@@ -1,26 +1,101 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ---------------------------------------------------------------------------
+   Design tokens
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+   Source of truth for the palette, lifted from the `ideology-space` mockup.
+   Raw values live here as plain CSS custom properties so they can switch at
+   runtime (system preference, or an explicit [data-theme] on <html>).
+   `@theme inline` below re-exports them to Tailwind as utility classes
+   (bg-surface, text-ink, border-line, text-dem, ...) that compile to
+   `var(--token)` rather than a frozen hex, so the theme switch is free.
+--------------------------------------------------------------------------- */
+
+:root {
+  --bg: #eef1f5;
+  --surface: #ffffff;
+  --surface-raised: #f7f8fa;
+  --ink: #1a2233;
+  --ink-muted: #5b6472;
+  --ink-faint: #8890a0;
+  --line: #d7dce3;
+  --line-strong: #b9c1cc;
+  --accent: #5c4b7a;
+  --accent-ink: #ffffff;
+  --dem: #3a66c2;
+  --rep: #c24a3a;
+  --oth: #8a8478;
+  --focus: #5c4b7a;
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --bg: #14161c;
+    --surface: #1b1e26;
+    --surface-raised: #20242e;
+    --ink: #e9eaee;
+    --ink-muted: #9aa2af;
+    --ink-faint: #6b7280;
+    --line: #2a2e38;
+    --line-strong: #3a4050;
+    --accent: #9b84c7;
+    --accent-ink: #14161c;
+    --dem: #4c7fdb;
+    --rep: #d96a56;
+    --oth: #aba593;
+    --focus: #9b84c7;
+    color-scheme: dark;
   }
 }
 
+:root[data-theme="dark"] {
+  --bg: #14161c;
+  --surface: #1b1e26;
+  --surface-raised: #20242e;
+  --ink: #e9eaee;
+  --ink-muted: #9aa2af;
+  --ink-faint: #6b7280;
+  --line: #2a2e38;
+  --line-strong: #3a4050;
+  --accent: #9b84c7;
+  --accent-ink: #14161c;
+  --dem: #4c7fdb;
+  --rep: #d96a56;
+  --oth: #aba593;
+  --focus: #9b84c7;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-dem: var(--dem);
+  --color-rep: var(--rep);
+  --color-oth: var(--oth);
+  --color-focus: var(--focus);
+
+  /* Font stacks are wired to the CSS variables set by next/font in layout.tsx. */
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
 }
