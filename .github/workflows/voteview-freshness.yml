@@ -1,0 +1,80 @@
+name: Voteview data freshness
+
+# Automate the check, gate the acceptance on a human.
+#
+# Weekly: re-fetch the Voteview HSall files and, if they differ from the
+# snapshot committed in pipeline/raw/voteview/, open a pull request with the
+# change. Never auto-merged — Corbett reviews and merges.
+#
+# Requires repo setting:
+#   Settings > Actions > General > "Allow GitHub Actions to create and
+#   approve pull requests"  (off by default)
+#
+# Note: the PR branch is pushed with GITHUB_TOKEN, so it does NOT trigger the
+# CI workflow. Re-run `pnpm validate && pnpm transform` locally before merging.
+
+on:
+  schedule:
+    - cron: "17 9 * * 1" # Mondays 09:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: voteview-freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Re-fetch Voteview snapshot
+        run: pnpm fetch:voteview
+
+      - name: Detect changes
+        id: detect
+        run: |
+          if git diff --quiet -- pipeline/raw/voteview; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Voteview snapshot is unchanged."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- pipeline/raw/voteview
+          fi
+
+      - name: Open pull request
+        if: steps.detect.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: pipeline/raw/voteview
+          branch: data/voteview-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): refresh Voteview snapshot"
+          title: "Voteview data refresh"
+          labels: data-refresh
+          body: |
+            The weekly freshness check found upstream changes to the Voteview
+            `HSall` files.
+
+            **Before merging**
+
+            - Review the diff in `pipeline/raw/voteview/`.
+            - Locally: `pnpm validate && pnpm transform`, commit the updated
+              `pipeline/output/_manifest.json`.
+            - Bump the citation year in `docs/CREDITS.md` if it changed.
+
+            Not auto-merged by design.
