@@ -1,54 +1,32 @@
 /**
- * The planned entity model for `pipeline/output/`.
+ * Entity model for `pipeline/output/`.
  *
- * These types describe the on-disk (serialized JSON) shape, so field names are
- * `snake_case` to match the data, not the usual TS `camelCase`. The source
- * layer is normalized — one fact in one place; page-shaped data is joined from
- * these at build time. See `docs/DATA_CONVENTIONS.md`.
- *
- * Nothing here is produced yet. Session 2 builds the transforms that emit and
- * validate these; treat this file as the schema skeleton, and keep it in sync
- * with DATA_CONVENTIONS.md §2.
+ * The entities that are actually built and emitted live in `lib/entities.ts` as
+ * Zod schemas (the output contract); their types are re-exported here for
+ * convenience. This file additionally holds the *planned* entities that have no
+ * data source integrated yet — documented so later sessions stay consistent
+ * with DATA_CONVENTIONS.md §2, but not produced.
  */
 
-/** Bioguide identifier, e.g. `"R000575"`. The sole canonical join key. */
-export type BioguideId = string;
+export type {
+  BioguideId,
+  Chamber,
+  IdCrosswalkEntry,
+  Legislator,
+  Term,
+  IdeologyScore,
+} from "./entities";
+
+import type { BioguideId } from "./entities";
 
 /** Congress number, e.g. `119`. The canonical time axis (not calendar year). */
 export type CongressNumber = number;
 
-export type Chamber = "house" | "senate";
+// ---------------------------------------------------------------------------
+// Planned — schema documented, no data source integrated yet. Do not emit.
+// ---------------------------------------------------------------------------
 
-export type Party = "Democrat" | "Republican" | "Independent" | string;
-
-/** Stable identity. Nothing that varies by Congress. */
-export interface Legislator {
-  bioguide_id: BioguideId;
-  name: {
-    first: string;
-    last: string;
-    /** Voteview's `bioname` ("LAST, First"), kept for display parity. */
-    official_full?: string;
-  };
-  birth_year?: number;
-  death_year?: number;
-  gender?: "M" | "F";
-}
-
-/** One row per legislator × Congress — "who served when." */
-export interface Term {
-  bioguide_id: BioguideId;
-  congress: CongressNumber;
-  chamber: Chamber;
-  state: string;
-  party: Party;
-  /** House only. */
-  district?: number;
-  /** Senate only. */
-  senate_class?: 1 | 2 | 3;
-}
-
-/** One row per legislator × year. */
+/** One row per legislator × year. Source undecided (OpenSecrets, House Clerk). */
 export interface FinancialDisclosure {
   bioguide_id: BioguideId;
   year: number;
@@ -57,7 +35,7 @@ export interface FinancialDisclosure {
 export interface Committee {
   committee_id: string;
   name: string;
-  chamber: Chamber | "joint";
+  chamber: "house" | "senate" | "joint";
   /** Set for subcommittees. */
   parent_committee_id?: string;
 }
@@ -68,18 +46,18 @@ export type CommitteeRole = "chair" | "ranking_member" | "member";
 export interface CommitteeMembership {
   bioguide_id: BioguideId;
   committee_id: string;
-  congress: CongressNumber;
+  congress_number: CongressNumber;
   role: CommitteeRole;
 }
 
 /**
- * One row per legislator × Congress × metric. DW-NOMINATE dimensions today;
- * interest-group scores later. `metric` values come from `lib/nominate.ts`
- * (`NominateMetric.column`) or a future scores module.
+ * One row per legislator × Congress × metric — the melted format reserved for
+ * future interest-group / issue scores. DW-NOMINATE is emitted wide in
+ * `ideology_scores.json` instead; this is not that.
  */
 export interface IssueScore {
   bioguide_id: BioguideId;
-  congress: CongressNumber;
+  congress_number: CongressNumber;
   metric: string;
   value: number;
 }
