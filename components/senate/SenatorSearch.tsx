@@ -38,7 +38,7 @@ export function SenatorSearch({ entries, noun }: SenatorSearchProps) {
   const results = useMemo(() => match(entries, query), [entries, query]);
 
   return (
-    <div className="relative w-full sm:ml-auto sm:w-[12.5rem]">
+    <div className="relative min-w-0 flex-1 sm:ml-auto sm:w-[12.5rem] sm:flex-none">
       <input
         type="text"
         value={query}
