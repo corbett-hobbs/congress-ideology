@@ -27,7 +27,7 @@ export function SiteHeader({ statesByChamber }: SiteHeaderProps) {
           href="/"
           className="min-w-0 shrink truncate font-serif text-[0.85rem] font-semibold tracking-tight text-ink sm:text-[0.95rem]"
         >
-          The Ideology Space
+          Congressional Ideology
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">

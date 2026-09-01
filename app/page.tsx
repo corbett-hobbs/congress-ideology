@@ -8,11 +8,11 @@ import { site } from "@/lib/site";
 import { SenateExplorer } from "@/components/senate/SenateExplorer";
 
 export const metadata: Metadata = {
-  title: { absolute: `${site.name} · Congress ideology, 1789–present` },
+  title: { absolute: `${site.name} · 1789–present` },
   description: site.description,
   alternates: { canonical: "/" },
   openGraph: {
-    title: `${site.name} · Congress ideology`,
+    title: site.name,
     description: site.description,
     url: "/",
   },

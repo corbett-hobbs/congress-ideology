@@ -1,4 +1,4 @@
-# The Ideology Space
+# Congressional Ideology
 
 **[congress-ideology.vercel.app](https://congress-ideology.vercel.app)** ·
 every U.S. senator's voting record reduced to a point in a two-dimensional

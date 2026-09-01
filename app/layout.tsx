@@ -29,7 +29,7 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const HEADLINE = `${site.name} · Congress ideology, 1789–present`;
+const HEADLINE = `${site.name} · 1789–present`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

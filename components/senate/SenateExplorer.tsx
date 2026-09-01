@@ -198,13 +198,15 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
           {ordinal(latestCongress)} Congress
         </p>
         <h1 className="mb-[0.6rem] text-balance font-serif text-[clamp(2.1rem,4.2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.01em]">
-          The Ideology Space
+          Congressional Ideology
         </h1>
         <p className="max-w-[42rem] text-pretty text-[1.02rem] leading-[1.55] text-ink-muted">
-          Every {noun}&rsquo;s roll-call votes reduced to two coordinates —
+          Use the toolbar up top to switch between the House and the Senate, or
+          to focus on a single state&rsquo;s delegation. Below, every{" "}
+          {noun}&rsquo;s roll-call votes are reduced to two coordinates —
           economic left–right on one axis, a second cross-cutting dimension on
-          the other. Scrub through {spanYears} years of Congresses to watch the
-          chamber pull apart, or pick a state to see its delegation.
+          the other — and the slider scrubs through {spanYears} years of
+          Congresses to watch the chamber pull apart.
         </p>
       </header>
 

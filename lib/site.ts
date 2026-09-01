@@ -13,7 +13,7 @@ export const siteUrl = (
 ).replace(/\/$/, "");
 
 export const site = {
-  name: "The Ideology Space",
+  name: "Congressional Ideology",
   shortName: "congress-ideology",
   tagline: "Congress ideology, from the roll-call record",
   description:
