@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# data pipeline
+#   raw/ and output/ are deliberately committed — see pipeline/README.md.
+#   Only fetch scratch files are ignored.
+pipeline/**/*.tmp
+pipeline/**/*.download
