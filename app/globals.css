@@ -156,6 +156,11 @@ body {
   fill: var(--ink-muted);
   pointer-events: none;
 }
+/* The profile compass's own member — labelled to match its accent ring. */
+.dot-label.is-focused-label {
+  fill: var(--accent);
+  font-weight: 600;
+}
 @media (prefers-reduced-motion: reduce) {
   .dot {
     transition: none;

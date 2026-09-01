@@ -50,8 +50,20 @@ export function CompassChart({
   const tip = useTooltip<ChamberMember>();
 
   const chamber = members[0]?.chamber ?? "senate";
-  const mostLiberal = members[0];
-  const mostConservative = members[members.length - 1];
+  const focused =
+    (dimUnfocused && highlightedId
+      ? members.find((m) => m.bioguideId === highlightedId)
+      : null) ?? null;
+  // Don't double-label the same dot as "most liberal/conservative".
+  const mostLiberal =
+    members[0] && members[0].bioguideId !== focused?.bioguideId
+      ? members[0]
+      : undefined;
+  const mostConservative =
+    members.length > 1 &&
+    members[members.length - 1].bioguideId !== focused?.bioguideId
+      ? members[members.length - 1]
+      : undefined;
 
   const drawOrder = useMemo(
     () =>
@@ -170,6 +182,16 @@ export function CompassChart({
                   y={y(mostConservative.dim2 as number) + 3}
                 >
                   {mostConservative.lastName}
+                </text>
+              )}
+              {focused?.dim1 != null && focused.dim2 != null && (
+                <text
+                  className="dot-label is-focused-label"
+                  textAnchor="middle"
+                  x={x(focused.dim1)}
+                  y={y(focused.dim2) - 12}
+                >
+                  {focused.lastName}
                 </text>
               )}
             </>
