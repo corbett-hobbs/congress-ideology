@@ -49,7 +49,7 @@ function Card({
 }) {
   return (
     <section
-      className={`rounded-[10px] border border-line bg-surface p-[1.35rem_1.35rem_1.1rem] ${className ?? ""}`}
+      className={`flex flex-col rounded-[10px] border border-line bg-surface p-[1.35rem_1.35rem_1.1rem] ${className ?? ""}`}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="font-serif text-[1.05rem] font-medium">{title}</h2>
@@ -312,7 +312,9 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
               </div>
             }
           >
-            <div className="border-t border-line pt-1 sm:max-h-[320px] sm:overflow-y-auto">
+            {/* Roughly the compass card's height, so the two columns line up;
+                scrolls inside. On mobile the whole list just expands. */}
+            <div className="mt-1 flex-1 border-t border-line pt-1 sm:max-h-[600px] sm:overflow-y-auto">
               {historyPending ? (
                 <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
               ) : (
