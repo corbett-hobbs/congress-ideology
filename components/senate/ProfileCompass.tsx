@@ -1,0 +1,28 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import type { SenateMember } from "@/lib/senate-data";
+import { senatorPath } from "@/lib/senator-url";
+import { CompassChart } from "./CompassChart";
+
+/**
+ * The Session 3 compass, focused on one senator: their dot is ringed, the rest
+ * of the chamber fades back, and clicking another dot opens that senator.
+ */
+export function ProfileCompass({
+  members,
+  bioguideId,
+}: {
+  members: SenateMember[];
+  bioguideId: string;
+}) {
+  const router = useRouter();
+  return (
+    <CompassChart
+      members={members}
+      highlightedId={bioguideId}
+      dimUnfocused
+      onSelect={(m) => router.push(senatorPath(m))}
+    />
+  );
+}
