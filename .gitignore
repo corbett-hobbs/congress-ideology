@@ -45,3 +45,6 @@ next-env.d.ts
 #   Only fetch scratch files are ignored.
 pipeline/**/*.tmp
 pipeline/**/*.download
+
+# editor / agent tooling
+.claude/
