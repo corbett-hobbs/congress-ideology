@@ -188,19 +188,28 @@ export function SenateExplorer({
     setHoveredId(null);
   }, []);
 
-  // Play steps through every Congress and loops back to the first.
+  // Play steps through every Congress and stops at the most recent one.
   useEffect(() => {
     if (!playing || historyPending) return;
+    if (congress >= latestCongress) {
+      setPlaying(false);
+      return;
+    }
     const id = setTimeout(() => {
-      goToCongress(congress >= latestCongress ? minCongress : congress + 1);
+      goToCongress(congress + 1);
     }, PLAY_INTERVAL_MS);
     return () => clearTimeout(id);
-  }, [playing, historyPending, congress, latestCongress, minCongress, goToCongress]);
+  }, [playing, historyPending, congress, latestCongress, goToCongress]);
 
   const togglePlay = useCallback(() => {
     setHistoryNeeded(true);
-    setPlaying((p) => !p);
-  }, []);
+    setPlaying((p) => {
+      if (p) return false;
+      // Pressing play while already parked at the end restarts from the first.
+      if (congress >= latestCongress) goToCongress(minCongress);
+      return true;
+    });
+  }, [congress, latestCongress, minCongress, goToCongress]);
 
   const stopAnd = useCallback((fn: () => void) => {
     setPlaying(false);
