@@ -1,0 +1,145 @@
+"use client";
+
+import { useMemo } from "react";
+import { scaleLinear } from "d3-scale";
+import { ChartFrame } from "@/components/charts/ChartFrame";
+import { Axis } from "@/components/charts/Axis";
+import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import type { SenateMember } from "@/lib/senate-data";
+import { MemberTooltip } from "./MemberTooltip";
+import { GROUP_FILL_CLASS } from "./format";
+
+const W = 640;
+const H = 600;
+const MARGIN = { top: 20, right: 64, bottom: 30, left: 52 };
+const TICKS = [-1, -0.5, 0, 0.5, 1];
+
+interface CompassChartProps {
+  /** Plottable senators for the current Congress, sorted by dim1. */
+  members: SenateMember[];
+  selectedId: string | null;
+  highlightedId: string | null;
+  onHover: (m: SenateMember | null) => void;
+  onSelect: (m: SenateMember) => void;
+}
+
+function zRank(m: SenateMember, selectedId: string | null, highlightedId: string | null) {
+  if (m.bioguideId === highlightedId) return 2;
+  if (m.bioguideId === selectedId) return 1;
+  return 0;
+}
+
+export function CompassChart({
+  members,
+  selectedId,
+  highlightedId,
+  onHover,
+  onSelect,
+}: CompassChartProps) {
+  const tip = useTooltip<SenateMember>();
+
+  const mostLiberal = members[0];
+  const mostConservative = members[members.length - 1];
+
+  const drawOrder = useMemo(
+    () =>
+      [...members].sort(
+        (a, b) =>
+          zRank(a, selectedId, highlightedId) -
+          zRank(b, selectedId, highlightedId),
+      ),
+    [members, selectedId, highlightedId],
+  );
+
+  return (
+    <>
+      <ChartFrame
+        width={W}
+        height={H}
+        margin={MARGIN}
+        ariaLabel="Scatter plot of senators by DW-NOMINATE ideology score"
+      >
+        {({ innerWidth, innerHeight }) => {
+          const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);
+          const y = scaleLinear().domain([-1, 1]).range([innerHeight, 0]);
+
+          return (
+            <>
+              <Axis
+                scale={x}
+                orientation="bottom"
+                ticks={TICKS}
+                offset={innerHeight}
+                gridExtent={innerHeight}
+                zeroAt={0}
+                format={(v) => v.toFixed(1)}
+              />
+              <Axis
+                scale={y}
+                orientation="left"
+                ticks={TICKS}
+                offset={0}
+                gridExtent={innerWidth}
+                zeroAt={0}
+                format={(v) => v.toFixed(1)}
+              />
+              <text
+                className="axis-caption"
+                transform={`translate(${-24},${innerHeight / 2}) rotate(-90)`}
+                textAnchor="middle"
+              >
+                DIMENSION 2
+              </text>
+
+              {drawOrder.map((m) => {
+                const isHi = m.bioguideId === highlightedId;
+                const isSel = m.bioguideId === selectedId;
+                return (
+                  <circle
+                    key={m.bioguideId}
+                    cx={x(m.dim1 as number)}
+                    cy={y(m.dim2 as number)}
+                    r={isHi ? 7.5 : isSel ? 6.5 : 4.6}
+                    className={`dot ${GROUP_FILL_CLASS[m.group]}${isHi ? " is-highlighted" : ""}`}
+                    onPointerEnter={(e) => {
+                      onHover(m);
+                      tip.show(m, e);
+                    }}
+                    onPointerMove={tip.move}
+                    onPointerLeave={() => {
+                      onHover(null);
+                      tip.hide();
+                    }}
+                    onClick={() => onSelect(m)}
+                  />
+                );
+              })}
+
+              {mostLiberal && (
+                <text
+                  className="dot-label"
+                  textAnchor="end"
+                  x={x(mostLiberal.dim1 as number) - 8}
+                  y={y(mostLiberal.dim2 as number) + 3}
+                >
+                  {mostLiberal.lastName}
+                </text>
+              )}
+              {mostConservative && mostConservative !== mostLiberal && (
+                <text
+                  className="dot-label"
+                  textAnchor="start"
+                  x={x(mostConservative.dim1 as number) + 8}
+                  y={y(mostConservative.dim2 as number) + 3}
+                >
+                  {mostConservative.lastName}
+                </text>
+              )}
+            </>
+          );
+        }}
+      </ChartFrame>
+      <Tooltip state={tip.state}>{(m) => <MemberTooltip member={m} />}</Tooltip>
+    </>
+  );
+}

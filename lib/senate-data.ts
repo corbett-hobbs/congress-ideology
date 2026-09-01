@@ -48,6 +48,16 @@ export interface PartyMeanPoint {
   rep: number | null;
 }
 
+export interface SenatorSearchEntry {
+  bioguideId: string;
+  name: string;
+  /** Most recent state served. */
+  state: string;
+  group: PartyGroup;
+  firstCongress: number;
+  latestCongress: number;
+}
+
 export interface SenateDataset {
   congresses: number[];
   latestCongress: number;
@@ -56,6 +66,8 @@ export interface SenateDataset {
   /** Every Senate member-Congress, including unscored ones (for the table). */
   allByCongress: Record<number, SenateMember[]>;
   trend: PartyMeanPoint[];
+  /** One entry per senator (ever), for name search. Sorted by last name. */
+  search: SenatorSearchEntry[];
 }
 
 /** The modern Republican party dates from the 33rd Congress (1854). Before
@@ -170,12 +182,37 @@ export function getSenateDataset(): SenateDataset {
     };
   });
 
+  const searchById = new Map<string, SenatorSearchEntry>();
+  for (const congress of sortedCongresses) {
+    for (const m of allByCongress[congress]) {
+      const prev = searchById.get(m.bioguideId);
+      if (!prev) {
+        searchById.set(m.bioguideId, {
+          bioguideId: m.bioguideId,
+          name: m.name,
+          state: m.state,
+          group: m.group,
+          firstCongress: congress,
+          latestCongress: congress,
+        });
+      } else {
+        prev.state = m.state;
+        prev.group = m.group;
+        prev.latestCongress = congress;
+      }
+    }
+  }
+  const search = [...searchById.values()].sort((a, b) =>
+    a.name.split(" ").at(-1)!.localeCompare(b.name.split(" ").at(-1)!),
+  );
+
   cached = {
     congresses: sortedCongresses,
     latestCongress: sortedCongresses[sortedCongresses.length - 1],
     byCongress,
     allByCongress,
     trend,
+    search,
   };
   return cached;
 }
