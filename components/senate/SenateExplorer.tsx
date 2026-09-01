@@ -40,7 +40,7 @@ function Panel({
   return (
     <section
       id={id}
-      className="scroll-mt-[4.5rem] rounded-[10px] border border-line bg-surface p-[1.1rem_1.25rem_1.25rem]"
+      className="scroll-mt-[7rem] rounded-[10px] border border-line bg-surface p-[1.1rem_1.25rem_1.25rem]"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <p className="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-faint">

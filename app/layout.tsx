@@ -70,7 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${newsreader.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-ink">
-        <Suspense fallback={<div className="h-12 border-b border-line" />}>
+        <Suspense fallback={<div className="min-h-16 border-b border-line-strong bg-surface" />}>
           <SiteHeader statesByChamber={statesByChamber()} />
         </Suspense>
         {children}
