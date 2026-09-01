@@ -22,7 +22,19 @@ describe("buildIdeologyScores", () => {
       bioguide_id: "A000001",
       congress_number: 118,
       chamber: "house",
+      n_votes: 100,
     });
+  });
+
+  it("carries n_votes through (null when Voteview has none)", () => {
+    const { scores } = buildIdeologyScores(
+      [
+        memberRow({ icpsr: 1, bioguide_id: "A000001", congress: 118, nominate_number_of_votes: 7 }),
+        memberRow({ icpsr: 69, bioguide_id: "A000069", congress: 118, nominate_number_of_votes: null }),
+      ],
+      crosswalk,
+    );
+    expect(scores.map((s) => s.n_votes).sort()).toEqual([7, null]);
   });
 
   it("keeps a per-chamber row when a member served both chambers in one Congress", () => {

@@ -73,6 +73,10 @@ export function buildIdeologyScores(
       nominate_dim2: row.nominate_dim2,
       nokken_poole_dim1: row.nokken_poole_dim1,
       nokken_poole_dim2: row.nokken_poole_dim2,
+      n_votes:
+        row.nominate_number_of_votes == null
+          ? null
+          : Math.round(row.nominate_number_of_votes),
     });
   }
 

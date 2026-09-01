@@ -91,5 +91,11 @@ export const ideologyScore = z.strictObject({
   nominate_dim2: nominateCoord,
   nokken_poole_dim1: nominateCoord,
   nokken_poole_dim2: nominateCoord,
+  /**
+   * Roll-call votes cast that Congress+chamber (Voteview
+   * `nominate_number_of_votes`). Disambiguates "who actually represented a
+   * seat" when a Congress has >2 senators for a state (mid-term appointments).
+   */
+  n_votes: z.number().int().nonnegative().nullable(),
 });
 export type IdeologyScore = z.infer<typeof ideologyScore>;
