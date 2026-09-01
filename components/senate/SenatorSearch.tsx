@@ -1,14 +1,15 @@
 "use client";
 
 import { useId, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import type { SenatorSearchEntry } from "@/lib/senate-data";
+import { senatorPath } from "@/lib/senator-url";
 import { GROUP_VAR, ordinal, stateName } from "./format";
 
 const MAX_RESULTS = 8;
 
 interface SenatorSearchProps {
   entries: SenatorSearchEntry[];
-  onPick: (entry: SenatorSearchEntry) => void;
 }
 
 /** Case-insensitive substring match on name and state (abbr or full). */
@@ -25,19 +26,13 @@ function match(entries: SenatorSearchEntry[], raw: string) {
     .slice(0, MAX_RESULTS);
 }
 
-export function SenatorSearch({ entries, onPick }: SenatorSearchProps) {
+export function SenatorSearch({ entries }: SenatorSearchProps) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const listId = useId();
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const results = useMemo(() => match(entries, query), [entries, query]);
-
-  const pick = (entry: SenatorSearchEntry) => {
-    onPick(entry);
-    setQuery(entry.name);
-    setOpen(false);
-  };
 
   return (
     <div className="relative ml-auto flex-none">
@@ -59,7 +54,6 @@ export function SenatorSearch({ entries, onPick }: SenatorSearchProps) {
           blurTimer.current = setTimeout(() => setOpen(false), 120);
         }}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && results[0]) pick(results[0]);
           if (e.key === "Escape") {
             setQuery("");
             setOpen(false);
@@ -80,16 +74,12 @@ export function SenatorSearch({ entries, onPick }: SenatorSearchProps) {
             </p>
           ) : (
             results.map((e) => (
-              <button
+              <Link
                 key={e.bioguideId}
-                type="button"
+                href={senatorPath(e)}
                 role="option"
                 aria-selected={false}
                 onMouseDown={(ev) => ev.preventDefault()}
-                onClick={() => {
-                  if (blurTimer.current) clearTimeout(blurTimer.current);
-                  pick(e);
-                }}
                 className="flex w-full items-center gap-2 rounded-[5px] px-[0.55rem] py-[0.4rem] text-left text-[0.82rem] hover:bg-surface-raised"
               >
                 <span
@@ -100,7 +90,7 @@ export function SenatorSearch({ entries, onPick }: SenatorSearchProps) {
                 <span className="ml-auto font-mono text-[0.72rem] text-ink-faint">
                   {e.state} · {ordinal(e.latestCongress)}
                 </span>
-              </button>
+              </Link>
             ))
           )}
         </div>

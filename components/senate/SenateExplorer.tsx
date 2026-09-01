@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { SenateDataset, SenateMember } from "@/lib/senate-data";
+import { senatorPath } from "@/lib/senator-url";
 import { CongressControls } from "./CongressControls";
 import { CompassChart } from "./CompassChart";
 import { Legend } from "./Legend";
@@ -23,13 +25,18 @@ function Panel({
   label,
   action,
   children,
+  id,
 }: {
   label: string;
   action?: React.ReactNode;
   children: React.ReactNode;
+  id?: string;
 }) {
   return (
-    <section className="rounded-[10px] border border-line bg-surface p-[1.1rem_1.25rem_1.25rem]">
+    <section
+      id={id}
+      className="scroll-mt-6 rounded-[10px] border border-line bg-surface p-[1.1rem_1.25rem_1.25rem]"
+    >
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <p className="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-faint">
           {label}
@@ -46,10 +53,9 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
     data;
   const minCongress = congresses[0];
 
+  const router = useRouter();
   const [congress, setCongress] = useState(latestCongress);
-  const [selected, setSelected] = useState<SenateMember | null>(null);
   const [hovered, setHovered] = useState<SenateMember | null>(null);
-  const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const [delegSort, setDelegSort] = useState<DelegationSort>("gap");
   const [tableOpen, setTableOpen] = useState(false);
@@ -65,17 +71,10 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
   const mostLiberal = members[0];
   const mostConservative = members[members.length - 1];
 
-  const goToCongress = useCallback((c: number, keepHighlight?: string) => {
+  const goToCongress = useCallback((c: number) => {
     setCongress(c);
     setHovered(null);
-    setHighlightedId(keepHighlight ?? null);
-    setSelected(
-      keepHighlight
-        ? (allByCongress[c] ?? []).find((m) => m.bioguideId === keepHighlight) ??
-            null
-        : null,
-    );
-  }, [allByCongress]);
+  }, []);
 
   useEffect(() => {
     if (!playing) return;
@@ -98,7 +97,7 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
     fn();
   }, []);
 
-  const readingMember = hovered ?? selected;
+  const readingMember = hovered;
   const congressLabel = `${ordinal(congress)} Congress`;
   const spanYears = (latestCongress - minCongress) * 2 + 2;
 
@@ -134,22 +133,18 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
         onTogglePlay={togglePlay}
         onToday={() => stopAnd(() => goToCongress(latestCongress))}
       >
-        <SenatorSearch
-          entries={search}
-          onPick={(e) =>
-            stopAnd(() => goToCongress(e.latestCongress, e.bioguideId))
-          }
-        />
+        <SenatorSearch entries={search} />
       </CongressControls>
 
       <section className="grid grid-cols-1 items-start gap-5 md:grid-cols-[minmax(0,1fr)_15.5rem]">
         <div className="relative rounded-[10px] border border-line bg-surface p-[1.25rem_1.25rem_0.75rem]">
           <CompassChart
             members={members}
-            selectedId={selected?.bioguideId ?? null}
-            highlightedId={highlightedId}
-            onHover={setHovered}
-            onSelect={setSelected}
+            highlightedId={hovered?.bioguideId ?? null}
+            onHover={(m) => {
+              if (m) setHovered(m);
+            }}
+            onSelect={(m) => router.push(senatorPath(m))}
           />
           <div className="flex justify-between px-[0.1rem] pb-[0.9rem] pt-[0.15rem] font-mono text-[0.68rem] text-ink-faint">
             <span>← more liberal</span>
@@ -184,6 +179,7 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
       </Panel>
 
       <Panel
+        id="delegation"
         label="Delegation alignment · each state's two senators, dimension 1"
         action={
           <div className="flex flex-none gap-[0.4rem]" role="group" aria-label="Sort delegations">

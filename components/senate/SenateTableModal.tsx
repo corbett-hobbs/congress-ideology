@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import type { SenateMember } from "@/lib/senate-data";
+import { senatorPath } from "@/lib/senator-url";
 import { fmt3, GROUP_VAR, ordinal, partyLabel } from "./format";
 
 interface SenateTableModalProps {
@@ -75,7 +77,12 @@ export function SenateTableModal({
                       className="mr-[0.4rem] inline-block size-2 rounded-full align-middle"
                       style={{ background: GROUP_VAR[m.group] }}
                     />
-                    {m.name}
+                    <Link
+                      href={senatorPath(m)}
+                      className="hover:text-accent hover:underline"
+                    >
+                      {m.name}
+                    </Link>
                   </td>
                   <td className="border-b border-line px-[0.4rem] py-[0.42rem]">
                     {m.state}

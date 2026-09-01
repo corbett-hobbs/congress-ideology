@@ -1,4 +1,6 @@
+import Link from "next/link";
 import type { SenateMember } from "@/lib/senate-data";
+import { senatorPath } from "@/lib/senator-url";
 import { fmt3, GROUP_VAR, partyLabel, stateName } from "./format";
 
 interface ReadingPanelProps {
@@ -54,10 +56,16 @@ export function ReadingPanel({
               <Coord label="Dim. 2" value={member.dim2} />
               <Coord label="Career d1" value={member.careerDim1} />
             </div>
+            <Link
+              href={senatorPath(member)}
+              className="mt-[0.7rem] inline-block text-[0.78rem] font-medium text-accent hover:underline"
+            >
+              {member.name}&rsquo;s profile →
+            </Link>
           </div>
         ) : (
           <p className="min-h-[4.6rem] text-[0.85rem] italic text-ink-faint">
-            Hover or tap a senator
+            Hover a senator; click for their profile
           </p>
         )}
       </Block>
