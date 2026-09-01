@@ -37,6 +37,11 @@ export const GROUP_VAR: Record<PartyGroup, string> = {
   other: "var(--oth)",
 };
 
+/** "D" / "R" / "I" — the news-style single-letter party abbreviation. */
+export function partyAbbr(party: string): string {
+  return party.charAt(0).toUpperCase() || "?";
+}
+
 /** "Independent (caucuses with Democrats)", "Democrat", "Whig", … */
 export function partyLabel(m: Pick<SenateMember, "party" | "caucus">): string {
   if (m.party === m.caucus || m.caucus === "Unknown") return m.party;

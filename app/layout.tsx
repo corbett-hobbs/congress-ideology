@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Newsreader, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { site, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -24,12 +25,25 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "congress-ideology",
-    template: "%s · congress-ideology",
+    default: `${site.name} · U.S. Senate ideology`,
+    template: `%s · ${site.name}`,
   },
-  description:
-    "A directory of every member of the U.S. Congress, built on their voting record.",
+  description: site.description,
+  applicationName: site.name,
+  authors: [{ name: "Corbett Hobbs" }],
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    title: `${site.name} · U.S. Senate ideology`,
+    description: site.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} · U.S. Senate ideology`,
+    description: site.description,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

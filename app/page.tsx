@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { getSenateDataset } from "@/lib/senate-data";
+import { site } from "@/lib/site";
 import { SenateExplorer } from "@/components/senate/SenateExplorer";
 
 export const metadata: Metadata = {
-  title: "The Ideology Space · U.S. Senate",
-  description:
-    "Every U.S. senator's roll-call votes reduced to two DW-NOMINATE coordinates, 1st–119th Congress.",
+  title: { absolute: `${site.name} · U.S. Senate ideology, 1789–present` },
+  description: site.description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: `${site.name} · U.S. Senate ideology`,
+    description: site.description,
+    url: "/",
+  },
 };
 
 export default function Home() {

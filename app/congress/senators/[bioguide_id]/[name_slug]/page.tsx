@@ -5,7 +5,8 @@ import {
   getSenateDataset,
   getSenatorProfile,
 } from "@/lib/senate-data";
-import { senatorSlug } from "@/lib/senator-url";
+import { senatorPath, senatorSlug } from "@/lib/senator-url";
+import { partyAbbr } from "@/components/senate/format";
 import { SenatorProfileView } from "@/components/senate/SenatorProfileView";
 
 interface RouteParams {
@@ -21,8 +22,10 @@ export function generateStaticParams(): RouteParams[] {
   }));
 }
 
-// A request with a valid id but a stale slug isn't pre-built — let it through
-// so the page can 308-redirect it to the canonical URL.
+// A valid id with a stale slug isn't pre-built. Keep dynamicParams on so the
+// request reaches the page, which 308-redirects it to the canonical URL (a
+// real HTTP redirect — do not add a loading.tsx here, its Suspense boundary
+// would turn the redirect into a client-side meta refresh).
 export const dynamicParams = true;
 
 export async function generateMetadata({
@@ -32,19 +35,23 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { bioguide_id } = await params;
   const profile = getSenatorProfile(bioguide_id);
-  if (!profile) return {};
+  if (!profile) return { title: "Senator not found" };
 
+  const abbr = partyAbbr(profile.party);
   const congresses =
     profile.senateCongressCount === 1
-      ? "1 Congress"
+      ? "their first Congress"
       : `${profile.senateCongressCount} Congresses`;
+  const title = `${profile.name} (${abbr}-${profile.state})`;
+  const description = `${profile.name}, ${profile.party} senator from ${profile.stateName} — DW-NOMINATE ideology score and how it has moved across ${congresses}.`;
+  const url = senatorPath(profile);
 
   return {
-    title: `${profile.name} · U.S. Senate`,
-    description: `${profile.name} of ${profile.stateName} — DW-NOMINATE ideology score and trajectory across ${congresses}.`,
-    alternates: {
-      canonical: `/congress/senators/${bioguide_id}/${senatorSlug(profile)}`,
-    },
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url, type: "profile" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
