@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type { Legislator } from "../validate/schemas";
-import { buildCrosswalk, resolveBioguide } from "./crosswalk";
+import { buildCrosswalk, buildIdCrosswalk, resolveBioguide } from "./crosswalk";
+import { memberRow } from "./fixtures";
 
 function leg(bioguide: string, icpsr?: number | number[]): Legislator {
   return {
     id: { bioguide, ...(icpsr === undefined ? {} : { icpsr }) },
     name: { first: "A", last: "B" },
+    bio: { gender: "M" },
+    terms: [{ type: "rep", start: "2013-01-03", end: "2015-01-03", state: "CA" }],
   } as Legislator;
 }
 
@@ -76,5 +79,33 @@ describe("resolveBioguide", () => {
       reason: "unmapped",
       icpsr: 999,
     });
+  });
+});
+
+describe("buildIdCrosswalk", () => {
+  it("augments congress-legislators entries with Voteview-only icpsr pairs", () => {
+    const { entries } = buildIdCrosswalk(
+      [leg("A000001", 1)],
+      [
+        memberRow({ icpsr: 1, bioguide_id: "A000001" }),
+        memberRow({ icpsr: 2, bioguide_id: "B000002" }), // not in congress-legislators
+        memberRow({ icpsr: 2, bioguide_id: "B000002" }), // dup icpsr, ignored
+        memberRow({ icpsr: 3, chamber: "President", bioguide_id: "P000003" }), // excluded
+      ],
+    );
+    expect(entries).toEqual([
+      { icpsr: 1, bioguide_id: "A000001", source: "congress-legislators" },
+      { icpsr: 2, bioguide_id: "B000002", source: "voteview" },
+    ]);
+  });
+
+  it("reports a Voteview row that resolves to no bioguide", () => {
+    const { unresolved } = buildIdCrosswalk(
+      [],
+      [memberRow({ icpsr: 99999, bioguide_id: "", bioname: "POE, Washington", congress: 29 })],
+    );
+    expect(unresolved).toEqual([
+      { icpsr: 99999, bioname: "POE, Washington", congress: 29 },
+    ]);
   });
 });

@@ -8,7 +8,8 @@
  * Pure — no I/O — so it is unit-tested directly.
  */
 
-import type { Legislator } from "../validate/schemas";
+import type { Legislator, VoteviewMemberRow } from "../validate/schemas";
+import type { IdCrosswalkEntry } from "../../lib/entities";
 
 export type Icpsr = number;
 export type Bioguide = string;
@@ -81,4 +82,61 @@ export function resolveBioguide(
   if (fromXwalk) return { ok: true, bioguide: fromXwalk, source: "crosswalk" };
   if (fromVoteview) return { ok: true, bioguide: fromVoteview, source: "voteview" };
   return { ok: false, reason: "unmapped", icpsr };
+}
+
+export interface IdCrosswalk {
+  entries: IdCrosswalkEntry[];
+  byIcpsr: ReadonlyMap<Icpsr, Bioguide>;
+  conflicts: readonly CrosswalkConflict[];
+  /** Voteview icpsrs (non-President) that resolve to no bioguide at all. */
+  unresolved: { icpsr: Icpsr; bioname: string; congress: number }[];
+}
+
+/**
+ * The emitted `id_crosswalk.json`: congress-legislators is authoritative, and
+ * where it has no `icpsr` for a member Voteview's own `icpsr`/`bioguide_id`
+ * pair fills the gap (tagged `source: "voteview"`). President rows are excluded
+ * — this project is about members of Congress.
+ */
+export function buildIdCrosswalk(
+  legislators: Iterable<Legislator>,
+  memberRows: Iterable<VoteviewMemberRow>,
+): IdCrosswalk {
+  const base = buildCrosswalk(legislators);
+  const byIcpsr = new Map(base.byIcpsr);
+  const entries: IdCrosswalkEntry[] = [...base.byIcpsr].map(
+    ([icpsr, bioguide_id]) => ({
+      icpsr,
+      bioguide_id,
+      source: "congress-legislators" as const,
+    }),
+  );
+
+  const conflicts = [...base.conflicts];
+  const unresolved: IdCrosswalk["unresolved"] = [];
+  const seenIcpsr = new Set<Icpsr>();
+
+  for (const row of memberRows) {
+    if (row.chamber === "President") continue;
+    if (byIcpsr.has(row.icpsr) || seenIcpsr.has(row.icpsr)) continue;
+    seenIcpsr.add(row.icpsr);
+
+    if (row.bioguide_id) {
+      byIcpsr.set(row.icpsr, row.bioguide_id);
+      entries.push({
+        icpsr: row.icpsr,
+        bioguide_id: row.bioguide_id,
+        source: "voteview",
+      });
+    } else {
+      unresolved.push({
+        icpsr: row.icpsr,
+        bioname: row.bioname,
+        congress: row.congress,
+      });
+    }
+  }
+
+  entries.sort((a, b) => a.icpsr - b.icpsr);
+  return { entries, byIcpsr, conflicts, unresolved };
 }

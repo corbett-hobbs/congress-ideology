@@ -1,27 +1,36 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { RAW_DIR } from "../fetch/lib";
-import { legislator, voteviewMemberRow } from "../validate/schemas";
-import { readCsvRows, readYamlList, validateAll } from "../validate/lib";
-import { buildCrosswalk, resolveBioguide, type Resolution } from "./crosswalk";
+import {
+  idCrosswalkEntry,
+  ideologyScore,
+  legislator as legislatorEntity,
+  term as termEntity,
+} from "../../lib/entities";
+import { buildIdCrosswalk } from "./crosswalk";
+import { buildLegislators } from "./legislators";
+import { buildTerms } from "./terms";
+import { buildIdeologyScores, KNOWN_UNRESOLVABLE } from "./scores";
+import { buildReport, printReport } from "./report";
+import {
+  readLegislators,
+  readVoteviewMembers,
+  writeEntities,
+  writeJson,
+} from "./io";
 
 /**
- * Transform stage — STUB.
+ * Transform: raw/ -> normalized, bioguide_id-keyed JSON in output/.
  *
- * Session 2 builds the real transforms that emit the normalized Legislator /
- * Term / IssueScore JSON described in docs/DATA_CONVENTIONS.md §2. For now this
- * just proves the pipeline runs end to end: read validated raw data, build the
- * icpsr -> bioguide_id crosswalk, apply it to every Voteview member row, and
- * write a manifest of what happened to pipeline/output/.
- *
- * It does not fail on mismatches / unmapped rows yet — it counts them, so
- * Session 2 starts with a clear picture of the crosswalk's real coverage.
+ * Emits id_crosswalk.json, legislators.json, terms.json, ideology_scores.json
+ * (each row validated against its schema in lib/entities.ts) plus _report.json.
+ * Fatal on a crosswalk conflict, a crosswalk/Voteview bioguide mismatch, or an
+ * unresolvable Voteview row that is not in the KNOWN_UNRESOLVABLE allowlist.
  */
 
-const OUTPUT_DIR = "pipeline/output";
-const MANIFEST = `${OUTPUT_DIR}/_manifest.json`;
+class FatalError extends Error {}
 
-async function sourceDigest(path: string) {
+async function digest(path: string) {
   const buf = await readFile(path);
   return {
     path,
@@ -30,81 +39,107 @@ async function sourceDigest(path: string) {
   };
 }
 
-console.log("transform (stub)");
+async function main() {
+  console.log("transform");
 
-const legislatorFiles = [
-  `${RAW_DIR}/congress-legislators/legislators-current.yaml`,
-  `${RAW_DIR}/congress-legislators/legislators-historical.yaml`,
-];
-const membersFile = `${RAW_DIR}/voteview/HSall_members.csv`;
+  const [members, legislators] = await Promise.all([
+    readVoteviewMembers(),
+    readLegislators(),
+  ]);
 
-const legislators = (
-  await Promise.all(
-    legislatorFiles.map(async (file) =>
-      validateAll(file, await readYamlList(file), legislator, (_r, i) => `entry ${i}`),
-    ),
-  )
-).flat();
+  const capCongress = Math.max(
+    ...members.filter((m) => m.chamber !== "President").map((m) => m.congress),
+  );
+  console.log(
+    `  source: ${members.length} member rows, ${legislators.length} legislators, cap Congress ${capCongress}`,
+  );
 
-const crosswalk = buildCrosswalk(legislators);
+  // --- id_crosswalk ------------------------------------------------------
+  const crosswalk = buildIdCrosswalk(legislators, members);
 
-const memberRows = validateAll(
-  membersFile,
-  await readCsvRows(membersFile),
-  voteviewMemberRow,
-  (_r, i) => `row ${i + 2}`,
-).filter((row) => row.chamber !== "President");
-
-type TallyKey = "agree" | "crosswalk" | "voteview" | "unmapped" | "mismatch";
-const tally: Record<TallyKey, number> = {
-  agree: 0,
-  crosswalk: 0,
-  voteview: 0,
-  unmapped: 0,
-  mismatch: 0,
-};
-const mismatchSamples: Resolution[] = [];
-
-for (const row of memberRows) {
-  const res = resolveBioguide(row.icpsr, row.bioguide_id || undefined, crosswalk);
-  if (res.ok) {
-    tally[res.source] += 1;
-  } else {
-    tally[res.reason] += 1;
-    if (res.reason === "mismatch" && mismatchSamples.length < 10) {
-      mismatchSamples.push(res);
-    }
+  if (crosswalk.conflicts.length > 0) {
+    const sample = crosswalk.conflicts
+      .slice(0, 10)
+      .map((c) => `  icpsr ${c.icpsr} -> ${c.bioguides.join(", ")}`)
+      .join("\n");
+    throw new FatalError(
+      `crosswalk: ${crosswalk.conflicts.length} icpsr(s) map to multiple bioguide ids\n${sample}`,
+    );
   }
+
+  const unexpected = crosswalk.unresolved.filter(
+    (u) => !(u.icpsr in KNOWN_UNRESOLVABLE),
+  );
+  if (unexpected.length > 0) {
+    const sample = unexpected
+      .slice(0, 20)
+      .map((u) => `  icpsr ${u.icpsr} "${u.bioname}" (Congress ${u.congress})`)
+      .join("\n");
+    throw new FatalError(
+      `crosswalk: ${unexpected.length} Voteview icpsr(s) resolve to no bioguide and are not in scores.ts KNOWN_UNRESOLVABLE:\n${sample}`,
+    );
+  }
+  for (const u of crosswalk.unresolved) {
+    console.warn(`  note: dropping icpsr ${u.icpsr} — ${KNOWN_UNRESOLVABLE[u.icpsr]}`);
+  }
+  await writeEntities("id_crosswalk", idCrosswalkEntry, crosswalk.entries);
+
+  // --- legislators -----------------------------------------------------
+  const legislatorEntities = buildLegislators(legislators);
+  await writeEntities("legislators", legislatorEntity, legislatorEntities);
+
+  // --- terms ---------------------------------------------------------- -
+  const { terms, collisions } = buildTerms(legislators, capCongress);
+  await writeEntities("terms", termEntity, terms);
+
+  // --- ideology_scores ---------------------------------------------- -
+  const scoresResult = buildIdeologyScores(members, crosswalk);
+  if (scoresResult.mismatches.length > 0) {
+    const sample = scoresResult.mismatches
+      .slice(0, 10)
+      .map(
+        (m) =>
+          `  icpsr ${m.icpsr} "${m.bioname}": crosswalk ${m.crosswalk} vs Voteview ${m.voteview}`,
+      )
+      .join("\n");
+    throw new FatalError(
+      `ideology_scores: ${scoresResult.mismatches.length} crosswalk/Voteview bioguide mismatch(es)\n${sample}`,
+    );
+  }
+  await writeEntities("ideology_scores", ideologyScore, scoresResult.scores);
+
+  // --- report -------------------------------------------------------- -
+  const report = buildReport({
+    legislators: legislatorEntities,
+    crosswalk,
+    terms,
+    termCollisions: collisions.length,
+    scoresResult,
+  });
+
+  await writeJson("_report.json", {
+    sources: await Promise.all(
+      [
+        `${RAW_DIR}/voteview/HSall_members.csv`,
+        `${RAW_DIR}/voteview/HSall_parties.csv`,
+        `${RAW_DIR}/congress-legislators/legislators-current.yaml`,
+        `${RAW_DIR}/congress-legislators/legislators-historical.yaml`,
+      ].map(digest),
+    ),
+    capCongress,
+    report,
+    knownUnresolvable: KNOWN_UNRESOLVABLE,
+    droppedUnresolvableRows: scoresResult.unresolvable,
+  });
+
+  printReport(report);
+  console.log(
+    "  wrote id_crosswalk.json, legislators.json, terms.json, ideology_scores.json, _report.json",
+  );
 }
 
-const sources = await Promise.all(
-  [membersFile, ...legislatorFiles].map(sourceDigest),
-);
-
-const manifest = {
-  note: "Stub output. Real entity JSON lands in Session 2 — see docs/DATA_CONVENTIONS.md.",
-  // Deterministic: a function of the inputs only, so re-running without a data
-  // change produces no git diff.
-  sourcesHash: createHash("sha256")
-    .update(sources.map((s) => s.sha256).join("\n"))
-    .digest("hex"),
-  sources,
-  legislators: {
-    entries: legislators.length,
-    crosswalkEntries: crosswalk.byIcpsr.size,
-    crosswalkConflicts: crosswalk.conflicts,
-  },
-  voteviewMembers: {
-    rowsExcludingPresidents: memberRows.length,
-    bioguideResolution: tally,
-    mismatchSamples,
-  },
-};
-
-await mkdir(OUTPUT_DIR, { recursive: true });
-await writeFile(MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
-
-console.log(`  legislators: ${legislators.length} (${crosswalk.byIcpsr.size} icpsr mapped, ${crosswalk.conflicts.length} conflicts)`);
-console.log(`  voteview member rows: ${memberRows.length}`);
-console.log(`  bioguide resolution: ${JSON.stringify(tally)}`);
-console.log(`  wrote ${MANIFEST}`);
+main().catch((err: unknown) => {
+  console.error("\ntransform FAILED");
+  console.error(err instanceof Error ? err.message : err);
+  process.exit(1);
+});
