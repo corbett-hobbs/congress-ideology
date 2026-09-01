@@ -7,9 +7,15 @@ components/
   charts/   chart primitives — ChartFrame, Axis, Tooltip. Every chart is
             built from these. D3 is used only for scale/shape maths; the SVG
             elements are plain JSX.
-  senate/   the Senate "Ideology Space" explorer (Session 3): SenateExplorer
-            plus the compass, trend, delegation, search, table and controls.
+  senate/   the Senate "Ideology Space" explorer (SenateExplorer + compass,
+            trend, delegation, search, table, controls) and the per-senator
+            profile view (SenatorProfileView, SenatorTrajectoryChart,
+            ProfileCompass) used by /congress/senators/[bioguide_id]/[name_slug].
 ```
+
+The compass and delegation charts take optional props (`dimUnfocused`,
+`filterState`, `highlightId`, navigate-on-click) so the profile pages reuse
+them rather than duplicating chart logic.
 
 Conventions:
 
