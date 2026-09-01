@@ -1,18 +1,14 @@
 import { ImageResponse } from "next/og";
-import { getCurrentMembers, getMemberProfile } from "@/lib/congress-data";
-import { memberSlug } from "@/lib/member-url";
+import { getMemberProfile } from "@/lib/congress-data";
 import { site } from "@/lib/site";
 
 export const alt = "U.S. senator ideology score";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export function generateStaticParams() {
-  return getCurrentMembers("senate").map((s) => ({
-    bioguide_id: s.bioguideId,
-    name_slug: memberSlug(s),
-  }));
-}
+// Rendered on first request and then cached, rather than all ~100 at build
+// time — link previews are rarely the first hit on a page. (The House side
+// has ~450 of these; prebuilding every one dominated the deploy.)
 
 const BG = "#14161c";
 const SURFACE = "#1b1e26";

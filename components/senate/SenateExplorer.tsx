@@ -280,7 +280,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
         <p className="mb-2 mt-1 max-w-[44rem] text-[0.76rem] text-ink-faint">
           Per-Congress means (nokken–poole), so real drift shows. Click to jump.
           {overlayVisible &&
-            ` The thin dashed lines are ${stateName(stateFilter as string)}'s ${chamberLabel(chamber)} delegation, for comparison — not a replacement for the national mean.`}
+            ` Solid lines are ${stateName(stateFilter as string)}'s ${chamberLabel(chamber)} delegation; the dotted lines behind them are the national mean.`}
         </p>
         {smallSample && (
           <p className="mb-2 max-w-[44rem] text-[0.76rem] text-ink-faint italic">

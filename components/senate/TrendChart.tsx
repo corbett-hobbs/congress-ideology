@@ -83,6 +83,13 @@ export function TrendChart({
           const overlayDem = stateOverlay && pathFor(stateOverlay.trend, "dem");
           const overlayRep = stateOverlay && pathFor(stateOverlay.trend, "rep");
 
+          // With a state selected, that state's line is the thing you're
+          // looking at — make it primary and drop the national means back to
+          // a dotted reference. (The small-sample caption still flags that a
+          // 1-3 member "mean" is noisy.)
+          const nationalClass = stateOverlay ? "trend-overlay-line" : "trend-line";
+          const nationalDash = stateOverlay ? "1 3" : undefined;
+
           return (
             <>
               <Axis
@@ -110,27 +117,26 @@ export function TrendChart({
               />
 
               {pathFor(trend, "dem") && (
-                <path className="trend-line stroke-dem" d={pathFor(trend, "dem") as string} />
+                <path
+                  className={`${nationalClass} stroke-dem`}
+                  d={pathFor(trend, "dem") as string}
+                  strokeDasharray={nationalDash}
+                />
               )}
               {pathFor(trend, "rep") && (
-                <path className="trend-line stroke-rep" d={pathFor(trend, "rep") as string} />
+                <path
+                  className={`${nationalClass} stroke-rep`}
+                  d={pathFor(trend, "rep") as string}
+                  strokeDasharray={nationalDash}
+                />
               )}
 
-              {/* State overlay: thinner, dashed, muted — a comparison, not a
-                  second dataset. Labelled in the legend below. */}
+              {/* The selected state's delegation — the primary line when shown. */}
               {overlayDem && (
-                <path
-                  className="trend-overlay-line stroke-dem"
-                  d={overlayDem}
-                  strokeDasharray="2 3"
-                />
+                <path className="trend-line stroke-dem" d={overlayDem} />
               )}
               {overlayRep && (
-                <path
-                  className="trend-overlay-line stroke-rep"
-                  d={overlayRep}
-                  strokeDasharray="2 3"
-                />
+                <path className="trend-line stroke-rep" d={overlayRep} />
               )}
 
               <line
@@ -163,10 +169,16 @@ export function TrendChart({
           <Swatch color="var(--rep)" /> Republicans
         </span>
         {stateOverlay && (
-          <span className="flex items-center gap-1.5 text-ink-faint">
-            <Swatch color="var(--ink-faint)" dash thin />
-            {stateOverlay.label} delegation
-          </span>
+          <>
+            <span className="flex items-center gap-1.5 text-ink-faint">
+              <Swatch color="var(--ink)" />
+              {stateOverlay.label} delegation
+            </span>
+            <span className="flex items-center gap-1.5 text-ink-faint">
+              <Swatch color="var(--ink-faint)" dash thin />
+              national mean
+            </span>
+          </>
         )}
       </div>
     </div>

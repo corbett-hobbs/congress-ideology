@@ -1,18 +1,13 @@
 import { ImageResponse } from "next/og";
-import { getCurrentMembers, getMemberProfile } from "@/lib/congress-data";
-import { memberSlug } from "@/lib/member-url";
+import { getMemberProfile } from "@/lib/congress-data";
 import { site } from "@/lib/site";
 
 export const alt = "U.S. representative ideology score";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export function generateStaticParams() {
-  return getCurrentMembers("house").map((m) => ({
-    bioguide_id: m.bioguideId,
-    name_slug: memberSlug(m),
-  }));
-}
+// Rendered on first request and then cached, rather than all ~450 at build
+// time — prebuilding every one was most of the deploy.
 
 const BG = "#14161c";
 const SURFACE = "#1b1e26";
