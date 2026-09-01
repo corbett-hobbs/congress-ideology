@@ -87,7 +87,13 @@ export function useExplorerUrl(): ExplorerUrl {
       onExplorer
         ? replace(buildQuery({ chamber: c }))
         : router.push(explorerHref({ chamber: c })),
-    setStateFilter: (s) => replace(buildQuery({ state: s })),
+    // Same rule as setChamber: in place on the explorer, else navigate there
+    // (preserving the current chamber) since a profile page has no filtered
+    // view of its own to apply the state to.
+    setStateFilter: (s) =>
+      onExplorer
+        ? replace(buildQuery({ state: s }))
+        : router.push(explorerHref({ state: s })),
     explorerHref,
   };
 }

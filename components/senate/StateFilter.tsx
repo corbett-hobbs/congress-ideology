@@ -3,12 +3,24 @@
 import { useExplorerUrl } from "@/lib/use-chamber";
 import { stateName } from "@/lib/states";
 
+const BASE_CLASS =
+  "rounded-md border border-line-strong bg-surface-raised text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
+
 /**
- * State dropdown, next to the member search. Writes `?state=` — selecting a
- * state narrows the compass panel to that state's delegation. See
- * lib/use-chamber.ts.
+ * State dropdown — lives in the persistent site header, alongside the
+ * chamber switcher (see components/SiteHeader.tsx). Writes `?state=`, which
+ * every view reads from the same shared URL state (lib/use-chamber.ts):
+ * narrows the explorer's compass panel to that state's delegation and adds
+ * its trend as an overlay on the party-means chart.
  */
-export function StateFilter({ states }: { states: string[] }) {
+export function StateFilter({
+  states,
+  compact = false,
+}: {
+  states: string[];
+  /** Smaller footprint for the site header vs. the explorer's own controls. */
+  compact?: boolean;
+}) {
   const { stateFilter, setStateFilter } = useExplorerUrl();
 
   return (
@@ -16,7 +28,11 @@ export function StateFilter({ states }: { states: string[] }) {
       aria-label="Filter by state"
       value={stateFilter ?? ""}
       onChange={(e) => setStateFilter(e.target.value || null)}
-      className="w-full rounded-md border border-line-strong bg-surface-raised px-[0.6rem] py-[0.48rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-auto"
+      className={`${BASE_CLASS} ${
+        compact
+          ? "w-full px-[0.5rem] py-[0.28rem] text-[0.75rem] sm:w-auto"
+          : "w-full px-[0.6rem] py-[0.48rem] text-[0.8rem] sm:w-auto"
+      }`}
     >
       <option value="">All states</option>
       {states.map((s) => (

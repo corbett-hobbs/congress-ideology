@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { mean } from "d3-array";
 import type { ChamberCurrent, MemberSearchEntry } from "@/lib/congress-types";
-import { plottableSorted } from "@/lib/congress-types";
+import { congressStartYear, plottableSorted } from "@/lib/congress-types";
 import { chamberFullName, chamberLabel, memberNoun } from "@/lib/chamber";
 import { memberPath } from "@/lib/member-url";
 import { stateName } from "@/lib/states";
@@ -16,7 +17,6 @@ import { ReadingPanel } from "./ReadingPanel";
 import { TrendChart, type TrendMode } from "./TrendChart";
 import { buildDelegations, DelegationChart, type DelegationSort } from "./DelegationChart";
 import { SenatorSearch } from "./SenatorSearch";
-import { StateFilter } from "./StateFilter";
 import { SenateTableModal } from "./SenateTableModal";
 import { SiteFooter } from "./SiteFooter";
 import { ordinal } from "./format";
@@ -71,8 +71,13 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const [tableOpen, setTableOpen] = useState(false);
 
   // The scrub-through-time payload loads on demand (it is ~1.3 MB for the House).
+  // A state filter also needs it immediately, for that state's trend overlay
+  // (which spans every Congress, not just the one currently shown).
   const [historyNeeded, setHistoryNeeded] = useState(false);
-  const { history, loading } = useChamberHistory(chamber, historyNeeded);
+  const { history, loading } = useChamberHistory(
+    chamber,
+    historyNeeded || stateFilter != null,
+  );
   useEffect(() => {
     const t = setTimeout(() => setHistoryNeeded(true), PRELOAD_DELAY_MS);
     return () => clearTimeout(t);
@@ -105,18 +110,35 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
       ? (history.allByCongress[congress] ?? [])
       : [];
 
-  const stateOptions = useMemo(
-    () =>
-      [...new Set(current.all.map((m) => m.state))].sort((a, b) =>
-        stateName(a).localeCompare(stateName(b)),
-      ),
-    [current.all],
-  );
-
   const stateMembers = useMemo(
     () => (stateFilter ? plottable.filter((m) => m.state === stateFilter) : plottable),
     [plottable, stateFilter],
   );
+
+  // The selected state's delegation, per Congress — an overlay on the
+  // national trend, not a replacement for it (a 1-3 member "party mean"
+  // isn't a meaningful trend on its own). Needs the full history regardless
+  // of which Congress is currently shown.
+  const stateTrend = useMemo(() => {
+    if (!stateFilter || !history || history.chamber !== chamber) return [];
+    return history.congresses.map((c) => {
+      const members = (history.allByCongress[c] ?? []).filter(
+        (m) => m.state === stateFilter && m.dim1 != null,
+      );
+      const meanOf = (group: "dem" | "rep") => {
+        const vals = members
+          .filter((m) => m.group === group)
+          .map((m) => m.dim1 as number);
+        return vals.length ? (mean(vals) ?? null) : null;
+      };
+      return {
+        congress: c,
+        year: congressStartYear(c),
+        dem: meanOf("dem"),
+        rep: meanOf("rep"),
+      };
+    });
+  }, [stateFilter, history, chamber]);
 
   const goToCongress = useCallback((c: number) => {
     setHistoryNeeded(true);
@@ -161,6 +183,11 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const spanYears = (latestCongress - minCongress) * 2 + 2;
   const isHouse = chamber === "house";
   const delegMode = isHouse ? "range" : "pair";
+  // The trend chart only draws this chamber's overlay when a line for this
+  // chamber is actually on screen (mode "both" or this chamber specifically).
+  const overlayVisible =
+    stateFilter != null && (trendMode === "both" || trendMode === chamber);
+  const smallSample = overlayVisible && stateMembers.length > 0 && stateMembers.length <= 3;
 
   const { summary } = useMemo(
     () => buildDelegations(plottable, delegMode),
@@ -195,10 +222,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
         onTogglePlay={togglePlay}
         onToday={() => stopAnd(() => goToCongress(latestCongress))}
       >
-        <div className="flex w-full flex-wrap items-center gap-2 sm:ml-auto sm:w-auto">
-          <StateFilter states={stateOptions} />
-          <SenatorSearch entries={search} noun={noun} />
-        </div>
+        <SenatorSearch entries={search} noun={noun} />
       </CongressControls>
 
       <section className="grid grid-cols-1 items-start gap-5 md:grid-cols-[minmax(0,1fr)_15.5rem]">
@@ -291,7 +315,16 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
         <p className="mb-2 mt-1 max-w-[44rem] text-[0.76rem] text-ink-faint">
           Per-Congress means (nokken–poole), so real drift shows. Click to jump.
           {trendMode === "both" ? " House is dashed." : ""}
+          {overlayVisible &&
+            ` The thin dashed lines are ${stateName(stateFilter as string)}'s ${chamberLabel(chamber)} delegation, for comparison — not a replacement for the national mean.`}
         </p>
+        {smallSample && (
+          <p className="mb-2 max-w-[44rem] text-[0.76rem] text-ink-faint italic">
+            {stateName(stateFilter as string)}&rsquo;s overlay reflects just{" "}
+            {stateMembers.length} {stateMembers.length === 1 ? noun : nounPlural}{" "}
+            — expect it to look noisier than the national lines, which average many more.
+          </p>
+        )}
         <TrendChart
           senateTrend={senate.trend}
           houseTrend={house.trend}
@@ -300,6 +333,11 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
           maxCongress={Math.max(senate.latestCongress, house.latestCongress)}
           congress={congress}
           onScrub={(c) => stopAnd(() => goToCongress(c))}
+          stateOverlay={
+            overlayVisible && stateFilter
+              ? { chamber, trend: stateTrend, label: stateName(stateFilter) }
+              : null
+          }
         />
       </Panel>
 
@@ -348,7 +386,9 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
                   : ""
               }. Click a row to filter to that state.`}
         </p>
-        <div className="max-h-[32rem] overflow-y-auto border-t border-line pt-[0.4rem]">
+        {/* On a phone the whole list scrolls with the page — a scroll region
+            inside a scroll region is miserable on touch. Contained on desktop. */}
+        <div className="border-t border-line pt-[0.4rem] sm:max-h-[32rem] sm:overflow-y-auto">
           {historyPending ? (
             <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
           ) : (

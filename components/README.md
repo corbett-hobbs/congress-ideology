@@ -8,17 +8,23 @@ components/
             built from these. D3 is used only for scale/shape maths; the SVG
             elements are plain JSX.
   senate/   the "Ideology Space" explorer (SenateExplorer + compass, beeswarm,
-            trend, delegation, state filter, search, table, controls) and the
-            per-member profile view (SenatorProfileView, SenatorTrajectoryChart,
+            trend, delegation, search, table, controls) and the per-member
+            profile view (SenatorProfileView, SenatorTrajectoryChart,
             ProfileCompass) used by /congress/{senators,house}/[bioguide_id]/[name_slug].
             Names still say "Senate"/"Senator" — the components were written
             Senate-first and generalized in place; the chamber is a prop/URL param.
+  SiteHeader.tsx  the persistent top toolbar (wordmark + StateFilter + chamber
+            switcher), rendered once in the root layout on every page.
 ```
 
 The compass and delegation charts take optional props (`dimUnfocused`,
 `filterState`, `highlightId`, `mode`, navigate-on-click) so the profile pages
 reuse them rather than duplicating chart logic. The active chamber and state
-filter live in the URL (`?chamber=house&state=CA`) via `lib/use-chamber.ts`.
+filter live in the URL (`?chamber=house&state=CA`) via `lib/use-chamber.ts`;
+both are driven only from `SiteHeader` — no view has its own copy of either
+control. A state filter narrows the explorer's compass panel to that state's
+delegation and overlays its trend on the party-means chart (as a comparison
+line, never a replacement).
 
 Conventions:
 
