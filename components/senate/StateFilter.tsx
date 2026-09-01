@@ -30,7 +30,7 @@ export function StateFilter({
       onChange={(e) => setStateFilter(e.target.value || null)}
       className={`${BASE_CLASS} ${
         compact
-          ? "w-full px-[0.5rem] py-[0.28rem] text-[0.75rem] sm:w-auto"
+          ? "max-w-[7.5rem] px-[0.4rem] py-[0.28rem] text-[0.75rem]"
           : "w-full px-[0.6rem] py-[0.48rem] text-[0.8rem] sm:w-auto"
       }`}
     >

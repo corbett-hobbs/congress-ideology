@@ -22,21 +22,19 @@ export function SiteHeader({ statesByChamber }: SiteHeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-[1180px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-6 py-2 sm:h-12 sm:flex-nowrap sm:py-0">
+      <div className="mx-auto flex h-12 w-full max-w-[1180px] items-center justify-between gap-2 px-4 sm:px-6">
         <Link
           href="/"
-          className="font-serif text-[0.95rem] font-semibold tracking-tight text-ink"
+          className="min-w-0 shrink truncate font-serif text-[0.85rem] font-semibold tracking-tight text-ink sm:text-[0.95rem]"
         >
           The Ideology Space
         </Link>
 
-        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:flex-nowrap">
-          <StateFilter states={statesByChamber[chamber]} compact />
-
+        <div className="flex shrink-0 items-center gap-2">
           <div
             role="group"
             aria-label="Chamber"
-            className="flex flex-none overflow-hidden rounded-md border border-line-strong text-[0.75rem] font-medium"
+            className="flex overflow-hidden rounded-md border border-line-strong text-[0.75rem] font-medium"
           >
             {CHAMBERS.map((c) => (
               <button
@@ -54,6 +52,8 @@ export function SiteHeader({ statesByChamber }: SiteHeaderProps) {
               </button>
             ))}
           </div>
+
+          <StateFilter states={statesByChamber[chamber]} compact />
         </div>
       </div>
     </header>

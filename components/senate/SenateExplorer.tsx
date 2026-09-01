@@ -14,7 +14,7 @@ import { CompassChart } from "./CompassChart";
 import { BeeswarmChart } from "./BeeswarmChart";
 import { Legend } from "./Legend";
 import { ReadingPanel } from "./ReadingPanel";
-import { TrendChart, type TrendMode } from "./TrendChart";
+import { TrendChart } from "./TrendChart";
 import { buildDelegations, DelegationChart, type DelegationSort } from "./DelegationChart";
 import { SenatorSearch } from "./SenatorSearch";
 import { SenateTableModal } from "./SenateTableModal";
@@ -67,7 +67,6 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const [playing, setPlaying] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [delegSort, setDelegSort] = useState<DelegationSort>("gap");
-  const [trendMode, setTrendMode] = useState<TrendMode>(chamber);
   const [tableOpen, setTableOpen] = useState(false);
 
   // The scrub-through-time payload loads on demand (it is ~1.3 MB for the House).
@@ -91,9 +90,6 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
     setCongress(latestCongress);
     setPlaying(false);
     setHoveredId(null);
-    // The party-means chart follows the chamber switcher unless the reader has
-    // since picked a specific comparison.
-    setTrendMode(chamber);
   }
 
   const atLatest = congress === latestCongress;
@@ -183,11 +179,9 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const spanYears = (latestCongress - minCongress) * 2 + 2;
   const isHouse = chamber === "house";
   const delegMode = isHouse ? "range" : "pair";
-  // The trend chart only draws this chamber's overlay when a line for this
-  // chamber is actually on screen (mode "both" or this chamber specifically).
-  const overlayVisible =
-    stateFilter != null && (trendMode === "both" || trendMode === chamber);
-  const smallSample = overlayVisible && stateMembers.length > 0 && stateMembers.length <= 3;
+  const overlayVisible = stateFilter != null;
+  const smallSample =
+    overlayVisible && stateMembers.length > 0 && stateMembers.length <= 3;
 
   const { summary } = useMemo(
     () => buildDelegations(plottable, delegMode),
@@ -281,40 +275,10 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
       </section>
 
       <Panel
-        label={`Party means, dimension 1 · 1789–${1789 + (latestCongress - 1) * 2 + 2}`}
-        action={
-          <div
-            className="flex flex-none flex-wrap gap-[0.4rem]"
-            role="group"
-            aria-label="Trend chambers"
-          >
-            {(
-              [
-                ["senate", "Senate"],
-                ["house", "House"],
-                ["both", "Both"],
-              ] as const
-            ).map(([m, text]) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => setTrendMode(m)}
-                aria-pressed={trendMode === m}
-                className={`rounded-md border px-[0.6rem] py-[0.3rem] text-[0.72rem] font-medium transition-colors ${
-                  trendMode === m
-                    ? "border-accent bg-accent text-accent-ink"
-                    : "border-line-strong bg-surface-raised text-ink-muted hover:border-accent"
-                }`}
-              >
-                {text}
-              </button>
-            ))}
-          </div>
-        }
+        label={`${chamberLabel(chamber)} party means, dimension 1 · 1789–${1789 + (latestCongress - 1) * 2 + 2}`}
       >
         <p className="mb-2 mt-1 max-w-[44rem] text-[0.76rem] text-ink-faint">
           Per-Congress means (nokken–poole), so real drift shows. Click to jump.
-          {trendMode === "both" ? " House is dashed." : ""}
           {overlayVisible &&
             ` The thin dashed lines are ${stateName(stateFilter as string)}'s ${chamberLabel(chamber)} delegation, for comparison — not a replacement for the national mean.`}
         </p>
@@ -326,16 +290,14 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
           </p>
         )}
         <TrendChart
-          senateTrend={senate.trend}
-          houseTrend={house.trend}
-          mode={trendMode}
-          minCongress={Math.min(senate.minCongress, house.minCongress)}
-          maxCongress={Math.max(senate.latestCongress, house.latestCongress)}
+          trend={current.trend}
+          minCongress={minCongress}
+          maxCongress={latestCongress}
           congress={congress}
           onScrub={(c) => stopAnd(() => goToCongress(c))}
           stateOverlay={
             overlayVisible && stateFilter
-              ? { chamber, trend: stateTrend, label: stateName(stateFilter) }
+              ? { trend: stateTrend, label: stateName(stateFilter) }
               : null
           }
         />
