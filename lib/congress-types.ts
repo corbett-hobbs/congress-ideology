@@ -5,7 +5,7 @@
  * and the lazily-fetched history payload — can use the same shapes and the
  * plottable-filter logic.
  */
-import type { Chamber } from "./chamber";
+import type { Chamber, ChamberView } from "./chamber";
 
 export type PartyGroup = "dem" | "rep" | "other";
 
@@ -48,9 +48,9 @@ export interface MemberSearchEntry {
   group: PartyGroup;
 }
 
-/** Small payload — shipped inline on the homepage, for both chambers. */
+/** Small payload — shipped inline on the homepage, per chamber and blended. */
 export interface ChamberCurrent {
-  chamber: Chamber;
+  chamber: ChamberView;
   latestCongress: number;
   minCongress: number;
   /** Every current member (incl. unscored) — table + delegation. By last name. */
@@ -61,9 +61,12 @@ export interface ChamberCurrent {
   trend: PartyMeanPoint[];
 }
 
-/** Big payload — a static `/data/{chamber}` asset, fetched on demand. */
+/**
+ * Big payload — one static `/data/{chamber}` asset per chamber, fetched on
+ * demand. The blended "both" history is these two merged on the client.
+ */
 export interface ChamberHistory {
-  chamber: Chamber;
+  chamber: ChamberView;
   congresses: number[];
   /** Every member-Congress. The plottable subset is derived client-side. */
   allByCongress: Record<number, ChamberMember[]>;

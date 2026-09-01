@@ -9,16 +9,31 @@
 
 export type Chamber = "house" | "senate";
 
+/** The explorer's chamber control: a blended "both" plus each chamber. */
+export type ChamberView = Chamber | "both";
+
 /** Senate first — the default, and the order the switcher shows. */
 export const CHAMBERS: readonly Chamber[] = ["senate", "house"];
+
+/** Order the toolbar shows; "both" is the default view. */
+export const CHAMBER_VIEWS: readonly ChamberView[] = ["both", "senate", "house"];
 
 export function isChamber(v: unknown): v is Chamber {
   return v === "house" || v === "senate";
 }
 
+export function isChamberView(v: unknown): v is ChamberView {
+  return v === "both" || v === "house" || v === "senate";
+}
+
 /** "Senate" / "House". */
 export function chamberLabel(c: Chamber): string {
   return c === "house" ? "House" : "Senate";
+}
+
+/** "Both" / "Senate" / "House" — the toolbar button labels. */
+export function viewLabel(v: ChamberView): string {
+  return v === "both" ? "Both" : chamberLabel(v);
 }
 
 /** "U.S. Senate" / "U.S. House of Representatives". */
@@ -36,6 +51,13 @@ interface NounOptions {
 export function memberNoun(c: Chamber, opts: NounOptions = {}): string {
   const base = c === "house" ? "representative" : "senator";
   const word = opts.plural ? `${base}s` : base;
+  return opts.cap ? word[0].toUpperCase() + word.slice(1) : word;
+}
+
+/** Like `memberNoun`, but "member(s) of Congress" for the blended view. */
+export function viewNoun(v: ChamberView, opts: NounOptions = {}): string {
+  if (v !== "both") return memberNoun(v, opts);
+  const word = opts.plural ? "members of Congress" : "member of Congress";
   return opts.cap ? word[0].toUpperCase() + word.slice(1) : word;
 }
 

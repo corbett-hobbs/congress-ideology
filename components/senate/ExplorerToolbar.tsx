@@ -1,6 +1,6 @@
 "use client";
 
-import { CHAMBERS, chamberLabel } from "@/lib/chamber";
+import { CHAMBER_VIEWS, viewLabel } from "@/lib/chamber";
 import { useExplorerUrl } from "@/lib/use-chamber";
 import { StateFilter } from "./StateFilter";
 import { ordinal, congressYears } from "./format";
@@ -30,7 +30,7 @@ export function ExplorerToolbar({
   onCongressChange,
   onTogglePlay,
 }: ExplorerToolbarProps) {
-  const { chamber, setChamber } = useExplorerUrl();
+  const { view, setView } = useExplorerUrl();
 
   return (
     <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 backdrop-blur">
@@ -40,19 +40,19 @@ export function ExplorerToolbar({
           aria-label="Chamber"
           className="flex flex-none overflow-hidden rounded-lg border border-line-strong text-[0.8rem] font-medium"
         >
-          {CHAMBERS.map((c) => (
+          {CHAMBER_VIEWS.map((v) => (
             <button
-              key={c}
+              key={v}
               type="button"
-              onClick={() => setChamber(c)}
-              aria-pressed={chamber === c}
+              onClick={() => setView(v)}
+              aria-pressed={view === v}
               className={`px-[0.85rem] py-[0.35rem] transition-colors ${
-                chamber === c
+                view === v
                   ? "bg-accent text-accent-ink"
                   : "bg-surface-raised text-ink-muted hover:text-ink"
               }`}
             >
-              {chamberLabel(c)}
+              {viewLabel(v)}
             </button>
           ))}
         </div>

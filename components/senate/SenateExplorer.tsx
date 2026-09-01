@@ -9,9 +9,13 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { mean } from "d3-array";
-import type { ChamberCurrent, MemberSearchEntry } from "@/lib/congress-types";
+import type {
+  ChamberCurrent,
+  MemberSearchEntry,
+  PartyMeanPoint,
+} from "@/lib/congress-types";
 import { congressStartYear, plottableSorted } from "@/lib/congress-types";
-import { chamberLabel, memberNoun } from "@/lib/chamber";
+import { chamberLabel, viewNoun } from "@/lib/chamber";
 import { memberPath } from "@/lib/member-url";
 import { stateName } from "@/lib/states";
 import { useChamberHistory, useExplorerUrl } from "@/lib/use-chamber";
@@ -66,13 +70,38 @@ function Card({
 interface ExplorerProps {
   senate: ChamberCurrent;
   house: ChamberCurrent;
+  /** Blended party means — the only "both" data that can't be merged client-side. */
+  bothTrend: PartyMeanPoint[];
   search: MemberSearchEntry[];
 }
 
-export function SenateExplorer({ senate, house, search }: ExplorerProps) {
+export function SenateExplorer({
+  senate,
+  house,
+  bothTrend,
+  search,
+}: ExplorerProps) {
   const router = useRouter();
-  const { chamber, stateFilter, setStateFilter } = useExplorerUrl();
-  const current = chamber === "house" ? house : senate;
+  const { view, stateFilter, setStateFilter } = useExplorerUrl();
+
+  // "Both" is just the two chambers' current sets concatenated; the trend is
+  // the one piece that needs the server (it's recomputed across the combined
+  // per-Congress set, not an average of two averages).
+  const both = useMemo<ChamberCurrent>(
+    () => ({
+      chamber: "both",
+      latestCongress: Math.max(senate.latestCongress, house.latestCongress),
+      minCongress: Math.min(senate.minCongress, house.minCongress),
+      all: [...house.all, ...senate.all],
+      plottable: [...house.plottable, ...senate.plottable].sort(
+        (a, b) => (a.dim1 as number) - (b.dim1 as number),
+      ),
+      trend: bothTrend,
+    }),
+    [senate, house, bothTrend],
+  );
+
+  const current = view === "house" ? house : view === "senate" ? senate : both;
   const { latestCongress, minCongress } = current;
 
   const [congress, setCongress] = useState(latestCongress);
@@ -81,11 +110,11 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const [delegSort, setDelegSort] = useState<DelegationSort>("gap");
   const [tableOpen, setTableOpen] = useState(false);
 
-  // The scrub-through-time payload loads on demand (~1.3 MB for the House). A
-  // state filter needs it immediately for that state's per-Congress overlay.
+  // The scrub-through-time payload loads on demand (~1.3 MB for the House, both
+  // chambers for "Both"). A state filter needs it immediately for the overlay.
   const [historyNeeded, setHistoryNeeded] = useState(false);
   const { history, loading } = useChamberHistory(
-    chamber,
+    view,
     historyNeeded || stateFilter != null,
   );
   useEffect(() => {
@@ -93,17 +122,17 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
     return () => clearTimeout(t);
   }, []);
 
-  // Reset to the current Congress whenever the chamber changes.
-  const [prevChamber, setPrevChamber] = useState(chamber);
-  if (prevChamber !== chamber) {
-    setPrevChamber(chamber);
+  // Reset to the current Congress whenever the view changes.
+  const [prevView, setPrevView] = useState(view);
+  if (prevView !== view) {
+    setPrevView(view);
     setCongress(latestCongress);
     setPlaying(false);
     setHoveredId(null);
   }
 
   const atLatest = congress === latestCongress;
-  const historyPending = !atLatest && (!history || history.chamber !== chamber);
+  const historyPending = !atLatest && (!history || history.chamber !== view);
 
   const plottable = useMemo(() => {
     if (atLatest) return current.plottable;
@@ -112,7 +141,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   }, [atLatest, historyPending, current.plottable, history, congress]);
 
   const histMembers =
-    !atLatest && history?.chamber === chamber
+    !atLatest && history?.chamber === view
       ? (history.allByCongress[congress] ?? [])
       : [];
 
@@ -133,7 +162,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   // The selected state's delegation, per Congress — an overlay on the national
   // trend, not a replacement (a 1–3 member "party mean" isn't a real trend).
   const stateTrend = useMemo(() => {
-    if (!stateFilter || !history || history.chamber !== chamber) return [];
+    if (!stateFilter || !history || history.chamber !== view) return [];
     return history.congresses.map((c) => {
       const members = (history.allByCongress[c] ?? []).filter(
         (m) => m.state === stateFilter && m.dim1 != null,
@@ -151,7 +180,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
         rep: meanOf("rep"),
       };
     });
-  }, [stateFilter, history, chamber]);
+  }, [stateFilter, history, view]);
 
   const goToCongress = useCallback((c: number) => {
     setHistoryNeeded(true);
@@ -183,14 +212,15 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const mostLiberal = shown[0];
   const mostConservative = shown[shown.length - 1];
 
-  const noun = memberNoun(chamber);
-  const nounPlural = memberNoun(chamber, { plural: true });
-  const isHouse = chamber === "house";
-  const delegMode = isHouse ? "range" : "pair";
+  const noun = viewNoun(view);
+  const nounPlural = viewNoun(view, { plural: true });
+  const isSenate = view === "senate";
+  const delegMode = isSenate ? "pair" : "range";
   const overlayVisible = stateFilter != null;
   const smallSample =
     overlayVisible && stateMembers.length > 0 && stateMembers.length <= 3;
   const showCompass = !stateFilter && !historyPending;
+  const bodyLabel = view === "both" ? "Congress" : chamberLabel(view);
 
   return (
     <>
@@ -218,7 +248,10 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
             lede="Each dot is a member of Congress, positioned by how they vote."
             action={
               <div className="w-full sm:w-auto">
-                <SenatorSearch entries={search} noun={noun} />
+                <SenatorSearch
+                  entries={search}
+                  noun={view === "both" ? "member" : noun}
+                />
               </div>
             }
           >
@@ -227,14 +260,16 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
                 <span className="font-medium text-ink">
                   {stateName(stateFilter)} · {stateMembers.length}{" "}
                   {stateMembers.length === 1 ? noun : nounPlural} in the{" "}
-                  {ordinal(congress)} {chamberLabel(chamber)}
+                  {ordinal(congress)} {bodyLabel}
                 </span>
                 <button
                   type="button"
                   onClick={() => setStateFilter(null)}
                   className="text-accent hover:underline"
                 >
-                  Show the whole chamber
+                  {view === "both"
+                    ? "Show the whole Congress"
+                    : "Show the whole chamber"}
                 </button>
               </div>
             )}
@@ -243,7 +278,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
               <div className="grid h-[300px] place-items-center text-[0.85rem] text-ink-faint">
                 {loading ? "Loading history…" : "Scrubbing loads the full history"}
               </div>
-            ) : stateFilter && isHouse ? (
+            ) : stateFilter && !isSenate ? (
               <BeeswarmChart
                 members={stateMembers}
                 highlightId={hovered?.bioguideId}
@@ -291,7 +326,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
               >
                 {(
                   [
-                    ["gap", isHouse ? "Widest spread" : "Most divided"],
+                    ["gap", isSenate ? "Most divided" : "Widest spread"],
                     ["az", "A–Z"],
                   ] as const
                 ).map(([mode, text]) => (
@@ -336,8 +371,8 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
           {overlayVisible && (
             <p className="mb-2 text-[0.76rem] text-ink-faint">
               Solid lines are {stateName(stateFilter as string)}&rsquo;s{" "}
-              {chamberLabel(chamber)} delegation; the dotted lines behind them are
-              the national mean.
+              {view === "both" ? "" : `${chamberLabel(view)} `}delegation; the
+              dotted lines behind them are the national mean.
               {smallSample &&
                 ` It's just ${stateMembers.length} ${
                   stateMembers.length === 1 ? noun : nounPlural
@@ -373,12 +408,14 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
         open={tableOpen}
         congress={congress}
         senateMembers={
-          atLatest ? senate.all : chamber === "senate" ? histMembers : []
+          atLatest
+            ? senate.all
+            : histMembers.filter((m) => m.chamber === "senate")
         }
         houseMembers={
-          atLatest ? house.all : chamber === "house" ? histMembers : []
+          atLatest ? house.all : histMembers.filter((m) => m.chamber === "house")
         }
-        activeChamber={chamber}
+        activeView={view}
         stateFilter={stateFilter}
         onClose={() => setTableOpen(false)}
       />

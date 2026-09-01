@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import {
+  getBothTrend,
   getChamberCurrent,
   getMemberSearchIndex,
 } from "@/lib/congress-data";
@@ -21,11 +22,17 @@ export const metadata: Metadata = {
 export default function Home() {
   const senate = getChamberCurrent("senate");
   const house = getChamberCurrent("house");
+  const bothTrend = getBothTrend();
   const search = getMemberSearchIndex();
 
   return (
     <Suspense fallback={<div className="min-h-screen" />}>
-      <SenateExplorer senate={senate} house={house} search={search} />
+      <SenateExplorer
+        senate={senate}
+        house={house}
+        bothTrend={bothTrend}
+        search={search}
+      />
     </Suspense>
   );
 }

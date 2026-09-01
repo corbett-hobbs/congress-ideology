@@ -2,22 +2,29 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { isChamber, type Chamber } from "./chamber";
-import type { ChamberHistory } from "./congress-types";
+import { isChamber, isChamberView, type Chamber, type ChamberView } from "./chamber";
+import type { ChamberHistory, ChamberMember } from "./congress-types";
 
 /**
- * The active chamber and state filter live in the URL (`?chamber=house&state=CA`)
- * so a view is shareable and survives a refresh. Absent `chamber` = Senate.
+ * The explorer's chamber view and state filter live in the URL
+ * (`?chamber=house&state=CA`) so a view is shareable and survives a refresh.
+ * Absent `chamber` = the blended "both" view (the default).
  */
 
+/** The active chamber for a member profile page (from the URL path). */
 export function useChamber(): Chamber {
   const params = useSearchParams();
   const pathname = usePathname();
   const raw = params.get("chamber");
   if (isChamber(raw)) return raw;
-  // On a profile page the chamber is in the path, not the query string.
   if (pathname.startsWith("/congress/house")) return "house";
   return "senate";
+}
+
+/** The explorer's chamber view — "both" unless the URL says otherwise. */
+export function useChamberView(): ChamberView {
+  const raw = useSearchParams().get("chamber");
+  return isChamberView(raw) ? raw : "both";
 }
 
 export function useStateFilter(): string | null {
@@ -25,26 +32,25 @@ export function useStateFilter(): string | null {
 }
 
 interface ExplorerUrl {
-  chamber: Chamber;
+  view: ChamberView;
   stateFilter: string | null;
-  setChamber: (c: Chamber) => void;
+  setView: (v: ChamberView) => void;
   setStateFilter: (s: string | null) => void;
-  /** Absolute path to the explorer for a given chamber/state, e.g. for links. */
-  explorerHref: (opts: { chamber?: Chamber; state?: string | null }) => string;
+  explorerHref: (opts: { view?: ChamberView; state?: string | null }) => string;
 }
 
 export function useExplorerUrl(): ExplorerUrl {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const chamber = useChamber();
+  const view = useChamberView();
   const stateFilter = useStateFilter();
 
   const buildQuery = useCallback(
-    (next: { chamber?: Chamber; state?: string | null }) => {
+    (next: { view?: ChamberView; state?: string | null }) => {
       const sp = new URLSearchParams(params.toString());
-      const c = next.chamber ?? chamber;
-      if (c === "house") sp.set("chamber", "house");
+      const v = next.view ?? view;
+      if (v === "senate" || v === "house") sp.set("chamber", v);
       else sp.delete("chamber");
 
       const s = next.state === undefined ? stateFilter : next.state;
@@ -54,19 +60,19 @@ export function useExplorerUrl(): ExplorerUrl {
       const q = sp.toString();
       return q ? `?${q}` : "";
     },
-    [params, chamber, stateFilter],
+    [params, view, stateFilter],
   );
 
   const explorerHref = useCallback(
-    (opts: { chamber?: Chamber; state?: string | null }) => {
+    (opts: { view?: ChamberView; state?: string | null }) => {
       const sp = new URLSearchParams();
-      const c = opts.chamber ?? chamber;
-      if (c === "house") sp.set("chamber", "house");
+      const v = opts.view ?? view;
+      if (v === "senate" || v === "house") sp.set("chamber", v);
       if (opts.state) sp.set("state", opts.state);
       const q = sp.toString();
       return `/${q ? `?${q}` : ""}`;
     },
-    [chamber],
+    [view],
   );
 
   const replace = useCallback(
@@ -79,17 +85,12 @@ export function useExplorerUrl(): ExplorerUrl {
   const onExplorer = pathname === "/";
 
   return {
-    chamber,
+    view,
     stateFilter,
-    // On the explorer, flip the URL in place. Elsewhere (a profile page), the
-    // switcher navigates back to the explorer in that chamber.
-    setChamber: (c) =>
+    setView: (v) =>
       onExplorer
-        ? replace(buildQuery({ chamber: c }))
-        : router.push(explorerHref({ chamber: c })),
-    // Same rule as setChamber: in place on the explorer, else navigate there
-    // (preserving the current chamber) since a profile page has no filtered
-    // view of its own to apply the state to.
+        ? replace(buildQuery({ view: v }))
+        : router.push(explorerHref({ view: v })),
     setStateFilter: (s) =>
       onExplorer
         ? replace(buildQuery({ state: s }))
@@ -98,37 +99,68 @@ export function useExplorerUrl(): ExplorerUrl {
   };
 }
 
-const historyCache = new Map<Chamber, ChamberHistory>();
+// --- lazy history --------------------------------------------------------
+
+const rawCache = new Map<Chamber, ChamberHistory>();
+const viewCache = new Map<ChamberView, ChamberHistory>();
+
+async function fetchChamberHistory(chamber: Chamber): Promise<ChamberHistory | null> {
+  const cached = rawCache.get(chamber);
+  if (cached) return cached;
+  try {
+    const r = await fetch(`/data/${chamber}`);
+    if (!r.ok) return null;
+    const h = (await r.json()) as ChamberHistory;
+    rawCache.set(chamber, h);
+    return h;
+  } catch {
+    return null;
+  }
+}
+
+function mergeHistories(a: ChamberHistory, b: ChamberHistory): ChamberHistory {
+  const congresses = [
+    ...new Set([...a.congresses, ...b.congresses]),
+  ].sort((x, y) => x - y);
+  const allByCongress: Record<number, ChamberMember[]> = {};
+  for (const c of congresses) {
+    allByCongress[c] = [
+      ...(a.allByCongress[c] ?? []),
+      ...(b.allByCongress[c] ?? []),
+    ];
+  }
+  return { chamber: "both", congresses, allByCongress };
+}
 
 /**
- * Lazily fetch the full scrub-through-time history for a chamber (the
- * `/data/{chamber}` static asset). `enabled` gates the request — the homepage
- * only needs it once the user scrubs off the current Congress or hits play.
- * Cached across chamber switches and component remounts.
+ * Lazily fetch the full scrub-through-time history for a view. Single chambers
+ * pull `/data/{chamber}`; "both" pulls both and merges them. `enabled` gates
+ * the request. Cached across view switches and remounts.
  */
 export function useChamberHistory(
-  chamber: Chamber,
+  view: ChamberView,
   enabled: boolean,
 ): { history: ChamberHistory | null; loading: boolean } {
   const [, force] = useState(0);
-  const cached = historyCache.get(chamber) ?? null;
+  const cached = viewCache.get(view) ?? null;
 
   useEffect(() => {
-    if (!enabled || historyCache.has(chamber)) return;
+    if (!enabled || viewCache.has(view)) return;
     let cancelled = false;
-    fetch(`/data/${chamber}`)
-      .then((r) => (r.ok ? (r.json() as Promise<ChamberHistory>) : null))
-      .then((h) => {
-        if (h && !cancelled) {
-          historyCache.set(chamber, h);
-          force((n) => n + 1);
-        }
-      })
-      .catch(() => {});
+    const chambers: Chamber[] = view === "both" ? ["house", "senate"] : [view];
+    Promise.all(chambers.map(fetchChamberHistory)).then((results) => {
+      if (cancelled || results.some((r) => !r)) return;
+      const merged =
+        view === "both"
+          ? mergeHistories(results[0] as ChamberHistory, results[1] as ChamberHistory)
+          : (results[0] as ChamberHistory);
+      viewCache.set(view, merged);
+      force((n) => n + 1);
+    });
     return () => {
       cancelled = true;
     };
-  }, [chamber, enabled]);
+  }, [view, enabled]);
 
   return { history: cached, loading: enabled && !cached };
 }

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { mean } from "d3-array";
 import type { IdeologyScore, Legislator, Term } from "./entities";
-import { CHAMBERS, type Chamber } from "./chamber";
+import { CHAMBERS, type Chamber, type ChamberView } from "./chamber";
 import { stateName as stateNameOf } from "./states";
 import {
   congressStartYear,
@@ -158,6 +158,33 @@ function buildFullChamber(chamber: Chamber): FullChamber {
   return full;
 }
 
+/** Party means for each Congress across the blended House + Senate set. */
+export function getBothTrend(): PartyMeanPoint[] {
+  const h = buildFullChamber("house");
+  const s = buildFullChamber("senate");
+  const congresses = [
+    ...new Set([...h.congresses, ...s.congresses]),
+  ].sort((a, b) => a - b);
+  return congresses.map((congress) => {
+    const scored = [
+      ...(h.byCongress[congress] ?? []),
+      ...(s.byCongress[congress] ?? []),
+    ];
+    const meanOf = (group: "dem" | "rep") => {
+      const vals = scored
+        .filter((m) => m.group === group)
+        .map((m) => m.dim1 as number);
+      return vals.length ? (mean(vals) ?? null) : null;
+    };
+    return {
+      congress,
+      year: congressStartYear(congress),
+      dem: meanOf("dem"),
+      rep: meanOf("rep"),
+    };
+  });
+}
+
 /** Small: current-Congress members + full-history party means for one chamber. */
 export function getChamberCurrent(chamber: Chamber): ChamberCurrent {
   const f = buildFullChamber(chamber);
@@ -168,6 +195,34 @@ export function getChamberCurrent(chamber: Chamber): ChamberCurrent {
     all: f.allByCongress[f.latestCongress] ?? [],
     plottable: f.byCongress[f.latestCongress] ?? [],
     trend: f.trend,
+  };
+}
+
+/**
+ * Like `getChamberCurrent`, but `"both"` blends House + Senate into one set:
+ * every member combined, no chamber distinction (colour still encodes party
+ * only), and the trend recomputed across the combined set — two party lines,
+ * not four.
+ */
+export function getViewCurrent(view: ChamberView): ChamberCurrent {
+  if (view !== "both") return getChamberCurrent(view);
+
+  const h = buildFullChamber("house");
+  const s = buildFullChamber("senate");
+  const latest = Math.max(h.latestCongress, s.latestCongress);
+  return {
+    chamber: "both",
+    latestCongress: latest,
+    minCongress: Math.min(h.congresses[0], s.congresses[0]),
+    all: [
+      ...(h.allByCongress[latest] ?? []),
+      ...(s.allByCongress[latest] ?? []),
+    ],
+    plottable: [
+      ...(h.byCongress[latest] ?? []),
+      ...(s.byCongress[latest] ?? []),
+    ].sort((a, b) => (a.dim1 as number) - (b.dim1 as number)),
+    trend: getBothTrend(),
   };
 }
 

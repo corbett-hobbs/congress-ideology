@@ -180,7 +180,7 @@ export function DelegationChart({
         margin={MARGIN}
         ariaLabel={
           mode === "range"
-            ? "Range chart of each state's House delegation on dimension 1"
+            ? "Range chart of each state's delegation on dimension 1"
             : "Dumbbell chart of each state's two senators by dimension 1"
         }
       >

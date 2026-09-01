@@ -3,18 +3,21 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { ChamberMember } from "@/lib/congress-types";
-import type { Chamber } from "@/lib/chamber";
+import type { Chamber, ChamberView } from "@/lib/chamber";
 import { memberPath } from "@/lib/member-url";
 import { fmt3, GROUP_VAR, ordinal, partyLabel, seatLabel } from "./format";
 
 type ChamberFilter = "all" | Chamber;
+
+const filterForView = (v: ChamberView): ChamberFilter => (v === "both" ? "all" : v);
 
 interface SenateTableModalProps {
   open: boolean;
   congress: number;
   senateMembers: ChamberMember[];
   houseMembers: ChamberMember[];
-  activeChamber: Chamber;
+  /** The explorer's current view — sets the table's default chamber filter. */
+  activeView: ChamberView;
   /** When set, only that state's rows are shown. */
   stateFilter: string | null;
   onClose: () => void;
@@ -25,19 +28,19 @@ export function SenateTableModal({
   congress,
   senateMembers,
   houseMembers,
-  activeChamber,
+  activeView,
   stateFilter,
   onClose,
 }: SenateTableModalProps) {
   const [chamberFilter, setChamberFilter] = useState<ChamberFilter>(
-    activeChamber,
+    filterForView(activeView),
   );
 
-  // Re-sync the chamber filter to the page's chamber each time the modal opens.
+  // Re-sync the chamber filter to the page's view each time the modal opens.
   const [wasOpen, setWasOpen] = useState(open);
   if (open !== wasOpen) {
     setWasOpen(open);
-    if (open) setChamberFilter(activeChamber);
+    if (open) setChamberFilter(filterForView(activeView));
   }
 
   useEffect(() => {
