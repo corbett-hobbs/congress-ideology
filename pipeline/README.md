@@ -20,16 +20,30 @@ silently. See `.github/workflows/voteview-freshness.yml` for the automated
 
 ## Stages
 
-| Stage       | Command                  | Status (session 1)                         |
-| ----------- | ------------------------ | ------------------------------------------ |
-| fetch       | `pnpm fetch`             | implemented — Voteview + congress-legislators |
-| validate    | `pnpm validate`          | minimal Zod stubs — real schemas are later |
-| transform   | `pnpm transform`         | stub — proves the pipeline runs end to end |
+| Stage     | Command          | What it does                                                        |
+| --------- | ---------------- | ------------------------------------------------------------------ |
+| fetch     | `pnpm fetch:all` | download Voteview + congress-legislators into `raw/`               |
+| validate  | `pnpm validate`  | schema-check `raw/`: missing fields, bad numbers, duplicate keys   |
+| transform | `pnpm transform` | `raw/` → `id_crosswalk`, `legislators`, `terms`, `ideology_scores` in `output/` + `_report.json` |
 
-`pnpm pipeline` runs all three in order.
+- `pnpm pipeline` runs all three in order (fetches from upstream).
+- `pnpm pipeline:check` runs validate + transform on the committed `raw/` and
+  fails if `output/` would change — this is what CI runs.
+- Each fetch script is runnable on its own (`pnpm fetch:voteview`,
+  `pnpm fetch:legislators`) and overwrites the files in `raw/`.
 
-Each fetch script is runnable on its own (`pnpm fetch:voteview`,
-`pnpm fetch:legislators`) and simply overwrites the files in `raw/`.
+## Output
+
+| File                   | Grain                                        |
+| ---------------------- | -------------------------------------------- |
+| `id_crosswalk.json`    | one row per `icpsr`                           |
+| `legislators.json`     | one row per `bioguide_id`                     |
+| `terms.json`           | one row per (bioguide_id, congress, chamber)  |
+| `ideology_scores.json` | one row per (bioguide_id, congress, chamber)  |
+| `_report.json`         | run summary and sanity numbers                |
+
+See `docs/DATA_CONVENTIONS.md` §2 for the full contract; schemas are in
+`lib/entities.ts`.
 
 ## Conventions
 

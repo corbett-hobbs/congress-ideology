@@ -45,29 +45,48 @@ historical file — normalize to "one or more `icpsr` per `bioguide_id`".
 Non-legislator Voteview rows (`chamber == "President"`) are filtered out before
 the crosswalk runs; this project is about members of Congress.
 
+**As built (Session 2):** `id_crosswalk.json` is congress-legislators' mapping
+(12,298 icpsr) **augmented** with ~332 pairs taken from Voteview's own
+`icpsr`/`bioguide_id` columns, for members congress-legislators has but hasn't
+recorded an `icpsr` for. Every augmented pair points at a `bioguide_id` that
+does exist in congress-legislators. Each entry carries a `source` field
+(`congress-legislators` | `voteview`). 3 Voteview member rows resolve to no
+`bioguide_id` in either source and are allowlisted in
+`pipeline/transform/scores.ts` (`KNOWN_UNRESOLVABLE`) with a reason; a *new*
+unresolvable row is fatal.
+
 ---
 
-## 2. Entity model (planned — not built yet)
+## 2. Entity model
 
 The source layer in `pipeline/output/` is **normalized**: one fact lives in one
 place. Page-shaped data is denormalized by joining these entities **at build
-time**, never stored pre-joined.
+time**, never stored pre-joined. `congress_number` (e.g. `119`) is the
+canonical time axis, not calendar year. Each file is a JSON array, one row per
+line; every row is validated against its `lib/entities.ts` schema before it is
+written.
 
-| Entity                | Grain                              | Key(s)                                             | Notes |
-| --------------------- | ---------------------------------- | ------------------------------------------------- | ----- |
-| **Legislator**        | one row per person                 | `bioguide_id`                                      | Stable identity: name, birth/death, gender, links. Nothing that varies by Congress. |
-| **Term**              | one row per legislator × Congress  | `bioguide_id` + `congress`                         | `chamber`, `state`, `party`, `district` (House) or `senate_class` (Senate). The unit of "who served when." |
-| **FinancialDisclosure** | one row per legislator × year    | `bioguide_id` + `year`                             | Annual disclosure summary. |
-| **CommitteeMembership** | one row per legislator × committee × Congress | `bioguide_id` + `committee_id` + `congress` | Includes role (chair, ranking member, member). |
-| **Committee**         | one row per committee              | `committee_id`                                     | Name, chamber, parent (for subcommittees). |
-| **IssueScore**        | one row per legislator × Congress × metric | `bioguide_id` + `congress` + `metric`     | DW-NOMINATE dimensions and any future interest-group scores. See §3. |
+### Built (Session 2)
 
-`congress` (the Congress number, e.g. `119`) is the canonical time axis, not
-calendar year. Convert years → Congress at the edges.
+| File                  | Grain                                       | Key                                              | Notes |
+| --------------------- | ------------------------------------------- | ------------------------------------------------ | ----- |
+| `id_crosswalk.json`   | one row per `icpsr`                          | `icpsr`                                          | `icpsr → bioguide_id` + `source`. See §1. |
+| `legislators.json`    | one row per person                           | `bioguide_id`                                    | Stable identity: `name.*`, `birth_year?`, `gender`. Nothing that varies by Congress. Source: congress-legislators. |
+| `terms.json`          | one row per (legislator, Congress, chamber)  | `bioguide_id` + `congress_number` + `chamber`    | `state`, `district` (House; `null` for at-large/delegate/Senate), `party`, `caucus`, `party_affiliations?`. Source: congress-legislators term records, expanded per Congress (`pipeline/transform/congress.ts`). See §3a. |
+| `ideology_scores.json`| one row per (legislator, Congress, chamber)  | `bioguide_id` + `congress_number` + `chamber`    | The four DW-NOMINATE coordinates, wide, nullable. Source: Voteview. `chamber` is in the grain so a member who served both chambers in one Congress keeps both per-Congress (`nokken_poole`) scores. See §3. |
 
-When these get built (Session 2+), each is a separate JSON file (or directory of
-files) under `pipeline/output/`, and each row validates against a Zod schema
-before it is written.
+Term records don't carry a Congress number — they're date ranges — so one
+Senate term record expands to ~3 `terms.json` rows. Terms of sitting members
+that run past the latest Congress in the Voteview data are clamped to it.
+
+### Planned — schema in `lib/types.ts`, no data source integrated yet
+
+| Entity                  | Grain                                          | Notes |
+| ----------------------- | ---------------------------------------------- | ----- |
+| **FinancialDisclosure** | one row per legislator × year                  | Source undecided (OpenSecrets, House Clerk). |
+| **Committee**           | one row per committee                          | Name, chamber, parent. |
+| **CommitteeMembership** | one row per legislator × committee × Congress  | Includes role. |
+| **IssueScore**          | one row per legislator × Congress × metric     | *Melted* format reserved for future interest-group scores — **not** where DW-NOMINATE lives (that's `ideology_scores.json`, wide). |
 
 ---
 
@@ -87,12 +106,45 @@ as interchangeable.
 - The static `nominate_*` score is the DW-NOMINATE constant-space estimate.
   `nokken_poole_*` is the per-period ("Nokken–Poole") estimate.
 - `nokken_poole_*` is **empty for `President` rows** and can be sparse for
-  members with very few votes in a Congress. Handle missing values explicitly;
-  do not coerce to `0` (which is the chamber center, a meaningful value).
-- Store both in `IssueScore` rows with distinct `metric` values
-  (e.g. `nominate_dim1`, `nokken_poole_dim1`). The static one is still stored
-  per-Congress for a uniform grain; consumers that want "career score" read any
-  one row.
+  members with very few votes in a Congress. Missing values are `null` in
+  `ideology_scores.json` — never `0` (which is the chamber center, a meaningful
+  value).
+- Both families are stored **wide** in `ideology_scores.json` (columns
+  `nominate_dim1/2`, `nokken_poole_dim1/2`), one row per (legislator, Congress,
+  chamber). The static `nominate_*` value repeats across a member's rows — that
+  is deliberate: the join key for combining scores with terms is
+  `congress_number`, and repeating keeps "one fact, one place" honest.
+
+---
+
+## 3a. `party` vs `caucus`
+
+congress-legislators distinguishes a member's **registration** (`party`, e.g.
+`Independent`) from the **conference they organize with** (`caucus`, e.g.
+`Democrat`) — Sanders, King, post-2022 Sinema. Both are preserved separately in
+`terms.json`:
+
+- `caucus` is what group/color features should use by default — it reflects how
+  the chamber actually functions (committee ratios, leadership).
+- `party` stays available for any feature that shows `Independent` as its own
+  category rather than folding it into D/R.
+- When the source doesn't distinguish, `caucus` defaults to `party`.
+- `party` is `null` only for a few pre-1820 terms with no recorded party.
+
+**Mid-Congress switches.** When a member changed affiliation during a Congress
+(Van Drew, Jeffords, Thurmond's 1964 switch mid-Senate-term), that row's
+top-level `party`/`caucus` is the affiliation **in effect at the start of that
+Congress**, and the full sequence — clipped to that Congress — is carried in
+`party_affiliations: [{start, end, party, caucus?}]`. A consumer wanting the
+end-of-Congress party reads `party_affiliations.at(-1)`. Note this differs from
+congress-legislators' own convention, where a term's top-level `party` is the
+*ending* affiliation.
+
+**Terms without a score.** ~1.6% of `terms.json` rows have no matching
+`ideology_scores.json` row: pre-1901 (Voteview's uneven early coverage),
+non-voting delegates (never scored — DC, PR, territories, pre-statehood
+AK/HI/NM/…), and members who served too little of a Congress to be scored. The
+`_report.json` breaks this down each run.
 
 ---
 
