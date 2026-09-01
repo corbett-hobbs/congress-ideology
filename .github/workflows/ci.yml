@@ -29,4 +29,11 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test
+
+      # Re-run validate + transform on the committed raw snapshots and fail if
+      # the output is stale or validation trips. A bad data or transform change
+      # can't merge silently. (Re-fetching from upstream is the weekly
+      # voteview-freshness job's role, not CI's — CI must stay deterministic.)
+      - run: pnpm pipeline:check
+
       - run: pnpm build

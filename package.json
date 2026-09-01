@@ -16,7 +16,8 @@
     "fetch:legislators": "tsx pipeline/fetch/legislators.ts",
     "validate": "tsx pipeline/validate/validate.ts",
     "transform": "tsx pipeline/transform/index.ts",
-    "pipeline": "pnpm fetch:all && pnpm validate && pnpm transform"
+    "pipeline": "pnpm fetch:all && pnpm validate && pnpm transform",
+    "pipeline:check": "pnpm validate && pnpm transform && git diff --exit-code --stat -- pipeline/output"
   },
   "engines": {
     "node": ">=20.9"
