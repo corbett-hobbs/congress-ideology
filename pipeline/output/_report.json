@@ -1,0 +1,135 @@
+{
+  "sources": [
+    {
+      "path": "pipeline/raw/voteview/HSall_members.csv",
+      "bytes": 6201247,
+      "sha256": "d086a15ff06499e11afe759d957af7c8e7e655c7fc14d40907bfe416fb61f07d"
+    },
+    {
+      "path": "pipeline/raw/voteview/HSall_parties.csv",
+      "bytes": 59805,
+      "sha256": "4f7dc5ccf4eb0381d356f6c0b7304acf4691858c3d3b0a726156691f84dca2ff"
+    },
+    {
+      "path": "pipeline/raw/congress-legislators/legislators-current.yaml",
+      "bytes": 1079984,
+      "sha256": "a4fde6aa9a67b210ea05b8671d88be0c40f5fe2162ed0c502d568294189429bb"
+    },
+    {
+      "path": "pipeline/raw/congress-legislators/legislators-historical.yaml",
+      "bytes": 8997407,
+      "sha256": "9641615f336b3113d6f89152e3441128cbdc3f61ccf87c65da3a015076c78c91"
+    }
+  ],
+  "capCongress": 119,
+  "report": {
+    "legislators": {
+      "total": 12768,
+      "withBirthYear": 12226
+    },
+    "crosswalk": {
+      "entries": 12630,
+      "fromCongressLegislators": 12298,
+      "fromVoteview": 332,
+      "conflicts": 0,
+      "voteviewIcpsrsUnresolvable": 3
+    },
+    "terms": {
+      "total": 51586,
+      "byChamber": {
+        "house": 41548,
+        "senate": 10038
+      },
+      "congressRange": [
+        1,
+        119
+      ],
+      "collisionsMerged": 9,
+      "missingParty": 462
+    },
+    "ideologyScores": {
+      "total": 50930,
+      "resolution": {
+        "agree": 50930,
+        "crosswalk": 0,
+        "voteview": 0
+      },
+      "mismatches": 0,
+      "unresolvableRowsDropped": 3
+    },
+    "join": {
+      "termsWithScore": 50752,
+      "termsMissingScore": 834,
+      "termsMissingScoreReasons": {
+        "before1901": 439,
+        "neverScoredMember": 188,
+        "briefService": 207
+      },
+      "termsMissingScoreSamples": [
+        "Wendell Anderson [A000202] C94 senate MN",
+        "Robert Andrews [A000210] C101 house NJ",
+        "Raymond Baldwin [B000095] C79 senate CT",
+        "Cass Ballenger [B000104] C99 house NC",
+        "Edward Bartlett [B000201] C79 house AK",
+        "Edward Bartlett [B000201] C80 house AK",
+        "Edward Bartlett [B000201] C81 house AK",
+        "Edward Bartlett [B000201] C82 house AK",
+        "Edward Bartlett [B000201] C83 house AK",
+        "Edward Bartlett [B000201] C84 house AK",
+        "Edward Bartlett [B000201] C85 house AK",
+        "Ross Bass [B000223] C88 senate TN",
+        "Max Baucus [B000243] C95 senate MT",
+        "George Bender [B000356] C83 senate OH",
+        "Lloyd Bentsen [B000401] C80 house TX",
+        "Lloyd Bentsen [B000401] C103 senate TX",
+        "Victor Berger [B000407] C66 house WI",
+        "Fred Blackmon [B000514] C67 house AL",
+        "Rudolph Boschwitz [B000647] C95 senate MN",
+        "Charles Boutelle [B000673] C57 house ME",
+        "Frank Bowman [B000704] C73 house WV",
+        "Joseph Broughton [B000894] C80 senate NC",
+        "Samuel Brownback [B000953] C104 senate KS",
+        "Clarence Burton [B001148] C80 house VA",
+        "Prescott Bush [B001167] C82 senate CT",
+        "Manley Butler [B001182] C92 house VA",
+        "Madeleine Bordallo [B001245] C108 house GU",
+        "Madeleine Bordallo [B001245] C109 house GU",
+        "Madeleine Bordallo [B001245] C112 house GU",
+        "Madeleine Bordallo [B001245] C113 house GU",
+        "Madeleine Bordallo [B001245] C114 house GU",
+        "Madeleine Bordallo [B001245] C115 house GU",
+        "Harry Cain [C000021] C79 senate WA",
+        "Ralph Cameron [C000066] C61 house AZ",
+        "Ralph Cameron [C000066] C62 house AZ",
+        "Charles Carlin [C000151] C66 house VA",
+        "John Chafee [C000269] C94 senate RI",
+        "Donna Christensen [C000380] C105 house VI",
+        "Donna Christensen [C000380] C106 house VI",
+        "Donna Christensen [C000380] C107 house VI"
+      ],
+      "scoresWithoutTerm": 156
+    }
+  },
+  "knownUnresolvable": {
+    "10509": "George O. Chambers, 87th Congress — no bioguide in either source",
+    "15067": "John L. \"Jack\" Swigert, 98th Congress — elected Nov 1982, died before being sworn in",
+    "99999": "Voteview placeholder icpsr (\"POE, Washington\", 29th Congress)"
+  },
+  "droppedUnresolvableRows": [
+    {
+      "icpsr": 99999,
+      "bioname": "POE, Washington",
+      "congress": 29
+    },
+    {
+      "icpsr": 10509,
+      "bioname": "CHAMBERS, George O.",
+      "congress": 87
+    },
+    {
+      "icpsr": 15067,
+      "bioname": "SWIGERT, John Leonard, Jr. (Jack)",
+      "congress": 98
+    }
+  ]
+}
