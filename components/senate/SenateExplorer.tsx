@@ -323,7 +323,7 @@ export function SenateExplorer({
 
           <Card
             title="How each state votes"
-            lede="How far apart each state's delegation sits, same Congress as the chart on the left."
+            lede="How far apart each state's delegation sits, same Congress as the Where members stand chart."
             action={
               <div
                 className="flex flex-none gap-[0.35rem]"
