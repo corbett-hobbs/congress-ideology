@@ -191,12 +191,9 @@ export function SenateExplorer({
   // Play steps through every Congress and stops at the most recent one.
   useEffect(() => {
     if (!playing || historyPending) return;
-    if (congress >= latestCongress) {
-      setPlaying(false);
-      return;
-    }
     const id = setTimeout(() => {
-      goToCongress(congress + 1);
+      if (congress >= latestCongress) setPlaying(false);
+      else goToCongress(congress + 1);
     }, PLAY_INTERVAL_MS);
     return () => clearTimeout(id);
   }, [playing, historyPending, congress, latestCongress, goToCongress]);
@@ -366,6 +363,7 @@ export function SenateExplorer({
                   members={plottable}
                   sort={delegSort}
                   mode={delegMode}
+                  selectedState={stateFilter}
                   onSelectState={(s) => setStateFilter(s)}
                 />
               )}
