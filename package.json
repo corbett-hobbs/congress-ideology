@@ -12,7 +12,9 @@
     "fetch:all": "pnpm fetch:voteview && pnpm fetch:legislators",
     "fetch:voteview": "tsx pipeline/fetch/voteview.ts",
     "fetch:legislators": "tsx pipeline/fetch/legislators.ts",
-    "validate": "tsx pipeline/validate/validate.ts"
+    "validate": "tsx pipeline/validate/validate.ts",
+    "transform": "tsx pipeline/transform/index.ts",
+    "pipeline": "pnpm fetch:all && pnpm validate && pnpm transform"
   },
   "engines": {
     "node": ">=20.9"
