@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import type { SenateMember } from "@/lib/senate-data";
+import { senatorPath } from "@/lib/senator-url";
 import { MemberTooltip } from "./MemberTooltip";
 import { GROUP_FILL_CLASS, stateName } from "./format";
 
@@ -65,25 +67,38 @@ export function buildDelegations(members: SenateMember[]): {
 
 interface DelegationChartProps {
   members: SenateMember[];
-  sort: DelegationSort;
+  sort?: DelegationSort;
+  /** Render only this state's row (profile pages). */
+  filterState?: string;
+  /** Enlarge this senator's dot and ring it. */
+  highlightId?: string;
 }
 
-export function DelegationChart({ members, sort }: DelegationChartProps) {
+export function DelegationChart({
+  members,
+  sort = "gap",
+  filterState,
+  highlightId,
+}: DelegationChartProps) {
+  const router = useRouter();
   const tip = useTooltip<SenateMember>();
 
   const { delegations } = useMemo(() => buildDelegations(members), [members]);
 
   const rows = useMemo(() => {
-    const copy = [...delegations];
+    let copy = [...delegations];
+    if (filterState) copy = copy.filter((d) => d.state === filterState);
     copy.sort(
       sort === "gap"
         ? (a, b) => b.gap - a.gap
         : (a, b) => stateName(a.state).localeCompare(stateName(b.state)),
     );
     return copy;
-  }, [delegations, sort]);
+  }, [delegations, sort, filterState]);
 
-  const height = MARGIN.top + rows.length * ROW_H + MARGIN.bottom;
+  // A single embedded row gets more height so the two dots and names read.
+  const rowH = filterState ? 52 : ROW_H;
+  const height = MARGIN.top + rows.length * rowH + MARGIN.bottom;
 
   return (
     <>
@@ -95,7 +110,7 @@ export function DelegationChart({ members, sort }: DelegationChartProps) {
       >
         {({ innerWidth }) => {
           const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);
-          const plotH = rows.length * ROW_H;
+          const plotH = rows.length * rowH;
 
           return (
             <>
@@ -110,7 +125,7 @@ export function DelegationChart({ members, sort }: DelegationChartProps) {
               />
 
               {rows.map((row, i) => {
-                const y = i * ROW_H + ROW_H / 2;
+                const y = i * rowH + rowH / 2;
                 const [a, b] = row.senators;
                 const xa = x(a.dim1 as number);
                 const xb = x(b.dim1 as number);
@@ -130,18 +145,36 @@ export function DelegationChart({ members, sort }: DelegationChartProps) {
                       y1={y}
                       y2={y}
                     />
-                    {row.senators.map((m) => (
-                      <circle
-                        key={m.bioguideId}
-                        className={`deleg-dot ${GROUP_FILL_CLASS[m.group]}`}
-                        cx={x(m.dim1 as number)}
-                        cy={y}
-                        r={5}
-                        onPointerEnter={(e) => tip.show(m, e)}
-                        onPointerMove={tip.move}
-                        onPointerLeave={tip.hide}
-                      />
-                    ))}
+                    {row.senators.map((m, si) => {
+                      const isHi = m.bioguideId === highlightId;
+                      const mx = x(m.dim1 as number);
+                      return (
+                        <g key={m.bioguideId}>
+                          {filterState && (
+                            <text
+                              className="deleg-gap-label"
+                              x={mx}
+                              y={si === 0 ? y - 12 : y + 20}
+                              textAnchor="middle"
+                              fill="var(--ink-muted)"
+                            >
+                              {m.lastName} {(m.dim1 as number).toFixed(2)}
+                            </text>
+                          )}
+                          <circle
+                            className={`deleg-dot ${GROUP_FILL_CLASS[m.group]}${isHi ? " is-highlighted" : ""}`}
+                            cx={mx}
+                            cy={y}
+                            r={isHi ? 7 : 5}
+                            style={{ cursor: "pointer" }}
+                            onPointerEnter={(e) => tip.show(m, e)}
+                            onPointerMove={tip.move}
+                            onPointerLeave={tip.hide}
+                            onClick={() => router.push(senatorPath(m))}
+                          />
+                        </g>
+                      );
+                    })}
                     <text
                       className="deleg-gap-label"
                       x={innerWidth + 14}

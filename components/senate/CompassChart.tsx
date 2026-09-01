@@ -11,16 +11,18 @@ import { GROUP_FILL_CLASS } from "./format";
 
 const W = 640;
 const H = 600;
-const MARGIN = { top: 20, right: 64, bottom: 30, left: 52 };
+const MARGIN = { top: 20, right: 64, bottom: 30, left: 58 };
 const TICKS = [-1, -0.5, 0, 0.5, 1];
 
 interface CompassChartProps {
   /** Plottable senators for the current Congress, sorted by dim1. */
   members: SenateMember[];
-  selectedId: string | null;
-  highlightedId: string | null;
-  onHover: (m: SenateMember | null) => void;
-  onSelect: (m: SenateMember) => void;
+  selectedId?: string | null;
+  highlightedId?: string | null;
+  onHover?: (m: SenateMember | null) => void;
+  onSelect?: (m: SenateMember) => void;
+  /** Fade every dot except the highlighted / selected one (profile pages). */
+  dimUnfocused?: boolean;
 }
 
 function zRank(m: SenateMember, selectedId: string | null, highlightedId: string | null) {
@@ -31,10 +33,11 @@ function zRank(m: SenateMember, selectedId: string | null, highlightedId: string
 
 export function CompassChart({
   members,
-  selectedId,
-  highlightedId,
+  selectedId = null,
+  highlightedId = null,
   onHover,
   onSelect,
+  dimUnfocused = false,
 }: CompassChartProps) {
   const tip = useTooltip<SenateMember>();
 
@@ -85,7 +88,7 @@ export function CompassChart({
               />
               <text
                 className="axis-caption"
-                transform={`translate(${-24},${innerHeight / 2}) rotate(-90)`}
+                transform={`translate(${-42},${innerHeight / 2}) rotate(-90)`}
                 textAnchor="middle"
               >
                 DIMENSION 2
@@ -94,6 +97,7 @@ export function CompassChart({
               {drawOrder.map((m) => {
                 const isHi = m.bioguideId === highlightedId;
                 const isSel = m.bioguideId === selectedId;
+                const faded = dimUnfocused && !isHi && !isSel;
                 return (
                   <circle
                     key={m.bioguideId}
@@ -101,16 +105,18 @@ export function CompassChart({
                     cy={y(m.dim2 as number)}
                     r={isHi ? 7.5 : isSel ? 6.5 : 4.6}
                     className={`dot ${GROUP_FILL_CLASS[m.group]}${isHi ? " is-highlighted" : ""}`}
+                    opacity={faded ? 0.28 : 1}
                     onPointerEnter={(e) => {
-                      onHover(m);
+                      onHover?.(m);
                       tip.show(m, e);
                     }}
                     onPointerMove={tip.move}
                     onPointerLeave={() => {
-                      onHover(null);
+                      onHover?.(null);
                       tip.hide();
                     }}
-                    onClick={() => onSelect(m)}
+                    onClick={onSelect ? () => onSelect(m) : undefined}
+                    style={onSelect ? { cursor: "pointer" } : undefined}
                   />
                 );
               })}
