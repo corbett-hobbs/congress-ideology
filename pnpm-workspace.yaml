@@ -1,3 +1,6 @@
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+  # esbuild (via tsx) works from its prebuilt platform package; its postinstall
+  # is only a sanity check and is safe to skip.
+  - esbuild

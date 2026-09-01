@@ -2,12 +2,16 @@
   "name": "congress-ideology",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "fetch:all": "pnpm fetch:voteview && pnpm fetch:legislators",
+    "fetch:voteview": "tsx pipeline/fetch/voteview.ts",
+    "fetch:legislators": "tsx pipeline/fetch/legislators.ts"
   },
   "engines": {
     "node": ">=20.9"
@@ -25,6 +29,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
   },
   "packageManager": "pnpm@10.34.5"
