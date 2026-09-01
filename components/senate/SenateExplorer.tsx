@@ -1,53 +1,63 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { useRouter } from "next/navigation";
 import { mean } from "d3-array";
 import type { ChamberCurrent, MemberSearchEntry } from "@/lib/congress-types";
 import { congressStartYear, plottableSorted } from "@/lib/congress-types";
-import { chamberFullName, chamberLabel, memberNoun } from "@/lib/chamber";
+import { chamberLabel, memberNoun } from "@/lib/chamber";
 import { memberPath } from "@/lib/member-url";
 import { stateName } from "@/lib/states";
 import { useChamberHistory, useExplorerUrl } from "@/lib/use-chamber";
-import { dim2Context } from "@/lib/dim2-context";
-import { CongressControls } from "./CongressControls";
+import { ExplorerToolbar } from "./ExplorerToolbar";
 import { CompassChart } from "./CompassChart";
+import { CompassPanel } from "./CompassPanel";
 import { BeeswarmChart } from "./BeeswarmChart";
 import { Dim2Footnote } from "./Dim2Footnote";
 import { Legend } from "./Legend";
-import { ReadingPanel } from "./ReadingPanel";
 import { TrendChart } from "./TrendChart";
-import { buildDelegations, DelegationChart, type DelegationSort } from "./DelegationChart";
+import { DelegationChart, type DelegationSort } from "./DelegationChart";
 import { SenatorSearch } from "./SenatorSearch";
 import { SenateTableModal } from "./SenateTableModal";
 import { SiteFooter } from "./SiteFooter";
 import { ordinal } from "./format";
 
-const PLAY_INTERVAL_MS = 260;
+const PLAY_INTERVAL_MS = 450;
 const PRELOAD_DELAY_MS = 1500;
 
-function Panel({
-  label,
+const INTRO =
+  "Political scientists Keith Poole and Howard Rosenthal built DW-NOMINATE to measure ideology from behavior. It looks at every yes-or-no vote a member has ever cast and finds the position that best explains their whole record, so members who vote alike land close together and members who vote oppositely land far apart. Each member ends up with two coordinates, plotted below as one dot — the horizontal position (dimension 1) is the familiar economic left–right spectrum and on its own explains most of how members differ; the vertical position (dimension 2) captures a secondary pattern whose meaning has shifted across history (see the note below the chart). Doing this for every Congress since 1789 turns the slider into a way to watch the chamber pull apart or come together over time, and picking a state shows whether its delegation votes as a bloc or splits down the middle.";
+
+function Card({
+  title,
+  lede,
   action,
+  className,
   children,
-  id,
 }: {
-  label: string;
+  title: string;
+  lede: string;
   action?: ReactNode;
+  className?: string;
   children: ReactNode;
-  id?: string;
 }) {
   return (
     <section
-      id={id}
-      className="scroll-mt-[7rem] rounded-[10px] border border-line bg-surface p-[1.1rem_1.25rem_1.25rem]"
+      className={`rounded-[10px] border border-line bg-surface p-[1.35rem_1.35rem_1.1rem] ${className ?? ""}`}
     >
-      <div className="flex flex-wrap items-baseline justify-between gap-4">
-        <p className="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-faint">
-          {label}
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <h2 className="font-serif text-[1.05rem] font-medium">{title}</h2>
         {action}
       </div>
+      <p className="mb-4 mt-1 text-[0.82rem] leading-[1.5] text-ink-muted">
+        {lede}
+      </p>
       {children}
     </section>
   );
@@ -71,9 +81,8 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const [delegSort, setDelegSort] = useState<DelegationSort>("gap");
   const [tableOpen, setTableOpen] = useState(false);
 
-  // The scrub-through-time payload loads on demand (it is ~1.3 MB for the House).
-  // A state filter also needs it immediately, for that state's trend overlay
-  // (which spans every Congress, not just the one currently shown).
+  // The scrub-through-time payload loads on demand (~1.3 MB for the House). A
+  // state filter needs it immediately for that state's per-Congress overlay.
   const [historyNeeded, setHistoryNeeded] = useState(false);
   const { history, loading } = useChamberHistory(
     chamber,
@@ -84,8 +93,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
     return () => clearTimeout(t);
   }, []);
 
-  // Reset to the current Congress whenever the chamber changes (adjust state
-  // during render — the pattern React recommends over a setState-in-effect).
+  // Reset to the current Congress whenever the chamber changes.
   const [prevChamber, setPrevChamber] = useState(chamber);
   if (prevChamber !== chamber) {
     setPrevChamber(chamber);
@@ -108,15 +116,22 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
       ? (history.allByCongress[congress] ?? [])
       : [];
 
+  const stateOptions = useMemo(
+    () =>
+      [...new Set(current.all.map((m) => m.state))].sort((a, b) =>
+        stateName(a).localeCompare(stateName(b)),
+      ),
+    [current.all],
+  );
+
   const stateMembers = useMemo(
-    () => (stateFilter ? plottable.filter((m) => m.state === stateFilter) : plottable),
+    () =>
+      stateFilter ? plottable.filter((m) => m.state === stateFilter) : plottable,
     [plottable, stateFilter],
   );
 
-  // The selected state's delegation, per Congress — an overlay on the
-  // national trend, not a replacement for it (a 1-3 member "party mean"
-  // isn't a meaningful trend on its own). Needs the full history regardless
-  // of which Congress is currently shown.
+  // The selected state's delegation, per Congress — an overlay on the national
+  // trend, not a replacement (a 1–3 member "party mean" isn't a real trend).
   const stateTrend = useMemo(() => {
     if (!stateFilter || !history || history.chamber !== chamber) return [];
     return history.congresses.map((c) => {
@@ -144,26 +159,19 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
     setHoveredId(null);
   }, []);
 
+  // Play steps through every Congress and loops back to the first.
   useEffect(() => {
-    if (!playing) return;
-    if (historyPending) return; // wait for history before advancing
+    if (!playing || historyPending) return;
     const id = setTimeout(() => {
-      if (congress >= latestCongress) setPlaying(false);
-      else goToCongress(congress + 1);
+      goToCongress(congress >= latestCongress ? minCongress : congress + 1);
     }, PLAY_INTERVAL_MS);
     return () => clearTimeout(id);
-  }, [playing, historyPending, congress, latestCongress, goToCongress]);
+  }, [playing, historyPending, congress, latestCongress, minCongress, goToCongress]);
 
   const togglePlay = useCallback(() => {
     setHistoryNeeded(true);
-    setPlaying((p) => {
-      if (!p && congress >= latestCongress) {
-        setCongress(minCongress);
-        setHoveredId(null);
-      }
-      return !p;
-    });
-  }, [congress, latestCongress, minCongress]);
+    setPlaying((p) => !p);
+  }, []);
 
   const stopAnd = useCallback((fn: () => void) => {
     setPlaying(false);
@@ -177,221 +185,201 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
 
   const noun = memberNoun(chamber);
   const nounPlural = memberNoun(chamber, { plural: true });
-  const congressLabel = `${ordinal(congress)} Congress`;
-  const spanYears = (latestCongress - minCongress) * 2 + 2;
   const isHouse = chamber === "house";
   const delegMode = isHouse ? "range" : "pair";
   const overlayVisible = stateFilter != null;
   const smallSample =
     overlayVisible && stateMembers.length > 0 && stateMembers.length <= 3;
-
-  const { summary } = useMemo(
-    () => buildDelegations(plottable, delegMode),
-    [plottable, delegMode],
-  );
+  const showCompass = !stateFilter && !historyPending;
 
   return (
-    <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-9">
-      <header className="max-w-[52rem]">
-        <p className="mb-2 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-accent">
-          DW‑NOMINATE · {chamberFullName(chamber)}, {ordinal(minCongress)}–
-          {ordinal(latestCongress)} Congress
-        </p>
-        <h1 className="mb-[0.6rem] text-balance font-serif text-[clamp(2.1rem,4.2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.01em]">
-          Congressional Ideology
-        </h1>
-        <p className="max-w-[42rem] text-pretty text-[1.02rem] leading-[1.55] text-ink-muted">
-          Use the toolbar up top to switch between the House and the Senate, or
-          to focus on a single state&rsquo;s delegation. Below, every{" "}
-          {noun}&rsquo;s roll-call votes are reduced to two coordinates —
-          economic left–right on one axis, a second cross-cutting dimension on
-          the other — and the slider scrubs through {spanYears} years of
-          Congresses to watch the chamber pull apart.
-        </p>
-      </header>
-
-      <CongressControls
+    <>
+      <ExplorerToolbar
+        states={stateOptions}
         congress={congress}
         min={minCongress}
         max={latestCongress}
-        latest={latestCongress}
         playing={playing}
         onCongressChange={(c) => stopAnd(() => goToCongress(c))}
         onTogglePlay={togglePlay}
-        onToday={() => stopAnd(() => goToCongress(latestCongress))}
-      >
-        <SenatorSearch entries={search} noun={noun} />
-      </CongressControls>
+      />
 
-      <section className="grid grid-cols-1 items-start gap-5 md:grid-cols-[minmax(0,1fr)_15.5rem]">
-        <div className="relative rounded-[10px] border border-line bg-surface p-[1.25rem_1.25rem_0.75rem]">
-          {stateFilter && (
-            <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.82rem]">
-              <span className="font-medium text-ink">
-                {stateName(stateFilter)} · {stateMembers.length}{" "}
-                {stateMembers.length === 1 ? noun : nounPlural}
-                {" in the "}
-                {ordinal(congress)} {chamberLabel(chamber)}
-              </span>
-              <button
-                type="button"
-                onClick={() => setStateFilter(null)}
-                className="text-accent hover:underline"
-              >
-                Show the whole chamber
-              </button>
-            </div>
-          )}
-
-          {historyPending ? (
-            <div className="grid h-[280px] place-items-center text-[0.85rem] text-ink-faint">
-              {loading ? "Loading history…" : "Scrubbing loads the full history"}
-            </div>
-          ) : stateFilter && isHouse ? (
-            <BeeswarmChart members={stateMembers} highlightId={hovered?.bioguideId} />
-          ) : stateFilter ? (
-            <DelegationChart members={plottable} filterState={stateFilter} mode="pair" />
-          ) : (
-            <CompassChart
-              members={plottable}
-              highlightedId={hoveredId}
-              onHover={(m) => m && setHoveredId(m.bioguideId)}
-              onSelect={(m) => router.push(memberPath(m))}
-              dim2NoteHint={dim2Context(congress).markerHint}
-            />
-          )}
-
-          <div className="flex items-center justify-between px-[0.1rem] pb-[0.9rem] pt-[0.15rem] font-mono text-[0.62rem] text-ink-faint sm:text-[0.68rem]">
-            <span>← more liberal</span>
-            <span className="hidden font-sans tracking-[0.03em] text-ink-muted sm:inline">
-              Dimension 1 · economic left–right
-            </span>
-            <span>more conservative →</span>
-          </div>
-          <Legend members={shown} />
-
-          {!stateFilter && !historyPending && (
-            <Dim2Footnote congress={congress} />
-          )}
+      <main className="mx-auto flex w-full max-w-[1120px] flex-col gap-5 px-4 pb-16 pt-7 sm:px-6">
+        <div>
+          <h1 className="mb-4 font-serif text-[clamp(1.7rem,3.6vw,2.35rem)] font-medium leading-[1.1] tracking-[-0.01em]">
+            How Does Congress Vote?
+          </h1>
+          <p className="text-[0.92rem] leading-[1.65] text-ink-muted">{INTRO}</p>
         </div>
 
-        <ReadingPanel
-          congressLabel={congressLabel}
-          seatsShown={shown.length}
-          mostLiberal={mostLiberal}
-          mostConservative={mostConservative}
-        />
-      </section>
-
-      <Panel
-        label={`${chamberLabel(chamber)} party means, dimension 1 · 1789–${1789 + (latestCongress - 1) * 2 + 2}`}
-      >
-        <p className="mb-2 mt-1 max-w-[44rem] text-[0.76rem] text-ink-faint">
-          Per-Congress means (nokken–poole), so real drift shows. Click to jump.
-          {overlayVisible &&
-            ` Solid lines are ${stateName(stateFilter as string)}'s ${chamberLabel(chamber)} delegation; the dotted lines behind them are the national mean.`}
-        </p>
-        {smallSample && (
-          <p className="mb-2 max-w-[44rem] text-[0.76rem] text-ink-faint italic">
-            {stateName(stateFilter as string)}&rsquo;s overlay reflects just{" "}
-            {stateMembers.length} {stateMembers.length === 1 ? noun : nounPlural}{" "}
-            — expect it to look noisier than the national lines, which average many more.
-          </p>
-        )}
-        <TrendChart
-          trend={current.trend}
-          minCongress={minCongress}
-          maxCongress={latestCongress}
-          congress={congress}
-          onScrub={(c) => stopAnd(() => goToCongress(c))}
-          stateOverlay={
-            overlayVisible && stateFilter
-              ? { trend: stateTrend, label: stateName(stateFilter) }
-              : null
-          }
-        />
-      </Panel>
-
-      <Panel
-        id="delegation"
-        label={
-          isHouse
-            ? "Delegation spread · each state's House members on dimension 1"
-            : "Delegation alignment · each state's two senators, dimension 1"
-        }
-        action={
-          <div
-            className="flex flex-none gap-[0.4rem]"
-            role="group"
-            aria-label="Sort delegations"
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.15fr_1fr]">
+          <Card
+            title="Where members stand"
+            lede="Each dot is a member of Congress, positioned by how they vote."
+            action={
+              <div className="w-full sm:w-auto">
+                <SenatorSearch entries={search} noun={noun} />
+              </div>
+            }
           >
-            {(
-              [
-                ["gap", isHouse ? "Widest spread" : "Most divided"],
-                ["az", "A–Z"],
-              ] as const
-            ).map(([mode, text]) => (
-              <button
-                key={mode}
-                type="button"
-                onClick={() => setDelegSort(mode)}
-                aria-pressed={delegSort === mode}
-                className={`rounded-md border px-[0.65rem] py-[0.32rem] text-[0.72rem] font-medium transition-colors ${
-                  delegSort === mode
-                    ? "border-accent bg-accent text-accent-ink"
-                    : "border-line-strong bg-surface-raised text-ink-muted hover:border-accent"
-                }`}
-              >
-                {text}
-              </button>
-            ))}
-          </div>
-        }
-      >
-        <p className="mb-[0.85rem] mt-[0.4rem] max-w-[44rem] text-[0.76rem] text-ink-faint">
-          {isHouse
-            ? `Each bar runs from a state's most-liberal to most-conservative House member in the ${ordinal(congress)} Congress; the right-hand count is the D/R split. Click a row for the full beeswarm.`
-            : `${summary.shown} of ${summary.totalStates} states show a full two-senator pairing in the ${ordinal(congress)} Congress${
-                summary.omitted > 0
-                  ? `; ${summary.omitted} omitted (a seat held by no one long enough to score)`
-                  : ""
-              }. Click a row to filter to that state.`}
-        </p>
-        {/* On a phone the whole list scrolls with the page — a scroll region
-            inside a scroll region is miserable on touch. Contained on desktop. */}
-        <div className="border-t border-line pt-[0.4rem] sm:max-h-[32rem] sm:overflow-y-auto">
-          {historyPending ? (
-            <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
-          ) : (
-            <DelegationChart
-              members={plottable}
-              sort={delegSort}
-              mode={delegMode}
-              onSelectState={(s) => setStateFilter(s)}
-            />
-          )}
-        </div>
-      </Panel>
+            {stateFilter && (
+              <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.82rem]">
+                <span className="font-medium text-ink">
+                  {stateName(stateFilter)} · {stateMembers.length}{" "}
+                  {stateMembers.length === 1 ? noun : nounPlural} in the{" "}
+                  {ordinal(congress)} {chamberLabel(chamber)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setStateFilter(null)}
+                  className="text-accent hover:underline"
+                >
+                  Show the whole chamber
+                </button>
+              </div>
+            )}
 
-      <SiteFooter>
-        <button
-          type="button"
-          onClick={() => setTableOpen(true)}
-          className="rounded-md border border-line-strong px-[0.85rem] py-[0.5rem] text-[0.8rem] font-medium text-accent hover:border-accent"
+            {historyPending ? (
+              <div className="grid h-[300px] place-items-center text-[0.85rem] text-ink-faint">
+                {loading ? "Loading history…" : "Scrubbing loads the full history"}
+              </div>
+            ) : stateFilter && isHouse ? (
+              <BeeswarmChart
+                members={stateMembers}
+                highlightId={hovered?.bioguideId}
+              />
+            ) : stateFilter ? (
+              <DelegationChart
+                members={plottable}
+                filterState={stateFilter}
+                mode="pair"
+              />
+            ) : (
+              <CompassPanel congress={congress}>
+                <CompassChart
+                  variant="explorer"
+                  members={plottable}
+                  highlightedId={hoveredId}
+                  onHover={(m) => m && setHoveredId(m.bioguideId)}
+                  onSelect={(m) => router.push(memberPath(m))}
+                />
+              </CompassPanel>
+            )}
+
+            <div className="mt-3">
+              <Legend members={shown} />
+            </div>
+
+            <p className="mt-2 text-[0.76rem] text-ink-muted">
+              Most liberal:{" "}
+              <span className="text-ink">{mostLiberal?.name ?? "—"}</span> ·
+              most conservative:{" "}
+              <span className="text-ink">{mostConservative?.name ?? "—"}</span>
+            </p>
+
+            {showCompass && <Dim2Footnote congress={congress} />}
+          </Card>
+
+          <Card
+            title="How each state votes"
+            lede="How far apart each state's delegation sits, same Congress as the chart on the left."
+            action={
+              <div
+                className="flex flex-none gap-[0.35rem]"
+                role="group"
+                aria-label="Sort states"
+              >
+                {(
+                  [
+                    ["gap", isHouse ? "Widest spread" : "Most divided"],
+                    ["az", "A–Z"],
+                  ] as const
+                ).map(([mode, text]) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setDelegSort(mode)}
+                    aria-pressed={delegSort === mode}
+                    className={`rounded-md border px-[0.55rem] py-[0.28rem] text-[0.7rem] font-medium transition-colors ${
+                      delegSort === mode
+                        ? "border-accent bg-accent text-accent-ink"
+                        : "border-line-strong bg-surface-raised text-ink-muted hover:border-accent"
+                    }`}
+                  >
+                    {text}
+                  </button>
+                ))}
+              </div>
+            }
+          >
+            <div className="border-t border-line pt-1 sm:max-h-[320px] sm:overflow-y-auto">
+              {historyPending ? (
+                <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
+              ) : (
+                <DelegationChart
+                  members={plottable}
+                  sort={delegSort}
+                  mode={delegMode}
+                  onSelectState={(s) => setStateFilter(s)}
+                />
+              )}
+            </div>
+          </Card>
+        </div>
+
+        <Card
+          title="How far apart are the parties?"
+          lede="Each party's average position on the economic left–right axis, every Congress since 1789. Click or drag the chart to jump to any point — it moves the same slider as everything above."
         >
-          View this Congress as a table
-        </button>
-      </SiteFooter>
+          {overlayVisible && (
+            <p className="mb-2 text-[0.76rem] text-ink-faint">
+              Solid lines are {stateName(stateFilter as string)}&rsquo;s{" "}
+              {chamberLabel(chamber)} delegation; the dotted lines behind them are
+              the national mean.
+              {smallSample &&
+                ` It's just ${stateMembers.length} ${
+                  stateMembers.length === 1 ? noun : nounPlural
+                } — expect it to look noisier than the national lines.`}
+            </p>
+          )}
+          <TrendChart
+            trend={current.trend}
+            minCongress={minCongress}
+            maxCongress={latestCongress}
+            congress={congress}
+            onScrub={(c) => stopAnd(() => goToCongress(c))}
+            stateOverlay={
+              overlayVisible && stateFilter
+                ? { trend: stateTrend, label: stateName(stateFilter) }
+                : null
+            }
+          />
+        </Card>
+
+        <SiteFooter>
+          <button
+            type="button"
+            onClick={() => setTableOpen(true)}
+            className="rounded-md border border-line-strong px-[0.85rem] py-[0.5rem] text-[0.8rem] font-medium text-accent hover:border-accent"
+          >
+            View this Congress as a table
+          </button>
+        </SiteFooter>
+      </main>
 
       <SenateTableModal
         open={tableOpen}
         congress={congress}
-        senateMembers={atLatest ? senate.all : chamber === "senate" ? histMembers : []}
-        houseMembers={atLatest ? house.all : chamber === "house" ? histMembers : []}
+        senateMembers={
+          atLatest ? senate.all : chamber === "senate" ? histMembers : []
+        }
+        houseMembers={
+          atLatest ? house.all : chamber === "house" ? histMembers : []
+        }
         activeChamber={chamber}
         stateFilter={stateFilter}
         onClose={() => setTableOpen(false)}
       />
-    </main>
+    </>
   );
 }

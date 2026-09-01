@@ -13,6 +13,8 @@ import { GROUP_FILL_CLASS } from "./format";
 const W = 640;
 const H = 600;
 const MARGIN = { top: 20, right: 64, bottom: 30, left: 58 };
+/** Explorer draws its own axis labels in HTML, so the SVG needs almost no gutter. */
+const EXPLORER_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
 const TICKS = [-1, -0.5, 0, 0.5, 1];
 
 interface CompassChartProps {
@@ -26,10 +28,16 @@ interface CompassChartProps {
   dimUnfocused?: boolean;
   /**
    * Tooltip for a small "i" marker beside the Dimension 2 axis label,
-   * pointing at the methodological note below the chart. Only the main
-   * explorer passes this — profile pages leave it off (see spec / session 8).
+   * pointing at the methodological note below the chart. Only profile pages
+   * pass this — the explorer renders its own HTML axis labels instead.
    */
   dim2NoteHint?: string;
+  /**
+   * "profile" (default) keeps the numeric tick labels and the in-SVG
+   * "DIMENSION 2" caption. "explorer" drops both — the explorer card draws
+   * word-based axis labels around the plot (see SenateExplorer / session 10).
+   */
+  variant?: "profile" | "explorer";
 }
 
 function zRank(m: ChamberMember, selectedId: string | null, highlightedId: string | null) {
@@ -46,20 +54,25 @@ export function CompassChart({
   onSelect,
   dimUnfocused = false,
   dim2NoteHint,
+  variant = "profile",
 }: CompassChartProps) {
   const tip = useTooltip<ChamberMember>();
+  const explorer = variant === "explorer";
 
   const chamber = members[0]?.chamber ?? "senate";
   const focused =
     (dimUnfocused && highlightedId
       ? members.find((m) => m.bioguideId === highlightedId)
       : null) ?? null;
-  // Don't double-label the same dot as "most liberal/conservative".
+  // Don't double-label the same dot as "most liberal/conservative". The
+  // explorer card names them in text below the chart, so skip the SVG labels
+  // there (its tight margins would clip them anyway).
   const mostLiberal =
-    members[0] && members[0].bioguideId !== focused?.bioguideId
+    !explorer && members[0] && members[0].bioguideId !== focused?.bioguideId
       ? members[0]
       : undefined;
   const mostConservative =
+    !explorer &&
     members.length > 1 &&
     members[members.length - 1].bioguideId !== focused?.bioguideId
       ? members[members.length - 1]
@@ -79,8 +92,8 @@ export function CompassChart({
     <>
       <ChartFrame
         width={W}
-        height={H}
-        margin={MARGIN}
+        height={explorer ? 470 : H}
+        margin={explorer ? EXPLORER_MARGIN : MARGIN}
         ariaLabel={`Scatter plot of ${memberNoun(chamber, { plural: true })} by DW-NOMINATE ideology score`}
       >
         {({ innerWidth, innerHeight }) => {
@@ -96,6 +109,7 @@ export function CompassChart({
                 offset={innerHeight}
                 gridExtent={innerHeight}
                 zeroAt={0}
+                labels={!explorer}
                 format={(v) => v.toFixed(1)}
               />
               <Axis
@@ -105,16 +119,19 @@ export function CompassChart({
                 offset={0}
                 gridExtent={innerWidth}
                 zeroAt={0}
+                labels={!explorer}
                 format={(v) => v.toFixed(1)}
               />
-              <text
-                className="axis-caption"
-                transform={`translate(${-42},${innerHeight / 2}) rotate(-90)`}
-                textAnchor="middle"
-              >
-                DIMENSION 2
-              </text>
-              {dim2NoteHint && (
+              {!explorer && (
+                <text
+                  className="axis-caption"
+                  transform={`translate(${-42},${innerHeight / 2}) rotate(-90)`}
+                  textAnchor="middle"
+                >
+                  DIMENSION 2
+                </text>
+              )}
+              {!explorer && dim2NoteHint && (
                 <g style={{ cursor: "help" }}>
                   <title>{dim2NoteHint}</title>
                   <circle

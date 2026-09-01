@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Newsreader, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { site, siteUrl } from "@/lib/site";
-import { CHAMBERS, type Chamber } from "@/lib/chamber";
-import { getChamberCurrent } from "@/lib/congress-data";
-import { stateName } from "@/lib/states";
 import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
@@ -53,16 +49,6 @@ export const metadata: Metadata = {
   },
 };
 
-function statesByChamber(): Record<Chamber, string[]> {
-  const out = {} as Record<Chamber, string[]>;
-  for (const chamber of CHAMBERS) {
-    out[chamber] = [...new Set(getChamberCurrent(chamber).all.map((m) => m.state))].sort(
-      (a, b) => stateName(a).localeCompare(stateName(b)),
-    );
-  }
-  return out;
-}
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -70,9 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${newsreader.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-ink">
-        <Suspense fallback={<div className="min-h-16 border-b border-line-strong bg-surface" />}>
-          <SiteHeader statesByChamber={statesByChamber()} />
-        </Suspense>
+        <SiteHeader />
         {children}
       </body>
     </html>

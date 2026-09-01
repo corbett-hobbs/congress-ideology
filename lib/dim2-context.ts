@@ -54,3 +54,23 @@ const MODERN: Dim2Context = {
 export function dim2Context(congress: number): Dim2Context {
   return congress >= DIM2_MODERN_ERA_FROM ? MODERN : HISTORICAL;
 }
+
+/**
+ * Labels for the compass's vertical axis. In the current era dimension 2 reads
+ * as pro/anti-establishment, so the axis gets endpoint words; historically it
+ * meant too many different things to label its ends, so only the middle
+ * carries a name.
+ *
+ * Sign check against ideology_scores.json: positive `nokken_poole_dim2` is the
+ * top of the plot and tracks with leadership — e.g. in the 119th, Speaker Mike
+ * Johnson sits at +0.39 and Marjorie Taylor Greene at −0.65 — so top = "Pro".
+ */
+export function dim2AxisLabels(congress: number): {
+  topEndpoint: string;
+  bottomEndpoint: string;
+  middle: string;
+} {
+  return congress >= DIM2_MODERN_ERA_FROM
+    ? { topEndpoint: "Pro", bottomEndpoint: "Anti", middle: "Establishment" }
+    : { topEndpoint: "", bottomEndpoint: "", middle: "Dimension 2" };
+}
