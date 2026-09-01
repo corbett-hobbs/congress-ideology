@@ -24,6 +24,12 @@ interface CompassChartProps {
   onSelect?: (m: ChamberMember) => void;
   /** Fade every dot except the highlighted / selected one (profile pages). */
   dimUnfocused?: boolean;
+  /**
+   * Tooltip for a small "i" marker beside the Dimension 2 axis label,
+   * pointing at the methodological note below the chart. Only the main
+   * explorer passes this — profile pages leave it off (see spec / session 8).
+   */
+  dim2NoteHint?: string;
 }
 
 function zRank(m: ChamberMember, selectedId: string | null, highlightedId: string | null) {
@@ -39,6 +45,7 @@ export function CompassChart({
   onHover,
   onSelect,
   dimUnfocused = false,
+  dim2NoteHint,
 }: CompassChartProps) {
   const tip = useTooltip<ChamberMember>();
 
@@ -95,6 +102,28 @@ export function CompassChart({
               >
                 DIMENSION 2
               </text>
+              {dim2NoteHint && (
+                <g style={{ cursor: "help" }}>
+                  <title>{dim2NoteHint}</title>
+                  <circle
+                    cx={-42}
+                    cy={innerHeight / 2 - 54}
+                    r={7}
+                    fill="var(--surface)"
+                    stroke="var(--ink-faint)"
+                  />
+                  <text
+                    x={-42}
+                    y={innerHeight / 2 - 50.5}
+                    textAnchor="middle"
+                    fontFamily="var(--font-mono)"
+                    fontSize={9.5}
+                    fill="var(--ink-muted)"
+                  >
+                    i
+                  </text>
+                </g>
+              )}
 
               {drawOrder.map((m) => {
                 const isHi = m.bioguideId === highlightedId;

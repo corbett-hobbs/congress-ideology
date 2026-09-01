@@ -9,9 +9,11 @@ import { chamberFullName, chamberLabel, memberNoun } from "@/lib/chamber";
 import { memberPath } from "@/lib/member-url";
 import { stateName } from "@/lib/states";
 import { useChamberHistory, useExplorerUrl } from "@/lib/use-chamber";
+import { dim2Context } from "@/lib/dim2-context";
 import { CongressControls } from "./CongressControls";
 import { CompassChart } from "./CompassChart";
 import { BeeswarmChart } from "./BeeswarmChart";
+import { Dim2Footnote } from "./Dim2Footnote";
 import { Legend } from "./Legend";
 import { ReadingPanel } from "./ReadingPanel";
 import { TrendChart } from "./TrendChart";
@@ -253,6 +255,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
               highlightedId={hoveredId}
               onHover={(m) => m && setHoveredId(m.bioguideId)}
               onSelect={(m) => router.push(memberPath(m))}
+              dim2NoteHint={dim2Context(congress).markerHint}
             />
           )}
 
@@ -264,6 +267,10 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
             <span>more conservative →</span>
           </div>
           <Legend members={shown} />
+
+          {!stateFilter && !historyPending && (
+            <Dim2Footnote congress={congress} />
+          )}
         </div>
 
         <ReadingPanel
