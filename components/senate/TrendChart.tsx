@@ -9,6 +9,9 @@ import type { Chamber } from "@/lib/chamber";
 import { chamberLabel } from "@/lib/chamber";
 import type { PartyMeanPoint } from "@/lib/congress-types";
 
+/** Which chamber(s) to plot the party means for. */
+export type TrendMode = Chamber | "both";
+
 const W = 1160;
 const H = 190;
 const MARGIN = { top: 14, right: 108, bottom: 24, left: 44 };
@@ -16,13 +19,9 @@ const Y_DOMAIN: [number, number] = [-0.6, 0.65];
 const Y_TICKS = [-0.5, 0, 0.5];
 const YEAR_TICKS = [1789, 1829, 1869, 1909, 1949, 1989, 2025];
 
-/** Which chamber(s) to plot. "active" follows the page's chamber switcher. */
-export type TrendMode = "active" | "senate" | "house" | "both";
-
 interface TrendChartProps {
   senateTrend: PartyMeanPoint[];
   houseTrend: PartyMeanPoint[];
-  activeChamber: Chamber;
   mode: TrendMode;
   minCongress: number;
   maxCongress: number;
@@ -34,7 +33,6 @@ interface TrendChartProps {
 export function TrendChart({
   senateTrend,
   houseTrend,
-  activeChamber,
   mode,
   minCongress,
   maxCongress,
@@ -44,17 +42,14 @@ export function TrendChart({
   const yearToCongress = (year: number) => Math.round((year - 1789) / 2) + 1;
 
   const series: { chamber: Chamber; trend: PartyMeanPoint[]; dashed: boolean }[] =
-    (() => {
-      const resolved = mode === "active" ? activeChamber : mode;
-      if (resolved === "senate")
-        return [{ chamber: "senate", trend: senateTrend, dashed: false }];
-      if (resolved === "house")
-        return [{ chamber: "house", trend: houseTrend, dashed: false }];
-      return [
-        { chamber: "senate", trend: senateTrend, dashed: false },
-        { chamber: "house", trend: houseTrend, dashed: true },
-      ];
-    })();
+    mode === "senate"
+      ? [{ chamber: "senate", trend: senateTrend, dashed: false }]
+      : mode === "house"
+        ? [{ chamber: "house", trend: houseTrend, dashed: false }]
+        : [
+            { chamber: "senate", trend: senateTrend, dashed: false },
+            { chamber: "house", trend: houseTrend, dashed: true },
+          ];
 
   return (
     <ChartFrame

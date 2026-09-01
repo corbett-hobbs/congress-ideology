@@ -12,8 +12,12 @@ import type { ChamberHistory } from "./congress-types";
 
 export function useChamber(): Chamber {
   const params = useSearchParams();
+  const pathname = usePathname();
   const raw = params.get("chamber");
-  return isChamber(raw) ? raw : "senate";
+  if (isChamber(raw)) return raw;
+  // On a profile page the chamber is in the path, not the query string.
+  if (pathname.startsWith("/congress/house")) return "house";
+  return "senate";
 }
 
 export function useStateFilter(): string | null {

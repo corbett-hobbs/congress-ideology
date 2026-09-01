@@ -38,7 +38,7 @@ export function SenatorSearch({ entries, noun }: SenatorSearchProps) {
   const results = useMemo(() => match(entries, query), [entries, query]);
 
   return (
-    <div className="relative ml-auto flex-none">
+    <div className="relative w-full sm:ml-auto sm:w-[12.5rem]">
       <input
         type="text"
         value={query}
@@ -62,14 +62,14 @@ export function SenatorSearch({ entries, noun }: SenatorSearchProps) {
             setOpen(false);
           }
         }}
-        className="w-[12.5rem] rounded-md border border-line-strong bg-surface-raised px-[0.7rem] py-[0.48rem] text-[0.8rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+        className="w-full rounded-md border border-line-strong bg-surface-raised px-[0.7rem] py-[0.48rem] text-[0.8rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       />
 
       {open && query.trim() && (
         <div
           id={listId}
           role="listbox"
-          className="absolute right-0 top-[calc(100%+6px)] z-30 max-h-[15rem] w-64 overflow-y-auto rounded-lg border border-line bg-surface p-[0.3rem] shadow-[0_10px_26px_rgba(10,12,16,0.16)]"
+          className="absolute right-0 top-[calc(100%+6px)] z-30 max-h-[15rem] w-full min-w-[16rem] overflow-y-auto rounded-lg border border-line bg-surface p-[0.3rem] shadow-[0_10px_26px_rgba(10,12,16,0.16)] sm:w-64"
         >
           {results.length === 0 ? (
             <p className="p-[0.55rem] text-[0.8rem] text-ink-faint">

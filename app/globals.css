@@ -125,12 +125,12 @@ body {
 }
 .axis-tick-label {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 11px;
   fill: var(--ink-faint);
 }
 .axis-caption {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 11px;
   fill: var(--ink-faint);
   letter-spacing: 0.08em;
 }
@@ -151,7 +151,7 @@ body {
 }
 .dot-label {
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 500;
   fill: var(--ink-muted);
   pointer-events: none;
@@ -190,7 +190,7 @@ body {
 .trend-end-label {
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .deleg-row-line {
@@ -208,13 +208,13 @@ body {
 }
 .deleg-state-label {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   fill: var(--ink);
 }
 .deleg-gap-label {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 12px;
   fill: var(--ink-faint);
   font-variant-numeric: tabular-nums;
 }

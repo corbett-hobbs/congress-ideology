@@ -189,9 +189,9 @@ export function SenatorProfileView({
               members={compassMembers}
               bioguideId={inChamber ? bioguideId : ""}
             />
-            <div className="mt-1 flex justify-between px-[0.1rem] font-mono text-[0.66rem] text-ink-faint">
+            <div className="mt-1 flex justify-between px-[0.1rem] font-mono text-[0.6rem] text-ink-faint sm:text-[0.66rem]">
               <span>← more liberal</span>
-              <span>dimension 1</span>
+              <span className="hidden sm:inline">dimension 1</span>
               <span>more conservative →</span>
             </div>
           </Panel>
@@ -264,12 +264,14 @@ export function SenatorProfileView({
               All 50 delegations →
             </Link>
           </p>
-          <div className="overflow-x-auto">
-            <DelegationChart
-              members={delegationMembers}
-              filterState={state}
-              highlightId={bioguideId}
-            />
+          <div className="-mx-2 overflow-x-auto px-2">
+            <div className="min-w-[34rem] sm:min-w-0">
+              <DelegationChart
+                members={delegationMembers}
+                filterState={state}
+                highlightId={bioguideId}
+              />
+            </div>
           </div>
         </Panel>
       )}

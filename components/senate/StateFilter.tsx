@@ -16,7 +16,7 @@ export function StateFilter({ states }: { states: string[] }) {
       aria-label="Filter by state"
       value={stateFilter ?? ""}
       onChange={(e) => setStateFilter(e.target.value || null)}
-      className="flex-none rounded-md border border-line-strong bg-surface-raised px-[0.6rem] py-[0.48rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      className="w-full rounded-md border border-line-strong bg-surface-raised px-[0.6rem] py-[0.48rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-auto"
     >
       <option value="">All states</option>
       {states.map((s) => (

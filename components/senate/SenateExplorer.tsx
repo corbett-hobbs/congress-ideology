@@ -67,7 +67,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const [playing, setPlaying] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [delegSort, setDelegSort] = useState<DelegationSort>("gap");
-  const [trendMode, setTrendMode] = useState<TrendMode>("active");
+  const [trendMode, setTrendMode] = useState<TrendMode>(chamber);
   const [tableOpen, setTableOpen] = useState(false);
 
   // The scrub-through-time payload loads on demand (it is ~1.3 MB for the House).
@@ -86,6 +86,9 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
     setCongress(latestCongress);
     setPlaying(false);
     setHoveredId(null);
+    // The party-means chart follows the chamber switcher unless the reader has
+    // since picked a specific comparison.
+    setTrendMode(chamber);
   }
 
   const atLatest = congress === latestCongress;
@@ -192,7 +195,7 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
         onTogglePlay={togglePlay}
         onToday={() => stopAnd(() => goToCongress(latestCongress))}
       >
-        <div className="ml-auto flex flex-none items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:ml-auto sm:w-auto">
           <StateFilter states={stateOptions} />
           <SenatorSearch entries={search} noun={noun} />
         </div>
@@ -235,9 +238,9 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
             />
           )}
 
-          <div className="flex justify-between px-[0.1rem] pb-[0.9rem] pt-[0.15rem] font-mono text-[0.68rem] text-ink-faint">
+          <div className="flex items-center justify-between px-[0.1rem] pb-[0.9rem] pt-[0.15rem] font-mono text-[0.62rem] text-ink-faint sm:text-[0.68rem]">
             <span>← more liberal</span>
-            <span className="font-sans tracking-[0.03em] text-ink-muted">
+            <span className="hidden font-sans tracking-[0.03em] text-ink-muted sm:inline">
               Dimension 1 · economic left–right
             </span>
             <span>more conservative →</span>
@@ -246,8 +249,6 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
         </div>
 
         <ReadingPanel
-          member={hovered}
-          noun={noun}
           congressLabel={congressLabel}
           seatsShown={shown.length}
           mostLiberal={mostLiberal}
@@ -265,7 +266,6 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
           >
             {(
               [
-                ["active", "This chamber"],
                 ["senate", "Senate"],
                 ["house", "House"],
                 ["both", "Both"],
@@ -292,16 +292,19 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
           Per-Congress means (nokken–poole), so real drift shows. Click to jump.
           {trendMode === "both" ? " House is dashed." : ""}
         </p>
-        <TrendChart
-          senateTrend={senate.trend}
-          houseTrend={house.trend}
-          activeChamber={chamber}
-          mode={trendMode}
-          minCongress={Math.min(senate.minCongress, house.minCongress)}
-          maxCongress={Math.max(senate.latestCongress, house.latestCongress)}
-          congress={congress}
-          onScrub={(c) => stopAnd(() => goToCongress(c))}
-        />
+        <div className="-mx-2 overflow-x-auto px-2">
+          <div className="min-w-[40rem] sm:min-w-0">
+            <TrendChart
+              senateTrend={senate.trend}
+              houseTrend={house.trend}
+              mode={trendMode}
+              minCongress={Math.min(senate.minCongress, house.minCongress)}
+              maxCongress={Math.max(senate.latestCongress, house.latestCongress)}
+              congress={congress}
+              onScrub={(c) => stopAnd(() => goToCongress(c))}
+            />
+          </div>
+        </div>
       </Panel>
 
       <Panel
@@ -349,16 +352,18 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
                   : ""
               }. Click a row to filter to that state.`}
         </p>
-        <div className="max-h-[32rem] overflow-y-auto border-t border-line pt-[0.4rem]">
+        <div className="max-h-[32rem] overflow-auto border-t border-line pt-[0.4rem]">
           {historyPending ? (
             <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
           ) : (
-            <DelegationChart
-              members={plottable}
-              sort={delegSort}
-              mode={delegMode}
-              onSelectState={(s) => setStateFilter(s)}
-            />
+            <div className="min-w-[50rem] sm:min-w-0">
+              <DelegationChart
+                members={plottable}
+                sort={delegSort}
+                mode={delegMode}
+                onSelectState={(s) => setStateFilter(s)}
+              />
+            </div>
           )}
         </div>
       </Panel>
