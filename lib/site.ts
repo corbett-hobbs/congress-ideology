@@ -15,9 +15,9 @@ export const siteUrl = (
 export const site = {
   name: "The Ideology Space",
   shortName: "congress-ideology",
-  tagline: "U.S. Senate ideology, from the roll-call record",
+  tagline: "Congress ideology, from the roll-call record",
   description:
-    "Every U.S. senator's votes reduced to a two-dimensional ideology score (DW-NOMINATE, 1st–119th Congress). Scrub through 236 years, compare a state's two senators, and read any current senator's trajectory.",
+    "Every member of Congress's votes reduced to a two-dimensional ideology score (DW-NOMINATE, 1st–119th Congress). Scrub through 236 years of the House and Senate, filter a state's delegation, and read any current member's trajectory.",
 } as const;
 
 export function absoluteUrl(path: string): string {
