@@ -8,11 +8,13 @@ import { Axis } from "@/components/charts/Axis";
 import type { Chamber } from "@/lib/chamber";
 import { chamberLabel } from "@/lib/chamber";
 import type { PartyMeanPoint } from "@/lib/congress-types";
+import { useElementWidth } from "@/lib/use-element-width";
 
 /** Which chamber(s) to plot the party means for. */
 export type TrendMode = Chamber | "both";
 
-const W = 1160;
+/** Used before the container is first measured (avoids a zero-width flash). */
+const FALLBACK_W = 1160;
 const H = 190;
 const MARGIN = { top: 14, right: 108, bottom: 24, left: 44 };
 const Y_DOMAIN: [number, number] = [-0.6, 0.65];
@@ -40,6 +42,12 @@ export function TrendChart({
   onScrub,
 }: TrendChartProps) {
   const yearToCongress = (year: number) => Math.round((year - 1789) / 2) + 1;
+  const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
+  // Size the chart to its actual container, not a fixed logical width the
+  // browser then stretches or shrinks — see lib/use-element-width.ts.
+  const W = measuredW || FALLBACK_W;
+  // Fewer year ticks once there isn't room for all seven without overlapping.
+  const yearTicks = W < 480 ? [1789, 1909, 2025] : YEAR_TICKS;
 
   const series: { chamber: Chamber; trend: PartyMeanPoint[]; dashed: boolean }[] =
     mode === "senate"
@@ -52,6 +60,7 @@ export function TrendChart({
           ];
 
   return (
+    <div ref={wrapRef}>
     <ChartFrame
       width={W}
       height={H}
@@ -88,7 +97,7 @@ export function TrendChart({
             <Axis
               scale={x}
               orientation="bottom"
-              ticks={YEAR_TICKS.map(yearToCongress)}
+              ticks={yearTicks.map(yearToCongress)}
               offset={innerHeight}
               gridExtent={innerHeight}
               format={(cg) => String(1789 + (cg - 1) * 2)}
@@ -172,5 +181,6 @@ export function TrendChart({
         );
       }}
     </ChartFrame>
+    </div>
   );
 }

@@ -292,19 +292,15 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
           Per-Congress means (nokken–poole), so real drift shows. Click to jump.
           {trendMode === "both" ? " House is dashed." : ""}
         </p>
-        <div className="-mx-2 overflow-x-auto px-2">
-          <div className="min-w-[40rem] sm:min-w-0">
-            <TrendChart
-              senateTrend={senate.trend}
-              houseTrend={house.trend}
-              mode={trendMode}
-              minCongress={Math.min(senate.minCongress, house.minCongress)}
-              maxCongress={Math.max(senate.latestCongress, house.latestCongress)}
-              congress={congress}
-              onScrub={(c) => stopAnd(() => goToCongress(c))}
-            />
-          </div>
-        </div>
+        <TrendChart
+          senateTrend={senate.trend}
+          houseTrend={house.trend}
+          mode={trendMode}
+          minCongress={Math.min(senate.minCongress, house.minCongress)}
+          maxCongress={Math.max(senate.latestCongress, house.latestCongress)}
+          congress={congress}
+          onScrub={(c) => stopAnd(() => goToCongress(c))}
+        />
       </Panel>
 
       <Panel
@@ -352,18 +348,16 @@ export function SenateExplorer({ senate, house, search }: ExplorerProps) {
                   : ""
               }. Click a row to filter to that state.`}
         </p>
-        <div className="max-h-[32rem] overflow-auto border-t border-line pt-[0.4rem]">
+        <div className="max-h-[32rem] overflow-y-auto border-t border-line pt-[0.4rem]">
           {historyPending ? (
             <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
           ) : (
-            <div className="min-w-[50rem] sm:min-w-0">
-              <DelegationChart
-                members={plottable}
-                sort={delegSort}
-                mode={delegMode}
-                onSelectState={(s) => setStateFilter(s)}
-              />
-            </div>
+            <DelegationChart
+              members={plottable}
+              sort={delegSort}
+              mode={delegMode}
+              onSelectState={(s) => setStateFilter(s)}
+            />
           )}
         </div>
       </Panel>

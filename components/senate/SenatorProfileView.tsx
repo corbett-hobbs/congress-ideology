@@ -264,15 +264,11 @@ export function SenatorProfileView({
               All 50 delegations →
             </Link>
           </p>
-          <div className="-mx-2 overflow-x-auto px-2">
-            <div className="min-w-[34rem] sm:min-w-0">
-              <DelegationChart
-                members={delegationMembers}
-                filterState={state}
-                highlightId={bioguideId}
-              />
-            </div>
-          </div>
+          <DelegationChart
+            members={delegationMembers}
+            filterState={state}
+            highlightId={bioguideId}
+          />
         </Panel>
       )}
 

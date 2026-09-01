@@ -8,13 +8,16 @@ import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import type { ChamberMember } from "@/lib/congress-types";
 import { memberPath } from "@/lib/member-url";
+import { useElementWidth } from "@/lib/use-element-width";
 import { MemberTooltip } from "./MemberTooltip";
 import { GROUP_FILL_CLASS, stateName } from "./format";
 
-const W = 1100;
+/** Used before the container is first measured (avoids a zero-width flash). */
+const FALLBACK_W = 1100;
 const MARGIN = { top: 26, right: 66, bottom: 8, left: 124 };
 const ROW_H = 26;
 const TICKS = [-1, -0.5, 0, 0.5, 1];
+const NARROW_TICKS = [-1, 0, 1];
 
 export type DelegationSort = "gap" | "az";
 /** "pair" — each state's two senators (dumbbell). "range" — a state's whole
@@ -141,6 +144,11 @@ export function DelegationChart({
 }: DelegationChartProps) {
   const router = useRouter();
   const tip = useTooltip<ChamberMember>();
+  const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
+  // Size the chart's own coordinate space to its actual container (rather
+  // than a fixed logical width the browser then stretches or shrinks) so
+  // labels render at their real, readable size on any screen.
+  const W = measuredW || FALLBACK_W;
 
   const { pairs, ranges } = useMemo(
     () => buildDelegations(members, mode),
@@ -161,9 +169,11 @@ export function DelegationChart({
   // A single embedded row gets more height so dots and names read.
   const rowH = filterState && mode === "pair" ? 52 : ROW_H;
   const height = MARGIN.top + rows.length * rowH + MARGIN.bottom;
+  // Fewer x-axis ticks once there isn't room for all five without overlapping.
+  const ticks = W < 420 ? NARROW_TICKS : TICKS;
 
   return (
-    <>
+    <div ref={wrapRef}>
       <ChartFrame
         width={W}
         height={height}
@@ -183,7 +193,7 @@ export function DelegationChart({
               <Axis
                 scale={x}
                 orientation="bottom"
-                ticks={TICKS}
+                ticks={ticks}
                 offset={-14}
                 gridExtent={-(plotH + 20)}
                 zeroAt={0}
@@ -278,6 +288,6 @@ export function DelegationChart({
         }}
       </ChartFrame>
       <Tooltip state={tip.state}>{(m) => <MemberTooltip member={m} />}</Tooltip>
-    </>
+    </div>
   );
 }
