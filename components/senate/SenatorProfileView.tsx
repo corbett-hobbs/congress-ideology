@@ -12,7 +12,6 @@ import { SiteFooter } from "./SiteFooter";
 import {
   congressStartYear,
   fmt2,
-  fmt3,
   GROUP_VAR,
   ordinal,
   partyLabel,
@@ -48,17 +47,6 @@ function Panel({
   );
 }
 
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex justify-between gap-3 text-[0.85rem]">
-      <dt className="text-ink-muted">{label}</dt>
-      <dd className="m-0 text-right font-mono font-medium tabular-nums">
-        {value}
-      </dd>
-    </div>
-  );
-}
-
 export function SenatorProfileView({
   profile,
   compassMembers,
@@ -75,9 +63,6 @@ export function SenatorProfileView({
     group,
     latestCongress,
     careerDim1,
-    careerDim2,
-    currentDim1,
-    currentDim2,
     trajectory,
     firstCongress,
     chamberCongressCount,
@@ -155,6 +140,12 @@ export function SenatorProfileView({
             <span className="text-ink-faint">· {fullName}</span>
           )}
         </p>
+        <p className="mt-1.5 text-[0.9rem] text-ink-muted">
+          In the {Chamber} since the {ordinal(firstCongress)} Congress (
+          {congressStartYear(firstCongress)}) ·{" "}
+          {chamberCongressCount}{" "}
+          {chamberCongressCount === 1 ? "Congress" : "Congresses"} served
+        </p>
         {partialCurrentTerm && (
           <p className="mt-2 max-w-[42rem] text-[0.82rem] text-ink-faint">
             Served only part of the {ordinal(latestCongress)} Congress — the
@@ -163,7 +154,24 @@ export function SenatorProfileView({
         )}
       </header>
 
-      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_16rem]">
+      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2">
+        <Panel label={`In the ${ordinal(latestCongress)} ${Chamber}`}>
+          <p className="mb-2 max-w-[42rem] text-[0.78rem] text-ink-faint">
+            {inChamber && rank
+              ? `${name} sits ${ordinal(rank)} from the left of ${scored.length} scored ${nounPlural}. Ringed below; the rest of the chamber is faded.`
+              : `No plottable ${ordinal(latestCongress)}-Congress position for ${name} (too few votes). The chamber is shown for context.`}
+          </p>
+          <ProfileCompass
+            members={compassMembers}
+            bioguideId={inChamber ? bioguideId : ""}
+          />
+          <div className="mt-1 flex justify-between px-[0.1rem] font-mono text-[0.6rem] text-ink-faint sm:text-[0.66rem]">
+            <span>← more liberal</span>
+            <span className="hidden sm:inline">dimension 1</span>
+            <span>more conservative →</span>
+          </div>
+        </Panel>
+
         <div className="flex flex-col gap-5">
           <Panel label="Ideological trajectory · dimension 1 by Congress">
             <p className="mb-2 max-w-[42rem] text-[0.78rem] text-ink-faint">
@@ -179,98 +187,47 @@ export function SenatorProfileView({
             />
           </Panel>
 
-          <Panel label={`In the ${ordinal(latestCongress)} ${Chamber}`}>
-            <p className="mb-2 max-w-[42rem] text-[0.78rem] text-ink-faint">
-              {inChamber && rank
-                ? `${name} sits ${ordinal(rank)} from the left of ${scored.length} scored ${nounPlural}. Ringed below; the rest of the chamber is faded.`
-                : `No plottable ${ordinal(latestCongress)}-Congress position for ${name} (too few votes). The chamber is shown for context.`}
-            </p>
-            <ProfileCompass
-              members={compassMembers}
-              bioguideId={inChamber ? bioguideId : ""}
-            />
-            <div className="mt-1 flex justify-between px-[0.1rem] font-mono text-[0.6rem] text-ink-faint sm:text-[0.66rem]">
-              <span>← more liberal</span>
-              <span className="hidden sm:inline">dimension 1</span>
-              <span>more conservative →</span>
-            </div>
-          </Panel>
+          {isHouse ? (
+            <Panel label={`${stateName} delegation`}>
+              <p className="max-w-[46rem] text-[0.85rem] leading-[1.6] text-ink-muted">
+                {stateName}&rsquo;s delegation in the {ordinal(latestCongress)}{" "}
+                House:{" "}
+                <span className="font-medium text-ink">
+                  {demCount} D / {repCount} R
+                  {otherCount > 0 ? ` / ${otherCount} other` : ""}
+                </span>
+                {spread != null
+                  ? `, dimension-1 spread ${fmt2(spread)} (from ${fmt2(dims[0])} to ${fmt2(dims[dims.length - 1])})`
+                  : ""}
+                .{" "}
+                <Link
+                  href={`/?chamber=house&state=${state}`}
+                  className="text-accent hover:underline"
+                >
+                  See the {stateName} beeswarm →
+                </Link>
+              </p>
+            </Panel>
+          ) : (
+            <Panel label={`${stateName} delegation · both senators on dimension 1`}>
+              <p className="mb-2 text-[0.78rem] text-ink-faint">
+                {inOwnDelegation
+                  ? `${name} and their seatmate`
+                  : `${stateName}'s two seated senators (${name} served too little of the ${ordinal(latestCongress)} Congress to appear)`}
+                {senateGap != null ? `, gap ${fmt2(senateGap)}` : ""}.{" "}
+                <Link href="/#delegation" className="text-accent hover:underline">
+                  All 50 delegations →
+                </Link>
+              </p>
+              <DelegationChart
+                members={delegationMembers}
+                filterState={state}
+                highlightId={bioguideId}
+              />
+            </Panel>
+          )}
         </div>
-
-        <aside className="flex flex-col gap-5">
-          <Panel label="Scores">
-            <dl className="flex flex-col gap-[0.55rem]">
-              <Stat label="Career dim 1" value={fmt3(careerDim1)} />
-              <Stat label="Career dim 2" value={fmt3(careerDim2)} />
-              <Stat
-                label={`${ordinal(latestCongress)} dim 1`}
-                value={fmt3(currentDim1)}
-              />
-              <Stat
-                label={`${ordinal(latestCongress)} dim 2`}
-                value={fmt3(currentDim2)}
-              />
-            </dl>
-          </Panel>
-
-          <Panel label="Service">
-            <dl className="flex flex-col gap-[0.55rem]">
-              <Stat
-                label={`First ${Chamber} Congress`}
-                value={`${ordinal(firstCongress)} (${congressStartYear(firstCongress)})`}
-              />
-              <Stat label="Congresses served" value={chamberCongressCount} />
-              <Stat
-                label="Seat"
-                value={
-                  isHouse
-                    ? `${state}-${profile.district ?? "AL"}`
-                    : state
-                }
-              />
-            </dl>
-          </Panel>
-        </aside>
       </div>
-
-      {isHouse ? (
-        <Panel label={`${stateName} delegation`}>
-          <p className="max-w-[46rem] text-[0.85rem] leading-[1.6] text-ink-muted">
-            {stateName}&rsquo;s delegation in the {ordinal(latestCongress)} House:{" "}
-            <span className="font-medium text-ink">
-              {demCount} D / {repCount} R
-              {otherCount > 0 ? ` / ${otherCount} other` : ""}
-            </span>
-            {spread != null
-              ? `, dimension-1 spread ${fmt2(spread)} (from ${fmt2(dims[0])} to ${fmt2(dims[dims.length - 1])})`
-              : ""}
-            .{" "}
-            <Link
-              href={`/?chamber=house&state=${state}`}
-              className="text-accent hover:underline"
-            >
-              See the {stateName} beeswarm →
-            </Link>
-          </p>
-        </Panel>
-      ) : (
-        <Panel label={`${stateName} delegation · both senators on dimension 1`}>
-          <p className="mb-2 text-[0.78rem] text-ink-faint">
-            {inOwnDelegation
-              ? `${name} and their seatmate`
-              : `${stateName}'s two seated senators (${name} served too little of the ${ordinal(latestCongress)} Congress to appear)`}
-            {senateGap != null ? `, gap ${fmt2(senateGap)}` : ""}.{" "}
-            <Link href="/#delegation" className="text-accent hover:underline">
-              All 50 delegations →
-            </Link>
-          </p>
-          <DelegationChart
-            members={delegationMembers}
-            filterState={state}
-            highlightId={bioguideId}
-          />
-        </Panel>
-      )}
 
       <SiteFooter />
     </main>
