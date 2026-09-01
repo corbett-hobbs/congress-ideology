@@ -184,6 +184,7 @@ export function SenatorProfileView({
               partyMean={trend}
               group={group}
               careerDim1={careerDim1}
+              memberName={name}
             />
           </Panel>
 

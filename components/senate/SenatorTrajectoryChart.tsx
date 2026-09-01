@@ -9,11 +9,12 @@ import type {
   PartyMeanPoint,
   MemberTrajectoryPoint,
 } from "@/lib/congress-types";
-import { congressStartYear, GROUP_LABEL } from "./format";
+import { congressStartYear, GROUP_LABEL, GROUP_VAR } from "./format";
 
 const W = 620;
 const H = 240;
-const MARGIN = { top: 20, right: 96, bottom: 26, left: 40 };
+// No wide right gutter — the lines run to the edge and the legend sits below.
+const MARGIN = { top: 20, right: 16, bottom: 26, left: 40 };
 /** Minimum vertical span so a genuinely stable senator isn't over-magnified. */
 const MIN_Y_SPAN = 0.5;
 const clamp = (v: number) => Math.max(-1, Math.min(1, v));
@@ -41,6 +42,8 @@ interface SenatorTrajectoryChartProps {
   partyMean: PartyMeanPoint[];
   group: PartyGroup;
   careerDim1: number | null;
+  /** This member's display name, for the legend. */
+  memberName: string;
 }
 
 /**
@@ -53,6 +56,7 @@ export function SenatorTrajectoryChart({
   partyMean,
   group,
   careerDim1,
+  memberName,
 }: SenatorTrajectoryChartProps) {
   const first = trajectory[0]?.congress ?? 0;
   const lastPt = trajectory[trajectory.length - 1]?.congress ?? first;
@@ -85,7 +89,10 @@ export function SenatorTrajectoryChart({
   yLo = clamp(yLo - pad);
   yHi = clamp(yHi + pad);
 
+  const meanLabel = `${GROUP_LABEL[meanKey]} mean`;
+
   return (
+   <div>
     <ChartFrame
       width={W}
       height={H}
@@ -137,24 +144,14 @@ export function SenatorTrajectoryChart({
             )}
 
             {careerDim1 != null && (
-              <>
-                <line
-                  className="grid-line"
-                  strokeDasharray="4 3"
-                  x1={0}
-                  x2={innerWidth}
-                  y1={y(careerDim1)}
-                  y2={y(careerDim1)}
-                />
-                <text
-                  fill="var(--ink-faint)"
-                  className="axis-tick-label"
-                  x={innerWidth + 6}
-                  y={y(careerDim1) - 5}
-                >
-                  career
-                </text>
-              </>
+              <line
+                className="grid-line"
+                strokeDasharray="4 3"
+                x1={0}
+                x2={innerWidth}
+                y1={y(careerDim1)}
+                y2={y(careerDim1)}
+              />
             )}
 
             {senatorLine && (
@@ -172,20 +169,51 @@ export function SenatorTrajectoryChart({
               ),
             )}
 
-            {meanLine && (
-              <text
-                fill="var(--ink-faint)"
-                className="axis-tick-label"
-                x={x(lastPt) + 6}
-                y={y((meanInRange.at(-1)?.[meanKey] as number) ?? 0) + 11}
-              >
-                {GROUP_LABEL[meanKey]} mean
-              </text>
-            )}
           </>
         );
       }}
     </ChartFrame>
+
+    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.72rem] text-ink-muted">
+      <span className="flex items-center gap-1.5">
+        <Swatch color={GROUP_VAR[group]} /> {memberName}
+      </span>
+      <span className="flex items-center gap-1.5">
+        <Swatch color={GROUP_VAR[meanKey]} faint />{" "}
+        {meanLabel}
+      </span>
+      {careerDim1 != null && (
+        <span className="flex items-center gap-1.5">
+          <Swatch color="var(--ink-faint)" dash /> Career average
+        </span>
+      )}
+    </div>
+   </div>
+  );
+}
+
+function Swatch({
+  color,
+  dash,
+  faint,
+}: {
+  color: string;
+  dash?: boolean;
+  faint?: boolean;
+}) {
+  return (
+    <svg width="20" height="8" viewBox="0 0 20 8" aria-hidden className="flex-none">
+      <line
+        x1="0"
+        y1="4"
+        x2="20"
+        y2="4"
+        stroke={color}
+        strokeWidth={2.25}
+        strokeDasharray={dash ? "3 3" : undefined}
+        opacity={faint ? 0.3 : 1}
+      />
+    </svg>
   );
 }
 
