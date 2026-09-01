@@ -6,6 +6,8 @@ import type {
 } from "@/lib/congress-types";
 import { chamberLabel, memberNoun } from "@/lib/chamber";
 import { ProfileCompass } from "./ProfileCompass";
+import { CompassPanel } from "./CompassPanel";
+import { Dim2Footnote } from "./Dim2Footnote";
 import { DelegationChart } from "./DelegationChart";
 import { SenatorTrajectoryChart } from "./SenatorTrajectoryChart";
 import { SiteFooter } from "./SiteFooter";
@@ -161,15 +163,13 @@ export function SenatorProfileView({
               ? `${name} sits ${ordinal(rank)} from the left of ${scored.length} scored ${nounPlural}. Ringed below; the rest of the chamber is faded.`
               : `No plottable ${ordinal(latestCongress)}-Congress position for ${name} (too few votes). The chamber is shown for context.`}
           </p>
-          <ProfileCompass
-            members={compassMembers}
-            bioguideId={inChamber ? bioguideId : ""}
-          />
-          <div className="mt-1 flex justify-between px-[0.1rem] font-mono text-[0.6rem] text-ink-faint sm:text-[0.66rem]">
-            <span>← more liberal</span>
-            <span className="hidden sm:inline">dimension 1</span>
-            <span>more conservative →</span>
-          </div>
+          <CompassPanel congress={latestCongress}>
+            <ProfileCompass
+              members={compassMembers}
+              bioguideId={inChamber ? bioguideId : ""}
+            />
+          </CompassPanel>
+          <Dim2Footnote congress={latestCongress} />
         </Panel>
 
         <div className="flex flex-col gap-5">

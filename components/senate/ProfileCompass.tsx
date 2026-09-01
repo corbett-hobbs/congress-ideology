@@ -19,6 +19,7 @@ export function ProfileCompass({
   const router = useRouter();
   return (
     <CompassChart
+      variant="explorer"
       members={members}
       highlightedId={bioguideId}
       dimUnfocused

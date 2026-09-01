@@ -3,8 +3,8 @@ import { dim2Context } from "@/lib/dim2-context";
 /**
  * Methodological note under the compass: what dimension 2 represents for the
  * Congress currently shown. Always visible (this is real context, not an
- * aside), and switches era based on the compass's Congress selector. Compass
- * view only — not on profile pages (see lib/dim2-context.ts / session 8).
+ * aside), and switches era based on the Congress shown. Used under both the
+ * explorer compass and the profile-page compass (see lib/dim2-context.ts).
  */
 export function Dim2Footnote({ congress }: { congress: number }) {
   const ctx = dim2Context(congress);
