@@ -34,7 +34,7 @@ export function ExplorerToolbar({
 
   return (
     <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-[1180px] flex-wrap items-center gap-x-5 gap-y-3 px-4 py-2.5 sm:px-6">
+      <div className="mx-auto flex w-full max-w-[1180px] flex-wrap items-center gap-x-2 gap-y-3 px-4 py-2.5 sm:gap-x-5 sm:px-6">
         <div
           role="group"
           aria-label="Chamber"
@@ -46,7 +46,7 @@ export function ExplorerToolbar({
               type="button"
               onClick={() => setView(v)}
               aria-pressed={view === v}
-              className={`px-[0.85rem] py-[0.35rem] transition-colors ${
+              className={`px-2 py-[0.35rem] transition-colors sm:px-[0.85rem] ${
                 view === v
                   ? "bg-accent text-accent-ink"
                   : "bg-surface-raised text-ink-muted hover:text-ink"
@@ -57,7 +57,7 @@ export function ExplorerToolbar({
           ))}
         </div>
 
-        <div className="flex flex-none items-center gap-2">
+        <div className="flex flex-none items-center gap-1.5 sm:gap-2">
           <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">
             State
           </span>
