@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEventHandler } from "react";
 import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
@@ -37,22 +38,25 @@ export function TrendChart({
       height={H}
       margin={MARGIN}
       ariaLabel="Line chart of Senate party ideology means over time"
-      className="cursor-crosshair"
-      onClick={(e) => {
-        const svg = e.currentTarget;
-        const rect = svg.getBoundingClientRect();
-        const frac = (e.clientX - rect.left) / rect.width;
-        const cg = Math.round(
-          minCongress + frac * (maxCongress - minCongress),
-        );
-        onScrub(Math.max(minCongress, Math.min(maxCongress, cg)));
-      }}
     >
       {({ innerWidth, innerHeight }) => {
         const x = scaleLinear()
           .domain([minCongress, maxCongress])
           .range([0, innerWidth]);
         const y = scaleLinear().domain(Y_DOMAIN).range([innerHeight, 0]);
+
+        // Map a click anywhere in the plot area to a Congress. The overlay
+        // rect lives inside the margin-translated <g>, so its CTM already
+        // accounts for the left margin — invert the x-scale directly.
+        const handleScrub: MouseEventHandler<SVGRectElement> = (e) => {
+          const ctm = e.currentTarget.getScreenCTM();
+          if (!ctm) return;
+          const local = new DOMPoint(e.clientX, e.clientY).matrixTransform(
+            ctm.inverse(),
+          );
+          const cg = Math.round(x.invert(local.x));
+          onScrub(Math.max(minCongress, Math.min(maxCongress, cg)));
+        };
 
         const demPath = line<PartyMeanPoint>()
           .defined((d) => d.dem != null)
@@ -121,6 +125,16 @@ export function TrendChart({
                 Republicans
               </text>
             )}
+
+            <rect
+              x={0}
+              y={0}
+              width={innerWidth}
+              height={innerHeight}
+              fill="transparent"
+              style={{ cursor: "crosshair" }}
+              onClick={handleScrub}
+            />
           </>
         );
       }}
