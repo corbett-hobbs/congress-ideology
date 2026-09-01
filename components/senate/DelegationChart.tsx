@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "@/components/charts/ChartFrame";
@@ -128,6 +128,8 @@ interface DelegationChartProps {
   sort?: DelegationSort;
   /** Render only this state's row (profile pages / filtered explorer). */
   filterState?: string;
+  /** Keep every row, but visually emphasize this state's and scroll it in. */
+  selectedState?: string | null;
   /** Enlarge this member's dot and ring it. */
   highlightId?: string;
   /** Click a row to filter the explorer to that state. */
@@ -139,12 +141,14 @@ export function DelegationChart({
   mode = "pair",
   sort = "gap",
   filterState,
+  selectedState,
   highlightId,
   onSelectState,
 }: DelegationChartProps) {
   const router = useRouter();
   const tip = useTooltip<ChamberMember>();
   const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
+  const selectedRowRef = useRef<SVGGElement | null>(null);
   // Size the chart's own coordinate space to its actual container (rather
   // than a fixed logical width the browser then stretches or shrinks) so
   // labels render at their real, readable size on any screen.
@@ -165,6 +169,36 @@ export function DelegationChart({
     );
     return copy;
   }, [pairs, ranges, mode, sort, filterState]);
+
+  // Bring the emphasized row into view when the filter changes (desktop only —
+  // the mobile list isn't capped, so there's nothing to scroll). Wait a frame:
+  // the chart's height settles once its width is measured.
+  useEffect(() => {
+    if (!selectedState) return;
+    let raf = 0;
+    let tries = 0;
+    const run = () => {
+      const row = selectedRowRef.current;
+      // Nearest scrollable ancestor (the desktop list's capped container).
+      let scroller = row?.parentElement as HTMLElement | null;
+      while (scroller && scroller.scrollHeight <= scroller.clientHeight + 1) {
+        scroller = scroller.parentElement;
+      }
+      // Layout may not have settled yet (width still being measured); retry.
+      if ((!row || !scroller) && tries++ < 20) {
+        raf = requestAnimationFrame(run);
+        return;
+      }
+      if (!row || !scroller) return;
+      const rowBox = row.getBoundingClientRect();
+      const box = scroller.getBoundingClientRect();
+      if (rowBox.top >= box.top && rowBox.bottom <= box.bottom) return;
+      const delta = rowBox.top - box.top - (box.height - rowBox.height) / 2;
+      scroller.scrollTo({ top: scroller.scrollTop + delta, behavior: "smooth" });
+    };
+    raf = requestAnimationFrame(run);
+    return () => cancelAnimationFrame(raf);
+  }, [selectedState, rows, W]);
 
   // A single embedded row gets more height so dots and names read.
   const rowH = filterState && mode === "pair" ? 52 : ROW_H;
@@ -208,10 +242,12 @@ export function DelegationChart({
                     ? (row as RangeRow).members
                     : (row as PairRow).members;
                 const xs = rowMembers.map((m) => x(m.dim1 as number));
+                const isSelected = selectedState === row.state;
 
                 return (
                   <g
                     key={row.state}
+                    ref={isSelected ? selectedRowRef : undefined}
                     style={selectable ? { cursor: "pointer" } : undefined}
                     onClick={
                       selectable
@@ -219,8 +255,18 @@ export function DelegationChart({
                         : undefined
                     }
                   >
+                    {isSelected && (
+                      <rect
+                        className="deleg-row-selected-bg"
+                        x={-MARGIN.left}
+                        y={y - rowH / 2 + 1}
+                        width={innerWidth + MARGIN.left + MARGIN.right - 1}
+                        height={rowH - 2}
+                        rx={3}
+                      />
+                    )}
                     <text
-                      className="deleg-state-label"
+                      className={`deleg-state-label${isSelected ? " is-selected" : ""}`}
                       x={-MARGIN.left + 2}
                       y={y + 4}
                     >

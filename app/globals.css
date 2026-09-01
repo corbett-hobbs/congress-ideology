@@ -220,6 +220,17 @@ body {
   font-weight: 500;
   fill: var(--ink);
 }
+/* The row for the currently filtered state — a muted tint plus a left rule,
+   matching the site's other "this one is selected" cues. */
+.deleg-row-selected-bg {
+  fill: var(--surface-raised);
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+.deleg-state-label.is-selected {
+  font-weight: 700;
+  fill: var(--ink);
+}
 .deleg-gap-label {
   font-family: var(--font-mono);
   font-size: 12px;
