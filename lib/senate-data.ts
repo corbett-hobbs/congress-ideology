@@ -7,6 +7,7 @@ import type {
   Legislator,
   Term,
 } from "./entities";
+import { stateName as stateNameOf } from "./states";
 
 /**
  * Build-time Senate dataset.
@@ -68,6 +69,41 @@ export interface SenateDataset {
   trend: PartyMeanPoint[];
   /** One entry per senator (ever), for name search. Sorted by last name. */
   search: SenatorSearchEntry[];
+}
+
+export interface SenatorTrajectoryPoint {
+  congress: number;
+  year: number;
+  /** Per-Congress nokken_poole_dim1. `null` where Voteview couldn't estimate. */
+  dim1: number | null;
+}
+
+export interface SenatorProfile {
+  bioguideId: string;
+  /** Display name, e.g. "Chuck Schumer" (nickname + last, no suffix). */
+  name: string;
+  /** congress-legislators `official_full`, e.g. "Charles E. Schumer". */
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  state: string;
+  stateName: string;
+  party: string;
+  caucus: string;
+  group: PartyGroup;
+  /** True when the person did not serve the whole latest Congress. */
+  partialCurrentTerm: boolean;
+  /** Static career (nominate) position. */
+  careerDim1: number | null;
+  careerDim2: number | null;
+  /** Per-Congress (nokken_poole) position in the latest Congress. */
+  currentDim1: number | null;
+  currentDim2: number | null;
+  latestCongress: number;
+  /** nokken_poole_dim1 for every Senate Congress served, chronological. */
+  trajectory: SenatorTrajectoryPoint[];
+  firstCongress: number;
+  senateCongressCount: number;
 }
 
 /** The modern Republican party dates from the 33rd Congress (1854). Before
@@ -219,3 +255,80 @@ export function getSenateDataset(): SenateDataset {
   };
   return cached;
 }
+
+/** Votes below this in the latest Congress = did not serve a full term. */
+const PARTIAL_TERM_VOTES = 50;
+
+let legByIdCache: Map<string, Legislator> | null = null;
+function legislatorsById(): Map<string, Legislator> {
+  if (!legByIdCache) {
+    legByIdCache = new Map(
+      readOutput<Legislator>("legislators.json").map((l) => [l.bioguide_id, l]),
+    );
+  }
+  return legByIdCache;
+}
+
+/** bioguide_id + display name for every senator in the latest Congress. */
+export function getCurrentSenators(): { bioguideId: string; name: string }[] {
+  const ds = getSenateDataset();
+  const seen = new Set<string>();
+  const out: { bioguideId: string; name: string }[] = [];
+  for (const m of ds.allByCongress[ds.latestCongress] ?? []) {
+    if (seen.has(m.bioguideId)) continue;
+    seen.add(m.bioguideId);
+    out.push({ bioguideId: m.bioguideId, name: m.name });
+  }
+  return out.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Full profile for one senator, or null if they held no seat in the latest Congress. */
+export function getSenatorProfile(bioguideId: string): SenatorProfile | null {
+  const ds = getSenateDataset();
+  const current = (ds.allByCongress[ds.latestCongress] ?? []).find(
+    (m) => m.bioguideId === bioguideId,
+  );
+  if (!current) return null;
+
+  const leg = legislatorsById().get(bioguideId);
+  const firstName = leg?.name.nickname ?? leg?.name.first ?? current.name;
+  const lastName = leg?.name.last ?? current.lastName;
+  const fullName = leg?.name.official_full ?? current.name;
+
+  const trajectory: SenatorTrajectoryPoint[] = [];
+  let careerDim1: number | null = null;
+  let careerDim2: number | null = null;
+  for (const c of ds.congresses) {
+    const m = (ds.allByCongress[c] ?? []).find((x) => x.bioguideId === bioguideId);
+    if (!m) continue;
+    trajectory.push({ congress: c, year: congressStartYear(c), dim1: m.dim1 });
+    // The career score is static; take it from any Congress that has one.
+    if (careerDim1 == null && m.careerDim1 != null) {
+      careerDim1 = m.careerDim1;
+      careerDim2 = m.careerDim2;
+    }
+  }
+
+  return {
+    bioguideId,
+    name: current.name,
+    fullName,
+    firstName,
+    lastName,
+    state: current.state,
+    stateName: stateNameOf(current.state),
+    party: current.party,
+    caucus: current.caucus,
+    group: current.group,
+    partialCurrentTerm: (current.nVotes ?? 0) < PARTIAL_TERM_VOTES,
+    careerDim1,
+    careerDim2,
+    currentDim1: current.dim1,
+    currentDim2: current.dim2,
+    latestCongress: ds.latestCongress,
+    trajectory,
+    firstCongress: trajectory[0]?.congress ?? ds.latestCongress,
+    senateCongressCount: trajectory.length,
+  };
+}
+
