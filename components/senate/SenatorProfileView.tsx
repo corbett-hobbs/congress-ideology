@@ -93,14 +93,20 @@ export function SenatorProfileView({
   const rank = rankIndex >= 0 ? rankIndex + 1 : null;
   const inChamber = compassMembers.some((m) => m.bioguideId === bioguideId);
 
-  const stateGap = (() => {
-    const mates = delegationMembers
-      .filter((m) => m.state === state && m.dim1 != null)
-      .sort((a, b) => (b.nVotes ?? 0) - (a.nVotes ?? 0))
-      .slice(0, 2);
-    if (mates.length < 2) return null;
-    return Math.abs((mates[0].dim1 as number) - (mates[1].dim1 as number));
-  })();
+  const delegationPair = delegationMembers
+    .filter((m) => m.state === state && m.dim1 != null)
+    .sort((a, b) => (b.nVotes ?? 0) - (a.nVotes ?? 0))
+    .slice(0, 2);
+  const stateGap =
+    delegationPair.length === 2
+      ? Math.abs(
+          (delegationPair[0].dim1 as number) -
+            (delegationPair[1].dim1 as number),
+        )
+      : null;
+  const inOwnDelegation = delegationPair.some(
+    (m) => m.bioguideId === bioguideId,
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-11">
@@ -204,8 +210,10 @@ export function SenatorProfileView({
 
       <Panel label={`${stateName} delegation · both senators on dimension 1`}>
         <p className="mb-2 text-[0.78rem] text-ink-faint">
-          {name}&rsquo;s seatmate and the gap between them
-          {stateGap != null ? ` (${fmt2(stateGap)})` : ""}.{" "}
+          {inOwnDelegation
+            ? `${name} and their seatmate`
+            : `${stateName}'s two seated senators (${name} served too little of the ${ordinal(latestCongress)} Congress to appear)`}
+          {stateGap != null ? `, gap ${fmt2(stateGap)}` : ""}.{" "}
           <Link href="/#delegation" className="text-accent hover:underline">
             All 50 delegations →
           </Link>
