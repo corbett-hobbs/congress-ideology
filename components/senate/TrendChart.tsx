@@ -10,6 +10,7 @@ const W = 1160;
 const H = 190;
 const MARGIN = { top: 14, right: 96, bottom: 24, left: 44 };
 const Y_DOMAIN: [number, number] = [-0.6, 0.65];
+const Y_TICKS = [-0.5, 0, 0.5];
 const YEAR_TICKS = [1789, 1829, 1869, 1909, 1949, 1989, 2025];
 
 interface TrendChartProps {
@@ -74,6 +75,14 @@ export function TrendChart({
               offset={innerHeight}
               gridExtent={innerHeight}
               format={(cg) => String(1789 + (cg - 1) * 2)}
+            />
+            <Axis
+              scale={y}
+              orientation="left"
+              ticks={Y_TICKS}
+              offset={0}
+              zeroAt={0}
+              format={(v) => v.toFixed(1)}
             />
             <line
               className="zero-line"

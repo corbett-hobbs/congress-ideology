@@ -88,14 +88,12 @@ export function congressStartYear(congress: number): number {
 const MIN_VOTES_FOR_SCORE = 10;
 
 /**
- * A per-Congress score is plottable when it exists, isn't Voteview's
- * "couldn't estimate" sentinel (exactly the origin), and rests on enough
- * votes to mean something — excludes senators who served only days
- * (Vance in the 119th, etc.).
+ * A per-Congress score is plottable when it exists (not null, not the origin
+ * sentinel) and rests on enough votes to mean something — excludes senators
+ * who served only days (Vance in the 119th, etc.).
  */
 function isPlottable(m: SenateMember): boolean {
   if (m.dim1 == null || m.dim2 == null) return false;
-  if (m.dim1 === 0 && m.dim2 === 0) return false;
   return (m.nVotes ?? 0) >= MIN_VOTES_FOR_SCORE;
 }
 
@@ -138,6 +136,11 @@ export function getSenateDataset(): SenateDataset {
     const caucus = term.caucus ?? term.party ?? "Unknown";
     const { name, lastName } = displayName(leg);
 
+    // Voteview emits exactly the origin when it couldn't estimate a
+    // per-Congress score (a senator who served only days).
+    const isSentinel =
+      score?.nokken_poole_dim1 === 0 && score?.nokken_poole_dim2 === 0;
+
     const member: SenateMember = {
       bioguideId: term.bioguide_id,
       name,
@@ -146,8 +149,8 @@ export function getSenateDataset(): SenateDataset {
       party: term.party ?? "Unknown",
       caucus,
       group: partyGroup(caucus, term.congress_number),
-      dim1: score?.nokken_poole_dim1 ?? null,
-      dim2: score?.nokken_poole_dim2 ?? null,
+      dim1: isSentinel ? null : (score?.nokken_poole_dim1 ?? null),
+      dim2: isSentinel ? null : (score?.nokken_poole_dim2 ?? null),
       careerDim1: score?.nominate_dim1 ?? null,
       careerDim2: score?.nominate_dim2 ?? null,
       nVotes: score?.n_votes ?? null,
