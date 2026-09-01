@@ -3,10 +3,10 @@ import { parse } from "csv-parse/sync";
 import { parse as parseYamlDoc } from "yaml";
 import { z, type ZodType } from "zod";
 
-/** Thrown when a raw row fails its schema. Names the file, row, and reason. */
+/** Thrown when raw data fails a check. Names the file, the row, and the reason. */
 export class ValidationError extends Error {
   constructor(file: string, rowLabel: string, detail: string) {
-    super(`${file}: ${rowLabel} failed validation\n${detail}`);
+    super(`${file}: ${rowLabel}\n${detail}`);
     this.name = "ValidationError";
   }
 }
@@ -39,20 +39,48 @@ export function validateAll<T>(
   return rows.map((row, i) => {
     const result = schema.safeParse(row);
     if (!result.success) {
-      throw new ValidationError(file, rowLabel(row, i), z.prettifyError(result.error));
+      throw new ValidationError(
+        file,
+        rowLabel(row, i),
+        z.prettifyError(result.error),
+      );
     }
     return result.data;
   });
 }
 
+/**
+ * Assert a key is unique across rows. Throws naming both offending rows the
+ * first time a key repeats.
+ */
+export function assertUnique<T>(
+  file: string,
+  rows: readonly T[],
+  key: (row: T) => string,
+  describe: (row: T) => string,
+): void {
+  const seen = new Map<string, T>();
+  for (const row of rows) {
+    const k = key(row);
+    const prior = seen.get(k);
+    if (prior) {
+      throw new ValidationError(
+        file,
+        `duplicate key ${JSON.stringify(k)}`,
+        `first:  ${describe(prior)}\nsecond: ${describe(row)}`,
+      );
+    }
+    seen.set(k, row);
+  }
+}
+
 /** Run a validate step, printing a summary line and failing loudly. */
 export async function step(
   label: string,
-  fn: () => Promise<number>,
+  fn: () => Promise<string>,
 ): Promise<void> {
   try {
-    const count = await fn();
-    console.log(`  ${label}: ${count} rows ok`);
+    console.log(`  ${label}: ${await fn()}`);
   } catch (err) {
     console.error(`  ${label}: FAILED`);
     console.error(err instanceof Error ? err.message : err);
