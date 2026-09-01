@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import type { SenateMember } from "@/lib/senate-data";
-import { senatorPath } from "@/lib/senator-url";
+import type { ChamberMember } from "@/lib/congress-types";
+import { memberPath } from "@/lib/member-url";
 import { CompassChart } from "./CompassChart";
 
 /**
@@ -13,7 +13,7 @@ export function ProfileCompass({
   members,
   bioguideId,
 }: {
-  members: SenateMember[];
+  members: ChamberMember[];
   bioguideId: string;
 }) {
   const router = useRouter();
@@ -22,7 +22,7 @@ export function ProfileCompass({
       members={members}
       highlightedId={bioguideId}
       dimUnfocused
-      onSelect={(m) => router.push(senatorPath(m))}
+      onSelect={(m) => router.push(memberPath(m))}
     />
   );
 }

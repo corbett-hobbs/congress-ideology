@@ -7,8 +7,8 @@ import { Axis } from "@/components/charts/Axis";
 import type {
   PartyGroup,
   PartyMeanPoint,
-  SenatorTrajectoryPoint,
-} from "@/lib/senate-data";
+  MemberTrajectoryPoint,
+} from "@/lib/congress-types";
 import { congressStartYear, GROUP_LABEL } from "./format";
 
 const W = 620;
@@ -36,7 +36,7 @@ const FILL: Record<PartyGroup, string> = {
 
 interface SenatorTrajectoryChartProps {
   /** This senator's per-Congress nokken_poole_dim1, chronological. */
-  trajectory: SenatorTrajectoryPoint[];
+  trajectory: MemberTrajectoryPoint[];
   /** Full Senate party-mean series; clipped to the trajectory span here. */
   partyMean: PartyMeanPoint[];
   group: PartyGroup;
@@ -99,7 +99,7 @@ export function SenatorTrajectoryChart({
         const congressTicks = axisCongresses(first, lastPt);
         const yTicks = niceTicks(yLo, yHi);
 
-        const senatorLine = line<SenatorTrajectoryPoint>()
+        const senatorLine = line<MemberTrajectoryPoint>()
           .defined((d) => d.dim1 != null)
           .x((d) => x(d.congress))
           .y((d) => y(d.dim1 as number))(trajectory);

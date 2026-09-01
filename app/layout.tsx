@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Newsreader, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { site, siteUrl } from "@/lib/site";
+import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -24,10 +26,12 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const HEADLINE = `${site.name} · Congress ideology, 1789–present`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${site.name} · U.S. Senate ideology`,
+    default: HEADLINE,
     template: `%s · ${site.name}`,
   },
   description: site.description,
@@ -36,12 +40,12 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: site.name,
-    title: `${site.name} · U.S. Senate ideology`,
+    title: HEADLINE,
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} · U.S. Senate ideology`,
+    title: HEADLINE,
     description: site.description,
   },
 };
@@ -52,7 +56,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${newsreader.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-bg text-ink">{children}</body>
+      <body className="min-h-full flex flex-col bg-bg text-ink">
+        <Suspense fallback={<div className="h-12 border-b border-line" />}>
+          <SiteHeader />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }

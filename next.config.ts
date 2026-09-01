@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   // doesn't follow on its own, so include it explicitly.
   outputFileTracingIncludes: {
     "/congress/senators/[bioguide_id]/[name_slug]": ["./pipeline/output/*.json"],
+    "/congress/house/[bioguide_id]/[name_slug]": ["./pipeline/output/*.json"],
     "/sitemap.xml": ["./pipeline/output/*.json"],
   },
 };

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { site } from "@/lib/site";
 
-export const alt = `${site.name} — U.S. Senate ideology`;
+export const alt = `${site.name} — Congress ideology`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -55,7 +55,7 @@ export default function OpengraphImage() {
               fontWeight: 600,
             }}
           >
-            DW-NOMINATE · U.S. SENATE
+            DW-NOMINATE · U.S. CONGRESS
           </div>
           <div
             style={{
@@ -77,8 +77,8 @@ export default function OpengraphImage() {
               lineHeight: 1.35,
             }}
           >
-            Every senator&rsquo;s votes reduced to a point in ideology space —
-            1st to 119th Congress, 1789 to today.
+            Every member of Congress&rsquo;s votes reduced to a point in ideology
+            space — 1st to 119th Congress, 1789 to today.
           </div>
         </div>
 

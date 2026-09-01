@@ -5,7 +5,8 @@ import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
-import type { SenateMember } from "@/lib/senate-data";
+import type { ChamberMember } from "@/lib/congress-types";
+import { memberNoun } from "@/lib/chamber";
 import { MemberTooltip } from "./MemberTooltip";
 import { GROUP_FILL_CLASS } from "./format";
 
@@ -16,16 +17,16 @@ const TICKS = [-1, -0.5, 0, 0.5, 1];
 
 interface CompassChartProps {
   /** Plottable senators for the current Congress, sorted by dim1. */
-  members: SenateMember[];
+  members: ChamberMember[];
   selectedId?: string | null;
   highlightedId?: string | null;
-  onHover?: (m: SenateMember | null) => void;
-  onSelect?: (m: SenateMember) => void;
+  onHover?: (m: ChamberMember | null) => void;
+  onSelect?: (m: ChamberMember) => void;
   /** Fade every dot except the highlighted / selected one (profile pages). */
   dimUnfocused?: boolean;
 }
 
-function zRank(m: SenateMember, selectedId: string | null, highlightedId: string | null) {
+function zRank(m: ChamberMember, selectedId: string | null, highlightedId: string | null) {
   if (m.bioguideId === highlightedId) return 2;
   if (m.bioguideId === selectedId) return 1;
   return 0;
@@ -39,8 +40,9 @@ export function CompassChart({
   onSelect,
   dimUnfocused = false,
 }: CompassChartProps) {
-  const tip = useTooltip<SenateMember>();
+  const tip = useTooltip<ChamberMember>();
 
+  const chamber = members[0]?.chamber ?? "senate";
   const mostLiberal = members[0];
   const mostConservative = members[members.length - 1];
 
@@ -60,7 +62,7 @@ export function CompassChart({
         width={W}
         height={H}
         margin={MARGIN}
-        ariaLabel="Scatter plot of senators by DW-NOMINATE ideology score"
+        ariaLabel={`Scatter plot of ${memberNoun(chamber, { plural: true })} by DW-NOMINATE ideology score`}
       >
         {({ innerWidth, innerHeight }) => {
           const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);

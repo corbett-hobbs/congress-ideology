@@ -1,15 +1,17 @@
 import Link from "next/link";
-import type { SenateMember } from "@/lib/senate-data";
-import { senatorPath } from "@/lib/senator-url";
+import type { ChamberMember } from "@/lib/congress-types";
+import { memberPath } from "@/lib/member-url";
 import { fmt3, GROUP_VAR, partyLabel, stateName } from "./format";
 
 interface ReadingPanelProps {
-  /** Hovered senator takes precedence, else the pinned selection. */
-  member: SenateMember | null;
+  /** Hovered member takes precedence, else the pinned selection. */
+  member: ChamberMember | null;
+  /** "senator" / "representative" for the active chamber. */
+  noun: string;
   congressLabel: string;
   seatsShown: number;
-  mostLiberal: SenateMember | undefined;
-  mostConservative: SenateMember | undefined;
+  mostLiberal: ChamberMember | undefined;
+  mostConservative: ChamberMember | undefined;
 }
 
 function Block({
@@ -31,6 +33,7 @@ function Block({
 
 export function ReadingPanel({
   member,
+  noun,
   congressLabel,
   seatsShown,
   mostLiberal,
@@ -38,7 +41,7 @@ export function ReadingPanel({
 }: ReadingPanelProps) {
   return (
     <aside className="flex flex-col gap-4">
-      <Block label="Selected senator">
+      <Block label={`Selected ${noun}`}>
         {member ? (
           <div className="min-h-[4.6rem]">
             <p className="mb-[0.15rem] font-serif text-[1.15rem] font-semibold">
@@ -57,7 +60,7 @@ export function ReadingPanel({
               <Coord label="Career d1" value={member.careerDim1} />
             </div>
             <Link
-              href={senatorPath(member)}
+              href={memberPath(member)}
               className="mt-[0.7rem] inline-block text-[0.78rem] font-medium text-accent hover:underline"
             >
               {member.name}&rsquo;s profile →
@@ -65,7 +68,7 @@ export function ReadingPanel({
           </div>
         ) : (
           <p className="min-h-[4.6rem] text-[0.85rem] italic text-ink-faint">
-            Hover a senator; click for their profile
+            Hover a {noun}; click for their profile
           </p>
         )}
       </Block>

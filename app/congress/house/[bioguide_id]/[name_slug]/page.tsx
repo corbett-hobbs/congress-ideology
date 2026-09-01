@@ -14,18 +14,17 @@ interface RouteParams {
   name_slug: string;
 }
 
-/** One static page per current senator, at the canonical slug. */
+/** One static page per current representative, at the canonical slug. */
 export function generateStaticParams(): RouteParams[] {
-  return getCurrentMembers("senate").map((s) => ({
-    bioguide_id: s.bioguideId,
-    name_slug: memberSlug(s),
+  return getCurrentMembers("house").map((m) => ({
+    bioguide_id: m.bioguideId,
+    name_slug: memberSlug(m),
   }));
 }
 
-// A valid id with a stale slug isn't pre-built. Keep dynamicParams on so the
-// request reaches the page, which 308-redirects it to the canonical URL (a
-// real HTTP redirect — do not add a loading.tsx here, its Suspense boundary
-// would turn the redirect into a client-side meta refresh).
+// Keep dynamicParams on so a stale name-slug 308-redirects to the canonical
+// URL. Do not add a loading.tsx here — its Suspense boundary would downgrade
+// the redirect to a client-side meta refresh.
 export const dynamicParams = true;
 
 export async function generateMetadata({
@@ -34,16 +33,20 @@ export async function generateMetadata({
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
   const { bioguide_id } = await params;
-  const profile = getMemberProfile("senate", bioguide_id);
-  if (!profile) return { title: "Senator not found" };
+  const profile = getMemberProfile("house", bioguide_id);
+  if (!profile) return { title: "Representative not found" };
 
   const abbr = partyAbbr(profile.party);
+  const seat =
+    profile.district != null
+      ? `${profile.state}-${profile.district}`
+      : `${profile.state} at-large`;
   const congresses =
     profile.chamberCongressCount === 1
       ? "their first Congress"
       : `${profile.chamberCongressCount} Congresses`;
-  const title = `${profile.name} (${abbr}-${profile.state})`;
-  const description = `${profile.name}, ${profile.party} senator from ${profile.stateName} — DW-NOMINATE ideology score and how it has moved across ${congresses}.`;
+  const title = `${profile.name} (${abbr}-${seat})`;
+  const description = `${profile.name}, ${profile.party} representative for ${seat} — DW-NOMINATE ideology score and how it has moved across ${congresses}.`;
   const url = memberPath(profile);
 
   return {
@@ -55,22 +58,22 @@ export async function generateMetadata({
   };
 }
 
-export default async function SenatorPage({
+export default async function RepresentativePage({
   params,
 }: {
   params: Promise<RouteParams>;
 }) {
   const { bioguide_id, name_slug } = await params;
 
-  const profile = getMemberProfile("senate", bioguide_id);
-  if (!profile) notFound(); // unknown id, or not a senator in the latest Congress
+  const profile = getMemberProfile("house", bioguide_id);
+  if (!profile) notFound();
 
   const canonical = memberSlug(profile);
   if (name_slug !== canonical) {
     permanentRedirect(memberPath(profile));
   }
 
-  const current = getChamberCurrent("senate");
+  const current = getChamberCurrent("house");
   return (
     <SenatorProfileView
       profile={profile}

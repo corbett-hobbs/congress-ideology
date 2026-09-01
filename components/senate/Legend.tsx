@@ -1,9 +1,9 @@
-import type { PartyGroup, SenateMember } from "@/lib/senate-data";
+import type { PartyGroup, ChamberMember } from "@/lib/congress-types";
 import { GROUP_LABEL, GROUP_VAR } from "./format";
 
 const ORDER: PartyGroup[] = ["dem", "rep", "other"];
 
-export function Legend({ members }: { members: SenateMember[] }) {
+export function Legend({ members }: { members: ChamberMember[] }) {
   const counts = members.reduce<Record<PartyGroup, number>>(
     (acc, m) => {
       acc[m.group] += 1;

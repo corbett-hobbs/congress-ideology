@@ -2,18 +2,21 @@
 
 import { useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import type { SenatorSearchEntry } from "@/lib/senate-data";
-import { senatorPath } from "@/lib/senator-url";
-import { GROUP_VAR, ordinal, stateName } from "./format";
+import type { MemberSearchEntry } from "@/lib/congress-types";
+import { memberPath } from "@/lib/member-url";
+import { memberTitleAbbr } from "@/lib/chamber";
+import { GROUP_VAR, seatLabel, stateName } from "./format";
 
 const MAX_RESULTS = 8;
 
 interface SenatorSearchProps {
-  entries: SenatorSearchEntry[];
+  entries: MemberSearchEntry[];
+  /** "senator" / "representative" for the active chamber (placeholder copy). */
+  noun: string;
 }
 
 /** Case-insensitive substring match on name and state (abbr or full). */
-function match(entries: SenatorSearchEntry[], raw: string) {
+function match(entries: MemberSearchEntry[], raw: string) {
   const q = raw.trim().toLowerCase();
   if (!q) return [];
   return entries
@@ -26,7 +29,7 @@ function match(entries: SenatorSearchEntry[], raw: string) {
     .slice(0, MAX_RESULTS);
 }
 
-export function SenatorSearch({ entries }: SenatorSearchProps) {
+export function SenatorSearch({ entries, noun }: SenatorSearchProps) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const listId = useId();
@@ -39,12 +42,12 @@ export function SenatorSearch({ entries }: SenatorSearchProps) {
       <input
         type="text"
         value={query}
-        placeholder="Find a senator…"
+        placeholder={`Find a ${noun}…`}
         autoComplete="off"
         role="combobox"
         aria-expanded={open && results.length > 0}
         aria-controls={listId}
-        aria-label="Find a senator"
+        aria-label={`Find a ${noun}`}
         onChange={(e) => {
           setQuery(e.target.value);
           setOpen(true);
@@ -70,13 +73,13 @@ export function SenatorSearch({ entries }: SenatorSearchProps) {
         >
           {results.length === 0 ? (
             <p className="p-[0.55rem] text-[0.8rem] text-ink-faint">
-              No senator matches “{query.trim()}”.
+              No member of Congress matches “{query.trim()}”.
             </p>
           ) : (
             results.map((e) => (
               <Link
                 key={e.bioguideId}
-                href={senatorPath(e)}
+                href={memberPath(e)}
                 role="option"
                 aria-selected={false}
                 onMouseDown={(ev) => ev.preventDefault()}
@@ -88,7 +91,7 @@ export function SenatorSearch({ entries }: SenatorSearchProps) {
                 />
                 {e.name}
                 <span className="ml-auto font-mono text-[0.72rem] text-ink-faint">
-                  {e.state} · {ordinal(e.latestCongress)}
+                  {memberTitleAbbr(e.chamber)} {seatLabel(e)}
                 </span>
               </Link>
             ))

@@ -3,14 +3,14 @@ import { getCurrentMembers, getMemberProfile } from "@/lib/congress-data";
 import { memberSlug } from "@/lib/member-url";
 import { site } from "@/lib/site";
 
-export const alt = "U.S. senator ideology score";
+export const alt = "U.S. representative ideology score";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export function generateStaticParams() {
-  return getCurrentMembers("senate").map((s) => ({
-    bioguide_id: s.bioguideId,
-    name_slug: memberSlug(s),
+  return getCurrentMembers("house").map((m) => ({
+    bioguide_id: m.bioguideId,
+    name_slug: memberSlug(m),
   }));
 }
 
@@ -28,7 +28,7 @@ export default async function Image({
   params: Promise<{ bioguide_id: string }>;
 }) {
   const { bioguide_id } = await params;
-  const profile = getMemberProfile("senate", bioguide_id);
+  const profile = getMemberProfile("house", bioguide_id);
 
   if (!profile) {
     return new ImageResponse(
@@ -55,7 +55,10 @@ export default async function Image({
 
   const dim1 = profile.currentDim1 ?? profile.careerDim1;
   const color = GROUP_COLOR[profile.group];
-  // Bar runs -1 .. +1 across the inner width.
+  const seat =
+    profile.district != null
+      ? `${profile.state}-${profile.district}`
+      : `${profile.state} at-large`;
   const BAR_W = 1056;
   const dotLeft = dim1 == null ? null : ((dim1 + 1) / 2) * BAR_W;
 
@@ -82,7 +85,7 @@ export default async function Image({
               fontWeight: 600,
             }}
           >
-            U.S. SENATOR
+            U.S. REPRESENTATIVE
           </div>
           <div
             style={{
@@ -113,7 +116,7 @@ export default async function Image({
                 background: color,
               }}
             />
-            {profile.party} · {profile.stateName}
+            {profile.party} · {seat}
           </div>
         </div>
 

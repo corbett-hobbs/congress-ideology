@@ -1,5 +1,16 @@
-import type { PartyGroup, SenateMember } from "@/lib/senate-data";
+import type { PartyGroup, ChamberMember } from "@/lib/congress-types";
 import { STATE_NAMES, stateName } from "@/lib/states";
+
+/**
+ * The seat a member holds: "CA" for a senator, "CA-12" for a House district,
+ * "CA-AL" for an at-large House seat.
+ */
+export function seatLabel(
+  m: Pick<ChamberMember, "chamber" | "state" | "district">,
+): string {
+  if (m.chamber !== "house") return m.state;
+  return `${m.state}-${m.district != null ? m.district : "AL"}`;
+}
 
 export const fmt3 = (v: number | null | undefined) =>
   v == null ? "—" : v.toFixed(3);
@@ -43,7 +54,7 @@ export function partyAbbr(party: string): string {
 }
 
 /** "Independent (caucuses with Democrats)", "Democrat", "Whig", … */
-export function partyLabel(m: Pick<SenateMember, "party" | "caucus">): string {
+export function partyLabel(m: Pick<ChamberMember, "party" | "caucus">): string {
   if (m.party === m.caucus || m.caucus === "Unknown") return m.party;
   if (m.caucus === "Democrat" || m.caucus === "Republican") {
     return `${m.party} (caucuses with ${m.caucus}s)`;

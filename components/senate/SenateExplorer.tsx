@@ -1,25 +1,28 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import type { SenateDataset, SenateMember } from "@/lib/senate-data";
-import { senatorPath } from "@/lib/senator-url";
+import type { ChamberCurrent, MemberSearchEntry } from "@/lib/congress-types";
+import { plottableSorted } from "@/lib/congress-types";
+import { chamberFullName, chamberLabel, memberNoun } from "@/lib/chamber";
+import { memberPath } from "@/lib/member-url";
+import { stateName } from "@/lib/states";
+import { useChamberHistory, useExplorerUrl } from "@/lib/use-chamber";
 import { CongressControls } from "./CongressControls";
 import { CompassChart } from "./CompassChart";
+import { BeeswarmChart } from "./BeeswarmChart";
 import { Legend } from "./Legend";
 import { ReadingPanel } from "./ReadingPanel";
-import { TrendChart } from "./TrendChart";
-import {
-  buildDelegations,
-  DelegationChart,
-  type DelegationSort,
-} from "./DelegationChart";
+import { TrendChart, type TrendMode } from "./TrendChart";
+import { buildDelegations, DelegationChart, type DelegationSort } from "./DelegationChart";
 import { SenatorSearch } from "./SenatorSearch";
+import { StateFilter } from "./StateFilter";
 import { SenateTableModal } from "./SenateTableModal";
 import { SiteFooter } from "./SiteFooter";
 import { ordinal } from "./format";
 
 const PLAY_INTERVAL_MS = 260;
+const PRELOAD_DELAY_MS = 1500;
 
 function Panel({
   label,
@@ -28,14 +31,14 @@ function Panel({
   id,
 }: {
   label: string;
-  action?: React.ReactNode;
-  children: React.ReactNode;
+  action?: ReactNode;
+  children: ReactNode;
   id?: string;
 }) {
   return (
     <section
       id={id}
-      className="scroll-mt-6 rounded-[10px] border border-line bg-surface p-[1.1rem_1.25rem_1.25rem]"
+      className="scroll-mt-[4.5rem] rounded-[10px] border border-line bg-surface p-[1.1rem_1.25rem_1.25rem]"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <p className="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-faint">
@@ -48,78 +51,134 @@ function Panel({
   );
 }
 
-export function SenateExplorer({ data }: { data: SenateDataset }) {
-  const { congresses, latestCongress, byCongress, allByCongress, trend, search } =
-    data;
-  const minCongress = congresses[0];
+interface ExplorerProps {
+  senate: ChamberCurrent;
+  house: ChamberCurrent;
+  search: MemberSearchEntry[];
+}
 
+export function SenateExplorer({ senate, house, search }: ExplorerProps) {
   const router = useRouter();
+  const { chamber, stateFilter, setStateFilter } = useExplorerUrl();
+  const current = chamber === "house" ? house : senate;
+  const { latestCongress, minCongress } = current;
+
   const [congress, setCongress] = useState(latestCongress);
-  const [hovered, setHovered] = useState<SenateMember | null>(null);
   const [playing, setPlaying] = useState(false);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [delegSort, setDelegSort] = useState<DelegationSort>("gap");
+  const [trendMode, setTrendMode] = useState<TrendMode>("active");
   const [tableOpen, setTableOpen] = useState(false);
 
-  const members = useMemo(
-    () => byCongress[congress] ?? [],
-    [byCongress, congress],
+  // The scrub-through-time payload loads on demand (it is ~1.3 MB for the House).
+  const [historyNeeded, setHistoryNeeded] = useState(false);
+  const { history, loading } = useChamberHistory(chamber, historyNeeded);
+  useEffect(() => {
+    const t = setTimeout(() => setHistoryNeeded(true), PRELOAD_DELAY_MS);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Reset to the current Congress whenever the chamber changes (adjust state
+  // during render — the pattern React recommends over a setState-in-effect).
+  const [prevChamber, setPrevChamber] = useState(chamber);
+  if (prevChamber !== chamber) {
+    setPrevChamber(chamber);
+    setCongress(latestCongress);
+    setPlaying(false);
+    setHoveredId(null);
+  }
+
+  const atLatest = congress === latestCongress;
+  const historyPending = !atLatest && (!history || history.chamber !== chamber);
+
+  const plottable = useMemo(() => {
+    if (atLatest) return current.plottable;
+    if (historyPending) return [];
+    return plottableSorted(history!.allByCongress[congress] ?? []);
+  }, [atLatest, historyPending, current.plottable, history, congress]);
+
+  const histMembers =
+    !atLatest && history?.chamber === chamber
+      ? (history.allByCongress[congress] ?? [])
+      : [];
+
+  const stateOptions = useMemo(
+    () =>
+      [...new Set(current.all.map((m) => m.state))].sort((a, b) =>
+        stateName(a).localeCompare(stateName(b)),
+      ),
+    [current.all],
   );
-  const allMembers = useMemo(
-    () => allByCongress[congress] ?? [],
-    [allByCongress, congress],
+
+  const stateMembers = useMemo(
+    () => (stateFilter ? plottable.filter((m) => m.state === stateFilter) : plottable),
+    [plottable, stateFilter],
   );
-  const mostLiberal = members[0];
-  const mostConservative = members[members.length - 1];
 
   const goToCongress = useCallback((c: number) => {
+    setHistoryNeeded(true);
     setCongress(c);
-    setHovered(null);
+    setHoveredId(null);
   }, []);
 
   useEffect(() => {
     if (!playing) return;
+    if (historyPending) return; // wait for history before advancing
     const id = setTimeout(() => {
       if (congress >= latestCongress) setPlaying(false);
       else goToCongress(congress + 1);
     }, PLAY_INTERVAL_MS);
     return () => clearTimeout(id);
-  }, [playing, congress, latestCongress, goToCongress]);
+  }, [playing, historyPending, congress, latestCongress, goToCongress]);
 
   const togglePlay = useCallback(() => {
+    setHistoryNeeded(true);
     setPlaying((p) => {
-      if (!p && congress >= latestCongress) goToCongress(minCongress);
+      if (!p && congress >= latestCongress) {
+        setCongress(minCongress);
+        setHoveredId(null);
+      }
       return !p;
     });
-  }, [congress, latestCongress, minCongress, goToCongress]);
+  }, [congress, latestCongress, minCongress]);
 
   const stopAnd = useCallback((fn: () => void) => {
     setPlaying(false);
     fn();
   }, []);
 
-  const readingMember = hovered;
+  const hovered = plottable.find((m) => m.bioguideId === hoveredId) ?? null;
+  const shown = stateFilter ? stateMembers : plottable;
+  const mostLiberal = shown[0];
+  const mostConservative = shown[shown.length - 1];
+
+  const noun = memberNoun(chamber);
+  const nounPlural = memberNoun(chamber, { plural: true });
   const congressLabel = `${ordinal(congress)} Congress`;
   const spanYears = (latestCongress - minCongress) * 2 + 2;
+  const isHouse = chamber === "house";
+  const delegMode = isHouse ? "range" : "pair";
 
   const { summary } = useMemo(
-    () => buildDelegations(members),
-    [members],
+    () => buildDelegations(plottable, delegMode),
+    [plottable, delegMode],
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-11">
+    <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-9">
       <header className="max-w-[52rem]">
         <p className="mb-2 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-accent">
-          DW‑NOMINATE · U.S. Senate, {ordinal(minCongress)}–{ordinal(latestCongress)} Congress
+          DW‑NOMINATE · {chamberFullName(chamber)}, {ordinal(minCongress)}–
+          {ordinal(latestCongress)} Congress
         </p>
         <h1 className="mb-[0.6rem] text-balance font-serif text-[clamp(2.1rem,4.2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.01em]">
           The Ideology Space
         </h1>
         <p className="max-w-[42rem] text-pretty text-[1.02rem] leading-[1.55] text-ink-muted">
-          Every senator&rsquo;s roll-call votes reduced to two coordinates —
+          Every {noun}&rsquo;s roll-call votes reduced to two coordinates —
           economic left–right on one axis, a second cross-cutting dimension on
           the other. Scrub through {spanYears} years of Congresses to watch the
-          chamber pull apart.
+          chamber pull apart, or pick a state to see its delegation.
         </p>
       </header>
 
@@ -133,19 +192,49 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
         onTogglePlay={togglePlay}
         onToday={() => stopAnd(() => goToCongress(latestCongress))}
       >
-        <SenatorSearch entries={search} />
+        <div className="ml-auto flex flex-none items-center gap-2">
+          <StateFilter states={stateOptions} />
+          <SenatorSearch entries={search} noun={noun} />
+        </div>
       </CongressControls>
 
       <section className="grid grid-cols-1 items-start gap-5 md:grid-cols-[minmax(0,1fr)_15.5rem]">
         <div className="relative rounded-[10px] border border-line bg-surface p-[1.25rem_1.25rem_0.75rem]">
-          <CompassChart
-            members={members}
-            highlightedId={hovered?.bioguideId ?? null}
-            onHover={(m) => {
-              if (m) setHovered(m);
-            }}
-            onSelect={(m) => router.push(senatorPath(m))}
-          />
+          {stateFilter && (
+            <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.82rem]">
+              <span className="font-medium text-ink">
+                {stateName(stateFilter)} · {stateMembers.length}{" "}
+                {stateMembers.length === 1 ? noun : nounPlural}
+                {" in the "}
+                {ordinal(congress)} {chamberLabel(chamber)}
+              </span>
+              <button
+                type="button"
+                onClick={() => setStateFilter(null)}
+                className="text-accent hover:underline"
+              >
+                Show the whole chamber
+              </button>
+            </div>
+          )}
+
+          {historyPending ? (
+            <div className="grid h-[280px] place-items-center text-[0.85rem] text-ink-faint">
+              {loading ? "Loading history…" : "Scrubbing loads the full history"}
+            </div>
+          ) : stateFilter && isHouse ? (
+            <BeeswarmChart members={stateMembers} highlightId={hovered?.bioguideId} />
+          ) : stateFilter ? (
+            <DelegationChart members={plottable} filterState={stateFilter} mode="pair" />
+          ) : (
+            <CompassChart
+              members={plottable}
+              highlightedId={hoveredId}
+              onHover={(m) => m && setHoveredId(m.bioguideId)}
+              onSelect={(m) => router.push(memberPath(m))}
+            />
+          )}
+
           <div className="flex justify-between px-[0.1rem] pb-[0.9rem] pt-[0.15rem] font-mono text-[0.68rem] text-ink-faint">
             <span>← more liberal</span>
             <span className="font-sans tracking-[0.03em] text-ink-muted">
@@ -153,26 +242,63 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
             </span>
             <span>more conservative →</span>
           </div>
-          <Legend members={members} />
+          <Legend members={shown} />
         </div>
 
         <ReadingPanel
-          member={readingMember}
+          member={hovered}
+          noun={noun}
           congressLabel={congressLabel}
-          seatsShown={members.length}
+          seatsShown={shown.length}
           mostLiberal={mostLiberal}
           mostConservative={mostConservative}
         />
       </section>
 
-      <Panel label={`Party means, dimension 1 · ${1789}–${1789 + (latestCongress - 1) * 2 + 2}`}>
+      <Panel
+        label={`Party means, dimension 1 · 1789–${1789 + (latestCongress - 1) * 2 + 2}`}
+        action={
+          <div
+            className="flex flex-none flex-wrap gap-[0.4rem]"
+            role="group"
+            aria-label="Trend chambers"
+          >
+            {(
+              [
+                ["active", "This chamber"],
+                ["senate", "Senate"],
+                ["house", "House"],
+                ["both", "Both"],
+              ] as const
+            ).map(([m, text]) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => setTrendMode(m)}
+                aria-pressed={trendMode === m}
+                className={`rounded-md border px-[0.6rem] py-[0.3rem] text-[0.72rem] font-medium transition-colors ${
+                  trendMode === m
+                    ? "border-accent bg-accent text-accent-ink"
+                    : "border-line-strong bg-surface-raised text-ink-muted hover:border-accent"
+                }`}
+              >
+                {text}
+              </button>
+            ))}
+          </div>
+        }
+      >
         <p className="mb-2 mt-1 max-w-[44rem] text-[0.76rem] text-ink-faint">
           Per-Congress means (nokken–poole), so real drift shows. Click to jump.
+          {trendMode === "both" ? " House is dashed." : ""}
         </p>
         <TrendChart
-          trend={trend}
-          minCongress={minCongress}
-          maxCongress={latestCongress}
+          senateTrend={senate.trend}
+          houseTrend={house.trend}
+          activeChamber={chamber}
+          mode={trendMode}
+          minCongress={Math.min(senate.minCongress, house.minCongress)}
+          maxCongress={Math.max(senate.latestCongress, house.latestCongress)}
           congress={congress}
           onScrub={(c) => stopAnd(() => goToCongress(c))}
         />
@@ -180,12 +306,20 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
 
       <Panel
         id="delegation"
-        label="Delegation alignment · each state's two senators, dimension 1"
+        label={
+          isHouse
+            ? "Delegation spread · each state's House members on dimension 1"
+            : "Delegation alignment · each state's two senators, dimension 1"
+        }
         action={
-          <div className="flex flex-none gap-[0.4rem]" role="group" aria-label="Sort delegations">
+          <div
+            className="flex flex-none gap-[0.4rem]"
+            role="group"
+            aria-label="Sort delegations"
+          >
             {(
               [
-                ["gap", "Most divided first"],
+                ["gap", isHouse ? "Widest spread" : "Most divided"],
                 ["az", "A–Z"],
               ] as const
             ).map(([mode, text]) => (
@@ -207,16 +341,25 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
         }
       >
         <p className="mb-[0.85rem] mt-[0.4rem] max-w-[44rem] text-[0.76rem] text-ink-faint">
-          {summary.shown} of {summary.totalStates} states show a full two-senator
-          pairing in the {ordinal(congress)} Congress
-          {summary.omitted > 0
-            ? `; ${summary.omitted} ${summary.omitted === 1 ? "state is" : "states are"} omitted (a seat held by no one long enough to score).`
-            : "."}{" "}
-          Where a mid-term change left three senators, the two with the most
-          roll-call votes are shown.
+          {isHouse
+            ? `Each bar runs from a state's most-liberal to most-conservative House member in the ${ordinal(congress)} Congress; the right-hand count is the D/R split. Click a row for the full beeswarm.`
+            : `${summary.shown} of ${summary.totalStates} states show a full two-senator pairing in the ${ordinal(congress)} Congress${
+                summary.omitted > 0
+                  ? `; ${summary.omitted} omitted (a seat held by no one long enough to score)`
+                  : ""
+              }. Click a row to filter to that state.`}
         </p>
         <div className="max-h-[32rem] overflow-y-auto border-t border-line pt-[0.4rem]">
-          <DelegationChart members={members} sort={delegSort} />
+          {historyPending ? (
+            <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
+          ) : (
+            <DelegationChart
+              members={plottable}
+              sort={delegSort}
+              mode={delegMode}
+              onSelectState={(s) => setStateFilter(s)}
+            />
+          )}
         </div>
       </Panel>
 
@@ -233,9 +376,12 @@ export function SenateExplorer({ data }: { data: SenateDataset }) {
       <SenateTableModal
         open={tableOpen}
         congress={congress}
-        members={allMembers}
+        senateMembers={atLatest ? senate.all : chamber === "senate" ? histMembers : []}
+        houseMembers={atLatest ? house.all : chamber === "house" ? histMembers : []}
+        activeChamber={chamber}
+        stateFilter={stateFilter}
         onClose={() => setTableOpen(false)}
       />
-    </div>
+    </main>
   );
 }

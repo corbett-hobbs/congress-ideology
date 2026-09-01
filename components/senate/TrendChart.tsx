@@ -5,17 +5,25 @@ import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
-import type { PartyMeanPoint } from "@/lib/senate-data";
+import type { Chamber } from "@/lib/chamber";
+import { chamberLabel } from "@/lib/chamber";
+import type { PartyMeanPoint } from "@/lib/congress-types";
 
 const W = 1160;
 const H = 190;
-const MARGIN = { top: 14, right: 96, bottom: 24, left: 44 };
+const MARGIN = { top: 14, right: 108, bottom: 24, left: 44 };
 const Y_DOMAIN: [number, number] = [-0.6, 0.65];
 const Y_TICKS = [-0.5, 0, 0.5];
 const YEAR_TICKS = [1789, 1829, 1869, 1909, 1949, 1989, 2025];
 
+/** Which chamber(s) to plot. "active" follows the page's chamber switcher. */
+export type TrendMode = "active" | "senate" | "house" | "both";
+
 interface TrendChartProps {
-  trend: PartyMeanPoint[];
+  senateTrend: PartyMeanPoint[];
+  houseTrend: PartyMeanPoint[];
+  activeChamber: Chamber;
+  mode: TrendMode;
   minCongress: number;
   maxCongress: number;
   congress: number;
@@ -24,7 +32,10 @@ interface TrendChartProps {
 
 /** Party-mean dimension 1 (per-Congress nokken_poole) over time. Click to jump. */
 export function TrendChart({
-  trend,
+  senateTrend,
+  houseTrend,
+  activeChamber,
+  mode,
   minCongress,
   maxCongress,
   congress,
@@ -32,12 +43,25 @@ export function TrendChart({
 }: TrendChartProps) {
   const yearToCongress = (year: number) => Math.round((year - 1789) / 2) + 1;
 
+  const series: { chamber: Chamber; trend: PartyMeanPoint[]; dashed: boolean }[] =
+    (() => {
+      const resolved = mode === "active" ? activeChamber : mode;
+      if (resolved === "senate")
+        return [{ chamber: "senate", trend: senateTrend, dashed: false }];
+      if (resolved === "house")
+        return [{ chamber: "house", trend: houseTrend, dashed: false }];
+      return [
+        { chamber: "senate", trend: senateTrend, dashed: false },
+        { chamber: "house", trend: houseTrend, dashed: true },
+      ];
+    })();
+
   return (
     <ChartFrame
       width={W}
       height={H}
       margin={MARGIN}
-      ariaLabel="Line chart of Senate party ideology means over time"
+      ariaLabel="Line chart of congressional party ideology means over time"
     >
       {({ innerWidth, innerHeight }) => {
         const x = scaleLinear()
@@ -45,9 +69,6 @@ export function TrendChart({
           .range([0, innerWidth]);
         const y = scaleLinear().domain(Y_DOMAIN).range([innerHeight, 0]);
 
-        // Map a click anywhere in the plot area to a Congress. The overlay
-        // rect lives inside the margin-translated <g>, so its CTM already
-        // accounts for the left margin — invert the x-scale directly.
         const handleScrub: MouseEventHandler<SVGRectElement> = (e) => {
           const ctm = e.currentTarget.getScreenCTM();
           if (!ctm) return;
@@ -58,17 +79,14 @@ export function TrendChart({
           onScrub(Math.max(minCongress, Math.min(maxCongress, cg)));
         };
 
-        const demPath = line<PartyMeanPoint>()
-          .defined((d) => d.dem != null)
-          .x((d) => x(d.congress))
-          .y((d) => y(d.dem as number))(trend);
-        const repPath = line<PartyMeanPoint>()
-          .defined((d) => d.rep != null)
-          .x((d) => x(d.congress))
-          .y((d) => y(d.rep as number))(trend);
+        const pathFor = (trend: PartyMeanPoint[], key: "dem" | "rep") =>
+          line<PartyMeanPoint>()
+            .defined((d) => d[key] != null)
+            .x((d) => x(d.congress))
+            .y((d) => y(d[key] as number))(trend);
 
-        const last = trend[trend.length - 1];
         const px = x(congress);
+        const single = series.length === 1;
 
         return (
           <>
@@ -96,8 +114,47 @@ export function TrendChart({
               y2={y(0)}
             />
 
-            {demPath && <path className="trend-line stroke-dem" d={demPath} />}
-            {repPath && <path className="trend-line stroke-rep" d={repPath} />}
+            {series.map(({ chamber, trend, dashed }) => {
+              const dem = pathFor(trend, "dem");
+              const rep = pathFor(trend, "rep");
+              const last = trend[trend.length - 1];
+              return (
+                <g key={chamber}>
+                  {dem && (
+                    <path
+                      className="trend-line stroke-dem"
+                      d={dem}
+                      strokeDasharray={dashed ? "5 4" : undefined}
+                    />
+                  )}
+                  {rep && (
+                    <path
+                      className="trend-line stroke-rep"
+                      d={rep}
+                      strokeDasharray={dashed ? "5 4" : undefined}
+                    />
+                  )}
+                  {last?.dem != null && (
+                    <text
+                      className="trend-end-label fill-dem"
+                      x={x(last.congress) + 8}
+                      y={y(last.dem) + 4}
+                    >
+                      {single ? "Democrats" : `Dem · ${chamberLabel(chamber)}`}
+                    </text>
+                  )}
+                  {last?.rep != null && (
+                    <text
+                      className="trend-end-label fill-rep"
+                      x={x(last.congress) + 8}
+                      y={y(last.rep) + 4}
+                    >
+                      {single ? "Republicans" : `Rep · ${chamberLabel(chamber)}`}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
 
             <line
               className="trend-playhead"
@@ -106,25 +163,6 @@ export function TrendChart({
               y1={0}
               y2={innerHeight}
             />
-
-            {last?.dem != null && (
-              <text
-                className="trend-end-label fill-dem"
-                x={x(last.congress) + 8}
-                y={y(last.dem) + 4}
-              >
-                Democrats
-              </text>
-            )}
-            {last?.rep != null && (
-              <text
-                className="trend-end-label fill-rep"
-                x={x(last.congress) + 8}
-                y={y(last.rep) + 4}
-              >
-                Republicans
-              </text>
-            )}
 
             <rect
               x={0}

@@ -1,20 +1,31 @@
 import type { Metadata } from "next";
-import { getSenateDataset } from "@/lib/senate-data";
+import { Suspense } from "react";
+import {
+  getChamberCurrent,
+  getMemberSearchIndex,
+} from "@/lib/congress-data";
 import { site } from "@/lib/site";
 import { SenateExplorer } from "@/components/senate/SenateExplorer";
 
 export const metadata: Metadata = {
-  title: { absolute: `${site.name} · U.S. Senate ideology, 1789–present` },
+  title: { absolute: `${site.name} · Congress ideology, 1789–present` },
   description: site.description,
   alternates: { canonical: "/" },
   openGraph: {
-    title: `${site.name} · U.S. Senate ideology`,
+    title: `${site.name} · Congress ideology`,
     description: site.description,
     url: "/",
   },
 };
 
 export default function Home() {
-  const data = getSenateDataset();
-  return <SenateExplorer data={data} />;
+  const senate = getChamberCurrent("senate");
+  const house = getChamberCurrent("house");
+  const search = getMemberSearchIndex();
+
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <SenateExplorer senate={senate} house={house} search={search} />
+    </Suspense>
+  );
 }
