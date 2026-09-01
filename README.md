@@ -33,10 +33,11 @@ pnpm typecheck      # tsc --noEmit
 pnpm lint           # eslint
 pnpm test           # vitest run
 
-pnpm fetch          # download all raw source data into pipeline/raw/
+pnpm fetch:all      # download all raw source data into pipeline/raw/
 pnpm validate       # schema-check raw data
 pnpm transform      # raw/ -> normalized JSON in pipeline/output/
-pnpm pipeline       # fetch + validate + transform
+pnpm pipeline       # fetch:all + validate + transform
+pnpm pipeline:check # validate + transform + assert output unchanged (CI)
 ```
 
 ## Layout
