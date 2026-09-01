@@ -2,9 +2,9 @@
 
 Data sources used by this project, and how they must be credited.
 
-> **TODO (later session):** none of this is surfaced in the UI yet. Once there
-> are pages, the Voteview citation below must appear in the site footer (and/or
-> a dedicated "About the data" page). Tracked here so it is not forgotten.
+The Voteview citation and congress-legislators credit appear in the site
+footer (`components/senate/SiteFooter.tsx`) and the README. Keep those in sync
+with this file.
 
 ---
 
