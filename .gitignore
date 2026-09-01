@@ -48,3 +48,6 @@ pipeline/**/*.download
 
 # editor / agent tooling
 .claude/
+
+# session scratch
+.scratch/
