@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 interface TooltipState<T> {
@@ -42,10 +42,9 @@ const EST_W = 208;
 const EST_H = 92;
 
 export function Tooltip<T>({ state, children }: TooltipProps<T>) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted || !state) return null;
+  // `state` starts null, so server and first client render both produce
+  // nothing; the portal only appears after a client-side pointer interaction.
+  if (!state || typeof document === "undefined") return null;
 
   let left = state.x + OFFSET;
   let top = state.y + OFFSET;
