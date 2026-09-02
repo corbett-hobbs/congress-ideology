@@ -251,7 +251,7 @@ export function SenateExplorer({
         <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.15fr_1fr]">
           <Card
             title="Where members stand"
-            lede="Each dot is a member of Congress, positioned by how they vote."
+            lede={`Each dot is a member of Congress, positioned by how they voted in the ${ordinal(congress)} ${bodyLabel}.`}
             action={
               <div className="w-full sm:w-auto">
                 <SenatorSearch
@@ -323,7 +323,7 @@ export function SenateExplorer({
 
           <Card
             title="How each state votes"
-            lede="How far apart each state's delegation sits, same Congress as the Where members stand chart."
+            lede={`How far apart each state's delegation sits in the ${ordinal(congress)} ${bodyLabel}.`}
             action={
               <div
                 className="flex flex-none gap-[0.35rem]"
