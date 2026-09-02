@@ -23,11 +23,11 @@ export function CompassPanel({
           <span className="text-[0.6rem] text-ink-faint [writing-mode:vertical-rl]">
             {topEndpoint}
           </span>
-          <span className="flex items-center gap-1.5 text-[0.72rem] text-ink-muted [writing-mode:vertical-rl] [transform:rotate(180deg)]">
+          <span className="flex items-center gap-1.5 text-[0.72rem] text-ink-muted [writing-mode:vertical-rl]">
             {middle}
             <span
               title={hint}
-              className="inline-flex size-[13px] cursor-help items-center justify-center rounded-full border border-ink-faint font-mono text-[0.55rem] leading-none text-ink-muted [transform:none] [writing-mode:horizontal-tb]"
+              className="inline-flex size-[13px] cursor-help items-center justify-center rounded-full border border-ink-faint font-mono text-[0.55rem] leading-none text-ink-muted [writing-mode:horizontal-tb]"
             >
               i
             </span>
