@@ -9,6 +9,7 @@ import { ProfileCompass } from "./ProfileCompass";
 import { CompassPanel } from "./CompassPanel";
 import { Dim2Footnote } from "./Dim2Footnote";
 import { DelegationChart } from "./DelegationChart";
+import { BeeswarmChart } from "./BeeswarmChart";
 import { SenatorTrajectoryChart } from "./SenatorTrajectoryChart";
 import { SiteFooter } from "./SiteFooter";
 import {
@@ -189,8 +190,8 @@ export function SenatorProfileView({
           </Panel>
 
           {isHouse ? (
-            <Panel label={`${stateName} delegation`}>
-              <p className="max-w-[46rem] text-[0.85rem] leading-[1.6] text-ink-muted">
+            <Panel label={`${stateName} delegation · dimension 1`}>
+              <p className="mb-2 max-w-[46rem] text-[0.85rem] leading-[1.6] text-ink-muted">
                 {stateName}&rsquo;s delegation in the {ordinal(latestCongress)}{" "}
                 House:{" "}
                 <span className="font-medium text-ink">
@@ -200,14 +201,15 @@ export function SenatorProfileView({
                 {spread != null
                   ? `, dimension-1 spread ${fmt2(spread)} (from ${fmt2(dims[0])} to ${fmt2(dims[dims.length - 1])})`
                   : ""}
-                .{" "}
+                .{inChamber ? ` ${name} is ringed.` : ""}{" "}
                 <Link
                   href={`/?chamber=house&state=${state}`}
                   className="text-accent hover:underline"
                 >
-                  See the {stateName} beeswarm →
+                  Open in the explorer →
                 </Link>
               </p>
+              <BeeswarmChart members={stateScored} highlightId={bioguideId} />
             </Panel>
           ) : (
             <Panel label={`${stateName} delegation · both senators on dimension 1`}>
