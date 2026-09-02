@@ -1,8 +1,9 @@
-# Congressional Ideology
+# InsideGov
 
-**[congress-ideology.vercel.app](https://congress-ideology.vercel.app)** ·
-every U.S. senator's voting record reduced to a point in a two-dimensional
-ideology space, from the 1st Congress (1789) to the 119th (2025–27).
+**[insidegov.fyi](https://insidegov.fyi)** ·
+every member of Congress's voting record reduced to a point in a
+two-dimensional ideology space, from the 1st Congress (1789) to the 119th
+(2025–27).
 
 ![The Senate ideology explorer](docs/images/screenshot-home.png)
 

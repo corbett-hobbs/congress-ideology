@@ -23,7 +23,7 @@ export default function NotFound() {
         href="/"
         className="font-mono text-[0.8rem] uppercase tracking-[0.1em] text-accent hover:underline"
       >
-        ← Congressional Ideology
+        ← InsideGov
       </Link>
     </main>
   );

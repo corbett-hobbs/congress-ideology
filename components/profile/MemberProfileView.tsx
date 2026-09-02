@@ -40,7 +40,7 @@ export function MemberProfileView({
           href={explorerHref}
           className="font-mono text-[0.72rem] uppercase tracking-[0.1em] text-accent hover:underline"
         >
-          ← Congressional Ideology
+          ← InsideGov
         </Link>
       </div>
 

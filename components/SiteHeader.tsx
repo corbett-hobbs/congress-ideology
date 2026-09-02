@@ -14,7 +14,7 @@ export function SiteHeader() {
           href="/"
           className="whitespace-nowrap font-serif text-[0.95rem] font-semibold tracking-tight text-ink sm:text-[1.1rem]"
         >
-          Congressional Ideology
+          InsideGov
         </Link>
         <SiteNav />
       </div>

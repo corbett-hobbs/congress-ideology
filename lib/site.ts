@@ -13,9 +13,10 @@ export const siteUrl = (
 ).replace(/\/$/, "");
 
 export const site = {
-  name: "Congressional Ideology",
+  name: "InsideGov",
+  /** Slug form — kept in sync with package.json `name`, not the display name. */
   shortName: "congress-ideology",
-  tagline: "Congress ideology, from the roll-call record",
+  tagline: "Congress, by the numbers",
   description:
     "Every member of Congress's votes reduced to a two-dimensional ideology score (DW-NOMINATE, 1st–119th Congress). Scrub through 236 years of the House and Senate, filter a state's delegation, and read any current member's trajectory.",
 } as const;
