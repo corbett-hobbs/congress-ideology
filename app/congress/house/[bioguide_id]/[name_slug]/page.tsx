@@ -7,7 +7,7 @@ import {
 } from "@/lib/congress-data";
 import { memberPath, memberSlug } from "@/lib/member-url";
 import { partyAbbr } from "@/components/senate/format";
-import { SenatorProfileView } from "@/components/senate/SenatorProfileView";
+import { MemberProfileView } from "@/components/profile/MemberProfileView";
 
 interface RouteParams {
   bioguide_id: string;
@@ -75,7 +75,7 @@ export default async function RepresentativePage({
 
   const current = getChamberCurrent("house");
   return (
-    <SenatorProfileView
+    <MemberProfileView
       profile={profile}
       compassMembers={current.plottable}
       delegationMembers={current.all}

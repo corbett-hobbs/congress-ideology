@@ -7,22 +7,29 @@ components/
   charts/   chart primitives — ChartFrame, Axis, Tooltip. Every chart is
             built from these. D3 is used only for scale/shape maths; the SVG
             elements are plain JSX.
-  senate/   the "Congressional Ideology" explorer (SenateExplorer + compass, beeswarm,
-            trend, delegation, search, table, controls) and the per-member
-            profile view (SenatorProfileView, SenatorTrajectoryChart,
-            ProfileCompass) used by /congress/{senators,house}/[bioguide_id]/[name_slug].
-            Names still say "Senate"/"Senator" — the components were written
-            Senate-first and generalized in place; the chamber is a prop/URL param.
-  SiteHeader.tsx  the persistent top toolbar (wordmark + StateFilter + chamber
-            switcher), rendered once in the root layout on every page.
+  senate/   the "Ideology" vertical: the explorer (SenateExplorer + compass,
+            beeswarm, trend, delegation, search, table, toolbar) and the
+            ideology-specific profile pieces (SenatorTrajectoryChart,
+            ProfileCompass, CompassPanel, Dim2Footnote, SiteFooter).
+            Names still say "Senate"/"Senator" — written Senate-first and
+            generalized in place; the chamber is a prop/URL param.
+  profile/  the per-member profile page, split into verticals-agnostic pieces:
+            MemberProfileView (the shell), ProfileHeader (identity block),
+            ProfilePanel (shared card chrome), and one section per vertical —
+            MemberIdeologySection today, others added as siblings. Used by
+            /congress/{senators,house}/[bioguide_id]/[name_slug].
+  SiteHeader.tsx / SiteNav.tsx  the persistent top bar (wordmark + top-level
+            section nav from lib/verticals.ts), rendered once in the root
+            layout on every page. The explorer's own controls (chamber / state
+            / play / slider) live below it in senate/ExplorerToolbar.tsx.
 ```
 
 The compass and delegation charts take optional props (`dimUnfocused`,
 `filterState`, `highlightId`, `mode`, navigate-on-click) so the profile pages
 reuse them rather than duplicating chart logic. The active chamber and state
 filter live in the URL (`?chamber=house&state=CA`) via `lib/use-chamber.ts`;
-both are driven only from `SiteHeader` — no view has its own copy of either
-control. A state filter narrows the explorer's compass panel to that state's
+both are driven only from `senate/ExplorerToolbar` — no view has its own copy
+of either control. A state filter narrows the explorer's compass panel to that state's
 delegation and overlays its trend on the party-means chart (as a comparison
 line, never a replacement).
 
