@@ -227,6 +227,14 @@ export function SenateExplorer({
     overlayVisible && stateMembers.length > 0 && stateMembers.length <= 3;
   const showCompass = !stateFilter && !historyPending;
   const bodyLabel = view === "both" ? "Congress" : chamberLabel(view);
+  // "senators sit" / "representatives sit" / "delegation sits" — chamber-aware
+  // subject for the "How each state votes" lede.
+  const delegationClause =
+    view === "senate"
+      ? "senators sit"
+      : view === "house"
+        ? "representatives sit"
+        : "delegation sits";
 
   return (
     <>
@@ -323,7 +331,7 @@ export function SenateExplorer({
 
           <Card
             title="How each state votes"
-            lede={`How far apart each state's delegation sits in the ${ordinal(congress)} Congress.`}
+            lede={`How far apart each state's ${delegationClause} in the ${ordinal(congress)} Congress.`}
             action={
               <div
                 className="flex flex-none gap-[0.35rem]"
@@ -332,7 +340,7 @@ export function SenateExplorer({
               >
                 {(
                   [
-                    ["gap", isSenate ? "Most divided" : "Widest spread"],
+                    ["gap", "Widest spread"],
                     ["az", "A–Z"],
                   ] as const
                 ).map(([mode, text]) => (
