@@ -162,21 +162,26 @@ export function TrendChart({
       </ChartFrame>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.72rem] text-ink-muted">
-        <span className="flex items-center gap-1.5">
-          <Swatch color="var(--dem)" /> Democrats
-        </span>
-        <span className="flex items-center gap-1.5">
-          <Swatch color="var(--rep)" /> Republicans
-        </span>
-        {stateOverlay && (
+        {stateOverlay ? (
           <>
-            <span className="flex items-center gap-1.5 text-ink-faint">
-              <Swatch color="var(--ink)" />
-              {stateOverlay.label} delegation
+            <span className="flex items-center gap-1.5">
+              <Swatch color="var(--dem)" /> {stateOverlay.label} Democrats
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Swatch color="var(--rep)" /> {stateOverlay.label} Republicans
             </span>
             <span className="flex items-center gap-1.5 text-ink-faint">
               <Swatch color="var(--ink-faint)" dash thin />
-              national mean
+              National party mean
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="flex items-center gap-1.5">
+              <Swatch color="var(--dem)" /> Democrats
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Swatch color="var(--rep)" /> Republicans
             </span>
           </>
         )}
