@@ -44,6 +44,25 @@ Biographical data and the `icpsr` ↔ `bioguide_id` crosswalk come from the
 
 ---
 
+## @unitedstates/images — member photos
+
+Official portrait photos for current members come from the
+`@unitedstates/images` project (US Government Publishing Office photos,
+re-published and resized).
+
+- Repository: https://github.com/unitedstates/images
+- Served from: https://unitedstates.github.io/images/congress/[size]/[bioguide].jpg
+- Sizes committed: `225x275` (tooltip) and `450x550` (profile page), under
+  `public/images/members/`. Fetched by `pipeline/fetch/photos.ts`; the
+  bioguide-id ↔ photo availability list is `pipeline/output/member-photos.json`.
+- License: **CC0 / public domain.** GPO photographs are U.S. Government works.
+  No attribution legally required; credited here and in the site footer as good
+  practice.
+- Scope: current members only. Members without a source photo fall back to
+  `public/images/member-placeholder.svg`.
+
+---
+
 ## Biographical Directory of the United States Congress
 
 `bioguide_id` values originate from the Biographical Directory of the United

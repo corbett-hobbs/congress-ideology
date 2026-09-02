@@ -11,6 +11,10 @@ pipeline/
   output/      checked-in normalized JSON the app imports (committed)
 ```
 
+`fetch/photos.ts` is the one exception to `fetch -> raw/`: the member photos it
+downloads are static assets, so they land directly in `public/images/members/`
+(committed), with an availability manifest at `output/member-photos.json`.
+
 ## Why raw data is committed
 
 Builds are reproducible and have no live network dependency. Source data
@@ -25,8 +29,9 @@ silently. See `.github/workflows/voteview-freshness.yml` for the automated
 | fetch     | `pnpm fetch:all` | download Voteview + congress-legislators into `raw/`               |
 | validate  | `pnpm validate`  | schema-check `raw/`: missing fields, bad numbers, duplicate keys   |
 | transform | `pnpm transform` | `raw/` → `id_crosswalk`, `legislators`, `terms`, `ideology_scores` in `output/` + `_report.json` |
+| photos    | `pnpm fetch:photos` | current members' portraits (two sizes) from `@unitedstates/images` → `public/images/members/` + `output/member-photos.json`. Runs after `transform` (reads the current roster from `terms.json`). |
 
-- `pnpm pipeline` runs all three in order (fetches from upstream).
+- `pnpm pipeline` runs all four in order (fetches from upstream).
 - `pnpm pipeline:check` runs validate + transform on the committed `raw/` and
   fails if `output/` would change — this is what CI runs.
 - Each fetch script is runnable on its own (`pnpm fetch:voteview`,
@@ -41,6 +46,7 @@ silently. See `.github/workflows/voteview-freshness.yml` for the automated
 | `terms.json`           | one row per (bioguide_id, congress, chamber)  |
 | `ideology_scores.json` | one row per (bioguide_id, congress, chamber)  |
 | `_report.json`         | run summary and sanity numbers                |
+| `member-photos.json`   | which current members have a committed photo (from `fetch:photos`, not re-derived by `pipeline:check`) |
 
 See `docs/DATA_CONVENTIONS.md` §2 for the full contract; schemas are in
 `lib/entities.ts`.

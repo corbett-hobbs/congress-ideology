@@ -38,8 +38,10 @@ interface TooltipProps<T> {
 }
 
 const OFFSET = 14;
-const EST_W = 208;
-const EST_H = 92;
+// Rough tooltip footprint, for the flip-at-edge heuristic. The member tooltip
+// adds a ~40px photo, so the box runs a little wider and taller than the text.
+const EST_W = 240;
+const EST_H = 120;
 
 export function Tooltip<T>({ state, children }: TooltipProps<T>) {
   // `state` starts null, so server and first client render both produce

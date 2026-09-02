@@ -36,6 +36,7 @@ remembers.
 | --- | --- |
 | [**Voteview**](https://voteview.com/) (Lewis, Poole, Rosenthal, Boche, Rudkin & Sonnet) | DW-NOMINATE ideal points — the static career score and the per-Congress (Nokken–Poole) score |
 | [**@unitedstates/congress-legislators**](https://github.com/unitedstates/congress-legislators) | Names, states, parties, terms, and the `icpsr` ↔ `bioguide_id` crosswalk |
+| [**@unitedstates/images**](https://github.com/unitedstates/images) | Official member portraits (current members only), committed under `public/images/members/` |
 
 > Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron Rudkin,
 > and Luke Sonnet (2026). *Voteview: Congressional Roll-Call Votes Database.*
@@ -67,10 +68,11 @@ DW-NOMINATE scores must not be conflated) are written down in
   re-runs the pipeline and fails if the committed output drifts, then builds.
 
 ```
-app/          routes — the explorer (/) and senator profiles
-components/    charts/ (primitives) and senate/ (the views)
+app/          routes — the explorer (/) and member profiles
+components/    charts/ (primitives), senate/ (the ideology views), profile/
 lib/           the build-time data layer + shared helpers
 pipeline/      fetch → validate → transform → pipeline/output/*.json
+public/        static assets, incl. committed member photos (images/members/)
 docs/          DATA_CONVENTIONS.md, CREDITS.md
 ```
 

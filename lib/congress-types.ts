@@ -30,6 +30,12 @@ export interface ChamberMember {
   careerDim1: number | null;
   careerDim2: number | null;
   nVotes: number | null;
+  /**
+   * Whether an official photo is committed for this member. Set only for
+   * current-Congress members (see lib/member-photo.ts); `undefined` on
+   * historical rows, which never render a photo.
+   */
+  hasPhoto?: boolean;
 }
 
 export interface PartyMeanPoint {
@@ -102,6 +108,8 @@ export interface MemberProfile {
   trajectory: MemberTrajectoryPoint[];
   firstCongress: number;
   chamberCongressCount: number;
+  /** Whether an official photo is committed for this member. */
+  hasPhoto: boolean;
 }
 
 // --- pure helpers ---------------------------------------------------------

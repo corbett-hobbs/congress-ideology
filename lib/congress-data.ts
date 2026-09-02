@@ -44,6 +44,26 @@ function readOutput<T>(name: string): T[] {
   return JSON.parse(readFileSync(path, "utf8")) as T[];
 }
 
+let photoBioguideCache: Set<string> | null = null;
+/**
+ * Bioguide ids of current members with a committed official photo, from the
+ * build-time manifest `pipeline/fetch/photos.ts` writes. Missing manifest →
+ * everyone falls back to the silhouette (graceful before the step is run).
+ */
+function photoBioguides(): Set<string> {
+  if (photoBioguideCache) return photoBioguideCache;
+  try {
+    const path = join(process.cwd(), "pipeline", "output", "member-photos.json");
+    const { withPhoto } = JSON.parse(readFileSync(path, "utf8")) as {
+      withPhoto: string[];
+    };
+    photoBioguideCache = new Set(withPhoto);
+  } catch {
+    photoBioguideCache = new Set();
+  }
+  return photoBioguideCache;
+}
+
 let legByIdCache: Map<string, Legislator> | null = null;
 function legislatorsById(): Map<string, Legislator> {
   if (!legByIdCache) {
@@ -129,6 +149,13 @@ function buildFullChamber(chamber: Chamber): FullChamber {
     .map(Number)
     .sort((a, b) => a - b);
   const latestCongress = congresses[congresses.length - 1];
+
+  // Photos exist for current members only; historical rows keep `hasPhoto`
+  // undefined and never render one. See pipeline/fetch/photos.ts.
+  const withPhoto = photoBioguides();
+  for (const m of allByCongress[latestCongress] ?? []) {
+    m.hasPhoto = withPhoto.has(m.bioguideId);
+  }
 
   const trend: PartyMeanPoint[] = congresses.map((congress) => {
     const scored = byCongress[congress] ?? [];
@@ -329,5 +356,6 @@ export function getMemberProfile(
     trajectory,
     firstCongress: trajectory[0]?.congress ?? f.latestCongress,
     chamberCongressCount: trajectory.length,
+    hasPhoto: current.hasPhoto ?? false,
   };
 }

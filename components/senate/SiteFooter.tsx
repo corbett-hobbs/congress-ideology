@@ -26,8 +26,16 @@ export function SiteFooter({ children }: SiteFooterProps) {
         >
           @unitedstates/congress-legislators
         </a>
-        . DW‑NOMINATE scores estimate each member&rsquo;s revealed ideology from
-        their voting record, not stated beliefs.
+        . Member photos:{" "}
+        <a
+          href="https://github.com/unitedstates/images"
+          className="text-ink-muted underline decoration-line-strong underline-offset-2 hover:decoration-accent"
+        >
+          @unitedstates/images
+        </a>{" "}
+        (public-domain GPO portraits). DW‑NOMINATE scores estimate each
+        member&rsquo;s revealed ideology from their voting record, not stated
+        beliefs.
       </p>
     </footer>
   );

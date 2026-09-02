@@ -248,11 +248,25 @@ body {
   line-height: 1.4;
   padding: 0.5rem 0.65rem;
   border-radius: 7px;
-  max-width: 13rem;
+  max-width: 15rem;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
 .chart-tooltip .tt-mono {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   opacity: 0.8;
+}
+.chart-tooltip .tt-body {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+.chart-tooltip .tt-photo {
+  width: 40px;
+  height: 49px;
+  flex: none;
+  border-radius: 3px;
+  object-fit: cover;
+  object-position: top;
+  background: var(--surface-raised);
 }
