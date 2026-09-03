@@ -1,0 +1,10 @@
+# Scanned / paper filings: image-only PDFs (no extractable text), large, and
+# they yield nothing to the parser (parse_confidence: "none"). build.py
+# re-fetches them on demand. See docs/HOUSE_DISCLOSURE_EXTRACTOR_EVAL.md §5.
+2023_8220593.pdf
+2024_9115596.pdf
+2023_8220569.pdf
+2024_9115586.pdf
+
+# Any other large PDF (>1 MB is almost always a scanned attachment set).
+*.pdf.tmp

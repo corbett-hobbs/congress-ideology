@@ -63,6 +63,35 @@ re-published and resized).
 
 ---
 
+## U.S. House Clerk — Financial Disclosure filings
+
+House member net-worth estimates (`pipeline/output/financial_disclosures.json`,
+parsed by `pipeline/financial/`) are derived from Financial Disclosure reports
+published by the **Clerk of the U.S. House of Representatives**, Legislative
+Resource Center.
+
+- Source: https://disclosures-clerk.house.gov/
+- Files used: the annual bulk index `public_disc/financial-pdfs/<YEAR>FD.zip`
+  and the individual report PDFs it points to. Electronic-filing snapshots are
+  committed under `pipeline/raw/house-financial-disclosures/` (scanned/paper
+  filings are `.gitignore`d — large and non-parseable, re-fetched on demand).
+- License: **public domain.** Financial Disclosure reports and the bulk index
+  are U.S. Government works and public records under the Ethics in Government
+  Act. No attribution legally required; credited here as good practice.
+
+### `disclosure-extractor` — evaluated, not adopted
+
+`freelawproject/disclosure-extractor` (BSD 2-Clause, © 2020 Free Law Project —
+https://github.com/freelawproject/disclosure-extractor) was evaluated as a
+possible parser for House filings and found to be specific to the federal
+**judiciary's** AO-10 form (see `docs/HOUSE_DISCLOSURE_EXTRACTOR_EVAL.md`). No
+code from it is used or redistributed. It remains an optional dependency of the
+evaluation probe only. Its BSD-2-Clause terms — retain the copyright notice and
+disclaimer on redistribution — are noted here for completeness; the notice text
+ships in the package's own `LICENSE`.
+
+---
+
 ## Biographical Directory of the United States Congress
 
 `bioguide_id` values originate from the Biographical Directory of the United

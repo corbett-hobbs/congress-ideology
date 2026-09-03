@@ -1,0 +1,23 @@
+# pipeline/financial/ — House financial-disclosure parser
+#
+# Separate from the TypeScript pipeline (this is the one Python component).
+# Set up with uv + a modern Python (the repo's node toolchain doesn't apply):
+#
+#   uv venv --python 3.12 .venv
+#   source .venv/bin/activate
+#   uv pip install --only-binary=:all: cryptography   # avoids an sdist Rust build
+#   uv pip install -r requirements.txt
+#
+# See README.md.
+
+pdfplumber==0.11.10
+
+# --- evaluation only -------------------------------------------------------
+# disclosure-extractor is NOT used by the parser. It is kept so
+# probe_disclosure_extractor.py stays runnable (the evaluation in
+# docs/HOUSE_DISCLOSURE_EXTRACTOR_EVAL.md). Its image path also needs the
+# `poppler` system package. Install it explicitly if you want to re-run the
+# probe:
+#
+#   uv pip install disclosure-extractor==0.0.60
+#   brew install poppler tesseract

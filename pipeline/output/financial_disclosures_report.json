@@ -1,0 +1,227 @@
+{
+  "congress": 119,
+  "years": [
+    2023,
+    2024
+  ],
+  "n_rows": 16,
+  "runs": [
+    {
+      "year": 2023,
+      "last": "Pelosi",
+      "bioguide_id": "P000197",
+      "resolve": "ok",
+      "confidence": "high",
+      "needs_review": false,
+      "net_worth_midpoint": 162568524,
+      "n_assets": 61,
+      "n_assets_valued": 57,
+      "review_notes": []
+    },
+    {
+      "year": 2023,
+      "last": "Crenshaw",
+      "bioguide_id": "C001120",
+      "resolve": "ok",
+      "confidence": "high",
+      "needs_review": false,
+      "net_worth_midpoint": 280512,
+      "n_assets": 28,
+      "n_assets_valued": 27,
+      "review_notes": []
+    },
+    {
+      "year": 2023,
+      "last": "Newhouse",
+      "bioguide_id": "N000189",
+      "resolve": "ok",
+      "confidence": "low",
+      "needs_review": true,
+      "net_worth_midpoint": -1522958,
+      "n_assets": 93,
+      "n_assets_valued": 88,
+      "review_notes": [
+        "9 row(s) show wrap/merge artifacts"
+      ]
+    },
+    {
+      "year": 2023,
+      "last": "Buchanan",
+      "bioguide_id": "B001260",
+      "resolve": "ok",
+      "confidence": "low",
+      "needs_review": true,
+      "net_worth_midpoint": 31747510,
+      "n_assets": 26,
+      "n_assets_valued": 21,
+      "review_notes": [
+        "1 open-ended band(s) present -- net worth is a lower bound",
+        "12 row(s) show wrap/merge artifacts"
+      ]
+    },
+    {
+      "year": 2023,
+      "last": "Wagner",
+      "bioguide_id": "W000812",
+      "resolve": "ok",
+      "confidence": "low",
+      "needs_review": true,
+      "net_worth_midpoint": 10154039,
+      "n_assets": 117,
+      "n_assets_valued": 82,
+      "review_notes": [
+        "20 row(s) show wrap/merge artifacts"
+      ]
+    },
+    {
+      "year": 2023,
+      "last": "Fitzpatrick",
+      "bioguide_id": "F000466",
+      "resolve": "ok",
+      "confidence": "low",
+      "needs_review": true,
+      "net_worth_midpoint": 2558000,
+      "n_assets": 2,
+      "n_assets_valued": 2,
+      "review_notes": [
+        "1 row(s) show wrap/merge artifacts"
+      ]
+    },
+    {
+      "year": 2023,
+      "last": "McCaul",
+      "bioguide_id": "M001157",
+      "resolve": "ok",
+      "confidence": "none",
+      "needs_review": true,
+      "net_worth_midpoint": null,
+      "n_assets": 0,
+      "n_assets_valued": 0,
+      "review_notes": [
+        "scanned/paper filing: no extractable schedule text"
+      ]
+    },
+    {
+      "year": 2023,
+      "last": "Khanna",
+      "bioguide_id": "K000389",
+      "resolve": "ok",
+      "confidence": "none",
+      "needs_review": true,
+      "net_worth_midpoint": null,
+      "n_assets": 0,
+      "n_assets_valued": 0,
+      "review_notes": [
+        "scanned/paper filing: no extractable schedule text"
+      ]
+    },
+    {
+      "year": 2024,
+      "last": "Pelosi",
+      "bioguide_id": "P000197",
+      "resolve": "ok",
+      "confidence": "high",
+      "needs_review": false,
+      "net_worth_midpoint": 187719525,
+      "n_assets": 64,
+      "n_assets_valued": 59,
+      "review_notes": []
+    },
+    {
+      "year": 2024,
+      "last": "Crenshaw",
+      "bioguide_id": "C001120",
+      "resolve": "ok",
+      "confidence": "high",
+      "needs_review": false,
+      "net_worth_midpoint": 187506,
+      "n_assets": 15,
+      "n_assets_valued": 14,
+      "review_notes": []
+    },
+    {
+      "year": 2024,
+      "last": "Newhouse",
+      "bioguide_id": "N000189",
+      "resolve": "ok",
+      "confidence": "low",
+      "needs_review": true,
+      "net_worth_midpoint": 14440556,
+      "n_assets": 131,
+      "n_assets_valued": 115,
+      "review_notes": [
+        "6 row(s) show wrap/merge artifacts"
+      ]
+    },
+    {
+      "year": 2024,
+      "last": "Buchanan",
+      "bioguide_id": "B001260",
+      "resolve": "ok",
+      "confidence": "low",
+      "needs_review": true,
+      "net_worth_midpoint": 75136017,
+      "n_assets": 43,
+      "n_assets_valued": 35,
+      "review_notes": [
+        "12 row(s) show wrap/merge artifacts"
+      ]
+    },
+    {
+      "year": 2024,
+      "last": "Wagner",
+      "bioguide_id": "W000812",
+      "resolve": "ok",
+      "confidence": "low",
+      "needs_review": true,
+      "net_worth_midpoint": 11161032,
+      "n_assets": 96,
+      "n_assets_valued": 65,
+      "review_notes": [
+        "23 row(s) show wrap/merge artifacts"
+      ]
+    },
+    {
+      "year": 2024,
+      "last": "Fitzpatrick",
+      "bioguide_id": "F000466",
+      "resolve": "ok",
+      "confidence": "low",
+      "needs_review": true,
+      "net_worth_midpoint": 2558000,
+      "n_assets": 2,
+      "n_assets_valued": 2,
+      "review_notes": [
+        "1 row(s) show wrap/merge artifacts"
+      ]
+    },
+    {
+      "year": 2024,
+      "last": "McCaul",
+      "bioguide_id": "M001157",
+      "resolve": "ok",
+      "confidence": "none",
+      "needs_review": true,
+      "net_worth_midpoint": null,
+      "n_assets": 0,
+      "n_assets_valued": 0,
+      "review_notes": [
+        "scanned/paper filing: no extractable schedule text"
+      ]
+    },
+    {
+      "year": 2024,
+      "last": "Khanna",
+      "bioguide_id": "K000389",
+      "resolve": "ok",
+      "confidence": "none",
+      "needs_review": true,
+      "net_worth_midpoint": null,
+      "n_assets": 0,
+      "n_assets_valued": 0,
+      "review_notes": [
+        "scanned/paper filing: no extractable schedule text"
+      ]
+    }
+  ]
+}
