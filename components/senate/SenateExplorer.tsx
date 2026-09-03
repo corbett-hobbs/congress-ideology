@@ -255,17 +255,21 @@ export function SenateExplorer({
         </div>
 
         {/*
-          Two-column card row. `md:items-stretch` (also the grid default) makes
-          both cards fill the row, whose height is the taller card's natural
-          height — "How each state votes", ~713px, driven by its own
-          `max-h-[600px]` list. "Where members stand" is naturally ~585px, so
-          stretch adds ~128px; because that card is `flex-col` with the default
-          (flex-start) justify, the surplus falls to a single block below its
-          stat line. That bottom gap is the intended, correct outcome — it is
-          NOT stray padding/margin/min-height (all verified absent). Don't
-          "fix" it by centring or spreading the card's content, and don't touch
-          the state list's scroll. Measured 2026: House & Senate both 713/713 at
-          1280px, 769/769 at 800px; single-column below md, no matching.
+          Two-column card row, equal height via `md:items-stretch` (also the
+          grid default). "Where members stand" is the height authority — a
+          fixed stack (chart + legend + readout, ~585px at 1280, ~520px at the
+          md breakpoint). "How each state votes" must not out-vote it: at md+
+          its state list is absolutely positioned (see below), so the list's
+          length never feeds into the row height. The row is therefore the
+          compass card's height, the state card stretches to it, and the list
+          fills and scrolls — no dead space under either card.
+          History: the list used to be a capped (max-h-600) in-flow block,
+          which made ITS card the taller one and left ~128px of blank space
+          under the compass readout; several attempts to paper over that with
+          justify/centring or a matching pixel height failed because the
+          compass height varies with width. Measured 2026: House & Senate
+          match within ~1px at 780 / 900 / 1024 / 1280px; single column below
+          md (no matching).
         */}
         <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.15fr_1fr] md:items-stretch">
           <Card
@@ -372,20 +376,27 @@ export function SenateExplorer({
               </div>
             }
           >
-            {/* Roughly the compass card's height, so the two columns line up;
-                scrolls inside. On mobile the whole list just expands. */}
-            <div className="mt-1 flex-1 border-t border-line pt-1 sm:max-h-[600px] sm:overflow-y-auto">
-              {historyPending ? (
-                <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
-              ) : (
-                <DelegationChart
-                  members={plottable}
-                  sort={delegSort}
-                  mode={delegMode}
-                  selectedState={stateFilter}
-                  onSelectState={(s) => setStateFilter(s)}
-                />
-              )}
+            {/* At md+ the inner list is absolutely positioned inside this
+                flex-1 wrapper, so its (long) content doesn't feed into the
+                grid row's height. The row is therefore sized by the compass
+                card, this card stretches to match, and the list fills exactly
+                that height and scrolls — both cards end level, no gap on
+                either. Single column (sm–md): normal flow, capped so the page
+                isn't one giant list. Mobile (<sm): expands. */}
+            <div className="relative mt-1 flex-1">
+              <div className="border-t border-line pt-1 sm:overflow-y-auto sm:max-md:max-h-[600px] md:absolute md:inset-0 md:overflow-y-auto">
+                {historyPending ? (
+                  <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
+                ) : (
+                  <DelegationChart
+                    members={plottable}
+                    sort={delegSort}
+                    mode={delegMode}
+                    selectedState={stateFilter}
+                    onSelectState={(s) => setStateFilter(s)}
+                  />
+                )}
+              </div>
             </div>
           </Card>
         </div>
