@@ -34,12 +34,6 @@ interface CompassChartProps {
   /** Fade every dot except the highlighted / selected one (profile pages). */
   dimUnfocused?: boolean;
   /**
-   * Tooltip for a small "i" marker beside the Dimension 2 axis label,
-   * pointing at the methodological note below the chart. Only profile pages
-   * pass this — the explorer renders its own HTML axis labels instead.
-   */
-  dim2NoteHint?: string;
-  /**
    * "profile" (default) keeps the numeric tick labels and the in-SVG
    * "DIMENSION 2" caption. "explorer" drops both — the explorer card draws
    * word-based axis labels around the plot (see SenateExplorer / session 10).
@@ -67,7 +61,6 @@ export function CompassChart({
   onHover,
   onSelect,
   dimUnfocused = false,
-  dim2NoteHint,
   variant = "profile",
 }: CompassChartProps) {
   const tip = useTooltip<ChamberMember>();
@@ -113,6 +106,15 @@ export function CompassChart({
         height={explorer ? 470 : H}
         margin={explorer ? EXPLORER_MARGIN : MARGIN}
         ariaLabel={`Scatter plot of ${memberNoun(chamber, { plural: true })} by DW-NOMINATE ideology score`}
+        onPointerLeave={() => {
+          // Leaving the plot by any edge — not onto another dot — must clear the
+          // hover tooltip and any hover-driven dot enlargement. The per-dot
+          // pointerleave can be missed when a hover-triggered re-sort moves the
+          // dot's DOM node out from under the pointer, which left the tooltip
+          // stuck visible. Click-to-select is unaffected (separate handler).
+          onHover?.(null);
+          tip.hide();
+        }}
       >
         {({ innerWidth, innerHeight }) => {
           const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);
@@ -148,28 +150,6 @@ export function CompassChart({
                 >
                   DIMENSION 2
                 </text>
-              )}
-              {!explorer && dim2NoteHint && (
-                <g style={{ cursor: "help" }}>
-                  <title>{dim2NoteHint}</title>
-                  <circle
-                    cx={-42}
-                    cy={innerHeight / 2 - 54}
-                    r={7}
-                    fill="var(--surface)"
-                    stroke="var(--ink-faint)"
-                  />
-                  <text
-                    x={-42}
-                    y={innerHeight / 2 - 50.5}
-                    textAnchor="middle"
-                    fontFamily="var(--font-mono)"
-                    fontSize={9.5}
-                    fill="var(--ink-muted)"
-                  >
-                    i
-                  </text>
-                </g>
               )}
 
               {drawOrder.map((m) => {

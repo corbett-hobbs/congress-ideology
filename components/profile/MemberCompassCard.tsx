@@ -6,7 +6,6 @@ import { memberNoun } from "@/lib/chamber";
 import { nearestNeighbors } from "@/lib/neighbors";
 import { CompassPanel } from "@/components/senate/CompassPanel";
 import { ProfileCompass } from "@/components/senate/ProfileCompass";
-import { Dim2Footnote } from "@/components/senate/Dim2Footnote";
 import { ordinal } from "@/components/senate/format";
 import { ProfilePanel } from "./ProfilePanel";
 import { NeighborChips } from "./NeighborChips";
@@ -91,28 +90,10 @@ export function MemberCompassCard({
         />
       </CompassPanel>
 
-      {neighborMode ? (
-        <>
-          {/* Mobile is a single column — the chip strip is just its natural
-              height. */}
-          <div className="mt-4 border-t border-line pt-3 lg:hidden">
-            <NeighborChips neighbors={neighbors} />
-          </div>
-          {/* At lg the compass card sits beside the stacked trajectory +
-              delegation cards, so its height must not change when toggling: an
-              invisible copy of the dim-2 note holds the strip's height and the
-              chips overlay it. */}
-          <div className="relative hidden lg:block">
-            <div className="invisible" aria-hidden>
-              <Dim2Footnote congress={latestCongress} />
-            </div>
-            <div className="absolute inset-x-0 top-0 mt-4 border-t border-line pt-3">
-              <NeighborChips neighbors={neighbors} />
-            </div>
-          </div>
-        </>
-      ) : (
-        <Dim2Footnote congress={latestCongress} />
+      {neighborMode && (
+        <div className="mt-4 border-t border-line pt-3">
+          <NeighborChips neighbors={neighbors} />
+        </div>
       )}
     </ProfilePanel>
   );

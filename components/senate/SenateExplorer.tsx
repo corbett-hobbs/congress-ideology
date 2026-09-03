@@ -23,7 +23,6 @@ import { ExplorerToolbar } from "./ExplorerToolbar";
 import { CompassChart } from "./CompassChart";
 import { CompassPanel } from "./CompassPanel";
 import { BeeswarmChart } from "./BeeswarmChart";
-import { Dim2Footnote } from "./Dim2Footnote";
 import { Legend } from "./Legend";
 import { TrendChart } from "./TrendChart";
 import { DelegationChart, type DelegationSort } from "./DelegationChart";
@@ -36,7 +35,7 @@ const PLAY_INTERVAL_MS = 450;
 const PRELOAD_DELAY_MS = 1500;
 
 const INTRO =
-  "Political scientists Keith Poole and Howard Rosenthal built DW-NOMINATE to measure ideology from behavior. It looks at every yes-or-no vote a member has ever cast and finds the position that best explains their whole record, so members who vote alike land close together and members who vote oppositely land far apart. Each member ends up with two coordinates, plotted below as one dot — the horizontal position (dimension 1) is the familiar economic left–right spectrum and on its own explains most of how members differ; the vertical position (dimension 2) captures a secondary pattern whose meaning has shifted across history (see the note below the chart). Doing this for every Congress since 1789 turns the slider into a way to watch the chamber pull apart or come together over time, and picking a state shows whether its delegation votes as a bloc or splits down the middle.";
+  "Political scientists Keith Poole and Howard Rosenthal built DW-NOMINATE to measure ideology from behavior. It looks at every yes-or-no vote a member has ever cast and finds the position that best explains their whole record, so members who vote alike land close together and members who vote oppositely land far apart. Each member ends up with two coordinates, plotted below as one dot — the horizontal position (dimension 1) is the familiar economic left–right spectrum and on its own explains most of how members differ; the vertical position (dimension 2) captures a secondary pattern whose meaning has shifted across history (tap the “i” by the vertical axis). Doing this for every Congress since 1789 turns the slider into a way to watch the chamber pull apart or come together over time, and picking a state shows whether its delegation votes as a bloc or splits down the middle.";
 
 function Card({
   title,
@@ -225,7 +224,6 @@ export function SenateExplorer({
   const overlayVisible = stateFilter != null;
   const smallSample =
     overlayVisible && stateMembers.length > 0 && stateMembers.length <= 3;
-  const showCompass = !stateFilter && !historyPending;
   const bodyLabel = view === "both" ? "Congress" : chamberLabel(view);
   // "senators sit" / "representatives sit" / "delegation sits" — chamber-aware
   // subject for the "How each state votes" lede.
@@ -325,8 +323,6 @@ export function SenateExplorer({
               most conservative:{" "}
               <span className="text-ink">{mostConservative?.name ?? "—"}</span>
             </p>
-
-            {showCompass && <Dim2Footnote congress={congress} />}
           </Card>
 
           <Card
