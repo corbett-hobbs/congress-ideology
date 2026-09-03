@@ -26,12 +26,10 @@ export const DIM2_MODERN_ERA_FROM = 112;
 export interface Dim2Context {
   /** Short mono eyebrow, e.g. "DIMENSION 2 · HISTORICAL". */
   tag: string;
-  /** The methodological note shown below the chart. */
+  /** The methodological note shown in the axis-label info popover. */
   body: string;
   sourceLabel: string;
   sourceHref: string;
-  /** One-line hint for the axis-label info marker's tooltip. */
-  markerHint: string;
 }
 
 const HISTORICAL: Dim2Context = {
@@ -39,7 +37,6 @@ const HISTORICAL: Dim2Context = {
   body: "For most of American history, dimension 2 captured differences within the major parties over issues like slavery, currency, nativism, civil rights, and lifestyle issues — cross-cutting splits that didn't track the main left-right axis.",
   sourceLabel: "Voteview, “About us”",
   sourceHref: "https://voteview.com/about",
-  markerHint: "Cross-cutting sectional and social issues — see the note below",
 };
 
 const MODERN: Dim2Context = {
@@ -48,7 +45,6 @@ const MODERN: Dim2Context = {
   sourceLabel: "FiveThirtyEight analysis of DW-NOMINATE scores",
   sourceHref:
     "https://fivethirtyeight.com/features/the-two-cracks-in-the-republican-party",
-  markerHint: "Establishment vs. anti-establishment — see the note below",
 };
 
 export function dim2Context(congress: number): Dim2Context {

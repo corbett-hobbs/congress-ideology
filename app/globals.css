@@ -26,9 +26,10 @@
   --rep: #c24a3a;
   --oth: #83817d;
   /* Extended historical-party palette (main-page charts only) — see
-     lib/party-palette.ts. Validated OKLab / CVD + WCAG-contrast alongside
-     --dem/--rep. */
-  --federalist: #2a6d74;
+     lib/party-palette.ts. Validated OKLab / CVD (protan・deutan) + WCAG-contrast
+     via validate_palette.js (co-occurrence-aware). --federalist deepened from a
+     mid teal so it separates from --demrep by lightness as well as hue. */
+  --federalist: #1d5a63;
   --demrep: #737f30;
   --whig: #b7862f;
   --jackson: #ab543a;
@@ -55,7 +56,7 @@
     --dem: #4c7fdb;
     --rep: #d96a56;
     --oth: #a5a39c;
-    --federalist: #4a9088;
+    --federalist: #2b7f88;
     --demrep: #8ba548;
     --whig: #d0a038;
     --jackson: #cf6446;
@@ -82,7 +83,7 @@
   --dem: #4c7fdb;
   --rep: #d96a56;
   --oth: #a5a39c;
-  --federalist: #4a9088;
+  --federalist: #2b7f88;
   --demrep: #8ba548;
   --whig: #d0a038;
   --jackson: #cf6446;

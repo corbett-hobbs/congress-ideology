@@ -16,7 +16,8 @@ import type { ChamberMember, PartyGroup } from "./congress-types";
  *
  * Tokens live in app/globals.css (light + dark). The palette was validated
  * OKLab / CVD (protan・deutan) + WCAG-contrast the same way as --dem/--rep;
- * see the session report.
+ * run `node validate_palette.js` (checks every co-occurring party pair, both
+ * themes) after touching a token.
  */
 export type PartyColorKey =
   | "dem"

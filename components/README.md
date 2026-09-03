@@ -10,7 +10,7 @@ components/
   senate/   the "Ideology" vertical: the explorer (SenateExplorer + compass,
             beeswarm, trend, delegation, search, table, toolbar) and the
             ideology-specific profile pieces (SenatorTrajectoryChart,
-            ProfileCompass, CompassPanel, Dim2Footnote, SiteFooter).
+            ProfileCompass, CompassPanel, Dim2Note, SiteFooter).
             Names still say "Senate"/"Senator" — written Senate-first and
             generalized in place; the chamber is a prop/URL param.
   profile/  the per-member profile page, split into verticals-agnostic pieces:
@@ -18,7 +18,7 @@ components/
             ProfilePanel (shared card chrome), and one section per vertical —
             MemberIdeologySection today, others added as siblings. Within it,
             MemberCompassCard adds the "nearest neighbors" toggle over the
-            shared compass; NeighborChips is its footnote-strip chip row. Used
+            shared compass; NeighborChips is its neighbor-mode chip row. Used
             by /congress/{senators,house}/[bioguide_id]/[name_slug].
   SiteHeader.tsx / SiteNav.tsx  the persistent top bar (wordmark + top-level
             section nav from lib/verticals.ts), rendered once in the root

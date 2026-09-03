@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { dim2AxisLabels, dim2Context } from "@/lib/dim2-context";
+import { dim2AxisLabels } from "@/lib/dim2-context";
+import { Dim2Note } from "./Dim2Note";
 
 /**
  * The compass with word-based axis labels drawn around it in HTML (the SVG
@@ -14,7 +15,6 @@ export function CompassPanel({
   children: ReactNode;
 }) {
   const { topEndpoint, bottomEndpoint, middle } = dim2AxisLabels(congress);
-  const hint = dim2Context(congress).markerHint;
 
   return (
     <div>
@@ -25,12 +25,7 @@ export function CompassPanel({
           </span>
           <span className="flex items-center gap-1.5 text-[0.72rem] text-ink-muted [writing-mode:vertical-rl]">
             {middle}
-            <span
-              title={hint}
-              className="inline-flex size-[13px] cursor-help items-center justify-center rounded-full border border-ink-faint font-mono text-[0.55rem] leading-none text-ink-muted [writing-mode:horizontal-tb]"
-            >
-              i
-            </span>
+            <Dim2Note congress={congress} />
           </span>
           <span className="text-[0.6rem] text-ink-faint [writing-mode:vertical-rl]">
             {bottomEndpoint}
