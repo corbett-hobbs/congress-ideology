@@ -34,7 +34,7 @@ is retained only as an optional dependency of the evaluation probe.
 | `extract_content` | text | **crash** — `re.findall(r"/s/(.*)\[", content)[0]` → `IndexError`. Expects a judge's `/s/ Name [` signature block; House form says `Digitally Signed: Hon. Nancy Pelosi`. |
 | `process_jef_document` | text | **crash** — same `IndexError` (wraps `extract_content`). |
 | `extract_normal_pdf` | text | `success: false`. Returns the 8 hard-coded AO-10 sections (`Positions`, `Agreements`, `Non-Investment Income`, `Non Investment Income Spouse`, `Reimbursements`, `Gifts`, `Liabilities`, `Investments and Trusts`) with **0 rows each** — it never finds a table whose first cell begins `"1."`, which is the AO-10 numbered-section layout. House uses `Schedule A`…`Schedule I`. |
-| `process_financial_document` | image | Needs `poppler`. Its logic (`extract_contours_from_page`) OpenCV-detects the AO-10 checkbox grid and bails when `found_count < 8`. A text-native House PDF has no such grid, so this path cannot succeed regardless. |
+| `process_financial_document` | image | Needs the `poppler` system package (not installed this session, so not executed). Its logic (`extract_contours_from_page` in `image_processing.py`) OpenCV-detects the AO-10 checkbox grid and returns `{"success": false}` when `found_count < 8`. A text-native House PDF has no such grid, so this path cannot succeed regardless; re-run `probe_disclosure_extractor.py` once `brew install poppler` finishes to confirm. |
 
 ## 3. Section-name compatibility (brief item 2)
 
