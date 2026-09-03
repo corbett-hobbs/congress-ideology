@@ -254,7 +254,7 @@ export function SenateExplorer({
           <p className="text-[0.92rem] leading-[1.65] text-ink-muted">{INTRO}</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.15fr_1fr]">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.15fr_1fr] md:items-stretch">
           <Card
             title="Where members stand"
             lede={`Each dot is a ${noun}, positioned by how they voted in the ${ordinal(congress)} Congress.`}
@@ -286,32 +286,40 @@ export function SenateExplorer({
               </div>
             )}
 
-            {historyPending ? (
-              <div className="grid h-[300px] place-items-center text-[0.85rem] text-ink-faint">
-                {loading ? "Loading history…" : "Scrubbing loads the full history"}
-              </div>
-            ) : stateFilter && !isSenate ? (
-              <BeeswarmChart
-                members={stateMembers}
-                highlightId={hovered?.bioguideId}
-              />
-            ) : stateFilter ? (
-              <DelegationChart
-                members={plottable}
-                filterState={stateFilter}
-                mode="pair"
-              />
-            ) : (
-              <CompassPanel congress={congress}>
-                <CompassChart
-                  variant="explorer"
-                  members={plottable}
-                  highlightedId={hoveredId}
-                  onHover={(m) => m && setHoveredId(m.bioguideId)}
-                  onSelect={(m) => router.push(memberPath(m))}
+            {/* The grid row stretches this card to match "How each state
+                votes". The fixed-domain compass SVG must not stretch with it,
+                so the slack pools here, centring the chart, with the legend
+                and readout pinned below. */}
+            <div className="flex flex-1 flex-col justify-center">
+              {historyPending ? (
+                <div className="grid h-[300px] place-items-center text-[0.85rem] text-ink-faint">
+                  {loading
+                    ? "Loading history…"
+                    : "Scrubbing loads the full history"}
+                </div>
+              ) : stateFilter && !isSenate ? (
+                <BeeswarmChart
+                  members={stateMembers}
+                  highlightId={hovered?.bioguideId}
                 />
-              </CompassPanel>
-            )}
+              ) : stateFilter ? (
+                <DelegationChart
+                  members={plottable}
+                  filterState={stateFilter}
+                  mode="pair"
+                />
+              ) : (
+                <CompassPanel congress={congress}>
+                  <CompassChart
+                    variant="explorer"
+                    members={plottable}
+                    highlightedId={hoveredId}
+                    onHover={(m) => m && setHoveredId(m.bioguideId)}
+                    onSelect={(m) => router.push(memberPath(m))}
+                  />
+                </CompassPanel>
+              )}
+            </div>
 
             <div className="mt-3">
               <Legend members={shown} />
