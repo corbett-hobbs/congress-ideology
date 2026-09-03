@@ -91,19 +91,30 @@ export const PARTY_META: Readonly<Record<PartyColorKey, PartyMeta>> = {
   oth: { label: "Other", abbr: "Oth", token: "--oth" },
 };
 
-/** Legend / label order — Democrat, Republican, then roughly chronological, then
- *  the neutral fallback last. */
+/**
+ * Legend / label order: economically left to right, so the party whose dots
+ * sit on the left of the compass is named first — matching Democrats before
+ * Republicans, and now the earlier parties too. Within each side, oldest first.
+ *
+ *   left  — Anti-Administration → Democratic-Republican → Jacksonian → Democrat
+ *   right — Pro-Administration → Federalist → Adams / National Republican →
+ *           Anti-Jacksonian → Whig → Republican
+ *
+ * Co-occurring parties are almost always from the same era, so in practice a
+ * legend shows one left party then one right party (e.g. "Democratic-Republicans
+ * · Federalists", "Jacksonians · Anti-Jacksonians"). Neutral fallback last.
+ */
 export const PARTY_COLOR_ORDER: readonly PartyColorKey[] = [
-  "dem",
-  "rep",
-  "proadmin",
   "antiadmin",
-  "federalist",
   "demrep",
+  "jackson",
+  "dem",
+  "proadmin",
+  "federalist",
   "adams",
   "antijackson",
-  "jackson",
   "whig",
+  "rep",
   "oth",
 ];
 

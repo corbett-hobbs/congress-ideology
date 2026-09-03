@@ -4,7 +4,8 @@ import { PARTY_META, partyCssVar, presentParties } from "@/lib/party-palette";
 /**
  * Party key + count for every party actually present in the shown members —
  * so the legend tracks the Congress as the slider moves, not a fixed list.
- * Democrats/Republicans first, then third parties, then the "Other" fallback.
+ * Ordered economically left-to-right (see PARTY_COLOR_ORDER), so the party on
+ * the left of the compass is named first; "Other" last.
  */
 export function Legend({ members }: { members: ChamberMember[] }) {
   const present = presentParties(members);

@@ -65,4 +65,29 @@ describe("presentParties", () => {
       { key: "oth", count: 1 },
     ]);
   });
+
+  it("names the economically-left party first, in every era", () => {
+    const keys = (ms: Parameters<typeof presentParties>[0]) =>
+      presentParties(ms).map((p) => p.key);
+    // modern
+    expect(keys([m({ partyCode: 200 }), m({ partyCode: 100 })])).toEqual([
+      "dem",
+      "rep",
+    ]);
+    // 7th Congress — Democratic-Republicans (left) before Federalists
+    expect(keys([m({ partyCode: 1 }), m({ partyCode: 13 })])).toEqual([
+      "demrep",
+      "federalist",
+    ]);
+    // 21st Congress — Jacksonians (left) before Anti-Jacksonians
+    expect(keys([m({ partyCode: 1275 }), m({ partyCode: 555 })])).toEqual([
+      "jackson",
+      "antijackson",
+    ]);
+    // 1st Congress — Anti-Administration (Jeffersonian, left) before Pro-Admin
+    expect(keys([m({ partyCode: 5000 }), m({ partyCode: 4000 })])).toEqual([
+      "antiadmin",
+      "proadmin",
+    ]);
+  });
 });
