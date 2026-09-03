@@ -326,7 +326,7 @@ export function SenateExplorer({
                   variant="explorer"
                   members={plottable}
                   highlightedId={hoveredId}
-                  onHover={(m) => m && setHoveredId(m.bioguideId)}
+                  onHover={(m) => setHoveredId(m?.bioguideId ?? null)}
                   onSelect={(m) => router.push(memberPath(m))}
                 />
               </CompassPanel>
