@@ -254,6 +254,19 @@ export function SenateExplorer({
           <p className="text-[0.92rem] leading-[1.65] text-ink-muted">{INTRO}</p>
         </div>
 
+        {/*
+          Two-column card row. `md:items-stretch` (also the grid default) makes
+          both cards fill the row, whose height is the taller card's natural
+          height — "How each state votes", ~713px, driven by its own
+          `max-h-[600px]` list. "Where members stand" is naturally ~585px, so
+          stretch adds ~128px; because that card is `flex-col` with the default
+          (flex-start) justify, the surplus falls to a single block below its
+          stat line. That bottom gap is the intended, correct outcome — it is
+          NOT stray padding/margin/min-height (all verified absent). Don't
+          "fix" it by centring or spreading the card's content, and don't touch
+          the state list's scroll. Measured 2026: House & Senate both 713/713 at
+          1280px, 769/769 at 800px; single-column below md, no matching.
+        */}
         <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.15fr_1fr] md:items-stretch">
           <Card
             title="Where members stand"
@@ -286,10 +299,8 @@ export function SenateExplorer({
               </div>
             )}
 
-            {/* Content stacks tightly from the top; the grid row stretches
-                this card to match "How each state votes", so any extra height
-                collects as one block below the readout rather than padding out
-                the fixed-domain compass. */}
+            {/* Stacks tight from the top (see the grid comment above for why
+                the leftover height sits as one block below the stat line). */}
             {historyPending ? (
               <div className="grid h-[300px] place-items-center text-[0.85rem] text-ink-faint">
                 {loading ? "Loading history…" : "Scrubbing loads the full history"}
