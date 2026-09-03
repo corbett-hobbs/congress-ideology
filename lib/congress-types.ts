@@ -31,6 +31,12 @@ export interface ChamberMember {
   careerDim2: number | null;
   nVotes: number | null;
   /**
+   * Voteview `party_code` for this member-Congress. Drives the extended
+   * historical-party palette on the main-page charts (see lib/party-palette.ts).
+   * `null` when the member has no Voteview score row.
+   */
+  partyCode: number | null;
+  /**
    * Whether an official photo is committed for this member. Set only for
    * current-Congress members (see lib/member-photo.ts); `undefined` on
    * historical rows, which never render a photo.

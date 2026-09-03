@@ -1,30 +1,27 @@
-import type { PartyGroup, ChamberMember } from "@/lib/congress-types";
-import { GROUP_LABEL, GROUP_VAR } from "./format";
+import type { ChamberMember } from "@/lib/congress-types";
+import { PARTY_META, partyCssVar, presentParties } from "@/lib/party-palette";
 
-const ORDER: PartyGroup[] = ["dem", "rep", "other"];
-
+/**
+ * Party key + count for every party actually present in the shown members —
+ * so the legend tracks the Congress as the slider moves, not a fixed list.
+ * Democrats/Republicans first, then third parties, then the "Other" fallback.
+ */
 export function Legend({ members }: { members: ChamberMember[] }) {
-  const counts = members.reduce<Record<PartyGroup, number>>(
-    (acc, m) => {
-      acc[m.group] += 1;
-      return acc;
-    },
-    { dem: 0, rep: 0, other: 0 },
-  );
+  const present = presentParties(members);
 
   return (
     <div className="flex flex-wrap gap-x-[1.1rem] gap-y-1 border-t border-line pt-3">
-      {ORDER.map((g) => (
+      {present.map(({ key, count }) => (
         <span
-          key={g}
+          key={key}
           className="flex items-center gap-[0.4rem] text-[0.8rem] text-ink-muted"
         >
           <span
             className="size-[0.62rem] flex-none rounded-full"
-            style={{ background: GROUP_VAR[g] }}
+            style={{ background: partyCssVar(key) }}
           />
-          {GROUP_LABEL[g]} —{" "}
-          <span className="font-mono font-medium text-ink">{counts[g]}</span>
+          {PARTY_META[key].label} —{" "}
+          <span className="font-mono font-medium text-ink">{count}</span>
         </span>
       ))}
     </div>

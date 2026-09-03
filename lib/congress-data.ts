@@ -133,6 +133,7 @@ function buildFullChamber(chamber: Chamber): FullChamber {
       careerDim1: score?.nominate_dim1 ?? null,
       careerDim2: score?.nominate_dim2 ?? null,
       nVotes: score?.n_votes ?? null,
+      partyCode: score?.party_code ?? null,
     };
     (allByCongress[term.congress_number] ??= []).push(member);
   }

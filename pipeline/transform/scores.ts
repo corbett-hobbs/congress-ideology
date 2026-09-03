@@ -77,6 +77,9 @@ export function buildIdeologyScores(
         row.nominate_number_of_votes == null
           ? null
           : Math.round(row.nominate_number_of_votes),
+      // Some raw rows carry "100.0" etc. — coerced to a number upstream, round
+      // to be safe before the int schema.
+      party_code: Math.round(row.party_code),
     });
   }
 

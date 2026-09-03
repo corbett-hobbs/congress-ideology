@@ -8,8 +8,8 @@ import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import type { ChamberMember } from "@/lib/congress-types";
 import { memberNoun } from "@/lib/chamber";
 import { hasProfilePage } from "@/lib/member-url";
+import { partyFillClass } from "@/lib/party-palette";
 import { MemberTooltip } from "./MemberTooltip";
-import { GROUP_FILL_CLASS } from "./format";
 
 const W = 640;
 const H = 600;
@@ -186,7 +186,7 @@ export function CompassChart({
                     cx={x(m.dim1 as number)}
                     cy={y(m.dim2 as number)}
                     r={isHi ? 7.5 : isSel ? 6.5 : 4.6}
-                    className={`dot ${GROUP_FILL_CLASS[m.group]}${isHi ? " is-highlighted" : ""}`}
+                    className={`dot ${partyFillClass(m)}${isHi ? " is-highlighted" : ""}`}
                     opacity={faded ? 0.28 : 1}
                     onPointerEnter={(e) => {
                       onHover?.(m);

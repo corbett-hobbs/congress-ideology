@@ -36,12 +36,6 @@ export const GROUP_LABEL: Record<PartyGroup, string> = {
   other: "Independent / other",
 };
 
-export const GROUP_FILL_CLASS: Record<PartyGroup, string> = {
-  dem: "fill-dem",
-  rep: "fill-rep",
-  other: "fill-other",
-};
-
 export const GROUP_VAR: Record<PartyGroup, string> = {
   dem: "var(--dem)",
   rep: "var(--rep)",

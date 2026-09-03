@@ -97,5 +97,11 @@ export const ideologyScore = z.strictObject({
    * seat" when a Congress has >2 senators for a state (mid-term appointments).
    */
   n_votes: z.number().int().nonnegative().nullable(),
+  /**
+   * Voteview `party_code` for this member-Congress — its own party attribution,
+   * kept so historical third parties (Federalist, Whig, Democrat-Republican, …)
+   * can be coloured distinctly on the main-page charts. See lib/party-palette.ts.
+   */
+  party_code: z.number().int(),
 });
 export type IdeologyScore = z.infer<typeof ideologyScore>;

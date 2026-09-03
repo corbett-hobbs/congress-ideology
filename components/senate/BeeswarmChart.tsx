@@ -9,8 +9,8 @@ import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import type { ChamberMember } from "@/lib/congress-types";
 import { hasProfilePage, memberPath } from "@/lib/member-url";
+import { partyFillClass } from "@/lib/party-palette";
 import { MemberTooltip } from "./MemberTooltip";
-import { GROUP_FILL_CLASS } from "./format";
 
 const W = 640;
 const MARGIN = { top: 14, right: 24, bottom: 34, left: 24 };
@@ -96,7 +96,7 @@ export function BeeswarmChart({
                     cx={n.x}
                     cy={n.y}
                     r={isHi ? 8 : R}
-                    className={`dot ${GROUP_FILL_CLASS[n.m.group]}${isHi ? " is-highlighted" : ""}`}
+                    className={`dot ${partyFillClass(n.m)}${isHi ? " is-highlighted" : ""}`}
                     style={navigable ? { cursor: "pointer" } : undefined}
                     onPointerEnter={(e) => tip.show(n.m, e)}
                     onPointerMove={tip.move}

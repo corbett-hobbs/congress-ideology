@@ -44,7 +44,7 @@ silently. See `.github/workflows/voteview-freshness.yml` for the automated
 | `id_crosswalk.json`    | one row per `icpsr`                           |
 | `legislators.json`     | one row per `bioguide_id`                     |
 | `terms.json`           | one row per (bioguide_id, congress, chamber)  |
-| `ideology_scores.json` | one row per (bioguide_id, congress, chamber)  |
+| `ideology_scores.json` | one row per (bioguide_id, congress, chamber); carries Voteview `party_code` |
 | `_report.json`         | run summary and sanity numbers                |
 | `member-photos.json`   | which current members have a committed photo (from `fetch:photos`, not re-derived by `pipeline:check`) |
 

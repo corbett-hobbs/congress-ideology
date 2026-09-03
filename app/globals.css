@@ -24,7 +24,18 @@
   --accent-ink: #ffffff;
   --dem: #3a66c2;
   --rep: #c24a3a;
-  --oth: #8a8478;
+  --oth: #83817d;
+  /* Extended historical-party palette (main-page charts only) — see
+     lib/party-palette.ts. Validated OKLab / CVD + WCAG-contrast alongside
+     --dem/--rep. */
+  --federalist: #2a6d74;
+  --demrep: #737f30;
+  --whig: #b7862f;
+  --jackson: #ab543a;
+  --antijackson: #4f76ab;
+  --adams: #7c5e94;
+  --proadmin: #47618a;
+  --antiadmin: #a67c3b;
   --focus: #5c4b7a;
   color-scheme: light;
 }
@@ -43,7 +54,15 @@
     --accent-ink: #14161c;
     --dem: #4c7fdb;
     --rep: #d96a56;
-    --oth: #aba593;
+    --oth: #a5a39c;
+    --federalist: #4a9088;
+    --demrep: #8ba548;
+    --whig: #d0a038;
+    --jackson: #cf6446;
+    --antijackson: #7695c4;
+    --adams: #9d80b3;
+    --proadmin: #6f8ab5;
+    --antiadmin: #c1904f;
     --focus: #9b84c7;
     color-scheme: dark;
   }
@@ -62,7 +81,15 @@
   --accent-ink: #14161c;
   --dem: #4c7fdb;
   --rep: #d96a56;
-  --oth: #aba593;
+  --oth: #a5a39c;
+  --federalist: #4a9088;
+  --demrep: #8ba548;
+  --whig: #d0a038;
+  --jackson: #cf6446;
+  --antijackson: #7695c4;
+  --adams: #9d80b3;
+  --proadmin: #6f8ab5;
+  --antiadmin: #c1904f;
   --focus: #9b84c7;
   color-scheme: dark;
 }
@@ -173,8 +200,35 @@ body {
 .fill-rep {
   fill: var(--rep);
 }
-.fill-other {
+.fill-other,
+.fill-oth {
   fill: var(--oth);
+}
+/* Extended historical-party palette — main-page charts only. See
+   lib/party-palette.ts. */
+.fill-federalist {
+  fill: var(--federalist);
+}
+.fill-demrep {
+  fill: var(--demrep);
+}
+.fill-whig {
+  fill: var(--whig);
+}
+.fill-jackson {
+  fill: var(--jackson);
+}
+.fill-antijackson {
+  fill: var(--antijackson);
+}
+.fill-adams {
+  fill: var(--adams);
+}
+.fill-proadmin {
+  fill: var(--proadmin);
+}
+.fill-antiadmin {
+  fill: var(--antiadmin);
 }
 .stroke-dem {
   stroke: var(--dem);

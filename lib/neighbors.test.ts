@@ -22,6 +22,7 @@ function member(
     careerDim1: null,
     careerDim2: null,
     nVotes: 500,
+    partyCode: 100,
   };
 }
 

@@ -8,13 +8,22 @@ import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import type { ChamberMember } from "@/lib/congress-types";
 import { hasProfilePage, memberPath } from "@/lib/member-url";
+import {
+  PARTY_META,
+  partyColorKey,
+  partyFillClass,
+  type PartyColorKey,
+} from "@/lib/party-palette";
 import { useElementWidth } from "@/lib/use-element-width";
 import { MemberTooltip } from "./MemberTooltip";
-import { GROUP_FILL_CLASS, stateName } from "./format";
+import { stateName } from "./format";
 
 /** Used before the container is first measured (avoids a zero-width flash). */
 const FALLBACK_W = 1100;
+/** "range" carries a two-party count label ("9Pro·7Anti") — wider than the
+ *  single gap number "pair" shows. */
 const MARGIN = { top: 26, right: 66, bottom: 8, left: 124 };
+const RANGE_RIGHT = 96;
 const ROW_H = 26;
 const TICKS = [-1, -0.5, 0, 0.5, 1];
 const NARROW_TICKS = [-1, 0, 1];
@@ -35,9 +44,17 @@ interface RangeRow {
   members: ChamberMember[];
   lo: ChamberMember;
   hi: ChamberMember;
-  dem: number;
-  rep: number;
+  /** Party breakdown, most-numerous first. */
+  parties: { key: PartyColorKey; count: number }[];
   gap: number;
+}
+
+/** "12D·8R" / "9F·7D-R" — the two biggest parties in a delegation. */
+function delegationLabel(parties: RangeRow["parties"]): string {
+  return parties
+    .slice(0, 2)
+    .map((p) => `${p.count}${PARTY_META[p.key].abbr}`)
+    .join("·");
 }
 
 export interface DelegationSummary {
@@ -75,13 +92,19 @@ export function buildDelegations(
       const sorted = [...arr].sort(
         (a, b) => (a.dim1 as number) - (b.dim1 as number),
       );
+      const partyCounts = new Map<PartyColorKey, number>();
+      for (const m of sorted) {
+        const k = partyColorKey(m);
+        partyCounts.set(k, (partyCounts.get(k) ?? 0) + 1);
+      }
       ranges.push({
         state,
         members: sorted,
         lo: sorted[0],
         hi: sorted[sorted.length - 1],
-        dem: sorted.filter((m) => m.group === "dem").length,
-        rep: sorted.filter((m) => m.group === "rep").length,
+        parties: [...partyCounts.entries()]
+          .map(([key, count]) => ({ key, count }))
+          .sort((a, b) => b.count - a.count),
         gap:
           (sorted[sorted.length - 1].dim1 as number) -
           (sorted[0].dim1 as number),
@@ -169,9 +192,12 @@ export function DelegationChart({
     return copy;
   }, [pairs, ranges, mode, sort, filterState]);
 
+  const margin =
+    mode === "range" ? { ...MARGIN, right: RANGE_RIGHT } : MARGIN;
+
   // A single embedded row gets more height so dots and names read.
   const rowH = filterState && mode === "pair" ? 52 : ROW_H;
-  const height = MARGIN.top + rows.length * rowH + MARGIN.bottom;
+  const height = margin.top + rows.length * rowH + margin.bottom;
   // Fewer x-axis ticks once there isn't room for all five without overlapping.
   const ticks = W < 420 ? NARROW_TICKS : TICKS;
 
@@ -180,7 +206,7 @@ export function DelegationChart({
       <ChartFrame
         width={W}
         height={height}
-        margin={MARGIN}
+        margin={margin}
         ariaLabel={
           mode === "range"
             ? "Range chart of each state's delegation on dimension 1"
@@ -226,16 +252,16 @@ export function DelegationChart({
                     {isSelected && (
                       <rect
                         className="deleg-row-selected-bg"
-                        x={-MARGIN.left}
+                        x={-margin.left}
                         y={y - rowH / 2 + 1}
-                        width={innerWidth + MARGIN.left + MARGIN.right - 1}
+                        width={innerWidth + margin.left + margin.right - 1}
                         height={rowH - 2}
                         rx={3}
                       />
                     )}
                     <text
                       className={`deleg-state-label${isSelected ? " is-selected" : ""}`}
-                      x={-MARGIN.left + 2}
+                      x={-margin.left + 2}
                       y={y + 4}
                     >
                       {stateName(row.state)}
@@ -268,7 +294,7 @@ export function DelegationChart({
                             </text>
                           )}
                           <circle
-                            className={`deleg-dot ${GROUP_FILL_CLASS[m.group]}${isHi ? " is-highlighted" : ""}`}
+                            className={`deleg-dot ${partyFillClass(m)}${isHi ? " is-highlighted" : ""}`}
                             cx={mx}
                             cy={y}
                             r={isHi ? 7 : isEndpoint ? 5 : 3}
@@ -297,7 +323,7 @@ export function DelegationChart({
                       y={y + 4}
                     >
                       {mode === "range"
-                        ? `${(row as RangeRow).dem}D·${(row as RangeRow).rep}R`
+                        ? delegationLabel((row as RangeRow).parties)
                         : row.gap.toFixed(2)}
                     </text>
                   </g>
