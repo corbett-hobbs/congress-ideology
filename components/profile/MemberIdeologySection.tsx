@@ -4,15 +4,12 @@ import type {
   MemberProfile,
   PartyMeanPoint,
 } from "@/lib/congress-types";
-import { chamberLabel, memberNoun } from "@/lib/chamber";
-import { ProfileCompass } from "@/components/senate/ProfileCompass";
-import { CompassPanel } from "@/components/senate/CompassPanel";
-import { Dim2Footnote } from "@/components/senate/Dim2Footnote";
 import { DelegationChart } from "@/components/senate/DelegationChart";
 import { BeeswarmChart } from "@/components/senate/BeeswarmChart";
 import { SenatorTrajectoryChart } from "@/components/senate/SenatorTrajectoryChart";
 import { fmt2, ordinal } from "@/components/senate/format";
 import { ProfilePanel } from "./ProfilePanel";
+import { MemberCompassCard } from "./MemberCompassCard";
 
 interface MemberIdeologySectionProps {
   profile: MemberProfile;
@@ -50,13 +47,7 @@ export function MemberIdeologySection({
   } = profile;
 
   const isHouse = chamber === "house";
-  const nounPlural = memberNoun(chamber, { plural: true });
-  const Chamber = chamberLabel(chamber);
-
-  const scored = compassMembers; // already sorted by dim1 ascending
-  const rankIndex = scored.findIndex((m) => m.bioguideId === bioguideId);
-  const rank = rankIndex >= 0 ? rankIndex + 1 : null;
-  const inChamber = rankIndex >= 0;
+  const inChamber = compassMembers.some((m) => m.bioguideId === bioguideId);
 
   // State delegation.
   const stateScored = delegationMembers.filter(
@@ -89,20 +80,7 @@ export function MemberIdeologySection({
       aria-label="Ideology"
       className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2"
     >
-      <ProfilePanel label={`In the ${ordinal(latestCongress)} ${Chamber}`}>
-        <p className="mb-2 max-w-[42rem] text-[0.78rem] text-ink-faint">
-          {inChamber && rank
-            ? `${name} sits ${ordinal(rank)} from the left of ${scored.length} scored ${nounPlural}. Ringed below; the rest of the chamber is faded.`
-            : `No plottable ${ordinal(latestCongress)}-Congress position for ${name} (too few votes). The chamber is shown for context.`}
-        </p>
-        <CompassPanel congress={latestCongress}>
-          <ProfileCompass
-            members={compassMembers}
-            bioguideId={inChamber ? bioguideId : ""}
-          />
-        </CompassPanel>
-        <Dim2Footnote congress={latestCongress} />
-      </ProfilePanel>
+      <MemberCompassCard profile={profile} compassMembers={compassMembers} />
 
       <div className="flex flex-col gap-5">
         <ProfilePanel label="Ideological trajectory · dimension 1 by Congress">

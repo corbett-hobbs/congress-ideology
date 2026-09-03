@@ -150,10 +150,11 @@ function buildFullChamber(chamber: Chamber): FullChamber {
     .sort((a, b) => a - b);
   const latestCongress = congresses[congresses.length - 1];
 
-  // Photos exist for current members only; historical rows keep `hasPhoto`
-  // undefined and never render one. See pipeline/fetch/photos.ts.
+  // Mark the current Congress's members: they're the ones with a profile page
+  // and a committed photo. Historical rows keep both flags undefined.
   const withPhoto = photoBioguides();
   for (const m of allByCongress[latestCongress] ?? []) {
+    m.isCurrent = true;
     m.hasPhoto = withPhoto.has(m.bioguideId);
   }
 

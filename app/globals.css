@@ -270,3 +270,16 @@ body {
   object-position: top;
   background: var(--surface-raised);
 }
+
+/* The neighbor-chip row in the profile compass card: scroll, never wrap. */
+.neighbor-chip-row {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.neighbor-chip-row::-webkit-scrollbar {
+  height: 5px;
+}
+.neighbor-chip-row::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 3px;
+}

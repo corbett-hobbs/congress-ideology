@@ -36,6 +36,12 @@ export interface ChamberMember {
    * historical rows, which never render a photo.
    */
   hasPhoto?: boolean;
+  /**
+   * True for members of the current Congress — the ones with a profile page.
+   * `undefined` on every historical row (same stamping as `hasPhoto`). Gate
+   * navigate-on-click with `hasProfilePage()` in lib/member-url.ts.
+   */
+  isCurrent?: boolean;
 }
 
 export interface PartyMeanPoint {

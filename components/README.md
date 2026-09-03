@@ -16,8 +16,10 @@ components/
   profile/  the per-member profile page, split into verticals-agnostic pieces:
             MemberProfileView (the shell), ProfileHeader (identity block),
             ProfilePanel (shared card chrome), and one section per vertical —
-            MemberIdeologySection today, others added as siblings. Used by
-            /congress/{senators,house}/[bioguide_id]/[name_slug].
+            MemberIdeologySection today, others added as siblings. Within it,
+            MemberCompassCard adds the "nearest neighbors" toggle over the
+            shared compass; NeighborChips is its footnote-strip chip row. Used
+            by /congress/{senators,house}/[bioguide_id]/[name_slug].
   SiteHeader.tsx / SiteNav.tsx  the persistent top bar (wordmark + top-level
             section nav from lib/verticals.ts), rendered once in the root
             layout on every page. The explorer's own controls (chamber / state

@@ -42,3 +42,13 @@ export function memberSlug(ref: Pick<MemberRef, "name">): string {
 export function memberPath(ref: MemberRef): string {
   return `${chamberBasePath(ref.chamber)}/${ref.bioguideId}/${memberSlug(ref)}`;
 }
+
+/**
+ * Profile pages exist for current members only. Charts that navigate on a dot
+ * click use this to avoid linking historical/former members (e.g. while the
+ * explorer's slider is scrubbed to a past Congress) to a dead 404. Current
+ * members carry `isCurrent` — see lib/congress-data.ts.
+ */
+export function hasProfilePage(m: { isCurrent?: boolean }): boolean {
+  return m.isCurrent === true;
+}

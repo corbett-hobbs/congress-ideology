@@ -7,6 +7,7 @@ import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import type { ChamberMember } from "@/lib/congress-types";
 import { memberNoun } from "@/lib/chamber";
+import { hasProfilePage } from "@/lib/member-url";
 import { MemberTooltip } from "./MemberTooltip";
 import { GROUP_FILL_CLASS } from "./format";
 
@@ -22,6 +23,12 @@ interface CompassChartProps {
   members: ChamberMember[];
   selectedId?: string | null;
   highlightedId?: string | null;
+  /**
+   * Additional members to ring, beyond `highlightedId` — the profile compass's
+   * "nearest neighbors" mode passes the anchor's closest colleagues here. Same
+   * highlight treatment as `highlightedId`; the anchor still owns the label.
+   */
+  highlightedIds?: readonly string[];
   onHover?: (m: ChamberMember | null) => void;
   onSelect?: (m: ChamberMember) => void;
   /** Fade every dot except the highlighted / selected one (profile pages). */
@@ -40,8 +47,14 @@ interface CompassChartProps {
   variant?: "profile" | "explorer";
 }
 
-function zRank(m: ChamberMember, selectedId: string | null, highlightedId: string | null) {
-  if (m.bioguideId === highlightedId) return 2;
+function zRank(
+  m: ChamberMember,
+  selectedId: string | null,
+  highlightedId: string | null,
+  ringed: ReadonlySet<string>,
+) {
+  if (m.bioguideId === highlightedId) return 3;
+  if (ringed.has(m.bioguideId)) return 2;
   if (m.bioguideId === selectedId) return 1;
   return 0;
 }
@@ -50,6 +63,7 @@ export function CompassChart({
   members,
   selectedId = null,
   highlightedId = null,
+  highlightedIds,
   onHover,
   onSelect,
   dimUnfocused = false,
@@ -58,6 +72,10 @@ export function CompassChart({
 }: CompassChartProps) {
   const tip = useTooltip<ChamberMember>();
   const explorer = variant === "explorer";
+  const ringed = useMemo(
+    () => new Set(highlightedIds ?? []),
+    [highlightedIds],
+  );
 
   const chamber = members[0]?.chamber ?? "senate";
   const focused =
@@ -82,10 +100,10 @@ export function CompassChart({
     () =>
       [...members].sort(
         (a, b) =>
-          zRank(a, selectedId, highlightedId) -
-          zRank(b, selectedId, highlightedId),
+          zRank(a, selectedId, highlightedId, ringed) -
+          zRank(b, selectedId, highlightedId, ringed),
       ),
-    [members, selectedId, highlightedId],
+    [members, selectedId, highlightedId, ringed],
   );
 
   return (
@@ -155,9 +173,13 @@ export function CompassChart({
               )}
 
               {drawOrder.map((m) => {
-                const isHi = m.bioguideId === highlightedId;
+                const isAnchor = m.bioguideId === highlightedId;
+                const isHi = isAnchor || ringed.has(m.bioguideId);
                 const isSel = m.bioguideId === selectedId;
                 const faded = dimUnfocused && !isHi && !isSel;
+                // Profile pages only exist for current members — don't wire a
+                // click that would 404 (e.g. a scrubbed-back historical dot).
+                const navigable = onSelect != null && hasProfilePage(m);
                 return (
                   <circle
                     key={m.bioguideId}
@@ -175,8 +197,8 @@ export function CompassChart({
                       onHover?.(null);
                       tip.hide();
                     }}
-                    onClick={onSelect ? () => onSelect(m) : undefined}
-                    style={onSelect ? { cursor: "pointer" } : undefined}
+                    onClick={navigable ? () => onSelect!(m) : undefined}
+                    style={navigable ? { cursor: "pointer" } : undefined}
                   />
                 );
               })}

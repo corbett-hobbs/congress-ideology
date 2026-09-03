@@ -8,7 +8,7 @@ import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import type { ChamberMember } from "@/lib/congress-types";
-import { memberPath } from "@/lib/member-url";
+import { hasProfilePage, memberPath } from "@/lib/member-url";
 import { MemberTooltip } from "./MemberTooltip";
 import { GROUP_FILL_CLASS } from "./format";
 
@@ -87,6 +87,9 @@ export function BeeswarmChart({
               />
               {nodes.map((n) => {
                 const isHi = n.m.bioguideId === highlightId;
+                // No profile page for former members (e.g. a scrubbed-back
+                // historical delegation) — don't link them to a 404.
+                const navigable = hasProfilePage(n.m);
                 return (
                   <circle
                     key={n.m.bioguideId}
@@ -94,11 +97,13 @@ export function BeeswarmChart({
                     cy={n.y}
                     r={isHi ? 8 : R}
                     className={`dot ${GROUP_FILL_CLASS[n.m.group]}${isHi ? " is-highlighted" : ""}`}
-                    style={{ cursor: "pointer" }}
+                    style={navigable ? { cursor: "pointer" } : undefined}
                     onPointerEnter={(e) => tip.show(n.m, e)}
                     onPointerMove={tip.move}
                     onPointerLeave={tip.hide}
-                    onClick={() => router.push(memberPath(n.m))}
+                    onClick={
+                      navigable ? () => router.push(memberPath(n.m)) : undefined
+                    }
                   />
                 );
               })}

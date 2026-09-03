@@ -7,7 +7,7 @@ import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import type { ChamberMember } from "@/lib/congress-types";
-import { memberPath } from "@/lib/member-url";
+import { hasProfilePage, memberPath } from "@/lib/member-url";
 import { useElementWidth } from "@/lib/use-element-width";
 import { MemberTooltip } from "./MemberTooltip";
 import { GROUP_FILL_CLASS, stateName } from "./format";
@@ -273,13 +273,19 @@ export function DelegationChart({
                             cy={y}
                             r={isHi ? 7 : isEndpoint ? 5 : 3}
                             opacity={isEndpoint ? 1 : 0.5}
-                            style={{ cursor: "pointer" }}
+                            style={
+                              hasProfilePage(m)
+                                ? { cursor: "pointer" }
+                                : undefined
+                            }
                             onPointerEnter={(e) => tip.show(m, e)}
                             onPointerMove={tip.move}
                             onPointerLeave={tip.hide}
                             onClick={(e) => {
                               e.stopPropagation();
-                              router.push(memberPath(m));
+                              // Former members (e.g. a scrubbed-back Congress)
+                              // have no profile page — don't link to a 404.
+                              if (hasProfilePage(m)) router.push(memberPath(m));
                             }}
                           />
                         </g>
