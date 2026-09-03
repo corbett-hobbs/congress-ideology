@@ -318,7 +318,6 @@ export function getMemberProfile(
   const leg = legislatorsById().get(bioguideId);
   const firstName = leg?.name.nickname ?? leg?.name.first ?? current.name;
   const lastName = leg?.name.last ?? current.lastName;
-  const fullName = leg?.name.official_full ?? current.name;
 
   const trajectory: MemberTrajectoryPoint[] = [];
   let careerDim1: number | null = null;
@@ -339,7 +338,6 @@ export function getMemberProfile(
     bioguideId,
     chamber,
     name: current.name,
-    fullName,
     firstName,
     lastName,
     state: current.state,

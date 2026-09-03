@@ -95,7 +95,6 @@ export interface MemberProfile {
   bioguideId: string;
   chamber: Chamber;
   name: string;
-  fullName: string;
   firstName: string;
   lastName: string;
   state: string;
