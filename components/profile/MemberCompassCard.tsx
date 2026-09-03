@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { ChamberMember, MemberProfile } from "@/lib/congress-types";
-import { chamberLabel, memberNoun } from "@/lib/chamber";
+import { memberNoun } from "@/lib/chamber";
 import { nearestNeighbors } from "@/lib/neighbors";
 import { CompassPanel } from "@/components/senate/CompassPanel";
 import { ProfileCompass } from "@/components/senate/ProfileCompass";
@@ -25,7 +25,6 @@ export function MemberCompassCard({
   const [mode, setMode] = useState<Mode>("all");
   const { bioguideId, chamber, name, latestCongress } = profile;
 
-  const Chamber = chamberLabel(chamber);
   const nounPlural = memberNoun(chamber, { plural: true });
 
   const anchorIndex = compassMembers.findIndex(
@@ -42,7 +41,7 @@ export function MemberCompassCard({
 
   return (
     <ProfilePanel
-      label={`In the ${ordinal(latestCongress)} ${Chamber}`}
+      label={`In the ${ordinal(latestCongress)} Congress`}
       action={
         canToggle ? (
           <div

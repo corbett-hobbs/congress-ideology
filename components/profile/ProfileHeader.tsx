@@ -33,16 +33,16 @@ export function ProfileHeader({ profile }: { profile: MemberProfile }) {
   const Chamber = chamberLabel(chamber);
 
   return (
-    <header className="flex max-w-[52rem] flex-col gap-3 sm:flex-row sm:items-start sm:gap-6">
+    <header className="flex max-w-[52rem] flex-row items-center gap-4 sm:items-start sm:gap-6">
       <MemberPhoto
         bioguideId={bioguideId}
         hasPhoto={hasPhoto}
         size="large"
-        className="aspect-[225/275] w-20 flex-none rounded-md border border-line-strong bg-surface-raised object-cover object-top sm:w-28"
+        className="aspect-[225/275] w-[84px] flex-none rounded-md border border-line-strong bg-surface-raised object-cover object-top sm:w-28"
       />
       <div className="min-w-0">
         <p className="mb-1.5 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-ink-faint">
-          {Noun} · {ordinal(latestCongress)} Congress
+          {Noun}
         </p>
         <h1 className="mb-1.5 font-serif text-[clamp(2rem,4vw,2.8rem)] font-semibold leading-[1.05] tracking-[-0.01em]">
           {name}
@@ -57,8 +57,8 @@ export function ProfileHeader({ profile }: { profile: MemberProfile }) {
           {partyLabel(profile)}
         </p>
         <p className="mt-1.5 text-[0.9rem] text-ink-muted">
-          In the {Chamber} since the {ordinal(firstCongress)} Congress (
-          {congressStartYear(firstCongress)}) · {chamberCongressCount}{" "}
+          In the {Chamber} since {congressStartYear(firstCongress)} ·{" "}
+          {chamberCongressCount}{" "}
           {chamberCongressCount === 1 ? "Congress" : "Congresses"} served
         </p>
         {partialCurrentTerm && (
