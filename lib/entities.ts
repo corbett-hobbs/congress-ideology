@@ -22,6 +22,16 @@ export const congressNumber = z.number().int().gte(1).lte(200);
 export const chamber = z.enum(["house", "senate"]);
 export type Chamber = z.infer<typeof chamber>;
 
+/**
+ * A committee's own identifier — the THOMAS id from
+ * `@unitedstates/congress-legislators` (`HSJU`, `SSFI`, `JSEC`). This is a
+ * *committee* key, not a person key, so it doesn't touch the "`bioguide_id` is
+ * the only person identifier" rule in DATA_CONVENTIONS §1 — the field is named
+ * `committee_id` rather than `thomas_id` to keep that language clean.
+ */
+export const committeeId = z.string().regex(/^[A-Z0-9]{4}$/, "committee id");
+export type CommitteeId = z.infer<typeof committeeId>;
+
 const nominateCoord = z.number().gte(-1).lte(1).nullable();
 
 /** icpsr -> bioguide_id. `source` records which dataset supplied the link. */
@@ -105,3 +115,43 @@ export const ideologyScore = z.strictObject({
   party_code: z.number().int(),
 });
 export type IdeologyScore = z.infer<typeof ideologyScore>;
+
+/**
+ * One row per standing committee (House, Senate, or joint) of the current
+ * Congress. Subcommittees are deliberately not emitted (see the committees
+ * session notes / ARCHITECTURE_MAP.md). Source: `committees-current.yaml`.
+ *
+ * `short_name` is the marquee form used on charts and in the URL slug
+ * ("Judiciary", "Ways and Means", "Joint Economic") — derived from `name`, kept
+ * here because it's a stable fact about the committee, not a join.
+ */
+export const committee = z.strictObject({
+  committee_id: committeeId,
+  name: z.string().min(1),
+  short_name: z.string().min(1),
+  chamber: z.enum(["house", "senate", "joint"]),
+});
+export type Committee = z.infer<typeof committee>;
+
+export const committeeRole = z.enum(["chair", "ranking_member", "member"]);
+export type CommitteeRole = z.infer<typeof committeeRole>;
+
+/**
+ * One row per (legislator, committee) for the current Congress — the source
+ * file is committee→members, inverted here to member-keyed so a member's
+ * committees are a plain filter (DATA_CONVENTIONS §1: everything in `output/`
+ * is `bioguide_id`-keyed). No `congress_number` column: this file only ever
+ * describes the current Congress. Source: `committee-membership-current.yaml`.
+ */
+export const committeeMembership = z.strictObject({
+  bioguide_id: bioguideId,
+  committee_id: committeeId,
+  /** Majority / minority side of the committee, from the source file. */
+  party: z.enum(["majority", "minority"]),
+  /** Normalised from the source `title`; `member` covers vice-chairs, ex
+   *  officio, and untitled seats. */
+  role: committeeRole,
+  /** Seat order within the member's party on the committee (source `rank`). */
+  rank: z.number().int().positive(),
+});
+export type CommitteeMembership = z.infer<typeof committeeMembership>;

@@ -114,6 +114,37 @@ export const legislatorTerm = z.looseObject({
 });
 export type LegislatorTerm = z.infer<typeof legislatorTerm>;
 
+// --- committees --------------------------------------------------------------
+
+/** One subcommittee under a `committees-current.yaml` entry. Not emitted — see
+ *  DATA_CONVENTIONS / the committees session notes — but validated so a shape
+ *  change upstream is caught. */
+export const rawSubcommittee = z.looseObject({
+  name: z.string().min(1),
+  thomas_id: z.string().min(1),
+});
+
+/** One entry of `committees-current.yaml` (a top-level committee). */
+export const rawCommittee = z.looseObject({
+  type: z.enum(["house", "senate", "joint"]),
+  name: z.string().min(1),
+  thomas_id: z.string().regex(/^[A-Z0-9]{4}$/, "4-char THOMAS id"),
+  subcommittees: z.array(rawSubcommittee).optional(),
+});
+export type RawCommittee = z.infer<typeof rawCommittee>;
+
+/** One member entry in a `committee-membership-current.yaml` roster list. */
+export const rawCommitteeMember = z.looseObject({
+  name: z.string().min(1),
+  bioguide: z.string().regex(BIOGUIDE),
+  party: z.enum(["majority", "minority"]),
+  rank: z.coerce.number().int().positive(),
+  title: z.string().min(1).optional(),
+  /** Present only on joint-committee rosters (members come from both chambers). */
+  chamber: z.enum(["house", "senate"]).optional(),
+});
+export type RawCommitteeMember = z.infer<typeof rawCommitteeMember>;
+
 /** One entry of `legislators-current.yaml` / `legislators-historical.yaml`. */
 export const legislator = z.looseObject({
   id: z.looseObject({

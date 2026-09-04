@@ -5,9 +5,13 @@ import { z, type ZodType } from "zod";
 import { RAW_DIR } from "../fetch/lib";
 import {
   legislator as legislatorSchema,
+  rawCommittee,
+  rawCommitteeMember,
   voteviewMemberRow,
   voteviewPartyRow,
   type Legislator,
+  type RawCommittee,
+  type RawCommitteeMember,
   type VoteviewMemberRow,
 } from "../validate/schemas";
 
@@ -19,6 +23,8 @@ const LEGISLATOR_YAML = [
   `${RAW_DIR}/congress-legislators/legislators-current.yaml`,
   `${RAW_DIR}/congress-legislators/legislators-historical.yaml`,
 ];
+const COMMITTEES_YAML = `${RAW_DIR}/congress-legislators/committees-current.yaml`;
+const COMMITTEE_MEMBERSHIP_YAML = `${RAW_DIR}/congress-legislators/committee-membership-current.yaml`;
 
 function parseRows<T>(file: string, rows: unknown[], schema: ZodType<T>): T[] {
   return rows.map((row, i) => {
@@ -61,6 +67,39 @@ export async function readLegislators(): Promise<Legislator[]> {
     }),
   );
   return lists.flat();
+}
+
+/** Top-level committees (`committees-current.yaml`), validated. */
+export async function readRawCommittees(): Promise<RawCommittee[]> {
+  const doc: unknown = parseYaml(await readFile(COMMITTEES_YAML, "utf8"));
+  if (!Array.isArray(doc)) throw new Error(`${COMMITTEES_YAML}: expected a YAML list`);
+  return parseRows(COMMITTEES_YAML, doc, rawCommittee);
+}
+
+/**
+ * `committee-membership-current.yaml` as a map of committee id → validated
+ * roster. Includes subcommittee keys (`<parent><digits>`); the transform picks
+ * out the parent-committee entries.
+ */
+export async function readRawCommitteeMembership(): Promise<
+  Record<string, RawCommitteeMember[]>
+> {
+  const doc: unknown = parseYaml(await readFile(COMMITTEE_MEMBERSHIP_YAML, "utf8"));
+  if (doc == null || typeof doc !== "object" || Array.isArray(doc)) {
+    throw new Error(`${COMMITTEE_MEMBERSHIP_YAML}: expected a YAML mapping`);
+  }
+  const out: Record<string, RawCommitteeMember[]> = {};
+  for (const [key, members] of Object.entries(doc as Record<string, unknown>)) {
+    if (!Array.isArray(members)) {
+      throw new Error(`${COMMITTEE_MEMBERSHIP_YAML}: ${key} is not a list`);
+    }
+    out[key] = parseRows(
+      `${COMMITTEE_MEMBERSHIP_YAML} [${key}]`,
+      members,
+      rawCommitteeMember,
+    );
+  }
+  return out;
 }
 
 /**

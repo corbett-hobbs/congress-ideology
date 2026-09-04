@@ -26,6 +26,11 @@ export async function readYamlList(path: string): Promise<unknown[]> {
   return doc;
 }
 
+/** Parse a YAML document of any shape (e.g. the committee-membership map). */
+export async function readYamlDoc(path: string): Promise<unknown> {
+  return parseYamlDoc(await readFile(path, "utf8"));
+}
+
 /**
  * Validate every item against `schema`, stopping at the first failure with a
  * ValidationError that points to the offending row.
