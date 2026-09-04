@@ -9,9 +9,8 @@ export function CommitteeDotTooltip({ committee }: { committee: CommitteeSummary
       <div>
         <b>{name}</b>
         <br />
-        {memberCount} members
-        <br />
-        {repCount} R / {demCount} D{otherCount > 0 ? ` / ${otherCount} other` : ""}
+        {memberCount} members · {repCount} R / {demCount} D
+        {otherCount > 0 ? ` / ${otherCount} other` : ""}
         <br />
         <span className="tt-mono">
           dim1 {fmt3(dim1)} &nbsp; dim2 {fmt3(dim2)}
