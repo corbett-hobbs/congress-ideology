@@ -11,10 +11,14 @@
 export type {
   BioguideId,
   Chamber,
+  CommitteeId,
   IdCrosswalkEntry,
   Legislator,
   Term,
   IdeologyScore,
+  Committee,
+  CommitteeRole,
+  CommitteeMembership,
 } from "./entities";
 
 import type { BioguideId } from "./entities";
@@ -100,23 +104,11 @@ export interface DisclosureLineItem {
   notes?: string[];
 }
 
-export interface Committee {
-  committee_id: string;
-  name: string;
-  chamber: "house" | "senate" | "joint";
-  /** Set for subcommittees. */
-  parent_committee_id?: string;
-}
-
-export type CommitteeRole = "chair" | "ranking_member" | "member";
-
-/** One row per legislator × committee × Congress. */
-export interface CommitteeMembership {
-  bioguide_id: BioguideId;
-  committee_id: string;
-  congress_number: CongressNumber;
-  role: CommitteeRole;
-}
+// Committee / CommitteeMembership are built — see `committee` / `committeeMembership`
+// in `lib/entities.ts` (re-exported above). Current Congress only; subcommittees
+// and a per-committee bills/votes record are the follow-ups. A committee's
+// blended ideology position is derived at build time in `lib/committee-data.ts`,
+// not stored (DATA_CONVENTIONS §2).
 
 /**
  * One row per legislator × Congress × metric — the melted format reserved for

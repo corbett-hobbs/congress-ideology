@@ -26,10 +26,15 @@ silently. See `.github/workflows/voteview-freshness.yml` for the automated
 
 | Stage     | Command          | What it does                                                        |
 | --------- | ---------------- | ------------------------------------------------------------------ |
-| fetch     | `pnpm fetch:all` | download Voteview + congress-legislators into `raw/`               |
-| validate  | `pnpm validate`  | schema-check `raw/`: missing fields, bad numbers, duplicate keys   |
-| transform | `pnpm transform` | `raw/` → `id_crosswalk`, `legislators`, `terms`, `ideology_scores` in `output/` + `_report.json` |
+| fetch     | `pnpm fetch:all` | download Voteview + congress-legislators (legislators, committees, committee rosters) into `raw/` |
+| validate  | `pnpm validate`  | schema-check `raw/`: missing fields, bad numbers, duplicate keys, every committee roster bioguide resolvable |
+| transform | `pnpm transform` | `raw/` → `id_crosswalk`, `legislators`, `terms`, `ideology_scores`, `committees`, `committee_memberships` in `output/` + `_report.json` |
 | photos    | `pnpm fetch:photos` | current members' portraits (two sizes) from `@unitedstates/images` → `public/images/members/` + `output/member-photos.json`. Runs after `transform` (reads the current roster from `terms.json`). |
+
+`pnpm fetch:committees` fetches `committees-current.yaml` +
+`committee-membership-current.yaml` on its own. These cover the **current
+Congress only** — there is no historical committee-membership file — which is
+why the committee feature is pinned to the latest Congress.
 
 - `pnpm pipeline` runs all four in order (fetches from upstream).
 - `pnpm pipeline:check` runs validate + transform on the committed `raw/` and
@@ -39,14 +44,16 @@ silently. See `.github/workflows/voteview-freshness.yml` for the automated
 
 ## Output
 
-| File                   | Grain                                        |
-| ---------------------- | -------------------------------------------- |
-| `id_crosswalk.json`    | one row per `icpsr`                           |
-| `legislators.json`     | one row per `bioguide_id`                     |
-| `terms.json`           | one row per (bioguide_id, congress, chamber)  |
-| `ideology_scores.json` | one row per (bioguide_id, congress, chamber); carries Voteview `party_code` |
-| `_report.json`         | run summary and sanity numbers                |
-| `member-photos.json`   | which current members have a committed photo (from `fetch:photos`, not re-derived by `pipeline:check`) |
+| File                          | Grain                                        |
+| ----------------------------- | -------------------------------------------- |
+| `id_crosswalk.json`           | one row per `icpsr`                           |
+| `legislators.json`            | one row per `bioguide_id`                     |
+| `terms.json`                  | one row per (bioguide_id, congress, chamber)  |
+| `ideology_scores.json`        | one row per (bioguide_id, congress, chamber); carries Voteview `party_code` |
+| `committees.json`             | one row per top-level committee (current Congress) |
+| `committee_memberships.json`  | one row per (bioguide_id, committee_id), current Congress |
+| `_report.json`                | run summary and sanity numbers                |
+| `member-photos.json`          | which current members have a committed photo (from `fetch:photos`, not re-derived by `pipeline:check`) |
 
 See `docs/DATA_CONVENTIONS.md` §2 for the full contract; schemas are in
 `lib/entities.ts`.
