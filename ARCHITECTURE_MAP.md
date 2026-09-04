@@ -73,6 +73,7 @@ to members and committees at once — there is no forked chart code.
 | body             | `charts/SwarmRows`                | the 1-D row list: label gutter (clamped to width), min→max connector, endpoint emphasis, right-hand meta, per-row and per-point click |
 | member wrapper   | `senate/CompassChart`            | `ScatterPlot` + member accessors (`partyFillClass`, `MemberTooltip`, `memberPath`/`hasProfilePage`) |
 | member wrapper   | `senate/DelegationChart`         | `SwarmRows` + state grouping (`buildDelegations`), pair (dumbbell) and range modes |
+| identity header  | `profile/ProfileHeader` vs. `committee/CommitteeHeader` | Same structural pattern (eyebrow, serif name, meta line, sub-line) — **deliberately not** a shared component. `ProfileHeader` keeps a `w-[84px]`/`w-28` photo slot (a real, systematically available per-member asset); `CommitteeHeader` has **no photo/seal placeholder at all** (a monogram was tried and dropped — pure decoration, no informational content, unlike the member photo) and reclaims that width, so its header isn't capped at `ProfileHeader`'s photo-driven `max-w-[52rem]` — it runs out to the page's own `max-w-[1180px]` instead. |
 | committee wrapper| `committee/CommitteeCompass`     | `ScatterPlot` + committee accessors (dot colour read straight off `CommitteeSummary.compassColorClass`, joint→neutral, `CommitteeDotTooltip`, `committeePath`) |
 | committee wrapper| `committee/CommitteeSwarm`       | `SwarmRows` + one row per committee, party-split meta, chamber-disambiguated labels |
 | control           | `charts/SortToggle`               | Shared "Widest spread / A–Z / Ideology" pill group behind both "How each state votes" and "How each committee votes" (`SenateExplorer`). "Ideology" is reversible (click again to flip direction) instead of pick-one-of-N; `DelegationChart` and `CommitteeSwarm` both take a `SortState` and sort their own row-level mean-dim1 field on it. |
@@ -83,10 +84,13 @@ committee roster swarm. Not yet folded into a primitive.
 
 ### Committee page shell (`components/committee/`)
 
-`CommitteeProfileView` → `CommitteeHeader` (monogram seal, control + split,
-Chair / Ranking Member) + `CommitteeCompassCard` (compass fed committees, "All
-committees" / "Nearest neighbors" toggle, `CommitteeNeighborChips` in neighbour
-mode) + `CommitteeRosterCard` (single-row swarm + scrollable roster list, no
+`CommitteeProfileView` → `CommitteeHeader` (no photo/seal — see the identity
+header row in the table above; control + compact `14R·9D` split, shared with
+`CommitteeSwarm`'s `partySplit`; Chair / Ranking Member from the real
+`title` field, never inferred from roster order) + `CommitteeCompassCard`
+(compass fed committees, "All committees" / "Nearest neighbors" toggle,
+`CommitteeNeighborChips` in neighbour mode) + `CommitteeRosterCard`
+(single-row swarm + scrollable roster list, no
 trajectory chart).
 
 ### Site-wide header back-link (`components/SiteHeader.tsx`, `components/BackLinkContext.tsx`)

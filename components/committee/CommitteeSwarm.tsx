@@ -6,7 +6,11 @@ import {
   SwarmRows,
   type SwarmRowData,
 } from "@/components/charts/SwarmRows";
-import type { CommitteeMemberRow, CommitteeSummary } from "@/lib/committee-types";
+import {
+  partySplit,
+  type CommitteeMemberRow,
+  type CommitteeSummary,
+} from "@/lib/committee-types";
 import { groupFillClass } from "@/lib/party-palette";
 import { hasProfilePage, memberPath } from "@/lib/member-url";
 import { committeePath } from "@/lib/committee-url";
@@ -20,13 +24,6 @@ const SINGLE_ROW_MARGIN = { top: 20, right: 24, bottom: 8, left: 24 };
 const SINGLE_ROW_H = 44;
 
 const CHAMBER_ABBR = { house: "H", senate: "S", joint: "J" } as const;
-
-/** "26R·23D" / "12R·8D·1I" — the roster's party make-up. */
-function partySplit(c: CommitteeSummary): string {
-  const parts = [`${c.repCount}R`, `${c.demCount}D`];
-  if (c.otherCount > 0) parts.push(`${c.otherCount}I`);
-  return parts.join("·");
-}
 
 /**
  * Row label: the short name, disambiguated by chamber only when two committees

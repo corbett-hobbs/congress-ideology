@@ -94,3 +94,15 @@ export interface CommitteeSearchEntry {
 export function committeeIsPlottable(c: CommitteeSummary): boolean {
   return c.dim1 != null && c.dim2 != null;
 }
+
+/** "26R·23D" / "12R·8D·1I" — the roster's compact party make-up. Shared by
+ *  `CommitteeSwarm`'s row meta and `CommitteeHeader`'s meta line — one
+ *  convention, not two (this used to be spaced out as "14 R / 9 D" on the
+ *  header specifically, which wrapped onto a second line). */
+export function partySplit(
+  c: Pick<CommitteeSummary, "repCount" | "demCount" | "otherCount">,
+): string {
+  const parts = [`${c.repCount}R`, `${c.demCount}D`];
+  if (c.otherCount > 0) parts.push(`${c.otherCount}I`);
+  return parts.join("·");
+}
