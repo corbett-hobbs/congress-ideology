@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getCurrentMembers } from "@/lib/congress-data";
+import { getAllCommittees } from "@/lib/committee-data";
 import { CHAMBERS } from "@/lib/chamber";
 import { memberPath } from "@/lib/member-url";
+import { committeePath } from "@/lib/committee-url";
 import { absoluteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -18,6 +20,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   );
 
+  const committees = getAllCommittees().map((c) => ({
+    url: absoluteUrl(committeePath(c)),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
   return [
     {
       url: absoluteUrl("/"),
@@ -26,5 +35,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...profiles,
+    ...committees,
   ];
 }

@@ -2,6 +2,8 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { RAW_DIR } from "../fetch/lib";
 import {
+  committee as committeeEntity,
+  committeeMembership as committeeMembershipEntity,
   idCrosswalkEntry,
   ideologyScore,
   legislator as legislatorEntity,
@@ -11,9 +13,12 @@ import { buildIdCrosswalk } from "./crosswalk";
 import { buildLegislators } from "./legislators";
 import { buildTerms } from "./terms";
 import { buildIdeologyScores, KNOWN_UNRESOLVABLE } from "./scores";
+import { buildCommittees } from "./committees";
 import { buildReport, printReport } from "./report";
 import {
   readLegislators,
+  readRawCommittees,
+  readRawCommitteeMembership,
   readVoteviewMembers,
   writeEntities,
   writeJson,
@@ -108,6 +113,24 @@ async function main() {
   }
   await writeEntities("ideology_scores", ideologyScore, scoresResult.scores);
 
+  // --- committees ----------------------------------------------------- -
+  const committeesResult = buildCommittees(
+    await readRawCommittees(),
+    await readRawCommitteeMembership(),
+  );
+  await writeEntities("committees", committeeEntity, committeesResult.committees);
+  await writeEntities(
+    "committee_memberships",
+    committeeMembershipEntity,
+    committeesResult.memberships,
+  );
+  for (const key of committeesResult.duplicateSeats) {
+    console.warn(`  note: committee seat listed twice, kept the senior role — ${key}`);
+  }
+  for (const id of committeesResult.committeesWithoutRoster) {
+    console.warn(`  note: committee ${id} has no roster in committee-membership-current.yaml`);
+  }
+
   // --- report -------------------------------------------------------- -
   const report = buildReport({
     legislators: legislatorEntities,
@@ -124,17 +147,33 @@ async function main() {
         `${RAW_DIR}/voteview/HSall_parties.csv`,
         `${RAW_DIR}/congress-legislators/legislators-current.yaml`,
         `${RAW_DIR}/congress-legislators/legislators-historical.yaml`,
+        `${RAW_DIR}/congress-legislators/committees-current.yaml`,
+        `${RAW_DIR}/congress-legislators/committee-membership-current.yaml`,
       ].map(digest),
     ),
     capCongress,
     report,
+    committees: {
+      total: committeesResult.committees.length,
+      byChamber: {
+        house: committeesResult.committees.filter((c) => c.chamber === "house").length,
+        senate: committeesResult.committees.filter((c) => c.chamber === "senate").length,
+        joint: committeesResult.committees.filter((c) => c.chamber === "joint").length,
+      },
+      membershipRows: committeesResult.memberships.length,
+      duplicateSeats: committeesResult.duplicateSeats.length,
+      committeesWithoutRoster: committeesResult.committeesWithoutRoster,
+    },
     knownUnresolvable: KNOWN_UNRESOLVABLE,
     droppedUnresolvableRows: scoresResult.unresolvable,
   });
 
   printReport(report);
   console.log(
-    "  wrote id_crosswalk.json, legislators.json, terms.json, ideology_scores.json, _report.json",
+    `  committees: ${committeesResult.committees.length}, committee_memberships: ${committeesResult.memberships.length}`,
+  );
+  console.log(
+    "  wrote id_crosswalk.json, legislators.json, terms.json, ideology_scores.json, committees.json, committee_memberships.json, _report.json",
   );
 }
 

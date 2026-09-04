@@ -64,4 +64,15 @@ describe("nearestNeighbors", () => {
   it("caps at n", () => {
     expect(nearestNeighbors(anchor, pool, 2)).toHaveLength(2);
   });
+
+  it("works for any (dim1, dim2) entity with a custom identity", () => {
+    type C = { committeeId: string; dim1: number | null; dim2: number | null };
+    const cs: C[] = [
+      { committeeId: "A", dim1: 0, dim2: 0 },
+      { committeeId: "B", dim1: 0.2, dim2: 0 },
+      { committeeId: "C", dim1: -0.8, dim2: 0.5 },
+    ];
+    const got = nearestNeighbors(cs[0], cs, 1, (c) => c.committeeId);
+    expect(got.map((n) => n.member.committeeId)).toEqual(["B"]);
+  });
 });

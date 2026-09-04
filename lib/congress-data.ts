@@ -288,6 +288,22 @@ export function getMemberSearchIndex(): MemberSearchEntry[] {
   );
 }
 
+/**
+ * Every current member of either chamber, keyed by `bioguide_id`. The joined
+ * `ChamberMember` carries their latest-Congress score, party group, photo flag
+ * and `isCurrent` — the shape other build-time joins (e.g. committee rosters)
+ * need without re-reading the pipeline outputs.
+ */
+export function getCurrentMemberIndex(): Map<string, ChamberMember> {
+  const index = new Map<string, ChamberMember>();
+  for (const chamber of CHAMBERS) {
+    for (const m of getChamberCurrent(chamber).all) {
+      if (!index.has(m.bioguideId)) index.set(m.bioguideId, m);
+    }
+  }
+  return index;
+}
+
 /** bioguide_id + display name for every current member of a chamber. */
 export function getCurrentMembers(
   chamber: Chamber,

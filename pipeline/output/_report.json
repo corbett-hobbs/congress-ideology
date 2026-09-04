@@ -19,6 +19,16 @@
       "path": "pipeline/raw/congress-legislators/legislators-historical.yaml",
       "bytes": 8997407,
       "sha256": "9641615f336b3113d6f89152e3441128cbdc3f61ccf87c65da3a015076c78c91"
+    },
+    {
+      "path": "pipeline/raw/congress-legislators/committees-current.yaml",
+      "bytes": 63366,
+      "sha256": "3885591df90465f004695444aca47db88188471542cb35cf8a88f24c8649b4b4"
+    },
+    {
+      "path": "pipeline/raw/congress-legislators/committee-membership-current.yaml",
+      "bytes": 292419,
+      "sha256": "f07d5156772ec91bcd6b8c4d36580589aedbcf7eea3249019776ad46c81e9c98"
     }
   ],
   "capCongress": 119,
@@ -109,6 +119,17 @@
       ],
       "scoresWithoutTerm": 156
     }
+  },
+  "committees": {
+    "total": 49,
+    "byChamber": {
+      "house": 23,
+      "senate": 21,
+      "joint": 5
+    },
+    "membershipRows": 1340,
+    "duplicateSeats": 0,
+    "committeesWithoutRoster": []
   },
   "knownUnresolvable": {
     "10509": "George O. Chambers, 87th Congress — no bioguide in either source",

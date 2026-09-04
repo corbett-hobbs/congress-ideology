@@ -1,11 +1,19 @@
 import { RAW_DIR } from "../fetch/lib";
-import { legislator, voteviewMemberRow, voteviewPartyRow } from "./schemas";
+import {
+  legislator,
+  rawCommittee,
+  rawCommitteeMember,
+  voteviewMemberRow,
+  voteviewPartyRow,
+} from "./schemas";
 import {
   assertUnique,
   readCsvRows,
+  readYamlDoc,
   readYamlList,
   step,
   validateAll,
+  ValidationError,
 } from "./lib";
 
 /**
@@ -85,4 +93,69 @@ await step("congress-legislators: bioguide uniqueness across both files", async 
     (r) => `${r.name} [${r.bioguide}] from ${r.file}`,
   );
   return `${legislatorRows.length} bioguide ids unique`;
+});
+
+const knownBioguides = new Set(legislatorRows.map((r) => r.bioguide));
+
+let committeeIds = new Set<string>();
+await step("congress-legislators/committees-current.yaml", async () => {
+  const file = `${LEGISLATORS}/committees-current.yaml`;
+  const rows = validateAll(file, await readYamlList(file), rawCommittee, (row, i) => {
+    const id = (row as { thomas_id?: string }).thomas_id ?? "?";
+    return `entry ${i} (thomas_id ${id})`;
+  });
+  assertUnique(
+    file,
+    rows,
+    (r) => r.thomas_id,
+    (r) => `${r.name} [${r.thomas_id}]`,
+  );
+  committeeIds = new Set(rows.map((r) => r.thomas_id));
+  return `${rows.length} committees ok (${rows.filter((r) => r.type === "house").length} house, ${rows.filter((r) => r.type === "senate").length} senate, ${rows.filter((r) => r.type === "joint").length} joint)`;
+});
+
+await step("congress-legislators/committee-membership-current.yaml", async () => {
+  const file = `${LEGISLATORS}/committee-membership-current.yaml`;
+  const doc = await readYamlDoc(file);
+  if (doc == null || typeof doc !== "object" || Array.isArray(doc)) {
+    throw new ValidationError(file, "document", "expected a YAML mapping of committee id -> members");
+  }
+  let rosterRows = 0;
+  let unknownBioguides = 0;
+  for (const [key, members] of Object.entries(doc as Record<string, unknown>)) {
+    if (!Array.isArray(members)) {
+      throw new ValidationError(file, `key ${key}`, "expected a list of members");
+    }
+    // Subcommittee rosters are keyed <parent><digits>; only parent committees
+    // must resolve to a committees-current.yaml entry.
+    const isParentKey = /^[A-Z0-9]{4}$/.test(key);
+    if (isParentKey && !committeeIds.has(key)) {
+      throw new ValidationError(
+        file,
+        `key ${key}`,
+        "roster for a committee not in committees-current.yaml",
+      );
+    }
+    const validated = validateAll(
+      file,
+      members,
+      rawCommitteeMember,
+      (row, i) => {
+        const b = (row as { bioguide?: string }).bioguide ?? "?";
+        return `${key}[${i}] (bioguide ${b})`;
+      },
+    );
+    for (const m of validated) {
+      rosterRows += 1;
+      if (!knownBioguides.has(m.bioguide)) unknownBioguides += 1;
+    }
+  }
+  if (unknownBioguides > 0) {
+    throw new ValidationError(
+      file,
+      "bioguide resolution",
+      `${unknownBioguides} roster member(s) have a bioguide not present in congress-legislators`,
+    );
+  }
+  return `${rosterRows} roster rows ok, every bioguide resolves`;
 });

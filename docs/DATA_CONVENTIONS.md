@@ -79,13 +79,23 @@ Term records don't carry a Congress number — they're date ranges — so one
 Senate term record expands to ~3 `terms.json` rows. Terms of sitting members
 that run past the latest Congress in the Voteview data are clamped to it.
 
+### Built (Session 5 — committees)
+
+| File                          | Grain                                    | Key                              | Notes |
+| ----------------------------- | ---------------------------------------- | -------------------------------- | ----- |
+| `committees.json`             | one row per top-level committee          | `committee_id`                   | `committee_id` (the THOMAS id — `HSJU`, `SSFI`, `JSEC`), `name`, derived `short_name`, `chamber` (`house`/`senate`/`joint`). **Current Congress only.** Subcommittees are fetched into `raw/` but not transformed. `committee_id` is a *committee* key, not a person key — §1's "no other identifier" rule is about person ids. |
+| `committee_memberships.json`  | one row per (legislator, committee)      | `bioguide_id`                    | Inverted from the source (committee→members) to member-keyed, per §1. `committee_id`, `party` (`majority`/`minority`), `role` (`chair`/`ranking_member`/`member`, normalised from the source `title`), `rank`. No `congress_number` column — this file only ever describes the current Congress. |
+
+A committee's **blended position** (mean `nokken_poole_dim1`/`dim2` over its
+scored roster) and its **spread** (`max(dim1) − min(dim1)`) are **derived at
+build time** in `lib/committee-data.ts`, never stored — page-shaped data is
+joined, not pre-computed into `output/` (§2, above).
+
 ### Planned — schema in `lib/types.ts`, no data source integrated yet
 
 | Entity                  | Grain                                          | Notes |
 | ----------------------- | ---------------------------------------------- | ----- |
 | **FinancialDisclosure** | one row per legislator × year                  | Source undecided (OpenSecrets, House Clerk). |
-| **Committee**           | one row per committee                          | Name, chamber, parent. |
-| **CommitteeMembership** | one row per legislator × committee × Congress  | Includes role. |
 | **IssueScore**          | one row per legislator × Congress × metric     | *Melted* format reserved for future interest-group scores — **not** where DW-NOMINATE lives (that's `ideology_scores.json`, wide). |
 
 ---

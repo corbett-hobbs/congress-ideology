@@ -31,11 +31,20 @@ export function useStateFilter(): string | null {
   return useSearchParams().get("state") || null;
 }
 
+/** Members vs. committees on the explorer — `?show=committees`, else members. */
+export type ExplorerEntity = "members" | "committees";
+
+export function useExplorerEntity(): ExplorerEntity {
+  return useSearchParams().get("show") === "committees" ? "committees" : "members";
+}
+
 interface ExplorerUrl {
   view: ChamberView;
   stateFilter: string | null;
+  entity: ExplorerEntity;
   setView: (v: ChamberView) => void;
   setStateFilter: (s: string | null) => void;
+  setEntity: (e: ExplorerEntity) => void;
   explorerHref: (opts: { view?: ChamberView; state?: string | null }) => string;
 }
 
@@ -45,22 +54,37 @@ export function useExplorerUrl(): ExplorerUrl {
   const params = useSearchParams();
   const view = useChamberView();
   const stateFilter = useStateFilter();
+  const entity = useExplorerEntity();
 
   const buildQuery = useCallback(
-    (next: { view?: ChamberView; state?: string | null }) => {
+    (next: {
+      view?: ChamberView;
+      state?: string | null;
+      entity?: ExplorerEntity;
+    }) => {
       const sp = new URLSearchParams(params.toString());
       const v = next.view ?? view;
       if (v === "senate" || v === "house") sp.set("chamber", v);
       else sp.delete("chamber");
 
-      const s = next.state === undefined ? stateFilter : next.state;
+      const e = next.entity ?? entity;
+      // Committees aren't scoped to a state — switching to them drops the filter.
+      const s =
+        e === "committees"
+          ? null
+          : next.state === undefined
+            ? stateFilter
+            : next.state;
       if (s) sp.set("state", s);
       else sp.delete("state");
+
+      if (e === "committees") sp.set("show", "committees");
+      else sp.delete("show");
 
       const q = sp.toString();
       return q ? `?${q}` : "";
     },
-    [params, view, stateFilter],
+    [params, view, stateFilter, entity],
   );
 
   const explorerHref = useCallback(
@@ -87,6 +111,7 @@ export function useExplorerUrl(): ExplorerUrl {
   return {
     view,
     stateFilter,
+    entity,
     setView: (v) =>
       onExplorer
         ? replace(buildQuery({ view: v }))
@@ -95,6 +120,7 @@ export function useExplorerUrl(): ExplorerUrl {
       onExplorer
         ? replace(buildQuery({ state: s }))
         : router.push(explorerHref({ state: s })),
+    setEntity: (e) => replace(buildQuery({ entity: e })),
     explorerHref,
   };
 }
