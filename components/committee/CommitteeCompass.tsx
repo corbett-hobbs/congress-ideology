@@ -52,6 +52,21 @@ export function CommitteeCompass({
     [committees],
   );
 
+  // Blended committee positions cluster near the origin, so zoom the axes in to
+  // a symmetric window that fits them with headroom — the zero-lines stay
+  // centred and the individual-member backdrop is clipped to the plot.
+  const { domain, ticks } = useMemo(() => {
+    const extent = points.reduce(
+      (m, c) => Math.max(m, Math.abs(c.dim1 as number), Math.abs(c.dim2 as number)),
+      0,
+    );
+    const bound = Math.min(1, Math.max(0.25, extent * 1.18));
+    return {
+      domain: [-bound, bound] as [number, number],
+      ticks: [-2 / 3, -1 / 3, 0, 1 / 3, 2 / 3].map((k) => k * bound),
+    };
+  }, [points]);
+
   const backdropPoints = useMemo(
     () =>
       (backdrop ?? [])
@@ -82,8 +97,13 @@ export function CommitteeCompass({
       points={points}
       ariaLabel="Scatter plot of committees by blended DW-NOMINATE ideology score"
       width={640}
-      height={explorer ? 470 : 600}
+      // Taller than the member compass: the zoomed, symmetric committee domain
+      // reads better closer to square, and it gives the roster card next to it
+      // the height to show a useful slice of the list before scrolling.
+      height={explorer ? 540 : 600}
       margin={explorer ? EXPLORER_MARGIN : MARGIN}
+      domain={domain}
+      ticks={ticks}
       axisTickLabels={!explorer}
       yAxisCaption={!explorer ? "DIMENSION 2" : undefined}
       x={(c) => c.dim1 as number}

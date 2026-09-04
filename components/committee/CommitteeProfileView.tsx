@@ -45,7 +45,7 @@ export function CommitteeProfileView({
 
       <section
         aria-label="Ideology"
-        className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2"
+        className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2 lg:items-stretch"
       >
         <CommitteeCompassCard
           committee={committee}

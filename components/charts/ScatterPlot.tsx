@@ -1,22 +1,27 @@
 "use client";
 
-import { useMemo, type ReactNode } from "react";
+import { useId, useMemo, type ReactNode } from "react";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame, type Margin } from "./ChartFrame";
 import { Axis } from "./Axis";
 import { Tooltip, useTooltip } from "./Tooltip";
 
 /**
- * The 2-D ideology scatter, entity-agnostic. Owns the frame, the fixed
- * [-1, 1] × [-1, 1] scales, gridlines, the dots (draw order, hover, tooltip,
- * click-to-navigate, focus fade), and domain-positioned text labels. The
- * caller supplies accessors and the tooltip body, so both the member compass
- * (`components/senate/CompassChart`) and the committee compass
- * (`components/committee/CommitteeCompass`) are thin wrappers over this — no
- * forked chart code.
+ * The 2-D ideology scatter, entity-agnostic. Owns the frame, the scales,
+ * gridlines, the dots (draw order, hover, tooltip, click-to-navigate, focus
+ * fade), and domain-positioned text labels. The caller supplies accessors and
+ * the tooltip body, so both the member compass (`components/senate/CompassChart`)
+ * and the committee compass (`components/committee/CommitteeCompass`) are thin
+ * wrappers over this — no forked chart code.
+ *
+ * The domain is `[-1, 1]` on both axes by default (individual members span it);
+ * a caller whose points cluster tightly (blended committees) can pass a smaller
+ * symmetric `domain` to zoom in — the zero-lines stay centred and anything
+ * outside the domain (a backdrop point) is clipped to the plot.
  */
 
-const TICKS = [-1, -0.5, 0, 0.5, 1];
+const FULL_DOMAIN = [-1, 1] as const;
+const DEFAULT_TICKS = [-1, -0.5, 0, 0.5, 1];
 
 export interface DotState {
   highlighted: boolean;
@@ -42,6 +47,10 @@ interface ScatterPlotProps<T> {
   width: number;
   height: number;
   margin?: Partial<Margin>;
+  /** Symmetric extent on both axes. Default `[-1, 1]`. */
+  domain?: readonly [number, number];
+  /** Gridline positions in domain units. Default `[-1, -0.5, 0, 0.5, 1]`. */
+  ticks?: readonly number[];
   /** Draw the numeric tick labels (profile) or leave the axes bare (explorer). */
   axisTickLabels?: boolean;
   /** Optional rotated caption beside the y-axis (the compass's "DIMENSION 2"). */
@@ -82,6 +91,8 @@ export function ScatterPlot<T>({
   width,
   height,
   margin,
+  domain = FULL_DOMAIN,
+  ticks = DEFAULT_TICKS,
   axisTickLabels = false,
   yAxisCaption,
   x: xOf,
@@ -101,6 +112,7 @@ export function ScatterPlot<T>({
   backdrop,
 }: ScatterPlotProps<T>) {
   const tip = useTooltip<T>();
+  const clipId = `scatter-clip-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const ringed = useMemo(() => new Set(highlightedIds ?? []), [highlightedIds]);
 
   const zRank = (d: T) => {
@@ -134,15 +146,15 @@ export function ScatterPlot<T>({
         }}
       >
         {({ innerWidth, innerHeight }) => {
-          const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);
-          const y = scaleLinear().domain([-1, 1]).range([innerHeight, 0]);
+          const x = scaleLinear().domain(domain).range([0, innerWidth]);
+          const y = scaleLinear().domain(domain).range([innerHeight, 0]);
 
           return (
             <>
               <Axis
                 scale={x}
                 orientation="bottom"
-                ticks={TICKS}
+                ticks={[...ticks]}
                 offset={innerHeight}
                 gridExtent={innerHeight}
                 zeroAt={0}
@@ -152,7 +164,7 @@ export function ScatterPlot<T>({
               <Axis
                 scale={y}
                 orientation="left"
-                ticks={TICKS}
+                ticks={[...ticks]}
                 offset={0}
                 gridExtent={innerWidth}
                 zeroAt={0}
@@ -169,47 +181,52 @@ export function ScatterPlot<T>({
                 </text>
               )}
 
-              {backdrop?.map((p, i) => (
-                <circle
-                  key={`bg${i}`}
-                  cx={x(p.x)}
-                  cy={y(p.y)}
-                  r={2.5}
-                  className="fill-oth"
-                  opacity={0.1}
-                  pointerEvents="none"
-                />
-              ))}
-
-              {drawOrder.map((d) => {
-                const key = idOf(d);
-                const highlighted = key === highlightedId || ringed.has(key);
-                const selected = key === selectedId;
-                const faded = dimUnfocused && !highlighted && !selected;
-                const selectable =
-                  onSelect != null && (isSelectable ? isSelectable(d) : true);
-                return (
+              <clipPath id={clipId}>
+                <rect x={0} y={0} width={innerWidth} height={innerHeight} />
+              </clipPath>
+              <g clipPath={`url(#${clipId})`}>
+                {backdrop?.map((p, i) => (
                   <circle
-                    key={key}
-                    cx={x(xOf(d))}
-                    cy={y(yOf(d))}
-                    r={radius(d, { highlighted, selected, faded })}
-                    className={`dot ${colorClass(d)}${highlighted ? " is-highlighted" : ""}`}
-                    opacity={faded ? 0.28 : 1}
-                    onPointerEnter={(e) => {
-                      onHover?.(d);
-                      tip.show(d, e);
-                    }}
-                    onPointerMove={tip.move}
-                    onPointerLeave={() => {
-                      onHover?.(null);
-                      tip.hide();
-                    }}
-                    onClick={selectable ? () => onSelect!(d) : undefined}
-                    style={selectable ? { cursor: "pointer" } : undefined}
+                    key={`bg${i}`}
+                    cx={x(p.x)}
+                    cy={y(p.y)}
+                    r={2.5}
+                    className="fill-oth"
+                    opacity={0.1}
+                    pointerEvents="none"
                   />
-                );
-              })}
+                ))}
+
+                {drawOrder.map((d) => {
+                  const key = idOf(d);
+                  const highlighted = key === highlightedId || ringed.has(key);
+                  const selected = key === selectedId;
+                  const faded = dimUnfocused && !highlighted && !selected;
+                  const selectable =
+                    onSelect != null && (isSelectable ? isSelectable(d) : true);
+                  return (
+                    <circle
+                      key={key}
+                      cx={x(xOf(d))}
+                      cy={y(yOf(d))}
+                      r={radius(d, { highlighted, selected, faded })}
+                      className={`dot ${colorClass(d)}${highlighted ? " is-highlighted" : ""}`}
+                      opacity={faded ? 0.28 : 1}
+                      onPointerEnter={(e) => {
+                        onHover?.(d);
+                        tip.show(d, e);
+                      }}
+                      onPointerMove={tip.move}
+                      onPointerLeave={() => {
+                        onHover?.(null);
+                        tip.hide();
+                      }}
+                      onClick={selectable ? () => onSelect!(d) : undefined}
+                      style={selectable ? { cursor: "pointer" } : undefined}
+                    />
+                  );
+                })}
+              </g>
 
               {labels?.map((l, i) => (
                 <text
