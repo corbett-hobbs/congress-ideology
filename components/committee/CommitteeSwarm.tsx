@@ -17,7 +17,10 @@ import { committeePath } from "@/lib/committee-url";
 import { DEFAULT_SORT, type SortState } from "@/components/charts/SortToggle";
 import { CommitteeMemberTooltip } from "./CommitteeMemberTooltip";
 
-const MARGIN = { top: 26, right: 96, bottom: 8, left: 210 };
+/** Right-justified against the plot's outer edge (see charts/SwarmRows), so
+ *  this only needs to fit the party-split text plus a small gap from the
+ *  dots — see the matching note in senate/DelegationChart. */
+const MARGIN = { top: 26, right: 72, bottom: 8, left: 210 };
 const ROW_H = 26;
 /** One committee's roster, full width, on a committee's own page. */
 const SINGLE_ROW_MARGIN = { top: 20, right: 24, bottom: 8, left: 24 };

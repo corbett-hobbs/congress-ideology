@@ -184,8 +184,9 @@ export function SwarmRows<TP>({
                     ))}
                     <text
                       className="deleg-gap-label"
-                      x={innerWidth + 14}
+                      x={innerWidth + effMargin.right - 4}
                       y={y + 4}
+                      textAnchor="end"
                     >
                       {row.meta}
                     </text>

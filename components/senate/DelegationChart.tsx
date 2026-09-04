@@ -19,9 +19,12 @@ import { stateName } from "./format";
 import { DEFAULT_SORT, type SortState } from "@/components/charts/SortToggle";
 
 /** "range" carries a two-party count label ("9Pro·7Anti") — wider than the
- *  single gap number "pair" shows. */
-const MARGIN = { top: 26, right: 66, bottom: 8, left: 124 };
-const RANGE_RIGHT = 96;
+ *  single gap number "pair" shows. Both meta strings are right-justified
+ *  against the plot's outer edge (see charts/SwarmRows), so these only need
+ *  to fit the text itself plus a small gap from the dots — not a fixed
+ *  left-aligned column with slack at the far edge. */
+const MARGIN = { top: 26, right: 48, bottom: 8, left: 124 };
+const RANGE_RIGHT = 72;
 const ROW_H = 26;
 
 export type { SortState };
