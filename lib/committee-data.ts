@@ -14,6 +14,7 @@ import type {
   CommitteeProfile,
   CommitteeSearchEntry,
   CommitteeSummary,
+  MemberCommitteeMembership,
   RosterLead,
 } from "./committee-types";
 
@@ -72,6 +73,9 @@ interface CommitteeIndex {
   byId: Map<string, CommitteeProfile>;
   /** Insertion order sorted by shortName, for stable listings. */
   ordered: CommitteeProfile[];
+  /** A member's own committee assignments, inverted from `memberships` —
+   *  role first (chair/ranking above plain member), then seniority `rank`. */
+  byMember: Map<string, MemberCommitteeMembership[]>;
 }
 
 let cache: CommitteeIndex | null = null;
@@ -153,17 +157,56 @@ function buildCommitteeIndex(): CommitteeIndex {
   const ordered = [...profiles].sort((a, b) =>
     a.shortName.localeCompare(b.shortName),
   );
-  cache = {
-    latestCongress,
-    byId: new Map(profiles.map((p) => [p.committeeId, p])),
-    ordered,
-  };
+  const byId = new Map(profiles.map((p) => [p.committeeId, p]));
+
+  // Invert `memberships` to member-keyed — a member's own committee list is
+  // then a plain lookup, matching every other output file's `bioguide_id`
+  // key (DATA_CONVENTIONS §1). Skips the same unmatched-member rows the
+  // roster loop above already warned about.
+  const byMember = new Map<string, MemberCommitteeMembership[]>();
+  for (const seat of memberships) {
+    const committee = byId.get(seat.committee_id);
+    if (!committee || !memberIndex.has(seat.bioguide_id)) continue;
+    const arr = byMember.get(seat.bioguide_id) ?? [];
+    arr.push({
+      committeeId: committee.committeeId,
+      shortName: committee.shortName,
+      chamber: committee.chamber,
+      role: seat.role,
+      rank: seat.rank,
+      memberCount: committee.memberCount,
+      blendDim1: committee.dim1,
+    });
+    byMember.set(seat.bioguide_id, arr);
+  }
+  for (const rows of byMember.values()) {
+    rows.sort((a, b) => {
+      const aTier = a.role === "member" ? 1 : 0;
+      const bTier = b.role === "member" ? 1 : 0;
+      return aTier !== bTier ? aTier - bTier : a.rank - b.rank;
+    });
+  }
+
+  cache = { latestCongress, byId, ordered, byMember };
   return cache;
 }
 
 /** The Congress the committee data describes (matches the member data's latest). */
 export function committeesLatestCongress(): number {
   return buildCommitteeIndex().latestCongress;
+}
+
+/**
+ * A member's committee assignments in the latest Congress, role-then-
+ * seniority ordered (see `buildCommitteeIndex`) — empty for the ~4% of
+ * current members with no current committee seat (mid-Congress resignation,
+ * a vacancy not yet backfilled, etc.). The caller renders nothing for an
+ * empty list, not a placeholder — a genuinely rare state, not an error.
+ */
+export function getMemberCommitteeMemberships(
+  bioguideId: string,
+): MemberCommitteeMembership[] {
+  return buildCommitteeIndex().byMember.get(bioguideId) ?? [];
 }
 
 function inView(chamber: CommitteeChamber, view: CommitteeChamberView): boolean {

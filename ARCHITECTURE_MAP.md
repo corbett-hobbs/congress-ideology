@@ -37,7 +37,7 @@ latest Congress and carry no trend chart.
 | Module                | Produces                                                     |
 | --------------------- | ----------------------------------------------------------- |
 | `lib/congress-data.ts`| `ChamberCurrent` / `ChamberHistory` / `MemberProfile`; `getCurrentMemberIndex()` (shared by committee-data) |
-| `lib/committee-data.ts`| `CommitteeSummary` / `CommitteeProfile` — joins the roster to each member's latest-Congress score and **blends each committee to a `(dim1, dim2)` point** (unweighted mean) + `spread` (`max−min` dim1). Also resolves `compassColorClass` (chamber → fill class, via `lib/committee-palette.ts`) once per committee here, at the data-prep layer — `CommitteeCompass` just reads the field, no member-vs-committee branching in the chart component. Client-safe shapes in `lib/committee-types.ts`. |
+| `lib/committee-data.ts`| `CommitteeSummary` / `CommitteeProfile` — joins the roster to each member's latest-Congress score and **blends each committee to a `(dim1, dim2)` point** (unweighted mean) + `spread` (`max−min` dim1). Also resolves `compassColorClass` (chamber → fill class, via `lib/committee-palette.ts`) once per committee here, at the data-prep layer — `CommitteeCompass` just reads the field, no member-vs-committee branching in the chart component. Also builds `byMember` (`committee_memberships.json` inverted to `bioguide_id`-keyed) for `getMemberCommitteeMemberships()` — a member's own committee list, role-then-seniority sorted. Client-safe shapes in `lib/committee-types.ts`. |
 | `lib/committee-palette.ts` | Committee-compass **chamber**-identity colours (House / Senate / joint→neutral) — a deliberate departure from `lib/party-palette.ts`'s majority-party colouring, scoped to compass dots only (`committee/CommitteeCompass`). "How each committee votes" (`CommitteeSwarm`) still uses party colours per member seat, unaffected. Validated via `validate_palette.js` (see its `FORCED_PAIRS`/`NEW_KEYS` — these colours never co-occur with a real `party_code`, so the automatic co-occurrence detection can't see them; they're checked explicitly instead). |
 | `lib/neighbors.ts`    | `nearestNeighbors` — generic over any `{dim1, dim2}` entity (members *and* committees), with `ideologicalDistance` |
 
@@ -77,6 +77,7 @@ to members and committees at once — there is no forked chart code.
 | committee wrapper| `committee/CommitteeCompass`     | `ScatterPlot` + committee accessors (dot colour read straight off `CommitteeSummary.compassColorClass`, joint→neutral, `CommitteeDotTooltip`, `committeePath`) |
 | committee wrapper| `committee/CommitteeSwarm`       | `SwarmRows` + one row per committee, party-split meta, chamber-disambiguated labels |
 | control           | `charts/SortToggle`               | Shared "Widest spread / A–Z / Ideology" pill group behind both "How each state votes" and "How each committee votes" (`SenateExplorer`). "Ideology" is reversible (click again to flip direction) instead of pick-one-of-N; `DelegationChart` and `CommitteeSwarm` both take a `SortState` and sort their own row-level mean-dim1 field on it. |
+| primitive        | `charts/AlignmentTrack`           | Small inline two-dot [-1, 1] comparison (a member's own position vs. a reference point) — plain divs, not an SVG `ChartFrame` body, since it's one comparison per profile-card row rather than a shared-axis multi-row chart. Introduced for `profile/CommitteeMembershipsCard`; reusable anywhere a single "this thing vs. that thing" ideology comparison is needed. |
 
 `components/senate/BeeswarmChart` (d3-force collision layout) is still its own
 chart — the profile-page single-state delegation and, potentially, a future
@@ -211,9 +212,9 @@ was actually here, and how it was resolved:
 ### Still open / not built (deliberately)
 
 Subcommittees (raw data is fetched but not transformed, so the follow-up is
-additive), a per-committee and per-member bills/votes record, and a
-committee-membership section on member profile pages (the inverted
-`committee_memberships.json` supports it when wanted).
+additive), and a per-committee and per-member bills/votes record. (The
+committee-membership section on member profile pages this list used to name
+as future work is now built — see "Session 3" below.)
 
 ---
 
@@ -269,3 +270,55 @@ couldn't) anticipate:
    than flattening them to a bare `/` the way the standalone mockup did —
    flagged here per this project's "flag divergence for review rather than
    silently resolving it" tenet, not silently decided.
+
+---
+
+## Session 3 — committee memberships card on member profile pages
+
+New card at the bottom of every member profile page
+(`member-committee-memberships-session-prompt.md` +
+`member-committee-memberships-mockup.html`): every committee a member sits
+on, role-then-seniority ordered, each row showing an `AlignmentTrack` of the
+member's own position against that committee's blend.
+
+- **Data was already shaped for this.** `committee_memberships.json` is
+  `bioguide_id`-keyed specifically so a member's own page could look this up
+  directly (original session prompt §3) — this session just built the
+  lookup: `buildCommitteeIndex()` in `lib/committee-data.ts` now also
+  inverts `memberships` into a `byMember` map (role tier, then `rank`,
+  pre-sorted once at build time) behind `getMemberCommitteeMemberships()`.
+  No pipeline change, no new join step — the member's own profile data
+  (`lib/congress-data.ts`) and the committee data (`lib/committee-data.ts`)
+  already run in the same server-side build step, reading the same
+  committed `pipeline/output/*.json`, so the prompt's §5 concern ("confirm
+  these aren't computed in separate passes") didn't apply here.
+- **Confirmed, not assumed: the zero-membership case is genuinely rare.**
+  22 of the 553 current members (~4%) have no current committee seat —
+  spot-checked a few (Pelosi, a mid-Congress resignation, a member who left
+  for an executive-branch role) and they're all real, unremarkable
+  vacancy/transition cases, not a data bug. `CommitteeMembershipsCard`
+  returns `null` for an empty list — the card is simply absent, never an
+  empty state.
+- **`AlignmentTrack` is a new primitive** (see the shared-components table
+  above) — plain positioned `<div>`s, not `ChartFrame`/SVG, since it's one
+  small two-point comparison per row rather than a shared-axis chart of many
+  rows. Same dot-on-a-line visual language as `SwarmRows` (colour-filled
+  primary dot, faint neutral reference dot) so it reads as consistent with
+  the rest of the site rather than a new visual idiom, per the mockup's own
+  framing.
+- **Role tags don't reuse the mockup's literal colours.** The mockup's
+  "Chair" pill used a hardcoded gold hex (`#f3ece1`/`#8a6a1f`) with no dark-
+  theme variant. Shipped version uses existing tokens instead — Chair is
+  `bg-accent text-accent-ink` (this project's one existing "this is the
+  active/primary one" treatment), Ranking Member matches the mockup's own
+  already-token-based style (`border-line-strong` / `surface-raised` /
+  `ink-muted`) — both theme-safe for free, no new colour introduced.
+- **Ranking, confirmed against the mockup's own tenet list:** role tier
+  first (chair/ranking above plain member), then `rank` ascending — real
+  seniority data from the source file, not alphabetical, not by committee
+  size, not by ideological-alignment closeness (noted in both the prompt
+  and mockup as a plausible *future* sort-toggle lens, not this card's
+  default order — left for later, not built here).
+- Full committees only (subcommittees were already out of scope for the
+  whole committees feature); click target is the committee name only, same
+  convention as everywhere else committees appear.

@@ -81,6 +81,26 @@ export interface RosterLead {
   party: string;
 }
 
+/**
+ * One row in a member's own "Committee memberships" card — this committee's
+ * identity + this member's role/seniority on it + enough of the committee's
+ * blended position for the alignment track. Not the same shape as
+ * `CommitteeMemberRow` (that's one roster seat *within* a committee; this is
+ * one committee *from a member's* point of view).
+ */
+export interface MemberCommitteeMembership {
+  committeeId: string;
+  shortName: string;
+  chamber: CommitteeChamber;
+  role: CommitteeRole;
+  /** Seat order within the member's party on the committee (source `rank`). */
+  rank: number;
+  memberCount: number;
+  /** This committee's blended dim1 (unweighted mean); `null` if too few of
+   *  its members are scored. */
+  blendDim1: number | null;
+}
+
 export interface CommitteeSearchEntry {
   committeeId: string;
   name: string;

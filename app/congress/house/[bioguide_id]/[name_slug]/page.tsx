@@ -5,6 +5,7 @@ import {
   getCurrentMembers,
   getMemberProfile,
 } from "@/lib/congress-data";
+import { getMemberCommitteeMemberships } from "@/lib/committee-data";
 import { memberPath, memberSlug } from "@/lib/member-url";
 import { partyAbbr } from "@/components/senate/format";
 import { MemberProfileView } from "@/components/profile/MemberProfileView";
@@ -80,6 +81,7 @@ export default async function RepresentativePage({
       compassMembers={current.plottable}
       delegationMembers={current.all}
       trend={current.trend}
+      committeeMemberships={getMemberCommitteeMemberships(bioguide_id)}
     />
   );
 }

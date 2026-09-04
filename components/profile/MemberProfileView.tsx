@@ -3,10 +3,12 @@ import type {
   MemberProfile,
   PartyMeanPoint,
 } from "@/lib/congress-types";
+import type { MemberCommitteeMembership } from "@/lib/committee-types";
 import { SiteFooter } from "@/components/senate/SiteFooter";
 import { SetBackLink } from "@/components/BackLinkContext";
 import { ProfileHeader } from "./ProfileHeader";
 import { MemberIdeologySection } from "./MemberIdeologySection";
+import { CommitteeMembershipsCard } from "./CommitteeMembershipsCard";
 
 interface MemberProfileViewProps {
   profile: MemberProfile;
@@ -15,6 +17,9 @@ interface MemberProfileViewProps {
   /** Every member of the latest Congress in this chamber (delegation). */
   delegationMembers: ChamberMember[];
   trend: PartyMeanPoint[];
+  /** This member's current committee assignments — empty for the small
+   *  share of current members with no current committee seat. */
+  committeeMemberships: MemberCommitteeMembership[];
 }
 
 /**
@@ -29,6 +34,7 @@ export function MemberProfileView({
   compassMembers,
   delegationMembers,
   trend,
+  committeeMemberships,
 }: MemberProfileViewProps) {
   const explorerHref =
     profile.chamber === "house" ? "/?chamber=house" : "/";
@@ -44,6 +50,11 @@ export function MemberProfileView({
         compassMembers={compassMembers}
         delegationMembers={delegationMembers}
         trend={trend}
+      />
+
+      <CommitteeMembershipsCard
+        profile={profile}
+        memberships={committeeMemberships}
       />
 
       {/* Future verticals stack here as sibling sections, e.g.
