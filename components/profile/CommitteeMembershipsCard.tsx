@@ -58,17 +58,15 @@ export function CommitteeMembershipsCard({
 
       <div className="border-t border-line">
         {memberships.map((m) => (
-          <div
+          <Link
             key={m.committeeId}
-            className="grid grid-cols-[1fr_140px] items-center gap-4 border-b border-line py-[0.7rem] sm:grid-cols-[1fr_180px]"
+            href={committeePath(m)}
+            className="group -mx-1 grid grid-cols-[1fr_140px] items-center gap-4 rounded border-b border-line px-1 py-[0.7rem] hover:bg-surface-raised sm:grid-cols-[1fr_180px]"
           >
             <div className="min-w-0">
-              <Link
-                href={committeePath(m)}
-                className="text-[0.9rem] text-ink hover:text-accent hover:underline"
-              >
+              <span className="text-[0.9rem] text-ink group-hover:text-accent group-hover:underline">
                 {m.shortName}
-              </Link>
+              </span>
               <RoleTag role={m.role} />
               <div className="mt-0.5 text-[0.72rem] text-ink-faint">
                 {m.memberCount} members · seniority rank {m.rank}
@@ -92,7 +90,7 @@ export function CommitteeMembershipsCard({
                 </div>
               )}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

@@ -320,5 +320,9 @@ member's own position against that committee's blend.
   and mockup as a plausible *future* sort-toggle lens, not this card's
   default order — left for later, not built here).
 - Full committees only (subcommittees were already out of scope for the
-  whole committees feature); click target is the committee name only, same
-  convention as everywhere else committees appear.
+  whole committees feature). **Click target: since revised to the whole
+  row**, not just the committee name — the mockup/prompt originally
+  specified name-only (matching the convention elsewhere committees
+  appear), but that was changed on direct request after shipping. The row
+  is a single `<Link>`; the committee name is styled via `group-hover`
+  rather than nested inside its own anchor.
