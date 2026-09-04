@@ -201,6 +201,21 @@ export function getCommitteeCompassPool(
   );
 }
 
+/**
+ * Faint individual-member positions to draw behind the committee dots on a
+ * committee's page — the relevant chamber's floor (both, for a joint committee),
+ * so the reader sees where the committee cluster sits within the membership.
+ */
+export function getCommitteeCompassBackdrop(
+  committee: Pick<CommitteeProfile, "chamber">,
+): { dim1: number | null; dim2: number | null }[] {
+  const chambers: ("house" | "senate")[] =
+    committee.chamber === "joint" ? ["house", "senate"] : [committee.chamber];
+  return chambers
+    .flatMap((c) => getChamberCurrent(c).plottable)
+    .map((m) => ({ dim1: m.dim1, dim2: m.dim2 }));
+}
+
 export function getCommitteeSearchIndex(): CommitteeSearchEntry[] {
   return buildCommitteeIndex().ordered.map((c) => ({
     committeeId: c.committeeId,

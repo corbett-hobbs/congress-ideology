@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
     "/congress/house/[bioguide_id]/[name_slug]/opengraph-image": [
       "./pipeline/output/*.json",
     ],
+    "/congress/committees/[committee_id]/[name_slug]": ["./pipeline/output/*.json"],
+    "/congress/committees/[committee_id]/[name_slug]/opengraph-image": [
+      "./pipeline/output/*.json",
+    ],
     "/sitemap.xml": ["./pipeline/output/*.json"],
   },
 };

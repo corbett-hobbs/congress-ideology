@@ -98,7 +98,8 @@ export function CommitteeSwarm({
         standalone || ordered.length === 1
           ? undefined
           : () => router.push(committeePath(c)),
-      meta: partySplit(c),
+      // The committee's own page states the split in its header already.
+      meta: standalone ? "" : partySplit(c),
       points: toPoints(c.roster, router),
     }));
   }, [committees, sort, standalone, router]);
