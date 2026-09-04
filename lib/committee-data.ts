@@ -6,6 +6,7 @@ import type { Committee, CommitteeMembership } from "./entities";
 import type { ChamberMember } from "./congress-types";
 import { isPlottable } from "./congress-types";
 import { getChamberCurrent, getCurrentMemberIndex } from "./congress-data";
+import { chamberFillClass } from "./committee-palette";
 import type {
   CommitteeChamber,
   CommitteeChamberView,
@@ -137,6 +138,7 @@ function buildCommitteeIndex(): CommitteeIndex {
       dim2: scored.length ? round(mean(scored, (r) => r.dim2 as number) as number, 3) : null,
       spread: xs.length >= 2 ? round(xs[xs.length - 1] - xs[0], 2) : null,
       controlGroup: controlGroup(roster),
+      compassColorClass: chamberFillClass(c.chamber),
       demCount,
       repCount,
       otherCount: roster.length - demCount - repCount,

@@ -37,7 +37,8 @@ latest Congress and carry no trend chart.
 | Module                | Produces                                                     |
 | --------------------- | ----------------------------------------------------------- |
 | `lib/congress-data.ts`| `ChamberCurrent` / `ChamberHistory` / `MemberProfile`; `getCurrentMemberIndex()` (shared by committee-data) |
-| `lib/committee-data.ts`| `CommitteeSummary` / `CommitteeProfile` — joins the roster to each member's latest-Congress score and **blends each committee to a `(dim1, dim2)` point** (unweighted mean) + `spread` (`max−min` dim1). Client-safe shapes in `lib/committee-types.ts`. |
+| `lib/committee-data.ts`| `CommitteeSummary` / `CommitteeProfile` — joins the roster to each member's latest-Congress score and **blends each committee to a `(dim1, dim2)` point** (unweighted mean) + `spread` (`max−min` dim1). Also resolves `compassColorClass` (chamber → fill class, via `lib/committee-palette.ts`) once per committee here, at the data-prep layer — `CommitteeCompass` just reads the field, no member-vs-committee branching in the chart component. Client-safe shapes in `lib/committee-types.ts`. |
+| `lib/committee-palette.ts` | Committee-compass **chamber**-identity colours (House / Senate / joint→neutral) — a deliberate departure from `lib/party-palette.ts`'s majority-party colouring, scoped to compass dots only (`committee/CommitteeCompass`). "How each committee votes" (`CommitteeSwarm`) still uses party colours per member seat, unaffected. Validated via `validate_palette.js` (see its `FORCED_PAIRS`/`NEW_KEYS` — these colours never co-occur with a real `party_code`, so the automatic co-occurrence detection can't see them; they're checked explicitly instead). |
 | `lib/neighbors.ts`    | `nearestNeighbors` — generic over any `{dim1, dim2}` entity (members *and* committees), with `ideologicalDistance` |
 
 ---
@@ -72,8 +73,9 @@ to members and committees at once — there is no forked chart code.
 | body             | `charts/SwarmRows`                | the 1-D row list: label gutter (clamped to width), min→max connector, endpoint emphasis, right-hand meta, per-row and per-point click |
 | member wrapper   | `senate/CompassChart`            | `ScatterPlot` + member accessors (`partyFillClass`, `MemberTooltip`, `memberPath`/`hasProfilePage`) |
 | member wrapper   | `senate/DelegationChart`         | `SwarmRows` + state grouping (`buildDelegations`), pair (dumbbell) and range modes |
-| committee wrapper| `committee/CommitteeCompass`     | `ScatterPlot` + committee accessors (`groupFillClass`, joint→neutral, `CommitteeDotTooltip`, `committeePath`) |
+| committee wrapper| `committee/CommitteeCompass`     | `ScatterPlot` + committee accessors (dot colour read straight off `CommitteeSummary.compassColorClass`, joint→neutral, `CommitteeDotTooltip`, `committeePath`) |
 | committee wrapper| `committee/CommitteeSwarm`       | `SwarmRows` + one row per committee, party-split meta, chamber-disambiguated labels |
+| control           | `charts/SortToggle`               | Shared "Widest spread / A–Z / Ideology" pill group behind both "How each state votes" and "How each committee votes" (`SenateExplorer`). "Ideology" is reversible (click again to flip direction) instead of pick-one-of-N; `DelegationChart` and `CommitteeSwarm` both take a `SortState` and sort their own row-level mean-dim1 field on it. |
 
 `components/senate/BeeswarmChart` (d3-force collision layout) is still its own
 chart — the profile-page single-state delegation and, potentially, a future
@@ -86,6 +88,22 @@ Chair / Ranking Member) + `CommitteeCompassCard` (compass fed committees, "All
 committees" / "Nearest neighbors" toggle, `CommitteeNeighborChips` in neighbour
 mode) + `CommitteeRosterCard` (single-row swarm + scrollable roster list, no
 trajectory chart).
+
+### Site-wide header back-link (`components/SiteHeader.tsx`, `components/BackLinkContext.tsx`)
+
+The header wordmark doubles as the "back to InsideGov" affordance: plain
+`InsideGov` on the homepage, `← InsideGov` on every sub-page. Since
+`SiteHeader` lives in `app/layout.tsx` as a sibling of `{children}` (not an
+ancestor of the page content), it can't read a page's own data directly — a
+committee page's correct back-href depends on that committee's `chamber`,
+which only the page component has. `BackLinkProvider` (wraps the whole body in
+`layout.tsx`) plus a page-level `<SetBackLink href={...} />` (used by
+`MemberProfileView` and `CommitteeProfileView`) bridge that gap: the page
+registers its restore-context href on mount, the header reads it. Always a
+fixed href, never `history.back()` — a shared-link/bookmark visitor has no
+meaningful history to return to. This replaced a second, separate
+"← InsideGov" link that used to sit below the header on both page types and
+did the exact same thing as the (already-clickable) wordmark.
 
 ---
 
@@ -192,3 +210,58 @@ Subcommittees (raw data is fetched but not transformed, so the follow-up is
 additive), a per-committee and per-member bills/votes record, and a
 committee-membership section on member profile pages (the inverted
 `committee_memberships.json` supports it when wanted).
+
+---
+
+## Session 2 — reversible Ideology sort, chamber-identity committee colour, header back-link
+
+Built from `committees-round2-session-prompt.md` (superseding that document's
+own forward-pointers in the original prompt's §4.2/§4.3/§4.5) plus a follow-up
+mockup for the header back-link. Notes on what the prompt didn't (and
+couldn't) anticipate:
+
+1. **The sort toggle didn't exist as a shared component before this session**
+   — "Widest spread" / "A–Z" were inline buttons duplicated once inside
+   `SenateExplorer.tsx` for both charts, styled as separate standalone
+   buttons (not the grouped-pill chrome every other toggle on the site uses).
+   Per the round-2 prompt's §1.3, this session both added "Ideology" *and*
+   restyled the existing two into a real grouped `role="group"` pill
+   (`charts/SortToggle.tsx`), matching `ExplorerToolbar`'s chamber/Members-
+   Committees toggle and `CommitteeCompassCard`'s All/Nearest-neighbors
+   toggle pixel-for-pixel rather than the mockup's rounded-full pill chrome
+   (mockups are unstyled-to-spec, not styled-to-ship — see the divergences
+   list above).
+
+2. **Chamber-identity committee colours required two new palette tokens, not
+   a `chamber` lookup alone.** `chamber` was already a field on
+   `CommitteeSummary`, so no pipeline change was needed — but *picking* two
+   new colours that pass `validate_palette.js` against the existing
+   dem/rep/oth tokens took real search. Green is a bad choice for one of the
+   two: under simulated protanopia/deuteranopia it converges toward
+   `--rep`'s red-orange almost everywhere in HSL space (confirmed by brute-
+   force search, not assumption) — the shipped `--committee-house` is
+   therefore a *dark* forest green (`#124912` light / `#7dd175` dark), not
+   the lighter green the round-2 mockup's own reference swatch suggested.
+   `--committee-senate` is a magenta (`#ad1f8a` light / `#c24799` dark).
+   `validate_palette.js` gained `FORCED_PAIRS` + `NEW_KEYS` sections because
+   these colours never share a real `party_code`, so the file's existing
+   co-occurrence detection (driven by `ideology_scores.json`) can't see them
+   automatically — they're checked against dem/rep/oth/each-other explicitly
+   instead, with an absolute (not regression-relative) bar, since a
+   brand-new token has no prior committed value to regress from.
+
+3. **The header back-link change came from a third, later document**
+   (`committee-page-mockup-backlink.html`, sent mid-session), not the
+   round-2 prompt above. It's included in this same entry because it's a
+   small, related "sub-page chrome" cleanup: the separate "← InsideGov" link
+   under the header on member/committee pages was redundant with the
+   already-clickable wordmark, so it was removed and folded into the
+   wordmark itself (see the "Site-wide header back-link" section above). The
+   mockup's own JS comment says the destination must be fixed and always the
+   canonical homepage — the shipped version keeps that constraint (never
+   `history.back()`) but preserves the real, richer per-page hrefs
+   (`?chamber=house&show=committees`, etc.) that already existed in
+   `CommitteeProfileView`/`MemberProfileView` before this session, rather
+   than flattening them to a bare `/` the way the standalone mockup did —
+   flagged here per this project's "flag divergence for review rather than
+   silently resolving it" tenet, not silently decided.

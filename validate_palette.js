@@ -45,8 +45,26 @@ const CODE_KEY = {
 const PALETTE_KEYS = [
   "dem", "rep", "proadmin", "antiadmin", "federalist", "demrep",
   "adams", "antijackson", "jackson", "whig", "oth",
+  "committee-house", "committee-senate",
 ];
 const BG_KEYS = ["bg", "surface", "surface-raised"];
+
+// The committee-compass chamber colours never co-occur with a party_code in
+// ideology_scores.json (committees aren't parties), so real co-occurrence
+// detection below would never flag them. They DO need checking against
+// dem/rep/oth (per the committees-round-2 prompt: "confirm neither reads as
+// too close to the existing red/blue/gray") and against each other (the
+// "Both" compass legend shows all three at once).
+const FORCED_PAIRS = [
+  ["committee-house", "committee-senate"],
+  ["committee-house", "dem"],
+  ["committee-house", "rep"],
+  ["committee-house", "oth"],
+  ["committee-senate", "dem"],
+  ["committee-senate", "rep"],
+  ["committee-senate", "oth"],
+];
+const NEW_KEYS = ["committee-house", "committee-senate"];
 
 // ---- CLI overrides -------------------------------------------------------
 const override = { light: {}, dark: {} };
@@ -219,6 +237,31 @@ for (const [ti, theme] of ["light", "dark"].entries()) {
         `   base ${was.toFixed(3)}  (${delta})`,
       );
     }
+  }
+
+  // Brand-new tokens (committee-house/senate) have no prior committed value,
+  // so the regression check above is a no-op for them (now === was). Hold
+  // them to the same absolute bars instead: >= 3:1 contrast, and >= DE_GOOD
+  // separation from dem/rep/oth and each other.
+  console.log("\n  new committee-chamber colours — absolute checks:");
+  for (const k of NEW_KEYS) {
+    const hex = T[k];
+    const worst = Math.min(...BG_KEYS.map((bg) => contrast(hex, T[bg])));
+    const contrastFail = worst < CONTRAST_MIN;
+    if (contrastFail) failures++;
+    console.log(
+      `    ${contrastFail ? "FAIL" : "ok  "} ${k.padEnd(16)} contrast ${worst.toFixed(2)} (want >= ${CONTRAST_MIN})`,
+    );
+  }
+  for (const [a, b] of FORCED_PAIRS) {
+    const label = [a, b].sort().join(" · ");
+    const des = allDE(T, a, b);
+    const now = Math.min(...des);
+    const sepFail = now < DE_GOOD;
+    if (sepFail) failures++;
+    console.log(
+      `    ${sepFail ? "FAIL" : "ok  "} ${label.padEnd(26)} ${des.map((d) => d.toFixed(3)).join(" / ")}  (want min >= ${DE_GOOD})`,
+    );
   }
 }
 

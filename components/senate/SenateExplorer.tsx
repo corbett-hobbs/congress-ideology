@@ -29,13 +29,15 @@ import { CompassPanel } from "./CompassPanel";
 import { BeeswarmChart } from "./BeeswarmChart";
 import { Legend } from "./Legend";
 import { TrendChart } from "./TrendChart";
-import { DelegationChart, type DelegationSort } from "./DelegationChart";
+import { DelegationChart } from "./DelegationChart";
+import { DEFAULT_SORT, SortToggle, type SortState } from "@/components/charts/SortToggle";
 import { SenatorSearch } from "./SenatorSearch";
 import { SenateTableModal } from "./SenateTableModal";
 import { SiteFooter } from "./SiteFooter";
 import { CommitteeCompass } from "@/components/committee/CommitteeCompass";
 import { CommitteeSwarm } from "@/components/committee/CommitteeSwarm";
 import { CommitteeSearch } from "@/components/committee/CommitteeSearch";
+import { CommitteeChamberLegend } from "@/components/committee/CommitteeChamberLegend";
 import { ordinal } from "./format";
 
 const PLAY_INTERVAL_MS = 450;
@@ -124,7 +126,7 @@ export function SenateExplorer({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hoveredCommittee, setHoveredCommittee] =
     useState<CommitteeSummary | null>(null);
-  const [delegSort, setDelegSort] = useState<DelegationSort>("gap");
+  const [delegSort, setDelegSort] = useState<SortState>(DEFAULT_SORT);
   const [tableOpen, setTableOpen] = useState(false);
 
   // Committees only exist for the 119th; scrubbing away silently reverts to
@@ -348,6 +350,15 @@ export function SenateExplorer({
                         view === "both" ? " — House, Senate, and joint" : ""
                       }. Hover a dot for its roster; click to open the committee.`}
                 </p>
+                {view === "both" && (
+                  <div className="mt-2">
+                    <CommitteeChamberLegend
+                      chambers={[
+                        ...new Set(viewCommittees.map((c) => c.chamber)),
+                      ]}
+                    />
+                  </div>
+                )}
               </>
             ) : (
               <>
@@ -427,32 +438,11 @@ export function SenateExplorer({
                 : `How far apart each state's ${delegationClause} in the ${ordinal(congress)} Congress.`
             }
             action={
-              <div
-                className="flex flex-none gap-[0.35rem]"
-                role="group"
-                aria-label={committeesActive ? "Sort committees" : "Sort states"}
-              >
-                {(
-                  [
-                    ["gap", "Widest spread"],
-                    ["az", "A–Z"],
-                  ] as const
-                ).map(([mode, text]) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    onClick={() => setDelegSort(mode)}
-                    aria-pressed={delegSort === mode}
-                    className={`rounded-md border px-[0.55rem] py-[0.28rem] text-[0.7rem] font-medium transition-colors ${
-                      delegSort === mode
-                        ? "border-accent bg-accent text-accent-ink"
-                        : "border-line-strong bg-surface-raised text-ink-muted hover:border-accent"
-                    }`}
-                  >
-                    {text}
-                  </button>
-                ))}
-              </div>
+              <SortToggle
+                state={delegSort}
+                onChange={setDelegSort}
+                ariaLabel={committeesActive ? "Sort committees" : "Sort states"}
+              />
             }
           >
             {/* At md+ the inner list is absolutely positioned inside this

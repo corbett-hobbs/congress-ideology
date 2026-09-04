@@ -54,6 +54,10 @@ export interface CommitteeSummary {
   spread: number | null;
   /** Party group holding the majority seats. */
   controlGroup: PartyGroup;
+  /** Compass dot fill class, resolved once from `chamber` at the data-prep
+   *  layer (see lib/committee-palette.ts) — the compass primitive just reads
+   *  it, no member-vs-committee branching in the chart component. */
+  compassColorClass: string;
   demCount: number;
   repCount: number;
   otherCount: number;

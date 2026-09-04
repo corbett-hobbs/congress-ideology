@@ -10,7 +10,7 @@ import type { CommitteeMemberRow, CommitteeSummary } from "@/lib/committee-types
 import { groupFillClass } from "@/lib/party-palette";
 import { hasProfilePage, memberPath } from "@/lib/member-url";
 import { committeePath } from "@/lib/committee-url";
-import type { DelegationSort } from "@/components/senate/DelegationChart";
+import { DEFAULT_SORT, type SortState } from "@/components/charts/SortToggle";
 import { CommitteeMemberTooltip } from "./CommitteeMemberTooltip";
 
 const MARGIN = { top: 26, right: 96, bottom: 8, left: 210 };
@@ -62,7 +62,7 @@ function toPoints(
 
 interface CommitteeSwarmProps {
   committees: CommitteeSummary[];
-  sort?: DelegationSort;
+  sort?: SortState;
   /** Single-committee mode for a committee's own roster card — full width, no
    *  row-label link, taller row. */
   standalone?: boolean;
@@ -70,7 +70,7 @@ interface CommitteeSwarmProps {
 
 export function CommitteeSwarm({
   committees,
-  sort = "gap",
+  sort = DEFAULT_SORT,
   standalone = false,
 }: CommitteeSwarmProps) {
   const router = useRouter();
@@ -83,11 +83,17 @@ export function CommitteeSwarm({
       seen.add(c.shortName);
     }
 
-    const ordered = [...committees].sort(
-      sort === "az"
-        ? (a, b) => a.shortName.localeCompare(b.shortName)
-        : (a, b) => (b.spread ?? -1) - (a.spread ?? -1),
-    );
+    const ordered = [...committees].sort((a, b) => {
+      if (sort.mode === "az") return a.shortName.localeCompare(b.shortName);
+      if (sort.mode === "ideology") {
+        if (a.dim1 == null && b.dim1 == null) return 0;
+        if (a.dim1 == null) return 1;
+        if (b.dim1 == null) return -1;
+        const cmp = b.dim1 - a.dim1;
+        return sort.direction === "desc" ? cmp : -cmp;
+      }
+      return (b.spread ?? -1) - (a.spread ?? -1);
+    });
     return ordered.map((c) => ({
       id: c.committeeId,
       // Standalone: the page header already names the committee and the split.

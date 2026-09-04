@@ -37,6 +37,11 @@
   --adams: #7c5e94;
   --proadmin: #47618a;
   --antiadmin: #a67c3b;
+  /* Committee-compass chamber colours (session 2) — see
+     lib/committee-palette.ts. Joint committees keep --oth. Validated the same
+     way as the historical-party palette via validate_palette.js. */
+  --committee-house: #124912;
+  --committee-senate: #ad1f8a;
   --focus: #5c4b7a;
   color-scheme: light;
 }
@@ -64,6 +69,8 @@
     --adams: #9d80b3;
     --proadmin: #6f8ab5;
     --antiadmin: #c1904f;
+    --committee-house: #7dd175;
+    --committee-senate: #c24799;
     --focus: #9b84c7;
     color-scheme: dark;
   }
@@ -91,6 +98,8 @@
   --adams: #9d80b3;
   --proadmin: #6f8ab5;
   --antiadmin: #c1904f;
+  --committee-house: #7dd175;
+  --committee-senate: #c24799;
   --focus: #9b84c7;
   color-scheme: dark;
 }
@@ -230,6 +239,14 @@ body {
 }
 .fill-antiadmin {
   fill: var(--antiadmin);
+}
+/* Committee-compass chamber colours — see lib/committee-palette.ts. Not used
+   for member dots or "How each committee votes" (party split, unaffected). */
+.fill-committee-house {
+  fill: var(--committee-house);
+}
+.fill-committee-senate {
+  fill: var(--committee-senate);
 }
 .stroke-dem {
   stroke: var(--dem);

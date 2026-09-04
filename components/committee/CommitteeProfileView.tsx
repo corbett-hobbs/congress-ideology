@@ -1,9 +1,9 @@
-import Link from "next/link";
 import type {
   CommitteeProfile,
   CommitteeSummary,
 } from "@/lib/committee-types";
 import { SiteFooter } from "@/components/senate/SiteFooter";
+import { SetBackLink } from "@/components/BackLinkContext";
 import { CommitteeHeader } from "./CommitteeHeader";
 import { CommitteeCompassCard } from "./CommitteeCompassCard";
 import { CommitteeRosterCard } from "./CommitteeRosterCard";
@@ -13,6 +13,10 @@ import { CommitteeRosterCard } from "./CommitteeRosterCard";
  * (`components/profile/MemberProfileView`) minus the trajectory chart — an
  * identity header, then the compass (committees among committees, this one
  * ringed) and the roster spread side by side.
+ *
+ * The "← InsideGov" back-link lives in the site header's wordmark, not here
+ * — `SetBackLink` just registers this page's restore-context destination
+ * (chamber + Committees view) with it. See components/BackLinkContext.tsx.
  */
 export function CommitteeProfileView({
   committee,
@@ -32,14 +36,7 @@ export function CommitteeProfileView({
 
   return (
     <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-11">
-      <div>
-        <Link
-          href={backHref}
-          className="font-mono text-[0.72rem] uppercase tracking-[0.1em] text-accent hover:underline"
-        >
-          ← InsideGov
-        </Link>
-      </div>
+      <SetBackLink href={backHref} />
 
       <CommitteeHeader committee={committee} />
 

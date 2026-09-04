@@ -1,10 +1,10 @@
-import Link from "next/link";
 import type {
   ChamberMember,
   MemberProfile,
   PartyMeanPoint,
 } from "@/lib/congress-types";
 import { SiteFooter } from "@/components/senate/SiteFooter";
+import { SetBackLink } from "@/components/BackLinkContext";
 import { ProfileHeader } from "./ProfileHeader";
 import { MemberIdeologySection } from "./MemberIdeologySection";
 
@@ -35,14 +35,7 @@ export function MemberProfileView({
 
   return (
     <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-11">
-      <div>
-        <Link
-          href={explorerHref}
-          className="font-mono text-[0.72rem] uppercase tracking-[0.1em] text-accent hover:underline"
-        >
-          ← InsideGov
-        </Link>
-      </div>
+      <SetBackLink href={explorerHref} />
 
       <ProfileHeader profile={profile} />
 

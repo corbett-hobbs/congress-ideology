@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Newsreader, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { site, siteUrl } from "@/lib/site";
 import { SiteHeader } from "@/components/SiteHeader";
+import { BackLinkProvider } from "@/components/BackLinkContext";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -56,8 +57,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${newsreader.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-ink">
-        <SiteHeader />
-        {children}
+        <BackLinkProvider>
+          <SiteHeader />
+          {children}
+        </BackLinkProvider>
       </body>
     </html>
   );

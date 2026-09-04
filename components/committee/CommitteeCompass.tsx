@@ -9,16 +9,10 @@ import {
 import type { CommitteeSummary } from "@/lib/committee-types";
 import { committeeIsPlottable } from "@/lib/committee-types";
 import { committeePath } from "@/lib/committee-url";
-import { groupFillClass } from "@/lib/party-palette";
 import { CommitteeDotTooltip } from "./CommitteeDotTooltip";
 
 const MARGIN = { top: 20, right: 64, bottom: 30, left: 58 };
 const EXPLORER_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
-
-/** Joint committees have no owning party — the neutral swatch, like independents. */
-function fillClass(c: CommitteeSummary): string {
-  return c.chamber === "joint" ? "fill-oth" : groupFillClass(c.controlGroup);
-}
 
 interface CommitteeCompassProps {
   /** The committees to plot (already chamber-scoped by the caller). */
@@ -109,7 +103,7 @@ export function CommitteeCompass({
       x={(c) => c.dim1 as number}
       y={(c) => c.dim2 as number}
       id={(c) => c.committeeId}
-      colorClass={fillClass}
+      colorClass={(c) => c.compassColorClass}
       radius={(c, s) =>
         c.committeeId === subjectId ? 9 : s.highlighted ? 7 : 6.5
       }

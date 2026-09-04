@@ -16,6 +16,7 @@ import {
 } from "@/lib/party-palette";
 import { MemberTooltip } from "./MemberTooltip";
 import { stateName } from "./format";
+import { DEFAULT_SORT, type SortState } from "@/components/charts/SortToggle";
 
 /** "range" carries a two-party count label ("9Pro·7Anti") — wider than the
  *  single gap number "pair" shows. */
@@ -23,7 +24,7 @@ const MARGIN = { top: 26, right: 66, bottom: 8, left: 124 };
 const RANGE_RIGHT = 96;
 const ROW_H = 26;
 
-export type DelegationSort = "gap" | "az";
+export type { SortState };
 /** "pair" — each state's two senators (dumbbell). "range" — a state's whole
  *  House delegation as a min→max spread on dimension 1. */
 export type DelegationMode = "pair" | "range";
@@ -32,6 +33,8 @@ interface PairRow {
   state: string;
   members: [ChamberMember, ChamberMember];
   gap: number;
+  /** Mean dim1 across the row — the "Ideology" sort key. */
+  mean: number;
 }
 
 interface RangeRow {
@@ -42,6 +45,8 @@ interface RangeRow {
   /** Party breakdown, most-numerous first. */
   parties: { key: PartyColorKey; count: number }[];
   gap: number;
+  /** Mean dim1 across the row — the "Ideology" sort key. */
+  mean: number;
 }
 
 /** "12D·8R" / "9F·7D-R" — the two biggest parties in a delegation. */
@@ -92,6 +97,7 @@ export function buildDelegations(
         const k = partyColorKey(m);
         partyCounts.set(k, (partyCounts.get(k) ?? 0) + 1);
       }
+      const sum = sorted.reduce((s, m) => s + (m.dim1 as number), 0);
       ranges.push({
         state,
         members: sorted,
@@ -103,6 +109,7 @@ export function buildDelegations(
         gap:
           (sorted[sorted.length - 1].dim1 as number) -
           (sorted[0].dim1 as number),
+        mean: sum / sorted.length,
       });
     }
     return {
@@ -130,6 +137,7 @@ export function buildDelegations(
       state,
       members: [a, b],
       gap: Math.abs((a.dim1 as number) - (b.dim1 as number)),
+      mean: ((a.dim1 as number) + (b.dim1 as number)) / 2,
     });
   }
 
@@ -143,7 +151,7 @@ export function buildDelegations(
 interface DelegationChartProps {
   members: ChamberMember[];
   mode?: DelegationMode;
-  sort?: DelegationSort;
+  sort?: SortState;
   /** Render only this state's row (profile pages / filtered explorer). */
   filterState?: string;
   /** Keep every row, but visually emphasize this state's. */
@@ -157,7 +165,7 @@ interface DelegationChartProps {
 export function DelegationChart({
   members,
   mode = "pair",
-  sort = "gap",
+  sort = DEFAULT_SORT,
   filterState,
   selectedState,
   highlightId,
@@ -173,11 +181,15 @@ export function DelegationChart({
   const sourceRows = useMemo(() => {
     let copy: (PairRow | RangeRow)[] = mode === "range" ? [...ranges] : [...pairs];
     if (filterState) copy = copy.filter((d) => d.state === filterState);
-    copy.sort(
-      sort === "gap"
-        ? (a, b) => b.gap - a.gap
-        : (a, b) => stateName(a.state).localeCompare(stateName(b.state)),
-    );
+    copy.sort((a, b) => {
+      if (sort.mode === "az")
+        return stateName(a.state).localeCompare(stateName(b.state));
+      if (sort.mode === "ideology") {
+        const cmp = b.mean - a.mean;
+        return sort.direction === "desc" ? cmp : -cmp;
+      }
+      return b.gap - a.gap;
+    });
     return copy;
   }, [pairs, ranges, mode, sort, filterState]);
 
