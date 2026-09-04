@@ -143,16 +143,16 @@ export function ExplorerToolbar({
           </div>
         </div>
 
-        <div
+        <p
           aria-hidden={!showJointHelper}
-          className={`flex min-h-[1.35rem] items-center gap-1.5 pt-1 text-[0.72rem] text-ink-muted transition-opacity ${
+          className={`min-h-[1.3rem] pt-1 text-[0.72rem] leading-snug text-ink-muted transition-opacity ${
             showJointHelper ? "opacity-100" : "opacity-0"
           }`}
         >
-          <span className="size-[0.4rem] flex-none rounded-full bg-oth" />
-          Joint committees appear under <b className="font-medium">Both</b> only —
+          <span className="mr-1.5 inline-block size-[0.4rem] rounded-full bg-oth align-middle" />
+          Joint committees show only under <b className="font-medium">Both</b> —
           they have no single owning chamber.
-        </div>
+        </p>
       </div>
     </div>
   );

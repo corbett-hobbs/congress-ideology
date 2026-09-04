@@ -37,7 +37,7 @@ export function CommitteeRosterCard({
 
       <CommitteeSwarm committees={[committee]} standalone />
 
-      <div className="mt-3 max-h-[360px] overflow-y-auto border-t border-line">
+      <div className="mt-3 max-h-[520px] overflow-y-auto border-t border-line">
         {roster.map((m) => {
           const tag = ROLE_TAG[m.role];
           const row = (

@@ -73,11 +73,26 @@ export function SwarmRows<TP>({
   const W = measuredW || FALLBACK_W;
   const ticks = W < 420 ? NARROW_TICKS : TICKS;
   const plotH = rows.length * rowHeight;
-  const height = margin.top + plotH + margin.bottom;
+
+  // The label gutter can't eat a narrow phone card — clamp it to a fraction of
+  // the measured width and clip labels that no longer fit.
+  const effMargin = {
+    ...margin,
+    left: Math.min(margin.left, Math.max(96, Math.round(W * 0.42))),
+  };
+  const maxLabelChars = Math.max(6, Math.floor((effMargin.left - 8) / 6.4));
+  const height = effMargin.top + plotH + effMargin.bottom;
+  const clip = (s: string) =>
+    s.length > maxLabelChars ? `${s.slice(0, maxLabelChars - 1)}…` : s;
 
   return (
     <div ref={wrapRef}>
-      <ChartFrame width={W} height={height} margin={margin} ariaLabel={ariaLabel}>
+      <ChartFrame
+        width={W}
+        height={height}
+        margin={effMargin}
+        ariaLabel={ariaLabel}
+      >
         {({ innerWidth }) => {
           const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);
 
@@ -107,19 +122,19 @@ export function SwarmRows<TP>({
                     {row.selected && (
                       <rect
                         className="deleg-row-selected-bg"
-                        x={-margin.left}
+                        x={-effMargin.left}
                         y={y - rowHeight / 2 + 1}
-                        width={innerWidth + margin.left + margin.right - 1}
+                        width={innerWidth + effMargin.left + effMargin.right - 1}
                         height={rowHeight - 2}
                         rx={3}
                       />
                     )}
                     <text
                       className={`deleg-state-label${row.labelHighlighted ? " is-selected" : ""}`}
-                      x={-margin.left + 2}
+                      x={-effMargin.left + 2}
                       y={y + 4}
                     >
-                      {row.label}
+                      {clip(row.label)}
                     </text>
                     {xs.length > 0 && (
                       <line

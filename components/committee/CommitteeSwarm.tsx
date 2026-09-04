@@ -13,12 +13,11 @@ import { committeePath } from "@/lib/committee-url";
 import type { DelegationSort } from "@/components/senate/DelegationChart";
 import { CommitteeMemberTooltip } from "./CommitteeMemberTooltip";
 
-const MARGIN = { top: 26, right: 96, bottom: 8, left: 200 };
+const MARGIN = { top: 26, right: 96, bottom: 8, left: 210 };
 const ROW_H = 26;
 /** One committee's roster, full width, on a committee's own page. */
 const SINGLE_ROW_MARGIN = { top: 20, right: 24, bottom: 8, left: 24 };
 const SINGLE_ROW_H = 44;
-const MAX_LABEL = 30;
 
 const CHAMBER_ABBR = { house: "H", senate: "S", joint: "J" } as const;
 
@@ -31,15 +30,13 @@ function partySplit(c: CommitteeSummary): string {
 
 /**
  * Row label: the short name, disambiguated by chamber only when two committees
- * in the set share it (House vs. Senate Judiciary), and clipped so a very long
- * select-committee name can't run into the plot.
+ * in the set share it (House vs. Senate Judiciary). SwarmRows clips it to the
+ * label gutter.
  */
 function rowLabel(c: CommitteeSummary, ambiguous: Set<string>): string {
-  let label = ambiguous.has(c.shortName)
+  return ambiguous.has(c.shortName)
     ? `${c.shortName} (${CHAMBER_ABBR[c.chamber]})`
     : c.shortName;
-  if (label.length > MAX_LABEL) label = `${label.slice(0, MAX_LABEL - 1)}…`;
-  return label;
 }
 
 function toPoints(
@@ -93,12 +90,12 @@ export function CommitteeSwarm({
     );
     return ordered.map((c) => ({
       id: c.committeeId,
-      label: rowLabel(c, ambiguous),
+      // Standalone: the page header already names the committee and the split.
+      label: standalone ? "" : rowLabel(c, ambiguous),
       onRowClick:
         standalone || ordered.length === 1
           ? undefined
           : () => router.push(committeePath(c)),
-      // The committee's own page states the split in its header already.
       meta: standalone ? "" : partySplit(c),
       points: toPoints(c.roster, router),
     }));
