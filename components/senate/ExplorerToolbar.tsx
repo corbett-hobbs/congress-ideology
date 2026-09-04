@@ -24,8 +24,22 @@ const STATE_LOCK_TITLE = "Committees aren't scoped to a state.";
 /**
  * The one sticky toolbar for the explorer: chamber switch, the
  * members/committees toggle, state filter, play/pause, the Congress slider, and
- * the Congress readout — one row. A reserved helper line sits below it
- * (opacity-toggled, never inserted/removed) for the joint-committee disclosure.
+ * the Congress readout.
+ *
+ * Below `sm` (this component's existing mobile breakpoint — everything else
+ * here already keys off it) the state control and the play/slider/readout
+ * group collapse into one merged row, the "STATE" label drops (the select's
+ * own "All states" placeholder already says what it is), and the Congress
+ * readout stacks ("119th" over the year range) to free the horizontal room
+ * that merge needs. At `sm` and up all of that reverts to today's single-row
+ * layout, unchanged.
+ *
+ * The joint-committee helper line genuinely diverges by breakpoint: at `sm`+
+ * it's always in the DOM with its height reserved (opacity-toggled) so the
+ * horizontal controls above it never jump while a person's eye is on them;
+ * below `sm` nothing above it moves horizontally when it appears, so it's
+ * conditionally rendered instead — the toolbar is simply shorter when it
+ * doesn't apply, not showing a reserved gap.
  */
 export function ExplorerToolbar({
   states,
@@ -42,6 +56,14 @@ export function ExplorerToolbar({
   const committeesLive = congress === committeeCongress;
   const committeesActive = committeesLive && entity === "committees";
   const showJointHelper = committeesActive && view === "both";
+
+  const jointNoteBody = (
+    <>
+      <span className="mr-1.5 inline-block size-[0.4rem] rounded-full bg-oth align-middle" />
+      Joint committees show only under <b className="font-medium">Both</b> —
+      they have no single owning chamber.
+    </>
+  );
 
   return (
     <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 backdrop-blur">
@@ -101,57 +123,68 @@ export function ExplorerToolbar({
             })}
           </div>
 
-          <div className="flex flex-none items-center gap-1.5 sm:gap-2">
-            <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">
-              State
-            </span>
-            <StateFilter
-              states={states}
-              compact
-              disabled={committeesActive}
-              disabledTitle={STATE_LOCK_TITLE}
-            />
-          </div>
+          {/* Below `sm` this is a real flex row, merging the state control into
+              the transport group on one line. At `sm`+ it's `display:contents`,
+              so its two children fall out as direct children of the row above —
+              exactly the original, unwrapped desktop layout. */}
+          <div className="flex w-full items-center gap-2 sm:contents">
+            <div className="flex flex-none items-center gap-1.5 sm:gap-2">
+              <span className="hidden font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint sm:inline">
+                State
+              </span>
+              <StateFilter
+                states={states}
+                compact
+                disabled={committeesActive}
+                disabledTitle={STATE_LOCK_TITLE}
+              />
+            </div>
 
-          <div className="flex min-w-[220px] flex-1 items-center gap-3">
-            <button
-              type="button"
-              onClick={onTogglePlay}
-              aria-label={playing ? "Pause" : "Play through every Congress"}
-              className="flex size-8 flex-none items-center justify-center rounded-full border border-line-strong bg-surface-raised text-[0.7rem] text-ink transition-colors hover:border-accent"
-            >
-              {playing ? "❚❚" : "▶"}
-            </button>
-            <input
-              type="range"
-              min={min}
-              max={max}
-              step={1}
-              value={congress}
-              aria-label="Congress"
-              onChange={(e) => onCongressChange(+e.target.value)}
-              className="h-6 flex-1 cursor-pointer accent-[var(--accent)]"
-            />
-            <div className="flex flex-none items-baseline gap-1.5 whitespace-nowrap tabular-nums">
-              <span className="font-mono text-[0.95rem] font-semibold text-ink">
-                {ordinal(congress)}
-              </span>
-              <span className="text-[0.76rem] text-ink-muted">
-                {congressYears(congress)}
-              </span>
+            <div className="flex min-w-0 flex-1 items-center gap-3 sm:min-w-[220px]">
+              <button
+                type="button"
+                onClick={onTogglePlay}
+                aria-label={playing ? "Pause" : "Play through every Congress"}
+                className="flex size-8 flex-none items-center justify-center rounded-full border border-line-strong bg-surface-raised text-[0.7rem] text-ink transition-colors hover:border-accent"
+              >
+                {playing ? "❚❚" : "▶"}
+              </button>
+              <input
+                type="range"
+                min={min}
+                max={max}
+                step={1}
+                value={congress}
+                aria-label="Congress"
+                onChange={(e) => onCongressChange(+e.target.value)}
+                className="h-6 min-w-0 flex-1 cursor-pointer accent-[var(--accent)]"
+              />
+              <div className="flex flex-none flex-col items-end whitespace-nowrap tabular-nums leading-tight sm:flex-row sm:items-baseline sm:gap-1.5 sm:leading-normal">
+                <span className="font-mono text-[0.95rem] font-semibold text-ink">
+                  {ordinal(congress)}
+                </span>
+                <span className="text-[0.66rem] text-ink-muted sm:text-[0.76rem]">
+                  {congressYears(congress)}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Mobile: absent unless both conditions hold — no reserved gap. */}
+        {showJointHelper && (
+          <p className="pt-1 text-[0.72rem] leading-snug text-ink-muted sm:hidden">
+            {jointNoteBody}
+          </p>
+        )}
+        {/* Desktop: always present, opacity-toggled — see the note above. */}
         <p
           aria-hidden={!showJointHelper}
-          className={`min-h-[1.3rem] pt-1 text-[0.72rem] leading-snug text-ink-muted transition-opacity ${
+          className={`hidden min-h-[1.3rem] pt-1 text-[0.72rem] leading-snug text-ink-muted transition-opacity sm:block ${
             showJointHelper ? "opacity-100" : "opacity-0"
           }`}
         >
-          <span className="mr-1.5 inline-block size-[0.4rem] rounded-full bg-oth align-middle" />
-          Joint committees show only under <b className="font-medium">Both</b> —
-          they have no single owning chamber.
+          {jointNoteBody}
         </p>
       </div>
     </div>
