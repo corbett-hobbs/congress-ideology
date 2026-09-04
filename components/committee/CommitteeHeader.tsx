@@ -71,12 +71,21 @@ export function CommitteeHeader({ committee }: { committee: CommitteeProfile }) 
           : `${CONTROL_LABEL[controlGroup]} control`}{" "}
         · {partySplit(committee)}
       </p>
-      <p className="mt-1.5 text-[0.9rem] text-ink-muted">
-        {chair && <LeadLink lead={chair} role="Chair" />}
-        {chair && rankingMember ? "  ·  " : ""}
-        {rankingMember && <LeadLink lead={rankingMember} role="Ranking Member" />}
-        {!chair && !rankingMember && "Leadership not recorded"}
-      </p>
+      {chair && (
+        <p className="mt-1.5 text-[0.9rem] text-ink-muted">
+          <LeadLink lead={chair} role="Chair" />
+        </p>
+      )}
+      {rankingMember && (
+        <p className="mt-1.5 text-[0.9rem] text-ink-muted">
+          <LeadLink lead={rankingMember} role="Ranking Member" />
+        </p>
+      )}
+      {!chair && !rankingMember && (
+        <p className="mt-1.5 text-[0.9rem] text-ink-muted">
+          Leadership not recorded
+        </p>
+      )}
       <p className="mt-1.5 text-[0.9rem] text-ink-muted">
         {memberCount} members in the {ordinal(latestCongress)} Congress
       </p>
