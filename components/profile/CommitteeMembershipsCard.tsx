@@ -48,13 +48,12 @@ export function CommitteeMembershipsCard({
 
   return (
     <ProfilePanel label="Committee memberships">
-      <p className="mb-2 max-w-[46rem] text-[0.85rem] leading-[1.6] text-ink-muted">
+      <p className="mb-2 text-[0.85rem] leading-[1.6] text-ink-muted">
         {name}&rsquo;s {memberships.length}{" "}
         {memberships.length === 1 ? "committee assignment" : "committee assignments"}{" "}
-        in the {ordinal(latestCongress)} Congress — chairmanships and
-        ranking-member roles first, then by seniority rank. Each row also
-        shows how {name}&rsquo;s own position compares to that committee&rsquo;s
-        overall blend.
+        in the {ordinal(latestCongress)} Congress ranked by seniority. Each
+        row also shows how {name}&rsquo;s own position compares to that
+        committee&rsquo;s overall blend.
       </p>
 
       <div className="border-t border-line">
@@ -83,9 +82,8 @@ export function CommitteeMembershipsCard({
                     primaryColor={primaryColor}
                     referenceValue={m.blendDim1}
                   />
-                  <div className="mt-[0.15rem] text-right font-mono text-[0.68rem] text-ink-faint">
-                    Δ {fmt2(Math.abs(currentDim1 - m.blendDim1))} from
-                    committee center
+                  <div className="mt-[0.15rem] whitespace-nowrap text-right font-mono text-[0.68rem] text-ink-faint">
+                    Δ {fmt2(Math.abs(currentDim1 - m.blendDim1))} from center
                   </div>
                 </>
               ) : (
