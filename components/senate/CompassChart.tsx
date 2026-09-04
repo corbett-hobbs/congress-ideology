@@ -1,56 +1,36 @@
 "use client";
 
 import { useMemo } from "react";
-import { scaleLinear } from "d3-scale";
-import { ChartFrame } from "@/components/charts/ChartFrame";
-import { Axis } from "@/components/charts/Axis";
-import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import {
+  ScatterPlot,
+  type ScatterLabel,
+} from "@/components/charts/ScatterPlot";
 import type { ChamberMember } from "@/lib/congress-types";
 import { memberNoun } from "@/lib/chamber";
 import { hasProfilePage } from "@/lib/member-url";
 import { partyFillClass } from "@/lib/party-palette";
 import { MemberTooltip } from "./MemberTooltip";
 
-const W = 640;
-const H = 600;
+/** Profile variant keeps the numeric ticks + in-SVG caption; explorer drops
+ *  both (the card draws word-based axis labels around the plot). */
 const MARGIN = { top: 20, right: 64, bottom: 30, left: 58 };
-/** Explorer draws its own axis labels in HTML, so the SVG needs almost no gutter. */
 const EXPLORER_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
-const TICKS = [-1, -0.5, 0, 0.5, 1];
 
 interface CompassChartProps {
-  /** Plottable senators for the current Congress, sorted by dim1. */
+  /** Plottable members for the current Congress, sorted by dim1. */
   members: ChamberMember[];
   selectedId?: string | null;
   highlightedId?: string | null;
   /**
    * Additional members to ring, beyond `highlightedId` — the profile compass's
-   * "nearest neighbors" mode passes the anchor's closest colleagues here. Same
-   * highlight treatment as `highlightedId`; the anchor still owns the label.
+   * "nearest neighbors" mode passes the anchor's closest colleagues here.
    */
   highlightedIds?: readonly string[];
   onHover?: (m: ChamberMember | null) => void;
   onSelect?: (m: ChamberMember) => void;
   /** Fade every dot except the highlighted / selected one (profile pages). */
   dimUnfocused?: boolean;
-  /**
-   * "profile" (default) keeps the numeric tick labels and the in-SVG
-   * "DIMENSION 2" caption. "explorer" drops both — the explorer card draws
-   * word-based axis labels around the plot (see SenateExplorer / session 10).
-   */
   variant?: "profile" | "explorer";
-}
-
-function zRank(
-  m: ChamberMember,
-  selectedId: string | null,
-  highlightedId: string | null,
-  ringed: ReadonlySet<string>,
-) {
-  if (m.bioguideId === highlightedId) return 3;
-  if (ringed.has(m.bioguideId)) return 2;
-  if (m.bioguideId === selectedId) return 1;
-  return 0;
 }
 
 export function CompassChart({
@@ -63,161 +43,89 @@ export function CompassChart({
   dimUnfocused = false,
   variant = "profile",
 }: CompassChartProps) {
-  const tip = useTooltip<ChamberMember>();
   const explorer = variant === "explorer";
-  const ringed = useMemo(
-    () => new Set(highlightedIds ?? []),
-    [highlightedIds],
-  );
-
   const chamber = members[0]?.chamber ?? "senate";
-  const focused =
-    (dimUnfocused && highlightedId
-      ? members.find((m) => m.bioguideId === highlightedId)
-      : null) ?? null;
-  // Don't double-label the same dot as "most liberal/conservative". The
-  // explorer card names them in text below the chart, so skip the SVG labels
-  // there (its tight margins would clip them anyway).
-  const mostLiberal =
-    !explorer && members[0] && members[0].bioguideId !== focused?.bioguideId
-      ? members[0]
-      : undefined;
-  const mostConservative =
-    !explorer &&
-    members.length > 1 &&
-    members[members.length - 1].bioguideId !== focused?.bioguideId
-      ? members[members.length - 1]
-      : undefined;
 
-  const drawOrder = useMemo(
-    () =>
-      [...members].sort(
-        (a, b) =>
-          zRank(a, selectedId, highlightedId, ringed) -
-          zRank(b, selectedId, highlightedId, ringed),
-      ),
-    [members, selectedId, highlightedId, ringed],
-  );
+  const labels = useMemo<ScatterLabel[]>(() => {
+    const focused =
+      (dimUnfocused && highlightedId
+        ? members.find((m) => m.bioguideId === highlightedId)
+        : null) ?? null;
+
+    // The explorer card names the extremes in text below the chart, so skip
+    // the SVG labels there (its tight margins would clip them anyway).
+    const mostLiberal =
+      !explorer && members[0] && members[0].bioguideId !== focused?.bioguideId
+        ? members[0]
+        : undefined;
+    const mostConservative =
+      !explorer &&
+      members.length > 1 &&
+      members[members.length - 1].bioguideId !== focused?.bioguideId
+        ? members[members.length - 1]
+        : undefined;
+
+    const out: ScatterLabel[] = [];
+    if (mostLiberal?.dim1 != null && mostLiberal.dim2 != null) {
+      out.push({
+        x: mostLiberal.dim1,
+        y: mostLiberal.dim2,
+        text: mostLiberal.lastName,
+        anchor: "end",
+        dx: -8,
+        dy: 3,
+      });
+    }
+    if (
+      mostConservative &&
+      mostConservative !== mostLiberal &&
+      mostConservative.dim1 != null &&
+      mostConservative.dim2 != null
+    ) {
+      out.push({
+        x: mostConservative.dim1,
+        y: mostConservative.dim2,
+        text: mostConservative.lastName,
+        anchor: "start",
+        dx: 8,
+        dy: 3,
+      });
+    }
+    if (focused?.dim1 != null && focused.dim2 != null) {
+      out.push({
+        x: focused.dim1,
+        y: focused.dim2,
+        text: focused.lastName,
+        anchor: "middle",
+        dy: -12,
+        className: "dot-label is-focused-label",
+      });
+    }
+    return out;
+  }, [members, explorer, dimUnfocused, highlightedId]);
 
   return (
-    <>
-      <ChartFrame
-        width={W}
-        height={explorer ? 470 : H}
-        margin={explorer ? EXPLORER_MARGIN : MARGIN}
-        ariaLabel={`Scatter plot of ${memberNoun(chamber, { plural: true })} by DW-NOMINATE ideology score`}
-        onPointerLeave={() => {
-          // Leaving the plot by any edge — not onto another dot — must clear the
-          // hover tooltip and any hover-driven dot enlargement. The per-dot
-          // pointerleave can be missed when a hover-triggered re-sort moves the
-          // dot's DOM node out from under the pointer, which left the tooltip
-          // stuck visible. Click-to-select is unaffected (separate handler).
-          onHover?.(null);
-          tip.hide();
-        }}
-      >
-        {({ innerWidth, innerHeight }) => {
-          const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);
-          const y = scaleLinear().domain([-1, 1]).range([innerHeight, 0]);
-
-          return (
-            <>
-              <Axis
-                scale={x}
-                orientation="bottom"
-                ticks={TICKS}
-                offset={innerHeight}
-                gridExtent={innerHeight}
-                zeroAt={0}
-                labels={!explorer}
-                format={(v) => v.toFixed(1)}
-              />
-              <Axis
-                scale={y}
-                orientation="left"
-                ticks={TICKS}
-                offset={0}
-                gridExtent={innerWidth}
-                zeroAt={0}
-                labels={!explorer}
-                format={(v) => v.toFixed(1)}
-              />
-              {!explorer && (
-                <text
-                  className="axis-caption"
-                  transform={`translate(${-42},${innerHeight / 2}) rotate(-90)`}
-                  textAnchor="middle"
-                >
-                  DIMENSION 2
-                </text>
-              )}
-
-              {drawOrder.map((m) => {
-                const isAnchor = m.bioguideId === highlightedId;
-                const isHi = isAnchor || ringed.has(m.bioguideId);
-                const isSel = m.bioguideId === selectedId;
-                const faded = dimUnfocused && !isHi && !isSel;
-                // Profile pages only exist for current members — don't wire a
-                // click that would 404 (e.g. a scrubbed-back historical dot).
-                const navigable = onSelect != null && hasProfilePage(m);
-                return (
-                  <circle
-                    key={m.bioguideId}
-                    cx={x(m.dim1 as number)}
-                    cy={y(m.dim2 as number)}
-                    r={isHi ? 7.5 : isSel ? 6.5 : 4.6}
-                    className={`dot ${partyFillClass(m)}${isHi ? " is-highlighted" : ""}`}
-                    opacity={faded ? 0.28 : 1}
-                    onPointerEnter={(e) => {
-                      onHover?.(m);
-                      tip.show(m, e);
-                    }}
-                    onPointerMove={tip.move}
-                    onPointerLeave={() => {
-                      onHover?.(null);
-                      tip.hide();
-                    }}
-                    onClick={navigable ? () => onSelect!(m) : undefined}
-                    style={navigable ? { cursor: "pointer" } : undefined}
-                  />
-                );
-              })}
-
-              {mostLiberal && (
-                <text
-                  className="dot-label"
-                  textAnchor="end"
-                  x={x(mostLiberal.dim1 as number) - 8}
-                  y={y(mostLiberal.dim2 as number) + 3}
-                >
-                  {mostLiberal.lastName}
-                </text>
-              )}
-              {mostConservative && mostConservative !== mostLiberal && (
-                <text
-                  className="dot-label"
-                  textAnchor="start"
-                  x={x(mostConservative.dim1 as number) + 8}
-                  y={y(mostConservative.dim2 as number) + 3}
-                >
-                  {mostConservative.lastName}
-                </text>
-              )}
-              {focused?.dim1 != null && focused.dim2 != null && (
-                <text
-                  className="dot-label is-focused-label"
-                  textAnchor="middle"
-                  x={x(focused.dim1)}
-                  y={y(focused.dim2) - 12}
-                >
-                  {focused.lastName}
-                </text>
-              )}
-            </>
-          );
-        }}
-      </ChartFrame>
-      <Tooltip state={tip.state}>{(m) => <MemberTooltip member={m} />}</Tooltip>
-    </>
+    <ScatterPlot<ChamberMember>
+      points={members}
+      ariaLabel={`Scatter plot of ${memberNoun(chamber, { plural: true })} by DW-NOMINATE ideology score`}
+      width={640}
+      height={explorer ? 470 : 600}
+      margin={explorer ? EXPLORER_MARGIN : MARGIN}
+      axisTickLabels={!explorer}
+      yAxisCaption={!explorer ? "DIMENSION 2" : undefined}
+      x={(m) => m.dim1 as number}
+      y={(m) => m.dim2 as number}
+      id={(m) => m.bioguideId}
+      colorClass={(m) => partyFillClass(m)}
+      highlightedId={highlightedId}
+      highlightedIds={highlightedIds}
+      selectedId={selectedId}
+      dimUnfocused={dimUnfocused}
+      onHover={onHover}
+      onSelect={onSelect}
+      isSelectable={(m) => hasProfilePage(m)}
+      renderTooltip={(m) => <MemberTooltip member={m} />}
+      labels={labels}
+    />
   );
 }

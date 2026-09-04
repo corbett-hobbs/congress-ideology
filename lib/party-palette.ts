@@ -136,6 +136,14 @@ export function partyFillClass(m: ColorInput): string {
   return `fill-${partyColorKey(m)}`;
 }
 
+/**
+ * SVG fill class from a party group alone — for entities that only carry the
+ * three-way group (committee rosters), never a Voteview `party_code`.
+ */
+export function groupFillClass(group: PartyGroup): string {
+  return `fill-${groupFallback(group)}`;
+}
+
 /** `var(--token)` for inline styles / legend swatches. */
 export function partyCssVar(key: PartyColorKey): string {
   return `var(${PARTY_META[key].token})`;

@@ -5,6 +5,11 @@ import {
   getChamberCurrent,
   getMemberSearchIndex,
 } from "@/lib/congress-data";
+import {
+  committeesLatestCongress,
+  getCommittees,
+  getCommitteeSearchIndex,
+} from "@/lib/committee-data";
 import { site } from "@/lib/site";
 import { SenateExplorer } from "@/components/senate/SenateExplorer";
 
@@ -24,6 +29,8 @@ export default function Home() {
   const house = getChamberCurrent("house");
   const bothTrend = getBothTrend();
   const search = getMemberSearchIndex();
+  const committees = getCommittees("both");
+  const committeeSearch = getCommitteeSearchIndex();
 
   return (
     <Suspense fallback={<div className="min-h-screen" />}>
@@ -32,6 +39,9 @@ export default function Home() {
         house={house}
         bothTrend={bothTrend}
         search={search}
+        committees={committees}
+        committeeSearch={committeeSearch}
+        committeeCongress={committeesLatestCongress()}
       />
     </Suspense>
   );

@@ -2,10 +2,10 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { scaleLinear } from "d3-scale";
-import { ChartFrame } from "@/components/charts/ChartFrame";
-import { Axis } from "@/components/charts/Axis";
-import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import {
+  SwarmRows,
+  type SwarmRowData,
+} from "@/components/charts/SwarmRows";
 import type { ChamberMember } from "@/lib/congress-types";
 import { hasProfilePage, memberPath } from "@/lib/member-url";
 import {
@@ -14,19 +14,14 @@ import {
   partyFillClass,
   type PartyColorKey,
 } from "@/lib/party-palette";
-import { useElementWidth } from "@/lib/use-element-width";
 import { MemberTooltip } from "./MemberTooltip";
 import { stateName } from "./format";
 
-/** Used before the container is first measured (avoids a zero-width flash). */
-const FALLBACK_W = 1100;
 /** "range" carries a two-party count label ("9Pro·7Anti") — wider than the
  *  single gap number "pair" shows. */
 const MARGIN = { top: 26, right: 66, bottom: 8, left: 124 };
 const RANGE_RIGHT = 96;
 const ROW_H = 26;
-const TICKS = [-1, -0.5, 0, 0.5, 1];
-const NARROW_TICKS = [-1, 0, 1];
 
 export type DelegationSort = "gap" | "az";
 /** "pair" — each state's two senators (dumbbell). "range" — a state's whole
@@ -169,19 +164,13 @@ export function DelegationChart({
   onSelectState,
 }: DelegationChartProps) {
   const router = useRouter();
-  const tip = useTooltip<ChamberMember>();
-  const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
-  // Size the chart's own coordinate space to its actual container (rather
-  // than a fixed logical width the browser then stretches or shrinks) so
-  // labels render at their real, readable size on any screen.
-  const W = measuredW || FALLBACK_W;
 
   const { pairs, ranges } = useMemo(
     () => buildDelegations(members, mode),
     [members, mode],
   );
 
-  const rows = useMemo(() => {
+  const sourceRows = useMemo(() => {
     let copy: (PairRow | RangeRow)[] = mode === "range" ? [...ranges] : [...pairs];
     if (filterState) copy = copy.filter((d) => d.state === filterState);
     copy.sort(
@@ -194,146 +183,63 @@ export function DelegationChart({
 
   const margin =
     mode === "range" ? { ...MARGIN, right: RANGE_RIGHT } : MARGIN;
-
   // A single embedded row gets more height so dots and names read.
-  const rowH = filterState && mode === "pair" ? 52 : ROW_H;
-  const height = margin.top + rows.length * rowH + margin.bottom;
-  // Fewer x-axis ticks once there isn't room for all five without overlapping.
-  const ticks = W < 420 ? NARROW_TICKS : TICKS;
+  const rowHeight = filterState && mode === "pair" ? 52 : ROW_H;
+
+  const rows: SwarmRowData<ChamberMember>[] = sourceRows.map((row) => {
+    const isRange = mode === "range";
+    const rangeRow = row as RangeRow;
+    const rowMembers = isRange ? rangeRow.members : (row as PairRow).members;
+    const isSelected = selectedState === row.state;
+
+    return {
+      id: row.state,
+      label: stateName(row.state),
+      labelHighlighted: isSelected,
+      selected: isSelected,
+      onRowClick: onSelectState ? () => onSelectState(row.state) : undefined,
+      meta: isRange
+        ? delegationLabel(rangeRow.parties)
+        : row.gap.toFixed(2),
+      points: rowMembers.map((m) => {
+        const navigable = hasProfilePage(m);
+        const isEndpoint =
+          !isRange || m === rangeRow.lo || m === rangeRow.hi;
+        return {
+          id: m.bioguideId,
+          value: m.dim1 as number,
+          colorClass: partyFillClass(m),
+          emphasized: isEndpoint,
+          highlighted: m.bioguideId === highlightId,
+          navigable,
+          onClick: navigable
+            ? () => router.push(memberPath(m))
+            : undefined,
+          tooltip: m,
+        };
+      }),
+      annotations:
+        filterState && mode === "pair"
+          ? rowMembers.map((m, si) => ({
+              value: m.dim1 as number,
+              text: `${m.lastName} ${(m.dim1 as number).toFixed(2)}`,
+              above: si === 0,
+            }))
+          : undefined,
+    };
+  });
 
   return (
-    <div ref={wrapRef}>
-      <ChartFrame
-        width={W}
-        height={height}
-        margin={margin}
-        ariaLabel={
-          mode === "range"
-            ? "Range chart of each state's delegation on dimension 1"
-            : "Dumbbell chart of each state's two senators by dimension 1"
-        }
-      >
-        {({ innerWidth }) => {
-          const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);
-          const plotH = rows.length * rowH;
-
-          return (
-            <>
-              <Axis
-                scale={x}
-                orientation="bottom"
-                ticks={ticks}
-                offset={-14}
-                gridExtent={-(plotH + 20)}
-                zeroAt={0}
-                format={(v) => v.toFixed(1)}
-              />
-
-              {rows.map((row, i) => {
-                const y = i * rowH + rowH / 2;
-                const selectable = onSelectState != null;
-                const rowMembers =
-                  mode === "range"
-                    ? (row as RangeRow).members
-                    : (row as PairRow).members;
-                const xs = rowMembers.map((m) => x(m.dim1 as number));
-                const isSelected = selectedState === row.state;
-
-                return (
-                  <g
-                    key={row.state}
-                    style={selectable ? { cursor: "pointer" } : undefined}
-                    onClick={
-                      selectable
-                        ? () => onSelectState!(row.state)
-                        : undefined
-                    }
-                  >
-                    {isSelected && (
-                      <rect
-                        className="deleg-row-selected-bg"
-                        x={-margin.left}
-                        y={y - rowH / 2 + 1}
-                        width={innerWidth + margin.left + margin.right - 1}
-                        height={rowH - 2}
-                        rx={3}
-                      />
-                    )}
-                    <text
-                      className={`deleg-state-label${isSelected ? " is-selected" : ""}`}
-                      x={-margin.left + 2}
-                      y={y + 4}
-                    >
-                      {stateName(row.state)}
-                    </text>
-                    <line
-                      className="deleg-row-line"
-                      x1={Math.min(...xs)}
-                      x2={Math.max(...xs)}
-                      y1={y}
-                      y2={y}
-                    />
-                    {rowMembers.map((m, si) => {
-                      const isHi = m.bioguideId === highlightId;
-                      const mx = x(m.dim1 as number);
-                      const isEndpoint =
-                        mode === "pair" ||
-                        m === (row as RangeRow).lo ||
-                        m === (row as RangeRow).hi;
-                      return (
-                        <g key={`${m.bioguideId}:${si}`}>
-                          {filterState && mode === "pair" && (
-                            <text
-                              className="deleg-gap-label"
-                              x={mx}
-                              y={si === 0 ? y - 12 : y + 20}
-                              textAnchor="middle"
-                              fill="var(--ink-muted)"
-                            >
-                              {m.lastName} {(m.dim1 as number).toFixed(2)}
-                            </text>
-                          )}
-                          <circle
-                            className={`deleg-dot ${partyFillClass(m)}${isHi ? " is-highlighted" : ""}`}
-                            cx={mx}
-                            cy={y}
-                            r={isHi ? 7 : isEndpoint ? 5 : 3}
-                            opacity={isEndpoint ? 1 : 0.5}
-                            style={
-                              hasProfilePage(m)
-                                ? { cursor: "pointer" }
-                                : undefined
-                            }
-                            onPointerEnter={(e) => tip.show(m, e)}
-                            onPointerMove={tip.move}
-                            onPointerLeave={tip.hide}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // Former members (e.g. a scrubbed-back Congress)
-                              // have no profile page — don't link to a 404.
-                              if (hasProfilePage(m)) router.push(memberPath(m));
-                            }}
-                          />
-                        </g>
-                      );
-                    })}
-                    <text
-                      className="deleg-gap-label"
-                      x={innerWidth + 14}
-                      y={y + 4}
-                    >
-                      {mode === "range"
-                        ? delegationLabel((row as RangeRow).parties)
-                        : row.gap.toFixed(2)}
-                    </text>
-                  </g>
-                );
-              })}
-            </>
-          );
-        }}
-      </ChartFrame>
-      <Tooltip state={tip.state}>{(m) => <MemberTooltip member={m} />}</Tooltip>
-    </div>
+    <SwarmRows<ChamberMember>
+      rows={rows}
+      margin={margin}
+      rowHeight={rowHeight}
+      ariaLabel={
+        mode === "range"
+          ? "Range chart of each state's delegation on dimension 1"
+          : "Dumbbell chart of each state's two senators by dimension 1"
+      }
+      renderTooltip={(m) => <MemberTooltip member={m} />}
+    />
   );
 }

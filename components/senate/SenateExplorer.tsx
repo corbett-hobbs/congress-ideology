@@ -15,6 +15,10 @@ import type {
   PartyMeanPoint,
 } from "@/lib/congress-types";
 import { congressStartYear, plottableSorted } from "@/lib/congress-types";
+import type {
+  CommitteeSearchEntry,
+  CommitteeSummary,
+} from "@/lib/committee-types";
 import { chamberLabel, viewNoun } from "@/lib/chamber";
 import { memberPath } from "@/lib/member-url";
 import { stateName } from "@/lib/states";
@@ -29,6 +33,9 @@ import { DelegationChart, type DelegationSort } from "./DelegationChart";
 import { SenatorSearch } from "./SenatorSearch";
 import { SenateTableModal } from "./SenateTableModal";
 import { SiteFooter } from "./SiteFooter";
+import { CommitteeCompass } from "@/components/committee/CommitteeCompass";
+import { CommitteeSwarm } from "@/components/committee/CommitteeSwarm";
+import { CommitteeSearch } from "@/components/committee/CommitteeSearch";
 import { ordinal } from "./format";
 
 const PLAY_INTERVAL_MS = 450;
@@ -72,6 +79,11 @@ interface ExplorerProps {
   /** Blended party means — the only "both" data that can't be merged client-side. */
   bothTrend: PartyMeanPoint[];
   search: MemberSearchEntry[];
+  /** Every committee (House, Senate, joint) blended to a point — 119th only. */
+  committees: CommitteeSummary[];
+  committeeSearch: CommitteeSearchEntry[];
+  /** The Congress the committee data describes — the toggle is live only here. */
+  committeeCongress: number;
 }
 
 export function SenateExplorer({
@@ -79,9 +91,13 @@ export function SenateExplorer({
   house,
   bothTrend,
   search,
+  committees,
+  committeeSearch,
+  committeeCongress,
 }: ExplorerProps) {
   const router = useRouter();
-  const { view, stateFilter, setStateFilter } = useExplorerUrl();
+  const { view, stateFilter, setStateFilter, entity, setEntity } =
+    useExplorerUrl();
 
   // "Both" is just the two chambers' current sets concatenated; the trend is
   // the one piece that needs the server (it's recomputed across the combined
@@ -106,8 +122,28 @@ export function SenateExplorer({
   const [congress, setCongress] = useState(latestCongress);
   const [playing, setPlaying] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [hoveredCommittee, setHoveredCommittee] =
+    useState<CommitteeSummary | null>(null);
   const [delegSort, setDelegSort] = useState<DelegationSort>("gap");
   const [tableOpen, setTableOpen] = useState(false);
+
+  // Committees only exist for the 119th; scrubbing away silently reverts to
+  // Members (same rule as the state filter clearing on a Congress change).
+  const committeesActive =
+    entity === "committees" && congress === committeeCongress;
+  useEffect(() => {
+    if (entity === "committees" && congress !== committeeCongress) {
+      setEntity("members");
+    }
+  }, [entity, congress, committeeCongress, setEntity]);
+
+  const viewCommittees = useMemo(
+    () =>
+      view === "both"
+        ? committees
+        : committees.filter((c) => c.chamber === view),
+    [committees, view],
+  );
 
   // The scrub-through-time payload loads on demand (~1.3 MB for the House, both
   // chambers for "Both"). A state filter needs it immediately for the overlay.
@@ -242,6 +278,7 @@ export function SenateExplorer({
         min={minCongress}
         max={latestCongress}
         playing={playing}
+        committeeCongress={committeeCongress}
         onCongressChange={(c) => stopAnd(() => goToCongress(c))}
         onTogglePlay={togglePlay}
       />
@@ -273,85 +310,127 @@ export function SenateExplorer({
         */}
         <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.15fr_1fr] md:items-stretch">
           <Card
-            title="Where members stand"
-            lede={`Each dot is a ${noun}, positioned by how they voted in the ${ordinal(congress)} Congress.`}
+            title={
+              committeesActive ? "Where committees stand" : "Where members stand"
+            }
+            lede={
+              committeesActive
+                ? `Each dot is a committee, blended from the average position of its members in the ${ordinal(congress)} Congress.`
+                : `Each dot is a ${noun}, positioned by how they voted in the ${ordinal(congress)} Congress.`
+            }
             action={
               <div className="w-full sm:w-auto">
-                <SenatorSearch
-                  entries={search}
-                  noun={view === "both" ? "member" : noun}
-                />
+                {committeesActive ? (
+                  <CommitteeSearch entries={committeeSearch} />
+                ) : (
+                  <SenatorSearch
+                    entries={search}
+                    noun={view === "both" ? "member" : noun}
+                  />
+                )}
               </div>
             }
           >
-            {stateFilter && (
-              <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.82rem]">
-                <span className="font-medium text-ink">
-                  {stateName(stateFilter)} · {stateMembers.length}{" "}
-                  {stateMembers.length === 1 ? noun : nounPlural} in the{" "}
-                  {ordinal(congress)} {bodyLabel}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setStateFilter(null)}
-                  className="text-accent hover:underline"
-                >
-                  {view === "both"
-                    ? "Show the whole Congress"
-                    : "Show the whole chamber"}
-                </button>
-              </div>
-            )}
-
-            {/* Stacks tight from the top (see the grid comment above for why
-                the leftover height sits as one block below the stat line). */}
-            {historyPending ? (
-              <div className="grid h-[300px] place-items-center text-[0.85rem] text-ink-faint">
-                {loading ? "Loading history…" : "Scrubbing loads the full history"}
-              </div>
-            ) : stateFilter && !isSenate ? (
-              <BeeswarmChart
-                members={stateMembers}
-                highlightId={hovered?.bioguideId}
-              />
-            ) : stateFilter ? (
-              <DelegationChart
-                members={plottable}
-                filterState={stateFilter}
-                mode="pair"
-              />
+            {committeesActive ? (
+              <>
+                <CompassPanel congress={congress}>
+                  <CommitteeCompass
+                    variant="explorer"
+                    committees={viewCommittees}
+                    backdrop={plottable}
+                    onHover={setHoveredCommittee}
+                  />
+                </CompassPanel>
+                <p className="mt-3 min-h-[1.5rem] text-[0.8rem] text-ink-muted">
+                  {hoveredCommittee
+                    ? `${hoveredCommittee.name} · ${hoveredCommittee.memberCount} members · ${hoveredCommittee.repCount} R / ${hoveredCommittee.demCount} D`
+                    : `${viewCommittees.length} committees${
+                        view === "both" ? " — House, Senate, and joint" : ""
+                      }. Hover a dot for its roster; click to open the committee.`}
+                </p>
+              </>
             ) : (
-              <CompassPanel congress={congress}>
-                <CompassChart
-                  variant="explorer"
-                  members={plottable}
-                  highlightedId={hoveredId}
-                  onHover={(m) => setHoveredId(m?.bioguideId ?? null)}
-                  onSelect={(m) => router.push(memberPath(m))}
-                />
-              </CompassPanel>
+              <>
+                {stateFilter && (
+                  <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.82rem]">
+                    <span className="font-medium text-ink">
+                      {stateName(stateFilter)} · {stateMembers.length}{" "}
+                      {stateMembers.length === 1 ? noun : nounPlural} in the{" "}
+                      {ordinal(congress)} {bodyLabel}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setStateFilter(null)}
+                      className="text-accent hover:underline"
+                    >
+                      {view === "both"
+                        ? "Show the whole Congress"
+                        : "Show the whole chamber"}
+                    </button>
+                  </div>
+                )}
+
+                {/* Stacks tight from the top (see the grid comment above for why
+                    the leftover height sits as one block below the stat line). */}
+                {historyPending ? (
+                  <div className="grid h-[300px] place-items-center text-[0.85rem] text-ink-faint">
+                    {loading
+                      ? "Loading history…"
+                      : "Scrubbing loads the full history"}
+                  </div>
+                ) : stateFilter && !isSenate ? (
+                  <BeeswarmChart
+                    members={stateMembers}
+                    highlightId={hovered?.bioguideId}
+                  />
+                ) : stateFilter ? (
+                  <DelegationChart
+                    members={plottable}
+                    filterState={stateFilter}
+                    mode="pair"
+                  />
+                ) : (
+                  <CompassPanel congress={congress}>
+                    <CompassChart
+                      variant="explorer"
+                      members={plottable}
+                      highlightedId={hoveredId}
+                      onHover={(m) => setHoveredId(m?.bioguideId ?? null)}
+                      onSelect={(m) => router.push(memberPath(m))}
+                    />
+                  </CompassPanel>
+                )}
+
+                <div className="mt-3">
+                  <Legend members={shown} />
+                </div>
+
+                <p className="mt-2 text-[0.76rem] text-ink-muted">
+                  Most liberal:{" "}
+                  <span className="text-ink">{mostLiberal?.name ?? "—"}</span> ·
+                  most conservative:{" "}
+                  <span className="text-ink">
+                    {mostConservative?.name ?? "—"}
+                  </span>
+                </p>
+              </>
             )}
-
-            <div className="mt-3">
-              <Legend members={shown} />
-            </div>
-
-            <p className="mt-2 text-[0.76rem] text-ink-muted">
-              Most liberal:{" "}
-              <span className="text-ink">{mostLiberal?.name ?? "—"}</span> ·
-              most conservative:{" "}
-              <span className="text-ink">{mostConservative?.name ?? "—"}</span>
-            </p>
           </Card>
 
           <Card
-            title="How each state votes"
-            lede={`How far apart each state's ${delegationClause} in the ${ordinal(congress)} Congress.`}
+            title={
+              committeesActive ? "How each committee votes" : "How each state votes"
+            }
+            lede={
+              committeesActive
+                ? `How far apart each committee's members sit in the ${ordinal(congress)} Congress.`
+                : `How far apart each state's ${delegationClause} in the ${ordinal(congress)} Congress.`
+            }
             action={
               <div
                 className="flex flex-none gap-[0.35rem]"
                 role="group"
-                aria-label="Sort states"
+                aria-label={committeesActive ? "Sort committees" : "Sort states"}
               >
                 {(
                   [
@@ -385,7 +464,9 @@ export function SenateExplorer({
                 isn't one giant list. Mobile (<sm): expands. */}
             <div className="relative mt-1 flex-1">
               <div className="border-t border-line pt-1 sm:overflow-y-auto sm:max-md:max-h-[600px] md:absolute md:inset-0 md:overflow-y-auto">
-                {historyPending ? (
+                {committeesActive ? (
+                  <CommitteeSwarm committees={viewCommittees} sort={delegSort} />
+                ) : historyPending ? (
                   <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
                 ) : (
                   <DelegationChart
@@ -401,6 +482,25 @@ export function SenateExplorer({
           </Card>
         </div>
 
+        {committeesActive ? (
+          <section className="flex flex-col rounded-[10px] border border-line bg-surface p-[1.35rem_1.35rem_1.1rem]">
+            <h2 className="font-serif text-[1.05rem] font-medium">
+              How far apart are the parties?
+            </h2>
+            <div className="mt-3 flex items-start gap-2.5 rounded-lg border border-dashed border-line-strong bg-surface-raised p-[1.1rem_1.25rem] text-[0.82rem] leading-[1.6] text-ink-muted">
+              <span aria-hidden className="text-[0.95rem] leading-none">
+                ⓘ
+              </span>
+              <span>
+                Committee membership is only tracked for the current Congress, so
+                there&rsquo;s no trend view here. Switch back to{" "}
+                <b className="font-medium text-ink">Members</b>, or move the
+                slider off the {ordinal(committeeCongress)} Congress, to see the
+                party-divergence trend.
+              </span>
+            </div>
+          </section>
+        ) : (
         <Card
           title="How far apart are the parties?"
           lede="Each party's average position on the economic left–right axis, every Congress since 1789. Click or drag the chart to jump to any point — it moves the same slider as everything above."
@@ -429,6 +529,7 @@ export function SenateExplorer({
             }
           />
         </Card>
+        )}
 
         <SiteFooter>
           <button

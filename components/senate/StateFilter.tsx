@@ -16,10 +16,15 @@ const BASE_CLASS =
 export function StateFilter({
   states,
   compact = false,
+  disabled = false,
+  disabledTitle,
 }: {
   states: string[];
   /** Smaller footprint for the site header vs. the explorer's own controls. */
   compact?: boolean;
+  /** Kept in place but inert (committees view — a committee has no state). */
+  disabled?: boolean;
+  disabledTitle?: string;
 }) {
   const { stateFilter, setStateFilter } = useExplorerUrl();
 
@@ -27,8 +32,10 @@ export function StateFilter({
     <select
       aria-label="Filter by state"
       value={stateFilter ?? ""}
+      disabled={disabled}
+      title={disabled ? disabledTitle : undefined}
       onChange={(e) => setStateFilter(e.target.value || null)}
-      className={`${BASE_CLASS} ${
+      className={`${BASE_CLASS} disabled:cursor-not-allowed disabled:opacity-40 ${
         compact
           ? "max-w-[7rem] px-[0.5rem] py-[0.42rem] text-[0.8rem] sm:max-w-[8.5rem] sm:px-[0.55rem]"
           : "w-full px-[0.6rem] py-[0.48rem] text-[0.8rem] sm:w-auto"
