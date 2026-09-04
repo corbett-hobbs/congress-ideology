@@ -75,10 +75,12 @@ export function SwarmRows<TP>({
   const plotH = rows.length * rowHeight;
 
   // The label gutter can't eat a narrow phone card — clamp it to a fraction of
-  // the measured width and clip labels that no longer fit.
+  // the measured width and clip labels that no longer fit. The floor (112) is
+  // set so the widest US state name still fits at any width; only the long
+  // committee names actually clip.
   const effMargin = {
     ...margin,
-    left: Math.min(margin.left, Math.max(96, Math.round(W * 0.42))),
+    left: Math.min(margin.left, Math.max(112, Math.round(W * 0.42))),
   };
   const maxLabelChars = Math.max(6, Math.floor((effMargin.left - 8) / 6.4));
   const height = effMargin.top + plotH + effMargin.bottom;
@@ -157,14 +159,14 @@ export function SwarmRows<TP>({
                           onPointerEnter={(e) => tip.show(p.tooltip, e)}
                           onPointerMove={tip.move}
                           onPointerLeave={tip.hide}
-                          onClick={
-                            p.onClick
-                              ? (e) => {
-                                  e.stopPropagation();
-                                  p.onClick!();
-                                }
-                              : undefined
-                          }
+                          onClick={(e) => {
+                            // Always swallow the click so a dot without its own
+                            // action (a former member on a scrubbed-back
+                            // Congress) doesn't fall through to the row's
+                            // select-this-row handler.
+                            e.stopPropagation();
+                            p.onClick?.();
+                          }}
                         />
                       </g>
                     ))}
