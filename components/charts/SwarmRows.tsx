@@ -69,6 +69,7 @@ export function SwarmRows<TP>({
   renderTooltip,
 }: SwarmRowsProps<TP>) {
   const tip = useTooltip<TP>();
+  const labelTip = useTooltip<string>();
   const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
   const W = measuredW || FALLBACK_W;
   const ticks = W < 420 ? NARROW_TICKS : TICKS;
@@ -132,9 +133,20 @@ export function SwarmRows<TP>({
                       />
                     )}
                     <text
-                      className={`deleg-state-label${row.labelHighlighted ? " is-selected" : ""}`}
+                      className={`deleg-state-label${row.labelHighlighted ? " is-selected" : ""}${row.label.length > maxLabelChars ? " is-clipped" : ""}`}
                       x={-effMargin.left + 2}
                       y={y + 4}
+                      onPointerEnter={
+                        row.label.length > maxLabelChars
+                          ? (e) => labelTip.show(row.label, e)
+                          : undefined
+                      }
+                      onPointerMove={
+                        row.label.length > maxLabelChars ? labelTip.move : undefined
+                      }
+                      onPointerLeave={
+                        row.label.length > maxLabelChars ? labelTip.hide : undefined
+                      }
                     >
                       {clip(row.label)}
                     </text>
@@ -198,6 +210,7 @@ export function SwarmRows<TP>({
         }}
       </ChartFrame>
       <Tooltip state={tip.state}>{(d) => renderTooltip(d)}</Tooltip>
+      <Tooltip state={labelTip.state}>{(label) => label}</Tooltip>
     </div>
   );
 }

@@ -303,6 +303,12 @@ body {
   font-weight: 700;
   fill: var(--ink);
 }
+.deleg-state-label.is-clipped {
+  cursor: default;
+  text-decoration: underline dotted;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
 .deleg-gap-label {
   font-family: var(--font-mono);
   font-size: 12px;
