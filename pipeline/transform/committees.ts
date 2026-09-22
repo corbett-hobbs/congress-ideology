@@ -3,17 +3,22 @@ import type {
   Committee,
   CommitteeMembership,
   CommitteeRole,
+  Subcommittee,
+  SubcommitteeMembership,
 } from "../../lib/entities";
 
 /**
  * committees-current.yaml + committee-membership-current.yaml ->
- *   committees.json             one row per top-level committee
- *   committee_memberships.json  one row per (legislator, committee), member-keyed
+ *   committees.json                one row per top-level committee
+ *   committee_memberships.json     one row per (legislator, committee), member-keyed
+ *   subcommittees.json             one row per subcommittee (buildSubcommittees)
+ *   subcommittee_memberships.json  one row per (legislator, subcommittee), member-keyed
  *
  * Current Congress only (there is no historical committee-membership file).
- * Subcommittees are intentionally dropped — their rosters are keyed
- * `<parent><digits>` in the membership file and skipped here; the raw snapshot
- * still carries them so a later subcommittee pass is additive.
+ * Subcommittee rosters are keyed `<parent><digits>` in the membership file;
+ * `buildCommittees` skips them (it only builds top-level rows) and
+ * `buildSubcommittees` picks them up separately, joining each roster's key
+ * back to the parent's `subcommittees[]` entry for the subcommittee's name.
  */
 
 type CommitteeType = RawCommittee["type"];
@@ -141,5 +146,100 @@ export function buildCommittees(
     committeesWithoutRoster: committees
       .map((c) => c.committee_id)
       .filter((id) => !membership[id]),
+  };
+}
+
+export interface SubcommitteesResult {
+  subcommittees: Subcommittee[];
+  memberships: SubcommitteeMembership[];
+  /** (bioguide, subcommittee) pairs that appeared more than once in a roster. */
+  duplicateSeats: string[];
+  /** Subcommittee ids from committees-current.yaml with no roster block. */
+  subcommitteesWithoutRoster: string[];
+  /**
+   * Membership keys that are neither a top-level committee id nor a known
+   * `<parent><digits>` subcommittee id — a data-shape drift upstream. Fatal
+   * in the pipeline (see DATA_CONVENTIONS §4); `transform/index.ts` throws
+   * when this is non-empty rather than silently dropping the roster.
+   */
+  unrecognizedRosterKeys: string[];
+}
+
+/**
+ * The subcommittee-grain analogue of `buildCommittees`: flattens each
+ * top-level committee's `subcommittees[]` into its own identity rows (id =
+ * parent THOMAS id + subcommittee THOMAS id), then inverts the same
+ * `membership` map `buildCommittees` reads — this time picking out exactly
+ * the keys that aren't a top-level committee id — into member-keyed
+ * subcommittee seats. Reuses `roleOf`/`ROLE_RANK` and the duplicate-seat
+ * handling from `buildCommittees` so both grains normalise roles identically.
+ */
+export function buildSubcommittees(
+  rawCommittees: readonly RawCommittee[],
+  membership: Readonly<Record<string, readonly RawCommitteeMember[]>>,
+): SubcommitteesResult {
+  const committeeIds = new Set(rawCommittees.map((c) => c.thomas_id));
+
+  const subcommittees: Subcommittee[] = rawCommittees
+    .flatMap((c) =>
+      (c.subcommittees ?? []).map((s) => ({
+        subcommittee_id: `${c.thomas_id}${s.thomas_id}`,
+        parent_committee_id: c.thomas_id,
+        name: s.name.trim(),
+        chamber: c.type,
+      })),
+    )
+    .sort((a, b) => a.subcommittee_id.localeCompare(b.subcommittee_id));
+
+  const subcommitteeIds = new Set(subcommittees.map((s) => s.subcommittee_id));
+
+  const seatByKey = new Map<string, SubcommitteeMembership>();
+  const duplicateSeats: string[] = [];
+  const unrecognizedRosterKeys: string[] = [];
+
+  for (const [key, roster] of Object.entries(membership)) {
+    if (committeeIds.has(key)) continue; // top-level roster, handled by buildCommittees
+    if (!subcommitteeIds.has(key)) {
+      unrecognizedRosterKeys.push(key);
+      continue;
+    }
+    for (const m of roster) {
+      const seatKey = `${m.bioguide}|${key}`;
+      const seat: SubcommitteeMembership = {
+        bioguide_id: m.bioguide,
+        subcommittee_id: key,
+        party: m.party,
+        role: roleOf(m.title),
+        rank: m.rank,
+      };
+      const prior = seatByKey.get(seatKey);
+      if (!prior) {
+        seatByKey.set(seatKey, seat);
+        continue;
+      }
+      duplicateSeats.push(seatKey);
+      // Keep the more senior role / lower rank.
+      const better =
+        ROLE_RANK[seat.role] !== ROLE_RANK[prior.role]
+          ? ROLE_RANK[seat.role] > ROLE_RANK[prior.role]
+          : seat.rank < prior.rank;
+      if (better) seatByKey.set(seatKey, seat);
+    }
+  }
+
+  const memberships = [...seatByKey.values()].sort(
+    (a, b) =>
+      a.bioguide_id.localeCompare(b.bioguide_id) ||
+      a.subcommittee_id.localeCompare(b.subcommittee_id),
+  );
+
+  return {
+    subcommittees,
+    memberships,
+    duplicateSeats,
+    subcommitteesWithoutRoster: subcommittees
+      .map((s) => s.subcommittee_id)
+      .filter((id) => !membership[id]),
+    unrecognizedRosterKeys,
   };
 }

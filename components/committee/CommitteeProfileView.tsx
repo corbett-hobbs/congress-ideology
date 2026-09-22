@@ -7,6 +7,7 @@ import { SetBackLink } from "@/components/BackLinkContext";
 import { CommitteeHeader } from "./CommitteeHeader";
 import { CommitteeCompassCard } from "./CommitteeCompassCard";
 import { CommitteeRosterCard } from "./CommitteeRosterCard";
+import { SubcommitteeSection } from "./SubcommitteeSection";
 
 /**
  * A committee's page: the same shape as a member profile
@@ -51,6 +52,8 @@ export function CommitteeProfileView({
         />
         <CommitteeRosterCard committee={committee} />
       </section>
+
+      <SubcommitteeSection committee={committee} />
 
       <SiteFooter />
     </main>

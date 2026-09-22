@@ -70,6 +70,26 @@ export interface CommitteeProfile extends CommitteeSummary {
   chair: RosterLead | null;
   rankingMember: RosterLead | null;
   latestCongress: number;
+  /** Ordered by name. Empty for committees with no subcommittees in the
+   *  raw source (e.g. some select/joint committees). */
+  subcommittees: SubcommitteeProfile[];
+}
+
+/**
+ * One subcommittee, joined the same way as a `CommitteeProfile` but at one
+ * grain down — a full roster and derived leads, deliberately **no** blended
+ * `dim1`/`dim2`/`spread`: most subcommittees are too small a roster for a
+ * mean to be a meaningful signal (see the committees session notes).
+ */
+export interface SubcommitteeProfile {
+  subcommitteeId: string;
+  name: string;
+  chamber: CommitteeChamber;
+  chair: RosterLead | null;
+  rankingMember: RosterLead | null;
+  memberCount: number;
+  /** Sorted by `dim1` ascending, unscored members last. */
+  roster: CommitteeMemberRow[];
 }
 
 export interface RosterLead {

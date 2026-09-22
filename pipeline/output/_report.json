@@ -131,6 +131,12 @@
     "duplicateSeats": 0,
     "committeesWithoutRoster": []
   },
+  "subcommittees": {
+    "total": 181,
+    "membershipRows": 2555,
+    "duplicateSeats": 0,
+    "subcommitteesWithoutRoster": []
+  },
   "knownUnresolvable": {
     "10509": "George O. Chambers, 87th Congress — no bioguide in either source",
     "15067": "John L. \"Jack\" Swigert, 98th Congress — elected Nov 1982, died before being sworn in",

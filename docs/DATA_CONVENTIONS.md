@@ -83,13 +83,25 @@ that run past the latest Congress in the Voteview data are clamped to it.
 
 | File                          | Grain                                    | Key                              | Notes |
 | ----------------------------- | ---------------------------------------- | -------------------------------- | ----- |
-| `committees.json`             | one row per top-level committee          | `committee_id`                   | `committee_id` (the THOMAS id — `HSJU`, `SSFI`, `JSEC`), `name`, derived `short_name`, `chamber` (`house`/`senate`/`joint`). **Current Congress only.** Subcommittees are fetched into `raw/` but not transformed. `committee_id` is a *committee* key, not a person key — §1's "no other identifier" rule is about person ids. |
+| `committees.json`             | one row per top-level committee          | `committee_id`                   | `committee_id` (the THOMAS id — `HSJU`, `SSFI`, `JSEC`), `name`, derived `short_name`, `chamber` (`house`/`senate`/`joint`). **Current Congress only.** `committee_id` is a *committee* key, not a person key — §1's "no other identifier" rule is about person ids. |
 | `committee_memberships.json`  | one row per (legislator, committee)      | `bioguide_id`                    | Inverted from the source (committee→members) to member-keyed, per §1. `committee_id`, `party` (`majority`/`minority`), `role` (`chair`/`ranking_member`/`member`, normalised from the source `title`), `rank`. No `congress_number` column — this file only ever describes the current Congress. |
 
 A committee's **blended position** (mean `nokken_poole_dim1`/`dim2` over its
 scored roster) and its **spread** (`max(dim1) − min(dim1)`) are **derived at
 build time** in `lib/committee-data.ts`, never stored — page-shaped data is
 joined, not pre-computed into `output/` (§2, above).
+
+### Built (Session — subcommittees)
+
+| File                             | Grain                                       | Key                                 | Notes |
+| --------------------------------- | -------------------------------------------- | ------------------------------------ | ----- |
+| `subcommittees.json`              | one row per subcommittee                    | `subcommittee_id`                    | `subcommittee_id` = parent `committee_id` + the subcommittee's own 2-digit THOMAS id (`HSAG15`, `SSAF13`), `parent_committee_id`, `name` (the raw name — no boilerplate to strip, unlike a top-level committee's), `chamber` (inherited from the parent). **Current Congress only.** Source: `committees-current.yaml`'s `subcommittees[]`, joined by `pipeline/transform/committees.ts`'s `buildSubcommittees`. |
+| `subcommittee_memberships.json`   | one row per (legislator, subcommittee)       | `bioguide_id`                        | Same shape/inversion as `committee_memberships.json`, one grain down: `subcommittee_id`, `party`, `role`, `rank`. |
+
+No subcommittee-level blended position is derived or stored: most
+subcommittees are too small a roster for a mean `dim1` to be a meaningful
+signal (deliberately out of scope, unlike the top-level committee blend
+above).
 
 ### Planned — schema in `lib/types.ts`, no data source integrated yet
 

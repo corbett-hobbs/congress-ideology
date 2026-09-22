@@ -76,9 +76,10 @@ export function CommitteeMembershipsCard({
               {currentDim1 != null && m.blendDim1 != null ? (
                 <>
                   <AlignmentTrack
-                    primaryValue={currentDim1}
-                    primaryColor={primaryColor}
-                    referenceValue={m.blendDim1}
+                    points={[
+                      { value: m.blendDim1, faint: true },
+                      { value: currentDim1, color: primaryColor },
+                    ]}
                   />
                   <div className="mt-[0.15rem] whitespace-nowrap text-right font-mono text-[0.68rem] text-ink-faint">
                     Δ {fmt2(Math.abs(currentDim1 - m.blendDim1))} from center

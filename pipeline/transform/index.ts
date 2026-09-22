@@ -7,13 +7,15 @@ import {
   idCrosswalkEntry,
   ideologyScore,
   legislator as legislatorEntity,
+  subcommittee as subcommitteeEntity,
+  subcommitteeMembership as subcommitteeMembershipEntity,
   term as termEntity,
 } from "../../lib/entities";
 import { buildIdCrosswalk } from "./crosswalk";
 import { buildLegislators } from "./legislators";
 import { buildTerms } from "./terms";
 import { buildIdeologyScores, KNOWN_UNRESOLVABLE } from "./scores";
-import { buildCommittees } from "./committees";
+import { buildCommittees, buildSubcommittees } from "./committees";
 import { buildReport, printReport } from "./report";
 import {
   readLegislators,
@@ -114,10 +116,9 @@ async function main() {
   await writeEntities("ideology_scores", ideologyScore, scoresResult.scores);
 
   // --- committees ----------------------------------------------------- -
-  const committeesResult = buildCommittees(
-    await readRawCommittees(),
-    await readRawCommitteeMembership(),
-  );
+  const rawCommittees = await readRawCommittees();
+  const rawMembership = await readRawCommitteeMembership();
+  const committeesResult = buildCommittees(rawCommittees, rawMembership);
   await writeEntities("committees", committeeEntity, committeesResult.committees);
   await writeEntities(
     "committee_memberships",
@@ -129,6 +130,27 @@ async function main() {
   }
   for (const id of committeesResult.committeesWithoutRoster) {
     console.warn(`  note: committee ${id} has no roster in committee-membership-current.yaml`);
+  }
+
+  // --- subcommittees ---------------------------------------------------- -
+  const subcommitteesResult = buildSubcommittees(rawCommittees, rawMembership);
+  if (subcommitteesResult.unrecognizedRosterKeys.length > 0) {
+    const sample = subcommitteesResult.unrecognizedRosterKeys.slice(0, 10).join(", ");
+    throw new FatalError(
+      `subcommittees: ${subcommitteesResult.unrecognizedRosterKeys.length} committee-membership key(s) match neither a committee nor a known subcommittee\n  ${sample}`,
+    );
+  }
+  await writeEntities("subcommittees", subcommitteeEntity, subcommitteesResult.subcommittees);
+  await writeEntities(
+    "subcommittee_memberships",
+    subcommitteeMembershipEntity,
+    subcommitteesResult.memberships,
+  );
+  for (const key of subcommitteesResult.duplicateSeats) {
+    console.warn(`  note: subcommittee seat listed twice, kept the senior role — ${key}`);
+  }
+  for (const id of subcommitteesResult.subcommitteesWithoutRoster) {
+    console.warn(`  note: subcommittee ${id} has no roster in committee-membership-current.yaml`);
   }
 
   // --- report -------------------------------------------------------- -
@@ -164,6 +186,12 @@ async function main() {
       duplicateSeats: committeesResult.duplicateSeats.length,
       committeesWithoutRoster: committeesResult.committeesWithoutRoster,
     },
+    subcommittees: {
+      total: subcommitteesResult.subcommittees.length,
+      membershipRows: subcommitteesResult.memberships.length,
+      duplicateSeats: subcommitteesResult.duplicateSeats.length,
+      subcommitteesWithoutRoster: subcommitteesResult.subcommitteesWithoutRoster,
+    },
     knownUnresolvable: KNOWN_UNRESOLVABLE,
     droppedUnresolvableRows: scoresResult.unresolvable,
   });
@@ -173,7 +201,10 @@ async function main() {
     `  committees: ${committeesResult.committees.length}, committee_memberships: ${committeesResult.memberships.length}`,
   );
   console.log(
-    "  wrote id_crosswalk.json, legislators.json, terms.json, ideology_scores.json, committees.json, committee_memberships.json, _report.json",
+    `  subcommittees: ${subcommitteesResult.subcommittees.length}, subcommittee_memberships: ${subcommitteesResult.memberships.length}`,
+  );
+  console.log(
+    "  wrote id_crosswalk.json, legislators.json, terms.json, ideology_scores.json, committees.json, committee_memberships.json, subcommittees.json, subcommittee_memberships.json, _report.json",
   );
 }
 

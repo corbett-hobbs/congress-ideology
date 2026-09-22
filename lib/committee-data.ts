@@ -2,7 +2,12 @@ import "server-only";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { mean } from "d3-array";
-import type { Committee, CommitteeMembership } from "./entities";
+import type {
+  Committee,
+  CommitteeMembership,
+  Subcommittee,
+  SubcommitteeMembership,
+} from "./entities";
 import type { ChamberMember } from "./congress-types";
 import { isPlottable } from "./congress-types";
 import { getChamberCurrent, getCurrentMemberIndex } from "./congress-data";
@@ -12,10 +17,12 @@ import type {
   CommitteeChamberView,
   CommitteeMemberRow,
   CommitteeProfile,
+  CommitteeRole,
   CommitteeSearchEntry,
   CommitteeSummary,
   MemberCommitteeMembership,
   RosterLead,
+  SubcommitteeProfile,
 } from "./committee-types";
 
 /**
@@ -56,6 +63,60 @@ function rosterLead(row: CommitteeMemberRow | undefined): RosterLead | null {
   };
 }
 
+const byDim1Ascending = (a: CommitteeMemberRow, b: CommitteeMemberRow) => {
+  if (a.dim1 == null) return b.dim1 == null ? 0 : 1;
+  if (b.dim1 == null) return -1;
+  return a.dim1 - b.dim1;
+};
+
+/**
+ * Join a set of (member, seat) rows to the current member index, grouped by
+ * whatever id the seat belongs to (a committee or a subcommittee) — the same
+ * shape either grain needs. Skips, but warns on, a seat naming a member with
+ * no current-Congress term (matches the existing committee-roster behaviour).
+ */
+function groupRosterRows<
+  S extends { bioguide_id: string; party: "majority" | "minority"; role: CommitteeRole; rank: number },
+>(
+  seats: readonly S[],
+  groupId: (seat: S) => string,
+  memberIndex: Map<string, ChamberMember>,
+  contextLabel: string,
+): Map<string, CommitteeMemberRow[]> {
+  const byGroup = new Map<string, CommitteeMemberRow[]>();
+  for (const seat of seats) {
+    const m = memberIndex.get(seat.bioguide_id);
+    if (!m) {
+      console.warn(
+        `committee-data: ${contextLabel} ${groupId(seat)} lists ${seat.bioguide_id}, who has no current-Congress term`,
+      );
+      continue;
+    }
+    const plottable = isPlottable(m);
+    const row: CommitteeMemberRow = {
+      bioguideId: m.bioguideId,
+      name: m.name,
+      lastName: m.lastName,
+      chamber: m.chamber,
+      state: m.state,
+      district: m.district,
+      party: m.party,
+      group: m.group,
+      role: seat.role,
+      side: seat.party,
+      dim1: plottable ? m.dim1 : null,
+      dim2: plottable ? m.dim2 : null,
+      hasPhoto: m.hasPhoto ?? false,
+      isCurrent: m.isCurrent ?? false,
+    };
+    const id = groupId(seat);
+    const arr = byGroup.get(id) ?? [];
+    arr.push(row);
+    byGroup.set(id, arr);
+  }
+  return byGroup;
+}
+
 /** The party group that holds a committee's majority seats. */
 function controlGroup(roster: CommitteeMemberRow[]): CommitteeMemberRow["group"] {
   const majority = roster.filter((r) => r.side === "majority");
@@ -85,48 +146,50 @@ function buildCommitteeIndex(): CommitteeIndex {
 
   const committees = readOutput<Committee>("committees.json");
   const memberships = readOutput<CommitteeMembership>("committee_memberships.json");
+  const subcommittees = readOutput<Subcommittee>("subcommittees.json");
+  const subcommitteeMemberships = readOutput<SubcommitteeMembership>(
+    "subcommittee_memberships.json",
+  );
   const memberIndex = getCurrentMemberIndex();
   const latestCongress = getChamberCurrent("house").latestCongress;
 
-  // roster rows grouped by committee
-  const rosterByCommittee = new Map<string, CommitteeMemberRow[]>();
-  for (const seat of memberships) {
-    const m: ChamberMember | undefined = memberIndex.get(seat.bioguide_id);
-    if (!m) {
-      // Roster names a member with no current-Congress seat — skip, but say so.
-      console.warn(
-        `committee-data: ${seat.committee_id} lists ${seat.bioguide_id}, who has no current-Congress term`,
-      );
-      continue;
-    }
-    const plottable = isPlottable(m);
-    const row: CommitteeMemberRow = {
-      bioguideId: m.bioguideId,
-      name: m.name,
-      lastName: m.lastName,
-      chamber: m.chamber,
-      state: m.state,
-      district: m.district,
-      party: m.party,
-      group: m.group,
-      role: seat.role,
-      side: seat.party,
-      dim1: plottable ? m.dim1 : null,
-      dim2: plottable ? m.dim2 : null,
-      hasPhoto: m.hasPhoto ?? false,
-      isCurrent: m.isCurrent ?? false,
+  const rosterByCommittee = groupRosterRows(
+    memberships,
+    (seat) => seat.committee_id,
+    memberIndex,
+    "committee",
+  );
+  const rosterBySubcommittee = groupRosterRows(
+    subcommitteeMemberships,
+    (seat) => seat.subcommittee_id,
+    memberIndex,
+    "subcommittee",
+  );
+
+  const subcommitteesByParent = new Map<string, SubcommitteeProfile[]>();
+  for (const s of subcommittees) {
+    const roster = (rosterBySubcommittee.get(s.subcommittee_id) ?? []).sort(
+      byDim1Ascending,
+    );
+    const profile: SubcommitteeProfile = {
+      subcommitteeId: s.subcommittee_id,
+      name: s.name,
+      chamber: s.chamber,
+      chair: rosterLead(roster.find((r) => r.role === "chair")),
+      rankingMember: rosterLead(roster.find((r) => r.role === "ranking_member")),
+      memberCount: roster.length,
+      roster,
     };
-    const arr = rosterByCommittee.get(seat.committee_id) ?? [];
-    arr.push(row);
-    rosterByCommittee.set(seat.committee_id, arr);
+    const arr = subcommitteesByParent.get(s.parent_committee_id) ?? [];
+    arr.push(profile);
+    subcommitteesByParent.set(s.parent_committee_id, arr);
+  }
+  for (const arr of subcommitteesByParent.values()) {
+    arr.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   const profiles: CommitteeProfile[] = committees.map((c) => {
-    const roster = (rosterByCommittee.get(c.committee_id) ?? []).sort((a, b) => {
-      if (a.dim1 == null) return b.dim1 == null ? 0 : 1;
-      if (b.dim1 == null) return -1;
-      return a.dim1 - b.dim1;
-    });
+    const roster = (rosterByCommittee.get(c.committee_id) ?? []).sort(byDim1Ascending);
     const scored = roster.filter((r) => r.dim1 != null && r.dim2 != null);
     const xs = scored.map((r) => r.dim1 as number).sort((a, b) => a - b);
 
@@ -151,6 +214,7 @@ function buildCommitteeIndex(): CommitteeIndex {
       chair: rosterLead(roster.find((r) => r.role === "chair")),
       rankingMember: rosterLead(roster.find((r) => r.role === "ranking_member")),
       latestCongress,
+      subcommittees: subcommitteesByParent.get(c.committee_id) ?? [],
     };
   });
 

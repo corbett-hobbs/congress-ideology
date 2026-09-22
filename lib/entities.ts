@@ -155,3 +155,43 @@ export const committeeMembership = z.strictObject({
   rank: z.number().int().positive(),
 });
 export type CommitteeMembership = z.infer<typeof committeeMembership>;
+
+/**
+ * A subcommittee's own identifier — the parent's 4-char THOMAS id plus the
+ * subcommittee's own 2-digit THOMAS id from `committees-current.yaml`
+ * (`HSAG15`, `SSAF13`). Unique globally, not just within its parent.
+ */
+export const subcommitteeId = z.string().regex(/^[A-Z0-9]{4}\d{2}$/, "subcommittee id");
+export type SubcommitteeId = z.infer<typeof subcommitteeId>;
+
+/**
+ * One row per subcommittee of the current Congress. Mirrors `committee`
+ * (same `chamber` values, inherited from the parent) with a `parent_committee_id`
+ * join back to it. No `short_name`: unlike a top-level committee's name, a
+ * subcommittee's raw `name` carries no "Committee on..." boilerplate to strip.
+ * Deliberately no blended-position field — see the committees session notes:
+ * most subcommittees are too small for a mean to be a meaningful signal.
+ * Source: `committees-current.yaml`'s `subcommittees[]`.
+ */
+export const subcommittee = z.strictObject({
+  subcommittee_id: subcommitteeId,
+  parent_committee_id: committeeId,
+  name: z.string().min(1),
+  chamber: z.enum(["house", "senate", "joint"]),
+});
+export type Subcommittee = z.infer<typeof subcommittee>;
+
+/**
+ * One row per (legislator, subcommittee) for the current Congress — the
+ * subcommittee-grain analogue of `committeeMembership`, same shape and same
+ * inversion-to-member-keyed rationale (DATA_CONVENTIONS §1). Source:
+ * `committee-membership-current.yaml`, rows keyed `<parent><digits>`.
+ */
+export const subcommitteeMembership = z.strictObject({
+  bioguide_id: bioguideId,
+  subcommittee_id: subcommitteeId,
+  party: z.enum(["majority", "minority"]),
+  role: committeeRole,
+  rank: z.number().int().positive(),
+});
+export type SubcommitteeMembership = z.infer<typeof subcommitteeMembership>;
