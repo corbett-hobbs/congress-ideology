@@ -36,8 +36,16 @@ _HAS_POSITIONS_PHRASES = ("Position", "Name of Organization")
 
 # Value-shaped tokens: dollar amounts, the hyphen in a range, "Over", and bare
 # trailing numbers from a wrapped high bound. Exactly the pattern given in the
-# session prompt.
-_VALUE_TOKEN_RE = re.compile(r"^\$|^-$|^Over$|^\d[\d,]*$")
+# session prompt. Case-insensitive: see the case-folding note below.
+_VALUE_TOKEN_RE = re.compile(r"^\$|^-$|^Over$|^\d[\d,]*$", re.IGNORECASE)
+
+# Some vintages of the Clerk's PDF generator (confirmed on 2013-2020 filings,
+# e.g. Darrell Issa's 2013 filing) embed a font whose cmap flips the case of
+# specific letters (b<->B, d<->D, s<->S, l<->L, ...) inconsistently per
+# extracted glyph -- "Schedule" comes out "ScheDule", "Liabilities" comes out
+# "liaBilitieS", "value of asset" comes out fully lowercase. This has nothing
+# to do with the document's real content, so every header/phrase comparison
+# below folds case rather than trusting the extracted casing.
 
 
 def _line(words: list[Word], ref: Word, tol: float = _TOP_TOL) -> list[Word]:
@@ -48,15 +56,15 @@ def _find_asset_header(words: list[Word]) -> tuple[float, float] | None:
     """Locate 'Value' 'of' 'Asset' header words; return (left, right) x-bounds."""
     by_top = sorted(words, key=lambda w: (w.top, w.x0))
     for i, w in enumerate(by_top):
-        if w.text != "Value":
+        if w.text.lower() != "value":
             continue
         line = sorted(_line(by_top, w), key=lambda x: x.x0)
-        texts = [x.text for x in line]
-        if "of" not in texts or "Asset" not in texts:
+        texts = [x.text.lower() for x in line]
+        if "of" not in texts or "asset" not in texts:
             continue
         # confirm ordering: Value < of < Asset by x0
-        w_of = next(x for x in line if x.text == "of")
-        w_asset = next(x for x in line if x.text == "Asset" and x.x0 > w_of.x0)
+        w_of = next(x for x in line if x.text.lower() == "of")
+        w_asset = next(x for x in line if x.text.lower() == "asset" and x.x0 > w_of.x0)
         left = w.x0 - 2.0
         after = [x for x in line if x.x0 > w_asset.x1]
         right = (after[0].x0 - 3.0) if after else (left + 250.0)
@@ -69,17 +77,17 @@ def _find_liability_header(words: list[Word]) -> tuple[float, float, float] | No
     wrap onto the next physical line). Return (left, right, page_right)."""
     by_top = sorted(words, key=lambda w: (w.top, w.x0))
     for i, w in enumerate(by_top):
-        if w.text != "Amount":
+        if w.text.lower() != "amount":
             continue
         line = sorted(_line(by_top, w), key=lambda x: x.x0)
-        texts = [x.text for x in line]
+        texts = [x.text.lower() for x in line]
         if "of" not in texts:
             continue
         # "Liability" either on the same line or wrapped just below, left-aligned
         # with "Amount".
         candidates = [
             x for x in words
-            if x.text == "Liability" and 0 <= (x.top - w.top) <= _WRAP_TOL and abs(x.x0 - w.x0) <= 10
+            if x.text.lower() == "liability" and 0 <= (x.top - w.top) <= _WRAP_TOL and abs(x.x0 - w.x0) <= 10
         ]
         if not candidates:
             continue
@@ -113,9 +121,9 @@ def extract(doc: DocWords) -> ColumnExtraction:
     last_liability_bounds: tuple[float, float, float] | None = None
 
     for page in doc.pages:
-        text = page.text
-        page_has_asset_phrase = _HAS_ASSET_HDR in text
-        page_has_liab_phrase = all(p in text for p in _HAS_LIAB_PHRASES)
+        text = page.text.lower()
+        page_has_asset_phrase = _HAS_ASSET_HDR.lower() in text
+        page_has_liab_phrase = all(p.lower() in text for p in _HAS_LIAB_PHRASES)
         ordered_words = sorted(page.words, key=lambda w: (w.top, w.x0))
 
         if page_has_asset_phrase:
