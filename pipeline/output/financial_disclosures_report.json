@@ -8,14 +8,14 @@
   ],
   "total_member_years": 3632,
   "counts_by_parse_confidence": {
-    "high": 2665,
-    "low": 14,
-    "unparseable_scanned": 429,
+    "high": 2673,
+    "low": 111,
     "no_filing_found": 524,
-    "download_failed": 0,
-    "no_value_data": 13
+    "ocr_low_confidence": 122,
+    "unparseable_scanned": 157,
+    "ocr_skipped_oversized": 45
   },
-  "needs_review_count": 443,
+  "needs_review_count": 435,
   "match_stats": {
     "ok": 4481,
     "no_candidate": 4429
@@ -4752,5 +4752,21 @@
       8,
       8
     ]
+  },
+  "ocr_pass": {
+    "run_at": "2026-09-23T17:24:22Z",
+    "phase": "2 (House, OCR)",
+    "rows_processed": 423,
+    "before_counts": {
+      "unparseable_scanned": 423
+    },
+    "after_counts": {
+      "unparseable_scanned": 157,
+      "ocr_low_confidence": 117,
+      "high": 8,
+      "low": 96,
+      "ocr_skipped_oversized": 45
+    },
+    "elapsed_sec": 2983.1
   }
 }

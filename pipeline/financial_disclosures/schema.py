@@ -47,6 +47,21 @@ _VALID_SOURCE_SYSTEMS = {"house_clerk", "senate_efd"}
 _VALID_EXTRACTION_METHODS = {"digital_text", "ocr", "manual"}
 _VALID_PARSE_CONFIDENCE = {
     "high", "low", "unparseable_scanned", "no_filing_found", "download_failed",
+    # Phase 2 (OCR) addition, anticipated by the architecture doc's schema
+    # section: an OCR'd page graph was located (so this genuinely is a
+    # Schedule A/D document, unlike "unparseable_scanned") but the mean
+    # Tesseract word confidence fell below extract_ocr.DOC_LOW_CONFIDENCE_THRESHOLD
+    # -- e.g. a hand-filled (cursive) filing, which Tesseract's bundled
+    # printed-text model cannot reliably read. Value-payload fields are left
+    # null rather than trusting a low-confidence OCR read, per the
+    # "flag rather than guess" principle in columns.py.
+    "ocr_low_confidence",
+    # Phase 2 (OCR) addition: page count exceeded extract_ocr.MAX_OCR_PAGES,
+    # so the document was deliberately not rasterized/OCR'd at all (see that
+    # constant's docstring -- this cap exists because one such filing, at
+    # full page count and OCR_DPI, was the proximate cause of an 88GB OOM
+    # crash before the page-by-page streaming fix). Needs manual review.
+    "ocr_skipped_oversized",
 }
 
 
