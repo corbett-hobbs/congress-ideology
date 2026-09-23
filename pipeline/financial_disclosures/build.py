@@ -13,6 +13,7 @@ import argparse
 import json
 import sys
 import time
+import zipfile
 from pathlib import Path
 
 import requests
@@ -73,9 +74,23 @@ def main() -> None:
     match_stats: dict[str, int] = {}
     unmatched_examples: list[dict] = []
     filing_type_counts: dict[str, int] = {}
+    failed_years: list[dict] = []
 
     for year in years:
-        rows = fetch.fetch_year_index(year, session)
+        try:
+            rows = fetch.fetch_year_index(year, session)
+        except (requests.RequestException, zipfile.BadZipFile) as e:
+            # A transient network error or a malformed zip for one year must
+            # not take down the whole run -- everything already fetched for
+            # other years (and every PDF already downloaded/parsed) would be
+            # lost, since output is only written once at the end of main().
+            # Skip this year, but record it distinctly from a genuinely empty
+            # year so the report doesn't silently read as "no filings" --
+            # per the "fail loudly, never silently" convention, this must be
+            # visible, just not fatal to the rest of the run.
+            print(f"[build] ERROR fetching {year} index: {e} -- skipping this year", file=sys.stderr)
+            failed_years.append({"year": year, "error": str(e)})
+            continue
         print(f"[build] {year}: {len(rows)} index rows", file=sys.stderr)
         for row in rows:
             filing_type_counts[row.filing_type] = filing_type_counts.get(row.filing_type, 0) + 1
@@ -221,6 +236,7 @@ def main() -> None:
             2,
         ),
         "filing_type_counts": filing_type_counts,
+        "failed_years": failed_years,
         "unmatched_examples": unmatched_examples,
         "docid_length_by_scan_status": {
             "scanned_lengths": docid_len_by_confidence["scanned"],
@@ -232,6 +248,9 @@ def main() -> None:
     print("[build] DONE", file=sys.stderr)
     print(json.dumps(report["counts_by_parse_confidence"], indent=2), file=sys.stderr)
     print(f"match_rate_pct={report['match_rate_pct']}", file=sys.stderr)
+    if failed_years:
+        print(f"[build] WARNING: {len(failed_years)} year(s) failed to fetch and were skipped: "
+              f"{[f['year'] for f in failed_years]} -- rerun to retry them", file=sys.stderr)
 
 
 if __name__ == "__main__":

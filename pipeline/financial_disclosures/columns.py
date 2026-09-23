@@ -113,9 +113,18 @@ def _find_asset_header(words: list[Word]) -> tuple[float, float] | None:
         texts = [x.text.lower() for x in line]
         if "of" not in texts or "asset" not in texts:
             continue
-        # confirm ordering: Value < of < Asset by x0
-        w_of = next(x for x in line if x.text.lower() == "of")
-        w_asset = next(x for x in line if x.text.lower() == "asset" and x.x0 > w_of.x0)
+        # confirm ordering: Value < of < Asset by x0. A stray word matching
+        # "asset" left of "of" (jitter, an unusual PDF vintage) means no word
+        # satisfies the x-position constraint even though "asset" passed the
+        # membership check above -- treat that as "header not found on this
+        # line" (like any other candidate that doesn't pan out) rather than
+        # letting an unguarded next() crash the whole run.
+        w_of = next((x for x in line if x.text.lower() == "of"), None)
+        if w_of is None:
+            continue
+        w_asset = next((x for x in line if x.text.lower() == "asset" and x.x0 > w_of.x0), None)
+        if w_asset is None:
+            continue
         left = w.x0 - 2.0
         after = [x for x in line if x.x0 > w_asset.x1]
         right = (after[0].x0 - 3.0) if after else (left + 250.0)
