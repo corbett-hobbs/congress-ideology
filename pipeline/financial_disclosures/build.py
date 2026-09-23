@@ -23,6 +23,7 @@ import fetch
 import match
 import roster
 from extract_text import extract_digital_text
+from schema import validate_record
 
 OUT_DIR = Path(__file__).resolve().parents[1] / "output"
 CURRENT_YEAR = 2026
@@ -217,8 +218,18 @@ def main() -> None:
             if confidence == "low":
                 needs_review_records.append(rec)
 
+    # docs/DATA_CONVENTIONS.md §2: every pipeline/output/*.json row is
+    # validated against its schema before writing (§4 "fail loudly, never
+    # silently"), and the file is a JSON array with one row per line so a
+    # data-only update shows as a line-level git diff, not a reformatted
+    # blob -- matches pipeline/transform/io.ts's writeEntities() convention.
+    for i, rec in enumerate(records):
+        validate_record(rec, i)
+
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUT_DIR / "financial_disclosures.json").write_text(json.dumps(records, indent=2))
+    lines = [json.dumps(rec, separators=(",", ":")) for rec in records]
+    body = "[\n" + ",\n".join(lines) + "\n]\n" if lines else "[]\n"
+    (OUT_DIR / "financial_disclosures.json").write_text(body)
 
     report = {
         "run_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

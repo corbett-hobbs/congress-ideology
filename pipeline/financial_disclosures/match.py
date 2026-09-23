@@ -12,7 +12,7 @@ import re
 from dataclasses import dataclass
 
 from fetch import FilingRow
-from roster import Member, norm
+from roster import Member, last_name_variants, norm
 
 _STATE_DST_RE = re.compile(r"^([A-Z]{2})\d{2}$")
 
@@ -31,7 +31,7 @@ def match_row(row: FilingRow, index: dict[tuple[str, str], list[Member]]) -> Mat
 
     candidates: list[Member] = []
     seen: set[str] = set()
-    for variant in _row_last_variants(row.last):
+    for variant in last_name_variants(row.last):
         for cand in index.get((variant, state), []):
             if cand.bioguide_id not in seen:
                 seen.add(cand.bioguide_id)
@@ -50,18 +50,21 @@ def match_row(row: FilingRow, index: dict[tuple[str, str], list[Member]]) -> Mat
     return MatchResult(None, "ambiguous")
 
 
-def _row_last_variants(last: str) -> list[str]:
-    parts = (last or "").split()
-    variants = {norm(last)}
-    if len(parts) > 1:
-        variants.add(norm("".join(parts)))
-        variants.add(norm(parts[-1]))
-        variants.add(norm(parts[0]))
-        variants.add(norm(" ".join(reversed(parts))))
-    return [v for v in variants if v]
+def _doc_id_sort_key(doc_id: str) -> tuple[int, str]:
+    """Compare doc_id numerically when possible. The Clerk's own doc_ids are
+    monotonically increasing integers (see README: digital filings run 8-10
+    digits, some scanned filings only 7), so a plain string compare picks the
+    lexicographically larger id, not the numerically/chronologically later
+    one, whenever two ids for the same member-year happen to differ in digit
+    count. Falls back to string comparison only if doc_id isn't purely
+    numeric (shouldn't happen for a real Clerk id, but never crash on it)."""
+    return (int(doc_id), "") if doc_id.isdigit() else (-1, doc_id)
 
 
 def pick_best_filing(rows: list[FilingRow]) -> FilingRow:
     """Amendment supersedes Original for the same reporting year: use
-    whichever has the latest FilingDate, not necessarily the amendment."""
-    return max(rows, key=lambda r: (r.filing_date or "", r.doc_id))
+    whichever has the latest FilingDate, not necessarily the amendment. Ties
+    (same filing_date, seen in production data -- e.g. two same-day
+    amendments) break on doc_id, compared numerically since it's the Clerk's
+    own monotonically increasing filing sequence number."""
+    return max(rows, key=lambda r: (r.filing_date or "", _doc_id_sort_key(r.doc_id)))

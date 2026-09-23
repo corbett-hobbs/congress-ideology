@@ -132,9 +132,18 @@ def _find_asset_header(words: list[Word]) -> tuple[float, float] | None:
     return None
 
 
-def _find_liability_header(words: list[Word]) -> tuple[float, float, float] | None:
+def _find_liability_header(words: list[Word], page_width: float) -> tuple[float, float] | None:
     """Locate 'Amount' 'of' 'Liability' header words (the last two words may
-    wrap onto the next physical line). Return (left, right, page_right)."""
+    wrap onto the next physical line). Return (left, right) x-bounds.
+
+    "Amount of Liability" is Schedule D's rightmost column (owner | creditor |
+    date incurred | type | amount), so there's no next header word to derive
+    `right` from the way `_find_asset_header` does. Derive it from the page's
+    own width instead of a fixed pixel count -- consistent with this module's
+    "never a hardcoded pixel range" principle, and correct regardless of a
+    given PDF vintage's margins, unlike a magic constant tuned to one
+    observed layout.
+    """
     by_top = sorted(words, key=lambda w: (w.top, w.x0))
     for i, w in enumerate(by_top):
         if w.text.lower() != "amount":
@@ -152,7 +161,7 @@ def _find_liability_header(words: list[Word]) -> tuple[float, float, float] | No
         if not candidates:
             continue
         left = w.x0 - 2.0
-        return left, left + 400.0, left + 400.0
+        return left, page_width - 5.0
     return None
 
 
@@ -172,18 +181,34 @@ class ColumnExtraction:
 
 
 def extract(doc: DocWords) -> ColumnExtraction:
+    # Tokens are joined across the WHOLE document, not per page. This is
+    # required, not just convenient: a wrapped band value can split across a
+    # *page* boundary, not just a line -- confirmed on Vern Buchanan's real
+    # 2024 filing, where "$50,001 - $100,000" ends one page as "...$50,001 -"
+    # and continues on the next page as "$100,000...". A per-page join loses
+    # that reconstruction and silently undercounts a real, previously
+    # validated case (tried during review; reverted after confirming exactly
+    # this regression). The trade-off this accepts: _find_exact_values'
+    # "only trust an exact figure when this schedule has zero band matches"
+    # gate operates at whole-document granularity too, so a document that
+    # mixes real EIGA-band lines on one page with a genuine exact-dollar line
+    # on another page will drop the exact line rather than guess -- no
+    # confirmed case of this in the dataset as of this fix, and it's the
+    # same "flag rather than guess" principle used throughout this module.
     asset_tokens: list[Word] = []
     liability_tokens: list[Word] = []
     asset_pages = liability_pages = 0
     asset_hdr_pages = liability_hdr_pages = 0
 
     last_asset_bounds: tuple[float, float] | None = None
-    last_liability_bounds: tuple[float, float, float] | None = None
+    last_liability_bounds: tuple[float, float] | None = None
 
     for page in doc.pages:
         text = page.text.lower()
         page_has_asset_phrase = _HAS_ASSET_HDR.lower() in text
         page_has_liab_phrase = all(p.lower() in text for p in _HAS_LIAB_PHRASES)
+        if not (page_has_asset_phrase or page_has_liab_phrase):
+            continue
         ordered_words = sorted(page.words, key=lambda w: (w.top, w.x0))
 
         if page_has_asset_phrase:
@@ -201,13 +226,13 @@ def extract(doc: DocWords) -> ColumnExtraction:
 
         if page_has_liab_phrase:
             liability_pages += 1
-            bounds = _find_liability_header(page.words)
+            bounds = _find_liability_header(page.words, page.width)
             if bounds:
                 liability_hdr_pages += 1
                 last_liability_bounds = bounds
             active = last_liability_bounds
             if active:
-                left, right, _ = active
+                left, right = active
                 for w in ordered_words:
                     if left <= w.x0 < right and _VALUE_TOKEN_RE.match(w.text):
                         liability_tokens.append(w)

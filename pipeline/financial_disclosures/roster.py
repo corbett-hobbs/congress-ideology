@@ -38,7 +38,7 @@ class Member:
     last_name_variants: list[str] = field(default_factory=list)
 
 
-def _last_name_variants(last: str) -> list[str]:
+def last_name_variants(last: str) -> list[str]:
     """Variant normalized keys for a (possibly multi-word) last name, to
     handle the Clerk index splitting a multi-word surname differently (e.g.
     "Watson Coleman" vs whatever ordering/concatenation the Clerk uses)."""
@@ -81,7 +81,7 @@ def load_current_house_members(min_year: int = 2013) -> list[Member]:
             last=last,
             state=state,
             first_year_served=first_year,
-            last_name_variants=_last_name_variants(last),
+            last_name_variants=last_name_variants(last),
         )
         members.append(m)
     return members
