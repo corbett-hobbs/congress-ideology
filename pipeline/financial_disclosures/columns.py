@@ -48,6 +48,57 @@ _VALUE_TOKEN_RE = re.compile(r"^\$|^-$|^Over$|^\d[\d,]*$", re.IGNORECASE)
 # below folds case rather than trusting the extracted casing.
 
 
+_EXACT_TOKEN_RE = re.compile(r"^\$[\d,]+$")
+
+# "$1,000,000" is provably ambiguous in this dataset: on some filings it's
+# noise (the *income* column's own "Over $1,000,000" top bracket, wrapping
+# onto a line that happens to land inside the asset/liability x-range), and
+# on others it's a genuine reported figure -- the House form's separate,
+# simplified convention for a spouse's "Excepted Trade or Business"
+# asset/liability, which skips the standard 10-tier EIGA bands entirely and
+# just checks "$1,000,000 or less" / "Over $1,000,000". Column position alone
+# can't tell these apart without the row-clustering this module deliberately
+# avoids, so it's never auto-counted -- a schedule whose only content is
+# "$1,000,000" is left at 0 lines, which correctly trips no_value_data and
+# gets flagged needs_review instead of a confident (and possibly wrong)
+# number in either direction.
+_AMBIGUOUS_EXACT_VALUES = {"$1,000,000"}
+
+
+def _find_exact_values(joined_text: str, matched_counts: dict[str, int]) -> dict[str, int]:
+    """After removing every matched band-range occurrence from ``joined_text``,
+    find leftover standalone dollar amounts (e.g. "$20,140") -- a plain
+    reported figure rather than an EIGA range, seen on some older filings
+    (checking/money-market accounts). Only trusted when the *whole* schedule
+    is reported this way (``matched_counts`` is empty) -- a real filing uses
+    one convention or the other for an entire schedule, never a mix, so a
+    lone exact figure sitting alongside real band matches is essentially
+    always column-bleed noise from a neighboring field, not a genuine second
+    line item (confirmed against sampled filings: every "mixed" case found
+    was a stray income-column or free-text-description figure). A leftover
+    "$X" adjacent to a "-" token, or immediately after "Over", is also left
+    alone -- that's the residue of a range/convention this module doesn't
+    recognize, not a standalone value, and guessing at it risks inventing a
+    number the filing never stated for this schedule.
+    """
+    if matched_counts:
+        return {}
+
+    residual = joined_text
+    tokens = residual.split()
+    exact: dict[str, int] = {}
+    for i, tok in enumerate(tokens):
+        if not _EXACT_TOKEN_RE.match(tok) or tok in _AMBIGUOUS_EXACT_VALUES:
+            continue
+        prev_is_dash = i > 0 and tokens[i - 1] == "-"
+        next_is_dash = i + 1 < len(tokens) and tokens[i + 1] == "-"
+        prev_is_over = i > 0 and tokens[i - 1].lower() == "over"
+        if prev_is_dash or next_is_dash or prev_is_over:
+            continue
+        exact[tok] = exact.get(tok, 0) + 1
+    return exact
+
+
 def _line(words: list[Word], ref: Word, tol: float = _TOP_TOL) -> list[Word]:
     return [w for w in words if abs(w.top - ref.top) <= tol]
 
@@ -161,6 +212,11 @@ def extract(doc: DocWords) -> ColumnExtraction:
 
     asset_counts = count_bands(asset_joined, ASSET_BANDS)
     liability_counts = count_bands(liability_joined, LIABILITY_BANDS)
+
+    for tok, n in _find_exact_values(asset_joined, asset_counts).items():
+        asset_counts[tok] = asset_counts.get(tok, 0) + n
+    for tok, n in _find_exact_values(liability_joined, liability_counts).items():
+        liability_counts[tok] = liability_counts.get(tok, 0) + n
 
     assets_total, has_open = value_total(asset_counts, ASSET_BANDS)
     liabilities_total, _ = value_total(liability_counts, LIABILITY_BANDS)

@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-09-22T23:51:15Z",
+  "run_at": "2026-09-23T01:12:04Z",
   "phase": "1 (House, digital filings)",
   "member_count": 437,
   "years": [
@@ -8,14 +8,14 @@
   ],
   "total_member_years": 3632,
   "counts_by_parse_confidence": {
-    "high": 2654,
-    "low": 16,
+    "high": 2656,
+    "low": 14,
     "unparseable_scanned": 438,
     "no_filing_found": 524,
     "download_failed": 0,
-    "no_value_data": 15
+    "no_value_data": 13
   },
-  "needs_review_count": 454,
+  "needs_review_count": 452,
   "match_stats": {
     "ok": 4481,
     "no_candidate": 4429

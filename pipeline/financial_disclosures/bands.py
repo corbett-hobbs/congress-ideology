@@ -11,6 +11,7 @@ two ranges sit back-to-back with no separator.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 
@@ -85,24 +86,45 @@ def count_bands(joined_text: str, bands: list[BandDef]) -> dict[str, int]:
     return counts
 
 
+# A handful of asset lines (mostly plain checking/money-market accounts, seen
+# on older filings) report a literal dollar figure -- e.g. "$20,140" -- instead
+# of an EIGA range. That's not a band at all, so it's kept in the same
+# band_counts dict under its own literal string (e.g. "$20,140") rather than
+# a range label ("$X - $Y") or the open-ended label -- unambiguous, since
+# every real band label contains " - " or starts with "Over ". An exact
+# figure is *more* precise than a midpoint estimate, so it's summed directly.
+_EXACT_VALUE_RE = re.compile(r"^\$([\d,]+)$")
+
+
+def parse_exact_value(label: str) -> float | None:
+    m = _EXACT_VALUE_RE.match(label)
+    if not m:
+        return None
+    return float(m.group(1).replace(",", ""))
+
+
 def value_total(counts: dict[str, int], bands: list[BandDef]) -> tuple[float, bool]:
     """Sum midpoint*count over recognized bands. Returns (total, has_open_ended).
 
     The open-ended top band contributes its floor value to the total (a
     sortable point estimate, matching wealthincongress.com's convention) but
     also flags ``has_open_ended`` so callers can surface it rather than treat
-    the total as exact.
+    the total as exact. Literal exact-dollar entries (see ``parse_exact_value``)
+    are summed directly since they're not an estimate.
     """
     by_label = {b.label: b for b in bands}
     total = 0.0
     has_open = False
     for label, n in counts.items():
         b = by_label.get(label)
-        if b is None:
+        if b is not None:
+            if b.midpoint is None:
+                total += OPEN_ENDED_FLOOR * n
+                has_open = True
+            else:
+                total += b.midpoint * n
             continue
-        if b.midpoint is None:
-            total += OPEN_ENDED_FLOOR * n
-            has_open = True
-        else:
-            total += b.midpoint * n
+        exact = parse_exact_value(label)
+        if exact is not None:
+            total += exact * n
     return total, has_open
