@@ -129,10 +129,11 @@ def main() -> None:
     total_member_years = sum(max(0, CURRENT_YEAR - m.first_year_served + 1) for m in members)
     processed = 0
     t0 = time.time()
+    years_set = set(years)  # O(1) membership; `years` can be ~3600 x 14 lookups otherwise
 
     for member in members:
         for year in range(member.first_year_served, CURRENT_YEAR + 1):
-            if year not in years:
+            if year not in years_set:
                 continue
             processed += 1
             if processed % 100 == 0:
