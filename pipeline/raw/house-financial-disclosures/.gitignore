@@ -8,3 +8,14 @@
 
 # Any other large PDF (>1 MB is almost always a scanned attachment set).
 *.pdf.tmp
+
+# pipeline/financial_disclosures/build.py (Phase 1, full-scale) caches every
+# downloaded filing PDF under a per-reporting-year subdirectory
+# (<year>/<doc_id>.pdf) -- thousands of files across 2013-2026. Unlike the
+# dozen flat fixture PDFs above (kept as committed test fixtures), the bulk
+# cache is straightforwardly re-fetchable via build.py and isn't committed,
+# to keep the repo from ballooning by hundreds of MB of re-derivable PDFs.
+# The per-year index files (<year>FD.raw) ARE committed -- small, and they're
+# the crosswalk source, not re-derivable from anything else in the repo.
+20*/
+
