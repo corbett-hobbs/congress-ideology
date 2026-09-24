@@ -24,7 +24,7 @@ System Python 3.9 works here (no 3.11+ requirement, unlike `pipeline/financial/`
 ```bash
 cd pipeline/financial_disclosures
 python3 -m venv .venv
-./.venv/bin/pip install pdfplumber pyyaml requests
+./.venv/bin/pip install pdfplumber pyyaml requests beautifulsoup4
 ```
 
 ## Run
@@ -119,14 +119,70 @@ match isn't expected). Regression case: Vern Buchanan's 2023/2024 filings
 carry a nested `⇒`-chained LLC asset valued "Over $50,000,000"; both years
 correctly set `has_open_ended_asset: true`.
 
+## Phase 3a: Senate, electronic (HTML) filings
+
+Computes the same per-`(bioguide_id, year)` net worth for current senators,
+from `efdsearch.senate.gov`. Unlike House, this source has no bulk index and
+gates search behind a click-through agreement to EIGA §105(c) — see
+`senate_fetch.py`'s module docstring for the confirmed session-bootstrap
+mechanism (the script submits that agreement itself each run, the same POST
+a human visitor's browser sends).
+
+Also unlike House, a Senate annual report is either **electronic** (rendered
+as a structured HTML page — no PDF, no OCR, no column-geometry work; the
+Value/Amount cell text already matches `bands.py`'s literal band strings
+verbatim) or **paper** (a scanned multi-page image viewer, `/search/view/paper/`).
+The format is given directly by the report URL, never guessed. This phase
+covers electronic reports only.
+
+| File | Role |
+| --- | --- |
+| `senate_roster.py` | Current-Senate variant of `roster.py` (reuses its `norm()`/`last_name_variants()`), floored at 2012 (eFD's stated coverage start) rather than House's 2013. |
+| `senate_fetch.py` | Session bootstrap (agreement POST) + paginated `POST /search/report/data/` (a DataTables JSON endpoint, 100 rows/page server-enforced) + individual report HTML fetch, cached under `pipeline/raw/senate-financial-disclosures/annual/<uuid>.html`. |
+| `senate_match.py` | Name-only matching (Senate search rows carry no state column, unlike House's `StateDst`) via last-name-variant + first-3-chars-of-first disambiguation, with a `senator_state`-scoped re-query as a second, verified layer before ever falling back to `"ambiguous"`. Also parses the report-label taxonomy (`"Annual Report for CY <year>"`, its amendments, `"New Filer Report for <date>"`) and excludes `"Candidate Report"` rows (a campaign-era snapshot filed under the same report-type bucket, not an officeholder annual disclosure). |
+| `senate_html.py` | HTML table extraction: assets via `<table id="grid_items">`, liabilities via the table whose `<caption>` reads "List of liabilities added to this report" — the value column is located by matching its header text, never a hardcoded index. Recognizes several literal value-cell conventions beyond the standard EIGA bands: `"Unascertainable"`, `"--"` (a parent/grouping row whose value lives on child rows), `"None (or less than $X)"` (a below-threshold disclosure distinct from the Income column's own convention), and `"Over $1,000,000 ... held independently by spouse or dependent child"` (an EIGA spousal-holding carve-out contributing a $1M floor — material for at least one current member's reported net worth). |
+| `build_senate_html.py` | Orchestrator. Merges into the existing `financial_disclosures.json` (drops any prior `chamber == "senate"` rows, appends freshly built ones) rather than rewriting it from scratch, since House rows must be left untouched. A `/paper/` row is counted (for Phase 3b sizing) and, when it's the only filing found for a member-year, written as `parse_confidence: "unparseable_scanned"` with a best-effort year estimate — never silently left as `no_filing_found`, which would misrepresent "filing exists but unread" as "no filing exists". |
+
+```bash
+./.venv/bin/python build_senate_html.py                     # full run: all current senators, 2012-2026
+./.venv/bin/python build_senate_html.py --last Baldwin Scott # restrict to specific surnames (testing)
+```
+
+### Validation (2026-09-24 run)
+
+1,018 current-senator-years processed: 818 `high`, 102 `unparseable_scanned`
+(paper, deferred to Phase 3b), 98 `no_filing_found` (pre-service years, plus
+CY2026 not yet due). Zero `low` or `download_failed` — every matched
+electronic report's value cells classified cleanly, including the Rick
+Scott/Tim Scott same-surname case (correctly kept separate across all years)
+and Rick Scott's ~100 spousal-independent-holding line items per report
+(the special-cased convention above).
+
+Spot-checked against votepredictor.com/congress/wealth (2026-09-24):
+
+| Member | Year | This pipeline's `net_worth` | votepredictor range (midpoint) |
+| --- | --- | --- | --- |
+| Rick Scott (S001217) | 2025 | $512.4M | $198.6M – $726.1M ($462.4M) |
+
+Falls inside votepredictor's range, both sources agree he's the wealthiest
+sitting senator, and the year-over-year trend matches (a jump in 2023, a dip
+in 2024, a rise in 2025) — same "bounds-check, not ground truth" caveat as
+the House validation above.
+
 ## Known gaps (carried forward per the architecture doc, not solved here)
 
-- Senate financial disclosures (Phase 3) — no bulk index, legal click-through
-  gate, no confirmed open-source parser. Not started.
-- OCR of scanned filings (Phase 2) — detected and flagged
+- Senate paper (scanned-image) filings (Phase 3b) — detected and counted,
+  not read. Includes at least two current senators (Blumenthal, Durbin) who
+  file exclusively on paper every year, so this isn't a shrinking legacy
+  tail the way House's scanned filings are. `senate_html.py`'s value
+  classification and `bands.py`'s band table both carry over unchanged once
+  Phase 3b adds an OCR-backed extraction step for the scanned page images
+  (served from `efd-media-public.senate.gov`, one GIF per page, no session
+  needed once the page URLs are known).
+- OCR of scanned House filings (Phase 2) — detected and flagged
   (`unparseable_scanned`), not read. `extract_text.py` is structured so
   Phase 2 only needs to add an OCR-backed alternative to
   `extract_digital_text()`.
 - Schedule B (transactions), C (outside income), E (positions), gifts,
-  travel — out of scope; only Schedule A (assets) and D (liabilities) feed
-  net worth.
+  travel — out of scope; only Schedule A (assets) / Part 3 and D
+  (liabilities) / Part 7 feed net worth, House and Senate alike.

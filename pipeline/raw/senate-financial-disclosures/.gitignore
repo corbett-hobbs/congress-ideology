@@ -1,0 +1,11 @@
+# senate_fetch.py caches every fetched electronic report page under
+# annual/<uuid>.html (829 files, ~66MB as of the first full run). Unlike
+# House's per-year index files (small, the crosswalk source, committed --
+# see pipeline/raw/house-financial-disclosures/.gitignore), Senate eFD has
+# no bulk index at all: search results are fetched fresh from the paginated
+# API every run (senate_fetch.search() deliberately doesn't cache them), so
+# there's nothing here that's a source of truth rather than a re-derivable
+# cache. Not committed, to keep the repo from ballooning with re-fetchable
+# HTML the same way House's bulk PDF cache is excluded.
+annual/
+paper/
