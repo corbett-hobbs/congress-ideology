@@ -61,10 +61,26 @@ def _doc_id_sort_key(doc_id: str) -> tuple[int, str]:
     return (int(doc_id), "") if doc_id.isdigit() else (-1, doc_id)
 
 
+def rank_filings(rows: list[FilingRow]) -> list[FilingRow]:
+    """All candidates for a (bioguide_id, year), best-guess-first: latest
+    FilingDate wins, ties broken by doc_id (compared numerically -- the
+    Clerk's own monotonically increasing filing sequence number).
+
+    Exists because the Clerk index's filing_type doesn't reliably mean what
+    it looks like it means: 'A' ("amendment") records amendment-to-*something*
+    generically, with no field recording what -- an amendment to a Periodic
+    Transaction Report gets the same code as an amendment to the annual
+    report. A row with a later FilingDate than the real annual report can
+    therefore win the naive "latest wins" pick despite not being a Schedule
+    A/D disclosure at all. Exposing the full ranked list (not just the top
+    pick) lets a caller verify content and fall back to the next-best
+    candidate when that happens -- see build.py/build_ocr.py."""
+    return sorted(rows, key=lambda r: (r.filing_date or "", _doc_id_sort_key(r.doc_id)), reverse=True)
+
+
 def pick_best_filing(rows: list[FilingRow]) -> FilingRow:
     """Amendment supersedes Original for the same reporting year: use
-    whichever has the latest FilingDate, not necessarily the amendment. Ties
-    (same filing_date, seen in production data -- e.g. two same-day
-    amendments) break on doc_id, compared numerically since it's the Clerk's
-    own monotonically increasing filing sequence number."""
-    return max(rows, key=lambda r: (r.filing_date or "", _doc_id_sort_key(r.doc_id)))
+    whichever has the latest FilingDate, not necessarily the amendment.
+    Thin wrapper over rank_filings() -- kept as one source of truth rather
+    than a parallel max() implementation so the two can't drift apart."""
+    return rank_filings(rows)[0]

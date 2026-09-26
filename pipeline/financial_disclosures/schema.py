@@ -62,6 +62,17 @@ _VALID_PARSE_CONFIDENCE = {
     # full page count and OCR_DPI, was the proximate cause of an 88GB OOM
     # crash before the page-by-page streaming fix). Needs manual review.
     "ocr_skipped_oversized",
+    # match.py's wrong-document-selection fix: every O/A candidate filing on
+    # record for this member-year was checked -- digitally and, where a
+    # candidate was itself a scan, via OCR -- and NONE contains Schedule A/D
+    # content at all. Distinct from "unparseable_scanned", which means "a
+    # document exists but couldn't be read" -- this means "we read every
+    # candidate fine, and none of them is the annual disclosure," a genuine
+    # data-coverage gap (e.g. the Clerk index's own filing_type='A' code
+    # doesn't record what is being amended, so an amendment to an unrelated
+    # filing type can be the only candidate on record) rather than a
+    # scan-quality problem to keep chasing.
+    "no_schedule_content_found",
 }
 
 

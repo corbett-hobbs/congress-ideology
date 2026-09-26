@@ -5,6 +5,7 @@ Usage:
     python build.py                      # full run, all current House members, 2013-CURRENT_YEAR
     python build.py --years 2024 2025    # restrict to specific reporting years (for testing)
     python build.py --last Pelosi Buchanan  # restrict to specific surnames (for testing)
+    python build.py --bioguide A000055 B001257  # restrict to specific members (for a targeted re-apply)
 """
 
 from __future__ import annotations
@@ -57,6 +58,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--years", type=int, nargs="*", default=None)
     ap.add_argument("--last", type=str, nargs="*", default=None)
+    ap.add_argument("--bioguide", type=str, nargs="*", default=None, help="restrict to specific bioguide_ids (for a targeted re-apply, e.g. after a match.py fix, without reprocessing the whole roster)")
     args = ap.parse_args()
 
     years = args.years or list(range(START_YEAR, CURRENT_YEAR + 1))
@@ -65,6 +67,9 @@ def main() -> None:
     if args.last:
         wanted = {roster.norm(x) for x in args.last}
         members = [m for m in members if roster.norm(m.last) in wanted]
+    if args.bioguide:
+        wanted_bg = set(args.bioguide)
+        members = [m for m in members if m.bioguide_id in wanted_bg]
     index = roster.build_index(members)
     print(f"[build] {len(members)} current House members loaded", file=sys.stderr)
 
@@ -122,6 +127,7 @@ def main() -> None:
         "no_filing_found": 0,
         "download_failed": 0,
         "no_value_data": 0,
+        "no_schedule_content_found": 0,
     }
     needs_review_records: list[dict] = []
     docid_len_by_confidence: dict[str, list[int]] = {"scanned": [], "digital": []}
@@ -152,87 +158,140 @@ def main() -> None:
                 counts["no_filing_found"] += 1
                 continue
 
-            best = match.pick_best_filing(rows)
-            rec["source_doc_id"] = best.doc_id
-            rec["filing_type"] = best.filing_type
-            rec["filing_date"] = best.filing_date
+            # Try each candidate, best-dated first, verifying content rather
+            # than trusting the Clerk's filing_type code alone -- see
+            # match.rank_filings()'s docstring for why that code can be
+            # misleading (a PTR amendment carries the same 'A' as an
+            # amendment to the real annual report). A digitally-readable
+            # candidate with no Schedule A/D content is confirmed wrong for
+            # free and skipped in favor of the next one; a scanned candidate
+            # can't be verified without OCR, so it's accepted as-is and
+            # deferred to build_ocr.py's Phase 2 pass, exactly as before --
+            # looking past a scanned top candidate here would risk skipping
+            # a legitimately scanned current-year report for an
+            # easier-to-read older one, which this fix must not do.
+            candidates = match.rank_filings(rows)
+            checked_any = False
+            tried_doc_ids: list[str] = []
+            resolved = False
 
-            pdf_path = fetch.download_pdf(year, best.doc_id, session)
-            if pdf_path is None:
+            for candidate in candidates:
+                pdf_path = fetch.download_pdf(year, candidate.doc_id, session)
+                if pdf_path is None:
+                    tried_doc_ids.append(f"{candidate.doc_id}(download_failed)")
+                    continue
+
+                try:
+                    doc = extract_digital_text(str(pdf_path))
+                except Exception as e:  # malformed PDF, etc.
+                    tried_doc_ids.append(f"{candidate.doc_id}(extract_error: {e})")
+                    continue
+
+                checked_any = True
+
+                if doc.is_scanned:
+                    rec["source_doc_id"] = candidate.doc_id
+                    rec["filing_type"] = candidate.filing_type
+                    rec["filing_date"] = candidate.filing_date
+                    rec["parse_confidence"] = "unparseable_scanned"
+                    rec["needs_review"] = True
+                    records.append(rec)
+                    counts["unparseable_scanned"] += 1
+                    needs_review_records.append(rec)
+                    docid_len_by_confidence["scanned"].append(len(candidate.doc_id))
+                    resolved = True
+                    break
+
+                ext = columns.extract(doc)
+                tried_doc_ids.append(candidate.doc_id)
+
+                if not columns.has_schedule_content(ext):
+                    # Confirmed wrong document, no OCR needed to know it --
+                    # try the next-best candidate instead of giving up.
+                    continue
+
+                docid_len_by_confidence["digital"].append(len(candidate.doc_id))
+                rec["source_doc_id"] = candidate.doc_id
+                rec["filing_type"] = candidate.filing_type
+                rec["filing_date"] = candidate.filing_date
+                confidence = columns.apply_extraction(rec, ext)
+                records.append(rec)
+                counts[confidence] += 1
+                no_value_data = ext.asset_line_count == 0 and ext.liability_line_count == 0
+                if no_value_data:
+                    counts["no_value_data"] += 1
+                if confidence == "low":
+                    needs_review_records.append(rec)
+                resolved = True
+                break
+
+            if resolved:
+                continue
+
+            # Every candidate tried, none scanned (that breaks out above)
+            # and none had real content -- either genuinely confirmed empty
+            # (checked_any) or every candidate failed to download/extract.
+            rec["source_doc_id"] = candidates[-1].doc_id
+            rec["filing_type"] = candidates[-1].filing_type
+            rec["filing_date"] = candidates[-1].filing_date
+            rec["needs_review"] = True
+            if checked_any:
+                rec["parse_confidence"] = "no_schedule_content_found"
+                rec["extra_note"] = f"checked {len(candidates)} candidate filing(s), none contain Schedule A/D content: {tried_doc_ids}"
+                counts["no_schedule_content_found"] += 1
+            else:
                 rec["parse_confidence"] = "download_failed"
-                rec["needs_review"] = True
-                records.append(rec)
+                rec["extra_note"] = f"all {len(candidates)} candidate filing(s) failed to download/extract: {tried_doc_ids}"
                 counts["download_failed"] += 1
-                needs_review_records.append(rec)
-                continue
-
-            try:
-                doc = extract_digital_text(str(pdf_path))
-            except Exception as e:  # malformed PDF, etc.
-                rec["parse_confidence"] = "download_failed"
-                rec["needs_review"] = True
-                rec["extra_note"] = f"extract error: {e}"
-                records.append(rec)
-                counts["download_failed"] += 1
-                needs_review_records.append(rec)
-                continue
-
-            if doc.is_scanned:
-                rec["parse_confidence"] = "unparseable_scanned"
-                rec["needs_review"] = True
-                records.append(rec)
-                counts["unparseable_scanned"] += 1
-                needs_review_records.append(rec)
-                docid_len_by_confidence["scanned"].append(len(best.doc_id))
-                continue
-
-            docid_len_by_confidence["digital"].append(len(best.doc_id))
-            ext = columns.extract(doc)
-
-            confidence = "high"
-            if ext.asset_pages and ext.asset_header_found_pages < ext.asset_pages:
-                confidence = "low"
-            if ext.liability_pages and ext.liability_header_found_pages < ext.liability_pages:
-                confidence = "low"
-            no_value_data = (
-                ext.asset_line_count == 0
-                and ext.liability_line_count == 0
-                and (ext.asset_pages > 0 or ext.liability_pages > 0)
-            )
-            if no_value_data:
-                confidence = "low"
-
-            rec["assets_total"] = round(ext.assets_total, 2)
-            rec["liabilities_total"] = round(ext.liabilities_total, 2)
-            rec["net_worth"] = round(ext.assets_total - ext.liabilities_total, 2)
-            rec["has_open_ended_asset"] = ext.has_open_ended_asset
-            rec["asset_line_count"] = ext.asset_line_count
-            rec["liability_line_count"] = ext.liability_line_count
-            rec["asset_band_counts"] = ext.asset_band_counts
-            rec["liability_band_counts"] = ext.liability_band_counts
-            rec["parse_confidence"] = confidence
-            rec["needs_review"] = confidence == "low"
             records.append(rec)
-            counts[confidence] += 1
-            if no_value_data:
-                counts["no_value_data"] += 1
-            if confidence == "low":
-                needs_review_records.append(rec)
+            needs_review_records.append(rec)
+
+    # Merge into the existing output file rather than overwriting it --
+    # required as soon as any other chamber/scope's rows can live in the
+    # same file (Senate's, since Phase 3a; also any House member-year this
+    # run's own --bioguide/--last/--years filters excluded). Only ever
+    # replace the exact (bioguide_id, year) keys this run actually
+    # recomputed, mirroring build_ocr.py's/build_senate_html.py's existing
+    # merge convention -- an unrestricted full run recomputes every current
+    # House member-year, so `kept` naturally reduces to just Senate's rows
+    # in that case, with nothing lost.
+    data_path = OUT_DIR / "financial_disclosures.json"
+    existing: list[dict] = json.loads(data_path.read_text()) if data_path.exists() else []
+    recomputed_keys = {(r["bioguide_id"], r["year"]) for r in records}
+    kept = [
+        r for r in existing
+        if r.get("chamber") != "house" or (r["bioguide_id"], r["year"]) not in recomputed_keys
+    ]
+    combined = kept + records
 
     # docs/DATA_CONVENTIONS.md §2: every pipeline/output/*.json row is
     # validated against its schema before writing (§4 "fail loudly, never
     # silently"), and the file is a JSON array with one row per line so a
     # data-only update shows as a line-level git diff, not a reformatted
     # blob -- matches pipeline/transform/io.ts's writeEntities() convention.
-    for i, rec in enumerate(records):
+    for i, rec in enumerate(combined):
         validate_record(rec, i)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    lines = [json.dumps(rec, separators=(",", ":")) for rec in records]
+    lines = [json.dumps(rec, separators=(",", ":")) for rec in combined]
     body = "[\n" + ",\n".join(lines) + "\n]\n" if lines else "[]\n"
-    (OUT_DIR / "financial_disclosures.json").write_text(body)
+    data_path.write_text(body)
 
-    report = {
+    # A --bioguide/--last/--years-scoped run's own match_stats/match_rate_pct/
+    # etc. describe only that filtered slice, not the whole House pass -- if
+    # this isn't an unrestricted full run, those numbers would be a
+    # misleading headline if written to the report's top level (e.g. a
+    # 6-member targeted rerun's "match_rate_pct" replacing the real
+    # multi-thousand-row figure), and would silently destroy Senate's
+    # `senate_html_pass` section by overwriting the whole file. Only an
+    # unrestricted full run replaces the top-level report; a scoped run
+    # preserves everything else and records its own numbers in a small
+    # sub-section instead, mirroring build_ocr.py's `ocr_pass` convention.
+    is_full_run = args.bioguide is None and args.last is None and args.years is None
+    report_path = OUT_DIR / "financial_disclosures_report.json"
+    existing_report = json.loads(report_path.read_text()) if report_path.exists() else {}
+
+    run_stats = {
         "run_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "phase": "1 (House, digital filings)",
         "member_count": len(members),
@@ -255,7 +314,22 @@ def main() -> None:
             "digital_lengths": docid_len_by_confidence["digital"],
         },
     }
-    (OUT_DIR / "financial_disclosures_report.json").write_text(json.dumps(report, indent=2))
+
+    report = dict(run_stats) if is_full_run else dict(existing_report)
+    if not is_full_run:
+        report["last_targeted_rerun"] = run_stats
+
+    # counts_by_parse_confidence/needs_review_count always reflect the
+    # current state of the whole merged file (every chamber), since even a
+    # scoped run genuinely changed the underlying data -- matches
+    # build_ocr.py's/build_senate_html.py's own convention.
+    global_counts: dict[str, int] = {}
+    for r in combined:
+        global_counts[r["parse_confidence"]] = global_counts.get(r["parse_confidence"], 0) + 1
+    report["counts_by_parse_confidence"] = global_counts
+    report["needs_review_count"] = sum(1 for r in combined if r["needs_review"])
+
+    report_path.write_text(json.dumps(report, indent=2))
 
     print("[build] DONE", file=sys.stderr)
     print(json.dumps(report["counts_by_parse_confidence"], indent=2), file=sys.stderr)

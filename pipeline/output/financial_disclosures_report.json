@@ -8,14 +8,15 @@
   ],
   "total_member_years": 3632,
   "counts_by_parse_confidence": {
-    "high": 3491,
-    "low": 145,
+    "high": 3530,
+    "low": 160,
     "no_filing_found": 622,
-    "ocr_low_confidence": 106,
-    "unparseable_scanned": 246,
-    "ocr_skipped_oversized": 40
+    "ocr_low_confidence": 120,
+    "no_schedule_content_found": 52,
+    "ocr_skipped_oversized": 49,
+    "unparseable_scanned": 117
   },
-  "needs_review_count": 537,
+  "needs_review_count": 498,
   "match_stats": {
     "ok": 4481,
     "no_candidate": 4429
@@ -4754,19 +4755,21 @@
     ]
   },
   "ocr_pass": {
-    "run_at": "2026-09-23T19:35:41Z",
+    "run_at": "2026-09-25T20:34:49Z",
     "phase": "2 (House, OCR)",
-    "rows_processed": 279,
+    "rows_processed": 109,
     "before_counts": {
-      "ocr_low_confidence": 122,
-      "unparseable_scanned": 157
+      "unparseable_scanned": 109
     },
     "after_counts": {
-      "ocr_low_confidence": 102,
-      "unparseable_scanned": 143,
-      "low": 34
+      "low": 10,
+      "ocr_low_confidence": 12,
+      "no_schedule_content_found": 39,
+      "unparseable_scanned": 15,
+      "high": 24,
+      "ocr_skipped_oversized": 9
     },
-    "elapsed_sec": 2647.6
+    "elapsed_sec": 4435.4
   },
   "senate_html_pass": {
     "run_at": "2026-09-24T17:19:38Z",
@@ -4799,5 +4802,1700 @@
       "ok_disambiguated": 1
     },
     "paper_member_years_deferred": 204
+  },
+  "last_targeted_rerun": {
+    "run_at": "2026-09-25T18:47:57Z",
+    "phase": "1 (House, digital filings)",
+    "member_count": 6,
+    "years": [
+      2013,
+      2026
+    ],
+    "total_member_years": 52,
+    "counts_by_parse_confidence": {
+      "high": 37,
+      "low": 0,
+      "unparseable_scanned": 9,
+      "no_filing_found": 6,
+      "download_failed": 0,
+      "no_value_data": 0,
+      "no_schedule_content_found": 0
+    },
+    "needs_review_count": 9,
+    "match_stats": {
+      "no_candidate": 8843,
+      "ok": 67
+    },
+    "match_rate_pct": 0.75,
+    "filing_type_counts": {
+      "X": 6186,
+      "T": 468,
+      "O": 6082,
+      "A": 2828,
+      "D": 2307,
+      "E": 40,
+      "B": 24,
+      "P": 8382,
+      "C": 10348,
+      "W": 1127,
+      "G": 55,
+      "R": 1,
+      "H": 396
+    },
+    "failed_years": [],
+    "unmatched_examples": [
+      {
+        "last": "ADAMS",
+        "first": "ALMA SHEALEY",
+        "state_dst": "NC12",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ADAMS",
+        "first": "SANDRA \"SANDY\"",
+        "state_dst": "FL24",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ADAMS",
+        "first": "STEVE",
+        "state_dst": "CA41",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ADDIVINOLA",
+        "first": "FRANK JOHN",
+        "state_dst": "MA05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ADERHOLT",
+        "first": "ROBERT B.",
+        "state_dst": "AL04",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ADERHOLT",
+        "first": "ROBERT B.",
+        "state_dst": "AL04",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Aderholt",
+        "first": "Robert B.",
+        "state_dst": "AL04",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "AGUILAR",
+        "first": "PETE",
+        "state_dst": "CA31",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ALEXANDER",
+        "first": "RODNEY",
+        "state_dst": "LA05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ALLEN",
+        "first": "RICHARD W.",
+        "state_dst": "GA12",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ALLIEGRO",
+        "first": "MARK C.",
+        "state_dst": "MA09",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "AMASH",
+        "first": "JUSTIN",
+        "state_dst": "MI03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Amash",
+        "first": "Justin",
+        "state_dst": "MI03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "AMODEI",
+        "first": "MARK E.",
+        "state_dst": "NV02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Amodei",
+        "first": "Mark E.",
+        "state_dst": "NV02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ANDEL",
+        "first": "ELLEN",
+        "state_dst": "FL18",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ANDERSON",
+        "first": "IKAIKA",
+        "state_dst": "HI01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ANDREWS",
+        "first": "ROBERT E.",
+        "state_dst": "NJ01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "APPEL",
+        "first": "STACI",
+        "state_dst": "IA03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ARKOOSH",
+        "first": "VALERIE ANN",
+        "state_dst": "PA13",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "ASSAD",
+        "first": "MIKE",
+        "state_dst": "NJ02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BABIN",
+        "first": "BRIAN",
+        "state_dst": "TX36",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BACA",
+        "first": "JOE",
+        "state_dst": "CA35",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BACHMANN",
+        "first": "MICHELE",
+        "state_dst": "MN06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bachmann",
+        "first": "Michele",
+        "state_dst": "MN06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bachus",
+        "first": "Spencer",
+        "state_dst": "AL06",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bachus",
+        "first": "Spencer",
+        "state_dst": "AL06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BACHUS",
+        "first": "SPENCER",
+        "state_dst": "AL06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BALKEMA",
+        "first": "CHRIS",
+        "state_dst": "IL11",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARBER",
+        "first": "RON",
+        "state_dst": "AZ02",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARBER",
+        "first": "RON",
+        "state_dst": "AZ02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barber",
+        "first": "Ron",
+        "state_dst": "AZ02",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barber",
+        "first": "Ron",
+        "state_dst": "AZ02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARKLEY",
+        "first": "MICHAEL J.",
+        "state_dst": "CA10",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barletta",
+        "first": "Lou",
+        "state_dst": "PA11",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARLETTA",
+        "first": "LOU",
+        "state_dst": "PA11",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARLETTA",
+        "first": "LOU",
+        "state_dst": "PA11",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barletta",
+        "first": "Lou",
+        "state_dst": "PA11",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barletta",
+        "first": "Lou",
+        "state_dst": "PA11",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barletta",
+        "first": "Lou",
+        "state_dst": "PA11",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARNES",
+        "first": "HOUSTON",
+        "state_dst": "NC02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARR",
+        "first": "ANDY",
+        "state_dst": "KY06",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARR",
+        "first": "ANDY",
+        "state_dst": "KY06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARR",
+        "first": "BOB",
+        "state_dst": "GA11",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARR",
+        "first": "BOB",
+        "state_dst": "GA11",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barr",
+        "first": "Garland \"Andy\"",
+        "state_dst": "KY06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARRON",
+        "first": "ELIOT STEVENS",
+        "state_dst": "LA05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARROW",
+        "first": "JOHN",
+        "state_dst": "GA12",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barrow",
+        "first": "John",
+        "state_dst": "GA12",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARTON",
+        "first": "JOE",
+        "state_dst": "TX06",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BARTON",
+        "first": "JOE",
+        "state_dst": "TX06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Barton",
+        "first": "Joe",
+        "state_dst": "TX06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bass",
+        "first": "Karen",
+        "state_dst": "CA37",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BASS",
+        "first": "KAREN",
+        "state_dst": "CA37",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BASS",
+        "first": "KAREN",
+        "state_dst": "CA37",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bass",
+        "first": "Karen",
+        "state_dst": "CA37",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BATTLE",
+        "first": "GEORGE EDWARD",
+        "state_dst": "NC12",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BAYNE",
+        "first": "IAN L.",
+        "state_dst": "IL11",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BEALE",
+        "first": "ANTHONY A.",
+        "state_dst": "IL02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Beatty",
+        "first": "Joyce",
+        "state_dst": "OH03",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Beatty",
+        "first": "Joyce",
+        "state_dst": "OH03",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BEATTY",
+        "first": "JOYCE",
+        "state_dst": "OH03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Beatty",
+        "first": "Joyce",
+        "state_dst": "OH03",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Beatty",
+        "first": "Joyce",
+        "state_dst": "OH03",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Beatty",
+        "first": "Joyce",
+        "state_dst": "OH03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Becerra",
+        "first": "Xavier",
+        "state_dst": "CA34",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BECERRA",
+        "first": "XAVIER",
+        "state_dst": "CA34",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Becerra",
+        "first": "Xavier",
+        "state_dst": "CA34",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BELGARD",
+        "first": "AIMEE",
+        "state_dst": "NJ03",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BELGARD",
+        "first": "AIMEE",
+        "state_dst": "NJ03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BENISHEK",
+        "first": "DAN",
+        "state_dst": "MI01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BENISHEK",
+        "first": "DAN",
+        "state_dst": "MI01",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Benishek",
+        "first": "Dan",
+        "state_dst": "MI01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BENSON",
+        "first": "MICHAEL WAYNE",
+        "state_dst": "MN01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BENTIVOLIO",
+        "first": "KERRY L.",
+        "state_dst": "MI11",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BENTIVOLIO",
+        "first": "KERRY L.",
+        "state_dst": "MI11",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bentivolio",
+        "first": "Kerry L.",
+        "state_dst": "MI11",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BERA",
+        "first": "AMI",
+        "state_dst": "CA07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bera",
+        "first": "Ami",
+        "state_dst": "CA07",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bera",
+        "first": "Ami",
+        "state_dst": "CA07",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bera",
+        "first": "Ami",
+        "state_dst": "CA07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BERGER",
+        "first": "PHILIP EDWARD",
+        "state_dst": "NC06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BERGMANN",
+        "first": "CHARLOTTE",
+        "state_dst": "TN09",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BILBRAY-KOHN",
+        "first": "ERIN K.",
+        "state_dst": "NV03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BILIRAKIS",
+        "first": "GUS M.",
+        "state_dst": "FL12",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bilirakis",
+        "first": "Gus M.",
+        "state_dst": "FL12",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BIRCHER",
+        "first": "MARK",
+        "state_dst": "FL13",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BIRMAN",
+        "first": "IGOR A.",
+        "state_dst": "CA07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BISHOP",
+        "first": "ROB",
+        "state_dst": "UT01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bishop",
+        "first": "Rob",
+        "state_dst": "UT01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BISHOP",
+        "first": "SANFORD D.",
+        "state_dst": "GA02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bishop",
+        "first": "Sanford D.",
+        "state_dst": "GA02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BISHOP",
+        "first": "TIMOTHY H.",
+        "state_dst": "NY01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bishop",
+        "first": "Timothy H.",
+        "state_dst": "NY01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Black",
+        "first": "Diane",
+        "state_dst": "TN06",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BLACK",
+        "first": "DIANE",
+        "state_dst": "TN06",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BLACK",
+        "first": "DIANE",
+        "state_dst": "TN06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Black",
+        "first": "Diane",
+        "state_dst": "TN06",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Black",
+        "first": "Diane",
+        "state_dst": "TN06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BLACKBURN",
+        "first": "MARSHA",
+        "state_dst": "TN07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Blackburn",
+        "first": "Marsha",
+        "state_dst": "TN07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BLUM",
+        "first": "RODNEY LELAND",
+        "state_dst": "IA01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BLUMENAUER",
+        "first": "EARL",
+        "state_dst": "OR03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Blumenauer",
+        "first": "Earl",
+        "state_dst": "OR03",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Blumenauer",
+        "first": "Earl",
+        "state_dst": "OR03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BOCCIERI",
+        "first": "JOHN A.",
+        "state_dst": "OH07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BOCK",
+        "first": "JOSEPH",
+        "state_dst": "IN02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Boehner",
+        "first": "John A.",
+        "state_dst": "OH08",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BOEHNER",
+        "first": "JOHN A.",
+        "state_dst": "OH08",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BOLGER",
+        "first": "RICHARD OWEN",
+        "state_dst": "VA10",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BONAMICI",
+        "first": "SUZANNE",
+        "state_dst": "OR01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bonamici",
+        "first": "Suzanne",
+        "state_dst": "OR01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BONGINO",
+        "first": "DANIEL",
+        "state_dst": "MD06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BONILLA",
+        "first": "JORGE L.",
+        "state_dst": "FL09",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BONNER",
+        "first": "JAY  ALAN",
+        "state_dst": "FL20",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BONNER",
+        "first": "JO",
+        "state_dst": "AL01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BORDALLO",
+        "first": "MADELEINE Z.",
+        "state_dst": "GU00",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bordallo",
+        "first": "Madeleine Z.",
+        "state_dst": "GU00",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BOST",
+        "first": "MICHAEL J.",
+        "state_dst": "IL12",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BOSTIC",
+        "first": "CURTIS",
+        "state_dst": "SC01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BOUSTANY",
+        "first": "CHARLES W.",
+        "state_dst": "LA03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Boustany",
+        "first": "Charles W.",
+        "state_dst": "LA03",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Boustany",
+        "first": "Charles W.",
+        "state_dst": "LA03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BOYLE",
+        "first": "BRENDAN F.",
+        "state_dst": "PA13",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRADY",
+        "first": "KEVIN",
+        "state_dst": "TX08",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRADY",
+        "first": "KEVIN",
+        "state_dst": "TX08",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brady",
+        "first": "Kevin",
+        "state_dst": "TX08",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRADY",
+        "first": "ROBERT A.",
+        "state_dst": "PA01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brady",
+        "first": "Robert A.",
+        "state_dst": "PA01",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brady",
+        "first": "Robert A.",
+        "state_dst": "PA01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRALEY",
+        "first": "BRUCE L.",
+        "state_dst": "IA01",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRALEY",
+        "first": "BRUCE L.",
+        "state_dst": "IA01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRALEY",
+        "first": "BRUCE L.",
+        "state_dst": "IA01",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Braley",
+        "first": "Bruce L.",
+        "state_dst": "IA01",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Braley",
+        "first": "Bruce L.",
+        "state_dst": "IA01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRANDON",
+        "first": "MARCUS",
+        "state_dst": "NC08",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BREWER",
+        "first": "THOMAS HILL",
+        "state_dst": "AR03",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRIDENSTINE",
+        "first": "JIM",
+        "state_dst": "OK01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bridenstine",
+        "first": "Jim",
+        "state_dst": "OK01",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bridenstine",
+        "first": "Jim",
+        "state_dst": "OK01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BRIKHO",
+        "first": "GEORGE",
+        "state_dst": "MI09",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROOKE",
+        "first": "WILLIAM W.",
+        "state_dst": "AL06",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROOKS",
+        "first": "JANIS C.",
+        "state_dst": "PA02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROOKS",
+        "first": "MO",
+        "state_dst": "AL05",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROOKS",
+        "first": "MO",
+        "state_dst": "AL05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brooks",
+        "first": "Mo",
+        "state_dst": "AL05",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brooks",
+        "first": "Mo",
+        "state_dst": "AL05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROOKS",
+        "first": "SUSAN W.",
+        "state_dst": "IN05",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROOKS",
+        "first": "SUSAN W.",
+        "state_dst": "IN05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brooks",
+        "first": "Susan W.",
+        "state_dst": "IN05",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brooks",
+        "first": "Susan W.",
+        "state_dst": "IN05",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brooks",
+        "first": "Susan W.",
+        "state_dst": "IN05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Broun",
+        "first": "Paul C.",
+        "state_dst": "GA10",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROUN",
+        "first": "PAUL C.",
+        "state_dst": "GA10",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brown",
+        "first": "Corrine",
+        "state_dst": "FL05",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROWN",
+        "first": "CORRINE",
+        "state_dst": "FL05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brown",
+        "first": "Corrine",
+        "state_dst": "FL05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROWN",
+        "first": "THOMAS EDISON",
+        "state_dst": "GA04",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROWNLEY",
+        "first": "JULIA",
+        "state_dst": "CA26",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brownley",
+        "first": "Julia",
+        "state_dst": "CA26",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Brownley",
+        "first": "Julia",
+        "state_dst": "CA26",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BROWNSBERGER",
+        "first": "WILLIAM N.",
+        "state_dst": "MA05",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BUCHANAN",
+        "first": "VERN",
+        "state_dst": "FL16",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Buchanan",
+        "first": "Vern",
+        "state_dst": "FL16",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BUCSHON",
+        "first": "LARRY",
+        "state_dst": "IN08",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BUCSHON",
+        "first": "LARRY",
+        "state_dst": "IN08",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bucshon",
+        "first": "Larry",
+        "state_dst": "IN08",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BURGESS",
+        "first": "MICHAEL C.",
+        "state_dst": "TX26",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BURGESS",
+        "first": "MICHAEL C.",
+        "state_dst": "TX26",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Burgess",
+        "first": "Michael C.",
+        "state_dst": "TX26",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BUSCH",
+        "first": "ELIZABETH COLBERT",
+        "state_dst": "SC01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BUSTOS",
+        "first": "CHERI",
+        "state_dst": "IL17",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bustos",
+        "first": "Cheri",
+        "state_dst": "IL17",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Bustos",
+        "first": "Cheri",
+        "state_dst": "IL17",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Butterfield",
+        "first": "G. K.",
+        "state_dst": "NC01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BUTTERFIELD",
+        "first": "G.K.",
+        "state_dst": "NC01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BYRNE",
+        "first": "BRADLEY ROBERTS",
+        "state_dst": "AL01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "BYRNES",
+        "first": "PAM",
+        "state_dst": "MI07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CAIN",
+        "first": "EMILY ANN",
+        "state_dst": "ME02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CALLIS",
+        "first": "ANN",
+        "state_dst": "IL13",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CALVERT",
+        "first": "KEN",
+        "state_dst": "CA42",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Calvert",
+        "first": "Ken",
+        "state_dst": "CA42",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CAMP",
+        "first": "DAVE",
+        "state_dst": "MI04",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CAMP",
+        "first": "DAVE",
+        "state_dst": "MI04",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CAMP",
+        "first": "DAVE",
+        "state_dst": "MI04",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Camp",
+        "first": "Dave",
+        "state_dst": "MI04",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Campbell",
+        "first": "John",
+        "state_dst": "CA45",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CAMPBELL",
+        "first": "JOHN",
+        "state_dst": "CA45",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CANNON",
+        "first": "JERRY",
+        "state_dst": "MI01",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CANSECO",
+        "first": "FRANCISCO RAUL",
+        "state_dst": "TX23",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CANTOR",
+        "first": "ERIC",
+        "state_dst": "VA07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Cantor",
+        "first": "Eric Ivan",
+        "state_dst": "VA07",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Cantor",
+        "first": "Eric Ivan",
+        "state_dst": "VA07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Capito",
+        "first": "Shelley Moore",
+        "state_dst": "WV02",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Capito",
+        "first": "Shelley Moore",
+        "state_dst": "WV02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CAPITO",
+        "first": "SHELLEY MOORE",
+        "state_dst": "WV02",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CAPPS",
+        "first": "LOIS",
+        "state_dst": "CA24",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Capps",
+        "first": "Lois",
+        "state_dst": "CA24",
+        "year": 2013,
+        "filing_type": "A",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "Capps",
+        "first": "Lois",
+        "state_dst": "CA24",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      },
+      {
+        "last": "CAPUANO",
+        "first": "MICHAEL E.",
+        "state_dst": "MA07",
+        "year": 2013,
+        "filing_type": "O",
+        "reason": "no_candidate"
+      }
+    ],
+    "docid_length_by_scan_status": {
+      "scanned_lengths": [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7
+      ],
+      "digital_lengths": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ]
+    }
   }
 }

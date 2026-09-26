@@ -268,3 +268,48 @@ def extract(doc: DocWords) -> ColumnExtraction:
         asset_header_found_pages=asset_hdr_pages,
         liability_header_found_pages=liability_hdr_pages,
     )
+
+
+def has_schedule_content(ext: ColumnExtraction) -> bool:
+    """True if at least one page was classified as Schedule A and/or D --
+    i.e. this document is a Schedule A/D disclosure at all, regardless of
+    whether any value line was actually extracted from it. False means the
+    selected document isn't a disclosure schedule (a wrong document was
+    picked -- see match.rank_filings()'s docstring), not that it failed to
+    parse; callers should try a different candidate document rather than
+    reporting a parse failure."""
+    return ext.asset_pages > 0 or ext.liability_pages > 0
+
+
+def apply_extraction(rec: dict, ext: ColumnExtraction) -> str:
+    """Fill `rec`'s value-payload fields from `ext` and set its
+    parse_confidence/needs_review, per the one confidence rule both the
+    digital-text path (build.py) and the OCR path (build_ocr.py) use.
+    Returns the confidence ("high"/"low") for the caller's own bucket
+    counting. Caller is responsible for extraction_method/source_doc_id/
+    filing_type/filing_date and must already have confirmed
+    has_schedule_content(ext) -- this function doesn't check it."""
+    confidence = "high"
+    if ext.asset_pages and ext.asset_header_found_pages < ext.asset_pages:
+        confidence = "low"
+    if ext.liability_pages and ext.liability_header_found_pages < ext.liability_pages:
+        confidence = "low"
+    no_value_data = (
+        ext.asset_line_count == 0
+        and ext.liability_line_count == 0
+        and (ext.asset_pages > 0 or ext.liability_pages > 0)
+    )
+    if no_value_data:
+        confidence = "low"
+
+    rec["assets_total"] = round(ext.assets_total, 2)
+    rec["liabilities_total"] = round(ext.liabilities_total, 2)
+    rec["net_worth"] = round(ext.assets_total - ext.liabilities_total, 2)
+    rec["has_open_ended_asset"] = ext.has_open_ended_asset
+    rec["asset_line_count"] = ext.asset_line_count
+    rec["liability_line_count"] = ext.liability_line_count
+    rec["asset_band_counts"] = ext.asset_band_counts
+    rec["liability_band_counts"] = ext.liability_band_counts
+    rec["parse_confidence"] = confidence
+    rec["needs_review"] = confidence == "low"
+    return confidence

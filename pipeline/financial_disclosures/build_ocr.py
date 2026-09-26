@@ -5,11 +5,19 @@ Loads the existing ``pipeline/output/financial_disclosures.json``, finds
 every row with ``parse_confidence == "unparseable_scanned"``, ensures its PDF
 is downloaded (reusing ``fetch.py``'s cache), runs it through
 ``extract_ocr.extract_ocr_text()`` + the SAME, unchanged ``columns.extract()``
-Phase 1 uses, and updates that row in place. Every other row (all 3,632
+Phase 1 uses, and updates that row in place. Every other row (all
 ``digital_text`` rows, plus any other ``parse_confidence`` value) is left
-byte-for-byte untouched -- this script never re-derives or re-matches a
-filing, it only re-extracts the document already selected as
-``source_doc_id`` for a row Phase 1 could not read at all.
+byte-for-byte untouched.
+
+One exception to "only re-extracts the document already selected as
+``source_doc_id``": if OCR confirms that document has zero Schedule A/D
+content (and it isn't the checkbox-grid legacy form -- see
+``scan_checkbox_form_v2.py``), ``_resolve_row()`` re-derives the member-
+year's other candidate filings (via ``match.rank_filings()``, same matching
+Phase 1 did) and tries them instead -- see
+``docs/FINANCIAL_DISCLOSURES_ARCHITECTURE.md`` and this component's own
+plan history for why: the Clerk's ``filing_type`` code alone can't be
+trusted to mean "this is the annual report."
 
 Usage:
     python build_ocr.py                 # full run over all unparseable_scanned rows
@@ -32,8 +40,12 @@ import requests
 
 import columns
 import fetch
-from extract_ocr import DOC_LOW_CONFIDENCE_THRESHOLD, extract_ocr_text
+import match
+import roster
+from extract_ocr import DOC_LOW_CONFIDENCE_THRESHOLD, MAX_OCR_PAGES, extract_ocr_text
+from extract_text import extract_digital_text
 from schema import validate_record
+from scan_checkbox_form_v2 import CHECKBOX_HIT_THRESHOLD, checkbox_form_hits
 
 # Best-effort backstop, on top of extract_ocr.py's page-by-page streaming and
 # MAX_OCR_PAGES guard: cap each worker process's own address space so a case
@@ -63,8 +75,43 @@ OUT_DIR = Path(__file__).resolve().parents[1] / "output"
 DATA_PATH = OUT_DIR / "financial_disclosures.json"
 REPORT_PATH = OUT_DIR / "financial_disclosures_report.json"
 
+# Per-year (bioguide_id -> ranked candidate FilingRows), built lazily and
+# reused across every row that needs it -- fetch.fetch_year_index() already
+# caches the raw index to disk, so this only costs re-matching in memory,
+# not a new network call, and only for years actually touched by a
+# no_schedule_found retry (a handful, not all of 2013-2026).
+_year_matches_cache: dict[int, dict[str, list]] = {}
+_roster_index_cache = None
 
-def _ocr_and_extract(pdf_path: str) -> dict:
+
+def _roster_index():
+    global _roster_index_cache
+    if _roster_index_cache is None:
+        members = roster.load_current_house_members()
+        _roster_index_cache = roster.build_index(members)
+    return _roster_index_cache
+
+
+def _candidates_for(bioguide_id: str, year: int, session: requests.Session) -> list:
+    """All ranked O/A candidates for a member-year, re-derived from the
+    Clerk's year index -- the same matching build.py's Phase 1 pass already
+    did, just re-run here (cheap: cached index, in-memory matching) so this
+    phase can see candidates Phase 1 didn't select."""
+    if year not in _year_matches_cache:
+        rows = fetch.fetch_year_index(year, session)
+        idx = _roster_index()
+        matched: dict[str, list] = {}
+        for row in rows:
+            if row.filing_type not in ("O", "A"):
+                continue
+            res = match.match_row(row, idx)
+            if res.bioguide_id:
+                matched.setdefault(res.bioguide_id, []).append(row)
+        _year_matches_cache[year] = matched
+    return match.rank_filings(_year_matches_cache[year].get(bioguide_id, []))
+
+
+def _ocr_and_extract(pdf_path: str, max_pages: int = MAX_OCR_PAGES) -> dict:
     """Run in a worker process: OCR the PDF and run it through the
     unchanged `columns.extract()`. Returns a plain (picklable) dict rather
     than the dataclasses themselves -- simpler than teaching the parent
@@ -73,7 +120,7 @@ def _ocr_and_extract(pdf_path: str) -> dict:
     Kept as a standalone, top-level function (not a closure/method) because
     `ProcessPoolExecutor` pickles the callable to ship it to the worker.
     """
-    doc = extract_ocr_text(pdf_path)
+    doc = extract_ocr_text(pdf_path, max_pages=max_pages)
     if doc.oversized:
         return {"oversized": True, "page_count": doc.page_count}
     if doc.is_scanned:
@@ -96,19 +143,24 @@ def _ocr_and_extract(pdf_path: str) -> dict:
     }
 
 
-def _apply_result(rec: dict, result: dict | None, error: str | None) -> None:
+def _apply_result(rec: dict, result: dict | None, error: str | None, *, is_checkbox_form: bool = False) -> str:
     """Mutate `rec` in place from a worker's `_ocr_and_extract` result (or
     an error string), per the same confidence model build.py uses for
     digital_text rows, plus the OCR-specific `ocr_low_confidence` value.
     Never touches fields outside the value-payload + provenance set a
-    Phase 1 row already has."""
+    Phase 1 row already has.
+
+    Returns "resolved" (rec is in a final state) or "needs_retry" -- the
+    latter only for a confirmed-wrong, non-checkbox-form document (see
+    `_resolve_row`), so the caller can try the member-year's next-best
+    candidate instead of accepting this as final."""
     rec["extraction_method"] = "ocr"
 
     if error is not None:
         rec["parse_confidence"] = "download_failed"
         rec["needs_review"] = True
         rec["extra_note"] = f"OCR extract error: {error}"
-        return
+        return "resolved"
 
     if result.get("oversized"):
         # Page count exceeded extract_ocr.MAX_OCR_PAGES -- deliberately not
@@ -118,7 +170,7 @@ def _apply_result(rec: dict, result: dict | None, error: str | None) -> None:
         rec["parse_confidence"] = "ocr_skipped_oversized"
         rec["needs_review"] = True
         rec["extra_note"] = f"OCR pass: skipped, {result['page_count']} pages exceeds cap"
-        return
+        return "resolved"
 
     if result["is_scanned"]:
         # Tesseract recovered essentially no text at all (e.g. a blank or
@@ -128,24 +180,39 @@ def _apply_result(rec: dict, result: dict | None, error: str | None) -> None:
         rec["parse_confidence"] = "unparseable_scanned"
         rec["needs_review"] = True
         rec["extra_note"] = "OCR pass: no recoverable text"
-        return
+        return "resolved"
 
     no_schedule_found = result["asset_pages"] == 0 and result["liability_pages"] == 0
     if no_schedule_found:
+        if is_checkbox_form:
+            # Confirmed checkbox-grid legacy form (band-boundary header
+            # signature) -- OCR simply failed to recognize its own header
+            # text, the real filing IS this document. Retrying against a
+            # different candidate would misrepresent "wrong document" as
+            # the cause and, since there's usually no better alternate,
+            # would relabel this "no_schedule_content_found" ("no real
+            # filing exists") when the correct read is "pending the
+            # checkbox-grid extraction work" -- stays exactly as before.
+            rec["parse_confidence"] = "unparseable_scanned"
+            rec["needs_review"] = True
+            rec["extra_note"] = (
+                "OCR pass: no Schedule A/D content found -- confirmed checkbox-grid "
+                "legacy form (band-boundary header signature); pending separate "
+                "extraction work, not a wrong-document case"
+            )
+            return "resolved"
         # OCR produced real text, but none of it matches Schedule A/D's
-        # literal header phrases anywhere in the document -- this is not an
-        # OCR-quality problem, it means the selected document genuinely
-        # isn't a Schedule A/D disclosure (confirmed on samples: several
+        # literal header phrases anywhere in the document, and this isn't
+        # the checkbox-grid form either -- this is not an OCR-quality
+        # problem, it means the selected document genuinely isn't a
+        # Schedule A/D disclosure (confirmed on samples: several
         # "unparseable_scanned" rows' source_doc_id turned out to be scanned
         # cover letters, e.g. an extension request, picked by match.py's
         # "latest FilingDate wins" tie-break over an actual digital filing
-        # for the same member-year -- a Phase 1 matching behavior, not
-        # something this phase re-derives or fixes). Stays flagged rather
-        # than guessing.
-        rec["parse_confidence"] = "unparseable_scanned"
-        rec["needs_review"] = True
+        # for the same member-year). Caller retries the next-best candidate
+        # rather than accepting this as final.
         rec["extra_note"] = "OCR pass: no Schedule A/D content found in this document"
-        return
+        return "needs_retry"
 
     no_value_data = (
         result["asset_line_count"] == 0
@@ -178,7 +245,7 @@ def _apply_result(rec: dict, result: dict | None, error: str | None) -> None:
         # don't trust -- but still record the band counts found, for audit.
         rec["asset_band_counts"] = result["asset_band_counts"]
         rec["liability_band_counts"] = result["liability_band_counts"]
-        return
+        return "resolved"
 
     confidence = "high"
     if header_incomplete or no_value_data:
@@ -195,6 +262,7 @@ def _apply_result(rec: dict, result: dict | None, error: str | None) -> None:
     rec["parse_confidence"] = confidence
     rec["needs_review"] = confidence == "low"
     rec["extra_note"] = f"OCR pass: mean word confidence {mean_conf:.1f}"
+    return "resolved"
 
 
 def _ensure_downloaded(rec: dict, session: requests.Session) -> str | None:
@@ -208,7 +276,86 @@ def _ensure_downloaded(rec: dict, session: requests.Session) -> str | None:
     return str(pdf_path) if pdf_path else None
 
 
-def _process_row_serial(rec: dict, session: requests.Session) -> None:
+def _resolve_row(
+    rec: dict,
+    session: requests.Session,
+    result: dict | None,
+    error: str | None,
+    pdf_path: str | None,
+    max_pages: int,
+) -> None:
+    """Apply the first (already-computed) OCR attempt via `_apply_result`;
+    if that comes back "needs_retry" (confirmed wrong document, not the
+    checkbox-grid form), try the member-year's remaining ranked candidates
+    -- digital extraction first (cheap, no OCR needed if it works), OCR
+    fallback if a candidate is itself scanned -- until one has real
+    Schedule A/D content or the list is exhausted. Runs serially regardless
+    of --workers: this only fires for the rare no_schedule_found case (a
+    handful of rows), so it isn't worth complicating the worker-pool
+    dispatch for the common case, which is unaffected."""
+    is_checkbox = bool(pdf_path) and checkbox_form_hits(pdf_path) >= CHECKBOX_HIT_THRESHOLD
+    outcome = _apply_result(rec, result, error, is_checkbox_form=is_checkbox)
+    if outcome == "resolved":
+        return
+
+    tried_doc_ids = [rec["source_doc_id"]]
+    tried_ids = {rec["source_doc_id"]}
+    year = rec["year"]
+    remaining = [c for c in _candidates_for(rec["bioguide_id"], year, session) if c.doc_id not in tried_ids]
+
+    for cand in remaining:
+        tried_ids.add(cand.doc_id)
+        cand_path = fetch.download_pdf(year, cand.doc_id, session)
+        if cand_path is None:
+            tried_doc_ids.append(f"{cand.doc_id}(download_failed)")
+            continue
+        cand_path = str(cand_path)
+
+        try:
+            doc = extract_digital_text(cand_path)
+        except Exception as e:
+            tried_doc_ids.append(f"{cand.doc_id}(extract_error: {e})")
+            continue
+
+        if not doc.is_scanned:
+            ext = columns.extract(doc)
+            tried_doc_ids.append(cand.doc_id)
+            if not columns.has_schedule_content(ext):
+                continue  # confirmed empty digital candidate, try next
+            rec["source_doc_id"] = cand.doc_id
+            rec["filing_type"] = cand.filing_type
+            rec["filing_date"] = cand.filing_date
+            rec["extraction_method"] = "digital_text"
+            columns.apply_extraction(rec, ext)
+            rec.pop("extra_note", None)
+            return
+
+        # Candidate is itself scanned -- OCR it, same acceptance rule.
+        cand_is_checkbox = checkbox_form_hits(cand_path) >= CHECKBOX_HIT_THRESHOLD
+        try:
+            cand_result = _ocr_and_extract(cand_path, max_pages=max_pages)
+            cand_error = None
+        except Exception as e:
+            cand_result, cand_error = None, str(e)
+
+        rec["source_doc_id"] = cand.doc_id
+        rec["filing_type"] = cand.filing_type
+        rec["filing_date"] = cand.filing_date
+        outcome = _apply_result(rec, cand_result, cand_error, is_checkbox_form=cand_is_checkbox)
+        tried_doc_ids.append(cand.doc_id)
+        if outcome == "resolved":
+            return
+
+    # Every remaining candidate tried (or none existed): the original
+    # candidate was already confirmed (via OCR) to have zero Schedule A/D
+    # content, and so was every alternate that could be checked -- this is
+    # the terminal "no real filing to find" state, not a scan-quality gap.
+    rec["parse_confidence"] = "no_schedule_content_found"
+    rec["needs_review"] = True
+    rec["extra_note"] = f"checked {len(tried_doc_ids)} candidate filing(s), none contain Schedule A/D content: {tried_doc_ids}"
+
+
+def _process_row_serial(rec: dict, session: requests.Session, max_pages: int = MAX_OCR_PAGES) -> None:
     """Single-process fallback path (used for --workers 1 / small test runs):
     download then OCR+extract in this same process."""
     pdf_path = _ensure_downloaded(rec, session)
@@ -220,12 +367,12 @@ def _process_row_serial(rec: dict, session: requests.Session) -> None:
         return
 
     try:
-        result = _ocr_and_extract(pdf_path)
+        result = _ocr_and_extract(pdf_path, max_pages=max_pages)
         error = None
     except Exception as e:  # pytesseract/pdf2image failure on a malformed/corrupt PDF
         result = None
         error = str(e)
-    _apply_result(rec, result, error)
+    _resolve_row(rec, session, result, error, pdf_path, max_pages)
 
 
 def _write_output(records: list[dict]) -> None:
@@ -246,10 +393,27 @@ def _write_output(records: list[dict]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--limit", type=int, default=None, help="process only the first N unparseable_scanned rows (testing)")
+    ap.add_argument("--limit", type=int, default=None, help="process only the first N target rows (testing)")
     ap.add_argument("--bioguide", type=str, nargs="*", default=None, help="restrict to specific bioguide_ids (testing)")
     ap.add_argument("--workers", type=int, default=1, help="parallel worker processes for the OCR+extract step (download stays serial/rate-limited)")
     ap.add_argument("--checkpoint-every", type=int, default=10, help="write financial_disclosures.json after every N completions, so a long run is resumable if interrupted")
+    ap.add_argument(
+        "--max-pages", type=int, default=MAX_OCR_PAGES,
+        help=f"override extract_ocr.MAX_OCR_PAGES (default {MAX_OCR_PAGES}) for this run. "
+             "Safe to raise for a targeted re-run (e.g. via --bioguide) against known members "
+             "whose filings are legitimately long -- the page-by-page streaming fix means "
+             "memory no longer scales with page count, so this only costs wall-clock time. "
+             "Leave at the default for a general/unfiltered run.",
+    )
+    ap.add_argument(
+        "--statuses", type=str, nargs="*", default=["unparseable_scanned"],
+        help="parse_confidence values to reprocess (default: unparseable_scanned only). "
+             "Pass e.g. --statuses unparseable_scanned ocr_low_confidence to also retry "
+             "rows an earlier OCR pass flagged low-confidence -- worth doing after a fix "
+             "to extract_ocr.py's OCR logic itself (e.g. the rotation-corroboration fix), "
+             "since those rows may improve on a rerun even though nothing about the row's "
+             "own data changed.",
+    )
     args = ap.parse_args()
 
     records: list[dict] = json.loads(DATA_PATH.read_text())
@@ -257,7 +421,11 @@ def main() -> None:
 
     targets_idx = [
         i for i, r in enumerate(records)
-        if r["parse_confidence"] == "unparseable_scanned"
+        if r.get("chamber") == "house"  # this module is entirely House-specific
+        # (Clerk PDFs, House roster/matching) -- Senate rows can carry the
+        # same parse_confidence values (e.g. "unparseable_scanned" for a
+        # paper filing) since Phase 3a, and must never reach this pipeline.
+        and r["parse_confidence"] in args.statuses
         and (args.bioguide is None or r["bioguide_id"] in args.bioguide)
     ]
     if args.limit is not None:
@@ -275,7 +443,7 @@ def main() -> None:
     if args.workers <= 1:
         for n, i in enumerate(targets_idx, 1):
             rec = records[i]
-            _process_row_serial(rec, session)
+            _process_row_serial(rec, session, max_pages=args.max_pages)
             elapsed = time.time() - t0
             print(
                 f"[build_ocr] {n}/{len(targets_idx)} {rec['bioguide_id']} {rec['year']} "
@@ -307,7 +475,7 @@ def main() -> None:
                 path = pdf_paths[i]
                 if path is None:
                     continue
-                future_to_idx[pool.submit(_ocr_and_extract, path)] = i
+                future_to_idx[pool.submit(_ocr_and_extract, path, args.max_pages)] = i
 
             done = 0
             total = len(targets_idx)
@@ -329,7 +497,7 @@ def main() -> None:
                 except Exception as e:
                     result = None
                     error = str(e)
-                _apply_result(rec, result, error)
+                _resolve_row(rec, session, result, error, pdf_paths[i], args.max_pages)
                 done += 1
                 elapsed = time.time() - t0
                 print(

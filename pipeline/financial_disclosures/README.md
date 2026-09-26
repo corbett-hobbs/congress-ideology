@@ -76,6 +76,7 @@ the file extension) and parses either.
 | `unparseable_scanned` | No extractable text layer (OmniPage-OCR'd scan). Value-payload fields left `null`, never guessed. `needs_review: true`. This is exactly Phase 2 (OCR)'s target set. |
 | `no_filing_found` | No `O`/`A` filing matched for this member-year — either a genuine gap (e.g. a first-year filer under the new online system) or a name-matching miss worth a second look. Value-payload fields left `null`. |
 | `download_failed` | Matched a filing but the PDF couldn't be downloaded or parsed as a PDF at all. `needs_review: true`. |
+| `no_schedule_content_found` | Every `O`/`A` candidate filing on record for this member-year was checked (digitally, and via OCR for any candidate that was itself a scan) and none contains Schedule A/D content at all — the Clerk index's own `filing_type='A'` code doesn't record what's being amended, so a same-year amendment to an unrelated filing (a Periodic Transaction Report, correspondence) can be the only O/A-coded document on record. `needs_review: true`. A genuine data-coverage gap, not a scan-quality problem — see `match.rank_filings()`. |
 
 ## Data source
 
