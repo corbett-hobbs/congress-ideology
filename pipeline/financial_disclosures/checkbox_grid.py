@@ -2,14 +2,23 @@
 
 Confirmed this session (both chambers, hand-filled and computer-typed,
 across the entire 2012-2026 span): a pre-electronic-era form where a value
-isn't printed text at all -- it's an X mark in one of ~13 fixed value-tier
-rows. Structure (confirmed against two real House pages, Brett Guthrie's
-2015 Schedule A, doc 9109119): Block A (asset name) runs across up to ~14
-narrow columns, one per asset; Block B/C/D each print their own fixed
-tier-row label list ONCE, to the right of a grid whose columns are the SAME
-asset positions as Block A. A page with only one asset (a long description)
-just leaves the other columns blank -- it's the same grid either way, not a
-different layout.
+isn't printed text at all -- it's an X mark in one of a fixed set of
+value-tier rows. Confirmed against four real House pages, two filers:
+Schedule A/Assets (13 tiers, "None" through "Over $50,000,000" plus a
+spousal-independent row) on pages 2 and 7 of Brett Guthrie's 2015 filing
+(doc 9109119), and Schedule D/Liabilities (11 tiers, "$10,001-$15,000"
+through "Over $50,000,000" plus its own spousal-independent row) on page
+23 of that same filing and page 10 of Gus Bilirakis's 2017 filing (doc
+9113522). Both schedules share the same grid shape: narrow columns (one
+per asset, or one per creditor/liability) with the fixed tier-row list
+printed ONCE to their right. A page with only one asset/liability (a long
+description) just leaves the other columns blank -- it's the same grid
+either way, not a different layout. The two Liabilities pages also
+surfaced a real difference from Assets that the row/column-location logic
+now accounts for (see `LIABILITY_ROW_LINE_PROBE_X_FRAC` and
+`extract_liability_blocks`'s docstring for what's still unsolved: a
+pre-printed "Example" column whose position isn't consistent between
+filers).
 
 This module knows nothing about where its input image came from (House's
 pdf2image-rasterized PDF page or Senate's directly-fetched GIF) -- same
@@ -41,7 +50,7 @@ from bands import ASSET_BANDS, LIABILITY_BANDS, BandDef, value_total
 # form, not free text), so row position is derived by anchoring on one
 # easy, non-numeric word -- "None" (the list's first row) -- found by
 # OCR-confirming each candidate ruled-line band in turn, then taking the
-# next N-1 REAL detected bands directly (see locate_tier_rows_by_geometry).
+# next N-1 REAL detected bands directly (see _locate_tier_rows).
 # Interpolating interior rows evenly from a single anchor was tried and
 # rejected: real row spacing on a live page is not uniform (one gap
 # measured 99px against a ~40px median, a genuinely missed ruled line
@@ -122,8 +131,7 @@ def find_ruled_lines(
 # merged into one nonsense span; a word clearly legible in a screenshot
 # wasn't found anywhere in a whole-region OCR pass). Every OCR call in this
 # module instead operates on a small, isolated, pre-cropped region via
-# `_ocr_single_line()` below -- see `locate_tier_rows_by_geometry`'s
-# docstring.
+# `_ocr_single_line()` below -- see `_locate_tier_rows`'s docstring.
 
 
 # Literal tier-row labels as printed on the checkbox form's Value-of-Asset
@@ -138,9 +146,9 @@ def find_ruled_lines(
 # third format this session has found it in.
 SPOUSAL_INDEPENDENT = "SPOUSAL_INDEPENDENT"
 
-# (display label, EIGA band / None / SPOUSAL_INDEPENDENT) -- print order,
-# row 0 must be the top anchor word, the last row must contain the bottom
-# anchor word (see ASSET_TOP_ANCHOR/ASSET_BOTTOM_ANCHOR below).
+# (display label, EIGA band / None / SPOUSAL_INDEPENDENT) -- print order.
+# `ASSET_TOP_ANCHOR` (below) must appear verbatim in one row's display
+# label; row 0 need not be that row itself -- see `ASSET_ANCHOR_OFFSET`.
 ASSET_TIER_ROW_LABELS: list[tuple[str, str | None]] = [
     ("None", None),
     ("$1-$1,000", None),
@@ -157,11 +165,42 @@ ASSET_TIER_ROW_LABELS: list[tuple[str, str | None]] = [
     ("Spouse/DC Asset over $1,000,000*", SPOUSAL_INDEPENDENT),
 ]
 
-# Plain-English, non-numeric anchor word for row 0 -- OCR never has to read
-# a dollar figure to position a row, just this one word, and only once
-# (see locate_tier_rows_by_geometry: after row 0 is found, the rest follow
-# from ruled-line position, not further OCR matching).
+# Plain-English, non-numeric anchor word -- OCR never has to read a dollar
+# figure to position a row, just this one word, and only once (see
+# `_locate_tier_rows`: after the anchor row is found, the rest follow from
+# ruled-line position, not further OCR matching). It's the list's first
+# row here, so no offset is needed to reach row 0.
 ASSET_TOP_ANCHOR = "None"
+ASSET_ANCHOR_OFFSET = 0
+
+# Schedule D/Liabilities' tier list (confirmed against a real page this
+# session, Brett Guthrie's doc 9109119, page 23): 11 rows, no "None" or
+# sub-threshold row at all -- liabilities under $10,000 simply aren't
+# reported, so the list starts directly at a real dollar band. That rules
+# out an Assets-style non-numeric top anchor, so this anchors on "Over
+# $50,000,000" instead: still no digit-range boundary to misread (unlike
+# "$X,001-$Y,000" pairs, a single large round number isn't easily confused
+# with a neighboring band), and it's the second-to-last row -- see
+# LIABILITY_ANCHOR_OFFSET.
+LIABILITY_TIER_ROW_LABELS: list[tuple[str, str | None]] = [
+    ("$10,001-$15,000", "$10,001 - $15,000"),
+    ("$15,001-$50,000", "$15,001 - $50,000"),
+    ("$50,001-$100,000", "$50,001 - $100,000"),
+    ("$100,001-$250,000", "$100,001 - $250,000"),
+    ("$250,001-$500,000", "$250,001 - $500,000"),
+    ("$500,001-$1,000,000", "$500,001 - $1,000,000"),
+    ("$1,000,001-$5,000,000", "$1,000,001 - $5,000,000"),
+    ("$5,000,001-$25,000,000", "$5,000,001 - $25,000,000"),
+    ("$25,000,001-$50,000,000", "$25,000,001 - $50,000,000"),
+    ("Over $50,000,000", "Over $50,000,000"),
+    ("Over $1,000,000* (Spouse/DC Liability)", SPOUSAL_INDEPENDENT),
+]
+
+LIABILITY_TOP_ANCHOR = "Over $50,000,000"
+# How many rows precede the anchor row in LIABILITY_TIER_ROW_LABELS -- 9
+# rows (A-I) come before "Over $50,000,000" (J), so row 0 is 9 bands
+# before wherever the anchor is actually found on the page.
+LIABILITY_ANCHOR_OFFSET = 9
 
 
 _ROW_EDGE_MARGIN = 5  # trim this many px off each detected band's top/bottom before OCR
@@ -214,65 +253,15 @@ def _split_wide_gaps(lines: list[int]) -> list[int]:
     return out
 
 
-def locate_tier_rows_by_geometry(
-    image: Image.Image,
-    label_column: tuple[int, int],
-    search_region: tuple[int, int, int, int],
-    labels: list[tuple[str, str | None]],
-    top_anchor: str,
-    min_coverage: float = _LINE_MIN_COVERAGE,
-    step: int = _LINE_SCAN_STEP,
-) -> list[tuple[str | None, int, int]] | None:
-    """Geometry-first row location: find ruled horizontal lines within
-    `search_region` (a generous window expected to contain this block's
-    tier-row grid), and OCR each candidate line-pair's `label_column`
-    (x0, x1) strip in isolation (`--psm 7` with edge-margin trimming, per
-    `_ocr_single_line`) until one reads as `top_anchor` (e.g. "None") --
-    that candidate is row 0. The remaining N-1 rows are the NEXT N-1
-    detected bands, taken directly -- not evenly interpolated. Confirmed
-    live this matters: row spacing on a real page is NOT uniform (one gap
-    measured 99px against a ~40px median -- genuine form layout, not a
-    detection error), so interpolating from a fixed spacing drifts out of
-    alignment after the first irregular gap while the real detected lines
-    (at the validated `_LINE_MIN_COVERAGE`/`_LINE_SCAN_STEP`) remain
-    correct throughout. Returns None (flag, don't guess) if `top_anchor`
-    isn't found, or if fewer than `len(labels)` bands remain after it."""
-    x0, x1 = label_column
-    lines = find_ruled_lines(image, "row", region=search_region, min_coverage=min_coverage, step=step)
-    if len(lines) < 2:
-        return None
-    lines = _split_wide_gaps(lines)
-
-    bands = list(zip(lines, lines[1:]))
-    anchor_idx = None
-    for i, (top, bottom) in enumerate(bands):
-        text = _ocr_single_line(image, (x0, top, x1, bottom), margin=_ROW_EDGE_MARGIN)
-        if top_anchor.lower() in text.lower():
-            anchor_idx = i
-            break
-    if anchor_idx is None:
-        return None
-
-    n = len(labels)
-    if anchor_idx + n > len(bands):
-        return None
-
-    rows: list[tuple[str | None, int, int]] = []
-    for i, (_display, band) in enumerate(labels):
-        top, bottom = bands[anchor_idx + i]
-        rows.append((band, top, bottom))
-    return rows
-
-
 # Search-region defaults below are fractions of page width/height, not
 # absolute pixels: both validation pages this session (different filers,
 # different asset layouts) rasterized to the exact same 1696x2200 at
 # extract_ocr.py's standard 200 DPI -- this is a fixed-layout government
 # form at a fixed scan resolution, so a page-proportional region is the
 # right level of "generous window," consistent with how
-# locate_tier_rows_by_geometry already tolerates a generous search_region
-# and finds exact positions from ruled-line geometry within it, not from
-# the region's exact bounds. Tuned from a 1696x2200 page; unseen only if a
+# `_locate_tier_rows` already tolerates a generous search_region and finds
+# exact positions from ruled-line geometry within it, not from the
+# region's exact bounds. Tuned from a 1696x2200 page; unseen only if a
 # future page rasterizes at a materially different DPI or page size.
 ASSET_HEADER_Y_FRAC = (0.078, 0.224)  # Block A's asset-name header strip
 ASSET_ROW_SEARCH_Y_FRAC = (0.204, 0.614)  # generous window containing Block B's tier-row grid
@@ -292,6 +281,26 @@ ASSET_GRID_X_FRAC = (0.088, 0.518)  # asset-name/checkbox columns, left of the l
 # this narrow, always-present strip rather than to the label column at all.
 _ROW_LINE_PROBE_X_FRAC = (0.088, 0.176)
 
+# Liabilities/Schedule D equivalents, measured against two real pages this
+# session (doc 9109119 page 23, doc 9113522 page 10) -- both filers'
+# checkbox-column area and tier-label text landed at consistent fractions
+# despite different creditor counts, unlike Assets' named-column area
+# (Schedule D's Creditor/Date/Type block has a fixed-width layout, not a
+# variable count of named columns to fit -- see `extract_liability_blocks`'s
+# docstring for the one thing that ISN'T yet consistent across those two
+# pages: which grid column is the pre-printed "Example" one).
+LIABILITY_ROW_SEARCH_Y_FRAC = (0.5, 0.99)  # generous window containing the tier-row grid
+LIABILITY_ROW_LINE_PROBE_X_FRAC = (0.40, 0.43)  # narrow strip within the checkbox columns
+LIABILITY_LABEL_COLUMN_X_FRAC = (0.560, 0.678)  # printed tier-label text strip
+# Right edge deliberately reaches past LIABILITY_LABEL_COLUMN_X_FRAC's own
+# left edge (0.560): confirmed live a real page's last real creditor
+# column extends to x=973 (0.574), inside that supposed boundary -- unlike
+# Assets, where the label column's own left edge cleanly bounds the grid.
+# The extra reach picks up a spurious trailing sliver on pages whose real
+# columns end earlier, which `_drop_outlier_column` trims (see its own
+# docstring's "NARROWER" case).
+LIABILITY_GRID_X_FRAC = (0.354, 0.590)  # creditor/checkbox columns, left of the label text strip
+
 
 def _frac_region(image: Image.Image, y_frac: tuple[float, float]) -> tuple[int, int]:
     return round(y_frac[0] * image.height), round(y_frac[1] * image.height)
@@ -305,32 +314,47 @@ def find_asset_columns(
     image: Image.Image,
     y_span: tuple[int, int],
     x_region: tuple[int, int] | None = None,
+    min_coverage: float = _LINE_MIN_COVERAGE,
 ) -> list[int]:
-    """Positions of the asset-grid's vertical ruled lines, scoped to
-    `y_span` (a row band's own top/bottom, as already found by
-    `locate_tier_rows_by_geometry` -- NOT a hardcoded region). Confirmed
-    live this matters: scanning column lines over a tall region spanning
-    multiple blocks (header + B + C + D) finds only the page's outer
-    border, because real column dividers don't run solid through the gaps
-    between blocks; scoped to one row's own height, they're unambiguous
-    (16 clean lines found on a real page, exactly matching a manual count
-    of its asset-name columns plus one trailing ID-number column)."""
+    """Positions of the checkbox grid's vertical ruled lines, scoped to
+    `y_span` (a row band's own top/bottom, as already found -- NOT a
+    hardcoded region). Confirmed live this matters: scanning column lines
+    over a tall region spanning multiple blocks (header + B + C + D) finds
+    only the page's outer border, because real column dividers don't run
+    solid through the gaps between blocks; scoped to one row's own height,
+    they're unambiguous (16 clean lines found on a real Assets page,
+    exactly matching a manual count of its asset-name columns plus one
+    trailing ID-number column). `min_coverage` matters here too: confirmed
+    live on a real Liabilities page that the default 0.5 found only the
+    outer border across the full row span, while 0.4 found all 6 real
+    column dividers cleanly -- see `_extract_marked_columns`, which tries
+    both the same way row detection does."""
     x0, x1 = x_region if x_region else _frac_x(image, ASSET_GRID_X_FRAC)
     y0, y1 = y_span
-    return find_ruled_lines(image, "col", region=(x0, y0, x1, y1))
+    return find_ruled_lines(image, "col", region=(x0, y0, x1, y1), min_coverage=min_coverage)
 
 
 # Dark-pixel fraction thresholds for one grid cell's interior (border-
 # trimmed via `margin`, same reasoning as `_ocr_single_line`'s margin: a
 # crop taken flush against a ruled line picks up the line itself as ink).
-# Confirmed live: an empty cell reads exactly 0.0, a handwritten X mark
-# reads 0.3-0.4 -- a wide gap, so the ambiguous band between the two
-# thresholds is a safety margin for noise (stray pen bleed, scan
-# artifacts, a partial/faint mark), not a boundary expected to see much
-# real traffic.
-_CELL_MARK_LOW = 0.08
-_CELL_MARK_HIGH = 0.18
+# The analysis window is also capped to `_CELL_MAX_WINDOW` px, centered in
+# the cell, regardless of how much bigger the cell itself is -- confirmed
+# live this matters: a handwritten X is roughly the same physical size
+# regardless of the box it's drawn in, so the SAME mark occupies a much
+# smaller fraction of a bigger cell. The Liabilities grid's cells (76x52px)
+# are over 2x the area of the Assets grid's (~40x40px) on the same page
+# family, and a real, confirmed mark there measured only 0.03-0.08 -- below
+# even the low threshold -- until capped down to a centered 20px window,
+# where it reads 0.18, comfortably inside the "mark" band. Re-verified
+# against every cell on both an Assets and a Liabilities validation page
+# (not just the one mark that motivated it): the cap changes nothing for
+# Assets' already-smaller cells (still 0.5-0.6 for a real mark, 0.0 for
+# empty) and correctly recovers the Liabilities page's one faint mark with
+# zero false positives across either page's full grid.
+_CELL_MARK_LOW = 0.05
+_CELL_MARK_HIGH = 0.15
 _CELL_MARGIN = 6
+_CELL_MAX_WINDOW = 20
 
 # Same ink-density technique applied to Block A's header strip for one
 # column: distinguishes a genuinely blank grid slot (no asset in this
@@ -368,10 +392,19 @@ def classify_cell(
     """Whether one grid cell (row_bounds x col_bounds) contains a mark.
     True/False for a clear read, None for "flag rather than guess" -- an
     ink density that lands between the two thresholds, not clearly a mark
-    or clearly empty."""
+    or clearly empty. The analysis window is margin-trimmed same as
+    before, then capped to `_CELL_MAX_WINDOW`, centered -- see that
+    constant's docstring for why a cell bigger than that needs it."""
     top, bottom = row_bounds
     left, right = col_bounds
-    frac = _dark_fraction(image, (left, top, right, bottom), margin)
+    x0, x1, y0, y1 = left + margin, right - margin, top + margin, bottom - margin
+    if x1 - x0 > _CELL_MAX_WINDOW:
+        cx = (x0 + x1) // 2
+        x0, x1 = cx - _CELL_MAX_WINDOW // 2, cx + _CELL_MAX_WINDOW // 2
+    if y1 - y0 > _CELL_MAX_WINDOW:
+        cy = (y0 + y1) // 2
+        y0, y1 = cy - _CELL_MAX_WINDOW // 2, cy + _CELL_MAX_WINDOW // 2
+    frac = _dark_fraction(image, (x0, y0, x1, y1), 0)
     if frac >= _CELL_MARK_HIGH:
         return True
     if frac <= _CELL_MARK_LOW:
@@ -390,26 +423,39 @@ def _column_has_content(
     return frac > _COLUMN_CONTENT_THRESHOLD
 
 
-# The printed form's last grid column before the label-text strip is an
-# "ID NO./B.F." administrative column, not an asset slot -- confirmed live
-# it has header-strip ink (a preprinted label plus sometimes a handwritten
-# footnote number) that clears `_COLUMN_CONTENT_THRESHOLD` same as a real
-# asset name would, which would otherwise misreport it as an asset with no
-# value marked. Distinguished structurally instead of by position: it's
-# reliably wider than every real asset column (61px vs a ~40px median on a
-# real page) since it holds a short numeric code rather than a name, not by
-# assuming it's always literally the last column found.
-_ID_COLUMN_WIDTH_RATIO = 1.3
+# A trailing grid column whose width is a clear outlier -- either much
+# WIDER or much NARROWER than every other column -- isn't a real data
+# column, and is dropped. Two distinct real cases confirmed live:
+# - WIDER: Assets' printed form has an "ID NO./B.F." administrative column
+#   as the last one before the label-text strip, not an asset slot -- it
+#   has header-strip ink (a preprinted label plus sometimes a handwritten
+#   footnote number) that clears `_COLUMN_CONTENT_THRESHOLD` same as a
+#   real asset name would, which would otherwise misreport it as an asset
+#   with no value marked. Reliably wider than every real asset column
+#   (61px vs a ~40px median on a real page) since it holds a short numeric
+#   code rather than a name.
+# - NARROWER: Liabilities' column search has to reach far enough right to
+#   catch a genuine page's last real creditor column (measured as far
+#   right as x=973 on one page), but that same generous right edge picks
+#   up a spurious sliver on OTHER pages (confirmed live: a ~25px trailing
+#   band, against a ~50px median, on a page whose real columns actually
+#   end earlier) -- a page-to-page artifact of the grid/label boundary,
+#   not a data column either.
+# Either way this is about the LAST column found being an outlier, not
+# about assuming it's always in some fixed position.
+_OUTLIER_COLUMN_WIDE_RATIO = 1.3
+_OUTLIER_COLUMN_NARROW_RATIO = 0.7
 
 
-def _drop_id_column(col_bands: list[tuple[int, int]]) -> list[tuple[int, int]]:
+def _drop_outlier_column(col_bands: list[tuple[int, int]]) -> list[tuple[int, int]]:
     if len(col_bands) < 2:
         return col_bands
     widths = [b - a for a, b in col_bands]
     median = sorted(widths)[len(widths) // 2]
     if not median:
         return col_bands
-    if widths[-1] > _ID_COLUMN_WIDTH_RATIO * median:
+    ratio = widths[-1] / median
+    if ratio > _OUTLIER_COLUMN_WIDE_RATIO or ratio < _OUTLIER_COLUMN_NARROW_RATIO:
         return col_bands[:-1]
     return col_bands
 
@@ -443,13 +489,13 @@ def _sweep_for_label_column(
     top_anchor: str,
     x_sweep_start: int,
 ) -> tuple[tuple[int, int], int] | None:
-    """Fallback for a page whose tier-label text isn't where
-    ASSET_LABEL_COLUMN_X_FRAC expects it (see that constant's neighbor,
-    _ROW_LINE_PROBE_X_FRAC, for why: this form's grid width varies by
-    filing page). Slides a fixed-width OCR window rightward across each
-    candidate row band in turn until `top_anchor` reads clean -- confirmed
-    live this finds it (a page's real tier-label text) even when the fixed
-    guess misses by several hundred pixels."""
+    """Fallback for a page whose tier-label text isn't where the fixed
+    label-column fraction expects it (see `_ROW_LINE_PROBE_X_FRAC`'s
+    docstring: this form's grid width varies by filing page). Slides a
+    fixed-width OCR window rightward across each candidate row band in
+    turn until `top_anchor` reads clean -- confirmed live this finds it (a
+    page's real tier-label text) even when the fixed guess misses by
+    several hundred pixels."""
     x_max = round(image.width * _LABEL_SWEEP_X_MAX_FRAC)
     for row_idx, (top, bottom) in enumerate(row_bands):
         for x0 in range(x_sweep_start, x_max, _LABEL_SWEEP_STEP):
@@ -460,52 +506,30 @@ def _sweep_for_label_column(
     return None
 
 
-@dataclass
-class AssetMark:
-    """One asset-grid column's result. `band` is an EIGA band label (from
-    `bands.ASSET_BANDS`), `SPOUSAL_INDEPENDENT`, or None if the column has
-    an asset but the tier grid didn't yield a clean single mark. `ambiguous`
-    is True when this column clearly has an asset (Block A header ink
-    cleared `_COLUMN_CONTENT_THRESHOLD`) but the value grid shows zero marks
-    or more than one -- flagged for manual review rather than guessed."""
-
-    column_index: int
-    band: str | None
-    ambiguous: bool
-
-
-def extract_asset_blocks(
+def _locate_tier_rows(
     image: Image.Image,
-    labels: list[tuple[str, str | None]] = ASSET_TIER_ROW_LABELS,
-    top_anchor: str = ASSET_TOP_ANCHOR,
-) -> list[AssetMark] | None:
-    """Full Assets/Schedule A extraction for one page: locates the tier-row
-    grid, locates the asset-grid columns scoped to that grid's own row span
-    (`find_asset_columns` -- never a hardcoded region), classifies every
-    (row, column) cell, and returns one `AssetMark` per column that
-    actually has an asset (Block A header ink check via
-    `_column_has_content` -- columns that are just unused grid slots on
-    this page are silently skipped, not reported as anything). Returns
-    None (flag, don't guess) if the tier-row grid itself couldn't be
-    located.
-
-    Row-line detection is scoped to `_ROW_LINE_PROBE_X_FRAC`, a narrow
-    strip guaranteed present regardless of how many asset columns this
-    page uses (see that constant's docstring) -- NOT to the label column,
-    which does vary by page. Two coverage levels are tried, not just the
-    validated default: confirmed live that one real page's ruled lines
-    only clear a looser 0.4 threshold (lighter print/scan contrast than
-    the page the 0.5 default was tuned on), while 0.5 remains necessary on
-    other pages to avoid false-positive lines a looser threshold would
-    pick up. Trying the stricter value first keeps the bar high by default.
-
-    Finding the tier-label text itself (needed to OCR-confirm the "None"
-    anchor row) tries the common-layout fixed fraction first, and only
-    falls back to the slower `_sweep_for_label_column` search when that
-    fails -- see its docstring for why a fixed position doesn't always
-    work."""
-    search_y = _frac_region(image, ASSET_ROW_SEARCH_Y_FRAC)
-    probe_x = _frac_x(image, _ROW_LINE_PROBE_X_FRAC)
+    probe_x_frac: tuple[float, float],
+    label_x_frac: tuple[float, float],
+    row_search_y_frac: tuple[float, float],
+    labels: list[tuple[str, str | None]],
+    top_anchor: str,
+    anchor_offset: int = 0,
+) -> tuple[list[tuple[str | None, int, int]], tuple[int, int]] | None:
+    """Shared by `extract_asset_blocks` and `extract_liability_blocks`: find
+    this block's `len(labels)` tier rows and the tier-label column's actual
+    x-position, trying a fixed-fraction guess first and falling back to
+    `_sweep_for_label_column`. Row-line detection is scoped to
+    `probe_x_frac`, a narrow strip guaranteed present regardless of how
+    many columns this page uses (see `_ROW_LINE_PROBE_X_FRAC`'s docstring)
+    -- NOT to the label column, which does vary by page. Two coverage
+    levels are tried, not just the validated default: confirmed live that
+    one real page's ruled lines only clear a looser 0.4 threshold (lighter
+    print/scan contrast than the page the 0.5 default was tuned on), while
+    0.5 remains necessary on other pages to avoid false-positive lines a
+    looser threshold would pick up. Returns `(rows, label_x)`, or None
+    (flag, don't guess) if the grid couldn't be located."""
+    search_y = _frac_region(image, row_search_y_frac)
+    probe_x = _frac_x(image, probe_x_frac)
 
     row_bands = None
     for min_coverage in (_LINE_MIN_COVERAGE, 0.4):
@@ -519,7 +543,7 @@ def extract_asset_blocks(
     if row_bands is None:
         return None
 
-    label_x = _frac_x(image, ASSET_LABEL_COLUMN_X_FRAC)
+    label_x = _frac_x(image, label_x_frac)
     anchor_idx = _find_anchor_row(image, row_bands, label_x, top_anchor)
     if anchor_idx is None:
         found = _sweep_for_label_column(image, row_bands, top_anchor, x_sweep_start=probe_x[1])
@@ -527,27 +551,83 @@ def extract_asset_blocks(
             return None
         label_x, anchor_idx = found
 
+    row0_idx = anchor_idx - anchor_offset
     n = len(labels)
-    if anchor_idx + n > len(row_bands):
+    if row0_idx < 0 or row0_idx + n > len(row_bands):
         return None
     rows: list[tuple[str | None, int, int]] = []
     for i, (_display, band) in enumerate(labels):
-        top, bottom = row_bands[anchor_idx + i]
+        top, bottom = row_bands[row0_idx + i]
         rows.append((band, top, bottom))
+    return rows, label_x
 
-    header_y = _frac_region(image, ASSET_HEADER_Y_FRAC)
+
+@dataclass
+class ColumnMark:
+    """One checkbox-grid column's result -- one asset (Assets/Schedule A)
+    or one creditor (Liabilities/Schedule D). `band` is an EIGA band label
+    (from `bands.ASSET_BANDS`/`LIABILITY_BANDS`), `SPOUSAL_INDEPENDENT`, or
+    None if the column has content but the tier grid didn't yield a clean
+    single mark. `ambiguous` is True when this column clearly has content
+    but the value grid shows zero marks or more than one -- flagged for
+    manual review rather than guessed."""
+
+    column_index: int
+    band: str | None
+    ambiguous: bool
+
+
+def _extract_marked_columns(
+    image: Image.Image,
+    rows: list[tuple[str | None, int, int]],
+    grid_x_left: int,
+    grid_x_right: int,
+    header_y_span: tuple[int, int] | None,
+    drop_outlier_column: bool,
+) -> list[ColumnMark] | None:
+    """Shared by `extract_asset_blocks` and `extract_liability_blocks`:
+    locate this block's columns (scoped to `rows`' own y-span, between
+    `grid_x_left` and `grid_x_right` -- never a hardcoded region),
+    classify every (row, column) cell, and return one `ColumnMark` per
+    column that has content.
+
+    Both coverage levels are tried and the one giving MORE resulting
+    columns wins (ties go to the stricter 0.5, same bias as row
+    detection) -- confirmed live neither level is uniformly right for
+    columns the way it is for rows: one real Liabilities page needed 0.5
+    (0.4 added a genuine trailing outlier column, dropped below), another
+    needed 0.4 (0.5 merged several real dividers into one wrong band, not
+    just missing a line at the edges the way a row gap does) -- so unlike
+    rows, "stricter first, use it if it meets a minimum" doesn't work here
+    since there's no fixed expected column count to check against.
+
+    `header_y_span` selects how "has content" is decided: Assets has a
+    dedicated asset-name header strip above the grid, so a column with no
+    ink there is a genuinely unused slot (`_column_has_content`). Passing
+    None instead treats "at least one classify_cell() hit that isn't a
+    clean empty" as content -- used for Liabilities, whose Creditor/Date/
+    Type text is a separate row-based table above the grid, not a per-
+    column header the same way Assets' asset names are (confirmed live:
+    the two don't share an x-axis in any way this module can currently
+    derive -- see `extract_liability_blocks`'s docstring for the open
+    problem this leaves)."""
     grid_y_span = (rows[0][1], rows[-1][2])
-    grid_x_left = _frac_x(image, ASSET_GRID_X_FRAC)[0]
-    col_lines = find_asset_columns(image, grid_y_span, x_region=(grid_x_left, label_x[0]))
-    if len(col_lines) < 2:
-        return None
-    col_bands = list(zip(col_lines, col_lines[1:]))
-    col_bands = _drop_id_column(col_bands)
-
-    results: list[AssetMark] = []
-    for col_idx, col_bounds in enumerate(col_bands):
-        if not _column_has_content(image, header_y, col_bounds):
+    best_bands: list[tuple[int, int]] | None = None
+    for min_coverage in (_LINE_MIN_COVERAGE, 0.4):
+        col_lines = find_asset_columns(image, grid_y_span, x_region=(grid_x_left, grid_x_right), min_coverage=min_coverage)
+        if len(col_lines) < 2:
             continue
+        col_bands = list(zip(col_lines, col_lines[1:]))
+        if drop_outlier_column:
+            col_bands = _drop_outlier_column(col_bands)
+        if best_bands is None or len(col_bands) > len(best_bands):
+            best_bands = col_bands
+    if best_bands is None:
+        return None
+    col_bands = best_bands
+
+    results: list[ColumnMark] = []
+    for col_idx, col_bounds in enumerate(col_bands):
         marks = []
         ambiguous_cell = False
         for band, top, bottom in rows:
@@ -556,40 +636,109 @@ def extract_asset_blocks(
                 ambiguous_cell = True
             elif hit:
                 marks.append(band)
-        if ambiguous_cell or len(marks) != 1:
-            results.append(AssetMark(column_index=col_idx, band=None, ambiguous=True))
+
+        if header_y_span is not None:
+            has_content = _column_has_content(image, header_y_span, col_bounds)
         else:
-            results.append(AssetMark(column_index=col_idx, band=marks[0], ambiguous=False))
+            has_content = ambiguous_cell or bool(marks)
+        if not has_content:
+            continue
+
+        if ambiguous_cell or len(marks) != 1:
+            results.append(ColumnMark(column_index=col_idx, band=None, ambiguous=True))
+        else:
+            results.append(ColumnMark(column_index=col_idx, band=marks[0], ambiguous=False))
     return results
 
 
-@dataclass
-class AssetSummary:
-    """`extract_asset_blocks()`'s output, tallied into the same shape the
-    digital-text (`columns.py`) and Senate HTML (`senate_html.py`) paths
-    already produce, so a caller can feed it into the same
-    `bands.value_total()` / schema fields regardless of extraction method.
-    `asset_line_count` counts every unambiguous marked column, including
-    ones on a non-reportable band ("None"/"$1-$1,000" -- disclosed, just
-    with nothing to add to a dollar total) or `SPOUSAL_INDEPENDENT`."""
+def extract_asset_blocks(
+    image: Image.Image,
+    labels: list[tuple[str, str | None]] = ASSET_TIER_ROW_LABELS,
+    top_anchor: str = ASSET_TOP_ANCHOR,
+) -> list[ColumnMark] | None:
+    """Full Assets/Schedule A extraction for one page -- see
+    `_locate_tier_rows` and `_extract_marked_columns` for the mechanics.
+    Columns that are just unused grid slots on this page (no ink in the
+    asset-name header strip) are silently skipped, not reported as
+    anything. Returns None (flag, don't guess) if the tier-row grid itself
+    couldn't be located."""
+    located = _locate_tier_rows(image, _ROW_LINE_PROBE_X_FRAC, ASSET_LABEL_COLUMN_X_FRAC, ASSET_ROW_SEARCH_Y_FRAC, labels, top_anchor)
+    if located is None:
+        return None
+    rows, label_x = located
+    header_y = _frac_region(image, ASSET_HEADER_Y_FRAC)
+    grid_x_left = _frac_x(image, ASSET_GRID_X_FRAC)[0]
+    return _extract_marked_columns(image, rows, grid_x_left, label_x[0], header_y_span=header_y, drop_outlier_column=True)
 
-    asset_band_counts: dict[str, int]
-    asset_line_count: int
+
+def extract_liability_blocks(
+    image: Image.Image,
+    labels: list[tuple[str, str | None]] = LIABILITY_TIER_ROW_LABELS,
+    top_anchor: str = LIABILITY_TOP_ANCHOR,
+    anchor_offset: int = LIABILITY_ANCHOR_OFFSET,
+) -> list[ColumnMark] | None:
+    """Full Liabilities/Schedule D extraction for one page -- validated
+    against two real pages this session (Brett Guthrie's 2015 filing, doc
+    9109119 page 23, and Gus Bilirakis's 2017 filing, doc 9113522 page 10),
+    both correctly recovering every real creditor's mark.
+
+    KNOWN OPEN PROBLEM, not yet solved: this form's grid always includes
+    one extra pre-printed "Example" column (illustrating "First Bank of
+    Wilmington, DE" / a mortgage, permanently marked at "$50,001 -
+    $100,000") alongside the real creditor columns, and this function does
+    NOT exclude it -- a returned `ColumnMark` may be that fake entry, not a
+    real liability. Two exclusion strategies were tried and rejected this
+    session: the Example column is NOT always in the same position (column
+    index 4 of 6 on one validation page, index 1 of 6 on the other -- ruled
+    out positional exclusion), and while its mark is confirmed at the same
+    band on both pages, a real creditor can legitimately owe $50,001-
+    $100,000 too, so treating that band as "always fake" would silently
+    drop genuine data. The Creditor/Date/Type text block does label its own
+    first row "Example" in plain, non-numeric text (an OCR-friendly anchor,
+    same spirit as `ASSET_TOP_ANCHOR`), but this module hasn't yet
+    established whether that text table's row order maps to this grid's
+    column order at all, let alone how -- needs a third validation page
+    (ideally with the Example column's index differing from both cases
+    seen so far) before attempting it. Until solved, a caller must treat
+    every returned mark as needing confirmation against the source image,
+    not wire this into an automated pipeline the way `extract_asset_blocks`
+    is intended to be."""
+    located = _locate_tier_rows(image, LIABILITY_ROW_LINE_PROBE_X_FRAC, LIABILITY_LABEL_COLUMN_X_FRAC, LIABILITY_ROW_SEARCH_Y_FRAC, labels, top_anchor, anchor_offset=anchor_offset)
+    if located is None:
+        return None
+    rows, _label_x = located
+    grid_x_left, grid_x_right = _frac_x(image, LIABILITY_GRID_X_FRAC)
+    return _extract_marked_columns(image, rows, grid_x_left, grid_x_right, header_y_span=None, drop_outlier_column=True)
+
+
+@dataclass
+class MarkSummary:
+    """`extract_asset_blocks()`/`extract_liability_blocks()`'s output,
+    tallied into the same shape the digital-text (`columns.py`) and Senate
+    HTML (`senate_html.py`) paths already produce, so a caller can feed it
+    into the same `bands.value_total()` / schema fields regardless of
+    extraction method or chamber. `line_count` counts every unambiguous
+    marked column, including ones on a non-reportable band (Assets'
+    "None"/"$1-$1,000" -- disclosed, just with nothing to add to a dollar
+    total) or `SPOUSAL_INDEPENDENT`."""
+
+    band_counts: dict[str, int]
+    line_count: int
     ambiguous_count: int
 
 
-def summarize_asset_marks(marks: list[AssetMark]) -> AssetSummary:
-    """Tally one page's `AssetMark` list. `SPOUSAL_INDEPENDENT` is kept as
-    its own key in `asset_band_counts` -- not merged into a reportable
-    EIGA band -- mirroring `senate_html.py`'s `extract_table()`, which puts
-    its own equivalent phrase into `band_counts` under the raw matched text
-    and leaves `bands.value_total()` to no-op on it, with the dollar
+def summarize_marks(marks: list[ColumnMark]) -> MarkSummary:
+    """Tally one page's `ColumnMark` list. `SPOUSAL_INDEPENDENT` is kept as
+    its own key in `band_counts` -- not merged into a reportable EIGA band
+    -- mirroring `senate_html.py`'s `extract_table()`, which puts its own
+    equivalent phrase into `band_counts` under the raw matched text and
+    leaves `bands.value_total()` to no-op on it, with the dollar
     contribution added separately (see that module's
     `_spousal_independent_adjustment`). A column whose mark landed on a
     non-reportable band (`band is None` in `ASSET_TIER_ROW_LABELS`, i.e.
-    "None" or "$1-$1,000") is counted in `asset_line_count` but has no key
-    in `asset_band_counts` at all -- there's no band label to key it under,
-    and `bands.value_total()` only ever sees labels it recognizes."""
+    "None" or "$1-$1,000") is counted in `line_count` but has no key in
+    `band_counts` at all -- there's no band label to key it under, and
+    `bands.value_total()` only ever sees labels it recognizes."""
     band_counts: dict[str, int] = {}
     line_count = 0
     ambiguous_count = 0
@@ -600,8 +749,8 @@ def summarize_asset_marks(marks: list[AssetMark]) -> AssetSummary:
         line_count += 1
         if mark.band is not None:
             band_counts[mark.band] = band_counts.get(mark.band, 0) + 1
-    return AssetSummary(
-        asset_band_counts=band_counts,
-        asset_line_count=line_count,
+    return MarkSummary(
+        band_counts=band_counts,
+        line_count=line_count,
         ambiguous_count=ambiguous_count,
     )
