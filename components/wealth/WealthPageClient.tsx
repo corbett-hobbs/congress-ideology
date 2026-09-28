@@ -5,6 +5,8 @@ import { stateName } from "@/lib/states";
 import type { ChamberView } from "@/lib/chamber";
 import type { WealthMember } from "@/lib/wealth-data";
 import { WealthFilterBar } from "./WealthFilterBar";
+import { NetWorthScatterCard } from "./NetWorthScatterCard";
+import { PartyWealthChart } from "./PartyWealthChart";
 
 /**
  * Owns the one shared chamber/state filter for the whole page (plan §2,
@@ -76,13 +78,16 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
           </p>
         </div>
 
-        <PlaceholderSection
-          title="Who outperformed, who lagged"
-          note="Scatter — annualized net worth change vs. years of usable disclosure data. Session 3."
+        <NetWorthScatterCard
+          key={view}
+          view={view}
+          chamberMembers={chamberPool}
+          stateFilter={effectiveStateFilter}
         />
-        <PlaceholderSection
-          title="How far apart are the parties' wealth?"
-          note="Median net worth by party over time. Session 3."
+        <PartyWealthChart
+          view={view}
+          chamberMembers={chamberPool}
+          stateFilter={effectiveStateFilter}
         />
         <div className="grid gap-5 md:grid-cols-2">
           <PlaceholderSection title="Highest net worth" note="Session 4." />

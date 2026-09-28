@@ -3,16 +3,8 @@
 import { ChamberSwitch } from "@/components/ChamberSwitch";
 import { StateFilter } from "@/components/senate/StateFilter";
 import { stateName } from "@/lib/states";
+import { wealthCountNoun } from "@/lib/wealth-copy";
 import type { ChamberView } from "@/lib/chamber";
-
-/** "members" / "senators" / "House members" — the wealth page's own copy,
- *  distinct from lib/chamber.ts's `viewNoun` ("member(s) of Congress" for
- *  "both", used elsewhere for chamber-neutral prose). */
-function countNoun(view: ChamberView): string {
-  if (view === "senate") return "senators";
-  if (view === "house") return "House members";
-  return "members";
-}
 
 /**
  * The pinned filter bar for /congress/wealth: chamber switch + state dropdown
@@ -35,7 +27,7 @@ export function WealthFilterBar({
   onStateFilterChange: (s: string | null) => void;
   count: number;
 }) {
-  const summary = `${count.toLocaleString("en-US")} ${countNoun(view)} with net worth data${
+  const summary = `${count.toLocaleString("en-US")} ${wealthCountNoun(view)} with net worth data${
     stateFilter ? ` in ${stateName(stateFilter)}` : ""
   }`;
 

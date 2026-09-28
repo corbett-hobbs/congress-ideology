@@ -42,6 +42,15 @@
      way as the historical-party palette via validate_palette.js. */
   --committee-house: #124912;
   --committee-senate: #ad1f8a;
+  /* Amber "note" accent — the wealth scatter's hover-card gap/off-scale
+     lines (session 3). Not a party colour, so it sits outside
+     validate_palette.js's co-occurrence checker; verified by hand instead —
+     >=5.2:1 WCAG contrast against --bg/--surface/--surface-raised in both
+     themes (a plain party-neutral UI accent, not required to be CVD-separable
+     from the party palette since it never draws a dot). The mock's literal
+     hex (#e3b04a) only clears that bar in dark mode (1.99:1 in light) — this
+     token needs its own light-mode value, same as every other token here. */
+  --note: #8a5a12;
   --focus: #5c4b7a;
   color-scheme: light;
 }
@@ -71,6 +80,7 @@
     --antiadmin: #c1904f;
     --committee-house: #7dd175;
     --committee-senate: #c24799;
+    --note: #e3b04a;
     --focus: #9b84c7;
     color-scheme: dark;
   }
@@ -100,6 +110,7 @@
   --antiadmin: #c1904f;
   --committee-house: #7dd175;
   --committee-senate: #c24799;
+  --note: #e3b04a;
   --focus: #9b84c7;
   color-scheme: dark;
 }
@@ -118,6 +129,7 @@
   --color-dem: var(--dem);
   --color-rep: var(--rep);
   --color-oth: var(--oth);
+  --color-note: var(--note);
   --color-focus: var(--focus);
 
   /* Font stacks are wired to the CSS variables set by next/font in layout.tsx. */

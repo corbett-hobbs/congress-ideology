@@ -1,7 +1,9 @@
-import type { ScaleLinear } from "d3-scale";
+import type { ScaleContinuousNumeric } from "d3-scale";
 
 interface AxisProps {
-  scale: ScaleLinear<number, number>;
+  /** Any continuous numeric scale (linear, symlog, ...) — only `scale(v)` is
+   *  called, so this accepts anything with that shape, not just `scaleLinear`. */
+  scale: ScaleContinuousNumeric<number, number>;
   orientation: "bottom" | "left";
   /** Explicit tick values. */
   ticks: number[];
