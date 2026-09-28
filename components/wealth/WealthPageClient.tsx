@@ -6,7 +6,6 @@ import type { ChamberView } from "@/lib/chamber";
 import type { WealthMember } from "@/lib/wealth-data";
 import { WealthFilterBar } from "./WealthFilterBar";
 import { NetWorthScatterCard } from "./NetWorthScatterCard";
-import { PartyWealthChart } from "./PartyWealthChart";
 import { WealthListsSection } from "./WealthListsSection";
 
 /**
@@ -81,11 +80,6 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
 
         <NetWorthScatterCard
           key={view}
-          view={view}
-          chamberMembers={chamberPool}
-          stateFilter={effectiveStateFilter}
-        />
-        <PartyWealthChart
           view={view}
           chamberMembers={chamberPool}
           stateFilter={effectiveStateFilter}

@@ -33,7 +33,6 @@ export function WealthList({ title, direction, members, view, stateFilter }: Wea
     return lastNameOf(a.name).localeCompare(lastNameOf(b.name));
   });
 
-  const hasNegative = direction === "lowest" && ranked.some((m) => m.points[m.points.length - 1].midpoint < 0);
   const noun = wealthCountNoun(view);
 
   return (
@@ -44,12 +43,6 @@ export function WealthList({ title, direction, members, view, stateFilter }: Wea
         net worth data from 2023 or later
         {stateFilter && ` in ${stateName(stateFilter)}`}
       </p>
-      {hasNegative && (
-        <p className="mt-1 text-[0.75rem] text-ink-faint">
-          Some members here have liabilities that exceed their assets — a negative estimated net
-          worth.
-        </p>
-      )}
 
       <div
         role="region"
