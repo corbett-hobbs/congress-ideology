@@ -5,6 +5,7 @@ import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
+import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { chamberLabel, type ChamberView } from "@/lib/chamber";
 import { stateName } from "@/lib/states";
@@ -15,6 +16,7 @@ import {
   type PartyChartPoint,
 } from "@/lib/wealth-party-chart";
 import { formatCompactUSD } from "@/lib/format-money";
+import { wealthCountNoun } from "@/lib/wealth-copy";
 
 const FALLBACK_W = 1080;
 const H = 280;
@@ -34,9 +36,19 @@ interface Props {
   stateFilter: string | null;
 }
 
+interface PartyPoint {
+  year: number;
+  key: "dem" | "rep";
+  value: number;
+  count: number;
+  /** "National" or the state's full name — which series this point is on. */
+  scope: string;
+}
+
 export function PartyWealthChart({ view, chamberMembers, stateFilter }: Props) {
   const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
   const W = measuredW || FALLBACK_W;
+  const tip = useTooltip<PartyPoint>();
 
   const series = useMemo(() => partyChartSeries(chamberMembers), [chamberMembers]);
 
@@ -96,20 +108,50 @@ export function PartyWealthChart({ view, chamberMembers, stateFilter }: Props) {
                 .x((d) => x(d.year))
                 .y((d) => y(d[key] as number))(pts);
 
-            const markers = (pts: PartyChartPoint[], key: "dem" | "rep", hollow: boolean) =>
+            const markers = (
+              pts: PartyChartPoint[],
+              key: "dem" | "rep",
+              hollow: boolean,
+              scope: string,
+            ) =>
               pts
                 .filter((d) => d[key] != null)
-                .map((d, i, arr) => (
-                  <circle
-                    key={`${key}-${d.year}`}
-                    cx={x(d.year)}
-                    cy={y(d[key] as number)}
-                    r={i === arr.length - 1 ? 4.5 : 2.6}
-                    className={key === "dem" ? "stroke-dem" : "stroke-rep"}
-                    fill={hollow ? "var(--surface)" : `var(--${key})`}
-                    strokeWidth={1.5}
-                  />
-                ));
+                .map((d, i, arr) => {
+                  const cx = x(d.year);
+                  const cy = y(d[key] as number);
+                  const point: PartyPoint = {
+                    year: d.year,
+                    key,
+                    value: d[key] as number,
+                    count: key === "dem" ? d.demCount : d.repCount,
+                    scope,
+                  };
+                  return (
+                    <g key={`${key}-${scope}-${d.year}`}>
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={i === arr.length - 1 ? 4.5 : 2.6}
+                        className={key === "dem" ? "stroke-dem" : "stroke-rep"}
+                        fill={hollow ? "var(--surface)" : `var(--${key})`}
+                        strokeWidth={1.5}
+                        pointerEvents="none"
+                      />
+                      {/* Larger, invisible hit target — the visible marker
+                          alone (r as small as 2.6) is too fiddly to hover. */}
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={9}
+                        fill="transparent"
+                        style={{ cursor: "default" }}
+                        onPointerEnter={(e) => tip.show(point, e)}
+                        onPointerMove={tip.move}
+                        onPointerLeave={tip.hide}
+                      />
+                    </g>
+                  );
+                });
 
             return (
               <>
@@ -143,8 +185,8 @@ export function PartyWealthChart({ view, chamberMembers, stateFilter }: Props) {
                     d={pathFor(series, "rep") as string}
                   />
                 )}
-                {markers(series, "dem", false)}
-                {markers(series, "rep", false)}
+                {markers(series, "dem", false, "National")}
+                {markers(series, "rep", false, "National")}
 
                 {stateSeries && pathFor(stateSeries, "dem") && (
                   <path
@@ -160,12 +202,15 @@ export function PartyWealthChart({ view, chamberMembers, stateFilter }: Props) {
                     strokeDasharray="4 3"
                   />
                 )}
-                {stateSeries && markers(stateSeries, "dem", true)}
-                {stateSeries && markers(stateSeries, "rep", true)}
+                {stateSeries &&
+                  markers(stateSeries, "dem", true, stateName(stateFilter!))}
+                {stateSeries &&
+                  markers(stateSeries, "rep", true, stateName(stateFilter!))}
               </>
             );
           }}
         </ChartFrame>
+        <Tooltip state={tip.state}>{(p) => <PartyPointTooltip point={p} view={view} />}</Tooltip>
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.72rem] text-ink-muted">
@@ -207,6 +252,25 @@ export function PartyWealthChart({ view, chamberMembers, stateFilter }: Props) {
 function chamberLabelForFootnote(view: ChamberView): string {
   if (view === "both") return "House and Senate";
   return chamberLabel(view);
+}
+
+function PartyPointTooltip({ point, view }: { point: PartyPoint; view: ChamberView }) {
+  const party = point.key === "dem" ? "Democrats" : "Republicans";
+  const noun = wealthCountNoun(view);
+  return (
+    <div>
+      <b>
+        {point.year} · {point.scope} {party}
+      </b>
+      <br />
+      <span className="tt-mono">{formatCompactUSD(point.value)} median</span>
+      <br />
+      <span className="tt-mono">
+        {point.count.toLocaleString("en-US")} {point.count === 1 ? noun.replace(/s$/, "") : noun}{" "}
+        with usable data
+      </span>
+    </div>
+  );
 }
 
 function LineSwatch({
