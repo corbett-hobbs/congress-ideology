@@ -195,3 +195,60 @@ export const subcommitteeMembership = z.strictObject({
   rank: z.number().int().positive(),
 });
 export type SubcommitteeMembership = z.infer<typeof subcommitteeMembership>;
+
+/**
+ * One row per (legislator, reporting year) — House Clerk (`house_clerk`) and
+ * Senate eFD (`senate_efd`) annual financial disclosures. Produced by the
+ * Python sidecar in `pipeline/financial_disclosures/` (its own dependency-free
+ * structural check is `pipeline/financial_disclosures/schema.py`; this is the
+ * Zod-side validation at the app's read boundary — DATA_CONVENTIONS §4).
+ *
+ * `year` is the year the report COVERS, already converted from filing year —
+ * never derive a display year from `filing_date`. `assets_total`,
+ * `liabilities_total` and `net_worth` are sums of EIGA band midpoints (the
+ * open-ended top band contributes its floor as a point estimate — see
+ * `pipeline/financial_disclosures/bands.py`). `asset_band_counts` /
+ * `liability_band_counts` are counts of filed band *labels*, not individual
+ * line-item values — there are no item names or per-item dollar amounts in
+ * this file (that's Session 5's line-item output). See
+ * `docs/NET_WORTH_METHODOLOGY.md` for how `lib/wealth-data.ts` turns this into
+ * a range (`lib/wealth-bands.ts`) and a "usable row" filter.
+ */
+export const financialDisclosure = z.strictObject({
+  bioguide_id: bioguideId,
+  year: z.number().int().gte(2000).lte(2100),
+  chamber,
+  assets_total: z.number().nullable(),
+  liabilities_total: z.number().nullable(),
+  net_worth: z.number().nullable(),
+  has_open_ended_asset: z.boolean().nullable(),
+  asset_line_count: z.number().int().nullable(),
+  liability_line_count: z.number().int().nullable(),
+  asset_band_counts: z.record(z.string(), z.number().int()),
+  liability_band_counts: z.record(z.string(), z.number().int()),
+  source_system: z.enum(["house_clerk", "senate_efd"]),
+  source_doc_id: z.string().nullable(),
+  filing_type: z.string().nullable(),
+  filing_date: z.string().nullable(),
+  extraction_method: z.enum([
+    "digital_text",
+    "ocr",
+    "manual",
+    "checkbox_grid",
+  ]),
+  parse_confidence: z
+    .enum([
+      "high",
+      "low",
+      "unparseable_scanned",
+      "no_filing_found",
+      "download_failed",
+      "ocr_low_confidence",
+      "ocr_skipped_oversized",
+      "no_schedule_content_found",
+    ])
+    .nullable(),
+  needs_review: z.boolean(),
+  extra_note: z.string().optional(),
+});
+export type FinancialDisclosure = z.infer<typeof financialDisclosure>;

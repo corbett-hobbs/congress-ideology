@@ -103,11 +103,22 @@ subcommittees are too small a roster for a mean `dim1` to be a meaningful
 signal (deliberately out of scope, unlike the top-level committee blend
 above).
 
+### Built (financial disclosures)
+
+| File                          | Grain                          | Key                          | Notes |
+| ------------------------------ | ------------------------------ | ----------------------------- | ----- |
+| `financial_disclosures.json`  | one row per (legislator, reporting year) | `bioguide_id` + `year` | House Clerk (`house_clerk`) and Senate eFD (`senate_efd`) annual disclosures, produced by the Python sidecar in `pipeline/financial_disclosures/`. Schema: `financialDisclosure` in `lib/entities.ts` (validated at the app's read boundary) and, on the Python side, `pipeline/financial_disclosures/schema.py`. `year` is the year the report **covers**, not the filing year. `assets_total`/`liabilities_total`/`net_worth` are sums of EIGA band midpoints; `asset_band_counts`/`liability_band_counts` are counts of band *labels*, not line items — no item names or per-item values here (that's the planned line-item extraction below). See `docs/NET_WORTH_METHODOLOGY.md` for the full range/midpoint policy `lib/wealth-bands.ts` and `lib/wealth-data.ts` build on top of this file. |
+
+Page-shaped net worth data (the current-member roster joined to usable
+filing years, cohort/rate/gap derivations, the compact client payload) is
+derived at build time in `lib/wealth-derive.ts`/`lib/wealth-data.ts`, never
+stored in `pipeline/output/` (§2, above).
+
 ### Planned — schema in `lib/types.ts`, no data source integrated yet
 
 | Entity                  | Grain                                          | Notes |
 | ----------------------- | ---------------------------------------------- | ----- |
-| **FinancialDisclosure** | one row per legislator × year                  | Source undecided (OpenSecrets, House Clerk). |
+| **DisclosureLineItem**  | one row per (legislator, year, asset/liability line) | Sibling output to `financial_disclosures.json`, keyed the same way but at item grain — verbatim description, band, owner. Not yet integrated (the line-item extraction follow-up). |
 | **IssueScore**          | one row per legislator × Congress × metric     | *Melted* format reserved for future interest-group scores — **not** where DW-NOMINATE lives (that's `ideology_scores.json`, wide). |
 
 ---
