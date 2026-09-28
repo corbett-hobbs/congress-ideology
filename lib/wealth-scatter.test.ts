@@ -20,6 +20,7 @@ function member(
     district: 1,
     caucus: "Democrat",
     entryYear: 2013,
+    hasPhoto: false,
     series: [],
     points: points.map((p) => ({
       year: p.year,

@@ -7,6 +7,7 @@ import type { WealthMember } from "@/lib/wealth-data";
 import { WealthFilterBar } from "./WealthFilterBar";
 import { NetWorthScatterCard } from "./NetWorthScatterCard";
 import { PartyWealthChart } from "./PartyWealthChart";
+import { WealthListsSection } from "./WealthListsSection";
 
 /**
  * Owns the one shared chamber/state filter for the whole page (plan §2,
@@ -89,20 +90,12 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
           chamberMembers={chamberPool}
           stateFilter={effectiveStateFilter}
         />
-        <div className="grid gap-5 md:grid-cols-2">
-          <PlaceholderSection title="Highest net worth" note="Session 4." />
-          <PlaceholderSection title="Lowest net worth" note="Session 4." />
-        </div>
+        <WealthListsSection
+          members={pool}
+          view={view}
+          stateFilter={effectiveStateFilter}
+        />
       </main>
     </>
-  );
-}
-
-function PlaceholderSection({ title, note }: { title: string; note: string }) {
-  return (
-    <section className="rounded-xl border border-dashed border-line-strong bg-surface-raised/40 p-6">
-      <h2 className="font-serif text-lg font-medium text-ink">{title}</h2>
-      <p className="mt-1 font-mono text-[0.72rem] text-ink-faint">{note}</p>
-    </section>
   );
 }

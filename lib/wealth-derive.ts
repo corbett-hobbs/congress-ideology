@@ -69,6 +69,8 @@ export interface WealthMember {
   caucus: "Democrat" | "Republican";
   /** Calendar year the member's first Congress (either chamber) convened. */
   entryYear: number;
+  /** Whether an official photo is committed — see lib/member-photo.ts. */
+  hasPhoto: boolean;
   /** One entry per usable year 2013–2025, in order; empty years omitted. */
   points: WealthYearPoint[];
   /** Dense 2013–2025 midpoint series, `null` for years with no usable filing —
@@ -88,6 +90,7 @@ export interface CurrentMemberFacts {
   state: string;
   district: number | null;
   caucus: string;
+  hasPhoto: boolean;
 }
 
 /**
@@ -144,6 +147,7 @@ export function buildWealthMembers(
       district: m.district,
       caucus: m.caucus,
       entryYear: congressStartYear(fc),
+      hasPhoto: m.hasPhoto,
       points,
       series,
     });

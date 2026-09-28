@@ -86,6 +86,7 @@ export function getWealthData(): WealthMember[] {
       state: m.state,
       district: m.district,
       caucus: m.caucus,
+      hasPhoto: m.hasPhoto ?? false,
     });
   }
 

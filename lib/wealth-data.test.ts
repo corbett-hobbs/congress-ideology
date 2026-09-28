@@ -51,6 +51,8 @@ function loadRealWealthMembers(): WealthMember[] {
     { bioguide_id: string; name: { first: string; last: string; nickname?: string } }[]
   >("legislators.json");
   const legByBioguide = new Map(legislators.map((l) => [l.bioguide_id, l]));
+  const { withPhoto } = readJson<{ withPhoto: string[] }>("member-photos.json");
+  const hasPhotoSet = new Set(withPhoto);
 
   const latestByChamber = new Map<string, number>();
   for (const t of terms) {
@@ -74,6 +76,7 @@ function loadRealWealthMembers(): WealthMember[] {
       state: t.state,
       district: t.district,
       caucus: t.caucus ?? t.party,
+      hasPhoto: hasPhotoSet.has(t.bioguide_id),
     });
   }
 
