@@ -36,7 +36,6 @@ export const verticals: readonly Vertical[] = [
     key: "wealth",
     label: "Wealth",
     href: "/wealth",
-    upcoming: true,
     owns: (p) => p === "/wealth" || p.startsWith("/wealth/"),
   },
 ];

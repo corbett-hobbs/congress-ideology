@@ -1,7 +1,7 @@
 "use client";
 
-import { CHAMBER_VIEWS, viewLabel } from "@/lib/chamber";
 import { useExplorerUrl } from "@/lib/use-chamber";
+import { ChamberSwitch } from "@/components/ChamberSwitch";
 import { StateFilter } from "./StateFilter";
 import { ordinal, congressYears } from "./format";
 
@@ -51,7 +51,8 @@ export function ExplorerToolbar({
   onCongressChange,
   onTogglePlay,
 }: ExplorerToolbarProps) {
-  const { view, setView, entity, setEntity } = useExplorerUrl();
+  const { view, setView, stateFilter, setStateFilter, entity, setEntity } =
+    useExplorerUrl();
 
   const committeesLive = congress === committeeCongress;
   const committeesActive = committeesLive && entity === "committees";
@@ -69,27 +70,7 @@ export function ExplorerToolbar({
     <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 backdrop-blur">
       <div className="mx-auto w-full max-w-[1180px] px-4 py-2.5 sm:px-6">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-3 sm:gap-x-5">
-          <div
-            role="group"
-            aria-label="Chamber"
-            className="flex flex-none overflow-hidden rounded-lg border border-line-strong text-[0.8rem] font-medium"
-          >
-            {CHAMBER_VIEWS.map((v) => (
-              <button
-                key={v}
-                type="button"
-                onClick={() => setView(v)}
-                aria-pressed={view === v}
-                className={`px-2 py-[0.35rem] transition-colors sm:px-[0.85rem] ${
-                  view === v
-                    ? "bg-accent text-accent-ink"
-                    : "bg-surface-raised text-ink-muted hover:text-ink"
-                }`}
-              >
-                {viewLabel(v)}
-              </button>
-            ))}
-          </div>
+          <ChamberSwitch value={view} onChange={setView} />
 
           <div
             role="group"
@@ -134,6 +115,8 @@ export function ExplorerToolbar({
               </span>
               <StateFilter
                 states={states}
+                value={stateFilter}
+                onChange={setStateFilter}
                 compact
                 disabled={committeesActive}
                 disabledTitle={STATE_LOCK_TITLE}
