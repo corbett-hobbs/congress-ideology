@@ -4,11 +4,13 @@ import type {
   PartyMeanPoint,
 } from "@/lib/congress-types";
 import type { MemberCommitteeMembership } from "@/lib/committee-types";
+import type { MemberWealthProfile } from "@/lib/wealth-data";
 import { SiteFooter } from "@/components/senate/SiteFooter";
 import { SetBackLink } from "@/components/BackLinkContext";
 import { ProfileHeader } from "./ProfileHeader";
 import { MemberIdeologySection } from "./MemberIdeologySection";
 import { CommitteeMembershipsCard } from "./CommitteeMembershipsCard";
+import { MemberWealthSection } from "./MemberWealthSection";
 
 interface MemberProfileViewProps {
   profile: MemberProfile;
@@ -20,6 +22,8 @@ interface MemberProfileViewProps {
   /** This member's current committee assignments — empty for the small
    *  share of current members with no current committee seat. */
   committeeMemberships: MemberCommitteeMembership[];
+  /** `null` when the member has no financial_disclosures.json rows at all. */
+  wealthProfile: MemberWealthProfile | null;
 }
 
 /**
@@ -35,6 +39,7 @@ export function MemberProfileView({
   delegationMembers,
   trend,
   committeeMemberships,
+  wealthProfile,
 }: MemberProfileViewProps) {
   const explorerHref =
     profile.chamber === "house" ? "/?chamber=house" : "/";
@@ -57,8 +62,9 @@ export function MemberProfileView({
         memberships={committeeMemberships}
       />
 
-      {/* Future verticals stack here as sibling sections, e.g.
-          <MemberWealthSection profile={profile} … /> */}
+      {wealthProfile && (
+        <MemberWealthSection profile={profile} wealthProfile={wealthProfile} />
+      )}
 
       <SiteFooter />
     </main>

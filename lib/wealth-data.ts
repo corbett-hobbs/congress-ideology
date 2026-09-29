@@ -1,13 +1,16 @@
 import "server-only";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { financialDisclosure, type FinancialDisclosure } from "./entities";
+import { financialDisclosure, type FinancialDisclosure, type DisclosureLineItem } from "./entities";
 import { getCurrentMemberIndex } from "./congress-data";
 import {
+  buildProfileYears,
   buildWealthMembers,
   type CurrentMemberFacts,
+  type ProfileYearStatus,
   type WealthMember,
 } from "./wealth-derive";
+import { getMemberLineItems } from "./line-items-data";
 
 /**
  * Build-time net worth data layer — the source every wealth view (the
@@ -96,4 +99,33 @@ export function getWealthData(): WealthMember[] {
     firstCongressByMember(),
   );
   return wealthDataCache;
+}
+
+export interface MemberWealthProfile {
+  /** One entry per 2013–2025, classified per `buildProfileYears` — the
+   *  profile card's chart reads this directly. */
+  years: ProfileYearStatus[];
+  /** Every reconciled line-item row for this member (Session 5), sorted by
+   *  year. Can be shorter than `years` — a usable year with no row here
+   *  falls back to the band-count totals already on `years[i]`. */
+  lineItemRows: DisclosureLineItem[];
+}
+
+/**
+ * The profile "Net worth over time" card's data for one member — every
+ * `financial_disclosures.json` row for them (not just usable ones, unlike
+ * `getWealthData()`) plus whatever line-item rows reconciled for them.
+ * `null` when the member has no financial_disclosures.json rows at all (the
+ * card doesn't render — see Session 6 plan, "No card if the member has no
+ * filing rows at all").
+ */
+export function getMemberWealthProfile(bioguideId: string): MemberWealthProfile | null {
+  const rows = readFinancialDisclosures().filter((r) => r.bioguide_id === bioguideId);
+  if (rows.length === 0) return null;
+
+  const lineItems = getMemberLineItems(bioguideId);
+  return {
+    years: buildProfileYears(rows),
+    lineItemRows: Array.from(lineItems.values()).sort((a, b) => a.year - b.year),
+  };
 }

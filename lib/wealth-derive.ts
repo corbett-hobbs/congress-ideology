@@ -79,7 +79,7 @@ export interface WealthMember {
   series: (number | null)[];
 }
 
-function toRange(row: FinancialDisclosure): WealthRange {
+export function toRange(row: FinancialDisclosure): WealthRange {
   const r = filingRange(row.asset_band_counts, row.liability_band_counts);
   return { lo: r.lo, hi: r.hi, openEnded: r.openEnded, unavailable: r.unavailable };
 }
@@ -200,6 +200,105 @@ export function hasDataGap(member: WealthMember): boolean {
   const entry = member.entryYear;
   if (entry < FIRST_USABLE_YEAR) return first > FIRST_USABLE_YEAR;
   return first - entry >= 2;
+}
+
+// --- per-member profile card (Session 6) --------------------------------
+//
+// The scatter/list aggregates above only ever look at *usable* rows.
+// The profile card's "Net worth over time" chart is different: per the plan
+// (§ Session 6), a year with no usable filing still needs to render as one
+// of three distinct states — "No filing found", "Filing on record; not
+// extractable" (paper/scanned, links to the original filing), or a
+// low-confidence year that DOES carry numbers ("needs review", hollow
+// marker) — instead of just disappearing. That needs every row for the
+// member, not just the usable ones, hence a separate function here rather
+// than reusing `buildWealthMembers`'s member loop.
+
+interface ProfileFilingMeta {
+  assetsTotal: number | null;
+  liabilitiesTotal: number | null;
+  filingDate: string | null;
+  filingType: string | null;
+  sourceSystem: FinancialDisclosure["source_system"];
+  sourceDocId: string | null;
+}
+
+export type ProfileYearStatus =
+  | ({ year: number; kind: "usable"; midpoint: number; range: WealthRange } & ProfileFilingMeta)
+  | ({ year: number; kind: "needs_review"; midpoint: number; range: WealthRange } & ProfileFilingMeta)
+  | {
+      year: number;
+      kind: "not_extractable";
+      sourceSystem: FinancialDisclosure["source_system"] | null;
+      sourceDocId: string | null;
+      filingDate: string | null;
+      filingType: string | null;
+      /** True for the ~102 scanned Senate rows whose `year` is estimated
+       *  from `filing_date` rather than read off the form itself. */
+      yearEstimated: boolean;
+    }
+  | { year: number; kind: "no_filing" };
+
+/**
+ * One entry per year in `SERIES_YEARS`, classifying every row for one member
+ * (not just usable ones) into the profile chart's four states. `rows` is
+ * every `financial_disclosures.json` row for this `bioguide_id` — pass the
+ * unfiltered per-member slice, not `WealthMember.points`.
+ */
+export function buildProfileYears(rows: FinancialDisclosure[]): ProfileYearStatus[] {
+  const byYear = new Map<number, FinancialDisclosure>();
+  for (const row of rows) byYear.set(row.year, row);
+
+  return SERIES_YEARS.map((year): ProfileYearStatus => {
+    const row = byYear.get(year);
+    if (!row) return { year, kind: "no_filing" };
+
+    const meta: ProfileFilingMeta = {
+      assetsTotal: row.assets_total,
+      liabilitiesTotal: row.liabilities_total,
+      filingDate: row.filing_date,
+      filingType: row.filing_type,
+      sourceSystem: row.source_system,
+      sourceDocId: row.source_doc_id,
+    };
+
+    if (isUsableRow(row)) {
+      return { year, kind: "usable", midpoint: row.net_worth ?? 0, range: toRange(row), ...meta };
+    }
+    if (row.parse_confidence === "no_filing_found") return { year, kind: "no_filing" };
+
+    if (
+      (row.parse_confidence === "low" || row.parse_confidence === "ocr_low_confidence") &&
+      row.net_worth != null
+    ) {
+      return { year, kind: "needs_review", midpoint: row.net_worth, range: toRange(row), ...meta };
+    }
+
+    return {
+      year,
+      kind: "not_extractable",
+      sourceSystem: row.source_system,
+      sourceDocId: row.source_doc_id,
+      filingDate: row.filing_date,
+      filingType: row.filing_type,
+      yearEstimated:
+        row.source_system === "senate_efd" && row.parse_confidence === "unparseable_scanned",
+    };
+  });
+}
+
+/** Calendar year a filing was submitted, from its (already-normalized-per-row
+ *  but not cross-chamber-uniform) `filing_date` — House is ISO
+ *  (`YYYY-MM-DD`), Senate is `MM/DD/YYYY` (plan §2). Distinguished by the
+ *  date's own separator rather than `source_system`, so this also works if
+ *  that ever changes. */
+export function filingYearOf(filingDate: string | null): number | null {
+  if (!filingDate) return null;
+  const isoMatch = /^(\d{4})-\d{2}-\d{2}$/.exec(filingDate);
+  if (isoMatch) return Number(isoMatch[1]);
+  const usMatch = /^\d{1,2}\/\d{1,2}\/(\d{4})$/.exec(filingDate);
+  if (usMatch) return Number(usMatch[1]);
+  return null;
 }
 
 export function median(values: number[]): number | null {
