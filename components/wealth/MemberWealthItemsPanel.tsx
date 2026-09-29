@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import type { DisclosureLineItem } from "@/lib/entities";
 import { filingYearOf, type ProfileYearStatus } from "@/lib/wealth-derive";
 import { formatCompactUSD, formatOpenEndedUSD } from "@/lib/format-money";
 import { sourceDocUrl, SOURCE_SYSTEM_LABEL } from "@/lib/disclosure-url";
 
 type Item = DisclosureLineItem["items"][number];
+type ItemKind = Item["kind"];
 
 function itemSortValue(item: Item): number {
   if (item.lo == null || item.hi == null) {
@@ -74,12 +76,20 @@ interface Props {
   onSelectYear: (year: number) => void;
 }
 
-/** Right column of the profile net worth card: year dropdown, the scrollable
- *  assets/liabilities list, totals, and the source-filing note. */
+/** Right column of the profile net worth card: an Assets/Liabilities toggle
+ *  + year dropdown, the scrollable item list, totals, and the source-filing
+ *  note. */
 export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSelectYear }: Props) {
+  const [kind, setKind] = useState<ItemKind>("asset");
   const yearOptions = lineItemRows.map((r) => r.year);
   const selectedRow = lineItemRows.find((r) => r.year === selectedYear);
   const meta = years.find((y) => y.year === selectedYear);
+
+  const assets = selectedRow ? sortItems(selectedRow.items.filter((i) => i.kind === "asset")) : [];
+  const liabilities = selectedRow ? sortItems(selectedRow.items.filter((i) => i.kind === "liability")) : [];
+  const assetBounds = sumBounds(assets);
+  const liabilityBounds = sumBounds(liabilities);
+  const shown = kind === "asset" ? assets : liabilities;
 
   if (yearOptions.length === 0) {
     // Session 5 line items didn't reconcile for any of this member's
@@ -112,11 +122,6 @@ export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSe
     );
   }
 
-  const assets = selectedRow ? sortItems(selectedRow.items.filter((i) => i.kind === "asset")) : [];
-  const liabilities = selectedRow ? sortItems(selectedRow.items.filter((i) => i.kind === "liability")) : [];
-  const assetBounds = sumBounds(assets);
-  const liabilityBounds = sumBounds(liabilities);
-
   const docUrl =
     meta && (meta.kind === "usable" || meta.kind === "needs_review") && meta.sourceDocId
       ? sourceDocUrl(meta.sourceSystem, meta.sourceDocId, meta.year)
@@ -129,9 +134,24 @@ export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSe
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-faint">
-          Assets &amp; liabilities
-        </p>
+        <div role="group" aria-label="Show" className="flex flex-none overflow-hidden rounded-lg border border-line-strong text-[0.78rem] font-medium">
+          <button
+            type="button"
+            onClick={() => setKind("asset")}
+            aria-pressed={kind === "asset"}
+            className={`px-2.5 py-1 transition-colors ${kind === "asset" ? "bg-accent text-accent-ink" : "bg-surface-raised text-ink-muted hover:text-ink"}`}
+          >
+            Assets · {assets.length}
+          </button>
+          <button
+            type="button"
+            onClick={() => setKind("liability")}
+            aria-pressed={kind === "liability"}
+            className={`px-2.5 py-1 transition-colors ${kind === "liability" ? "bg-accent text-accent-ink" : "bg-surface-raised text-ink-muted hover:text-ink"}`}
+          >
+            Liabilities · {liabilities.length}
+          </button>
+        </div>
         <label className="flex items-center gap-1.5 text-[0.78rem] text-ink-muted">
           Year
           <select
@@ -151,13 +171,16 @@ export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSe
       <div
         role="region"
         tabIndex={0}
-        aria-label={`Assets and liabilities reported for ${selectedYear}`}
+        aria-label={`${kind === "asset" ? "Assets" : "Liabilities"} reported for ${selectedYear}`}
         className="mt-3 max-h-[26rem] overflow-y-auto rounded-md border border-line"
       >
-        <ItemSection title="Assets" items={assets} />
-        <ItemSection title="Liabilities" items={liabilities} />
-        {assets.length === 0 && liabilities.length === 0 && (
-          <p className="p-4 text-center text-[0.8rem] text-ink-faint">No items reported for {selectedYear}.</p>
+        {shown.map((item, i) => (
+          <ItemRow key={i} item={item} />
+        ))}
+        {shown.length === 0 && (
+          <p className="p-4 text-center text-[0.8rem] text-ink-faint">
+            No {kind === "asset" ? "assets" : "liabilities"} reported for {selectedYear}.
+          </p>
         )}
       </div>
 
@@ -206,28 +229,24 @@ export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSe
   );
 }
 
-function ItemSection({ title, items }: { title: string; items: Item[] }) {
-  if (items.length === 0) return null;
+function ItemRow({ item }: { item: Item }) {
+  const secondary = [item.owner, item.form_type].filter(Boolean).join(" · ");
   return (
-    <div>
-      <p className="sticky top-0 z-10 border-b border-line bg-surface-raised px-3 py-1.5 font-mono text-[0.65rem] uppercase tracking-[0.06em] text-ink-faint">
-        {title} · {items.length} item{items.length === 1 ? "" : "s"}
-      </p>
-      {items.map((item, i) => {
-        const secondary = [item.owner, item.form_type].filter(Boolean).join(" · ");
-        return (
-          <div key={i} className="flex items-start justify-between gap-3 border-b border-line px-3 py-2 last:border-0">
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[0.82rem] text-ink">{item.description || "(no description)"}</p>
-              {secondary && <p className="mt-0.5 text-[0.7rem] text-ink-faint">{secondary}</p>}
-            </div>
-            <div className="flex-none text-right">
-              <div className="font-mono text-[0.82rem] font-semibold text-ink">{itemMidpointText(item)}</div>
-              <div className="font-mono text-[0.66rem] text-ink-faint">{item.band_label}</div>
-            </div>
-          </div>
-        );
-      })}
+    <div className="border-b border-line px-3 py-2.5 last:border-0">
+      <div className="flex items-start justify-between gap-3">
+        <p className="line-clamp-3 min-w-0 flex-1 break-words text-[0.82rem] text-ink">
+          {item.description || "(no description)"}
+        </p>
+        <div className="flex-none whitespace-nowrap font-mono text-[0.82rem] font-semibold text-ink">
+          {itemMidpointText(item)}
+        </div>
+      </div>
+      <div className="mt-0.5 flex items-start justify-between gap-3">
+        <p className="min-w-0 flex-1 text-[0.7rem] text-ink-faint">{secondary}</p>
+        <p className="max-w-[65%] flex-none text-right font-mono text-[0.66rem] text-ink-faint">
+          {item.band_label}
+        </p>
+      </div>
     </div>
   );
 }

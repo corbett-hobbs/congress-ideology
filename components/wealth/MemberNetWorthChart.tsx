@@ -33,6 +33,18 @@ function tickLabel(v: number): string {
   return v < 0 ? `-${formatCompactUSD(-v)}` : formatCompactUSD(v);
 }
 
+/** Up to ~6 evenly spread years across an arbitrary span, always including
+ *  the last year — mirrors `senate/SenatorTrajectoryChart`'s `axisCongresses`. */
+function axisYears(first: number, last: number): number[] {
+  const span = last - first;
+  if (span <= 0) return [first];
+  const step = Math.max(1, Math.ceil(span / 6));
+  const out: number[] = [];
+  for (let y = first; y <= last; y += step) out.push(y);
+  if (out[out.length - 1] !== last) out.push(last);
+  return out;
+}
+
 interface Props {
   years: ProfileYearStatus[];
   selectedYear: number;
@@ -86,12 +98,19 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
     return { yLo: lo - pad, yHi: hi + pad };
   }, [plottable]);
 
+  // Start the x-axis at this member's own first reported year (any row at
+  // all, not just usable ones) rather than always at the pipeline's 2013
+  // floor — a member who entered Congress in 2019 doesn't need six empty
+  // years of runway before their first point.
+  const domainStart = years.find((y) => y.kind !== "no_filing")?.year ?? SERIES_YEARS[0];
+  const domainEnd = SERIES_YEARS[SERIES_YEARS.length - 1];
+
   const x = scaleLinear()
-    .domain([SERIES_YEARS[0], SERIES_YEARS[SERIES_YEARS.length - 1]])
+    .domain([domainStart, domainEnd])
     .range([0, W - MARGIN.left - MARGIN.right]);
   const y = scaleLinear().domain([yHi, yLo]).range([0, H - MARGIN.top - MARGIN.bottom]);
   const yTicks = y.ticks(5);
-  const xTicks = SERIES_YEARS.filter((_, i) => i % 2 === 0);
+  const xTicks = axisYears(domainStart, domainEnd);
 
   // Contiguous runs of "usable" years (the only kind with a trustworthy
   // range) drive the band; a gap in years ends a run.
@@ -133,15 +152,38 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
   // all of them (up to 11 empty pre-2013-entry years) would bury the axis.
   const firstPlottedYear = plottable[0]?.year;
   const lastPlottedYear = plottable[plottable.length - 1]?.year;
-  const gapLabels =
-    firstPlottedYear == null
-      ? []
-      : years.filter(
-          (y) =>
-            (y.kind === "no_filing" || y.kind === "not_extractable") &&
-            y.year > firstPlottedYear &&
-            y.year < lastPlottedYear!,
-        );
+  // One label per *contiguous run* of gap years, centered under the run —
+  // not one per year: several missing years in a row (e.g. 2016–2020) used
+  // to each render their own "no filing" text on top of each other,
+  // garbling into "no filing filing filing filing".
+  const gapRuns = useMemo(() => {
+    if (firstPlottedYear == null) return [];
+    const runs: { midYear: number; anyNotExtractable: boolean }[] = [];
+    let run: number[] = [];
+    let anyNotExtractable = false;
+    const flush = () => {
+      if (run.length) {
+        runs.push({
+          midYear: (run[0] + run[run.length - 1]) / 2,
+          anyNotExtractable,
+        });
+      }
+      run = [];
+      anyNotExtractable = false;
+    };
+    for (const y of years) {
+      const inBridge = y.year > firstPlottedYear && y.year < lastPlottedYear!;
+      const isGap = y.kind === "no_filing" || y.kind === "not_extractable";
+      if (inBridge && isGap) {
+        run.push(y.year);
+        if (y.kind === "not_extractable") anyNotExtractable = true;
+      } else {
+        flush();
+      }
+    }
+    flush();
+    return runs;
+  }, [years, firstPlottedYear, lastPlottedYear]);
 
   function svgPoint(localX: number, localY: number) {
     const svg = svgRef.current;
@@ -226,16 +268,16 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
               />
             ))}
 
-            {gapLabels.map((g) => (
+            {gapRuns.map((g) => (
               <text
-                key={g.year}
-                x={x(g.year)}
+                key={g.midYear}
+                x={x(g.midYear)}
                 y={innerHeight + 30}
                 textAnchor="middle"
                 className="axis-tick-label"
                 opacity={0.55}
               >
-                {g.kind === "no_filing" ? "no filing" : "not extractable"}
+                {g.anyNotExtractable ? "not extractable" : "no filing"}
               </text>
             ))}
           </>

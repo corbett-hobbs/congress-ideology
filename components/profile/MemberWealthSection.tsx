@@ -70,7 +70,7 @@ export function MemberWealthSection({ profile, wealthProfile }: Props) {
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_20rem]">
+      <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <MemberNetWorthChart
           years={years}
           selectedYear={selectedYear}
