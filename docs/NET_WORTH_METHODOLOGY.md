@@ -2,9 +2,11 @@
 
 How `lib/wealth-bands.ts` / `lib/wealth-derive.ts` / `lib/wealth-data.ts` turn
 `pipeline/output/financial_disclosures.json` into the net worth track
-(`/congress/wealth` and each profile's "Net worth over time" card). Read
-`docs/DATA_CONVENTIONS.md` §1–2 first for the general pipeline-output rules;
-this doc is the wealth-specific policy layered on top.
+(`/wealth` — the plan calls this route `/congress/wealth`; shipped at
+`/wealth` instead, see `app/wealth/page.tsx`'s own doc comment — and each
+profile's "Net worth over time" card). Read `docs/DATA_CONVENTIONS.md` §1–2
+first for the general pipeline-output rules; this doc is the wealth-specific
+policy layered on top.
 
 ## Source
 
@@ -26,8 +28,10 @@ of EIGA band midpoints — the open-ended top band ("Over $50,000,000")
 contributes its **floor** as a point estimate there, so `net_worth` is a
 single number even for open-ended filings. `asset_band_counts` /
 `liability_band_counts` are counts of band *labels*, not line items — there
-are no item names or per-item dollar amounts in this file (that's the
-line-item extraction follow-up, a sibling output).
+are no item names or per-item dollar amounts in this file. The item grain
+(verbatim descriptions, owner, per-item band) is a sibling output,
+`pipeline/output/line-items/<year>.json` — see "Line items and the profile
+card" below.
 
 ## Usable row
 
@@ -152,6 +156,57 @@ members this measures **~88 KB raw / ~25 KB gzipped**, against the plan's
 directly against the real pipeline output so a future change that blows the
 budget fails a test, not a page-weight audit.
 
+## Line items and the profile card (Sessions 5–6)
+
+`pipeline/output/line-items/<year>.json` (sharded by year — the first
+sharded pipeline output; `lib/line-items-data.ts` reads it) holds one row per
+(`bioguide_id`, `year`) that **reconciled**: a filing only gets a row here if
+its freshly re-extracted item band multiset exactly reproduces that same
+filing's already-trusted `asset_band_counts`/`liability_band_counts`. A
+filing that doesn't reconcile has no row at all — excluded, never partially
+emitted. As of the 2026-09-29 full run: 3,507 of 3,515 usable rows reconciled
+(99.8%; Senate 816/816, House 2,691/2,699), 156,614 items total. Item
+`lo`/`hi` are computed by `pipeline/financial_disclosures/line_item_bands.py`
+— the same band policy as `bands.py`/`wealth-bands.ts`, restated a third time
+because this module needs *per-item* ranges (open-ended `hi = null`), not a
+filing-level sum.
+
+The profile card's "Net worth over time" section is the one place that reads
+*every* `financial_disclosures.json` row for a member, not just usable ones
+— `lib/wealth-data.ts`'s `getMemberWealthProfile()` classifies each of the
+2013–2025 years via `lib/wealth-derive.ts`'s `buildProfileYears()` into one
+of four states:
+
+| State | Meaning | Chart treatment |
+|---|---|---|
+| `usable` | High-confidence, not flagged | Solid point, contributes to the range band |
+| `needs_review` | Low confidence but has a `net_worth` number | Hollow dashed marker, no band contribution |
+| `not_extractable` | A filing exists but has no numbers (scanned/paper) | No point; links to the source filing |
+| `no_filing` | No row at all for that year | No point |
+
+The chart's x-axis starts at this member's own **first reported year** (the
+first year with any row, any confidence — not always 2013): a member who
+entered Congress in 2019 doesn't get six empty years of runway. Gaps between
+the first and last plotted year break the range band and bridge the midpoint
+line with one dashed segment *per contiguous gap run* (not one label per
+missing year — several consecutive gap years used to each render their own
+"no filing" text stacked on top of each other). Open-ended bands ("Over
+$50,000,000", or the spousal-independent carve-out) get one chart-wide
+top-of-plot gradient fade rather than a precise per-column effect — a real
+filing can mix open-ended and closed years, and the y-domain's own ceiling
+is set by the highest reported value (which an open-ended band always is),
+so the fade lands close to where they actually sit; the hover card and the
+midpoint's "+" suffix carry the precise signal.
+
+The item list (right column) toggles between Assets and Liabilities (one
+list shown at a time, not stacked) and only offers years with a reconciled
+`line-items` row in its dropdown; a usable year with no such row falls back
+to the band-count total from `financial_disclosures.json` rather than
+fabricating items. Long or garbled descriptions (a known residual risk —
+see `house_line_items.py`'s own docstring on same-band items back-to-back on
+one page) are clamped to 3 lines rather than truncated to 1 or left to
+overflow.
+
 ## Band policy: one module, two languages
 
 The plan asks for the band/midpoint policy to live in one module importable
@@ -168,6 +223,7 @@ languages, so:
   point estimate.
 - `lib/wealth-data.test.ts` cross-checks the TypeScript policy against the
   pipeline's own `net_worth` field for every usable row in the real output
-  file, so the two can't silently drift apart without a failing test. A
-  future line-item session (Session 5) reusing `bands.py`'s tiers keeps
-  both sides honest the same way.
+  file, so the two can't silently drift apart without a failing test.
+  `pipeline/financial_disclosures/line_item_bands.py` (Session 5) is a third
+  restatement of the same tiers, at item grain — see "Line items and the
+  profile card" above.

@@ -135,7 +135,17 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     [dots],
   );
 
-  const standouts = useMemo(() => pickStandouts(cohort, 3), [cohort]);
+  // Below ~480px the chart is measured (not viewBox-scaled — see the `W`
+  // computation above), so its physical width shrinks while `.dot-label`'s
+  // CSS font-size stays fixed: the full "Lastname (R) +$55.07M/yr ↑" labels
+  // (fine at 1280px) crowd into each other and the dots below them. Fewer,
+  // shorter labels rather than a smaller font — the rate is still one tap
+  // away in the hover card.
+  const compactLabels = W < 480;
+  const standouts = useMemo(
+    () => pickStandouts(cohort, compactLabels ? 1 : 3),
+    [cohort, compactLabels],
+  );
   const standoutLabels = useMemo(() => {
     const entries = [...standouts.top, ...standouts.bottom]
       .map((e) => {
@@ -147,7 +157,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
 
     const ys = spreadLabelsY(
       entries.map((v) => v.dot.cy),
-      14,
+      compactLabels ? 20 : 14,
       innerHeight,
     );
 
@@ -155,9 +165,11 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
       const nearRightEdge = v.dot.cx > innerWidth * 0.85;
       const letter = v.entry.member.caucus === "Democrat" ? "D" : "R";
       const arrow = v.entry.rate > 0 ? "↑" : "↓";
-      const text = v.dot.pinned
-        ? `${lastNameOf(v.entry.member.name)} (${letter}) ${formatSignedCompactUSD(v.entry.rate)}/yr ${arrow}`
-        : `${lastNameOf(v.entry.member.name)} (${letter})`;
+      const text = compactLabels
+        ? `${lastNameOf(v.entry.member.name)} (${letter})`
+        : v.dot.pinned
+          ? `${lastNameOf(v.entry.member.name)} (${letter}) ${formatSignedCompactUSD(v.entry.rate)}/yr ${arrow}`
+          : `${lastNameOf(v.entry.member.name)} (${letter})`;
       return {
         key: v.entry.member.bioguideId,
         x: v.dot.cx + (nearRightEdge ? -10 : 10),
@@ -166,7 +178,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         text,
       };
     });
-  }, [standouts, dotById, innerWidth, innerHeight]);
+  }, [standouts, dotById, innerWidth, innerHeight, compactLabels]);
 
   const searchResults = useMemo(() => {
     const q = query.trim().toLowerCase();

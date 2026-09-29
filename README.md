@@ -19,6 +19,11 @@ site makes that data explorable:
   their score has moved, against their party's mean.
 - **See where a committee sits** — every House, Senate, and joint committee of
   the 119th Congress blended to a point, plus a page per committee.
+- **Congressional net worth** ([`/congress/wealth`](https://insidegov.fyi/congress/wealth))
+  — who outperformed, who lagged: annualized net worth change vs. years of
+  usable disclosure data, highest/lowest lists, and a "Net worth over time"
+  card with the actual assets and liabilities on every current member's
+  profile page, estimated from their annual financial disclosures.
 - Party-mean trend line, a searchable roster, a full data table, and a
   profile page for every current representative and senator.
 
@@ -39,6 +44,7 @@ remembers.
 | [**Voteview**](https://voteview.com/) (Lewis, Poole, Rosenthal, Boche, Rudkin & Sonnet) | DW-NOMINATE ideal points — the static career score and the per-Congress (Nokken–Poole) score |
 | [**@unitedstates/congress-legislators**](https://github.com/unitedstates/congress-legislators) | Names, states, parties, terms, the `icpsr` ↔ `bioguide_id` crosswalk, and current committees + rosters |
 | [**@unitedstates/images**](https://github.com/unitedstates/images) | Official member portraits (current members only), committed under `public/images/members/` |
+| **House Clerk** ([disclosures-clerk.house.gov](https://disclosures-clerk.house.gov/)) and **Senate eFD** ([efdsearch.senate.gov](https://efdsearch.senate.gov/)) | Annual financial disclosures (assets, liabilities, net worth bands) behind `/congress/wealth` and each profile's net worth card |
 
 > Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron Rudkin,
 > and Luke Sonnet (2026). *Voteview: Congressional Roll-Call Votes Database.*
@@ -61,7 +67,13 @@ DW-NOMINATE scores must not be conflated) are written down in
   normalized JSON (`legislators.json`, `terms.json`, `ideology_scores.json`,
   `id_crosswalk.json`, `committees.json`, `committee_memberships.json`). The app
   reads those at build time and statically prerenders every page — there is no
-  runtime data fetching and nothing to operate.
+  runtime data fetching and nothing to operate. Financial disclosures are a
+  separate Python sidecar (`pipeline/financial_disclosures/`, PDF/HTML parsing
+  is easier there) producing `financial_disclosures.json` (one row per member
+  per reporting year, band-count grain) and `line-items/<year>.json` (the
+  verbatim per-asset/per-liability grain, sharded by year) — both validated
+  the same way (Zod on the TS side, a dependency-free schema check on the
+  Python side) before the app reads them.
 - **D3 for the maths only** (`d3-scale`, `d3-shape`, `d3-force`) — scales, path
   strings, and the beeswarm collision layout. Every `<circle>`, `<path>` and
   `<line>` is plain JSX, so React owns the DOM. Low-level primitives
@@ -72,12 +84,14 @@ DW-NOMINATE scores must not be conflated) are written down in
   re-runs the pipeline and fails if the committed output drifts, then builds.
 
 ```
-app/          routes — the explorer (/), member profiles, committee pages
-components/    charts/ (primitives), senate/ (the ideology views), profile/, committee/
+app/          routes — the explorer (/), member profiles, committee pages, /congress/wealth
+components/    charts/ (primitives), senate/ (the ideology views), profile/, committee/, wealth/
 lib/           the build-time data layer + shared helpers
 pipeline/      fetch → validate → transform → pipeline/output/*.json
+                financial_disclosures/ — Python sidecar (PDF/HTML parsing) for
+                financial_disclosures.json + line-items/<year>.json
 public/        static assets, incl. committed member photos (images/members/)
-docs/          DATA_CONVENTIONS.md, CREDITS.md
+docs/          DATA_CONVENTIONS.md, NET_WORTH_METHODOLOGY.md, CREDITS.md
 ```
 
 See [`ARCHITECTURE_MAP.md`](ARCHITECTURE_MAP.md) for the data-layer, route, and
@@ -108,9 +122,7 @@ standing committee of the 119th Congress. Committee membership is only tracked
 for the current Congress (there is no historical roster file upstream), so the
 committee views are pinned to the 119th and carry no trend chart.
 
-Still future work: subcommittees, a per-member bills/votes record, and the
-financial-disclosure vertical (`/wealth` — the House-disclosure parser lives in
-`pipeline/financial/` but isn't wired into the site yet).
+Still future work: subcommittees and a per-member bills/votes record.
 
 ## Licence
 

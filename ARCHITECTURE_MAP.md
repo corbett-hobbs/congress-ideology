@@ -24,6 +24,8 @@ stored. See `docs/DATA_CONVENTIONS.md` for the full contract.
 | `committee_memberships.json` | (legislator, committee) (119th)            | `bioguide_id`                  | `transform/committees.ts`    | `lib/committee-data.ts` |
 | `member-photos.json`         | which current members have a photo         | —                              | `fetch/photos.ts`            | `lib/congress-data.ts` |
 | `_report.json`               | run summary / sanity numbers               | —                              | `transform/index.ts`         | humans |
+| `financial_disclosures.json` | (legislator, reporting year), band-count grain | `bioguide_id`+`year`       | Python sidecar: `pipeline/financial_disclosures/build.py` / `build_senate_html.py` / `build_ocr.py` | `lib/wealth-data.ts` |
+| `line-items/<year>.json`     | (legislator, reporting year) that reconciled, item grain | `bioguide_id`+`year`, sharded by `year` | `pipeline/financial_disclosures/build_line_items.py` | `lib/line-items-data.ts` |
 
 Raw sources: Voteview `HSall_members.csv` / `HSall_parties.csv`;
 `@unitedstates/congress-legislators` `legislators-current.yaml`,
@@ -40,6 +42,11 @@ latest Congress and carry no trend chart.
 | `lib/committee-data.ts`| `CommitteeSummary` / `CommitteeProfile` — joins the roster to each member's latest-Congress score and **blends each committee to a `(dim1, dim2)` point** (unweighted mean) + `spread` (`max−min` dim1). Also resolves `compassColorClass` (chamber → fill class, via `lib/committee-palette.ts`) once per committee here, at the data-prep layer — `CommitteeCompass` just reads the field, no member-vs-committee branching in the chart component. Also builds `byMember` (`committee_memberships.json` inverted to `bioguide_id`-keyed) for `getMemberCommitteeMemberships()` — a member's own committee list, role-then-seniority sorted. Client-safe shapes in `lib/committee-types.ts`. |
 | `lib/committee-palette.ts` | Committee-compass **chamber**-identity colours (House / Senate / joint→neutral) — a deliberate departure from `lib/party-palette.ts`'s majority-party colouring, scoped to compass dots only (`committee/CommitteeCompass`). "How each committee votes" (`CommitteeSwarm`) still uses party colours per member seat, unaffected. Validated via `validate_palette.js` (see its `FORCED_PAIRS`/`NEW_KEYS` — these colours never co-occur with a real `party_code`, so the automatic co-occurrence detection can't see them; they're checked explicitly instead). |
 | `lib/neighbors.ts`    | `nearestNeighbors` — generic over any `{dim1, dim2}` entity (members *and* committees), with `ideologicalDistance` |
+| `lib/wealth-data.ts`  | Reads `financial_disclosures.json` + `terms.json`, `server-only`. `getWealthData()` — every current member joined to usable filing years (cohort-wide, for `/wealth`). `getMemberWealthProfile(bioguideId)` — one member's *every* row (not just usable), classified per year by `buildProfileYears` (`lib/wealth-derive.ts`), plus reconciled line-item rows — the profile card's payload. Re-exports `lib/wealth-derive.ts` in full. |
+| `lib/wealth-derive.ts`| Pure, unit-tested data-shaping (no file I/O): `isUsableRow`, `buildWealthMembers`, `annualizedRate`, `hasDataGap`, `buildProfileYears` (the profile card's 4-state year classification: usable / needs_review / not_extractable / no_filing), `filingYearOf`, the compact client payload codec (`toWealthPayload`/`fromWealthPayload`). |
+| `lib/wealth-bands.ts` | EIGA band label → `(lo, hi)` bounds, TS restatement of `pipeline/financial_disclosures/bands.py`; `filingRange()` sums a filing's band counts into a net worth range. |
+| `lib/line-items-data.ts` | Reads `pipeline/output/line-items/<year>.json`, `server-only` — the **first sharded** pipeline output (every other `lib/*-data.ts` reader assumes one flat file). Indexes all shards once by `bioguide_id` then `year`; degrades to empty (not an error) if the directory doesn't exist yet in a checkout. |
+| `lib/disclosure-url.ts` | `sourceDocUrl(sourceSystem, sourceDocId, year)` — the app-side restatement of `fetch.py`'s House PDF URL template and `senate_fetch.py`'s Senate report URL template (no such builder existed before Session 6). |
 
 ---
 
@@ -52,7 +59,7 @@ latest Congress and carry no trend chart.
 | `/congress/house/[bioguide_id]/[name_slug]`         | SSG + dynamic | `MemberProfileView` |
 | `/congress/committees/[committee_id]/[name_slug]`   | SSG + dynamic | `CommitteeProfileView` — same shape as a member profile minus the trajectory chart |
 | `/data/[chamber]`                                   | static JSON | the scrub-through-time payload, fetched on demand |
-| `/wealth`                                           | static | placeholder (`upcoming` vertical) |
+| `/wealth`                                           | static | `WealthPageClient` — chamber/state filter bar, the net worth scatter ("who outperformed, who lagged"), highest/lowest lists. Plan called this route `/congress/wealth`; shipped at `/wealth` instead since the site already had that top-level vertical wired up (nav entry, `lib/verticals.ts`) — see `app/wealth/page.tsx`'s own doc comment. |
 | `/sitemap.xml`, `/robots.txt`, `/opengraph-image`   | static | — |
 
 Each `*/[.../name_slug]` route also has `opengraph-image.tsx` (rendered on
@@ -82,6 +89,24 @@ to members and committees at once — there is no forked chart code.
 `components/senate/BeeswarmChart` (d3-force collision layout) is still its own
 chart — the profile-page single-state delegation and, potentially, a future
 committee roster swarm. Not yet folded into a primitive.
+
+### Wealth track (`components/wealth/`, `/wealth` + profile pages)
+
+Built on the same `charts/ChartFrame` + `charts/Axis` + `charts/Tooltip`
+primitives as the ideology charts — no parallel chart stack.
+
+| Component | Notes |
+| --------- | ----- |
+| `wealth/NetWorthScatterCard` | "Who outperformed, who lagged" — annualized rate vs. years of data, `scaleSymlog` y-axis, pinned-outlier triangles beyond ±$15M/yr, member search, `<details>` table fallback |
+| `wealth/WealthListsSection`, `wealth/WealthList`, `wealth/Sparkline` | Highest/lowest net worth lists, each row's own min/max-scaled sparkline over the shared 2013–2025 axis |
+| `wealth/WealthFilterBar` | Chamber switch (`components/ChamberSwitch`) + state dropdown (`components/senate/StateFilter`) — the same controls the homepage explorer uses, wired to page-level state instead of URL params |
+| `profile/MemberWealthSection` | The profile page's full-width "Net worth over time" card (sibling to `MemberIdeologySection`/`CommitteeMembershipsCard` in `MemberProfileView`) — absent (not an empty state) for a member with zero `financial_disclosures.json` rows |
+| `wealth/MemberNetWorthChart` | One member's midpoint line + range band, one point per covered year. No existing click-to-select-driving-a-dropdown pattern existed before this — built from scratch, modeled on `senate/SenatorTrajectoryChart`'s zoom-to-data y-domain. Gaps break the band and bridge the midpoint line with a dashed segment (restricted to gaps *between* the member's own first/last data year — labeling every pre-entry year up to the 2013 floor was tried and reverted, it buried the axis). Open-ended bands get one chart-wide top gradient fade rather than a precise per-point effect (documented trade-off in the component). |
+| `wealth/MemberWealthItemsPanel` | The chart's year-linked assets/liabilities list — year dropdown (years with a reconciled `line-items` row only), sticky section headers, falls back to the band-count total (no fabricated items) for a year Session 5 didn't reconcile |
+
+`WealthMemberTooltip` (hover-card content, scatter + hover-linked from search)
+and `wealth-copy.ts`/`wealth-scatter.ts` (pure label/jitter/standout-picking
+helpers, unit-tested) round out the scatter's own supporting files.
 
 ### Committee page shell (`components/committee/`)
 
@@ -326,3 +351,73 @@ member's own position against that committee's blend.
   appear), but that was changed on direct request after shipping. The row
   is a single `<Link>`; the committee name is styled via `group-hover`
   rather than nested inside its own anchor.
+
+---
+
+## Net worth track — Sessions 1–7
+
+Built from `net-worth-claude-code-plan.md`, seven sessions. Notes on where
+the plan and the shipped code diverge, beyond what's already called out
+inline in the tables above:
+
+1. **`/congress/wealth` shipped at `/wealth`.** The plan names the landing
+   route `/congress/wealth` throughout; the site already had a top-level
+   `wealth` vertical wired up at `/wealth` (nav entry, `lib/verticals.ts`)
+   before Session 2, so that session built in place rather than introduce a
+   second, competing route — reported in its own summary, restated in
+   `app/wealth/page.tsx`'s doc comment.
+2. **The party wealth chart was built (Session 3) then explicitly removed**
+   on direct request, along with tightened list headers — a real, shipped
+   feature taken back out, not a divergence in the "prompt vs. code"
+   sense. `/wealth` today is: filter bar, scatter, highest/lowest lists.
+3. **Session 5 (line-item extraction) ran at full scale, not just the
+   session's own investigate-phase sample.** The plan's Session 6 depends on
+   Session 5's *output existing*; validating that against only the ~85
+   locally cached House PDFs and calling it done would have left Session 6
+   built against a near-empty `line-items/` directory. Session 5 fetched the
+   ~2,600 remaining House PDFs from the House Clerk's own site (all already
+   publicly available, same one-PDF-per-request pattern `build.py` already
+   uses) before Session 6 started — 3,507 of 3,515 usable filings
+   reconciled. See `docs/NET_WORTH_METHODOLOGY.md`'s "Line items and the
+   profile card" section for the numbers and the reconciliation gate.
+4. **No click-to-select-driving-a-dropdown pattern existed before Session
+   6** — checked `senate/SenatorTrajectoryChart` (no click handler at all)
+   and the wealth scatter's own `selectedId` (highlights a marker, doesn't
+   drive another control). Built from scratch for `wealth/MemberNetWorthChart`
+   + `wealth/MemberWealthItemsPanel`, modeled structurally on
+   `SenatorTrajectoryChart`'s `ChartFrame`/`Axis`/zoom-to-data-y-domain shape.
+5. **The profile card's chart x-axis and gap labels needed a second pass**
+   (reported directly, not found in review): the plan says "one point per
+   year covered," which a first cut read as "always plot the full
+   2013–2025 window" — for a member who entered Congress well after 2013,
+   or whose data starts later, that left a long empty run-up. Fixed to start
+   at the member's own first reported year instead. A related bug in that
+   same first cut rendered one muted gap label *per missing year* rather
+   than one per contiguous run — for a multi-year gap this stacked several
+   "no filing" strings on top of each other into unreadable text
+   (`"no filing filing filing"`). Both fixed in `MemberNetWorthChart.tsx`.
+6. **A real data-quality bug, exposed (not caused) by removing the item
+   list's old single-line truncation**: some House PDF vintages' embedded
+   fonts map certain glyphs — confirmed on the "L" of "LOCATION:" and the
+   "D" of "DESCRIPTION:" continuation labels — to literal NUL/control
+   codepoints, which pdfplumber decodes as-is rather than dropping. Hidden
+   behind a `truncate` (single-line ellipsis) UI treatment on the shipped-
+   then-immediately-revised item list, this only became visible once the
+   list was widened and given room to show full descriptions. Fixed at the
+   word-collection point in `house_line_items.py` (`_clean_word`), scoped to
+   that module rather than `extract_text.py` (shared with the trusted,
+   untouched `columns.py` band-counting path).
+7. **The item list's remaining known display artifact**: on rare pages with
+   several same-band items back-to-back, one item's description can still
+   absorb a neighbor's text (the reconciliation gate only guarantees band
+   *totals* match, not that every description is paired with its own value
+   — documented residual risk since Session 5, see `house_line_items.py`'s
+   module docstring). Mitigated in the UI with a 3-line clamp rather than
+   chased further at the extraction layer in this pass.
+8. **Assets/Liabilities is a toggle, not two stacked sections.** The
+   original Session 6 build listed both under sticky "Assets · N items" /
+   "Liabilities · N items" headers in one scrollable region — functional,
+   but on a member with 300+ assets, liabilities were scrolled out of
+   reach. Revised to a two-way pill toggle (same `role="group"` pattern as
+   `ChamberSwitch`) that replaces the panel's title, one list shown at a
+   time.
