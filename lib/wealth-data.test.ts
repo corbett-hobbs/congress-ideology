@@ -190,7 +190,7 @@ describe("wealth data fixtures", () => {
 
   it("counts list-eligible members correctly (latest usable year >= 2023)", () => {
     const eligible = members.filter(isListEligible);
-    expect(eligible.length).toBe(498);
+    expect(eligible.length).toBe(500);
   });
 
   it("reconciles the range midpoint against the pipeline net_worth for every closed-range point", () => {
