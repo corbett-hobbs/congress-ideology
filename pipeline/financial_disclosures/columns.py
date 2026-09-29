@@ -22,7 +22,16 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from bands import ASSET_BANDS, LIABILITY_BANDS, count_bands, value_total
+from bands import (
+    ASSET_BANDS,
+    ASSET_TIERS,
+    LIABILITY_BANDS,
+    LIABILITY_TIERS,
+    OPEN_ENDED_FLOOR,
+    count_bands,
+    parse_exact_value,
+    value_total,
+)
 from extract_text import DocWords, PageWords, Word
 
 _TOP_TOL = 3.5  # same-line tolerance, in points
@@ -64,6 +73,34 @@ _EXACT_TOKEN_RE = re.compile(r"^\$[\d,]+$")
 # number in either direction.
 _AMBIGUOUS_EXACT_VALUES = {"$1,000,000"}
 
+# Every EIGA tier boundary (each tier's low and high, from bands.py). On a
+# scanned checkbox-grid form the printed tier legend ("$100,001 - $250,000",
+# ...) sits inside the value column, and when OCR drops or garbles a dash the
+# legend's halves stop matching as band ranges and surface here as lone
+# "exact" figures -- confirmed on Mike Rogers' 2013 filing (doc 9102988),
+# whose seven "exact values" ($250,000, $100,000 x2, $50,000,000 x2,
+# $25,000,000, $500,000) were exactly the legend's upper bounds and summed to
+# a bogus $125.95M with high confidence. A genuine reported figure landing
+# exactly on a tier boundary is far less likely than legend residue, so these
+# are never trusted as exact values.
+_BAND_BOUNDARY_VALUES = frozenset(
+    f"${n:,}"
+    for tier in (*ASSET_TIERS, *LIABILITY_TIERS)
+    for n in tier
+) | {f"${OPEN_ENDED_FLOOR:,}", f"${OPEN_ENDED_FLOOR + 1:,}"}
+
+# Below the lowest reportable tier ($1,001 assets / $10,001 liabilities) a
+# lone figure isn't a reportable amount -- on a scan it's a comma-split
+# fragment of a legend value ("$15" from "$15,001", "$29", "$50", ...).
+_MIN_EXACT_VALUE = 1_001
+
+
+def _is_plausible_exact_value(tok: str) -> bool:
+    """False for legend residue: a tier-boundary figure or a sub-$1,001 fragment."""
+    if tok in _BAND_BOUNDARY_VALUES:
+        return False
+    return parse_exact_value(tok) is not None and parse_exact_value(tok) >= _MIN_EXACT_VALUE
+
 
 def _find_exact_values(joined_text: str, matched_counts: dict[str, int]) -> dict[str, int]:
     """After removing every matched band-range occurrence from ``joined_text``,
@@ -89,6 +126,8 @@ def _find_exact_values(joined_text: str, matched_counts: dict[str, int]) -> dict
     exact: dict[str, int] = {}
     for i, tok in enumerate(tokens):
         if not _EXACT_TOKEN_RE.match(tok) or tok in _AMBIGUOUS_EXACT_VALUES:
+            continue
+        if not _is_plausible_exact_value(tok):
             continue
         prev_is_dash = i > 0 and tokens[i - 1] == "-"
         next_is_dash = i + 1 < len(tokens) and tokens[i + 1] == "-"

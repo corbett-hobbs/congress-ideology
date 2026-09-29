@@ -8,14 +8,14 @@
   ],
   "total_member_years": 3632,
   "counts_by_parse_confidence": {
-    "high": 3532,
-    "low": 261,
+    "high": 3521,
+    "low": 272,
     "no_filing_found": 622,
     "ocr_low_confidence": 70,
     "no_schedule_content_found": 55,
     "unparseable_scanned": 110
   },
-  "needs_review_count": 496,
+  "needs_review_count": 507,
   "match_stats": {
     "ok": 4481,
     "no_candidate": 4429
