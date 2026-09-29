@@ -6,6 +6,7 @@ import type { MemberWealthProfile } from "@/lib/wealth-data";
 import { chamberLabel } from "@/lib/chamber";
 import { formatCompactUSD, formatOpenEndedUSD } from "@/lib/format-money";
 import { MemberNetWorthChart } from "@/components/wealth/MemberNetWorthChart";
+import { HowToReadNotes } from "@/components/wealth/HowToReadNotes";
 import { MemberWealthItemsPanel } from "@/components/wealth/MemberWealthItemsPanel";
 
 interface Props {
@@ -85,12 +86,27 @@ export function MemberWealthSection({ profile, wealthProfile }: Props) {
         />
       </div>
 
-      <p className="mt-4 text-[0.72rem] leading-relaxed text-ink-faint">
-        Estimated from the asset and liability ranges on each annual
-        disclosure. Years are the year each report covers, so a report filed
-        in 2025 appears as 2024. Ranges are wide by design: the line traces
-        the midpoint and the shaded band shows the full reported range. How
-        we estimate this · Source: {chamberLabel(profile.chamber) === "House" ? "House Clerk" : "Senate eFD"}.
+      <p className="mt-4 max-w-[46rem] text-[0.78rem] leading-relaxed text-ink-muted">
+        Members of Congress don&apos;t report a net worth. They file annual
+        disclosures listing assets and liabilities as value ranges, like
+        &ldquo;$15,001-$50,000.&rdquo; We take the midpoint of each range and
+        subtract liabilities from assets to estimate net worth. Expect wide
+        margins: these are estimates, best read as trends and comparisons
+        rather than exact totals.
+      </p>
+      <details className="mt-2 text-[0.78rem] leading-relaxed text-ink-muted">
+        <summary className="cursor-pointer font-medium text-ink">
+          How to read this
+        </summary>
+        <div className="mt-2 max-w-[46rem]">
+          <HowToReadNotes />
+        </div>
+      </details>
+      <p className="mt-3 text-[0.72rem] leading-relaxed text-ink-faint">
+        Years are the year each report covers, so a report filed in 2025
+        appears as 2024. The line traces the midpoint and the shaded band
+        shows the full reported range. Source:{" "}
+        {chamberLabel(profile.chamber) === "House" ? "House Clerk" : "Senate eFD"}.
       </p>
     </section>
   );
