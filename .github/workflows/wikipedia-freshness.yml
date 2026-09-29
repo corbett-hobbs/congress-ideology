@@ -1,0 +1,86 @@
+name: Wikipedia bios freshness
+
+# Automate the check, gate the acceptance on a human.
+#
+# Weekly: re-fetch every current member's Wikipedia lead and, if the trimmed
+# result differs from pipeline/output/wikipedia_summaries.json, open a pull
+# request. Never auto-merged — a human reviews the diff (it includes each
+# record's `revision`, so text changes and vandalism are visible) and merges.
+# `fetched_at` is only bumped when a record actually changes, so an unchanged
+# article produces no diff.
+#
+# Requires repo setting:
+#   Settings > Actions > General > "Allow GitHub Actions to create and
+#   approve pull requests"  (off by default)
+#
+# Note: the PR branch is pushed with GITHUB_TOKEN, so it does NOT trigger the
+# CI workflow. Re-run `pnpm validate` locally before merging.
+
+on:
+  schedule:
+    - cron: "43 9 * * 1" # Mondays 09:43 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: wikipedia-freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Re-fetch Wikipedia summaries
+        run: pnpm fetch:wikipedia
+
+      - name: Validate
+        run: pnpm validate
+
+      - name: Detect changes
+        id: detect
+        run: |
+          if git diff --quiet -- pipeline/output/wikipedia_summaries.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Wikipedia summaries are unchanged."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- pipeline/output/wikipedia_summaries.json
+          fi
+
+      - name: Open pull request
+        if: steps.detect.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: pipeline/output/wikipedia_summaries.json
+          branch: data/wikipedia-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): refresh Wikipedia bios"
+          title: "Wikipedia bios refresh"
+          labels: data-refresh
+          body: |
+            The weekly freshness check found changes to member Wikipedia leads.
+
+            **Before merging**
+
+            - Review the diff in `pipeline/output/wikipedia_summaries.json`.
+              Each changed record carries a new `revision` — open the article
+              history for anything that looks wrong (vandalism, wrong person).
+            - Check any record with `needs_review: true`.
+            - Locally: `pnpm validate`.
+
+            Not auto-merged by design.

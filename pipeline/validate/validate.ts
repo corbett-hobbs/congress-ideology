@@ -1,6 +1,8 @@
 import { RAW_DIR } from "../fetch/lib";
+import { readFile } from "node:fs/promises";
 import {
   legislator,
+  wikipediaSummary,
   rawCommittee,
   rawCommitteeMember,
   voteviewMemberRow,
@@ -158,4 +160,26 @@ await step("congress-legislators/committee-membership-current.yaml", async () =>
     );
   }
   return `${rosterRows} roster rows ok, every bioguide resolves`;
+});
+
+// Our own output, not a raw snapshot — but it is committed and written by a
+// scheduled job (fetch:wikipedia), so CI re-checks it on every push.
+await step("output/wikipedia_summaries.json", async () => {
+  const file = "pipeline/output/wikipedia_summaries.json";
+  const rows = validateAll(
+    file,
+    JSON.parse(await readFile(file, "utf8")) as unknown[],
+    wikipediaSummary,
+    (row, i) => `record ${i} (bioguide ${(row as { bioguide_id?: string }).bioguide_id ?? "?"})`,
+  );
+  assertUnique(file, rows, (r) => r.bioguide_id, (r) => `${r.title} [${r.bioguide_id}]`);
+  const unknown = rows.filter((r) => !knownBioguides.has(r.bioguide_id));
+  if (unknown.length > 0) {
+    throw new ValidationError(
+      file,
+      "bioguide resolution",
+      `${unknown.length} record(s) have a bioguide not present in congress-legislators: ${unknown.map((r) => r.bioguide_id).join(", ")}`,
+    );
+  }
+  return `${rows.length} records ok, bioguide_id unique and resolves`;
 });

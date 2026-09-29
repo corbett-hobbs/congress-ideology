@@ -44,6 +44,7 @@ remembers.
 | [**Voteview**](https://voteview.com/) (Lewis, Poole, Rosenthal, Boche, Rudkin & Sonnet) | DW-NOMINATE ideal points — the static career score and the per-Congress (Nokken–Poole) score |
 | [**@unitedstates/congress-legislators**](https://github.com/unitedstates/congress-legislators) | Names, states, parties, terms, the `icpsr` ↔ `bioguide_id` crosswalk, and current committees + rosters |
 | [**@unitedstates/images**](https://github.com/unitedstates/images) | Official member portraits (current members only), committed under `public/images/members/` |
+| [**Wikipedia**](https://en.wikipedia.org/) (CC BY-SA 4.0) | The short, abridged bio in each current member's profile header, fetched at build time (`pipeline/fetch/wikipedia.ts`) |
 | **House Clerk** ([disclosures-clerk.house.gov](https://disclosures-clerk.house.gov/)) and **Senate eFD** ([efdsearch.senate.gov](https://efdsearch.senate.gov/)) | Annual financial disclosures (assets, liabilities, net worth bands) behind `/congress/wealth` and each profile's net worth card |
 
 > Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron Rudkin,
@@ -54,6 +55,8 @@ Raw snapshots are committed under `pipeline/raw/`, so builds are reproducible
 and don't touch the network. A scheduled GitHub Action re-fetches Voteview
 weekly and opens a PR if it changed — see
 [`.github/workflows/voteview-freshness.yml`](.github/workflows/voteview-freshness.yml).
+Wikipedia bios are refreshed the same way
+([`wikipedia-freshness.yml`](.github/workflows/wikipedia-freshness.yml)).
 Data conventions (why `bioguide_id` is the only join key, why the two
 DW-NOMINATE scores must not be conflated) are written down in
 [`docs/DATA_CONVENTIONS.md`](docs/DATA_CONVENTIONS.md).

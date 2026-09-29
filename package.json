@@ -16,9 +16,10 @@
     "fetch:legislators": "tsx pipeline/fetch/legislators.ts",
     "fetch:committees": "tsx pipeline/fetch/committees.ts",
     "fetch:photos": "tsx pipeline/fetch/photos.ts",
+    "fetch:wikipedia": "tsx pipeline/fetch/wikipedia.ts",
     "validate": "tsx pipeline/validate/validate.ts",
     "transform": "tsx pipeline/transform/index.ts",
-    "pipeline": "pnpm fetch:all && pnpm validate && pnpm transform && pnpm fetch:photos",
+    "pipeline": "pnpm fetch:all && pnpm validate && pnpm transform && pnpm fetch:photos && pnpm fetch:wikipedia",
     "pipeline:check": "pnpm validate && pnpm transform && git diff --exit-code --stat -- pipeline/output"
   },
   "engines": {

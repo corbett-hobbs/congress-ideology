@@ -33,7 +33,21 @@ export function SiteFooter({ children }: SiteFooterProps) {
         >
           @unitedstates/images
         </a>{" "}
-        (public-domain GPO portraits). DW‑NOMINATE scores estimate each
+        (public-domain GPO portraits). Member bios:{" "}
+        <a
+          href="https://en.wikipedia.org/"
+          className="text-ink-muted underline decoration-line-strong underline-offset-2 hover:decoration-accent"
+        >
+          Wikipedia
+        </a>
+        , text abridged, under{" "}
+        <a
+          href="https://creativecommons.org/licenses/by-sa/4.0/"
+          className="text-ink-muted underline decoration-line-strong underline-offset-2 hover:decoration-accent"
+        >
+          CC BY-SA 4.0
+        </a>
+        . DW‑NOMINATE scores estimate each
         member&rsquo;s revealed ideology from their voting record, not stated
         beliefs.
       </p>

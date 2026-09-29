@@ -167,3 +167,31 @@ export const legislator = z.looseObject({
   terms: z.array(legislatorTerm).min(1),
 });
 export type Legislator = z.infer<typeof legislator>;
+
+/**
+ * One record of `pipeline/output/wikipedia_summaries.json` — a trimmed
+ * Wikipedia lead per current member, keyed by `bioguide_id`. Strict (not
+ * `looseObject`): this is our own output, so an unknown field is a bug.
+ */
+export const wikipediaSummary = z.strictObject({
+  bioguide_id: z.string().regex(BIOGUIDE),
+  title: z.string().min(1),
+  extract: z.string().min(1),
+  url: z.string().regex(/^https:\/\/en\.wikipedia\.org\/wiki\/\S+$/),
+  revision: z.string().regex(/^\d+$/),
+  fetched_at: z.string().regex(ISO_DATE),
+  needs_review: z.boolean(),
+});
+export type WikipediaSummary = z.infer<typeof wikipediaSummary>;
+
+/** The parts of the Wikipedia REST `page/summary` response we depend on. */
+export const wikipediaApiSummary = z.looseObject({
+  type: z.string(),
+  title: z.string().min(1),
+  extract: z.string(),
+  revision: z.string().regex(/^\d+$/),
+  content_urls: z.looseObject({
+    desktop: z.looseObject({ page: z.string().url() }),
+  }),
+});
+export type WikipediaApiSummary = z.infer<typeof wikipediaApiSummary>;
