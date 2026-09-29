@@ -7,6 +7,7 @@ import {
 } from "@/lib/congress-data";
 import { getMemberCommitteeMemberships } from "@/lib/committee-data";
 import { getMemberWealthProfile } from "@/lib/wealth-data";
+import { getMemberWikipediaBio } from "@/lib/wikipedia-bio";
 import { memberPath, memberSlug } from "@/lib/member-url";
 import { partyAbbr } from "@/components/senate/format";
 import { MemberProfileView } from "@/components/profile/MemberProfileView";
@@ -81,6 +82,7 @@ export default async function SenatorPage({
       trend={current.trend}
       committeeMemberships={getMemberCommitteeMemberships(bioguide_id)}
       wealthProfile={getMemberWealthProfile(bioguide_id)}
+      bio={getMemberWikipediaBio(bioguide_id)}
     />
   );
 }

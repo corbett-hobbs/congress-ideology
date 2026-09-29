@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parse } from "csv-parse/sync";
-import { legislator, voteviewMemberRow } from "./schemas";
+import { legislator, voteviewMemberRow, wikipediaSummary } from "./schemas";
 
 const MEMBER_HEADER =
   "congress,chamber,icpsr,state_icpsr,district_code,state_abbrev,party_code,occupancy,last_means,bioname,bioguide_id,born,died,nominate_dim1,nominate_dim2,nominate_log_likelihood,nominate_geo_mean_probability,nominate_number_of_votes,nominate_number_of_errors,conditional,nokken_poole_dim1,nokken_poole_dim2";
@@ -82,6 +82,32 @@ describe("legislator", () => {
     if (r.success) {
       expect(r.data.terms[0].party).toBe("Independent");
       expect(r.data.terms[0].caucus).toBe("Democrat");
+    }
+  });
+});
+
+describe("wikipediaSummary", () => {
+  const good = {
+    bioguide_id: "C000127",
+    title: "Maria Cantwell",
+    extract: "Maria Cantwell is a U.S. senator.",
+    url: "https://en.wikipedia.org/wiki/Maria_Cantwell",
+    revision: "1371225958",
+    fetched_at: "2026-09-29",
+    needs_review: false,
+  };
+  it("accepts a well-formed record", () => {
+    expect(wikipediaSummary.safeParse(good).success).toBe(true);
+  });
+  it("rejects a bad bioguide, empty extract, non-Wikipedia url or extra field", () => {
+    for (const bad of [
+      { ...good, bioguide_id: "cantwell" },
+      { ...good, extract: "" },
+      { ...good, url: "https://example.com/x" },
+      { ...good, revision: "abc" },
+      { ...good, placeholder: true },
+    ]) {
+      expect(wikipediaSummary.safeParse(bad).success).toBe(false);
     }
   });
 });

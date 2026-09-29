@@ -23,6 +23,7 @@ stored. See `docs/DATA_CONVENTIONS.md` for the full contract.
 | `committees.json`            | one row per top-level committee (119th)    | `committee_id` (THOMAS id)     | `transform/committees.ts`    | `lib/committee-data.ts` |
 | `committee_memberships.json` | (legislator, committee) (119th)            | `bioguide_id`                  | `transform/committees.ts`    | `lib/committee-data.ts` |
 | `member-photos.json`         | which current members have a photo         | —                              | `fetch/photos.ts`            | `lib/congress-data.ts` |
+| `wikipedia_summaries.json`   | one row per current member with a usable Wikipedia article (trimmed lead) | `bioguide_id` | `fetch/wikipedia.ts` (+ `wikipedia/trim.ts`) | `lib/wikipedia-bio.ts` → `profile/ProfileHeader` |
 | `_report.json`               | run summary / sanity numbers               | —                              | `transform/index.ts`         | humans |
 | `financial_disclosures.json` | (legislator, reporting year), band-count grain | `bioguide_id`+`year`       | Python sidecar: `pipeline/financial_disclosures/build.py` / `build_senate_html.py` / `build_ocr.py` | `lib/wealth-data.ts` |
 | `line-items/<year>.json`     | (legislator, reporting year) that reconciled, item grain | `bioguide_id`+`year`, sharded by `year` | `pipeline/financial_disclosures/build_line_items.py` | `lib/line-items-data.ts` |
@@ -80,7 +81,7 @@ to members and committees at once — there is no forked chart code.
 | body             | `charts/SwarmRows`                | the 1-D row list: label gutter (clamped to width), min→max connector, endpoint emphasis, right-hand meta, per-row and per-point click |
 | member wrapper   | `senate/CompassChart`            | `ScatterPlot` + member accessors (`partyFillClass`, `MemberTooltip`, `memberPath`/`hasProfilePage`) |
 | member wrapper   | `senate/DelegationChart`         | `SwarmRows` + state grouping (`buildDelegations`), pair (dumbbell) and range modes |
-| identity header  | `profile/ProfileHeader` vs. `committee/CommitteeHeader` | Same structural pattern (eyebrow, serif name, meta line, sub-line) — **deliberately not** a shared component. `ProfileHeader` keeps a `w-[84px]`/`w-28` photo slot (a real, systematically available per-member asset); `CommitteeHeader` has **no photo/seal placeholder at all** (a monogram was tried and dropped — pure decoration, no informational content, unlike the member photo) and reclaims that width, so its header isn't capped at `ProfileHeader`'s photo-driven `max-w-[52rem]` — it runs out to the page's own `max-w-[1180px]` instead. |
+| identity header  | `profile/ProfileHeader` vs. `committee/CommitteeHeader` | Same structural pattern (eyebrow, serif name, meta line, sub-line) — **deliberately not** a shared component. `ProfileHeader` keeps a `w-[84px]`/`w-28` photo slot (`w-24`/`w-28` when a Wikipedia bio is present; see below) (a real, systematically available per-member asset); `CommitteeHeader` has **no photo/seal placeholder at all** (a monogram was tried and dropped — pure decoration, no informational content, unlike the member photo) and reclaims that width, so its header isn't capped at `ProfileHeader`'s photo-driven `max-w-[52rem]` — it runs out to the page's own `max-w-[1180px]` instead. |
 | committee wrapper| `committee/CommitteeCompass`     | `ScatterPlot` + committee accessors (dot colour read straight off `CommitteeSummary.compassColorClass`, joint→neutral, `CommitteeDotTooltip`, `committeePath`) |
 | committee wrapper| `committee/CommitteeSwarm`       | `SwarmRows` + one row per committee, party-split meta, chamber-disambiguated labels |
 | control           | `charts/SortToggle`               | Shared "Widest spread / A–Z / Ideology" pill group behind both "How each state votes" and "How each committee votes" (`SenateExplorer`). "Ideology" is reversible (click again to flip direction) instead of pick-one-of-N; `DelegationChart` and `CommitteeSwarm` both take a `SortState` and sort their own row-level mean-dim1 field on it. |
@@ -107,6 +108,26 @@ primitives as the ideology charts — no parallel chart stack.
 `WealthMemberTooltip` (hover-card content, scatter + hover-linked from search)
 and `wealth-copy.ts`/`wealth-scatter.ts` (pure label/jitter/standout-picking
 helpers, unit-tested) round out the scatter's own supporting files.
+
+### Wikipedia bio in the member header (`components/profile/ProfileHeader.tsx`)
+
+`MemberProfileView` passes `bio` (`getMemberWikipediaBio()` from
+`lib/wikipedia-bio.ts`, `WikipediaBio` in `lib/wikipedia-types.ts`) to
+`ProfileHeader`. With a bio, at `lg`+ the header is one top-aligned row: photo,
+a fixed `380px` details column, then the bio column (`flex-1`, `--line` left
+border) — `relative` with an `absolute inset-0 overflow-hidden` inner column so
+it adds **no height**; the header height is still set by the photo / details.
+Below `lg` the bio stacks under the photo + details row behind a top rule, with
+no line clamp. Body text is clamped to **4 lines** at `lg`: the 5-line clamp in
+the design spec does not fit — the shortest real header is 137px (photo-driven)
+and label + 5 lines + attribution needs ~154px. Members with no record render
+the header exactly as before (same markup, `max-w-[52rem]`); the 16 members of
+the 119th Congress who already left office aren't in `legislators-current.yaml`,
+so they (and `James Gallagher`, no `id.wikipedia`) have no bio.
+
+The data file is refreshed weekly by `.github/workflows/wikipedia-freshness.yml`
+(fetch → diff → PR on a meaningful diff, never auto-merged); CI does **not**
+re-fetch, it only Zod-validates the committed file (`pnpm validate`).
 
 ### Committee page shell (`components/committee/`)
 

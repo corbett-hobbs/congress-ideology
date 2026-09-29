@@ -63,6 +63,30 @@ re-published and resized).
 
 ---
 
+## Wikipedia — member bios
+
+The short bio in each member profile header is the lead of the member's English
+Wikipedia article, via the Wikipedia REST summary endpoint
+(`https://en.wikipedia.org/api/rest_v1/page/summary/{title}`), where `{title}`
+is `id.wikipedia` from `legislators-current.yaml`.
+
+- Fetched by `pipeline/fetch/wikipedia.ts` into
+  `pipeline/output/wikipedia_summaries.json` (build-time only; the site never
+  calls Wikipedia at request time).
+- License: **CC BY-SA 4.0** — https://creativecommons.org/licenses/by-sa/4.0/.
+  Attribution is **required** and ShareAlike applies to the text.
+- Attribution as shown: under every bio, "From [Wikipedia](article url) (text
+  may be abridged), licensed under CC BY-SA 4.0." (links to the article and the
+  license), plus a line in the site footer (`components/senate/SiteFooter.tsx`).
+- The text is **trimmed only** (first two sentences, ~320 characters, on a
+  sentence boundary; `pipeline/wikipedia/trim.ts`) — never rewritten or
+  summarized — hence "may be abridged". Article history/authors are linked via
+  the article URL and the `revision` recorded per record.
+- Requests carry a descriptive `User-Agent` with a contact address, per the
+  Wikimedia API etiquette.
+
+---
+
 ## U.S. House Clerk — Financial Disclosure filings
 
 House member net-worth estimates (`pipeline/output/financial_disclosures.json`,

@@ -7,6 +7,7 @@ import type { MemberCommitteeMembership } from "@/lib/committee-types";
 import type { MemberWealthProfile } from "@/lib/wealth-data";
 import { SiteFooter } from "@/components/senate/SiteFooter";
 import { SetBackLink } from "@/components/BackLinkContext";
+import type { WikipediaBio } from "@/lib/wikipedia-types";
 import { ProfileHeader } from "./ProfileHeader";
 import { MemberIdeologySection } from "./MemberIdeologySection";
 import { CommitteeMembershipsCard } from "./CommitteeMembershipsCard";
@@ -24,6 +25,8 @@ interface MemberProfileViewProps {
   committeeMemberships: MemberCommitteeMembership[];
   /** `null` when the member has no financial_disclosures.json rows at all. */
   wealthProfile: MemberWealthProfile | null;
+  /** `null` when the member has no Wikipedia record — the header omits the bio. */
+  bio: WikipediaBio | null;
 }
 
 /**
@@ -40,6 +43,7 @@ export function MemberProfileView({
   trend,
   committeeMemberships,
   wealthProfile,
+  bio,
 }: MemberProfileViewProps) {
   const explorerHref =
     profile.chamber === "house" ? "/?chamber=house" : "/";
@@ -48,7 +52,7 @@ export function MemberProfileView({
     <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-11">
       <SetBackLink href={explorerHref} />
 
-      <ProfileHeader profile={profile} />
+      <ProfileHeader profile={profile} bio={bio} />
 
       <MemberIdeologySection
         profile={profile}

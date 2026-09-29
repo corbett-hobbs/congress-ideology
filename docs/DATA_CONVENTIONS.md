@@ -115,6 +115,12 @@ filing years, cohort/rate/gap derivations, the compact client payload) is
 derived at build time in `lib/wealth-derive.ts`/`lib/wealth-data.ts`, never
 stored in `pipeline/output/` (§2, above).
 
+### Built (Wikipedia bios)
+
+| File                          | Grain                          | Key                          | Notes |
+| ------------------------------ | ------------------------------ | ----------------------------- | ----- |
+| `wikipedia_summaries.json`    | one row per **current** member with a usable article | `bioguide_id` | A **source-layer** file, like `member-photos.json`: a fetched-and-trimmed copy of external text, not a derived join. Built by `pipeline/fetch/wikipedia.ts` (network; run by the weekly `wikipedia-freshness` Action, not by CI). Fields: `bioguide_id`, `title`, `extract`, `url`, `revision`, `fetched_at`, `needs_review`. **The `extract` is trimmed, not the full lead**: first two sentences, ≤ ~320 chars, cut on a sentence boundary by the one tested function `trimExtract` (`pipeline/wikipedia/trim.ts`); never rewritten. Members with no `id.wikipedia`, a 404, or a non-`standard` page have **no row** — no placeholder; the profile header omits the bio. `needs_review` flags an extract < 80 chars or one never mentioning congress/senate/representative (likely wrong-person match); flagged rows are still emitted and are for the reviewer of the refresh PR. Zod schema `wikipediaSummary` in `pipeline/validate/schemas.ts`, checked by `pnpm validate`. `fetched_at` is carried over when a record is otherwise unchanged, so an unchanged article yields an unchanged file. Read by `lib/wikipedia-bio.ts`. Attribution: `docs/CREDITS.md`. |
+
 ### Planned — schema in `lib/types.ts`, no data source integrated yet
 
 | Entity                  | Grain                                          | Notes |
