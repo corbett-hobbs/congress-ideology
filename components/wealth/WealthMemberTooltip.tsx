@@ -1,60 +1,77 @@
 import { chamberLabel, memberTitleAbbr } from "@/lib/chamber";
 import { annualizedRate, hasDataGap } from "@/lib/wealth-derive";
-import { formatCompactUSD, formatSignedCompactUSD } from "@/lib/format-money";
-import type { WealthMember } from "@/lib/wealth-data";
-import { yearsOfData } from "@/lib/wealth-scatter";
+import {
+  formatCompactUSD,
+  formatOpenEndedUSD,
+  formatSignedCompactUSD,
+} from "@/lib/format-money";
+import type { WealthMember, WealthYearPoint } from "@/lib/wealth-data";
+import {
+  NET_WORTH_CAP,
+  isClipped,
+  netWorthChange,
+  yearsOfData,
+} from "@/lib/wealth-scatter";
 
-/** The scatter's hover/search card — one cohort member's rate summary, plus
- *  amber notes for a data gap and/or a pinned (off-scale) rate. */
-export function WealthMemberTooltip({
-  member,
-  pinned,
-}: {
-  member: WealthMember;
-  pinned: boolean;
-}) {
+/** A point's net worth, carrying the trailing `+` of an open-ended band. */
+export function formatPointUSD(point: WealthYearPoint): string {
+  return point.range.openEnded
+    ? formatOpenEndedUSD(point.midpoint)
+    : formatCompactUSD(point.midpoint);
+}
+
+/** The scatter's hover/search card — one cohort member's before/after
+ *  summary, plus amber notes for a data gap and/or a clipped point. Values
+ *  are always the true (unclamped) dollars. */
+export function WealthMemberTooltip({ member }: { member: WealthMember }) {
   const first = member.points[0];
   const last = member.points[member.points.length - 1];
+  const years = yearsOfData(member);
   const rate = annualizedRate(member);
+  const change = netWorthChange(member);
   const gapped = hasDataGap(member);
-  const district = member.chamber === "house" && member.district ? `-${member.district}` : "";
+  const clipped = isClipped(member);
 
   return (
     <div>
       <b>
-        {member.name} ({member.caucus === "Democrat" ? "D" : "R"})
+        {member.name} ({member.caucus === "Democrat" ? "D" : "R"}) ·{" "}
+        {chamberLabel(member.chamber)} · {locationLabel(member)}
       </b>
       <br />
-      {chamberLabel(member.chamber)} · {member.state}
-      {district}
-      <br />
       <span className="tt-mono">
-        {yearsOfData(member)} yrs of data ({first.year}–{last.year})
+        {years} yrs of data ({first.year}–{last.year})
       </span>
       <br />
       <span className="tt-mono">
-        {formatCompactUSD(first.midpoint)} → {formatCompactUSD(last.midpoint)} total
+        {formatPointUSD(first)} → {formatPointUSD(last)}
       </span>
       <br />
       <span className="tt-mono">
-        {formatSignedCompactUSD(rate)}/yr ({formatSignedCompactUSD(last.midpoint - first.midpoint)}{" "}
-        over {last.year - first.year} yrs)
+        {formatSignedCompactUSD(change)} total ({formatSignedCompactUSD(rate)}/yr over{" "}
+        {years} yrs)
       </span>
       {gapped && (
         <p className="mt-1 text-note">
           First year with data {first.year}; entered {member.entryYear}
         </p>
       )}
-      {pinned && (
-        <p className="mt-1 text-note">Off scale: pinned to the ±$15M/yr edge</p>
+      {clipped && (
+        <p className="mt-1 text-note">
+          One or both values are beyond ±{formatCompactUSD(NET_WORTH_CAP)} and shown at the
+          chart edge.
+        </p>
       )}
     </div>
   );
 }
 
-/** The search-result row's compact line for a member with only 1 usable
- *  year — never plotted, so no rate to show. */
-export function memberTitleLine(member: WealthMember): string {
+function locationLabel(member: WealthMember): string {
   const district = member.chamber === "house" && member.district ? `-${member.district}` : "";
-  return `${memberTitleAbbr(member.chamber)} ${member.state}${district}`;
+  return `${member.state}${district}`;
+}
+
+/** The search-result row's compact line: "Rep. CA-12" / "Sen. TX". */
+export function memberTitleLine(member: WealthMember): string {
+  return `${memberTitleAbbr(member.chamber)} ${locationLabel(member)}`;
 }

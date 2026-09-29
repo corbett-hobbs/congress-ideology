@@ -60,7 +60,7 @@ latest Congress and carry no trend chart.
 | `/congress/house/[bioguide_id]/[name_slug]`         | SSG + dynamic | `MemberProfileView` |
 | `/congress/committees/[committee_id]/[name_slug]`   | SSG + dynamic | `CommitteeProfileView` — same shape as a member profile minus the trajectory chart |
 | `/data/[chamber]`                                   | static JSON | the scrub-through-time payload, fetched on demand |
-| `/wealth`                                           | static | `WealthPageClient` — chamber/state filter bar, the net worth scatter ("who outperformed, who lagged"), highest/lowest lists. Plan called this route `/congress/wealth`; shipped at `/wealth` instead since the site already had that top-level vertical wired up (nav entry, `lib/verticals.ts`) — see `app/wealth/page.tsx`'s own doc comment. |
+| `/wealth`                                           | static | `WealthPageClient` — chamber/state filter bar, the net worth scatter ("where they started, where they are now"), highest/lowest lists. Plan called this route `/congress/wealth`; shipped at `/wealth` instead since the site already had that top-level vertical wired up (nav entry, `lib/verticals.ts`) — see `app/wealth/page.tsx`'s own doc comment. |
 | `/sitemap.xml`, `/robots.txt`, `/opengraph-image`   | static | — |
 
 Each `*/[.../name_slug]` route also has `opengraph-image.tsx` (rendered on
@@ -98,7 +98,7 @@ primitives as the ideology charts — no parallel chart stack.
 
 | Component | Notes |
 | --------- | ----- |
-| `wealth/NetWorthScatterCard` | "Who outperformed, who lagged" — annualized rate vs. years of data, `scaleSymlog` y-axis, pinned-outlier triangles beyond ±$15M/yr, member search, `<details>` table fallback |
+| `wealth/NetWorthScatterCard` | "Where they started, where they are now" — first vs. latest net worth on a square, shared `asinh` signed-log domain capped at ±$20M, no-change diagonal, clipped-point diamonds, click-to-navigate dots (`memberPath`/`hasProfilePage`), select-in-place member search, `<details>` table fallback |
 | `wealth/WealthListsSection`, `wealth/WealthList`, `wealth/Sparkline` | Highest/lowest net worth lists, each row's own min/max-scaled sparkline over the shared 2013–2025 axis |
 | `wealth/WealthFilterBar` | Chamber switch (`components/ChamberSwitch`) + state dropdown (`components/senate/StateFilter`) — the same controls the homepage explorer uses, wired to page-level state instead of URL params |
 | `profile/MemberWealthSection` | The profile page's full-width "Net worth over time" card (sibling to `MemberIdeologySection`/`CommitteeMembershipsCard` in `MemberProfileView`) — absent (not an empty state) for a member with zero `financial_disclosures.json` rows |
@@ -106,7 +106,7 @@ primitives as the ideology charts — no parallel chart stack.
 | `wealth/MemberWealthItemsPanel` | The chart's year-linked assets/liabilities list — year dropdown (years with a reconciled `line-items` row only), sticky section headers, falls back to the band-count total (no fabricated items) for a year Session 5 didn't reconcile |
 
 `WealthMemberTooltip` (hover-card content, scatter + hover-linked from search)
-and `wealth-copy.ts`/`wealth-scatter.ts` (pure label/jitter/standout-picking
+and `wealth-copy.ts`/`wealth-scatter.ts` (pure transform/standout-picking
 helpers, unit-tested) round out the scatter's own supporting files.
 
 ### Wikipedia bio in the member header (`components/profile/ProfileHeader.tsx`)

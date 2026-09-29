@@ -1,10 +1,9 @@
 import type { WealthMember } from "./wealth-data";
-import { annualizedRate } from "./wealth-derive";
 
 /**
- * Pure geometry/selection helpers for the "who outperformed, who lagged"
+ * Pure geometry/selection helpers for the "where they started, where they are now"
  * scatter (components/wealth/NetWorthScatterCard.tsx). Kept out of the
- * component so the jitter and standout-label selection are unit-testable
+ * component so the transform and standout-label selection are unit-testable
  * without a DOM.
  */
 
@@ -16,50 +15,98 @@ export function yearsOfData(member: WealthMember): number {
   return last.year - first.year;
 }
 
-/**
- * Deterministic horizontal jitter offsets for `n` points sharing one x
- * bucket: evenly spread across `spreadWidth`, centered on 0. Callers sort
- * their points by `bioguideId` first (SSR-safe, no `Math.random`) and zip the
- * result 1:1 — this function only computes the offsets.
- */
-export function jitterOffsets(n: number, spreadWidth: number): number[] {
-  if (n <= 1) return [0];
-  return Array.from({ length: n }, (_, i) => (i / (n - 1) - 0.5) * spreadWidth);
+/** Net worth is capped at ±this on both axes; beyond it a dot is drawn as a
+ *  diamond at the edge. */
+export const NET_WORTH_CAP = 20_000_000;
+/** The `asinh` knee: values much smaller than this stay near-linear, so the
+ *  region around $0 isn't over-stretched. */
+const SIGNED_LOG_KNEE = 100_000;
+
+/** The one transform both axes share — that identity is what makes the plot
+ *  square and its diagonal a true no-change line. */
+export function signedLog(value: number): number {
+  return Math.asinh(value / SIGNED_LOG_KNEE);
 }
 
-/** `min(0.8 * columnWidth, 44)` — the plan's jitter-spread rule. */
-export function jitterSpreadWidth(columnWidth: number): number {
-  return Math.min(0.8 * columnWidth, 44);
+/** Inverse of `signedLog`, rounded to whole dollars (tick labels). */
+export function signedLogInverse(t: number): number {
+  return Math.round(Math.sinh(t) * SIGNED_LOG_KNEE);
+}
+
+export function clampNetWorth(value: number): number {
+  return Math.max(-NET_WORTH_CAP, Math.min(NET_WORTH_CAP, value));
+}
+
+export function isBeyondCap(value: number): boolean {
+  return Math.abs(value) > NET_WORTH_CAP;
+}
+
+/** Cohort members always have >= 2 usable points. */
+export function firstNetWorth(member: WealthMember): number {
+  return member.points[0].midpoint;
+}
+export function latestNetWorth(member: WealthMember): number {
+  return member.points[member.points.length - 1].midpoint;
+}
+/** Total dollar change, first usable filing to latest. */
+export function netWorthChange(member: WealthMember): number {
+  return latestNetWorth(member) - firstNetWorth(member);
+}
+/** Clipped on either coordinate. */
+export function isClipped(member: WealthMember): boolean {
+  return isBeyondCap(firstNetWorth(member)) || isBeyondCap(latestNetWorth(member));
 }
 
 export interface StandoutEntry {
   member: WealthMember;
-  rate: number;
+  change: number;
 }
 
 /**
- * Top/bottom `n` cohort members by annualized rate — the scatter's standout
- * labels. Ties broken by `bioguideId` for determinism. `top` and `bottom`
- * never share a member (relevant only when the cohort has fewer than
- * `2n` members).
+ * Top/bottom `n` cohort members by total dollar change (`latest - first`, not
+ * rate) — the scatter's standout labels. Ties broken by `bioguideId` for
+ * determinism. `top` and `bottom` never share a member (relevant only when
+ * the cohort has fewer than `2n` members).
  */
 export function pickStandouts(
   cohort: readonly WealthMember[],
   n = 3,
 ): { top: StandoutEntry[]; bottom: StandoutEntry[] } {
   const ranked = cohort
-    .map((member) => ({ member, rate: annualizedRate(member) }))
+    .map((member) => ({ member, change: netWorthChange(member) }))
     .sort(
-      (a, b) => b.rate - a.rate || a.member.bioguideId.localeCompare(b.member.bioguideId),
+      (a, b) => b.change - a.change || a.member.bioguideId.localeCompare(b.member.bioguideId),
     );
 
   const top = ranked.slice(0, n);
   const bottomPool = ranked.slice(Math.max(n, ranked.length - n));
-  const bottom = [...bottomPool].sort((a, b) => a.rate - b.rate);
+  const bottom = [...bottomPool].sort((a, b) => a.change - b.change);
 
   // A tiny cohort could put the same member in both slices.
   const topIds = new Set(top.map((e) => e.member.bioguideId));
   return { top, bottom: bottom.filter((e) => !topIds.has(e.member.bioguideId)) };
+}
+
+/**
+ * Label anchors for standout dots (plot-area px, square plot of side `size`):
+ * each label sits beside its dot, flipped to the dot's left when the dot is in
+ * the right part of the plot (away from the nearest edge), then y-positions
+ * are relaxed apart so labels don't overlap.
+ */
+export function placeStandoutLabels(
+  dots: readonly { cx: number; cy: number }[],
+  size: number,
+  minGap = 14,
+): { x: number; y: number; anchor: "start" | "end" }[] {
+  const ys = spreadLabelsY(
+    dots.map((d) => d.cy + 4),
+    minGap,
+    size,
+  );
+  return dots.map((d, i) => {
+    const flip = d.cx > size * 0.6;
+    return { x: d.cx + (flip ? -10 : 10), y: ys[i], anchor: flip ? "end" : "start" };
+  });
 }
 
 /**
