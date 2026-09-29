@@ -47,6 +47,21 @@ _WRAP_TOL = 20.0
 
 _ZERO_LABELS = ("None (or less than $1,001)", "--", "Unascertainable")
 
+# Some PDF vintages' embedded fonts map certain glyphs (confirmed: the "L" in
+# "LOCATION:" and "D" in "DESCRIPTION:" continuation labels) to C0 control
+# codepoints -- pdfplumber decodes these as literal NUL/control characters
+# rather than dropping them, so an uncleaned word can read as
+# "L\x00\x00\x00\x00\x00\x00\x00: Boston, MA, US" instead of "LOCATION:
+# Boston, MA, US". Stripped at the point every word is collected (not in
+# extract_text.py, which columns.py's own trusted band-counting also
+# depends on and this session must not touch) so no control character ever
+# reaches a line-item description, owner, or type field.
+_CONTROL_CHARS_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
+
+
+def _clean_word(text: str) -> str:
+    return _CONTROL_CHARS_RE.sub("", text)
+
 
 def _line(words: list[Word], ref: Word, tol: float = _TOP_TOL) -> list[Word]:
     return [w for w in words if abs(w.top - ref.top) <= tol]
@@ -306,18 +321,21 @@ def _extract_schedule(
             # next, with the repeated header text in between).
             if cols.header_top - _TOP_TOL <= w.top <= cols.header_bottom + _TOP_TOL:
                 continue
-            pw = _PWord(page.page_index, w.top, w.x0, w.text)
+            cleaned_text = _clean_word(w.text)
+            if not cleaned_text:
+                continue  # a word that was ONLY control characters
+            pw = _PWord(page.page_index, w.top, w.x0, cleaned_text)
             if cols.description[0] <= w.x0 < cols.description[1]:
                 desc_words.append(pw)
             if cols.value[0] <= w.x0 < cols.value[1]:
                 value_words.append(pw)
             if cols.owner[0] <= w.x0 < cols.owner[1]:
                 owner_by_key.setdefault(pw.key, "")
-                owner_by_key[pw.key] += (" " if owner_by_key[pw.key] else "") + w.text
+                owner_by_key[pw.key] += (" " if owner_by_key[pw.key] else "") + cleaned_text
             form_type_bounds = getattr(cols, "form_type", None)
             if form_type_bounds and form_type_bounds[0] <= w.x0 < form_type_bounds[1]:
                 type_by_key.setdefault(pw.key, "")
-                type_by_key[pw.key] += (" " if type_by_key[pw.key] else "") + w.text
+                type_by_key[pw.key] += (" " if type_by_key[pw.key] else "") + cleaned_text
 
     if not columns_found:
         return None
