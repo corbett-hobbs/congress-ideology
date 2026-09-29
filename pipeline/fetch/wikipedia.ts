@@ -35,7 +35,7 @@ const OUT = "pipeline/output/wikipedia_summaries.json";
 
 /** Wikimedia asks for a descriptive UA with a way to reach the operator. */
 const USER_AGENT =
-  "congress-ideology/0.1 (https://github.com/PLACEHOLDER/congress-ideology; PLACEHOLDER-CONTACT@example.com)";
+  "congress-ideology/0.1 (https://github.com/corbett-hobbs/congress-ideology)";
 const API = "https://en.wikipedia.org/api/rest_v1/page/summary";
 const CONCURRENCY = 5;
 const MAX_ATTEMPTS = 6;
