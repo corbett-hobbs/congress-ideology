@@ -77,6 +77,7 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
 
   const plottable = useMemo(() => years.filter(isPlottable), [years]);
   const hasOpenEnded = plottable.some((p) => p.range.openEnded);
+  const hasNeedsReview = plottable.some((p) => p.kind === "needs_review");
 
   const { yLo, yHi } = useMemo(() => {
     const values: number[] = [0];
@@ -144,6 +145,7 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
     }
     return segs;
   }, [plottable]);
+  const hasBridgedGap = lineSegments.some((s) => s.dashed);
 
   // Only label gaps *between* this member's own first and last plotted
   // year — a "bridge" implies two known points either side of it. Years
@@ -294,13 +296,15 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
           <span aria-hidden className="h-2.5 w-4 flex-none rounded-sm bg-accent opacity-20" />
           Full reported range
         </span>
-        <span className="flex items-center gap-1.5">
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className="flex-none">
-            <circle cx="6" cy="6" r="4" className="fill-surface stroke-accent" strokeWidth={1.5} strokeDasharray="1.5 1.2" />
-          </svg>
-          Needs review
-        </span>
-        <LegendLine className="stroke-accent" dashed label="No filing (bridged)" />
+        {hasNeedsReview && (
+          <span className="flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className="flex-none">
+              <circle cx="6" cy="6" r="4" className="fill-surface stroke-accent" strokeWidth={1.5} strokeDasharray="1.5 1.2" />
+            </svg>
+            Needs review
+          </span>
+        )}
+        {hasBridgedGap && <LegendLine className="stroke-accent" dashed label="No filing (bridged)" />}
       </div>
     </div>
   );

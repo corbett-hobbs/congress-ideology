@@ -9,6 +9,11 @@ import { sourceDocUrl, SOURCE_SYSTEM_LABEL } from "@/lib/disclosure-url";
 type Item = DisclosureLineItem["items"][number];
 type ItemKind = Item["kind"];
 
+/** Rows shown before the "Show all" toggle — roughly matches the chart's
+ *  own height so the two columns read as one card, not a short chart next
+ *  to a long list. */
+const COLLAPSED_ROW_COUNT = 3;
+
 function itemSortValue(item: Item): number {
   if (item.lo == null || item.hi == null) {
     // open-ended (lo known, hi null) sorts above every closed band;
@@ -81,6 +86,21 @@ interface Props {
  *  note. */
 export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSelectYear }: Props) {
   const [kind, setKind] = useState<ItemKind>("asset");
+  const [expanded, setExpanded] = useState(false);
+
+  // Collapse back down whenever the toggle or year changes, so switching to
+  // Liabilities (usually a much shorter list) doesn't stay expanded from
+  // Assets, and picking a new year doesn't carry an unrelated expand state.
+  // Adjusted during render (React's own recommended pattern for resetting
+  // state on a prop change) rather than an effect, which would cause an
+  // extra visible render of the stale (expanded) list first.
+  const selectionKey = `${kind}|${selectedYear}`;
+  const [prevSelectionKey, setPrevSelectionKey] = useState(selectionKey);
+  if (selectionKey !== prevSelectionKey) {
+    setPrevSelectionKey(selectionKey);
+    setExpanded(false);
+  }
+
   const yearOptions = lineItemRows.map((r) => r.year);
   const selectedRow = lineItemRows.find((r) => r.year === selectedYear);
   const meta = years.find((y) => y.year === selectedYear);
@@ -90,6 +110,7 @@ export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSe
   const assetBounds = sumBounds(assets);
   const liabilityBounds = sumBounds(liabilities);
   const shown = kind === "asset" ? assets : liabilities;
+  const visible = expanded ? shown : shown.slice(0, COLLAPSED_ROW_COUNT);
 
   if (yearOptions.length === 0) {
     // Session 5 line items didn't reconcile for any of this member's
@@ -172,9 +193,9 @@ export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSe
         role="region"
         tabIndex={0}
         aria-label={`${kind === "asset" ? "Assets" : "Liabilities"} reported for ${selectedYear}`}
-        className="mt-3 max-h-[26rem] overflow-y-auto rounded-md border border-line"
+        className={`mt-3 rounded-md border border-line ${expanded ? "max-h-[26rem] overflow-y-auto" : ""}`}
       >
-        {shown.map((item, i) => (
+        {visible.map((item, i) => (
           <ItemRow key={i} item={item} />
         ))}
         {shown.length === 0 && (
@@ -183,6 +204,25 @@ export function MemberWealthItemsPanel({ lineItemRows, years, selectedYear, onSe
           </p>
         )}
       </div>
+
+      {shown.length > COLLAPSED_ROW_COUNT && (
+        <button
+          type="button"
+          onClick={() => setExpanded((e) => !e)}
+          className="mt-1.5 flex w-full items-center justify-center gap-1 py-1 text-[0.75rem] text-accent hover:underline"
+        >
+          {expanded ? "Show fewer" : `Show all ${shown.length}`}
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            aria-hidden
+            className={`flex-none transition-transform ${expanded ? "rotate-180" : ""}`}
+          >
+            <path d="M2 3.5 L5 6.5 L8 3.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      )}
 
       <div className="mt-3 space-y-1 border-t border-line pt-2.5 font-mono text-[0.78rem] text-ink-muted">
         <div className="flex justify-between gap-3">
