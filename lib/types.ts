@@ -20,6 +20,7 @@ export type {
   CommitteeRole,
   CommitteeMembership,
   FinancialDisclosure,
+  DisclosureLineItem,
 } from "./entities";
 
 import type { BioguideId } from "./entities";
@@ -33,30 +34,10 @@ export type CongressNumber = number;
 
 // FinancialDisclosure is built — see `financialDisclosure` in `lib/entities.ts`
 // (re-exported above), `lib/wealth-bands.ts` for the range/midpoint policy,
-// and `lib/wealth-data.ts` for the per-member payload derived from it. Item-
-// level assets/liabilities (`DisclosureLineItem` below) are still planned —
-// that's the line-item extraction follow-up, a sibling output keyed
-// (bioguide_id, year), not a rework of this file.
-
-export interface DisclosureValueBand {
-  low: number | null;
-  high: number | null;
-  open_ended: boolean;
-  /** null for open-ended or unrecognised bands — never fabricated. */
-  midpoint: number | null;
-  recognized: boolean;
-  raw: string;
-}
-
-export interface DisclosureLineItem {
-  name: string;
-  owner: "JT" | "SP" | "DC" | null;
-  type_code: string | null;
-  value: DisclosureValueBand | null;
-  value_raw: string;
-  extra?: Record<string, string>;
-  notes?: string[];
-}
+// and `lib/wealth-data.ts` for the per-member payload derived from it.
+// Item-level assets/liabilities are also now built — see `disclosureLineItem`
+// in `lib/entities.ts` (re-exported above) and
+// `pipeline/financial_disclosures/build_line_items.py` (Session 5).
 
 // Committee / CommitteeMembership are built — see `committee` / `committeeMembership`
 // in `lib/entities.ts` (re-exported above). Current Congress only; subcommittees

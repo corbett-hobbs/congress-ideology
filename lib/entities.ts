@@ -252,3 +252,50 @@ export const financialDisclosure = z.strictObject({
   extra_note: z.string().optional(),
 });
 export type FinancialDisclosure = z.infer<typeof financialDisclosure>;
+
+/**
+ * One row per (legislator, reporting year) that reconciled at item grain —
+ * the Session 5 sibling to `financialDisclosure`, keyed the same way
+ * (`bioguide_id` + `year`) but holding the verbatim per-asset/per-liability
+ * lines instead of just band counts. Produced by
+ * `pipeline/financial_disclosures/build_line_items.py`, sharded to
+ * `pipeline/output/line-items/<year>.json` (its own dependency-free
+ * structural check is `pipeline/financial_disclosures/line_item_schema.py`).
+ *
+ * Only emitted for a filing whose freshly re-extracted item band multiset
+ * *exactly* reproduces that same filing's already-trusted
+ * `asset_band_counts`/`liability_band_counts` in `financial_disclosures.json`
+ * — a filing that doesn't reconcile has no row here at all (excluded, not
+ * partially emitted; see the run's own `_report.json` for exclusion counts).
+ * Only high-confidence, non-scanned, digital-text filings are considered —
+ * scanned/paper filings are out of scope for this extraction.
+ *
+ * `lo`/`hi` are the item's own EIGA band range (`hi: null` for an
+ * open-ended top band, mirroring `lib/wealth-bands.ts`'s policy restated in
+ * `pipeline/financial_disclosures/line_item_bands.py`) — not a sum or
+ * midpoint. `owner`/`form_type` are `null` when the source form has no such
+ * column (House Schedule A has no per-item type column; Senate's HTML table
+ * always does). `description` is the verbatim, whitespace-normalized text
+ * from the form — it can include an account/institution name, which is not
+ * itself a personal identifier but is exactly what the source document
+ * reports.
+ */
+export const disclosureLineItem = z.strictObject({
+  bioguide_id: bioguideId,
+  year: z.number().int().gte(2000).lte(2100),
+  chamber,
+  source_system: z.enum(["house_clerk", "senate_efd"]),
+  source_doc_id: z.string().nullable(),
+  items: z.array(
+    z.strictObject({
+      kind: z.enum(["asset", "liability"]),
+      description: z.string(),
+      band_label: z.string(),
+      lo: z.number().nullable(),
+      hi: z.number().nullable(),
+      owner: z.string().nullable(),
+      form_type: z.string().nullable(),
+    }),
+  ),
+});
+export type DisclosureLineItem = z.infer<typeof disclosureLineItem>;
