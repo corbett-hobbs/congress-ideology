@@ -3,22 +3,23 @@
 Confirmed this session (both chambers, hand-filled and computer-typed,
 across the entire 2012-2026 span): a pre-electronic-era form where a value
 isn't printed text at all -- it's an X mark in one of a fixed set of
-value-tier rows. Confirmed against four real House pages, two filers:
+value-tier rows. Confirmed against five real House pages, three filers:
 Schedule A/Assets (13 tiers, "None" through "Over $50,000,000" plus a
 spousal-independent row) on pages 2 and 7 of Brett Guthrie's 2015 filing
 (doc 9109119), and Schedule D/Liabilities (11 tiers, "$10,001-$15,000"
 through "Over $50,000,000" plus its own spousal-independent row) on page
-23 of that same filing and page 10 of Gus Bilirakis's 2017 filing (doc
-9113522). Both schedules share the same grid shape: narrow columns (one
+23 of that same filing, page 10 of Gus Bilirakis's 2017 filing (doc
+9113522), and page 29 of Bradley James Sherman's 2022 filing (doc
+8219781). Both schedules share the same grid shape: narrow columns (one
 per asset, or one per creditor/liability) with the fixed tier-row list
 printed ONCE to their right. A page with only one asset/liability (a long
 description) just leaves the other columns blank -- it's the same grid
-either way, not a different layout. The two Liabilities pages also
-surfaced a real difference from Assets that the row/column-location logic
-now accounts for (see `LIABILITY_ROW_LINE_PROBE_X_FRAC` and
-`extract_liability_blocks`'s docstring for what's still unsolved: a
-pre-printed "Example" column whose position isn't consistent between
-filers).
+either way, not a different layout. The Liabilities pages also surfaced a
+real difference from Assets that the row/column-location logic now
+accounts for (see `LIABILITY_ROW_LINE_PROBE_X_FRAC`), and one problem the
+third page made worse instead of better -- see `extract_liability_blocks`'s
+docstring: a pre-printed "Example" column whose position AND illustrated
+value both vary between filers, with no exclusion strategy found yet.
 
 This module knows nothing about where its input image came from (House's
 pdf2image-rasterized PDF page or Senate's directly-fetched GIF) -- same
@@ -28,6 +29,7 @@ extract_ocr.py / columns.py.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 import pytesseract
@@ -216,10 +218,16 @@ def _ocr_single_line(image: Image.Image, region: tuple[int, int, int, int], marg
     the crop's top/bottom edges before OCR -- also confirmed necessary live:
     a crop taken exactly at a ruled-line boundary (e.g. a band straight from
     find_ruled_lines) reads as garbage or empty, since the line itself sits
-    right at the edge; trimming a few px clear of it fixes the read."""
+    right at the edge; trimming a few px clear of it fixes the read. A
+    `margin` that would invert a short band (top+margin >= bottom-margin --
+    seen live once `_ANCHOR_MARGINS` widened the set of margins tried) is
+    clamped down rather than raising, since a too-large margin for this
+    particular band is just a miss, not a real error."""
     x0, y0, x1, y1 = region
     if margin:
-        y0, y1 = y0 + margin, y1 - margin
+        margin = min(margin, (y1 - y0 - 1) // 2)
+        if margin > 0:
+            y0, y1 = y0 + margin, y1 - margin
     return pytesseract.image_to_string(image.crop((x0, y0, x1, y1)), config="--psm 7").strip()
 
 
@@ -470,6 +478,66 @@ _LABEL_SWEEP_STEP = 20
 _LABEL_WINDOW_WIDTH = 165
 
 
+# Margins tried, in order, when OCR-checking a candidate anchor row.
+# Confirmed live this matters, not just as a theoretical safety margin, and
+# confirmed live TWICE with two DIFFERENT failure shapes: on one real page,
+# the single default margin (5) alone made Tesseract return nothing for a
+# perfectly legible "None" while every other margin from 2-10 read it fine;
+# on another real page, EVERY margin from 0-8 failed and only 9-13 worked.
+# There's no single small set that's safe -- Tesseract's behavior at a
+# crop's exact edge isn't predictable from the image alone. `_ANCHOR_MARGINS`
+# (wide, cheap to exhaust -- used by `_find_anchor_row`, which checks one
+# fixed x-position per row, no inner loop) trades real compute for not
+# missing a genuine anchor. `_ANCHOR_MARGINS_SWEEP` (narrower) is for
+# `_sweep_for_label_column`, which already multiplies this cost by every
+# x-position it tries -- a real runtime tradeoff, accepted because the
+# sweep is the minority-layout fallback, not the common path.
+_ANCHOR_MARGINS = tuple(range(0, 15, 2))
+_ANCHOR_MARGINS_SWEEP = (_ROW_EDGE_MARGIN, 3, 8)
+
+
+# Widening the margin search (above) fixed two real failures but not a
+# third, confirmed live: Tesseract read "None" as "Nore" -- a single-
+# character MISREAD, not a crop-boundary artifact, so no margin fixes it.
+# For this one word specifically, a single-character-tolerant whole-word
+# match is safe to add: "None" is short, plain English, and not a dollar
+# figure, unlike the band labels this module's docstring already explains
+# why NOT to fuzzy-match (there, two genuinely different bands could score
+# above a naive similarity threshold purely from shared digits -- a risk
+# that doesn't exist for a short non-numeric word with no other page
+# vocabulary anywhere near it in edit distance). Deliberately gated on the
+# anchor containing no digits: Liabilities' own anchor ("Over $50,000,000")
+# must never go through this path, since it's exactly the kind of digit-
+# bearing string fuzzy-matching is unsafe for.
+_ANCHOR_FUZZY_MAX_DISTANCE = 1
+
+
+def _edit_distance(a: str, b: str) -> int:
+    if len(a) < len(b):
+        a, b = b, a
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i] + [0] * len(b)
+        for j, cb in enumerate(b, 1):
+            cur[j] = min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb))
+        prev = cur
+    return prev[-1]
+
+
+def _reads_anchor(image: Image.Image, region: tuple[int, int, int, int], anchor: str, margins: tuple[int, ...] = _ANCHOR_MARGINS) -> bool:
+    x0, top, x1, bottom = region
+    fuzzy_ok = not any(c.isdigit() for c in anchor)
+    for margin in margins:
+        text = _ocr_single_line(image, (x0, top, x1, bottom), margin=margin)
+        if anchor.lower() in text.lower():
+            return True
+        if fuzzy_ok:
+            for word in re.findall(r"[A-Za-z]+", text):
+                if _edit_distance(word.lower(), anchor.lower()) <= _ANCHOR_FUZZY_MAX_DISTANCE:
+                    return True
+    return False
+
+
 def _find_anchor_row(
     image: Image.Image,
     row_bands: list[tuple[int, int]],
@@ -477,8 +545,7 @@ def _find_anchor_row(
     top_anchor: str,
 ) -> int | None:
     for i, (top, bottom) in enumerate(row_bands):
-        text = _ocr_single_line(image, (label_x[0], top, label_x[1], bottom), margin=_ROW_EDGE_MARGIN)
-        if top_anchor.lower() in text.lower():
+        if _reads_anchor(image, (label_x[0], top, label_x[1], bottom), top_anchor):
             return i
     return None
 
@@ -500,8 +567,7 @@ def _sweep_for_label_column(
     for row_idx, (top, bottom) in enumerate(row_bands):
         for x0 in range(x_sweep_start, x_max, _LABEL_SWEEP_STEP):
             x1 = x0 + _LABEL_WINDOW_WIDTH
-            text = _ocr_single_line(image, (x0, top, x1, bottom), margin=_ROW_EDGE_MARGIN)
-            if top_anchor.lower() in text.lower():
+            if _reads_anchor(image, (x0, top, x1, bottom), top_anchor, margins=_ANCHOR_MARGINS_SWEEP):
                 return (x0, x1), row_idx
     return None
 
@@ -678,31 +744,48 @@ def extract_liability_blocks(
     anchor_offset: int = LIABILITY_ANCHOR_OFFSET,
 ) -> list[ColumnMark] | None:
     """Full Liabilities/Schedule D extraction for one page -- validated
-    against two real pages this session (Brett Guthrie's 2015 filing, doc
-    9109119 page 23, and Gus Bilirakis's 2017 filing, doc 9113522 page 10),
-    both correctly recovering every real creditor's mark.
+    against three real pages this session, three different filers (Brett
+    Guthrie's 2015 filing, doc 9109119 page 23; Gus Bilirakis's 2017
+    filing, doc 9113522 page 10; Bradley James Sherman's 2022 filing, doc
+    8219781 page 29 -- the last also at slightly different page dimensions,
+    1685x2169 vs the other two's 1696x2200, confirming the fraction-based
+    regions tolerate that too), all three correctly recovering every real
+    creditor's mark.
 
-    KNOWN OPEN PROBLEM, not yet solved: this form's grid always includes
+    KNOWN OPEN PROBLEM, NOT SOLVED, actively made WORSE by the third
+    validation page rather than better: this form's grid always includes
     one extra pre-printed "Example" column (illustrating "First Bank of
-    Wilmington, DE" / a mortgage, permanently marked at "$50,001 -
-    $100,000") alongside the real creditor columns, and this function does
-    NOT exclude it -- a returned `ColumnMark` may be that fake entry, not a
-    real liability. Two exclusion strategies were tried and rejected this
-    session: the Example column is NOT always in the same position (column
-    index 4 of 6 on one validation page, index 1 of 6 on the other -- ruled
-    out positional exclusion), and while its mark is confirmed at the same
-    band on both pages, a real creditor can legitimately owe $50,001-
-    $100,000 too, so treating that band as "always fake" would silently
-    drop genuine data. The Creditor/Date/Type text block does label its own
-    first row "Example" in plain, non-numeric text (an OCR-friendly anchor,
-    same spirit as `ASSET_TOP_ANCHOR`), but this module hasn't yet
-    established whether that text table's row order maps to this grid's
-    column order at all, let alone how -- needs a third validation page
-    (ideally with the Example column's index differing from both cases
-    seen so far) before attempting it. Until solved, a caller must treat
-    every returned mark as needing confirmation against the source image,
-    not wire this into an automated pipeline the way `extract_asset_blocks`
-    is intended to be."""
+    Wilmington, DE" / a mortgage), and this function does NOT exclude it
+    -- a returned `ColumnMark` may be that fake entry, not a real
+    liability. Three exclusion strategies were tried and rejected:
+    - Positional: column index 4 of 6 on page one, index 1 of 6 on page
+      two -- not fixed.
+    - By value: pages one and two both showed it marked at "$50,001 -
+      $100,000", which looked like a real pattern worth exploiting --
+      until page three, whose only two marks are at "$100,001 - $250,000"
+      and "$250,001 - $500,000", neither of which is that band. So the
+      Example's illustrated value isn't fixed either (this form is
+      computer-generated per filing, not a static printed template --
+      Assets already showed layout varying by page; apparently the
+      Example illustration can too, plausibly across form-revision years).
+      A real creditor can also legitimately owe $50,001-$100,000, so even
+      the disproven pattern would have silently dropped genuine data had
+      it been trusted.
+    - Via embedded PDF structure: checked whether the source PDF carries
+      any form-field names, annotations, or a text layer that might name
+      which column is which -- confirmed live it doesn't; every page here
+      is a single flat scanned image, no digital structure to read at all.
+    The Creditor/Date/Type text block does label its own first row
+    "Example" in plain, non-numeric text (an OCR-friendly anchor, same
+    spirit as `ASSET_TOP_ANCHOR`), but this module has no confirmed way to
+    map that text table's row order onto this grid's column order -- only
+    a raw pixel comparison across pages, which is what ruled out the two
+    strategies above. Solving this for real would need a page with enough
+    real creditors, combined with some other distinguishing signal per
+    creditor (unclear what), to nail the row-to-column correspondence
+    empirically. Until solved, a caller must treat every returned mark as
+    needing confirmation against the source image, not wire this into an
+    automated pipeline the way `extract_asset_blocks` is intended to be."""
     located = _locate_tier_rows(image, LIABILITY_ROW_LINE_PROBE_X_FRAC, LIABILITY_LABEL_COLUMN_X_FRAC, LIABILITY_ROW_SEARCH_Y_FRAC, labels, top_anchor, anchor_offset=anchor_offset)
     if located is None:
         return None

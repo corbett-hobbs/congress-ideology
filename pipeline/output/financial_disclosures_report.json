@@ -8,15 +8,14 @@
   ],
   "total_member_years": 3632,
   "counts_by_parse_confidence": {
-    "high": 3530,
-    "low": 160,
+    "high": 3532,
+    "low": 261,
     "no_filing_found": 622,
-    "ocr_low_confidence": 120,
-    "no_schedule_content_found": 52,
-    "ocr_skipped_oversized": 49,
-    "unparseable_scanned": 117
+    "ocr_low_confidence": 70,
+    "no_schedule_content_found": 55,
+    "unparseable_scanned": 110
   },
-  "needs_review_count": 498,
+  "needs_review_count": 496,
   "match_stats": {
     "ok": 4481,
     "no_candidate": 4429
@@ -4755,21 +4754,20 @@
     ]
   },
   "ocr_pass": {
-    "run_at": "2026-09-25T20:34:49Z",
+    "run_at": "2026-09-29T02:44:41Z",
     "phase": "2 (House, OCR)",
-    "rows_processed": 109,
+    "rows_processed": 86,
     "before_counts": {
-      "unparseable_scanned": 109
+      "ocr_low_confidence": 73,
+      "unparseable_scanned": 13
     },
     "after_counts": {
-      "low": 10,
-      "ocr_low_confidence": 12,
-      "no_schedule_content_found": 39,
-      "unparseable_scanned": 15,
-      "high": 24,
-      "ocr_skipped_oversized": 9
+      "ocr_low_confidence": 32,
+      "low": 51,
+      "unparseable_scanned": 1,
+      "high": 2
     },
-    "elapsed_sec": 4435.4
+    "elapsed_sec": 38900.3
   },
   "senate_html_pass": {
     "run_at": "2026-09-24T17:19:38Z",

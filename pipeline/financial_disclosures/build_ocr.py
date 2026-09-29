@@ -19,6 +19,14 @@ Phase 1 did) and tries them instead -- see
 plan history for why: the Clerk's ``filing_type`` code alone can't be
 trusted to mean "this is the annual report."
 
+A separate exception, run as its own phase before the OCR pass described
+above: any target document confirmed to be the checkbox-grid legacy form
+(``checkbox_form_hits()``) is tried first through ``_apply_checkbox_grid()``
+(``checkbox_grid.py``'s ruled-line/mark-geometry extraction, not text
+recognition), regardless of ``--statuses`` scoping -- see that function's
+own docstring for what it can and can't resolve (Liabilities on such a
+document is deliberately left unresolved rather than guessed).
+
 Usage:
     python build_ocr.py                 # full run over all unparseable_scanned rows
     python build_ocr.py --limit 10       # process only the first N (testing)
@@ -37,15 +45,25 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 import requests
+from pdf2image import convert_from_path, pdfinfo_from_path
 
+import checkbox_grid
 import columns
 import fetch
 import match
 import roster
+from bands import ASSET_BANDS, value_total
 from extract_ocr import DOC_LOW_CONFIDENCE_THRESHOLD, MAX_OCR_PAGES, extract_ocr_text
 from extract_text import extract_digital_text
 from schema import validate_record
-from scan_checkbox_form_v2 import CHECKBOX_HIT_THRESHOLD, checkbox_form_hits
+from scan_checkbox_form_v2 import CHECKBOX_HIT_THRESHOLD, checkbox_form_hits, find_page_titled
+from senate_html import SPOUSAL_INDEPENDENT_FLOOR
+
+# checkbox_grid.py's row/column geometry was validated at this DPI -- use
+# the same one here rather than extract_ocr.OCR_DPI, which is tuned for
+# Tesseract's whole-page text recognition, a different problem with
+# different resolution needs.
+_CHECKBOX_GRID_DPI = 200
 
 # Best-effort backstop, on top of extract_ocr.py's page-by-page streaming and
 # MAX_OCR_PAGES guard: cap each worker process's own address space so a case
@@ -141,6 +159,82 @@ def _ocr_and_extract(pdf_path: str, max_pages: int = MAX_OCR_PAGES) -> dict:
         "asset_band_counts": ext.asset_band_counts,
         "liability_band_counts": ext.liability_band_counts,
     }
+
+
+def _apply_checkbox_grid(rec: dict, pdf_path: str) -> bool:
+    """Try the checkbox-grid legacy-form extraction path (see
+    checkbox_grid.py) for a document already confirmed to contain that
+    form. Returns True if `rec` was resolved this way (caller should skip
+    the generic OCR/columns.py path entirely for it), False if it wasn't
+    (checkbox_grid.py's geometry search found nothing usable on any page --
+    "flag rather than guess": falls through to the existing generic path
+    unchanged, same as it already does for every other unresolved case).
+
+    Does NOT use `checkbox_grid.checkbox_form_pages()`/whole-page title
+    search to decide WHICH pages to try -- confirmed live those miss real
+    pages (Tesseract's whole-page segmentation struggles unpredictably with
+    this dense layout, differently on different pages of the *same*
+    document), so this tries every page and keeps whatever resolves. Slower
+    but correct; a silent undercount of a filer's real assets would be
+    worse than the extra runtime.
+
+    Liabilities: does not call `checkbox_grid.extract_liability_blocks()`
+    to produce a trusted figure -- its own docstring documents why not (the
+    unsolved "Example column" problem). If no page in the document is
+    titled "Schedule D" at all, liabilities are confidently zero; otherwise
+    `liabilities_total`/`net_worth` are left null and the row is flagged
+    for review rather than guessed -- assets can still be presented with
+    confidence even though the full net-worth picture isn't complete."""
+    page_count = pdfinfo_from_path(pdf_path).get("Pages", 0)
+    marks: list[checkbox_grid.ColumnMark] = []
+    for pg in range(1, page_count + 1):
+        image = convert_from_path(pdf_path, dpi=_CHECKBOX_GRID_DPI, first_page=pg, last_page=pg)[0]
+        page_marks = checkbox_grid.extract_asset_blocks(image)
+        if page_marks:
+            marks.extend(page_marks)
+    if not marks:
+        return False
+
+    summary = checkbox_grid.summarize_marks(marks)
+    assets_total, has_open = value_total(summary.band_counts, ASSET_BANDS)
+    spousal_n = summary.band_counts.get(checkbox_grid.SPOUSAL_INDEPENDENT, 0)
+    if spousal_n:
+        assets_total += SPOUSAL_INDEPENDENT_FLOOR * spousal_n
+        has_open = True
+
+    liability_pages = find_page_titled(pdf_path, r"SCHEDULE\s*D\b")
+    liabilities_resolved = not liability_pages
+
+    rec["extraction_method"] = "checkbox_grid"
+    rec["assets_total"] = round(assets_total, 2)
+    rec["has_open_ended_asset"] = has_open
+    rec["asset_line_count"] = summary.line_count
+    rec["asset_band_counts"] = summary.band_counts
+    rec["liability_band_counts"] = {}
+    if liabilities_resolved:
+        rec["liabilities_total"] = 0.0
+        rec["liability_line_count"] = 0
+        rec["net_worth"] = round(assets_total, 2)
+    else:
+        rec["liabilities_total"] = None
+        rec["liability_line_count"] = None
+        rec["net_worth"] = None
+
+    confident = summary.ambiguous_count == 0 and liabilities_resolved
+    rec["parse_confidence"] = "high" if confident else "low"
+    rec["needs_review"] = not confident
+    note = (
+        f"checkbox-grid extraction: {len(marks)} marked asset column(s) found, "
+        f"{summary.ambiguous_count} ambiguous"
+    )
+    if not liabilities_resolved:
+        note += (
+            f"; Schedule D present as checkbox-grid form on page(s) {liability_pages}, "
+            "not auto-extracted (see checkbox_grid.extract_liability_blocks docstring) "
+            "-- assets_total is confident, net_worth is not"
+        )
+    rec["extra_note"] = note
+    return True
 
 
 def _apply_result(rec: dict, result: dict | None, error: str | None, *, is_checkbox_form: bool = False) -> str:
@@ -436,9 +530,52 @@ def main() -> None:
     before_counts: dict[str, int] = {}
     after_counts: dict[str, int] = {}
     t0 = time.time()
+    all_target_idx = list(targets_idx)  # kept for after_counts/rows_processed -- targets_idx itself shrinks after Phase 0
 
     for i in targets_idx:
         before_counts[records[i]["parse_confidence"]] = before_counts.get(records[i]["parse_confidence"], 0) + 1
+
+    # Phase 0: checkbox-grid legacy-form resolution. Runs before, and
+    # independent of, --workers -- this is a different technique
+    # (checkbox_grid.py's geometry search), not the OCR+columns.py pass
+    # below, so it isn't threaded through that pass's ProcessPoolExecutor
+    # dispatch. A row resolved here is removed from `targets_idx` so the
+    # generic OCR pass never re-processes it (also saves a wasted whole-
+    # document Tesseract run on a form that pass can't read anyway).
+    remaining_idx = []
+    resolved_count = 0
+    total_phase0 = len(targets_idx)
+    for n, i in enumerate(targets_idx, 1):
+        rec = records[i]
+        pdf_path = _ensure_downloaded(rec, session)
+        if pdf_path is None:
+            remaining_idx.append(i)  # let the generic path's own download-failed handling apply
+            continue
+        try:
+            is_checkbox = checkbox_form_hits(pdf_path) >= CHECKBOX_HIT_THRESHOLD
+            resolved = is_checkbox and _apply_checkbox_grid(rec, pdf_path)
+        except Exception as e:
+            # A single malformed page/document must not abort the whole
+            # batch -- same "one bad doc, not the whole run" principle the
+            # OCR pass below already applies via its own try/except.
+            print(f"[build_ocr] checkbox-grid phase error on {rec['bioguide_id']} {rec['year']} doc={rec['source_doc_id']}: {e}", file=sys.stderr)
+            resolved = False
+        if resolved:
+            resolved_count += 1
+            print(
+                f"[build_ocr] checkbox-grid {n}/{total_phase0} {rec['bioguide_id']} {rec['year']} "
+                f"doc={rec['source_doc_id']} -> {rec['parse_confidence']}",
+                file=sys.stderr,
+            )
+        else:
+            remaining_idx.append(i)
+        if n % args.checkpoint_every == 0:
+            _write_output(records)
+            print(f"[build_ocr] checkbox-grid phase checkpoint ({n}/{total_phase0})", file=sys.stderr)
+    if resolved_count:
+        _write_output(records)
+        print(f"[build_ocr] checkbox-grid phase resolved {resolved_count}/{total_phase0}, checkpoint written", file=sys.stderr)
+    targets_idx = remaining_idx
 
     if args.workers <= 1:
         for n, i in enumerate(targets_idx, 1):
@@ -510,7 +647,7 @@ def main() -> None:
                     _write_output(records)
                     print(f"[build_ocr] checkpoint written ({done}/{total})", file=sys.stderr)
 
-    for i in targets_idx:
+    for i in all_target_idx:
         after_counts[records[i]["parse_confidence"]] = after_counts.get(records[i]["parse_confidence"], 0) + 1
 
     _write_output(records)
@@ -528,7 +665,7 @@ def main() -> None:
     report["ocr_pass"] = {
         "run_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "phase": "2 (House, OCR)",
-        "rows_processed": len(targets_idx),
+        "rows_processed": len(all_target_idx),
         "before_counts": before_counts,
         "after_counts": after_counts,
         "elapsed_sec": round(time.time() - t0, 1),

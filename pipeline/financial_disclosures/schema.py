@@ -44,7 +44,14 @@ _OPTIONAL_FIELDS: dict[str, tuple[type, ...]] = {
 
 _VALID_CHAMBERS = {"house", "senate"}
 _VALID_SOURCE_SYSTEMS = {"house_clerk", "senate_efd"}
-_VALID_EXTRACTION_METHODS = {"digital_text", "ocr", "manual"}
+_VALID_EXTRACTION_METHODS = {
+    "digital_text", "ocr", "manual",
+    # Checkbox-grid legacy form (see checkbox_grid.py) -- distinct from
+    # "ocr" since it's a genuinely different technique (ruled-line/mark
+    # geometry, not text recognition), not "printed text OCR" that just
+    # happened to run on a scanned page.
+    "checkbox_grid",
+}
 _VALID_PARSE_CONFIDENCE = {
     "high", "low", "unparseable_scanned", "no_filing_found", "download_failed",
     # Phase 2 (OCR) addition, anticipated by the architecture doc's schema
