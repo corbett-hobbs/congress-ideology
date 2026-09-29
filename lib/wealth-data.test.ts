@@ -94,7 +94,8 @@ function loadRealWealthMembers(): WealthMember[] {
 /**
  * Regression fixtures from the net worth plan, section 2 — recomputed
  * directly against `pipeline/output/financial_disclosures.json` on
- * 2026-09-28 (see the Session 1 report). Tolerance is exact match; if the
+ * 2026-09-28 (see the Session 1 report), updated after the OCR legend-residue
+ * fix (Rogers R000575's bogus 2013 row removed; J000307 now a real outlier). Tolerance is exact match; if the
  * pipeline output changes these numbers, that's a real finding to report,
  * not a fixture to loosen.
  */
@@ -105,8 +106,8 @@ describe("wealth data fixtures", () => {
     cohort.filter((m) => m.chamber === c);
 
   it("has the expected cohort size (2+ usable years)", () => {
-    expect(cohort.length).toBe(422);
-    expect(byChamber("house").length).toBe(341);
+    expect(cohort.length).toBe(421);
+    expect(byChamber("house").length).toBe(340);
     expect(byChamber("senate").length).toBe(81);
   });
 
@@ -122,11 +123,11 @@ describe("wealth data fixtures", () => {
   it("matches the annualized-rate fixtures (within $1, floating-point rounding)", () => {
     const both = shareAndMedian(cohort);
     expect(both.sharePositivePct).toBe(72);
-    expect(Math.round(both.medianRate)).toBeCloseTo(56_667, -1);
+    expect(Math.round(both.medianRate)).toBeCloseTo(57_083, -1);
 
     const house = shareAndMedian(byChamber("house"));
     expect(house.sharePositivePct).toBe(70);
-    expect(Math.round(house.medianRate)).toBeCloseTo(47_504, -1);
+    expect(Math.round(house.medianRate)).toBeCloseTo(48_625, -1);
 
     const senate = shareAndMedian(byChamber("senate"));
     expect(senate.sharePositivePct).toBe(80);
@@ -137,8 +138,8 @@ describe("wealth data fixtures", () => {
     const asMillions = (n: number) => Math.round(n / 1000) / 1000; // nearest $1K
 
     const both = partyMedians(members, 2025);
-    expect(asMillions(both.dem.median!)).toBeCloseTo(1.36, 2);
-    expect(both.dem.count).toBe(240);
+    expect(asMillions(both.dem.median!)).toBeCloseTo(1.38, 2);
+    expect(both.dem.count).toBe(239);
     expect(asMillions(both.rep.median!)).toBeCloseTo(2.09, 2);
     expect(both.rep.count).toBe(252);
 
@@ -147,7 +148,7 @@ describe("wealth data fixtures", () => {
       2025,
     );
     expect(asMillions(house.dem.median!)).toBeCloseTo(1.1, 2);
-    expect(house.dem.count).toBe(195);
+    expect(house.dem.count).toBe(194);
     expect(asMillions(house.rep.median!)).toBeCloseTo(1.5, 2);
     expect(house.rep.count).toBe(201);
 
@@ -162,13 +163,13 @@ describe("wealth data fixtures", () => {
   });
 
   it("flags the expected count of gapped cohort members", () => {
-    expect(cohort.filter(hasDataGap).length).toBe(56);
+    expect(cohort.filter(hasDataGap).length).toBe(58);
   });
 
   it("pins exactly the expected 5 outliers, beyond +/-$15M/yr", () => {
     const pinned = cohort.filter((m) => isPinnedOutlier(annualizedRate(m)));
     expect(pinned.map((m) => m.bioguideId).sort()).toEqual(
-      ["F000110", "G000599", "R000575", "R000618", "S001217"].sort(),
+      ["F000110", "G000599", "J000307", "R000618", "S001217"].sort(),
     );
   });
 

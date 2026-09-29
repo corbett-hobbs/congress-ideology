@@ -118,12 +118,21 @@ below needs "when did they first show up in Congress at all."
   - first usable year)`, over the member's own first/last usable years (not
   a fixed window).
 - **Pinned outlier**: `|rate| > $15,000,000/yr`. Exactly 5 current cohort
-  members cross this as of 2026-09-28: Pete Ricketts (R000618), Dan Goldman
-  (G000599), Mike Rogers (R000575), Scott Fields (F000110), Rick Scott
-  (S001217). Mike Rogers's outlier status comes from a parser mis-read (his
-  2017 filing has unrecognized band labels — see the Session 1 report's
-  watch-item findings); it wasn't corrected here (out of scope — no parser
-  changes in Session 1) but is flagged for a parser-side follow-up.
+  members cross this: Pete Ricketts (R000618), Dan Goldman (G000599), Scott Fields (F000110), Rick Scott (S001217), and
+  J000307 (two clean digital filings, $15.4M to $30.8M, a real $15.4M/yr). Mike Rogers (R000575) used to be on this list from a scanned-
+  checkbox-form mis-read (see the OCR note below); that row is now flagged
+  `low` and excluded.
+
+## OCR legend-residue guard
+
+On scanned checkbox-grid filings the printed tier legend sits inside the value
+column. When OCR garbles a dash, the legend's halves stop matching as band
+ranges and surface as lone "exact dollar figures" -- Rogers' 2013 filing
+summed to a bogus $125.95M with `high` confidence this way (his real marks are
+all between $1,001 and about $1M). `columns._is_plausible_exact_value` now
+rejects any exact figure that lands on a tier boundary or below the lowest
+reportable tier, and `recompute_exact_values.py` cleaned already-written rows
+(55 OCR rows touched, 11 `high` rows downgraded to `low`).
 
 ## Gap flag
 
@@ -138,7 +147,7 @@ flag if entry >= 2013 and (first - entry) >= 2
 Explicitly **not** flagged: `entry < 2013` with `first === 2013` (that's
 just the pipeline's 2013 data floor, not a real gap) or `entry >= 2013` with
 `first - entry === 1` (the normal one-year lag between taking office and
-filing a first annual report). 56 of the 422 cohort members are flagged.
+filing a first annual report). 58 of the 421 cohort members are flagged.
 
 ## List eligibility
 
