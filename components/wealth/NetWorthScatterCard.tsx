@@ -1,42 +1,48 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { scaleLinear, scaleSymlog } from "d3-scale";
+import Link from "next/link";
+import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
-import { memberPath } from "@/lib/member-url";
+import { hasProfilePage, memberPath } from "@/lib/member-url";
 import { chamberLabel, type ChamberView } from "@/lib/chamber";
 import { stateName } from "@/lib/states";
+import { median, wealthCohort, type WealthMember } from "@/lib/wealth-derive";
 import {
-  annualizedRate,
-  isPinnedOutlier,
-  median,
-  wealthCohort,
-  type WealthMember,
-} from "@/lib/wealth-derive";
-import {
-  jitterOffsets,
-  jitterSpreadWidth,
+  NET_WORTH_CAP,
+  clampNetWorth,
+  firstNetWorth,
+  isClipped,
+  latestNetWorth,
+  netWorthChange,
   pickStandouts,
-  spreadLabelsY,
+  placeStandoutLabels,
+  signedLog,
+  signedLogInverse,
   yearsOfData,
 } from "@/lib/wealth-scatter";
 import { wealthCountNoun } from "@/lib/wealth-copy";
 import { formatCompactUSD, formatSignedCompactUSD } from "@/lib/format-money";
-import { memberTitleLine, WealthMemberTooltip } from "./WealthMemberTooltip";
+import {
+  formatPointUSD,
+  memberTitleLine,
+  WealthMemberTooltip,
+} from "./WealthMemberTooltip";
 
-const CAP = 15_000_000;
-const AXIS_MAX = CAP * 1.05;
-const Y_TICKS = [
-  -10_000_000, -1_000_000, -100_000, -10_000, 0, 10_000, 100_000, 1_000_000,
-  10_000_000,
+const T_MAX = signedLog(NET_WORTH_CAP);
+const TICKS_DESKTOP = [
+  -20_000_000, -5_000_000, -1_000_000, -100_000, 0, 100_000, 1_000_000, 5_000_000,
+  20_000_000,
 ];
-const X_MAX = 12;
-const H = 460;
-const MARGIN = { top: 16, right: 26, bottom: 40, left: 64 };
+const TICKS_COMPACT = [-20_000_000, -1_000_000, 0, 1_000_000, 20_000_000];
+const MAX_SIDE = 560;
 const FALLBACK_W = 1080;
+/** Below this card width the chart drops the standout labels and long axis
+ *  titles (measured, not viewport — the card can be narrow on a wide page). */
+const COMPACT_W = 560;
 
 function tickLabel(v: number): string {
   if (v === 0) return "$0";
@@ -48,12 +54,19 @@ function lastNameOf(name: string): string {
   return parts[parts.length - 1];
 }
 
+function partyLetter(m: WealthMember): "D" | "R" {
+  return m.caucus === "Democrat" ? "D" : "R";
+}
+
+function noun(view: ChamberView): string {
+  return view === "senate" ? "senator" : view === "house" ? "House member" : "member";
+}
+
 interface Dot {
   member: WealthMember;
   cx: number;
   cy: number;
-  rate: number;
-  pinned: boolean;
+  clipped: boolean;
 }
 
 interface Props {
@@ -69,125 +82,93 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
-  const [singleYearNotice, setSingleYearNotice] = useState<WealthMember | null>(
-    null,
-  );
+  const [singleYearNotice, setSingleYearNotice] = useState<WealthMember | null>(null);
   const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
   const svgRef = useRef<SVGSVGElement>(null);
   const tip = useTooltip<WealthMember>();
 
   const W = measuredW || FALLBACK_W;
-  const innerWidth = W - MARGIN.left - MARGIN.right;
-  const innerHeight = H - MARGIN.top - MARGIN.bottom;
+  const compact = W < COMPACT_W;
+  // Square plot: one side length for both axes, centred in the card. Mobile
+  // trades axis titles for short captions, so it needs less margin.
+  const margin = compact
+    ? { top: 26, right: 14, bottom: 34, left: 50 }
+    : { top: 16, right: 20, bottom: 46, left: 78 };
+  const side = Math.max(
+    180,
+    Math.min(MAX_SIDE, W - margin.left - margin.right),
+  );
+  const padX = Math.max(0, (W - margin.left - margin.right - side) / 2);
+  const left = margin.left + padX;
+  const H = side + margin.top + margin.bottom;
 
-  const x = scaleLinear().domain([0, X_MAX]).range([0, innerWidth]);
-  const y = scaleSymlog()
-    .constant(5000)
-    .domain([-AXIS_MAX, AXIS_MAX])
-    .range([innerHeight, 0]);
+  // Both axes: identical transform, identical domain — see lib/wealth-scatter.
+  const x = scaleLinear().domain([-T_MAX, T_MAX]).range([0, side]);
+  const y = scaleLinear().domain([-T_MAX, T_MAX]).range([side, 0]);
 
-  const rates = useMemo(() => cohort.map(annualizedRate), [cohort]);
-  const sharePositivePct = rates.length
-    ? Math.round((rates.filter((r) => r > 0).length / rates.length) * 100)
+  const changes = useMemo(() => cohort.map(netWorthChange), [cohort]);
+  const growPct = changes.length
+    ? Math.round((changes.filter((c) => c > 0).length / changes.length) * 100)
     : 0;
-  const medianRate = median(rates);
+  const medianChange = median(changes);
   const stateCohortCount = stateFilter
     ? cohort.filter((m) => m.state === stateFilter).length
     : null;
 
-  const dots = useMemo<Dot[]>(() => {
-    const byYears = new Map<number, WealthMember[]>();
-    for (const m of cohort) {
-      const yrs = yearsOfData(m);
-      const list = byYears.get(yrs);
-      if (list) list.push(m);
-      else byYears.set(yrs, [m]);
-    }
-    const columnWidth = innerWidth / (X_MAX + 1);
-    const spread = jitterSpreadWidth(columnWidth);
-    const out: Dot[] = [];
-    for (const [yrs, members] of byYears) {
-      const sorted = [...members].sort((a, b) =>
-        a.bioguideId.localeCompare(b.bioguideId),
-      );
-      const offsets = jitterOffsets(sorted.length, spread);
-      sorted.forEach((member, i) => {
-        const rate = annualizedRate(member);
-        const pinned = isPinnedOutlier(rate);
-        const plotRate = pinned ? Math.sign(rate) * AXIS_MAX : rate;
-        out.push({
-          member,
-          // Rounded: avoids a float-precision SSR/client hydration mismatch
-          // on the exact same logical value (sub-pixel, invisible either way).
-          cx: Math.round((x(yrs) + offsets[i]) * 100) / 100,
-          cy: Math.round(y(plotRate) * 100) / 100,
-          rate,
-          pinned,
-        });
-      });
-    }
-    return out;
+  const dots = useMemo<Dot[]>(
+    () =>
+      cohort.map((member) => ({
+        member,
+        // Rounded: avoids a float-precision SSR/client hydration mismatch on
+        // the same logical value (sub-pixel, invisible either way).
+        cx: Math.round(x(signedLog(clampNetWorth(firstNetWorth(member)))) * 100) / 100,
+        cy: Math.round(y(signedLog(clampNetWorth(latestNetWorth(member)))) * 100) / 100,
+        clipped: isClipped(member),
+      })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cohort, innerWidth]);
-
+    [cohort, side],
+  );
   const dotById = useMemo(
     () => new Map(dots.map((d) => [d.member.bioguideId, d])),
     [dots],
   );
 
-  // Below ~480px the chart is measured (not viewBox-scaled — see the `W`
-  // computation above), so its physical width shrinks while `.dot-label`'s
-  // CSS font-size stays fixed: the full "Lastname (R) +$55.07M/yr ↑" labels
-  // (fine at 1280px) crowd into each other and the dots below them. Fewer,
-  // shorter labels rather than a smaller font — the rate is still one tap
-  // away in the hover card.
-  const compactLabels = W < 480;
-  const standouts = useMemo(
-    () => pickStandouts(cohort, compactLabels ? 1 : 3),
-    [cohort, compactLabels],
-  );
+  // Draw order: everyone else, then state matches, then the ringed member.
+  const drawOrder = useMemo(() => {
+    const rank = (d: Dot) =>
+      d.member.bioguideId === selectedId || d.member.bioguideId === hoverId
+        ? 2
+        : stateFilter && d.member.state === stateFilter
+          ? 1
+          : 0;
+    return [...dots].sort((a, b) => rank(a) - rank(b));
+  }, [dots, selectedId, hoverId, stateFilter]);
+
   const standoutLabels = useMemo(() => {
-    const entries = [...standouts.top, ...standouts.bottom]
-      .map((e) => {
-        const dot = dotById.get(e.member.bioguideId);
-        if (!dot) return null;
-        return { entry: e, dot };
-      })
-      .filter((v): v is { entry: (typeof standouts.top)[number]; dot: Dot } => v != null);
-
-    const ys = spreadLabelsY(
-      entries.map((v) => v.dot.cy),
-      compactLabels ? 20 : 14,
-      innerHeight,
+    if (compact) return [];
+    const { top, bottom } = pickStandouts(cohort, 3);
+    const entries = [...top, ...bottom]
+      .map((e) => ({ entry: e, dot: dotById.get(e.member.bioguideId) }))
+      .filter((v): v is { entry: (typeof top)[number]; dot: Dot } => v.dot != null);
+    const placed = placeStandoutLabels(
+      entries.map((v) => v.dot),
+      side,
     );
-
-    return entries.map((v, i) => {
-      const nearRightEdge = v.dot.cx > innerWidth * 0.85;
-      const letter = v.entry.member.caucus === "Democrat" ? "D" : "R";
-      const arrow = v.entry.rate > 0 ? "↑" : "↓";
-      const text = compactLabels
-        ? `${lastNameOf(v.entry.member.name)} (${letter})`
-        : v.dot.pinned
-          ? `${lastNameOf(v.entry.member.name)} (${letter}) ${formatSignedCompactUSD(v.entry.rate)}/yr ${arrow}`
-          : `${lastNameOf(v.entry.member.name)} (${letter})`;
-      return {
-        key: v.entry.member.bioguideId,
-        x: v.dot.cx + (nearRightEdge ? -10 : 10),
-        y: ys[i],
-        anchor: nearRightEdge ? ("end" as const) : ("start" as const),
-        text,
-      };
-    });
-  }, [standouts, dotById, innerWidth, innerHeight, compactLabels]);
+    return entries.map((v, i) => ({
+      key: v.entry.member.bioguideId,
+      ...placed[i],
+      text: `${lastNameOf(v.entry.member.name)} (${partyLetter(v.entry.member)}) ${formatSignedCompactUSD(v.entry.change)}`,
+    }));
+  }, [cohort, dotById, side, compact]);
 
   const searchResults = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
     const byState = q.length === 2;
-    const matches = chamberMembers.filter((m) =>
-      byState ? m.state.toLowerCase() === q : m.name.toLowerCase().includes(q),
-    );
-    return matches
+    return chamberMembers
+      .filter((m) =>
+        byState ? m.state.toLowerCase() === q : m.name.toLowerCase().includes(q),
+      )
       .sort((a, b) => lastNameOf(a.name).localeCompare(lastNameOf(b.name)))
       .slice(0, 8);
   }, [query, chamberMembers]);
@@ -196,20 +177,23 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     const svg = svgRef.current;
     if (!svg) return { clientX: 0, clientY: 0 };
     const rect = svg.getBoundingClientRect();
-    const scaleX = rect.width / W;
-    const scaleY = rect.height / H;
     return {
-      clientX: rect.left + (MARGIN.left + localX) * scaleX,
-      clientY: rect.top + (MARGIN.top + localY) * scaleY,
+      clientX: rect.left + (left + localX) * (rect.width / W),
+      clientY: rect.top + (margin.top + localY) * (rect.height / H),
     };
   }
 
+  function clearSelection() {
+    setSelectedId(null);
+    setSingleYearNotice(null);
+    tip.hide();
+  }
+
+  // Selection, not navigation: rings the dot and opens its hover card in place.
   function selectMember(member: WealthMember) {
     setQuery("");
     setSingleYearNotice(null);
     if (member.points.length < 2) {
-      // Not in the cohort — nothing to plot, so surface the note near the
-      // stats row instead of trying to open a tooltip with no dot.
       setSelectedId(null);
       tip.hide();
       setSingleYearNotice(member);
@@ -221,42 +205,64 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
   }
 
   const chamberNoun = wealthCountNoun(view);
-  const ariaSummary = `Scatter plot of annualized net worth change vs. years of usable disclosure data, for ${cohort.length} ${chamberNoun} with 2 or more years of data. Median change ${
-    medianRate != null ? formatSignedCompactUSD(medianRate) : "unavailable"
-  } per year. The vertical axis is capped at plus or minus 15 million dollars per year; members beyond that are pinned to the edge.`;
+  const capLabel = formatCompactUSD(NET_WORTH_CAP);
+  const ariaSummary = `Scatter plot of net worth at each member's first usable filing (horizontal axis) against net worth at their latest usable filing (vertical axis), for ${cohort.length} ${chamberNoun} with 2 or more years of data. Both axes use the same signed-log scale, capped at plus or minus ${NET_WORTH_CAP / 1_000_000} million dollars; members beyond the cap are drawn as diamonds at the edge. The diagonal is no change: points above it grew, points below it shrank. Median change ${
+    medianChange != null ? formatSignedCompactUSD(medianChange) : "unavailable"
+  }.`;
+
+  const ticks = compact ? TICKS_COMPACT : TICKS_DESKTOP;
+  const tickT = ticks.map(signedLog);
+
+  const stats = [
+    { value: `${growPct}%`, label: "grew" },
+    {
+      value: medianChange != null ? formatSignedCompactUSD(medianChange) : "—",
+      label: "median change",
+    },
+    { value: cohort.length.toLocaleString("en-US"), label: "plotted" },
+    ...(stateCohortCount != null
+      ? [{ value: String(stateCohortCount), label: `in ${stateName(stateFilter!)}` }]
+      : []),
+  ];
 
   return (
-    <section className="rounded-xl border border-line-strong bg-surface p-5 sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <section className="rounded-xl border border-line-strong bg-surface p-4 sm:p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-4">
         <div>
           <h2 className="font-serif text-xl font-medium text-ink sm:text-2xl">
-            Who outperformed, who lagged
+            Where they started, where they are now
           </h2>
           <p className="mt-1 text-[0.85rem] text-ink-muted">
-            Real disclosures, 2013–2025 · {cohort.length} {chamberNoun} with 2+
-            years of data
+            {chamberNoun} with 2+ years of data
             {stateFilter && ` · ${stateName(stateFilter)} highlighted`}
           </p>
         </div>
 
-        <div className="relative w-full max-w-[16rem] sm:w-64">
+        <div className="relative w-full sm:w-64">
           <label className="sr-only" htmlFor="wealth-member-search">
-            {`Find a ${view === "senate" ? "senator" : view === "house" ? "House member" : "member"}…`}
+            {`Find ${view === "both" ? "a member" : `a ${noun(view)}`}…`}
           </label>
           <input
             id="wealth-member-search"
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={`Find a ${view === "senate" ? "senator" : view === "house" ? "House member" : "member"}…`}
-            aria-label={`Find a ${view === "senate" ? "senator" : view === "house" ? "House member" : "member"}…`}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && searchResults[0]) selectMember(searchResults[0]);
+              else if (e.key === "Escape") {
+                setQuery("");
+                clearSelection();
+              }
+            }}
+            placeholder={`Find ${view === "both" ? "a member" : `a ${noun(view)}`}…`}
+            aria-label={`Find ${view === "both" ? "a member" : `a ${noun(view)}`}…`}
             className="w-full rounded-md border border-line-strong bg-surface-raised px-3 py-1.5 text-[0.85rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           />
           {query.trim() && (
             <div className="absolute z-30 mt-1 w-full rounded-md border border-line-strong bg-surface shadow-lg">
               <p className="border-b border-line px-3 py-1.5 font-mono text-[0.65rem] uppercase tracking-[0.06em] text-ink-faint">
                 {searchResults.length
-                  ? `${view === "senate" ? "Senators" : view === "house" ? "House members" : "Members"} matching "${query.trim()}"`
+                  ? `${wealthCountNoun(view)} matching "${query.trim()}"`
                   : "No match in this chamber."}
               </p>
               <ul className="max-h-64 overflow-y-auto">
@@ -285,152 +291,144 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 font-mono text-[0.78rem] text-ink-muted">
-        <span>
-          <b className="text-ink">{sharePositivePct}%</b> with a positive rate
-        </span>
-        <span>
-          Median{" "}
-          <b className="text-ink">
-            {medianRate != null ? formatSignedCompactUSD(medianRate) : "—"}
-          </b>
-        </span>
-        <span>
-          <b className="text-ink">{cohort.length.toLocaleString("en-US")}</b>{" "}
-          plotted
-        </span>
-        {stateCohortCount != null && (
-          <span>
-            <b className="text-ink">{stateCohortCount}</b> in {stateName(stateFilter!)}
+      <div className="mt-4 flex flex-nowrap gap-3 font-mono text-[0.78rem] text-ink-muted sm:flex-wrap sm:gap-x-6 sm:gap-y-1">
+        {stats.map((s) => (
+          <span key={s.label} className="min-w-0 flex-1 sm:flex-none">
+            <b className="block text-[1rem] text-ink sm:inline sm:text-[0.78rem]">{s.value}</b>{" "}
+            <span className="block text-[0.7rem] leading-tight sm:inline sm:text-[0.78rem]">
+              {s.label}
+            </span>
           </span>
-        )}
+        ))}
       </div>
 
       {singleYearNotice && (
         <p className="mt-2 text-[0.8rem] text-note">
-          {singleYearNotice.name} has only 1 year of data, so they aren’t
-          plotted. Latest: {formatCompactUSD(singleYearNotice.points[0].midpoint)}{" "}
-          ({singleYearNotice.points[0].year}).
+          {singleYearNotice.name} has only 1 year of data, so they aren’t plotted. Latest:{" "}
+          {formatPointUSD(singleYearNotice.points[0])} ({singleYearNotice.points[0].year}).
         </p>
       )}
 
-      <div ref={wrapRef} className="mt-4">
+      <p className="mt-4 rounded-md border border-line bg-surface-raised px-3 py-2 text-[0.8rem] leading-relaxed text-ink-muted">
+        Diagonal = no change. Above it, they grew. Below it, they shrank. Distance from the
+        line is the size of the change, not how fast it happened — the hover card has years
+        and rate.
+      </p>
+
+      <div ref={wrapRef} className="mt-3">
         <ChartFrame
           width={W}
           height={H}
-          margin={MARGIN}
+          margin={{ ...margin, left }}
           ariaLabel={ariaSummary}
           svgRef={svgRef}
+          onPointerLeave={() => {
+            setHoverId(null);
+            if (!selectedId) tip.hide();
+          }}
         >
           {() => (
             <>
               <Axis
                 scale={x}
                 orientation="bottom"
-                ticks={Array.from({ length: X_MAX + 1 }, (_, i) => i)}
-                offset={innerHeight}
-                gridExtent={innerHeight}
-                format={(v) => String(v)}
+                ticks={tickT}
+                offset={side}
+                gridExtent={side}
+                zeroAt={0}
+                format={(t) => tickLabel(signedLogInverse(t))}
               />
               <Axis
                 scale={y}
                 orientation="left"
-                ticks={Y_TICKS}
+                ticks={tickT}
                 offset={0}
+                gridExtent={side}
                 zeroAt={0}
-                format={tickLabel}
+                format={(t) => tickLabel(signedLogInverse(t))}
               />
-              <text
-                className="axis-tick-label"
-                x={innerWidth / 2}
-                y={innerHeight + 34}
-                textAnchor="middle"
-              >
-                Years of net worth data (reporting years 2013–2025, not total
-                tenure)
-              </text>
-
-              {medianRate != null && (
+              {compact ? (
                 <>
-                  {(() => {
-                    // Rounded to avoid a float-precision hydration mismatch
-                    // between server and client renders of the same value —
-                    // sub-pixel precision doesn't matter visually anyway.
-                    const medianY =
-                      Math.round(
-                        y(Math.max(-AXIS_MAX, Math.min(AXIS_MAX, medianRate))) * 100,
-                      ) / 100;
-                    return (
-                      <>
-                        <line
-                          x1={0}
-                          x2={innerWidth}
-                          y1={medianY}
-                          y2={medianY}
-                          className="stroke-accent"
-                          strokeWidth={1.5}
-                          strokeDasharray="4 3"
-                        />
-                        <text
-                          x={innerWidth}
-                          y={medianY - 5}
-                          textAnchor="end"
-                          className="dot-label"
-                        >
-                          Median {formatSignedCompactUSD(medianRate)}/yr
-                        </text>
-                      </>
-                    );
-                  })()}
+                  <text className="axis-caption" x={side / 2} y={side + 32} textAnchor="middle">
+                    Starting net worth →
+                  </text>
+                  <text className="axis-caption" x={-margin.left + 6} y={-12} textAnchor="start">
+                    ↑ Current net worth
+                  </text>
+                </>
+              ) : (
+                <>
+                  <text className="axis-tick-label" x={side / 2} y={side + 38} textAnchor="middle">
+                    Net worth at first usable filing
+                  </text>
+                  <text
+                    className="axis-tick-label"
+                    transform={`translate(${-62},${side / 2}) rotate(-90)`}
+                    textAnchor="middle"
+                  >
+                    Net worth at latest usable filing
+                  </text>
                 </>
               )}
 
-              {dots.map((d) => {
-                const highlighted =
-                  d.member.bioguideId === selectedId ||
-                  d.member.bioguideId === hoverId;
-                const dimmed = stateFilter != null && d.member.state !== stateFilter;
-                const r = highlighted ? 7 : dimmed ? 3.4 : 4.4;
-                const colorClass = d.member.caucus === "Democrat" ? "fill-dem" : "fill-rep";
+              {/* Corner to corner of the square: a true 45° no-change line. */}
+              <line
+                x1={0}
+                y1={side}
+                x2={side}
+                y2={0}
+                stroke="var(--ink-muted)"
+                strokeWidth={1.5}
+                strokeDasharray="5 4"
+                pointerEvents="none"
+              />
+
+              {drawOrder.map((d) => {
+                const id = d.member.bioguideId;
+                const ringed = id === selectedId || id === hoverId;
+                const matches = !!stateFilter && d.member.state === stateFilter;
+                const dimmed = !!stateFilter && !matches;
+                const r = ringed ? 7 : matches ? 5.6 : dimmed ? 3.6 : 4.4;
+                const cls = `dot ${d.member.caucus === "Democrat" ? "fill-dem" : "fill-rep"}${ringed ? " is-highlighted" : ""}`;
                 const opacity = dimmed ? 0.28 : 1;
-                const commonProps = {
+                const linkable = hasProfilePage({ isCurrent: true });
+                const label = `${d.member.name} (${partyLetter(d.member)}), ${memberTitleLine(d.member)}: ${formatPointUSD(d.member.points[0])} to ${formatPointUSD(d.member.points[d.member.points.length - 1])}`;
+                const shape = d.clipped ? (
+                  <polygon
+                    points={`${d.cx},${d.cy - r * 1.35} ${d.cx + r * 1.35},${d.cy} ${d.cx},${d.cy + r * 1.35} ${d.cx - r * 1.35},${d.cy}`}
+                    opacity={opacity}
+                    className={cls}
+                  />
+                ) : (
+                  <circle cx={d.cx} cy={d.cy} r={r} opacity={opacity} className={cls} />
+                );
+                const handlers = {
                   onPointerEnter: () => {
-                    setHoverId(d.member.bioguideId);
+                    setHoverId(id);
                     tip.show(d.member, svgPoint(d.cx, d.cy));
                   },
                   onPointerLeave: () => {
                     setHoverId(null);
-                    tip.hide();
+                    if (selectedId && selectedId !== id) {
+                      const sel = dotById.get(selectedId);
+                      if (sel) tip.show(sel.member, svgPoint(sel.cx, sel.cy));
+                    } else if (!selectedId) tip.hide();
                   },
-                  onClick: () => selectMember(d.member),
-                  style: { cursor: "pointer" as const },
                 };
-                if (d.pinned) {
-                  const up = d.rate > 0;
-                  const s = highlighted ? 8 : 6;
-                  const points = up
-                    ? `${d.cx},${d.cy - s} ${d.cx - s},${d.cy + s} ${d.cx + s},${d.cy + s}`
-                    : `${d.cx},${d.cy + s} ${d.cx - s},${d.cy - s} ${d.cx + s},${d.cy - s}`;
-                  return (
-                    <polygon
-                      key={d.member.bioguideId}
-                      {...commonProps}
-                      points={points}
-                      opacity={opacity}
-                      className={`dot ${colorClass}${highlighted ? " is-highlighted" : ""}`}
-                    />
-                  );
-                }
-                return (
-                  <circle
-                    key={d.member.bioguideId}
-                    {...commonProps}
-                    cx={d.cx}
-                    cy={d.cy}
-                    r={r}
-                    opacity={opacity}
-                    className={`dot ${colorClass}${highlighted ? " is-highlighted" : ""}`}
-                  />
+                return linkable ? (
+                  <Link
+                    key={id}
+                    href={memberPath(d.member)}
+                    aria-label={label}
+                    tabIndex={-1}
+                    {...handlers}
+                  >
+                    {shape}
+                  </Link>
+                ) : (
+                  <g key={id} role="img" aria-label={label} {...handlers}>
+                    {shape}
+                  </g>
                 );
               })}
 
@@ -441,6 +439,8 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
                   y={l.y}
                   textAnchor={l.anchor}
                   className="dot-label"
+                  // Surface-coloured halo keeps the text legible over the dot cloud.
+                  style={{ paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 3 }}
                 >
                   {l.text}
                 </text>
@@ -448,11 +448,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
             </>
           )}
         </ChartFrame>
-        <Tooltip state={tip.state}>
-          {(m) => (
-            <WealthMemberTooltip member={m} pinned={dotById.get(m.bioguideId)?.pinned ?? false} />
-          )}
-        </Tooltip>
+        <Tooltip state={tip.state}>{(m) => <WealthMemberTooltip member={m} />}</Tooltip>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[0.72rem] text-ink-muted">
@@ -460,30 +456,26 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         <LegendSwatch className="bg-rep" label="Republican" />
         <span className="flex items-center gap-1.5">
           <svg width="16" height="8" viewBox="0 0 16 8" aria-hidden className="flex-none">
-            <line x1="0" y1="4" x2="16" y2="4" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="3 2" />
+            <line x1="0" y1="7" x2="16" y2="1" stroke="var(--ink-muted)" strokeWidth={1.5} strokeDasharray="3 2" />
           </svg>
-          Median
+          No change
         </span>
         <span className="flex items-center gap-1.5">
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className="flex-none">
-            <polygon points="6,1 1,10 11,10" fill="var(--ink-faint)" />
+            <polygon points="6,0.5 11.5,6 6,11.5 0.5,6" fill="var(--ink-faint)" />
           </svg>
-          Beyond ±$15M/yr, pinned to the edge
+          Beyond ±{capLabel}, drawn at the edge
         </span>
       </div>
 
       <p className="mt-3 text-[0.72rem] leading-relaxed text-ink-faint">
-        Years are the year each report covers, not the year it was filed.
-        Annualized change is total change ÷ years of data, on a signed-log
-        scale so a few multi-million outliers don’t flatten everyone else.
-        Pick a state to highlight its members. Pick a member in the search to
-        see their filings; members with missing early filings get a note
-        there. Rates beyond ±$15M/yr are pinned to the edge as triangles so
-        they don’t flatten everyone else; the label and hover card show the
-        true value. Members with only 1–2 years of data can show extreme
-        rates from one large one-time move. Estimates for members reporting
-        an open-ended “Over $50,000,000” band are approximate and marked with
-        a +.
+        Years are the year each report covers, not the year it was filed. Both axes use the
+        same signed-log scale, capped at ±{capLabel} so a handful of very large estimates
+        don’t compress everyone else near zero; points beyond the cap are drawn as diamonds
+        at the edge, with the true value in the label and hover card. Pick a state to
+        highlight its members. Pick a member in the search to see their filings; members
+        with missing early years get a note there. Estimates for members reporting an
+        open-ended “Over $50,000,000” band are approximate and marked with a +.
       </p>
 
       <WealthScatterTable cohort={cohort} />
@@ -500,8 +492,8 @@ function LegendSwatch({ className, label }: { className: string; label: string }
   );
 }
 
-/** Table fallback for the chart (accessibility) — every cohort member's rate
- *  data as a plain, sortable-by-eye table, collapsed by default. */
+/** Table fallback for the chart (accessibility) — every cohort member's
+ *  before/after as a plain table, collapsed by default. */
 function WealthScatterTable({ cohort }: { cohort: WealthMember[] }) {
   return (
     <details className="mt-3">
@@ -512,9 +504,12 @@ function WealthScatterTable({ cohort }: { cohort: WealthMember[] }) {
         <table className="w-full border-collapse text-[0.78rem]">
           <thead className="sticky top-0 bg-surface-raised">
             <tr>
-              {["Name", "Chamber", "State", "Party", "Years", "First", "Last", "Rate"].map(
+              {["Name", "Chamber", "State", "Party", "Years", "First", "Latest", "Change"].map(
                 (h) => (
-                  <th key={h} className="border-b border-line px-2 py-1.5 text-left font-mono text-[0.65rem] uppercase tracking-[0.05em] text-ink-faint">
+                  <th
+                    key={h}
+                    className="border-b border-line px-2 py-1.5 text-left font-mono text-[0.65rem] uppercase tracking-[0.05em] text-ink-faint"
+                  >
                     {h}
                   </th>
                 ),
@@ -522,26 +517,22 @@ function WealthScatterTable({ cohort }: { cohort: WealthMember[] }) {
             </tr>
           </thead>
           <tbody>
-            {cohort.map((m) => {
-              const first = m.points[0];
-              const last = m.points[m.points.length - 1];
-              return (
-                <tr key={m.bioguideId} className="border-b border-line last:border-0">
-                  <td className="px-2 py-1">
-                    <a href={memberPath(m)} className="hover:underline">
-                      {m.name}
-                    </a>
-                  </td>
-                  <td className="px-2 py-1">{chamberLabel(m.chamber)}</td>
-                  <td className="px-2 py-1">{m.state}</td>
-                  <td className="px-2 py-1">{m.caucus === "Democrat" ? "D" : "R"}</td>
-                  <td className="px-2 py-1">{yearsOfData(m)}</td>
-                  <td className="px-2 py-1">{formatCompactUSD(first.midpoint)}</td>
-                  <td className="px-2 py-1">{formatCompactUSD(last.midpoint)}</td>
-                  <td className="px-2 py-1">{formatSignedCompactUSD(annualizedRate(m))}/yr</td>
-                </tr>
-              );
-            })}
+            {cohort.map((m) => (
+              <tr key={m.bioguideId} className="border-b border-line last:border-0">
+                <td className="px-2 py-1">
+                  <Link href={memberPath(m)} className="hover:underline">
+                    {m.name}
+                  </Link>
+                </td>
+                <td className="px-2 py-1">{chamberLabel(m.chamber)}</td>
+                <td className="px-2 py-1">{m.state}</td>
+                <td className="px-2 py-1">{partyLetter(m)}</td>
+                <td className="px-2 py-1">{yearsOfData(m)}</td>
+                <td className="px-2 py-1">{formatPointUSD(m.points[0])}</td>
+                <td className="px-2 py-1">{formatPointUSD(m.points[m.points.length - 1])}</td>
+                <td className="px-2 py-1">{formatSignedCompactUSD(netWorthChange(m))}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

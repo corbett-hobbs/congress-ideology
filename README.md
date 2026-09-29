@@ -20,8 +20,8 @@ site makes that data explorable:
 - **See where a committee sits** — every House, Senate, and joint committee of
   the 119th Congress blended to a point, plus a page per committee.
 - **Congressional net worth** ([`/congress/wealth`](https://insidegov.fyi/congress/wealth))
-  — who outperformed, who lagged: annualized net worth change vs. years of
-  usable disclosure data, highest/lowest lists, and a "Net worth over time"
+  — where they started, where they are now: first vs. latest net worth on a
+  shared signed-log scale, highest/lowest lists, and a "Net worth over time"
   card with the actual assets and liabilities on every current member's
   profile page, estimated from their annual financial disclosures.
 - Party-mean trend line, a searchable roster, a full data table, and a
