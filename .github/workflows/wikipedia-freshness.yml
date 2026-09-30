@@ -5,9 +5,9 @@ name: Wikipedia bios freshness
 # Weekly: re-fetch every current member's Wikipedia lead and, if the trimmed
 # result differs from pipeline/output/wikipedia_summaries.json, open a pull
 # request. Never auto-merged — a human reviews the diff (it includes each
-# record's `revision`, so text changes and vandalism are visible) and merges.
-# `fetched_at` is only bumped when a record actually changes, so an unchanged
-# article produces no diff.
+# record's `revision`, so vandalism is easy to check in the article history)
+# and merges. A record only changes when the SHOWN text changes; edits
+# elsewhere in an article produce no diff.
 #
 # Requires repo setting:
 #   Settings > Actions > General > "Allow GitHub Actions to create and
@@ -78,8 +78,8 @@ jobs:
             **Before merging**
 
             - Review the diff in `pipeline/output/wikipedia_summaries.json`.
-              Each changed record carries a new `revision` — open the article
-              history for anything that looks wrong (vandalism, wrong person).
+              Each changed record carries the `revision` its new text came from —
+              open the article history for anything that looks wrong (vandalism, wrong person).
             - Check any record with `needs_review: true`.
             - Locally: `pnpm validate`.
 

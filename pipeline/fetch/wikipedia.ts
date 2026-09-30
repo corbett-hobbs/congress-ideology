@@ -25,10 +25,11 @@ import { RAW_DIR, run } from "./lib";
  * - A fetch that still fails after retries (429 / 5xx / network) aborts the
  *   run without touching the file, so a flaky night can't silently delete
  *   bios from the committed output.
- * - `fetched_at` is carried over from the committed record when nothing else
- *   about it changed, so an unchanged article produces an unchanged file and
- *   the weekly workflow only opens a PR for a real diff. `revision` is in the
- *   record, so text changes (and vandalism) show up in review.
+ * - `revision` and `fetched_at` are carried over from the committed record
+ *   when the SHOWN text (title, extract, url, needs_review) is unchanged, so
+ *   edits elsewhere in an article don't produce a diff and the weekly workflow
+ *   only opens a PR when the displayed bio changes. On a change, the new
+ *   `revision` is in the diff so reviewers can check the article history.
  */
 const LEGISLATORS = `${RAW_DIR}/congress-legislators/legislators-current.yaml`;
 const OUT = "pipeline/output/wikipedia_summaries.json";
@@ -155,16 +156,19 @@ await run("wikipedia", async () => {
         revision: api.revision,
         needs_review: needsReview(extract),
       };
+      // Only the text we show decides whether a record changed. An edit
+      // elsewhere in the article bumps `revision` but not the lead, so keep the
+      // committed revision + fetched_at and the weekly job stays quiet.
       const prev = previous.get(draft.bioguide_id);
       const unchanged =
         prev &&
         prev.title === draft.title &&
         prev.extract === draft.extract &&
         prev.url === draft.url &&
-        prev.revision === draft.revision &&
         prev.needs_review === draft.needs_review;
       const record = wikipediaSummary.safeParse({
         ...draft,
+        revision: unchanged ? prev.revision : draft.revision,
         fetched_at: unchanged ? prev.fetched_at : today,
       });
       if (!record.success) {
