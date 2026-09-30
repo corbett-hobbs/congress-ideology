@@ -11,6 +11,24 @@ const GIVEN_NAME_OVERRIDES: Readonly<Record<string, string>> = {
 };
 
 /**
+ * Surnames shortened to match `official_full`, keyed by bioguide id. The
+ * upstream `last` holds the fuller legal surname.
+ */
+const FAMILY_NAME_OVERRIDES: Readonly<Record<string, string>> = {
+  G000608: "Graham", // Darline Graham Nordone
+  H001103: "Hernández", // Pablo José Hernández Rivera
+};
+
+/** The surname a member goes by. */
+export function familyName(
+  name: Legislator["name"],
+  bioguideId?: string,
+): string {
+  const override = bioguideId ? FAMILY_NAME_OVERRIDES[bioguideId] : undefined;
+  return override ?? name.last;
+}
+
+/**
  * The first name a member goes by. Preference order:
  *  0. `GIVEN_NAME_OVERRIDES`
  *  1. `nickname` ("Chuck")
@@ -39,5 +57,5 @@ export function displayName(
   name: Legislator["name"],
   bioguideId?: string,
 ): string {
-  return `${givenName(name, bioguideId)} ${name.last}`;
+  return `${givenName(name, bioguideId)} ${familyName(name, bioguideId)}`;
 }

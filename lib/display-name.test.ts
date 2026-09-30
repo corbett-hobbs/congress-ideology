@@ -46,4 +46,12 @@ describe("displayName", () => {
       "Val Hoyle",
     );
   });
+  it("applies surname overrides", () => {
+    expect(
+      displayName({ first: "Darline", last: "Graham Nordone" }, "G000608"),
+    ).toBe("Darline Graham");
+    expect(
+      displayName({ first: "Pablo José", last: "Hernández Rivera" }, "H001103"),
+    ).toBe("Pablo José Hernández");
+  });
 });
