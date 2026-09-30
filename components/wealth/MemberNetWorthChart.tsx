@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
@@ -13,7 +13,8 @@ import {
 import { formatCompactUSD, formatOpenEndedUSD } from "@/lib/format-money";
 
 const W = 640;
-const H = 280;
+const DEFAULT_H = 280;
+const MIN_H = 220;
 const MARGIN = { top: 20, right: 16, bottom: 38, left: 68 };
 /** Minimum dollar span so a flat/near-flat series isn't over-magnified. */
 const MIN_Y_SPAN = 200_000;
@@ -73,6 +74,33 @@ interface Props {
  */
 export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberName }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const areaRef = useRef<HTMLDivElement>(null);
+  const [H, setH] = useState(DEFAULT_H);
+
+  // On wide layouts the chart sits beside the items panel; stretch the SVG's
+  // logical height so its rendered height fills the row (the wrapper below
+  // is absolutely positioned there, so it never drives the row height).
+  useEffect(() => {
+    const el = areaRef.current;
+    if (!el) return;
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => {
+      const { width, height } = el.getBoundingClientRect();
+      if (!mq.matches || width === 0 || height === 0) {
+        setH(DEFAULT_H);
+        return;
+      }
+      setH(Math.max(MIN_H, Math.round((W * height) / width)));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    mq.addEventListener("change", update);
+    return () => {
+      ro.disconnect();
+      mq.removeEventListener("change", update);
+    };
+  }, []);
   const tip = useTooltip<Plottable>();
 
   const plottable = useMemo(() => years.filter(isPlottable), [years]);
@@ -202,7 +230,9 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
     : `${memberName} has no usable net worth data in this window.`;
 
   return (
-    <div>
+    <div className="relative">
+    <div className="flex flex-col lg:absolute lg:inset-0">
+      <div ref={areaRef} className="lg:min-h-0 lg:flex-1">
       <ChartFrame width={W} height={H} margin={MARGIN} ariaLabel={ariaSummary} svgRef={svgRef}>
         {({ innerWidth, innerHeight }) => (
           <>
@@ -285,6 +315,7 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
           </>
         )}
       </ChartFrame>
+      </div>
 
       <Tooltip state={tip.state}>
         {(p) => <YearHoverCard point={p} />}
@@ -306,6 +337,7 @@ export function MemberNetWorthChart({ years, selectedYear, onSelectYear, memberN
         )}
         {hasBridgedGap && <LegendLine className="stroke-accent" dashed label="No filing (bridged)" />}
       </div>
+    </div>
     </div>
   );
 }
