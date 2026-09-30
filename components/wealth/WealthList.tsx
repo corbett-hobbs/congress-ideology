@@ -36,7 +36,7 @@ export function WealthList({ title, direction, members, view, stateFilter }: Wea
   const noun = wealthCountNoun(view);
 
   return (
-    <section className="flex min-w-0 flex-col rounded-xl border border-line-strong bg-surface p-5 sm:p-6">
+    <section className="@container flex min-w-0 flex-col rounded-xl border border-line-strong bg-surface p-3 sm:p-6">
       <h2 className="font-serif text-lg font-medium text-ink sm:text-xl">{title}</h2>
       <p className="mt-1 text-[0.8rem] text-ink-muted">
         Ranked from the {direction === "highest" ? "top" : "bottom"} · {ranked.length} {noun} with
@@ -48,22 +48,22 @@ export function WealthList({ title, direction, members, view, stateFilter }: Wea
         role="region"
         tabIndex={0}
         aria-label={`${title} table, ${ranked.length} rows`}
-        className="mt-3 max-h-[26rem] overflow-x-auto overflow-y-auto rounded-md border border-line"
+        className="mt-3 max-h-[26rem] overflow-y-auto overflow-x-hidden rounded-md border border-line"
       >
-        <table className="w-full min-w-[22rem] border-collapse text-[0.82rem]">
+        <table className="w-full border-collapse text-[0.82rem]">
           <thead className="sticky top-0 z-10 bg-surface-raised">
             <tr>
               <th className="w-8 border-b border-line px-2 py-2 text-left font-mono text-[0.62rem] uppercase tracking-[0.05em] text-ink-faint">
                 #
               </th>
-              <th className="border-b border-line px-2 py-2 text-left font-mono text-[0.62rem] uppercase tracking-[0.05em] text-ink-faint">
+              <th className="w-full border-b border-line px-2 py-2 text-left font-mono text-[0.62rem] uppercase tracking-[0.05em] text-ink-faint">
                 Member
               </th>
-              <th className="border-b border-line px-2 py-2 text-left font-mono text-[0.62rem] uppercase tracking-[0.05em] text-ink-faint">
-                Trend
-              </th>
-              <th className="border-b border-line px-2 py-2 text-right font-mono text-[0.62rem] uppercase tracking-[0.05em] text-ink-faint">
+              <th className="whitespace-nowrap border-b border-line px-2 py-2 text-right font-mono text-[0.62rem] uppercase tracking-[0.05em] text-ink-faint">
                 Est. net worth
+              </th>
+              <th className="border-b border-line pl-1 pr-2 py-2 text-left font-mono text-[0.62rem] uppercase tracking-[0.05em] text-ink-faint">
+                Trend
               </th>
             </tr>
           </thead>
@@ -89,18 +89,18 @@ function WealthListRow({ rank, member }: { rank: number; member: WealthMember })
 
   return (
     <tr className="h-14 border-b border-line last:border-0 hover:bg-surface-raised">
-      <td className="px-2 py-1 font-mono tabular-nums text-ink-faint">{rank}</td>
-      <td className="px-2 py-1">
-        <a href={memberPath(member)} className="flex items-center gap-2">
+      <td className="pl-2 pr-0 py-1 font-mono text-[0.7rem] tabular-nums text-ink-faint">{rank}</td>
+      <td className="max-w-0 px-1.5 py-1">
+        <a href={memberPath(member)} className="flex items-center gap-1.5">
           <MemberPhoto
             bioguideId={member.bioguideId}
             hasPhoto={member.hasPhoto}
             size="small"
-            className="h-9 w-7 flex-none rounded-sm object-cover object-top"
+            className="h-8 w-6 flex-none @md:h-9 @md:w-7 rounded-sm object-cover object-top"
           />
           <span className="min-w-0">
-            <span className="block truncate font-medium text-ink">{member.name}</span>
-            <span className="flex items-center gap-1 text-[0.72rem] text-ink-faint">
+            <span className="block line-clamp-2 break-words font-medium leading-tight text-ink @md:truncate">{member.name}</span>
+            <span className="mt-0.5 flex items-center gap-1 whitespace-nowrap text-[0.68rem] text-ink-faint @md:text-[0.72rem]">
               <span
                 aria-hidden
                 className={`size-1.5 flex-none rounded-full ${member.caucus === "Democrat" ? "bg-dem" : "bg-rep"}`}
@@ -112,11 +112,13 @@ function WealthListRow({ rank, member }: { rank: number; member: WealthMember })
           </span>
         </a>
       </td>
-      <td className="px-2 py-1">
-        <Sparkline series={member.series} />
-      </td>
-      <td className="px-2 py-1 text-right">
+      <td className="whitespace-nowrap px-1 py-1 text-right">
         <NetWorthCell point={latest} />
+      </td>
+      <td className="py-1 pl-0.5 pr-2">
+        <div className="w-8 @md:w-24 [&>svg]:h-auto [&>svg]:w-full">
+          <Sparkline series={member.series} />
+        </div>
       </td>
     </tr>
   );
@@ -134,7 +136,7 @@ function NetWorthCell({ point }: { point: WealthYearPoint }) {
   return (
     <div>
       <div className="font-mono font-semibold tabular-nums text-ink">{midpointText}</div>
-      <div className="font-mono text-[0.68rem] tabular-nums text-ink-faint">{rangeText}</div>
+      <div className="font-mono text-[0.6rem] tabular-nums text-ink-faint @md:text-[0.68rem]">{rangeText}</div>
     </div>
   );
 }
