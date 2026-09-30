@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { mean } from "d3-array";
 import type { IdeologyScore, Legislator, Term } from "./entities";
+import { displayName as formatDisplayName, givenName } from "./display-name";
 import { CHAMBERS, type Chamber, type ChamberView } from "./chamber";
 import { stateName as stateNameOf } from "./states";
 import {
@@ -75,8 +76,7 @@ function legislatorsById(): Map<string, Legislator> {
 }
 
 function displayName(l: Legislator): { name: string; lastName: string } {
-  const first = l.name.nickname ?? l.name.first;
-  return { name: `${first} ${l.name.last}`, lastName: l.name.last };
+  return { name: formatDisplayName(l.name), lastName: l.name.last };
 }
 
 interface FullChamber {
@@ -333,7 +333,7 @@ export function getMemberProfile(
   if (!current) return null;
 
   const leg = legislatorsById().get(bioguideId);
-  const firstName = leg?.name.nickname ?? leg?.name.first ?? current.name;
+  const firstName = leg ? givenName(leg.name) : current.name;
   const lastName = leg?.name.last ?? current.lastName;
 
   const trajectory: MemberTrajectoryPoint[] = [];

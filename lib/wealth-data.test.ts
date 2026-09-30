@@ -2,7 +2,12 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gzipSync } from "node:zlib";
-import { financialDisclosure, type FinancialDisclosure } from "./entities";
+import { displayName } from "./display-name";
+import {
+  financialDisclosure,
+  type FinancialDisclosure,
+  type Legislator,
+} from "./entities";
 import {
   annualizedRate,
   buildWealthMembers,
@@ -48,7 +53,7 @@ function loadRealWealthMembers(): WealthMember[] {
     }[]
   >("terms.json");
   const legislators = readJson<
-    { bioguide_id: string; name: { first: string; last: string; nickname?: string } }[]
+    { bioguide_id: string; name: Legislator["name"] }[]
   >("legislators.json");
   const legByBioguide = new Map(legislators.map((l) => [l.bioguide_id, l]));
   const { withPhoto } = readJson<{ withPhoto: string[] }>("member-photos.json");
@@ -68,7 +73,7 @@ function loadRealWealthMembers(): WealthMember[] {
     if (currentMembers.has(t.bioguide_id)) continue; // first chamber wins, same as getChamberCurrent order
     const leg = legByBioguide.get(t.bioguide_id);
     const name = leg
-      ? `${leg.name.nickname ?? leg.name.first} ${leg.name.last}`
+      ? displayName(leg.name)
       : t.bioguide_id;
     currentMembers.set(t.bioguide_id, {
       name,
