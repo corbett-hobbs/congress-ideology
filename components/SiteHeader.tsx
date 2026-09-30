@@ -10,9 +10,9 @@ import { useBackLinkHref } from "./BackLinkContext";
 const SECTION_PAGES = new Set(["/", "/congress", "/congress/wealth", "/supreme-court"]);
 
 /**
- * Slim bar at the very top of every page: the wordmark plus the primary
- * branch nav (SiteNav), and — for a branch with two or more sections — the
- * secondary section row (SiteSectionNav). Each explorer/section renders its
+ * One header row at `md`+ (two slim rows below): wordmark, branch tabs
+ * (SiteNav), then — for a branch with two or more sections — a divider and
+ * the section pills (SiteSectionNav), all left-aligned; the right is empty. Each explorer/section renders its
  * own controls below this — e.g. components/senate/ExplorerToolbar.tsx. The
  * header is not sticky; only those toolbars pin.
  *
@@ -27,28 +27,26 @@ export function SiteHeader() {
   const isDetail = !SECTION_PAGES.has(pathname);
 
   return (
-    <header>
-      <div className="border-b border-line bg-surface">
-        <div className="mx-auto flex min-h-12 w-full max-w-[1180px] flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-1.5 sm:px-6">
-          <Link
-            href={isDetail ? backHref : "/"}
-            title={isDetail ? "Back to InsideGov" : undefined}
-            className="group flex items-center gap-1.5 whitespace-nowrap font-serif text-[0.95rem] font-semibold tracking-tight text-ink sm:text-[1.1rem]"
-          >
-            {isDetail && (
-              <span
-                aria-hidden
-                className="font-sans text-[0.85em] font-medium text-ink-muted transition-colors group-hover:text-accent"
-              >
-                ←
-              </span>
-            )}
-            InsideGov
-          </Link>
-          <SiteNav />
-        </div>
+    <header className="border-b border-line bg-surface">
+      <div className="mx-auto flex w-full max-w-[1180px] flex-wrap items-stretch md:h-14 md:flex-nowrap md:px-6">
+        <Link
+          href={isDetail ? backHref : "/"}
+          title={isDetail ? "Back to InsideGov" : undefined}
+          className="group flex h-12 flex-1 items-center gap-1.5 whitespace-nowrap pl-4 font-serif text-[1.1rem] font-semibold tracking-tight text-ink md:mr-8 md:h-auto md:flex-none md:pl-0 md:text-[1.35rem]"
+        >
+          {isDetail && (
+            <span
+              aria-hidden
+              className="font-sans text-[0.85em] font-medium text-ink-muted transition-colors group-hover:text-accent"
+            >
+              ←
+            </span>
+          )}
+          InsideGov
+        </Link>
+        <SiteNav />
+        <SiteSectionNav />
       </div>
-      <SiteSectionNav />
     </header>
   );
 }

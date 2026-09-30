@@ -5,16 +5,21 @@ import { usePathname } from "next/navigation";
 import { activeSection, branches, sectionRow } from "@/lib/verticals";
 
 /**
- * Persistent two-tier nav (see lib/verticals.ts). `SiteNav` is the primary
- * row — one underlined entry per live branch, rendered in SiteHeader on every
- * page. `SiteSectionNav` is the secondary row of section tabs, shown only for
- * a branch with two or more sections, on that branch's section pages.
+ * Persistent two-tier nav (see lib/verticals.ts), rendered as groups of the
+ * single SiteHeader row. `SiteNav` is the branch tabs (Congress, Supreme
+ * Court) — text tabs with an accent underline flush with the header's bottom
+ * border. `SiteSectionNav` is the divider plus the section pills (Ideology,
+ * Wealth), shown only for a branch with two or more sections, on that
+ * branch's section pages. Below `md` the pills wrap onto their own slim row.
  */
 export function SiteNav() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Branches" className="flex items-center gap-3 sm:gap-4">
+    <nav
+      aria-label="Sections"
+      className="flex h-12 items-stretch gap-1 pr-2 md:h-auto md:gap-2 md:pr-0"
+    >
       {branches
         .filter((b) => b.status === "live")
         .map((b) => {
@@ -23,8 +28,8 @@ export function SiteNav() {
             <Link
               key={b.id}
               href={b.href}
-              aria-current={active ? "true" : undefined}
-              className={`whitespace-nowrap border-b-2 py-1 font-mono text-[0.68rem] uppercase tracking-[0.06em] transition-colors sm:text-[0.7rem] sm:tracking-[0.08em] ${
+              aria-current={active ? "page" : undefined}
+              className={`flex items-center whitespace-nowrap border-b-[3px] px-2 font-mono text-[0.68rem] uppercase tracking-[0.1em] transition-colors md:px-3.5 md:text-[0.8rem] md:tracking-[0.14em] ${
                 active
                   ? "border-accent text-ink"
                   : "border-transparent text-ink-muted hover:text-ink"
@@ -44,31 +49,33 @@ export function SiteSectionNav() {
   if (!row) return null;
 
   return (
-    <div className="border-b border-line bg-surface">
+    <>
+      <span
+        aria-hidden
+        className="mx-6 hidden h-7 w-px self-center bg-line md:block"
+      />
       <nav
-        aria-label={`${row.branch.label} sections`}
-        className="mx-auto flex w-full max-w-[1180px] items-center gap-1 px-4 py-1.5 sm:px-6"
+        aria-label={`${row.branch.label} views`}
+        className="order-3 flex h-12 basis-full items-center gap-1 border-t border-line bg-surface-raised px-4 py-0.5 md:order-none md:h-auto md:basis-auto md:gap-1.5 md:border-t-0 md:bg-transparent md:p-0"
       >
-        <div role="group" className="flex items-center gap-1">
-          {row.branch.sections.map((s) => {
-            const active = activeSection(row.branch, pathname)?.id === s.id;
-            return (
-              <Link
-                key={s.id}
-                href={s.href}
-                aria-current={active ? "page" : undefined}
-                className={`whitespace-nowrap rounded-md px-2 py-1 font-mono text-[0.68rem] uppercase tracking-[0.06em] transition-colors sm:text-[0.7rem] sm:tracking-[0.08em] ${
-                  active
-                    ? "bg-accent text-accent-ink"
-                    : "text-ink-muted hover:text-ink"
-                }`}
-              >
-                {s.label}
-              </Link>
-            );
-          })}
-        </div>
+        {row.branch.sections.map((s) => {
+          const active = activeSection(row.branch, pathname)?.id === s.id;
+          return (
+            <Link
+              key={s.id}
+              href={s.href}
+              aria-current={active ? "page" : undefined}
+              className={`flex h-11 items-center whitespace-nowrap rounded-[10px] px-4 font-mono text-[0.75rem] uppercase tracking-[0.14em] transition-colors md:h-9 md:text-[0.8rem] ${
+                active
+                  ? "bg-accent text-accent-ink"
+                  : "text-ink-muted hover:text-ink"
+              }`}
+            >
+              {s.label}
+            </Link>
+          );
+        })}
       </nav>
-    </div>
+    </>
   );
 }
