@@ -86,7 +86,7 @@ export function MemberWealthSection({ profile, wealthProfile }: Props) {
         />
       </div>
 
-      <p className="mt-4 max-w-[46rem] text-[0.78rem] leading-relaxed text-ink-muted">
+      <p className="mt-4 text-[0.78rem] leading-relaxed text-ink-muted">
         Members of Congress don&apos;t report a net worth. They file annual
         disclosures listing assets and liabilities as value ranges, like
         &ldquo;$15,001-$50,000.&rdquo; We take the midpoint of each range and
@@ -98,7 +98,7 @@ export function MemberWealthSection({ profile, wealthProfile }: Props) {
         <summary className="cursor-pointer font-medium text-ink">
           How to read this
         </summary>
-        <div className="mt-2 max-w-[46rem]">
+        <div className="mt-2">
           <HowToReadNotes />
         </div>
       </details>
