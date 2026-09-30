@@ -10,6 +10,7 @@ import {
   signedLogInverse,
   spreadLabelsY,
   yearsOfData,
+  zoomTicks,
 } from "./wealth-scatter";
 import type { WealthMember } from "./wealth-data";
 
@@ -127,5 +128,32 @@ describe("spreadLabelsY", () => {
   it("clamps to the chart bounds", () => {
     const out = spreadLabelsY([0, 5], 20, 300);
     expect(out[0]).toBeGreaterThanOrEqual(0);
+  });
+});
+
+describe("zoomTicks", () => {
+  const T = signedLog(NET_WORTH_CAP);
+
+  it("keeps ticks inside the window, ascending and pixel-spaced", () => {
+    const size = 500;
+    const ticks = zoomTicks([-T, T], size);
+    const px = ticks.map((v) => ((signedLog(v) + T) / (2 * T)) * size);
+    expect(ticks).toEqual([...ticks].sort((a, b) => a - b));
+    for (let i = 1; i < px.length; i++) expect(px[i] - px[i - 1]).toBeGreaterThanOrEqual(46);
+    expect(ticks).toContain(0);
+  });
+
+  it("only returns values inside a zoomed window", () => {
+    const ticks = zoomTicks([signedLog(200_000), signedLog(3_000_000)], 400);
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const v of ticks) {
+      expect(v).toBeGreaterThanOrEqual(200_000);
+      expect(v).toBeLessThanOrEqual(3_000_000);
+    }
+  });
+
+  it("returns nothing for a degenerate window", () => {
+    expect(zoomTicks([1, 1], 400)).toEqual([]);
+    expect(zoomTicks([0, 1], 0)).toEqual([]);
   });
 });

@@ -1,10 +1,12 @@
 "use client";
 
-import { useId, useMemo, type ReactNode } from "react";
+import { useId, useMemo, useRef, type ReactNode } from "react";
 import { scaleLinear } from "d3-scale";
-import { ChartFrame, type Margin } from "./ChartFrame";
+import { ChartFrame, DEFAULT_MARGIN, type Margin } from "./ChartFrame";
 import { Axis } from "./Axis";
 import { Tooltip, useTooltip } from "./Tooltip";
+import { useZoomPan, viewDomains } from "./use-zoom-pan";
+import { ZoomControls } from "./ZoomControls";
 
 /**
  * The 2-D ideology scatter, entity-agnostic. Owns the frame, the scales,
@@ -18,6 +20,8 @@ import { Tooltip, useTooltip } from "./Tooltip";
  * a caller whose points cluster tightly (blended committees) can pass a smaller
  * symmetric `domain` to zoom in — the zero-lines stay centred and anything
  * outside the domain (a backdrop point) is clipped to the plot.
+ *
+ * `zoomable` adds interactive zoom + pan on top of that (see `use-zoom-pan`).
  */
 
 const FULL_DOMAIN = [-1, 1] as const;
@@ -80,6 +84,9 @@ interface ScatterPlotProps<T> {
   /** Faint, non-interactive context dots drawn behind the plot (e.g. the member
    *  cloud behind the committee dots). Domain coordinates. */
   backdrop?: readonly { x: number; y: number }[];
+  /** Interactive zoom (+/- buttons, Ctrl/⌘-wheel, pinch, double-click) and
+   *  drag-to-pan. Default off. */
+  zoomable?: boolean;
 }
 
 const defaultRadius = (_d: unknown, s: DotState) =>
@@ -110,8 +117,33 @@ export function ScatterPlot<T>({
   renderTooltip,
   labels,
   backdrop,
+  zoomable = false,
 }: ScatterPlotProps<T>) {
   const tip = useTooltip<T>();
+  const svgRef = useRef<SVGSVGElement>(null);
+  const extent = domain[1];
+  const mergedMargin: Margin = { ...DEFAULT_MARGIN, ...margin };
+  const zoom = useZoomPan({
+    svgRef,
+    extent,
+    getPlotBox: () => {
+      const svg = svgRef.current;
+      if (!svg) return null;
+      const r = svg.getBoundingClientRect();
+      const s = r.width / width;
+      return {
+        left: r.left + mergedMargin.left * s,
+        top: r.top + mergedMargin.top * s,
+        width: (width - mergedMargin.left - mergedMargin.right) * s,
+        height: (height - mergedMargin.top - mergedMargin.bottom) * s,
+      };
+    },
+    onViewChange: () => {
+      onHover?.(null);
+      tip.hide();
+    },
+  });
+  const visible = viewDomains(zoom.view, extent);
   const clipId = `scatter-clip-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const ringed = useMemo(() => new Set(highlightedIds ?? []), [highlightedIds]);
 
@@ -129,13 +161,14 @@ export function ScatterPlot<T>({
     [points, highlightedId, selectedId, ringed],
   );
 
-  return (
-    <>
+  const chart = (
       <ChartFrame
         width={width}
         height={height}
         margin={margin}
         ariaLabel={ariaLabel}
+        svgRef={svgRef}
+        svgProps={zoomable ? zoom.svgProps : undefined}
         onPointerLeave={() => {
           // Leaving the plot by any edge (not onto another dot) must clear the
           // hover tooltip and any hover-driven enlargement — a per-dot
@@ -146,30 +179,37 @@ export function ScatterPlot<T>({
         }}
       >
         {({ innerWidth, innerHeight }) => {
-          const x = scaleLinear().domain(domain).range([0, innerWidth]);
-          const y = scaleLinear().domain(domain).range([innerHeight, 0]);
+          const x = scaleLinear().domain(visible.x).range([0, innerWidth]);
+          const y = scaleLinear().domain(visible.y).range([innerHeight, 0]);
+          // Zoomed in, the fixed gridlines get too sparse: let d3 pick round
+          // ones for the visible window and add a decimal as the step shrinks.
+          const xTicks = zoom.zoomed ? x.ticks(6) : [...ticks];
+          const yTicks = zoom.zoomed ? y.ticks(6) : [...ticks];
+          const step = zoom.zoomed && xTicks.length > 1 ? xTicks[1] - xTicks[0] : 0.5;
+          const digits = step >= 0.1 ? 1 : step >= 0.01 ? 2 : 3;
+          const tickFormat = (v: number) => v.toFixed(digits);
 
           return (
             <>
               <Axis
                 scale={x}
                 orientation="bottom"
-                ticks={[...ticks]}
+                ticks={xTicks}
                 offset={innerHeight}
                 gridExtent={innerHeight}
                 zeroAt={0}
                 labels={axisTickLabels}
-                format={(v) => v.toFixed(1)}
+                format={tickFormat}
               />
               <Axis
                 scale={y}
                 orientation="left"
-                ticks={[...ticks]}
+                ticks={yTicks}
                 offset={0}
                 gridExtent={innerWidth}
                 zeroAt={0}
                 labels={axisTickLabels}
-                format={(v) => v.toFixed(1)}
+                format={tickFormat}
               />
               {yAxisCaption && (
                 <text
@@ -228,21 +268,48 @@ export function ScatterPlot<T>({
                 })}
               </g>
 
-              {labels?.map((l, i) => (
-                <text
-                  key={`${l.text}:${i}`}
-                  className={l.className ?? "dot-label"}
-                  textAnchor={l.anchor}
-                  x={x(l.x) + (l.dx ?? 0)}
-                  y={y(l.y) + (l.dy ?? 0)}
-                >
-                  {l.text}
-                </text>
+              {labels
+                ?.filter(
+                  (l) =>
+                    !zoom.zoomed ||
+                    (l.x >= visible.x[0] &&
+                      l.x <= visible.x[1] &&
+                      l.y >= visible.y[0] &&
+                      l.y <= visible.y[1]),
+                )
+                .map((l, i) => (
+                  <text
+                    key={`${l.text}:${i}`}
+                    className={l.className ?? "dot-label"}
+                    textAnchor={l.anchor}
+                    x={x(l.x) + (l.dx ?? 0)}
+                    y={y(l.y) + (l.dy ?? 0)}
+                  >
+                    {l.text}
+                  </text>
               ))}
             </>
           );
         }}
       </ChartFrame>
+  );
+
+  return (
+    <>
+      {zoomable ? (
+        <div className="relative">
+          {chart}
+          <ZoomControls
+            onZoomIn={zoom.zoomIn}
+            onZoomOut={zoom.zoomOut}
+            onReset={zoom.reset}
+            canZoomIn={zoom.canZoomIn}
+            zoomed={zoom.zoomed}
+          />
+        </div>
+      ) : (
+        chart
+      )}
       <Tooltip state={tip.state}>{(d) => renderTooltip(d)}</Tooltip>
     </>
   );
