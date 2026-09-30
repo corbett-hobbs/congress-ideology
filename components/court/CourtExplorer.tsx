@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { justicePath } from "@/lib/justice-url";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { PillGroup } from "@/components/charts/PillGroup";
@@ -38,7 +38,9 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
   const [playing, setPlaying] = useState(false);
   const [appointed, setAppointed] = useState<CourtFilter["appointed"]>("all");
   const [president, setPresident] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const router = useRouter();
+  // Nothing is "selected" any more: a click navigates. The chart props still take it.
+  const selectedId: number | null = null;
   const [sort, setSort] = useState<PresidentSort>("chronological");
 
   const filter = useMemo<CourtFilter>(
@@ -79,24 +81,14 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
     setTerm(t);
   }, []);
 
-  /** Select a justice; one not seated in the current term pulls the term to their first. */
-  const choose = useCallback(
-    (id: number, toggle: boolean) => {
+  /** Clicking a justice anywhere (strip dot, president row, trajectory line) opens their profile. */
+  const onToggleSelect = useCallback(
+    (id: number) => {
       const j = byId.get(id);
-      if (!j) return;
-      if (toggle && selectedId === id) {
-        setSelectedId(null);
-        return;
-      }
-      setSelectedId(id);
-      if (!isSeated(j, term)) {
-        setPlaying(false);
-        setTerm(j.t0);
-      }
+      if (j) router.push(justicePath(j));
     },
-    [byId, selectedId, term],
+    [byId, router],
   );
-  const onToggleSelect = useCallback((id: number) => choose(id, true), [choose]);
 
   const changeAppointed = (v: CourtFilter["appointed"]) => {
     setAppointed(v);
@@ -158,7 +150,7 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:items-stretch">
           <ChartCard
             title="Where the justices stand"
-            lede="The Court in the selected term, left to right. Dot color is the party of the president who appointed each justice."
+            lede="The Court in the selected term, left to right. Dot color is the party of the president who appointed each justice. Click a justice for their profile."
             action={<JusticeSearch justices={data.justices} />}
           >
             <JusticeStrip
@@ -192,38 +184,6 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
                 </>
               )}
             </p>
-
-            <div className="flex min-h-[1.75rem] items-center gap-3 text-[0.82rem]">
-              {selected && (
-                <>
-                  <span className="min-w-0 truncate">
-                    <span
-                      className="mr-1.5 inline-block size-[0.55rem] rounded-full align-middle"
-                      style={{
-                        background: selected.party === "D" ? "var(--dem)" : "var(--rep)",
-                      }}
-                    />
-                    <span className="font-medium">{selected.name}</span>{" "}
-                    <span className="text-ink-muted">
-                      · appointed by {selected.pres}
-                    </span>
-                  </span>
-                  <Link
-                    href={justicePath(selected)}
-                    className="flex-none font-medium text-accent hover:underline"
-                  >
-                    View profile →
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedId(null)}
-                    className="flex-none text-accent hover:underline"
-                  >
-                    Clear
-                  </button>
-                </>
-              )}
-            </div>
 
             <p className="mt-2 text-[0.76rem] leading-[1.55] text-ink-faint">
               Martin&ndash;Quinn scores run on a single liberal&ndash;conservative
