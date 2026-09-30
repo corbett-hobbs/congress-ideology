@@ -51,3 +51,6 @@ pipeline/**/*.download
 
 # session scratch
 .scratch/
+
+# Regenerable output of pipeline/financial_disclosures/scan_checkbox_form_v2.py
+pipeline/financial_disclosures/checkbox_scan_v2_results.json
