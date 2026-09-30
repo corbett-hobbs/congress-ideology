@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { justicePath } from "@/lib/justice-url";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { PillGroup } from "@/components/charts/PillGroup";
 import {
@@ -95,7 +97,6 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
     [byId, selectedId, term],
   );
   const onToggleSelect = useCallback((id: number) => choose(id, true), [choose]);
-  const onPickSelect = useCallback((id: number) => choose(id, false), [choose]);
 
   const changeAppointed = (v: CourtFilter["appointed"]) => {
     setAppointed(v);
@@ -158,7 +159,7 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
           <ChartCard
             title="Where the justices stand"
             lede="The Court in the selected term, left to right. Dot color is the party of the president who appointed each justice."
-            action={<JusticeSearch justices={data.justices} onPick={onPickSelect} />}
+            action={<JusticeSearch justices={data.justices} />}
           >
             <JusticeStrip
               data={data}
@@ -207,6 +208,12 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
                       · appointed by {selected.pres}
                     </span>
                   </span>
+                  <Link
+                    href={justicePath(selected)}
+                    className="flex-none font-medium text-accent hover:underline"
+                  >
+                    View profile →
+                  </Link>
                   <button
                     type="button"
                     onClick={() => setSelectedId(null)}

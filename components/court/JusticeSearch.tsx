@@ -1,22 +1,18 @@
 "use client";
 
 import { useId, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { CourtJustice } from "@/lib/court-types";
+import { justicePath } from "@/lib/justice-url";
 
 const MAX_RESULTS = 8;
 
 /**
  * "Find a justice" combobox. Patterned on components/senate/SenatorSearch.tsx,
- * but a pick selects the justice in the shared explorer state instead of
- * navigating (there are no justice profile pages).
+ * a pick opens that justice's profile page.
  */
-export function JusticeSearch({
-  justices,
-  onPick,
-}: {
-  justices: CourtJustice[];
-  onPick: (id: number) => void;
-}) {
+export function JusticeSearch({ justices }: { justices: CourtJustice[] }) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const listId = useId();
@@ -30,8 +26,8 @@ export function JusticeSearch({
       .slice(0, MAX_RESULTS);
   }, [justices, query]);
 
-  const pick = (id: number) => {
-    onPick(id);
+  const pick = (j: CourtJustice) => {
+    router.push(justicePath(j));
     setQuery("");
     setOpen(false);
   };
@@ -61,7 +57,7 @@ export function JusticeSearch({
             setOpen(false);
           } else if (e.key === "Enter" && results[0]) {
             e.preventDefault();
-            pick(results[0].id);
+            pick(results[0]);
           }
         }}
         className="w-full rounded-md border border-line-strong bg-surface-raised px-[0.7rem] py-[0.48rem] text-[0.8rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
@@ -85,7 +81,7 @@ export function JusticeSearch({
                 role="option"
                 aria-selected={false}
                 onMouseDown={(ev) => ev.preventDefault()}
-                onClick={() => pick(j.id)}
+                onClick={() => pick(j)}
                 className="flex w-full items-center gap-2 rounded-[5px] px-[0.55rem] py-[0.4rem] text-left text-[0.82rem] hover:bg-surface-raised focus-visible:bg-surface-raised"
               >
                 <span
