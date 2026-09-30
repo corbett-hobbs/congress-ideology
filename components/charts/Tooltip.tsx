@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 interface TooltipState<T> {
@@ -43,20 +43,46 @@ const OFFSET = 14;
 const EST_W = 240;
 const EST_H = 120;
 
+const EDGE = 8;
+
 export function Tooltip<T>({ state, children }: TooltipProps<T>) {
   // `state` starts null, so server and first client render both produce
   // nothing; the portal only appears after a client-side pointer interaction.
   if (!state || typeof document === "undefined") return null;
-
-  let left = state.x + OFFSET;
-  let top = state.y + OFFSET;
-  if (left + EST_W > window.innerWidth) left = state.x - OFFSET - EST_W;
-  if (top + EST_H > window.innerHeight) top = state.y - OFFSET - EST_H;
-
   return createPortal(
-    <div className="chart-tooltip" style={{ left, top }}>
+    <TooltipBox x={state.x} y={state.y}>
       {children(state.data)}
-    </div>,
+    </TooltipBox>,
     document.body,
+  );
+}
+
+/** Positions itself from the pointer using the estimate, then measures its real
+ *  size and clamps fully inside the viewport (narrow phones, tall cards). */
+function TooltipBox({ x, y, children }: { x: number; y: number; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  let left = x + OFFSET;
+  let top = y + OFFSET;
+  if (left + EST_W > window.innerWidth) left = x - OFFSET - EST_W;
+  if (top + EST_H > window.innerHeight) top = y - OFFSET - EST_H;
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const { width, height } = el.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    const vh = window.innerHeight;
+    let l = x + OFFSET;
+    let t = y + OFFSET;
+    if (l + width > vw - EDGE) l = x - OFFSET - width;
+    if (t + height > vh - EDGE) t = y - OFFSET - height;
+    el.style.left = `${Math.max(EDGE, Math.min(l, vw - width - EDGE))}px`;
+    el.style.top = `${Math.max(EDGE, Math.min(t, vh - height - EDGE))}px`;
+  });
+
+  return (
+    <div ref={ref} className="chart-tooltip" style={{ left, top }}>
+      {children}
+    </div>
   );
 }
