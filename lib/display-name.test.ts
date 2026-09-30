@@ -32,4 +32,18 @@ describe("displayName", () => {
       "J. Smith",
     );
   });
+  it("applies bioguide overrides", () => {
+    expect(
+      displayName(
+        { first: "Nicolas", middle: "Joseph", last: "LaLota" },
+        "L000598",
+      ),
+    ).toBe("Nick LaLota");
+    expect(displayName({ first: "Gregorio", last: "Casar" }, "C001131")).toBe(
+      "Greg Casar",
+    );
+    expect(displayName({ first: "Valerie", last: "Hoyle" }, "H001094")).toBe(
+      "Val Hoyle",
+    );
+  });
 });
