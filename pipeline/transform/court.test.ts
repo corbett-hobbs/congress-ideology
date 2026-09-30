@@ -31,7 +31,7 @@ const fjc = (over: Partial<FjcJustice> & { nid: number; last: string; start: str
   death_year: null,
   end: null,
   appointments: [
-    { title: "Associate Justice", president: "P", party: "Republican", nomination: null, confirmation: null, start: over.start, end: over.end ?? null },
+    { title: "Associate Justice", president: "P", party: "Republican", nomination: null, confirmation: null, vote_raw: null, start: over.start, end: over.end ?? null },
   ],
   ...over,
 });
@@ -125,8 +125,8 @@ describe("buildJustices", () => {
       start: "1925-02-05",
       end: "1946-04-22",
       appointments: [
-        { title: "Associate Justice", president: "Calvin Coolidge", party: "Republican", nomination: "1925-01-05", confirmation: "1925-02-05", start: "1925-02-05", end: "1941-07-03" },
-        { title: "Chief Justice", president: "Franklin D. Roosevelt", party: "Democratic", nomination: "1941-06-12", confirmation: "1941-06-27", start: "1941-07-03", end: "1946-04-22" },
+        { title: "Associate Justice", president: "Calvin Coolidge", party: "Republican", nomination: "1925-01-05", confirmation: "1925-02-05", vote_raw: " 71/6", start: "1925-02-05", end: "1941-07-03" },
+        { title: "Chief Justice", president: "Franklin D. Roosevelt", party: "Democratic", nomination: "1941-06-12", confirmation: "1941-06-27", vote_raw: null, start: "1941-07-03", end: "1946-04-22" },
       ],
     });
     const span = { justice_id: 74, scdb_name: "HFStone", first_term: 1937, last_term: 1945 };
@@ -149,7 +149,7 @@ function dataset(): CourtValidationInput {
   const names = [[108, "Thomas"], [113, "Sotomayor"], [105, "Scalia"], [109, "Ginsburg"]] as const;
   const justices: Justice[] = names.map(([id, last]) => ({
     justice_id: id, name: { first: "X", last, full: `X ${last}` }, birth_year: 1950, death_year: null,
-    appointing_president: "P", appointing_party: "Republican" as const, chief_justice_appointment: null, nomination_date: null, confirmation_date: null,
+    appointing_president: "P", appointing_party: "Republican" as const, chief_justice_appointment: null, nomination_date: null, confirmation_date: null, senate_vote: null, appointment_start: "1930-01-01", fjc_nid: 1,
     service_start: "1990-01-01", service_end: null,
   }));
   const scores = [];
@@ -164,7 +164,7 @@ function dataset(): CourtValidationInput {
     courtTerms.push({ term: t, segment: null, median_score: 0, median_sd: 0.2, min_score: -3, max_score: 3, median_justice_id: 200, median_justice_probability: 0.5 });
   }
   for (let id = 200; id <= 204; id++) {
-    justices.push({ justice_id: id, name: { first: "F", last: `F${id}`, full: `F F${id}` }, birth_year: 1900, death_year: null, appointing_president: "P", appointing_party: "Democratic" as const, chief_justice_appointment: null, nomination_date: null, confirmation_date: null, service_start: "1930-01-01", service_end: null });
+    justices.push({ justice_id: id, name: { first: "F", last: `F${id}`, full: `F F${id}` }, birth_year: 1900, death_year: null, appointing_president: "P", appointing_party: "Democratic" as const, chief_justice_appointment: null, nomination_date: null, confirmation_date: null, senate_vote: null, appointment_start: "1930-01-01", fjc_nid: 1, service_start: "1930-01-01", service_end: null });
   }
   return { justices, scores, courtTerms, probabilities: [] };
 }

@@ -1,5 +1,7 @@
 import { RAW_DIR } from "../fetch/lib";
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
+import { justice as justiceSchema, justiceBio } from "../../lib/court-entities";
 import {
   legislator,
   wikipediaSummary,
@@ -182,6 +184,38 @@ await step("output/wikipedia_summaries.json", async () => {
     );
   }
   return `${rows.length} records ok, bioguide_id unique and resolves`;
+});
+
+// Written by fetch:justice-bios (committed, like wikipedia_summaries.json), so CI
+// re-checks it on every push: every row resolves to a justice, one row each,
+// and every photo it names is on disk.
+await step("output/court/justice_bios.json", async () => {
+  const file = "pipeline/output/court/justice_bios.json";
+  const rows = validateAll(
+    file,
+    JSON.parse(await readFile(file, "utf8")) as unknown[],
+    justiceBio,
+    (row, i) => `record ${i} (justice ${(row as { justice_id?: number }).justice_id ?? "?"})`,
+  );
+  assertUnique(file, rows, (r) => String(r.justice_id), (r) => `${r.title} [${r.justice_id}]`);
+  const known = new Set(
+    (JSON.parse(await readFile("pipeline/output/court/justices.json", "utf8")) as unknown[]).map(
+      (j) => justiceSchema.parse(j).justice_id,
+    ),
+  );
+  const unknown = rows.filter((r) => !known.has(r.justice_id));
+  if (unknown.length > 0) {
+    throw new ValidationError(file, "justice resolution", `${unknown.length} record(s) name a justice_id not in justices.json: ${unknown.map((r) => r.justice_id).join(", ")}`);
+  }
+  const missing = rows.filter((r) => r.photo && !existsSync(`public${r.photo.path}`));
+  if (missing.length > 0) {
+    throw new ValidationError(file, "photo files", `missing on disk: ${missing.map((r) => r.photo!.path).join(", ")}`);
+  }
+  const review = rows.filter((r) => r.needs_review);
+  if (review.length > 0) {
+    throw new ValidationError(file, "needs_review", `unresolved needs_review: ${review.map((r) => r.justice_id).join(", ")}`);
+  }
+  return `${rows.length} records ok, ${rows.filter((r) => r.photo).length} photos on disk`;
 });
 
 // --- Supreme Court track: raw inputs (Martin-Quinn + FJC bios) ---------------

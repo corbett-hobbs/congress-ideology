@@ -42,9 +42,17 @@ export const chiefJusticeAppointment = z.strictObject({
 });
 export type ChiefJusticeAppointment = z.infer<typeof chiefJusticeAppointment>;
 
+export const senateVote = z.strictObject({
+  ayes: z.number().int().gte(0),
+  nays: z.number().int().gte(0),
+});
+export type SenateVote = z.infer<typeof senateVote>;
+
 /** Stable identity only — nothing that varies by term. */
 export const justice = z.strictObject({
   justice_id: justiceId,
+  /** Federal Judicial Center judge id (`nid`) — the bio-source key; `justice_id` stays the page key. */
+  fjc_nid: z.number().int().positive(),
   name: z.strictObject({
     first: z.string().min(1),
     middle: z.string().min(1).optional(),
@@ -59,6 +67,10 @@ export const justice = z.strictObject({
   appointing_party: partyEnum,
   nomination_date: isoDate.nullable(),
   confirmation_date: isoDate.nullable(),
+  /** Roll-call Senate vote on that same appointment; null = voice vote or none recorded. */
+  senate_vote: senateVote.nullable(),
+  /** Day that appointment's service began (earliest of recess and commission date). */
+  appointment_start: isoDate,
   /**
    * Set for every justice who served as Chief Justice (Hughes, Stone, Vinson,
    * Warren, Burger, Rehnquist, Roberts), else null. For those appointed
@@ -121,3 +133,29 @@ export const justiceCrosswalkEntry = z.strictObject({
   fjc_nid: z.number().int().positive(),
 });
 export type JusticeCrosswalkEntry = z.infer<typeof justiceCrosswalkEntry>;
+
+/**
+ * A justice's Wikipedia lead and (when its license allows) portrait. Written by
+ * `pipeline/fetch/justice-bios.ts` — not by the transform — to
+ * `pipeline/output/court/justice_bios.json`, one row per matched justice. A
+ * justice with no safe match has NO row (the page omits the bio block).
+ */
+export const justiceBio = z.strictObject({
+  justice_id: justiceId,
+  title: z.string().min(1),
+  extract: z.string().min(1),
+  url: z.string().regex(/^https:\/\/en\.wikipedia\.org\/wiki\/\S+$/),
+  revision: z.string().regex(/^\d+$/),
+  fetched_at: isoDate,
+  needs_review: z.boolean(),
+  /** Portrait, present only when Commons license metadata says public domain / CC0. */
+  photo: z
+    .strictObject({
+      /** Path under `public/`, e.g. `/images/justices/103.jpg`. */
+      path: z.string().regex(/^\/images\/justices\/\d+\.(jpg|png)$/),
+      source_url: z.string().url(),
+      license: z.string().min(1),
+    })
+    .nullable(),
+});
+export type JusticeBio = z.infer<typeof justiceBio>;

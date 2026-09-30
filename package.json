@@ -19,6 +19,7 @@
     "fetch:wikipedia": "tsx pipeline/fetch/wikipedia.ts",
     "fetch:mq": "tsx pipeline/fetch/mq.ts",
     "fetch:fjc": "tsx pipeline/fetch/fjc.ts",
+    "fetch:justice-bios": "tsx pipeline/fetch/justice-bios.ts",
     "validate": "tsx pipeline/validate/validate.ts",
     "transform": "tsx pipeline/transform/index.ts && tsx pipeline/transform/court-run.ts",
     "pipeline": "pnpm fetch:all && pnpm validate && pnpm transform && pnpm fetch:photos && pnpm fetch:wikipedia",

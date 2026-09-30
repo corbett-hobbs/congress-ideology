@@ -1,0 +1,684 @@
+[
+  {
+    "justice_id": 67,
+    "title": "James Clark McReynolds",
+    "extract": "James Clark McReynolds was an American lawyer and judge from Tennessee who served as United States Attorney General under President Woodrow Wilson and as an associate justice of the Supreme Court of the United States. He served on the Court from 1914 to his retirement in 1941.",
+    "url": "https://en.wikipedia.org/wiki/James_Clark_McReynolds",
+    "revision": "1374303840",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/67.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:McREYNOLDS%2C_J.C._JUSTICE_LCCN2016857877_%E2%80%93_unframed.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 68,
+    "title": "Louis Brandeis",
+    "extract": "Louis Dembitz Brandeis was an American lawyer who served as an associate justice of the U.S. Supreme Court from 1916 to 1939. Brandeis was a leading figure in the antitrust movement at the turn of the 20th century, particularly in his resistance to the monopolization of the New England railroad.",
+    "url": "https://en.wikipedia.org/wiki/Louis_Brandeis",
+    "revision": "1375459832",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/68.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Brandeisl.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 71,
+    "title": "George Sutherland",
+    "extract": "George Alexander Sutherland was a British-born American jurist and politician who served as an associate justice of the U.S. Supreme Court from 1922 to 1938. A member of the Republican Party, he also represented Utah in the U.S. Senate from 1905 to 1917 and in the House of Representatives from 1901 to 1903.",
+    "url": "https://en.wikipedia.org/wiki/George_Sutherland",
+    "revision": "1366251095",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/71.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Justice_George_Sutherland_5.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 72,
+    "title": "Pierce Butler (judge)",
+    "extract": "Pierce Butler was an American jurist who served as an associate justice of the Supreme Court of the United States from 1923 until his death in 1939. He is notable for being the first Supreme Court justice from Minnesota, and for being a Democrat appointed by a Republican president. He was a staunch conservative and was regarded as a part of the Four Horsemen, the conservative bloc that dominated the Supreme Court during the 1930s.",
+    "url": "https://en.wikipedia.org/wiki/Pierce_Butler_(judge)",
+    "revision": "1359695122",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/72.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Pierce_Butler.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 74,
+    "title": "Harlan F. Stone",
+    "extract": "Harlan Fiske Stone was an American attorney who served as an associate justice of the U.S. Supreme Court from 1925 to 1941 and then as the 12th chief justice of the United States from 1941 until his death in 1946. He also served as the U.S. Attorney General from 1924 to 1925 under President Calvin Coolidge, with whom he had attended Amherst College as a young man.",
+    "url": "https://en.wikipedia.org/wiki/Harlan_F._Stone",
+    "revision": "1372224503",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/74.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Harlan_F._Stone_Portrait_(cropped).jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 75,
+    "title": "Charles Evans Hughes",
+    "extract": "Charles Evans Hughes was an American politician, academic, and jurist who served as the 11th chief justice of the United States from 1930 to 1941. A member of the Republican Party, he previously was the 36th governor of New York (1907–1910), an associate justice of the Supreme Court (1910–1916), and 44th U.S. secretary of state (1921–1925).",
+    "url": "https://en.wikipedia.org/wiki/Charles_Evans_Hughes",
+    "revision": "1374692259",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/75.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Charles_Evans_Hughes_cph.3b15401.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 76,
+    "title": "Owen Roberts",
+    "extract": "Owen Josephus Roberts was an associate justice of the United States Supreme Court from 1930 to 1945. He also led two Roberts Commissions, the first of which investigated the attack on Pearl Harbor, and the second of which focused on works of cultural value during World War II.",
+    "url": "https://en.wikipedia.org/wiki/Owen_Roberts",
+    "revision": "1359060857",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/76.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Owen_J._Roberts_cph.3b11988.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 77,
+    "title": "Benjamin N. Cardozo",
+    "extract": "Benjamin Nathan Cardozo was an American lawyer and jurist who served on the New York Court of Appeals from 1914 to 1932 and as an associate justice of the Supreme Court of the United States from 1932 until his death in 1938. Cardozo is remembered for his significant influence on the development of American common law in the 20th century, as well as for his philosophy and vivid prose style.",
+    "url": "https://en.wikipedia.org/wiki/Benjamin_N._Cardozo",
+    "revision": "1376388846",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/77.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Benjamin_Cardozo.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 78,
+    "title": "Hugo Black",
+    "extract": "Hugo Lafayette Black was an American lawyer, politician, and jurist who served as a U.S. Senator from Alabama from 1927 to 1937 and as an associate justice of the U.S. Supreme Court from 1937 to 1971. A member of the Democratic Party and a devoted New Dealer, Black endorsed Franklin D. Roosevelt in both the 1932 and 1936 presidential elections.",
+    "url": "https://en.wikipedia.org/wiki/Hugo_Black",
+    "revision": "1373671073",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/78.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:HugoLaFayetteBlack.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 79,
+    "title": "Stanley Forman Reed",
+    "extract": "Stanley Forman Reed was an American lawyer and jurist who served as an associate justice of the U.S. Supreme Court from 1938 to 1957. He also served as U.S. Solicitor General from 1935 to 1938.",
+    "url": "https://en.wikipedia.org/wiki/Stanley_Forman_Reed",
+    "revision": "1365467037",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/79.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Stanley_Reed.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 80,
+    "title": "Felix Frankfurter",
+    "extract": "Felix Frankfurter was an American jurist who served as an associate justice of the U.S. Supreme Court from 1939 until 1962, advocating judicial restraint.",
+    "url": "https://en.wikipedia.org/wiki/Felix_Frankfurter",
+    "revision": "1373950242",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/80.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:FRANKFURTER%2C_FELIX._JUSTICE_LCCN2016862746_Trim.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 81,
+    "title": "William O. Douglas",
+    "extract": "William Orville Douglas was an American jurist who served as an associate justice of the Supreme Court of the United States from 1939 to 1975. Douglas was known for his strong progressive and civil libertarian views and is often cited as the most liberal justice in the U.S. Supreme Court’s history.",
+    "url": "https://en.wikipedia.org/wiki/William_O._Douglas",
+    "revision": "1377052514",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/81.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Justice_William_O_Douglas.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 82,
+    "title": "Frank Murphy",
+    "extract": "William Francis Murphy was an American politician, lawyer, and jurist from Harbor Beach, Michigan. He was a Democrat who was named to the Supreme Court of the United States in 1940 after a political career that included serving as United States Attorney General, 35th governor of Michigan, and Mayor of Detroit. He also served as the last American Governor-General of the Philippines and the first High Commissioner to the Philippines.",
+    "url": "https://en.wikipedia.org/wiki/Frank_Murphy",
+    "revision": "1369828556",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/82.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Justice_Frank_Murphy.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 83,
+    "title": "James F. Byrnes",
+    "extract": "James Francis Byrnes was an American judge and politician from South Carolina. A member of the Democratic Party, he served in the U.S. Congress and on the U.S. Supreme Court, as well as in the executive branch, most prominently as the 49th U.S. Secretary of State under President Harry S. Truman. Byrnes was also the 104th governor of South Carolina.",
+    "url": "https://en.wikipedia.org/wiki/James_F._Byrnes",
+    "revision": "1371247961",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/83.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:James_F._Byrnes_cph.3c32232_(cropped)(b).jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 84,
+    "title": "Robert H. Jackson",
+    "extract": "Robert Houghwout Jackson was an American lawyer, jurist, and politician who served as an associate justice of the U.S. Supreme Court from 1941 until his death in 1954. He had previously served as United States Solicitor General and United States Attorney General, and is the only person to have held all three of those offices.",
+    "url": "https://en.wikipedia.org/wiki/Robert_H._Jackson",
+    "revision": "1370490670",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/84.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Service-pnp-hec-21600-21656v_(cropped).jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 85,
+    "title": "Wiley Rutledge",
+    "extract": "Wiley Blount Rutledge Jr. was an American jurist who served as an associate justice of the Supreme Court of the United States from 1943 to 1949. The ninth and final justice appointed by President Franklin D. Roosevelt, he is best known for his impassioned defenses of civil liberties.",
+    "url": "https://en.wikipedia.org/wiki/Wiley_Rutledge",
+    "revision": "1371886470",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/85.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Wiley_Rutledge_portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 86,
+    "title": "Harold H. Burton",
+    "extract": "Harold Hitz Burton was an American politician and lawyer. He served as the 45th mayor of Cleveland, Ohio, as a U.S. senator from Ohio, and as an associate justice of the Supreme Court of the United States.",
+    "url": "https://en.wikipedia.org/wiki/Harold_H._Burton",
+    "revision": "1365923806",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/86.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Harold_Burton.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 87,
+    "title": "Fred M. Vinson",
+    "extract": "Frederick Moore Vinson was an American attorney and politician who served as the 13th chief justice of the United States from 1946 until his death in 1953. Vinson was one of the few Americans to have served in all three branches of the U.S. government.",
+    "url": "https://en.wikipedia.org/wiki/Fred_M._Vinson",
+    "revision": "1375041374",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/87.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Chief_Justice_Fred_M._Vinson.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 88,
+    "title": "Tom C. Clark",
+    "extract": "Thomas Campbell Clark was an American lawyer who served as the 59th United States attorney general from 1945 to 1949 and as Associate Justice of the Supreme Court of the United States from 1949 to 1967.",
+    "url": "https://en.wikipedia.org/wiki/Tom_C._Clark",
+    "revision": "1367181901",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/88.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Official_portrait_of_Associate_Justice_Tom_C._Clark%2C_Supreme_Court_of_the_United_States_(cropped).jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 89,
+    "title": "Sherman Minton",
+    "extract": "Sherman \"Shay\" Minton was an American politician and jurist who served as a U.S. senator from Indiana and later became an associate justice of the Supreme Court of the United States; he was a member of the Democratic Party.",
+    "url": "https://en.wikipedia.org/wiki/Sherman_Minton",
+    "revision": "1373447769",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/89.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Sherman_minton_photo.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 90,
+    "title": "Earl Warren",
+    "extract": "Earl Warren was an American attorney and politician who served as the 14th chief justice of the United States from 1953 to 1969 and as the 30th governor of California from 1943 to 1953.",
+    "url": "https://en.wikipedia.org/wiki/Earl_Warren",
+    "revision": "1375594658",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/90.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Earl_Warren.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 91,
+    "title": "John Marshall Harlan II",
+    "extract": "John Marshall Harlan was an American lawyer and jurist who served as an associate justice of the U.S. Supreme Court from 1955 to 1971. Harlan is usually called John Marshall Harlan II to distinguish him from his grandfather, John Marshall Harlan, who served on the U.S. Supreme Court from 1877 to 1911.",
+    "url": "https://en.wikipedia.org/wiki/John_Marshall_Harlan_II",
+    "revision": "1361886405",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/91.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:John_Marshall_Harlan_II_official.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 92,
+    "title": "William J. Brennan Jr.",
+    "extract": "William Joseph Brennan Jr. was an American lawyer and jurist who served as an associate justice of the Supreme Court of the United States from 1956 to 1990. He was the eighth-longest serving justice in Supreme Court history, and was known for being a leader of the Court's liberal wing.",
+    "url": "https://en.wikipedia.org/wiki/William_J._Brennan_Jr.",
+    "revision": "1372431656",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/92.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:US_Supreme_Court_Justice_William_Brennan_-_1972_official_portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 93,
+    "title": "Charles Evans Whittaker",
+    "extract": "Charles Evans Whittaker was an associate justice of the United States Supreme Court from 1957 to 1962. After working in private practice in Kansas City, Missouri, he was nominated for the United States District Court for the Western District of Missouri. In 1956, President Dwight D. Eisenhower nominated Whittaker to the United States Court of Appeals for the Eighth Circuit.",
+    "url": "https://en.wikipedia.org/wiki/Charles_Evans_Whittaker",
+    "revision": "1360822186",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/93.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Charles_Whittaker.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 94,
+    "title": "Potter Stewart",
+    "extract": "Potter Stewart was an American lawyer and judge who was an associate justice of the United States Supreme Court from 1958 to 1981. During his tenure, he made major contributions to criminal justice reform, civil rights, access to the courts, and Fourth Amendment jurisprudence.",
+    "url": "https://en.wikipedia.org/wiki/Potter_Stewart",
+    "revision": "1372870384",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/94.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:US_Supreme_Court_Justice_Potter_Stewart_-_1976_official_portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 95,
+    "title": "Byron White",
+    "extract": "Byron Raymond \"Whizzer\" White was an American lawyer and professional football halfback who served as an associate justice of the Supreme Court of the United States from 1962 to 1993. At the time of his retirement, he was the Supreme Court's only sitting justice appointed by a Democrat and the last-living member of the progressive Warren Court.",
+    "url": "https://en.wikipedia.org/wiki/Byron_White",
+    "revision": "1376740007",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/95.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Justice_White_Official.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 96,
+    "title": "Arthur Goldberg",
+    "extract": "Arthur Joseph Goldberg was an American politician and jurist who served as the 9th U.S. secretary of labor, an associate justice of the Supreme Court of the United States, and the 6th United States ambassador to the United Nations.",
+    "url": "https://en.wikipedia.org/wiki/Arthur_Goldberg",
+    "revision": "1371973757",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/96.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Justice_Arthur_Goldberg_-_1965_-_A720-5.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 97,
+    "title": "Abe Fortas",
+    "extract": "Abraham Fortas was an American lawyer and jurist who served as an associate justice of the Supreme Court of the United States from 1965 to 1969. Born and raised in Memphis, Tennessee, Fortas graduated from Rhodes College and Yale Law School. He later became a law professor at Yale and then an advisor for the U.S. Securities and Exchange Commission.",
+    "url": "https://en.wikipedia.org/wiki/Abe_Fortas",
+    "revision": "1373083321",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/97.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:SCOTUS_Justice_Abe_Fortas.jpeg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 98,
+    "title": "Thurgood Marshall",
+    "extract": "Thoroughgood \"Thurgood\" Marshall was an American lawyer who served as an associate justice of the Supreme Court of the United States from 1967 until 1991. He was the Supreme Court's first African-American justice. Before his judicial service, he was an attorney who fought for civil rights, leading the NAACP Legal Defense and Educational Fund.",
+    "url": "https://en.wikipedia.org/wiki/Thurgood_Marshall",
+    "revision": "1376814780",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/98.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Thurgood-marshall-2.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 99,
+    "title": "Warren E. Burger",
+    "extract": "Warren Earl Burger was an American attorney who served as the 15th chief justice of the United States from 1969 to 1986.",
+    "url": "https://en.wikipedia.org/wiki/Warren_E._Burger",
+    "revision": "1374139712",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/99.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Warren_E_Burger_official_photograph_as_chief_justice.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 100,
+    "title": "Harry Blackmun",
+    "extract": "Harold Andrew Blackmun was an American lawyer and jurist who served as an associate justice of the Supreme Court of the United States from 1970 to 1994. Appointed by President Richard Nixon, Blackmun ultimately became one of the most liberal justices on the Court. He is best known as the author of the Court's opinion in Roe v.",
+    "url": "https://en.wikipedia.org/wiki/Harry_Blackmun",
+    "revision": "1373777193",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/100.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Justice_Blackmun_Official.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 101,
+    "title": "Lewis F. Powell Jr.",
+    "extract": "Lewis Franklin Powell Jr. was an American lawyer and jurist who served as an associate justice of the Supreme Court of the United States from 1972 to 1987.",
+    "url": "https://en.wikipedia.org/wiki/Lewis_F._Powell_Jr.",
+    "revision": "1369477262",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/101.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:US_Supreme_Court_Justice_Lewis_Powell_-_1976_official_portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 102,
+    "title": "William Rehnquist",
+    "extract": "William Hubbs Rehnquist was an American attorney who served as the 16th chief justice of the United States from 1986 until his death in 2005, having previously been an associate justice from 1972 to 1986. Considered a staunch conservative, Rehnquist favored a conception of federalism that emphasized the Tenth Amendment's reservation of powers to the states.",
+    "url": "https://en.wikipedia.org/wiki/William_Rehnquist",
+    "revision": "1374934689",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/102.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:William_Rehnquist_Official_Portrait_as_Chief_Justice.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 103,
+    "title": "John Paul Stevens",
+    "extract": "John Paul Stevens was an American lawyer and jurist who served as an associate justice of the Supreme Court of the United States from 1975 to 2010. He was the second-oldest and fourth-longest-serving justice in U.S. Supreme Court history. At the time of his death in 2019 at age 99, he was the longest-lived Supreme Court justice ever.",
+    "url": "https://en.wikipedia.org/wiki/John_Paul_Stevens",
+    "revision": "1359374632",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/103.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:John_Paul_Stevens%2C_SCOTUS_photo_portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 104,
+    "title": "Sandra Day O'Connor",
+    "extract": "Sandra Day O'Connor was an American attorney, politician, and jurist who served as an associate justice of the Supreme Court of the United States from 1981 to 2006. Nominated by President Ronald Reagan, O'Connor was the first woman to serve as a U.S. Supreme Court justice. A moderate conservative, she was considered a swing vote.",
+    "url": "https://en.wikipedia.org/wiki/Sandra_Day_O'Connor",
+    "revision": "1377478675",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/104.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Sandra_Day_O'Connor.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 105,
+    "title": "Antonin Scalia",
+    "extract": "Antonin Gregory Scalia was an American jurist who served as an associate justice of the Supreme Court of the United States from 1986 until his death in 2016. He was described as the intellectual anchor for the originalist and textualist position in the Court's conservative wing.",
+    "url": "https://en.wikipedia.org/wiki/Antonin_Scalia",
+    "revision": "1373804147",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/105.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Antonin_Scalia_Official_SCOTUS_Portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 106,
+    "title": "Anthony Kennedy",
+    "extract": "Anthony McLeod Kennedy is an American lawyer who served as an associate justice of the Supreme Court of the United States from 1988 until his retirement in 2018. He was nominated to the court in 1987 by President Ronald Reagan, and after being unanimously confirmed by the U.S. Senate was sworn in on February 18, 1988.",
+    "url": "https://en.wikipedia.org/wiki/Anthony_Kennedy",
+    "revision": "1375885776",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/106.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Anthony_Kennedy_official_SCOTUS_portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 107,
+    "title": "David Souter",
+    "extract": "David Hackett Souter was an American lawyer and jurist who served as an Associate Justice of the Supreme Court of the United States from 1990 to 2009. Appointed by President George H. W. Bush to fill the seat that had been vacated by William J. Brennan Jr., Souter was a member of both the Rehnquist and Roberts courts.",
+    "url": "https://en.wikipedia.org/wiki/David_Souter",
+    "revision": "1371949177",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/107.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:DavidSouter.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 108,
+    "title": "Clarence Thomas",
+    "extract": "Clarence Thomas is an American lawyer and jurist who has served as an associate justice of the Supreme Court of the United States since 1991. Nominated by President George H. W. Bush to succeed Thurgood Marshall, Thomas is the second African American to serve on the U.S. Supreme Court and the second longest-serving U.S. Supreme Court justice in history.",
+    "url": "https://en.wikipedia.org/wiki/Clarence_Thomas",
+    "revision": "1377488726",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/108.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Clarence_Thomas_official_SCOTUS_portrait_(3x4_cropped).jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 109,
+    "title": "Ruth Bader Ginsburg",
+    "extract": "Joan Ruth Bader Ginsburg was an American lawyer and jurist who served as an associate justice of the Supreme Court of the United States from 1993 until her death in 2020. She was nominated by President Bill Clinton to replace retiring justice Byron White, and at the time was viewed as a moderate consensus-builder. Ginsburg was the first Jewish woman and the second woman to serve on the Court, after Sandra Day O'Connor.",
+    "url": "https://en.wikipedia.org/wiki/Ruth_Bader_Ginsburg",
+    "revision": "1375636727",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/109.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Ruth_Bader_Ginsburg_2016_portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 110,
+    "title": "Stephen Breyer",
+    "extract": "Stephen Gerald Breyer is an American lawyer and jurist who served as an associate justice of the U.S. Supreme Court from 1994 until his retirement in 2022. He was nominated by President Bill Clinton, and replaced retiring justice Harry Blackmun. Breyer was generally associated with the liberal wing of the Court.",
+    "url": "https://en.wikipedia.org/wiki/Stephen_Breyer",
+    "revision": "1368233083",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/110.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Stephen_Breyer%2C_SCOTUS_photo_portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 111,
+    "title": "John Roberts",
+    "extract": "John Glover Roberts Jr. is an American jurist who has served since 2005 as the 17th chief justice of the United States. Though primarily an institutionalist, he has been described as having a moderate conservative judicial philosophy. Regarded as a swing vote in some cases, Roberts has presided over an ideological shift toward conservative jurisprudence on the high court, in which he has authored key opinions.",
+    "url": "https://en.wikipedia.org/wiki/John_Roberts",
+    "revision": "1377117940",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/111.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Official_roberts_CJ.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 112,
+    "title": "Samuel Alito",
+    "extract": "Samuel Anthony Alito Jr. is an American jurist who serves as an associate justice of the Supreme Court of the United States. He was nominated to the high court by President George W. Bush on October 31, 2005, and has served on it since January 31, 2006. After Antonin Scalia, Alito is the second Italian American justice to serve on the U.S. Supreme Court.",
+    "url": "https://en.wikipedia.org/wiki/Samuel_Alito",
+    "revision": "1377202818",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/112.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Samuel_Alito_official_photo.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 113,
+    "title": "Sonia Sotomayor",
+    "extract": "Sonia Maria Sotomayor is an American lawyer and jurist who serves as an associate justice of the Supreme Court of the United States. She was nominated by President Barack Obama on May 26, 2009, and has served since August 8, 2009. She is the third woman U.S. Supreme Court justice.",
+    "url": "https://en.wikipedia.org/wiki/Sonia_Sotomayor",
+    "revision": "1376904972",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/113.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Sonia_Sotomayor_in_SCOTUS_robe.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 114,
+    "title": "Elena Kagan",
+    "extract": "Elena Kagan is an American lawyer who serves as an associate justice of the Supreme Court of the United States. She was appointed in 2010 by President Barack Obama and is the fourth woman to serve on the Court.",
+    "url": "https://en.wikipedia.org/wiki/Elena_Kagan",
+    "revision": "1375136418",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": null
+  },
+  {
+    "justice_id": 115,
+    "title": "Neil Gorsuch",
+    "extract": "Neil McGill Gorsuch is an American jurist who serves as an associate justice of the Supreme Court of the United States. He was nominated by President Donald Trump on January 31, 2017, and has served since April 10, 2017.",
+    "url": "https://en.wikipedia.org/wiki/Neil_Gorsuch",
+    "revision": "1370976036",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/115.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Associate_Justice_Neil_Gorsuch_Official_Portrait.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 116,
+    "title": "Brett Kavanaugh",
+    "extract": "Brett Michael Kavanaugh is an American lawyer and jurist serving as an associate justice of the Supreme Court of the United States. He was nominated by President Donald Trump on July 9, 2018, and has served since October 6, 2018. He was previously a United States circuit judge of the United States Court of Appeals for the District of Columbia Circuit from 2006 to 2018.",
+    "url": "https://en.wikipedia.org/wiki/Brett_Kavanaugh",
+    "revision": "1374506251",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/116.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Associate_Justice_Brett_Kavanaugh_Official_Portrait_(full_length).jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 117,
+    "title": "Amy Coney Barrett",
+    "extract": "Amy Vivian Coney Barrett is an American lawyer and jurist serving since 2020 as an associate justice of the Supreme Court of the United States. The fifth woman to serve on the court, she was nominated by President Donald Trump. She was a United States circuit judge of the United States Court of Appeals for the Seventh Circuit from 2017 to 2020.",
+    "url": "https://en.wikipedia.org/wiki/Amy_Coney_Barrett",
+    "revision": "1375006627",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/117.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Official_Amy_Barrett_photo.jpg",
+      "license": "Public domain"
+    }
+  },
+  {
+    "justice_id": 118,
+    "title": "Ketanji Brown Jackson",
+    "extract": "Ketanji Onyika Brown Jackson is an American lawyer and jurist who is an associate justice of the Supreme Court of the United States. Jackson was nominated to the U.S. Supreme Court by President Joe Biden on February 25, 2022, and confirmed by the United States Senate and sworn into office that same year. She is the first Black woman, the first former federal public defender, and the sixth woman to serve on the U.S. Supreme Court.",
+    "url": "https://en.wikipedia.org/wiki/Ketanji_Brown_Jackson",
+    "revision": "1375799740",
+    "fetched_at": "2026-09-30",
+    "needs_review": false,
+    "photo": {
+      "path": "/images/justices/118.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Ketanji_Brown_Jackson_official_SCOTUS_portrait.jpg",
+      "license": "Public domain"
+    }
+  }
+]

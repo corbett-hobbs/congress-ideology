@@ -185,6 +185,8 @@ export interface FjcAppointment {
   party: string;
   nomination: string | null;
   confirmation: string | null;
+  /** Raw "Ayes/Nays" cell (" 98/0"), trimmed; null when blank (voice vote). Parsed strictly only for appointments that reach justices.json — 18th-century rows hold junk like "10//14". */
+  vote_raw: string | null;
   /** Earliest of recess-appointment and commission dates. */
   start: string;
   /** Senior-status date, else termination date, else null (still serving). */
@@ -208,6 +210,15 @@ export interface FjcJustice {
 
 const blank = (s: string | undefined): string | null => (s === undefined || s.trim() === "" ? null : s.trim());
 
+/** " 98/0" -> {98, 0}; blank -> null. Anything else is fatal. */
+export function parseVote(raw: string | null, nid: string, name: string): { ayes: number; nays: number } | null {
+  const t = raw?.trim() ?? "";
+  if (t === "") return null;
+  const m = /^(\d+)\/(\d+)$/.exec(t);
+  if (!m) throw new CourtDataError(`fjc: nid ${nid} (${name}): unparseable Ayes/Nays ${JSON.stringify(raw)}`);
+  return { ayes: Number(m[1]), nays: Number(m[2]) };
+}
+
 export function buildFjcJustices(service: Row[], demographics: Row[]): FjcJustice[] {
   const demo = new Map(demographics.map((d) => [d.nid, d]));
   const byNid = new Map<string, FjcAppointment[]>();
@@ -225,6 +236,7 @@ export function buildFjcJustices(service: Row[], demographics: Row[]): FjcJustic
       party: r["Party of Appointing President"].trim(),
       nomination: blank(r["Nomination Date"]),
       confirmation: blank(r["Confirmation Date"]),
+      vote_raw: blank(r["Ayes/Nays"]),
       start,
       end: blank(r["Senior Status Date"]) ?? blank(r["Termination Date"]),
     });
@@ -376,6 +388,7 @@ export function buildJustices(spans: MqSpan[], matched: Map<number, FjcJustice>)
     const full = [j.first, j.middle, j.last].filter(Boolean).join(" ") + (j.suffix ? ` ${j.suffix}` : "");
     return {
       justice_id: span.justice_id,
+      fjc_nid: j.nid,
       name: {
         first: j.first,
         ...(j.middle ? { middle: j.middle } : {}),
@@ -389,6 +402,8 @@ export function buildJustices(spans: MqSpan[], matched: Map<number, FjcJustice>)
       appointing_party: party(appt),
       nomination_date: appt.nomination,
       confirmation_date: appt.confirmation,
+      senate_vote: parseVote(appt.vote_raw, String(j.nid), `${j.last} (justice ${span.justice_id})`),
+      appointment_start: appt.start,
       chief_justice_appointment: chief
         ? {
             president: chief.president,

@@ -5,10 +5,13 @@ import type {
   CourtMedianProbability,
   CourtTermRow,
   Justice,
+  JusticeBio,
   MqScore,
 } from "./court-entities";
 import { buildCourtPayload } from "./court-derive";
+import { buildJusticeProfiles } from "./justice-derive";
 import type { CourtHubSummary, CourtPayload } from "./court-types";
+import type { JusticeProfile, JusticeRef } from "./justice-types";
 
 /**
  * Build-time Supreme Court dataset: reads the four normalized outputs in
@@ -24,18 +27,61 @@ function readCourt<T>(name: string): T[] {
   return JSON.parse(readFileSync(path, "utf8")) as T[];
 }
 
-let cached: CourtPayload | null = null;
-
-export function getCourtPayload(): CourtPayload {
-  cached ??= buildCourtPayload({
+function readInputs() {
+  return {
     justices: readCourt<Justice>("justices.json"),
     scores: readCourt<MqScore>("mq_scores.json"),
     terms: readCourt<CourtTermRow>("court_terms.json"),
     probabilities: readCourt<CourtMedianProbability>(
       "court_median_probabilities.json",
     ),
-  });
+  };
+}
+
+let cached: CourtPayload | null = null;
+
+export function getCourtPayload(): CourtPayload {
+  cached ??= buildCourtPayload(readInputs());
   return cached;
+}
+
+let profiles: Map<number, JusticeProfile> | null = null;
+
+/**
+ * Every justice's profile page data, joined once per build. Bios come from
+ * `justice_bios.json` (`pipeline/fetch/justice-bios.ts`); a justice with no row
+ * simply has no bio/photo — the page omits those blocks, never a placeholder.
+ */
+function loadProfiles(): Map<number, JusticeProfile> {
+  if (!profiles) {
+    const bios = new Map<number, { extract: string; url: string; photoPath: string | null }>();
+    try {
+      for (const b of readCourt<JusticeBio>("justice_bios.json")) {
+        bios.set(b.justice_id, {
+          extract: b.extract,
+          url: b.url,
+          photoPath: b.photo?.path ?? null,
+        });
+      }
+    } catch {
+      // graceful before `pnpm fetch:justice-bios` has been run
+    }
+    const built = buildJusticeProfiles({ ...readInputs(), bios });
+    profiles = new Map(built.profiles.map((p) => [p.justice.id, p]));
+  }
+  return profiles;
+}
+
+export function getJusticeProfile(id: number): JusticeProfile | null {
+  return loadProfiles().get(id) ?? null;
+}
+
+/** One ref per justice with a profile page, oldest first — for static params and the sitemap. */
+export function getJusticeRefs(): JusticeRef[] {
+  return [...loadProfiles().values()].map((p) => ({
+    id: p.justice.id,
+    name: p.justice.name,
+  }));
 }
 
 /** What the hub card needs: the latest term's median justice and the median series. */
