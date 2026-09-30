@@ -375,8 +375,9 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
 
       {singleYearNotice && (
         <p className="mt-2 text-[0.8rem] text-note">
-          {singleYearNotice.name} has only 1 year of data, so they aren’t plotted. Latest:{" "}
-          {formatPointUSD(singleYearNotice.points[0])} ({singleYearNotice.points[0].year}).
+          {singleYearNotice.points.length === 0
+            ? `${singleYearNotice.name} has no usable filings yet, so they aren’t plotted.`
+            : `${singleYearNotice.name} has only 1 year of data, so they aren’t plotted. Latest: ${formatPointUSD(singleYearNotice.points[0])} (${singleYearNotice.points[0].year}).`}
         </p>
       )}
 
