@@ -90,29 +90,63 @@ class OcrDocWords(DocWords):
     page_count: int = 0
 
 
-def _deskew_orientation(image: Image.Image) -> Image.Image:
-    """Correct whole-page 90/180/270-degree rotation before OCR.
+def _detect_page_rotations(pdf_path: str, dpi: int, page_count: int) -> list[int]:
+    """First pass: run Tesseract's OSD (orientation & script detection) on
+    every page and collect its raw, possibly-noisy `rotate` guess. Kept
+    separate from the real OCR pass in `extract_ocr_text` so a page is only
+    re-rasterized (not re-OCR'd) for this probe -- `image_to_osd` is far
+    cheaper than `image_to_data`. `_resolve_rotations` below is what decides
+    whether to actually trust each of these guesses."""
+    raw: list[int] = []
+    for i in range(page_count):
+        page_num = i + 1
+        image = convert_from_path(pdf_path, dpi=dpi, first_page=page_num, last_page=page_num)[0]
+        try:
+            osd = pytesseract.image_to_osd(image, output_type=pytesseract.Output.DICT)
+            rotate = (osd.get("rotate", 0) or 0) % 360
+        except pytesseract.TesseractError:
+            rotate = 0
+        raw.append(rotate)
+        del image
+        gc.collect()
+    return raw
 
-    Confirmed on real filings (e.g. Vern Buchanan's 2015 filing, doc
-    9109482): the Clerk's scanner sometimes captures a landscape-oriented
-    physical page into a portrait-oriented PDF page, so the *image content*
-    is sideways even though the PDF page itself reports no `/Rotate` (the
-    page is genuinely just a raster image with no such metadata to read).
-    Left uncorrected, this doesn't just garble the text -- it transposes
-    word x/y geometry, which would corrupt every downstream column-position
-    calculation in columns.py silently rather than obviously. Tesseract's
-    own OSD (orientation and script detection) reads this correctly even at
-    low confidence (observed ~4 on real samples -- OSD confidence is
-    calibrated differently than word confidence and stays low on these
-    forms even when the rotation call itself is correct), so the *presence*
-    of a detected non-zero rotation is trusted; only a failure to run OSD at
-    all (e.g. a near-blank page) falls back to leaving the page unrotated.
+
+def _resolve_rotations(raw_rotations: list[int]) -> list[int]:
+    """Corroborate each page's individually noisy OSD guess against its
+    immediate neighbors before trusting it.
+
+    Originally this module trusted ANY nonzero OSD rotation outright, on the
+    theory that OSD confidence "stays low on these forms even when the
+    rotation call itself is correct" (based on one filing that turned out to
+    genuinely need rotation). That theory doesn't hold in general: spot-
+    checked against a real filing that does NOT need rotation (a Bilirakis
+    amendment, doc 8219785 -- a page whose raw, unrotated OCR already reads
+    a clean "SCHEDULE A- ASSETS" header), OSD still reported a nonzero
+    rotation at low confidence (rotate=90, orientation_conf=0.36), and that
+    doc's per-page guesses bounced incoherently (90, 0, 90, 270, 90, 0,
+    270...) -- noise, not signal. By contrast, on a filing confirmed to
+    genuinely be rotated, 5 consecutive pages all agreed on the same
+    rotate=90. A real physical-scan rotation shows up as the same angle
+    repeated across a run of pages; an isolated guess with no neighbor
+    agreement is noise and the page is left unrotated instead.
     """
-    try:
-        osd = pytesseract.image_to_osd(image, output_type=pytesseract.Output.DICT)
-    except pytesseract.TesseractError:
-        return image
-    rotate = osd.get("rotate", 0) or 0
+    resolved = list(raw_rotations)
+    for i, angle in enumerate(raw_rotations):
+        if angle == 0:
+            continue
+        neighbors = raw_rotations[max(0, i - 1):i] + raw_rotations[i + 1:i + 2]
+        if angle not in neighbors:
+            resolved[i] = 0
+    return resolved
+
+
+def _apply_rotation(image: Image.Image, rotate: int) -> Image.Image:
+    """Apply an already-corroborated clockwise rotation correction (see
+    `_resolve_rotations`). Left uncorrected, a genuine rotation doesn't just
+    garble the text -- it transposes word x/y geometry, which would corrupt
+    every downstream column-position calculation in columns.py silently
+    rather than obviously."""
     if rotate % 360 == 0:
         return image
     # Tesseract's `rotate` is the clockwise correction angle; PIL's
@@ -122,7 +156,7 @@ def _deskew_orientation(image: Image.Image) -> Image.Image:
     return image.rotate(-rotate, expand=True)
 
 
-def extract_ocr_text(pdf_path: str, dpi: int = OCR_DPI) -> OcrDocWords:
+def extract_ocr_text(pdf_path: str, dpi: int = OCR_DPI, max_pages: int = MAX_OCR_PAGES) -> OcrDocWords:
     """Extraction method: ``ocr`` -- rasterize each page and run Tesseract.
 
     Returns the same ``DocWords`` shape ``extract_digital_text`` does (as an
@@ -134,11 +168,19 @@ def extract_ocr_text(pdf_path: str, dpi: int = OCR_DPI) -> OcrDocWords:
     Rasterizes and OCRs ONE page at a time (via `first_page`/`last_page`,
     not a bare `convert_from_path(pdf_path, dpi=dpi)`) so peak memory stays
     roughly constant regardless of document length -- see MAX_OCR_PAGES'
-    docstring for why this matters on this dataset.
+    docstring for why this matters on this dataset. Because of that, `max_pages`
+    is a caller-supplied override (defaulting to MAX_OCR_PAGES) rather than a
+    fixed limit: raising it no longer risks the OOM the cap was originally
+    added for, it only costs more wall-clock time per document -- useful for
+    a targeted re-run against known members whose filings are legitimately
+    long (e.g. Harold Rogers' filings run 300-480+ pages every year), without
+    loosening the safe default for the general population.
     """
     page_count = pdfinfo_from_path(pdf_path).get("Pages", 0)
-    if page_count > MAX_OCR_PAGES:
+    if page_count > max_pages:
         return OcrDocWords(pages=[], total_chars=0, oversized=True, page_count=page_count)
+
+    rotations = _resolve_rotations(_detect_page_rotations(pdf_path, dpi, page_count))
 
     pages: list[PageWords] = []
     total_chars = 0
@@ -150,7 +192,7 @@ def extract_ocr_text(pdf_path: str, dpi: int = OCR_DPI) -> OcrDocWords:
     for i in range(page_count):
         page_num = i + 1  # convert_from_path's first_page/last_page are 1-indexed
         raw_image = convert_from_path(pdf_path, dpi=dpi, first_page=page_num, last_page=page_num)[0]
-        image = _deskew_orientation(raw_image)
+        image = _apply_rotation(raw_image, rotations[i])
         data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
         n = len(data["text"])
         words: list[Word] = []
