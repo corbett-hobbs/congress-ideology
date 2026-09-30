@@ -16,7 +16,10 @@ export const site = {
   name: "InsideGov",
   /** Slug form — kept in sync with package.json `name`, not the display name. */
   shortName: "congress-ideology",
-  tagline: "Congress, by the numbers",
+  tagline: "The U.S. government, by the numbers",
+  /** Homepage / whole-site blurb; `description` below is Congress-specific. */
+  hubDescription:
+    "Explore ideology, net worth, and more across all three branches of the U.S. government. Start with Congress and the Supreme Court, with the presidency on the way.",
   description:
     "Every member of Congress's votes reduced to a two-dimensional ideology score (DW-NOMINATE, 1st–119th Congress). Scrub through 236 years of the House and Senate, filter a state's delegation, and read any current member's trajectory.",
 } as const;

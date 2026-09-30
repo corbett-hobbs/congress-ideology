@@ -11,11 +11,11 @@ import { ordinal } from "@/components/senate/format";
 
 export const metadata: Metadata = {
   title: { absolute: `${site.name} · 1789–present` },
-  description: site.description,
+  description: site.hubDescription,
   alternates: { canonical: "/" },
   openGraph: {
     title: site.name,
-    description: site.description,
+    description: site.hubDescription,
     url: "/",
   },
 };
@@ -46,7 +46,14 @@ export default function Hub() {
             {site.tagline}
           </h1>
           <p className="text-[1.05rem] leading-relaxed text-ink-muted">
-            Explore ideology and more across the branches of U.S. government.
+            Explore ideology, net worth, and more across all three branches of
+            the U.S. government.
+          </p>
+          <p className="text-[1.05rem] leading-relaxed text-ink-muted">
+            Every roll call, every ruling, and every financial disclosure leaves
+            a trail. We turn those public records into data you can scrub
+            through, compare, and dig into. Start with Congress and the Supreme
+            Court; the presidency is on the way.
           </p>
         </div>
 
