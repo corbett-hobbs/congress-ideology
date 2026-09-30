@@ -20,7 +20,7 @@ export default function RepresentativeNotFound() {
         former member, a senator, or a mistyped ID lands here.
       </p>
       <Link
-        href="/?chamber=house"
+        href="/congress?chamber=house"
         className="font-mono text-[0.8rem] uppercase tracking-[0.1em] text-accent hover:underline"
       >
         ← Browse the House

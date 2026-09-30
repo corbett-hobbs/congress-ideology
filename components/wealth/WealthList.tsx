@@ -23,7 +23,7 @@ interface WealthListProps {
   stateFilter: string | null;
 }
 
-/** One of the two side-by-side ranked lists on /wealth. */
+/** One of the two side-by-side ranked lists on /congress/wealth. */
 export function WealthList({ title, direction, members, view, stateFilter }: WealthListProps) {
   const eligible = members.filter(isListEligible);
   const ranked = [...eligible].sort((a, b) => {

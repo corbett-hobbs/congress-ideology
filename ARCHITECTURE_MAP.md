@@ -65,17 +65,20 @@ latest Congress and carry no trend chart.
 
 | Route                                               | Kind | Renders |
 | --------------------------------------------------- | ---- | ------- |
-| `/`                                                 | static | `SenateExplorer` — the compass / delegation / trend explorer, with a Members ↔ Committees toggle (119th only) |
+| `/`                                                 | static | Hub — a card per branch (`lib/verticals.ts`): Congress (party-mean sparkline + dim-1 gap stat for the latest Congress, from `getBothTrend()`) and Supreme Court (non-link "Coming soon"). Redirect target of nothing; bare `/` never redirects. |
+| `/congress`                                         | static | `SenateExplorer` — the compass / delegation / trend explorer, with a Members ↔ Committees toggle (119th only). Reads `?chamber`, `?state`, `?show`. |
 | `/congress/senators/[bioguide_id]/[name_slug]`      | SSG + dynamic | `MemberProfileView` (stale slug → 308, bad id → 404) |
 | `/congress/house/[bioguide_id]/[name_slug]`         | SSG + dynamic | `MemberProfileView` |
 | `/congress/committees/[committee_id]/[name_slug]`   | SSG + dynamic | `CommitteeProfileView` — same shape as a member profile minus the trajectory chart |
 | `/data/[chamber]`                                   | static JSON | the scrub-through-time payload, fetched on demand |
-| `/wealth`                                           | static | `WealthPageClient` — chamber/state filter bar, the net worth scatter ("where they started, where they are now"), highest/lowest lists. Plan called this route `/congress/wealth`; shipped at `/wealth` instead since the site already had that top-level vertical wired up (nav entry, `lib/verticals.ts`) — see `app/wealth/page.tsx`'s own doc comment. |
+| `/congress/wealth`                                  | static | `WealthPageClient` — chamber/state filter bar, the net worth scatter ("where they started, where they are now"), highest/lowest lists. |
 | `/sitemap.xml`, `/robots.txt`, `/opengraph-image`   | static | — |
+
+`next.config.ts` `redirects()`: `/wealth` → `/congress/wealth` (308) and, for each explorer query param (`chamber`, `state`, `show`), `/?<param>` → `/congress` (308, query carried through). Bare `/` serves the hub. The `#delegation` hash can't be redirected server-side. `/supreme-court` is reserved for the Court branch (`status: 'soon'` in `lib/verticals.ts`; no route yet).
 
 Each `*/[.../name_slug]` route also has `opengraph-image.tsx` (rendered on
 demand) and `not-found.tsx`. Routes that read `pipeline/output/*.json` via `fs`
-are listed in `next.config.ts` `outputFileTracingIncludes`.
+are listed in `next.config.ts` `outputFileTracingIncludes` (keyed by route; the static pages `/`, `/congress`, `/congress/wealth` read the JSON at build time and need no entry).
 
 ---
 
@@ -101,7 +104,7 @@ to members and committees at once — there is no forked chart code.
 chart — the profile-page single-state delegation and, potentially, a future
 committee roster swarm. Not yet folded into a primitive.
 
-### Wealth track (`components/wealth/`, `/wealth` + profile pages)
+### Wealth track (`components/wealth/`, `/congress/wealth` + profile pages)
 
 Built on the same `charts/ChartFrame` + `charts/Axis` + `charts/Tooltip`
 primitives as the ideology charts — no parallel chart stack.
@@ -150,21 +153,11 @@ header row in the table above; control + compact `14R·9D` split, shared with
 (single-row swarm + scrollable roster list, no
 trajectory chart).
 
-### Site-wide header back-link (`components/SiteHeader.tsx`, `components/BackLinkContext.tsx`)
+### Two-tier nav and header back-link (`lib/verticals.ts`, `components/SiteHeader.tsx`, `components/SiteNav.tsx`, `components/BackLinkContext.tsx`)
 
-The header wordmark doubles as the "back to InsideGov" affordance: plain
-`InsideGov` on the homepage, `← InsideGov` on every sub-page. Since
-`SiteHeader` lives in `app/layout.tsx` as a sibling of `{children}` (not an
-ancestor of the page content), it can't read a page's own data directly — a
-committee page's correct back-href depends on that committee's `chamber`,
-which only the page component has. `BackLinkProvider` (wraps the whole body in
-`layout.tsx`) plus a page-level `<SetBackLink href={...} />` (used by
-`MemberProfileView` and `CommitteeProfileView`) bridge that gap: the page
-registers its restore-context href on mount, the header reads it. Always a
-fixed href, never `history.back()` — a shared-link/bookmark visitor has no
-meaningful history to return to. This replaced a second, separate
-"← InsideGov" link that used to sit below the header on both page types and
-did the exact same thing as the (already-clickable) wordmark.
+`lib/verticals.ts` holds `branches: Branch[]` — `{ id, label, href, status: 'live' | 'soon', sections, owns(pathname) }` — Congress (sections Ideology `/congress`, Wealth `/congress/wealth`) and Supreme Court (`/supreme-court`, one section, `status: 'soon'`). `SiteNav` is the primary row (live branches only, current one underlined; profile pages under `/congress/...` count as Congress). `SiteSectionNav` is the secondary tab row, rendered only for a live branch with two or more sections, on its section pages (not on profiles, the hub, or the Court). Flipping the Court's `status` to `live` adds its nav entry and makes its hub card a link. The header is **not** sticky; the explorer/wealth toolbars pin at `top-0 z-40` exactly as before.
+
+The wordmark is a plain link to `/` (no arrow) on `/`, `/congress`, `/congress/wealth`, `/supreme-court`; everywhere else it is `← InsideGov` going to whatever the page registered via `SetBackLink` (falls back to `/`). `BackLinkProvider` (wraps the body in `layout.tsx`) plus a page-level `<SetBackLink href={...} />` (used by `MemberProfileView` and `CommitteeProfileView`, now pointing under `/congress`) bridge the header/page gap. Always a fixed href, never `history.back()`.
 
 ---
 
@@ -391,16 +384,11 @@ Built from `net-worth-claude-code-plan.md`, seven sessions. Notes on where
 the plan and the shipped code diverge, beyond what's already called out
 inline in the tables above:
 
-1. **`/congress/wealth` shipped at `/wealth`.** The plan names the landing
-   route `/congress/wealth` throughout; the site already had a top-level
-   `wealth` vertical wired up at `/wealth` (nav entry, `lib/verticals.ts`)
-   before Session 2, so that session built in place rather than introduce a
-   second, competing route — reported in its own summary, restated in
-   `app/wealth/page.tsx`'s doc comment.
+1. **`/congress/wealth`** shipped at `/wealth` originally; moved to the planned route in the two-tier-structure session (below).
 2. **The party wealth chart was built (Session 3) then explicitly removed**
    on direct request, along with tightened list headers — a real, shipped
    feature taken back out, not a divergence in the "prompt vs. code"
-   sense. `/wealth` today is: filter bar, scatter, highest/lowest lists.
+   sense. `/congress/wealth` today is: filter bar, scatter, highest/lowest lists.
 3. **Session 5 (line-item extraction) ran at full scale, not just the
    session's own investigate-phase sample.** The plan's Session 6 depends on
    Session 5's *output existing*; validating that against only the ~85
@@ -452,3 +440,16 @@ inline in the tables above:
    reach. Revised to a two-way pill toggle (same `role="group"` pattern as
    `ChamberSwitch`) that replaces the panel's title, one list shown at a
    time.
+
+---
+
+## Session: two-tier structure (hub, `/congress`, `/congress/wealth`)
+
+`/` is now a hub; the explorer moved to `/congress`, wealth to `/congress/wealth`, with branch → section nav (see Routes and the header section above). Divergences from the session prompt:
+
+- **Explorer query params** are `chamber`, `state`, `show` (only those). Redirects use one `has` rule each; bare `/` stays the hub. Old `/#delegation` links now land on the hub (hash is client-only).
+- **No `"/"` tracing entry**: the hub is a static page reading JSON at build time, like the old `/`. Only serverless routes need `outputFileTracingIncludes`.
+- **Supreme Court**: pipeline output exists under `pipeline/output/court/` and `lib/court-entities.ts`, but no route or reader. Branch is `status: 'soon'`; hub card has no stat/sparkline.
+- **OG images**: a page that sets its own `openGraph` doesn't inherit the root file-based image, so `/congress` and `/congress/wealth` set `images`/`twitter.images` to `/opengraph-image` explicitly.
+- **Sticky behavior**: header doesn't stick, so the secondary row scrolls away; toolbars unchanged.
+- `/congress`'s title is now "Congress ideology explorer"; the hub keeps the site-level title.

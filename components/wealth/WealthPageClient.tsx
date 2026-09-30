@@ -12,7 +12,7 @@ import { WealthListsSection } from "./WealthListsSection";
 /**
  * Owns the one shared chamber/state filter for the whole page (plan §2,
  * decision 2) — page-level React state, not URL params: unlike the homepage
- * explorer, /wealth's filter bar only has a chamber switch and a state
+ * explorer, /congress/wealth's filter bar only has a chamber switch and a state
  * dropdown, no per-view page to link back to from elsewhere, so there's no
  * cross-page link that needs a shareable URL yet. Every section below reads
  * `view/stateFilter` from here; nothing keeps independent filter state.

@@ -20,7 +20,7 @@ export default function SenatorNotFound() {
         Congress. A former senator, a House member, or a mistyped ID lands here.
       </p>
       <Link
-        href="/"
+        href="/congress"
         className="font-mono text-[0.8rem] uppercase tracking-[0.1em] text-accent hover:underline"
       >
         ← Browse the Senate

@@ -4,6 +4,7 @@ import { getAllCommittees } from "@/lib/committee-data";
 import { CHAMBERS } from "@/lib/chamber";
 import { memberPath } from "@/lib/member-url";
 import { committeePath } from "@/lib/committee-url";
+import { branches } from "@/lib/verticals";
 import { absoluteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -34,6 +35,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
+    {
+      url: absoluteUrl("/congress"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: absoluteUrl("/congress/wealth"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...branches
+      .filter((b) => b.status === "live" && b.id !== "congress")
+      .map((b) => ({
+        url: absoluteUrl(b.href),
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.9,
+      })),
     ...profiles,
     ...committees,
   ];

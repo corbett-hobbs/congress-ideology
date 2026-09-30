@@ -8,7 +8,7 @@ const BASE_CLASS =
 /**
  * State dropdown — a controlled select, no state of its own. The explorer
  * (components/senate/ExplorerToolbar.tsx) wires it to the shared URL state
- * (lib/use-chamber.ts); /wealth (components/wealth/WealthFilterBar.tsx)
+ * (lib/use-chamber.ts); /congress/wealth (components/wealth/WealthFilterBar.tsx)
  * wires it to page-level state instead. Same component either way — only the
  * value/onChange source differs.
  */

@@ -30,10 +30,10 @@ export function CommitteeProfileView({
 }) {
   const backHref =
     committee.chamber === "house"
-      ? "/?chamber=house&show=committees"
+      ? "/congress?chamber=house&show=committees"
       : committee.chamber === "senate"
-        ? "/?chamber=senate&show=committees"
-        : "/?show=committees";
+        ? "/congress?chamber=senate&show=committees"
+        : "/congress?show=committees";
 
   return (
     <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-11">

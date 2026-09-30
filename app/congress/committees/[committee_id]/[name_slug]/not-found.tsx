@@ -21,7 +21,7 @@ export default function CommitteeNotFound() {
         mistyped ID lands here.
       </p>
       <Link
-        href="/?show=committees"
+        href="/congress?show=committees"
         className="font-mono text-[0.8rem] uppercase tracking-[0.1em] text-accent hover:underline"
       >
         ← Browse the committees

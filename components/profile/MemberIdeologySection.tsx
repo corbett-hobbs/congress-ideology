@@ -112,7 +112,7 @@ export function MemberIdeologySection({
                 : ""}
               .{inChamber ? ` ${name} is ringed.` : ""}{" "}
               <Link
-                href={`/?chamber=house&state=${state}`}
+                href={`/congress?chamber=house&state=${state}`}
                 className="text-accent hover:underline"
               >
                 Open in the explorer →
@@ -129,7 +129,7 @@ export function MemberIdeologySection({
                 ? `${name} and their seatmate`
                 : `${stateName}'s two seated senators (${name} served too little of the ${ordinal(latestCongress)} Congress to appear)`}
               {senateGap != null ? `, gap ${fmt2(senateGap)}` : ""}.{" "}
-              <Link href="/#delegation" className="text-accent hover:underline">
+              <Link href="/congress#delegation" className="text-accent hover:underline">
                 All 50 delegations →
               </Link>
             </p>

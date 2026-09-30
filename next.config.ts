@@ -1,6 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // The explorer moved from "/" to "/congress" and wealth from "/wealth" to
+  // "/congress/wealth". A bare "/" is the hub and must not redirect, so the
+  // explorer is matched on the query params it reads/writes (chamber, state,
+  // show — see lib/use-chamber.ts). Next carries the query string through.
+  async redirects() {
+    return [
+      { source: "/wealth", destination: "/congress/wealth", permanent: true },
+      ...["chamber", "state", "show"].map((key) => ({
+        source: "/",
+        has: [{ type: "query" as const, key }],
+        destination: "/congress",
+        permanent: true,
+      })),
+    ];
+  },
+
   // Several routes render as serverless functions (stale-slug redirects on the
   // profile pages; the OG images, which now render on demand) and read
   // pipeline/output/*.json via fs — a computed path Next's tracer doesn't

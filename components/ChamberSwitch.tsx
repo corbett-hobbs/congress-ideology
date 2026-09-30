@@ -6,7 +6,7 @@ import { CHAMBER_VIEWS, viewLabel, type ChamberView } from "@/lib/chamber";
  * The three-way Both / Senate / House pill switch — a controlled component,
  * no state of its own. Used by the explorer's toolbar
  * (components/senate/ExplorerToolbar.tsx, wired to the shared URL state) and
- * /wealth's filter bar (components/wealth/WealthFilterBar.tsx, wired to
+ * /congress/wealth's filter bar (components/wealth/WealthFilterBar.tsx, wired to
  * page-level state).
  */
 export function ChamberSwitch({

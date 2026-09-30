@@ -94,7 +94,7 @@ export function useExplorerUrl(): ExplorerUrl {
       if (v === "senate" || v === "house") sp.set("chamber", v);
       if (opts.state) sp.set("state", opts.state);
       const q = sp.toString();
-      return `/${q ? `?${q}` : ""}`;
+      return `/congress${q ? `?${q}` : ""}`;
     },
     [view],
   );
@@ -106,7 +106,7 @@ export function useExplorerUrl(): ExplorerUrl {
     [router, pathname],
   );
 
-  const onExplorer = pathname === "/";
+  const onExplorer = pathname === "/congress";
 
   return {
     view,

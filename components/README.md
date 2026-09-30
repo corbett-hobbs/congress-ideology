@@ -27,8 +27,9 @@ components/
             MemberCompassCard adds the "nearest neighbors" toggle over the
             shared compass; NeighborChips is its neighbor-mode chip row. Used
             by /congress/{senators,house}/[bioguide_id]/[name_slug].
-  SiteHeader.tsx / SiteNav.tsx  the persistent top bar (wordmark + top-level
-            section nav from lib/verticals.ts), rendered once in the root
+  SiteHeader.tsx / SiteNav.tsx  the persistent top bar (wordmark + branch nav,
+            plus a section-tab row for multi-section branches, from
+            lib/verticals.ts), rendered once in the root
             layout on every page. The explorer's own controls (chamber /
             members-committees / state / play / slider) live below it in
             senate/ExplorerToolbar.tsx.

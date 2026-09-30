@@ -46,7 +46,7 @@ export function MemberProfileView({
   bio,
 }: MemberProfileViewProps) {
   const explorerHref =
-    profile.chamber === "house" ? "/?chamber=house" : "/";
+    profile.chamber === "house" ? "/congress?chamber=house" : "/congress";
 
   return (
     <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-6 pb-16 pt-11">

@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import {
-  getBothTrend,
-  getChamberCurrent,
-  getMemberSearchIndex,
-} from "@/lib/congress-data";
-import {
-  committeesLatestCongress,
-  getCommittees,
-  getCommitteeSearchIndex,
-} from "@/lib/committee-data";
+import Link from "next/link";
+import { getBothTrend } from "@/lib/congress-data";
+import { branches } from "@/lib/verticals";
 import { site } from "@/lib/site";
-import { SenateExplorer } from "@/components/senate/SenateExplorer";
+import { HubSparkline } from "@/components/HubSparkline";
+import { SiteFooter } from "@/components/senate/SiteFooter";
+import { ordinal } from "@/components/senate/format";
 
 export const metadata: Metadata = {
   title: { absolute: `${site.name} · 1789–present` },
@@ -24,25 +18,101 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
-  const senate = getChamberCurrent("senate");
-  const house = getChamberCurrent("house");
-  const bothTrend = getBothTrend();
-  const search = getMemberSearchIndex();
-  const committees = getCommittees("both");
-  const committeeSearch = getCommitteeSearchIndex();
+const BLURBS: Record<string, string> = {
+  congress:
+    "Every member\u2019s votes as a two-dimensional ideology score, plus estimated net worth from financial disclosures.",
+  "supreme-court":
+    "Where the justices sit over time, from Martin-Quinn ideology scores.",
+};
+
+const fmt2 = (n: number) => n.toFixed(2);
+
+export default function Hub() {
+  const trend = getBothTrend();
+  const latest = [...trend]
+    .reverse()
+    .find((p) => p.dem != null && p.rep != null);
+  const gap = latest ? (latest.rep as number) - (latest.dem as number) : null;
 
   return (
-    <Suspense fallback={<div className="min-h-screen" />}>
-      <SenateExplorer
-        senate={senate}
-        house={house}
-        bothTrend={bothTrend}
-        search={search}
-        committees={committees}
-        committeeSearch={committeeSearch}
-        committeeCongress={committeesLatestCongress()}
-      />
-    </Suspense>
+    <>
+      <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col gap-8 px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+        <div className="flex max-w-[44rem] flex-col gap-3">
+          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+            {site.tagline}
+          </h1>
+          <p className="text-[1.05rem] leading-relaxed text-ink-muted">
+            Explore ideology and more across the branches of U.S. government.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {branches.map((b) => {
+            const live = b.status === "live";
+            const isCongress = b.id === "congress";
+            return (
+              <section
+                key={b.id}
+                aria-labelledby={`hub-${b.id}`}
+                className={`flex flex-col gap-4 rounded-xl border border-line bg-surface p-5 ${
+                  live ? "" : "opacity-70"
+                }`}
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <h2
+                    id={`hub-${b.id}`}
+                    className="font-serif text-2xl font-semibold tracking-tight"
+                  >
+                    {live ? (
+                      <Link href={b.href} className="hover:text-accent">
+                        {b.label}
+                      </Link>
+                    ) : (
+                      b.label
+                    )}
+                  </h2>
+                  {!live && (
+                    <span className="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-ink-faint">
+                      Coming soon
+                    </span>
+                  )}
+                </div>
+                <p className="text-[0.95rem] leading-relaxed text-ink-muted">
+                  {BLURBS[b.id]}
+                </p>
+
+                {isCongress && gap != null && (
+                  <div className="flex flex-col gap-2">
+                    <HubSparkline trend={trend} />
+                    <p className="text-[0.85rem] text-ink-muted">
+                      <span className="font-serif text-2xl font-semibold text-ink">
+                        {fmt2(gap)}
+                      </span>{" "}
+                      gap between the party means on dimension 1,{" "}
+                      {ordinal(latest!.congress)} Congress (House and Senate)
+                    </p>
+                  </div>
+                )}
+
+                {live && (
+                  <div className="mt-auto flex flex-wrap gap-2 pt-1">
+                    {b.sections.map((s) => (
+                      <Link
+                        key={s.id}
+                        href={s.href}
+                        className="rounded-md border border-line-strong px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-ink-muted transition-colors hover:border-accent hover:text-ink"
+                      >
+                        {s.label} →
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </section>
+            );
+          })}
+        </div>
+        <SiteFooter />
+      </main>
+    </>
   );
 }
