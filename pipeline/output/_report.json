@@ -2,13 +2,13 @@
   "sources": [
     {
       "path": "pipeline/raw/voteview/HSall_members.csv",
-      "bytes": 6201247,
-      "sha256": "d086a15ff06499e11afe759d957af7c8e7e655c7fc14d40907bfe416fb61f07d"
+      "bytes": 6201434,
+      "sha256": "c9cad95f555957622e4f80fb4d3cb4eee07daffba3bf9ad8745d234bc8151c24"
     },
     {
       "path": "pipeline/raw/voteview/HSall_parties.csv",
-      "bytes": 59805,
-      "sha256": "4f7dc5ccf4eb0381d356f6c0b7304acf4691858c3d3b0a726156691f84dca2ff"
+      "bytes": 59810,
+      "sha256": "f57e2d40ddbd9a48394300c2ad4d4979354194707d6e1591b2b2d553fdb89b8c"
     },
     {
       "path": "pipeline/raw/congress-legislators/legislators-current.yaml",
@@ -38,9 +38,9 @@
       "withBirthYear": 12226
     },
     "crosswalk": {
-      "entries": 12630,
+      "entries": 12632,
       "fromCongressLegislators": 12298,
-      "fromVoteview": 332,
+      "fromVoteview": 334,
       "conflicts": 0,
       "voteviewIcpsrsUnresolvable": 3
     },
@@ -58,9 +58,9 @@
       "missingParty": 462
     },
     "ideologyScores": {
-      "total": 50930,
+      "total": 50932,
       "resolution": {
-        "agree": 50930,
+        "agree": 50932,
         "crosswalk": 0,
         "voteview": 0
       },
@@ -117,7 +117,7 @@
         "Donna Christensen [C000380] C106 house VI",
         "Donna Christensen [C000380] C107 house VI"
       ],
-      "scoresWithoutTerm": 156
+      "scoresWithoutTerm": 158
     }
   },
   "committees": {
