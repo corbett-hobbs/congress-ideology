@@ -623,7 +623,11 @@
     "revision": "1375136418",
     "fetched_at": "2026-09-30",
     "needs_review": false,
-    "photo": null
+    "photo": {
+      "path": "/images/justices/114.jpg",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Elena_Kagan_official_SCOTUS_portrait.jpg",
+      "license": "Public domain"
+    }
   },
   {
     "justice_id": 115,

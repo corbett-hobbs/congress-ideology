@@ -145,7 +145,40 @@ interface PhotoResult {
   note: string;
 }
 
+/**
+ * Articles whose lead image is not public domain, but whose subject has a
+ * public-domain Commons file: justice_id -> that file's name.
+ */
+const PHOTO_OVERRIDES: Record<number, string> = {
+  // The article's lead is the CC BY-SA 3.0 copy of the 2013 official portrait;
+  // this is the public-domain copy of the same Steve Petteway photograph.
+  114: "Elena_Kagan_official_SCOTUS_portrait.jpg",
+};
+
 async function findPhoto(id: number, api: z.infer<typeof apiPhoto>): Promise<PhotoResult> {
+  const override = PHOTO_OVERRIDES[id];
+  if (override) {
+    const base = `https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&titles=${encodeURIComponent("File:" + override)}`;
+    const { body } = await getJson(`${base}&iiprop=extmetadata|url&iiurlwidth=330`);
+    const info = (body as { query?: { pages?: Record<string, { imageinfo?: { thumburl?: string; extmetadata?: Record<string, { value: string }> }[] }> } })?.query?.pages;
+    const ii = Object.values(info ?? {})[0]?.imageinfo?.[0];
+    const license = ii?.extmetadata?.LicenseShortName?.value ?? "";
+    if (!ii?.thumburl || !isPublicDomainLicense({ LicenseShortName: license })) {
+      return { photo: null, note: `override ${override} is not public domain` };
+    }
+    const res = await fetch(ii.thumburl, { headers: { "User-Agent": USER_AGENT } });
+    if (!res.ok) return { photo: null, note: `override download ${res.status}` };
+    await mkdir(PHOTO_DIR, { recursive: true });
+    await writeFile(`${PHOTO_DIR}/${id}.jpg`, Buffer.from(await res.arrayBuffer()));
+    return {
+      photo: {
+        path: `/images/justices/${id}.jpg`,
+        source_url: `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(override)}`,
+        license,
+      },
+      note: `photo ok via override (${license})`,
+    };
+  }
   const src = api.thumbnail?.source ?? api.originalimage?.source;
   const orig = api.originalimage?.source ?? api.thumbnail?.source;
   if (!src || !orig) return { photo: null, note: "no image on article" };
