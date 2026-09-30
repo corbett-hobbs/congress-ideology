@@ -26,11 +26,14 @@ interface ChartFrameProps {
   onPointerMove?: (e: React.PointerEvent<SVGSVGElement>) => void;
   onPointerLeave?: (e: React.PointerEvent<SVGSVGElement>) => void;
   onClick?: (e: React.MouseEvent<SVGSVGElement>) => void;
+  /** Extra props for the <svg> (e.g. zoom/pan handlers). Spread last, so keep
+   *  handlers here distinct from the explicit ones above. */
+  svgProps?: React.SVGProps<SVGSVGElement>;
   /** Receives the plot-area dimensions (inside the margins). */
   children: (dims: ChartDims) => ReactNode;
 }
 
-const DEFAULT_MARGIN: Margin = { top: 8, right: 8, bottom: 8, left: 8 };
+export const DEFAULT_MARGIN: Margin = { top: 8, right: 8, bottom: 8, left: 8 };
 
 /**
  * Responsive SVG container. Establishes a fixed logical coordinate space that
@@ -47,6 +50,7 @@ export function ChartFrame({
   onPointerMove,
   onPointerLeave,
   onClick,
+  svgProps,
   children,
 }: ChartFrameProps) {
   const margin: Margin = { ...DEFAULT_MARGIN, ...marginProp };
@@ -68,6 +72,7 @@ export function ChartFrame({
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       onClick={onClick}
+      {...svgProps}
     >
       <g transform={`translate(${margin.left},${margin.top})`}>{children(dims)}</g>
     </svg>

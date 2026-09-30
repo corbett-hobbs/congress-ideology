@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { useZoomPan, viewDomains, type ZoomView } from "@/components/charts/use-zoom-pan";
+import { ZoomControls } from "@/components/charts/ZoomControls";
 import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
@@ -23,6 +25,7 @@ import {
   signedLog,
   signedLogInverse,
   yearsOfData,
+  zoomTicks,
 } from "@/lib/wealth-scatter";
 import { wealthCountNoun } from "@/lib/wealth-copy";
 import { formatCompactUSD, formatSignedCompactUSD } from "@/lib/format-money";
@@ -43,6 +46,7 @@ const FALLBACK_W = 1080;
 /** Below this card width the chart drops the standout labels and long axis
  *  titles (measured, not viewport — the card can be narrow on a wide page). */
 const COMPACT_W = 560;
+const MAX_ZOOM = 16;
 
 function tickLabel(v: number): string {
   if (v === 0) return "$0";
@@ -102,9 +106,49 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
   const left = margin.left + padX;
   const H = side + margin.top + margin.bottom;
 
+  const clipId = `wealth-clip-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const zoom = useZoomPan({
+    svgRef,
+    extent: T_MAX,
+    maxK: MAX_ZOOM,
+    getPlotBox: () => {
+      const svg = svgRef.current;
+      if (!svg) return null;
+      const r = svg.getBoundingClientRect();
+      const s = r.width / W;
+      return {
+        left: r.left + left * s,
+        top: r.top + margin.top * s,
+        width: side * s,
+        height: side * s,
+      };
+    },
+    // Zoom/pan moves every dot, so any open hover card is now misplaced.
+    onViewChange: () => {
+      setHoverId(null);
+      tip.hide();
+    },
+  });
+  const zoomed = zoom.zoomed;
+
   // Both axes: identical transform, identical domain — see lib/wealth-scatter.
-  const x = scaleLinear().domain([-T_MAX, T_MAX]).range([0, side]);
-  const y = scaleLinear().domain([-T_MAX, T_MAX]).range([side, 0]);
+  // Zooming narrows the same window on both, so the diagonal stays 45°.
+  const visible = viewDomains(zoom.view, T_MAX);
+  const x = scaleLinear().domain(visible.x).range([0, side]);
+  const y = scaleLinear().domain(visible.y).range([side, 0]);
+
+  /** Plot-area px of a member's dot under an arbitrary view. */
+  function pointUnder(member: WealthMember, v: ZoomView): { cx: number; cy: number } {
+    const d = viewDomains(v, T_MAX);
+    const tx = signedLog(clampNetWorth(firstNetWorth(member)));
+    const ty = signedLog(clampNetWorth(latestNetWorth(member)));
+    return {
+      cx: ((tx - d.x[0]) / (d.x[1] - d.x[0])) * side,
+      cy: side - ((ty - d.y[0]) / (d.y[1] - d.y[0])) * side,
+    };
+  }
+  const onPlot = (p: { cx: number; cy: number }) =>
+    p.cx >= 0 && p.cx <= side && p.cy >= 0 && p.cy <= side;
 
   const changes = useMemo(() => cohort.map(netWorthChange), [cohort]);
   const growPct = changes.length
@@ -126,7 +170,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         clipped: isClipped(member),
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cohort, side],
+    [cohort, side, zoom.view],
   );
   const dotById = useMemo(
     () => new Map(dots.map((d) => [d.member.bioguideId, d])),
@@ -149,7 +193,10 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     const { top, bottom } = pickStandouts(cohort, 3);
     const entries = [...top, ...bottom]
       .map((e) => ({ entry: e, dot: dotById.get(e.member.bioguideId) }))
-      .filter((v): v is { entry: (typeof top)[number]; dot: Dot } => v.dot != null);
+      .filter(
+        (v): v is { entry: (typeof top)[number]; dot: Dot } =>
+          v.dot != null && onPlot(v.dot),
+      );
     const placed = placeStandoutLabels(
       entries.map((v) => v.dot),
       side,
@@ -159,6 +206,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
       ...placed[i],
       text: `${lastNameOf(v.entry.member.name)} (${partyLetter(v.entry.member)}) ${formatSignedCompactUSD(v.entry.change)}`,
     }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cohort, dotById, side, compact]);
 
   const searchResults = useMemo(() => {
@@ -183,6 +231,15 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     };
   }
 
+  function clampedCenter(member: WealthMember, k: number) {
+    const slack = T_MAX - T_MAX / k;
+    const clamp = (v: number) => Math.min(slack, Math.max(-slack, v));
+    return {
+      cx: clamp(signedLog(clampNetWorth(firstNetWorth(member)))),
+      cy: clamp(signedLog(clampNetWorth(latestNetWorth(member)))),
+    };
+  }
+
   function clearSelection() {
     setSelectedId(null);
     setSingleYearNotice(null);
@@ -200,8 +257,19 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
       return;
     }
     setSelectedId(member.bioguideId);
-    const dot = dotById.get(member.bioguideId);
-    if (dot) tip.show(member, svgPoint(dot.cx, dot.cy));
+    // If they're outside the zoomed window, pan (keeping the zoom) to them.
+    let at = pointUnder(member, zoom.view);
+    if (!onPlot(at)) {
+      zoom.centerOn(
+        signedLog(clampNetWorth(firstNetWorth(member))),
+        signedLog(clampNetWorth(latestNetWorth(member))),
+      );
+      at = pointUnder(member, {
+        ...zoom.view,
+        ...clampedCenter(member, zoom.view.k),
+      });
+    }
+    tip.show(member, svgPoint(at.cx, at.cy));
   }
 
   const chamberNoun = wealthCountNoun(view);
@@ -210,8 +278,10 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     medianChange != null ? formatSignedCompactUSD(medianChange) : "unavailable"
   }.`;
 
-  const ticks = compact ? TICKS_COMPACT : TICKS_DESKTOP;
-  const tickT = ticks.map(signedLog);
+  // Zoomed, each axis has its own window (panning is independent per axis).
+  const fixedTicks = compact ? TICKS_COMPACT : TICKS_DESKTOP;
+  const xTickT = (zoomed ? zoomTicks(visible.x, side) : fixedTicks).map(signedLog);
+  const yTickT = (zoomed ? zoomTicks(visible.y, side) : fixedTicks).map(signedLog);
 
   const stats = [
     { value: `${growPct}%`, label: "grew" },
@@ -316,13 +386,14 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         and rate.
       </p>
 
-      <div ref={wrapRef} className="mt-3">
+      <div ref={wrapRef} className="relative mt-3">
         <ChartFrame
           width={W}
           height={H}
           margin={{ ...margin, left }}
           ariaLabel={ariaSummary}
           svgRef={svgRef}
+          svgProps={zoom.svgProps}
           onPointerLeave={() => {
             setHoverId(null);
             if (!selectedId) tip.hide();
@@ -333,7 +404,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
               <Axis
                 scale={x}
                 orientation="bottom"
-                ticks={tickT}
+                ticks={xTickT}
                 offset={side}
                 gridExtent={side}
                 zeroAt={0}
@@ -342,7 +413,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
               <Axis
                 scale={y}
                 orientation="left"
-                ticks={tickT}
+                ticks={yTickT}
                 offset={0}
                 gridExtent={side}
                 zeroAt={0}
@@ -372,66 +443,73 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
                 </>
               )}
 
-              {/* Corner to corner of the square: a true 45° no-change line. */}
-              <line
-                x1={0}
-                y1={side}
-                x2={side}
-                y2={0}
-                stroke="var(--ink-muted)"
-                strokeWidth={1.5}
-                strokeDasharray="5 4"
-                pointerEvents="none"
-              />
+              <clipPath id={clipId}>
+                <rect x={0} y={0} width={side} height={side} />
+              </clipPath>
 
-              {drawOrder.map((d) => {
-                const id = d.member.bioguideId;
-                const ringed = id === selectedId || id === hoverId;
-                const matches = !!stateFilter && d.member.state === stateFilter;
-                const dimmed = !!stateFilter && !matches;
-                const r = ringed ? 7 : matches ? 5.6 : dimmed ? 3.6 : 4.4;
-                const cls = `dot ${d.member.caucus === "Democrat" ? "fill-dem" : "fill-rep"}${ringed ? " is-highlighted" : ""}`;
-                const opacity = dimmed ? 0.28 : 1;
-                const linkable = hasProfilePage({ isCurrent: true });
-                const label = `${d.member.name} (${partyLetter(d.member)}), ${memberTitleLine(d.member)}: ${formatPointUSD(d.member.points[0])} to ${formatPointUSD(d.member.points[d.member.points.length - 1])}`;
-                const shape = d.clipped ? (
-                  <polygon
-                    points={`${d.cx},${d.cy - r * 1.35} ${d.cx + r * 1.35},${d.cy} ${d.cx},${d.cy + r * 1.35} ${d.cx - r * 1.35},${d.cy}`}
-                    opacity={opacity}
-                    className={cls}
-                  />
-                ) : (
-                  <circle cx={d.cx} cy={d.cy} r={r} opacity={opacity} className={cls} />
-                );
-                const handlers = {
-                  onPointerEnter: () => {
-                    setHoverId(id);
-                    tip.show(d.member, svgPoint(d.cx, d.cy));
-                  },
-                  onPointerLeave: () => {
-                    setHoverId(null);
-                    if (selectedId && selectedId !== id) {
-                      const sel = dotById.get(selectedId);
-                      if (sel) tip.show(sel.member, svgPoint(sel.cx, sel.cy));
-                    } else if (!selectedId) tip.hide();
-                  },
-                };
-                return linkable ? (
-                  <Link
-                    key={id}
-                    href={memberPath(d.member)}
-                    aria-label={label}
-                    tabIndex={-1}
-                    {...handlers}
-                  >
-                    {shape}
-                  </Link>
-                ) : (
-                  <g key={id} role="img" aria-label={label} {...handlers}>
-                    {shape}
-                  </g>
-                );
-              })}
+              {/* Corner to corner of the square: a true 45° no-change line. */}
+              <g clipPath={zoomed ? `url(#${clipId})` : undefined}>
+                <line
+                  x1={x(-T_MAX)}
+                  y1={y(-T_MAX)}
+                  x2={x(T_MAX)}
+                  y2={y(T_MAX)}
+                  stroke="var(--ink-muted)"
+                  strokeWidth={1.5}
+                  strokeDasharray="5 4"
+                  pointerEvents="none"
+                />
+
+                {drawOrder.map((d) => {
+                  const id = d.member.bioguideId;
+                  const ringed = id === selectedId || id === hoverId;
+                  const matches = !!stateFilter && d.member.state === stateFilter;
+                  const dimmed = !!stateFilter && !matches;
+                  const r = ringed ? 7 : matches ? 5.6 : dimmed ? 3.6 : 4.4;
+                  const cls = `dot ${d.member.caucus === "Democrat" ? "fill-dem" : "fill-rep"}${ringed ? " is-highlighted" : ""}`;
+                  const opacity = dimmed ? 0.28 : 1;
+                  const linkable = hasProfilePage({ isCurrent: true });
+                  const label = `${d.member.name} (${partyLetter(d.member)}), ${memberTitleLine(d.member)}: ${formatPointUSD(d.member.points[0])} to ${formatPointUSD(d.member.points[d.member.points.length - 1])}`;
+                  const shape = d.clipped ? (
+                    <polygon
+                      points={`${d.cx},${d.cy - r * 1.35} ${d.cx + r * 1.35},${d.cy} ${d.cx},${d.cy + r * 1.35} ${d.cx - r * 1.35},${d.cy}`}
+                      opacity={opacity}
+                      className={cls}
+                    />
+                  ) : (
+                    <circle cx={d.cx} cy={d.cy} r={r} opacity={opacity} className={cls} />
+                  );
+                  const handlers = {
+                    onPointerEnter: () => {
+                      setHoverId(id);
+                      tip.show(d.member, svgPoint(d.cx, d.cy));
+                    },
+                    onPointerLeave: () => {
+                      setHoverId(null);
+                      if (selectedId && selectedId !== id) {
+                        const sel = dotById.get(selectedId);
+                        if (sel && onPlot(sel)) tip.show(sel.member, svgPoint(sel.cx, sel.cy));
+                      } else if (!selectedId) tip.hide();
+                    },
+                  };
+                  return linkable ? (
+                    <Link
+                      key={id}
+                      href={memberPath(d.member)}
+                      aria-label={label}
+                      tabIndex={-1}
+                      {...handlers}
+                    >
+                      {shape}
+                    </Link>
+                  ) : (
+                    <g key={id} role="img" aria-label={label} {...handlers}>
+                      {shape}
+                    </g>
+                  );
+                })}
+
+              </g>
 
               {standoutLabels.map((l) => (
                 <text
@@ -449,6 +527,15 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
             </>
           )}
         </ChartFrame>
+        <ZoomControls
+          onZoomIn={zoom.zoomIn}
+          onZoomOut={zoom.zoomOut}
+          onReset={zoom.reset}
+          canZoomIn={zoom.canZoomIn}
+          zoomed={zoomed}
+          className=""
+          style={{ left: left + 6, top: margin.top + 6 }}
+        />
         <Tooltip state={tip.state}>{(m) => <WealthMemberTooltip member={m} />}</Tooltip>
       </div>
 
@@ -473,8 +560,8 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         Years are the year each report covers, not the year it was filed. Both axes use the
         same signed-log scale, capped at ±{capLabel} so a handful of very large estimates
         don’t compress everyone else near zero; points beyond the cap are drawn as diamonds
-        at the edge, with the true value in the label and hover card. Pick a state to
-        highlight its members. Pick a member in the search to see their filings; members
+        at the edge, with the true value in the label and hover card. Zoom with the +/− buttons,
+        Ctrl/⌘ + scroll or a pinch, and drag to pan. Pick a state to highlight its members. Pick a member in the search to see their filings; members
         with missing early years get a note there. Estimates for members reporting an
         open-ended “Over $50,000,000” band are approximate and marked with a +.
       </p>

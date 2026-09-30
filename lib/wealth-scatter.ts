@@ -33,6 +33,42 @@ export function signedLogInverse(t: number): number {
   return Math.round(Math.sinh(t) * SIGNED_LOG_KNEE);
 }
 
+/**
+ * Gridline dollar values for a zoomed window of the signed-log axis. `range` is
+ * the visible `[min, max]` in transformed (`signedLog`) units and `sizePx` the
+ * plot side, so tick spacing is judged in pixels — the axis is far from linear
+ * in dollars. Picks 1-2-5 values by priority (0, then 1s, 5s, 2s, ... of each
+ * power of ten) and keeps each only if it is `minGapPx` clear of those already
+ * kept. Returned ascending.
+ */
+export function zoomTicks(
+  range: readonly [number, number],
+  sizePx: number,
+  minGapPx = 46,
+): number[] {
+  const [t0, t1] = range;
+  const span = t1 - t0;
+  if (!(span > 0) || !(sizePx > 0)) return [];
+  const px = (dollars: number) => ((signedLog(dollars) - t0) / span) * sizePx;
+
+  const candidates: number[] = [0];
+  for (const lead of [1, 5, 2, 3, 4, 6, 8]) {
+    for (let p = 2; p <= 7; p++) {
+      const v = lead * 10 ** p;
+      if (v > NET_WORTH_CAP) continue;
+      candidates.push(v, -v);
+    }
+  }
+
+  const kept: { v: number; p: number }[] = [];
+  for (const v of candidates) {
+    const p = px(v);
+    if (p < 0 || p > sizePx) continue;
+    if (kept.every((k) => Math.abs(k.p - p) >= minGapPx)) kept.push({ v, p });
+  }
+  return kept.map((k) => k.v).sort((a, b) => a - b);
+}
+
 export function clampNetWorth(value: number): number {
   return Math.max(-NET_WORTH_CAP, Math.min(NET_WORTH_CAP, value));
 }

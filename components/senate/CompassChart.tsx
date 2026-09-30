@@ -126,6 +126,7 @@ export function CompassChart({
       isSelectable={(m) => hasProfilePage(m)}
       renderTooltip={(m) => <MemberTooltip member={m} />}
       labels={labels}
+      zoomable
     />
   );
 }
