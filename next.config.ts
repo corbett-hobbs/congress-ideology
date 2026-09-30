@@ -35,6 +35,10 @@ const nextConfig: NextConfig = {
       "./pipeline/output/*.json",
     ],
     "/sitemap.xml": ["./pipeline/output/*.json"],
+    // The Court pages and the hub card read pipeline/output/court/ via
+    // lib/justice-data.ts.
+    "/supreme-court": ["./pipeline/output/court/*.json"],
+    "/": ["./pipeline/output/court/*.json"],
   },
 };
 

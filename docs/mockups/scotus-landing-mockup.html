@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InsideGov · Supreme Court landing page (mockup)</title>
+<!--
+  MOCKUP ONLY. Layout, controls and linked-state behavior are the spec.
+  Justice scores below are ILLUSTRATIVE hand-built trajectories, not real Martin-Quinn values.
+  Pixel spacing here is NOT authoritative: rebuild spacing in a real browser against the shipped
+  tokens/primitives (see the Claude Code session prompt).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f5; --surface:#ffffff; --surface-raised:#f7f8fa;
+    --ink:#1a2233; --ink-muted:#5b6472; --ink-faint:#8890a0;
+    --line:#d7dce3; --line-strong:#b9c1cc;
+    --accent:#5c4b7a; --dem:#3a66c2; --rep:#c24a3a;
+    box-sizing:border-box;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14161c; --surface:#1b1e26; --surface-raised:#20242e;
+      --ink:#e9eaee; --ink-muted:#9aa2af; --ink-faint:#6b7280;
+      --line:#2a2e38; --line-strong:#3a4050;
+      --accent:#9b84c7; --dem:#4c7fdb; --rep:#d96a56;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14161c; --surface:#1b1e26; --surface-raised:#20242e;
+    --ink:#e9eaee; --ink-muted:#9aa2af; --ink-faint:#6b7280;
+    --line:#2a2e38; --line-strong:#3a4050;
+    --accent:#9b84c7; --dem:#4c7fdb; --rep:#d96a56;
+  }
+  *,*::before,*::after{box-sizing:inherit}
+  html{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+  .site{border-bottom:1px solid var(--line);background:var(--surface)}
+  .site .wrap{display:flex;align-items:center;height:52px}
+  .wordmark{font:500 20px "Newsreader",Georgia,serif;letter-spacing:.2px;color:var(--ink);text-decoration:none}
+
+  .hero{padding:36px 0 20px}
+  h1{font:400 clamp(30px,4.6vw,46px)/1.1 "Newsreader",Georgia,serif;margin:0 0 14px;letter-spacing:-.01em}
+  .intro{margin:0;color:var(--ink-muted);font-size:15.5px}
+
+  /* sticky toolbar */
+  .toolbar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+  .toolbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px 22px;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
+  .term{display:flex;align-items:center;gap:12px;flex:1 1 340px;max-width:520px;min-width:260px;margin-left:auto}
+  button{font:inherit;color:inherit}
+  .play{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface-raised);display:grid;place-items:center;cursor:pointer;flex:none}
+  .play:focus-visible,.seg button:focus-visible,input:focus-visible,.row-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .play svg{width:14px;height:14px;fill:var(--ink)}
+  input[type=range]{flex:1;min-width:120px;accent-color:var(--accent)}
+  .termlabel{display:flex;align-items:baseline;gap:8px;white-space:nowrap;min-width:104px;justify-content:flex-end}
+  .termlabel b{font:500 15px "IBM Plex Mono",monospace}
+  .termlabel span{font:400 13px "IBM Plex Mono",monospace;color:var(--ink-muted)}
+  .filter{display:flex;align-items:center;gap:10px;flex:none;min-width:0}
+  .filter label{font:400 11px "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  select.pres{max-width:176px;padding:6px 26px 6px 10px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface-raised);color:var(--ink);font:inherit;font-size:13px;cursor:pointer;text-overflow:ellipsis}
+  select.pres:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--surface-raised)}
+  .seg button{border:0;background:transparent;padding:6px 12px;font-size:13px;cursor:pointer;color:var(--ink-muted);border-right:1px solid var(--line-strong)}
+  .seg button:last-child{border-right:0}
+  .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+  :root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#14161c}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#14161c}}
+
+  main{padding:20px 0 56px;display:grid;gap:20px}
+  .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:stretch}
+  .flexcol{display:flex;flex-direction:column}
+  .fill{position:relative;flex:1 1 auto;min-height:300px;margin-top:8px}
+  .fill .scroll2{position:absolute;inset:0;max-height:none;overflow-y:auto;margin-top:0}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px 16px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;margin-bottom:4px}
+  h2{font:500 22px/1.2 "Newsreader",Georgia,serif;margin:0}
+  .lede{margin:4px 0 0;color:var(--ink-muted);font-size:13.5px;max-width:64ch}
+  .foot{margin:10px 0 0;color:var(--ink-faint);font-size:12.5px;max-width:80ch}
+
+  /* search */
+  .search{position:relative;width:200px}
+  .search input{width:100%;padding:7px 10px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface-raised);color:var(--ink);font:inherit;font-size:13.5px}
+  .results{position:absolute;right:0;left:0;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;z-index:10;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.12)}
+  .results button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:0;background:transparent;padding:7px 10px;font-size:13.5px;cursor:pointer}
+  .results button:hover,.results button:focus-visible{background:var(--surface-raised)}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .dot.D{background:var(--dem)} .dot.R{background:var(--rep)}
+
+  .stats{display:flex;gap:26px;flex-wrap:wrap;margin:6px 0 0;font-size:13.5px}
+  .stats div{display:flex;flex-direction:column}
+  .stats small{color:var(--ink-muted);font-size:12px}
+  .stats strong{font-weight:500}
+  .picked{margin-top:8px;font-size:13.5px;display:none;align-items:center;gap:10px;flex-wrap:wrap}
+  .picked.on{display:flex}
+  .picked button{border:1px solid var(--line-strong);background:var(--surface-raised);border-radius:6px;padding:2px 8px;font-size:12.5px;cursor:pointer;color:var(--ink-muted)}
+
+  svg text{font-family:"IBM Plex Sans",system-ui,sans-serif}
+  .chart{width:100%;display:block}
+  .scroll2{max-height:340px;overflow-y:auto;border-top:1px solid var(--line);margin-top:8px}
+  @media (max-width:800px){
+    .grid2{grid-template-columns:minmax(0,1fr)}
+    .fill{min-height:0}
+    .fill .scroll2{position:static;max-height:none;overflow:visible}
+    .search{width:100%}
+    .term{flex:1 1 100%;max-width:none;margin-left:0}
+    .filter{width:100%}
+    select.pres{flex:1 1 auto;max-width:none;min-width:0;padding:6px 20px 6px 8px;font-size:12.5px;text-overflow:clip}
+    .seg button{padding:6px 8px;font-size:12.5px}
+  }
+  @media (max-width:560px){ .filter .lbl{display:none} }
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;font-size:12.5px;color:var(--ink-muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:22px;height:0;border-top:2px solid}
+  .tip{position:fixed;z-index:50;pointer-events:none;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px;font-size:12.5px;box-shadow:0 6px 20px rgba(0,0,0,.14);display:none;max-width:240px}
+  .tip b{font-weight:600;display:block;font-size:13.5px}
+  .tip .m{color:var(--ink-muted)}
+  footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--ink-faint);font-size:12.5px}
+  footer p{margin:0 0 6px;max-width:90ch}
+  .mocknote{background:var(--surface-raised);border:1px dashed var(--line-strong);color:var(--ink-muted);padding:8px 12px;border-radius:8px;font-size:12.5px;margin-top:14px}
+</style>
+</head>
+<body>
+
+<div class="site"><div class="wrap"><a class="wordmark" href="#">InsideGov</a></div></div>
+
+<div class="toolbar" role="region" aria-label="Court controls">
+  <div class="wrap">
+    <div class="filter">
+      <label id="apl" class="lbl">Appointed by</label>
+      <div class="seg" role="group" aria-labelledby="apl" id="appt">
+        <button data-v="all" aria-pressed="true">All</button>
+        <button data-v="D" aria-pressed="false">Democratic</button>
+        <button data-v="R" aria-pressed="false">Republican</button>
+      </div>
+      <select id="pres" class="pres" aria-label="Appointing president"></select>
+    </div>
+    <div class="term">
+      <button class="play" id="play" aria-label="Play through terms"><svg viewBox="0 0 14 14" id="playicon"><path d="M3 1.5v11l9-5.5z"/></svg></button>
+      <input type="range" id="slider" min="1937" max="2024" value="2023" aria-label="Supreme Court term">
+      <div class="termlabel"><b id="tlab">2023–2024</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap hero">
+  <h1>How Does the Supreme Court Lean?</h1>
+  <p class="intro">Martin–Quinn scores estimate each justice's ideology from how they vote in divided cases: justices who vote alike land close together, and a justice's position is allowed to move from one term to the next. Pick a term to see who sat on the Court, which presidents appointed them, and how far each one has moved since.</p>
+  <p class="mocknote">Mockup. Scores shown are illustrative trajectories, not real Martin–Quinn estimates.</p>
+</div>
+
+<div class="wrap">
+<main>
+
+  <div class="grid2">
+  <section class="card" aria-labelledby="c1t">
+    <div class="card-head">
+      <h2 id="c1t">Where the justices stand</h2>
+      <div class="search">
+        <input id="q" type="search" placeholder="Find a justice" aria-label="Find a justice" autocomplete="off">
+        <div class="results" id="results" hidden></div>
+      </div>
+    </div>
+    <p class="lede">The Court in the selected term, left to right. Dot color is the party of the president who appointed each justice.</p>
+    <svg class="chart" id="c1" role="img" aria-label="Justices on a liberal to conservative axis"></svg>
+    <div class="stats" id="stats"></div>
+    <div class="picked" id="picked"></div>
+    <p class="foot">Martin–Quinn scores run on a single liberal–conservative scale and are not comparable in number to the DW-NOMINATE scores on the Congress pages. Dimming a party's appointees never changes the median. In terms with a mid-term change, hollow dots mark the justice who left or joined, and the median reflects the Court after the change.</p>
+  </section>
+
+  <section class="card flexcol" aria-labelledby="c2t">
+    <div class="card-head">
+      <h2 id="c2t">Who each president appointed</h2>
+      <div class="seg" role="group" aria-label="Sort presidents" id="sort">
+        <button data-v="chron" aria-pressed="true">Chronological</button>
+        <button data-v="spread" aria-pressed="false">Widest spread</button>
+      </div>
+    </div>
+    <p class="lede">Career average for every justice a president put on the Court. A ring marks justices sitting in the selected term.</p>
+    <div class="fill"><div class="scroll2" id="c2wrap"><svg class="chart" id="c2" role="img" aria-label="Justices grouped by appointing president"></svg></div></div>
+    <p class="foot">Career average is the mean of a justice's per-term scores. It can hide justices who moved a long way. Justices still serving are not final.</p>
+  </section>
+
+  </div>
+
+  <section class="card" aria-labelledby="c3t">
+    <div class="card-head">
+      <div>
+        <h2 id="c3t">How each justice moved</h2>
+        <p class="lede">Every justice's score, term by term, since 1937. Click or drag to change the term; click a line to follow one justice.</p>
+      </div>
+    </div>
+    <svg class="chart" id="c3" role="img" aria-label="Justice ideology over time"></svg>
+    <div class="legend" id="legend"></div>
+    <p class="foot">Scores are smoothed by the model, so a justice's stability is partly an assumption of the method. The shaded band for a selected justice is its estimation uncertainty.</p>
+  </section>
+
+</main>
+<footer>
+  <p>Source: Martin, Andrew D. and Kevin M. Quinn. 2002. "Dynamic Ideal Point Estimation via Markov Chain Monte Carlo for the U.S. Supreme Court, 1953–1999." Political Analysis 10:134–153. Scores from mqscores.wustl.edu.</p>
+  <p>Appointing president and party from the Federal Judicial Center biographical directory.</p>
+</footer>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+(function(){
+  /* ---------- illustrative data ---------- */
+  // [id, name, short, president, party, firstTerm, lastTerm, scoreStart, scoreEnd]
+  const RAW = [
+    ['hughes','Charles Evans Hughes','Hughes','Hoover','R',1937,1940,0.1,0.0],
+    ['sutherland','George Sutherland','Sutherland','Harding','R',1937,1937,1.9,1.9],
+    ['butler','Pierce Butler','Butler','Harding','R',1937,1938,2.3,2.3],
+    ['mcreynolds','James McReynolds','McReynolds','Wilson','D',1937,1940,2.6,2.3],
+    ['brandeis','Louis Brandeis','Brandeis','Wilson','D',1937,1938,-1.6,-1.6],
+    ['stone','Harlan Fiske Stone','Stone','Coolidge','R',1937,1945,-1.2,-0.4],
+    ['oroberts','Owen Roberts','O. Roberts','Hoover','R',1937,1944,0.6,0.3],
+    ['black','Hugo Black','Black','F. Roosevelt','D',1937,1970,-1.9,-0.3],
+    ['reed','Stanley Reed','Reed','F. Roosevelt','D',1937,1956,-0.6,0.5],
+    ['frankfurter','Felix Frankfurter','Frankfurter','F. Roosevelt','D',1938,1961,-0.6,1.0],
+    ['douglas','William O. Douglas','Douglas','F. Roosevelt','D',1938,1974,-1.2,-3.2],
+    ['murphy','Frank Murphy','Murphy','F. Roosevelt','D',1939,1948,-1.8,-2.3],
+    ['byrnes','James Byrnes','Byrnes','F. Roosevelt','D',1941,1941,0.0,0.0],
+    ['rjackson','Robert Jackson','R. Jackson','F. Roosevelt','D',1941,1953,-0.3,0.5],
+    ['rutledge','Wiley Rutledge','Rutledge','F. Roosevelt','D',1943,1948,-1.5,-2.1],
+    ['burton','Harold Burton','Burton','Truman','D',1945,1957,0.8,1.1],
+    ['vinson','Fred Vinson','Vinson','Truman','D',1946,1952,1.0,1.3],
+    ['clark','Tom Clark','Clark','Truman','D',1949,1966,0.8,0.1],
+    ['minton','Sherman Minton','Minton','Truman','D',1949,1955,1.0,1.3],
+    ['warren','Earl Warren','Warren','Eisenhower','R',1953,1968,-0.2,-1.9],
+    ['harlan','John Marshall Harlan II','Harlan II','Eisenhower','R',1955,1970,1.3,1.0],
+    ['brennan','William Brennan','Brennan','Eisenhower','R',1956,1989,-1.2,-2.9],
+    ['whittaker','Charles Whittaker','Whittaker','Eisenhower','R',1956,1961,0.8,0.9],
+    ['stewart','Potter Stewart','Stewart','Eisenhower','R',1958,1980,0.6,-0.1],
+    ['white','Byron White','White','Kennedy','D',1962,1992,-0.4,1.1],
+    ['goldberg','Arthur Goldberg','Goldberg','Kennedy','D',1962,1964,-1.5,-1.5],
+    ['fortas','Abe Fortas','Fortas','Johnson','D',1965,1968,-1.6,-1.6],
+    ['tmarshall','Thurgood Marshall','Marshall','Johnson','D',1967,1990,-1.5,-3.3],
+    ['burger','Warren Burger','Burger','Nixon','R',1969,1985,1.2,0.9],
+    ['blackmun','Harry Blackmun','Blackmun','Nixon','R',1970,1993,1.1,-1.7],
+    ['powell','Lewis Powell','Powell','Nixon','R',1971,1986,0.8,0.3],
+    ['rehnquist','William Rehnquist','Rehnquist','Nixon','R',1971,2004,2.6,1.5],
+    ['stevens','John Paul Stevens','Stevens','Ford','R',1975,2009,0.5,-2.0],
+    ['oconnor','Sandra Day O\u2019Connor','O\u2019Connor','Reagan','R',1981,2005,1.0,0.2],
+    ['scalia','Antonin Scalia','Scalia','Reagan','R',1986,2015,1.5,2.5],
+    ['kennedy','Anthony Kennedy','Kennedy','Reagan','R',1987,2017,0.9,0.4],
+    ['souter','David Souter','Souter','G.H.W. Bush','R',1990,2008,0.3,-1.4],
+    ['thomas','Clarence Thomas','Thomas','G.H.W. Bush','R',1991,2024,1.6,3.4],
+    ['ginsburg','Ruth Bader Ginsburg','Ginsburg','Clinton','D',1993,2019,-0.7,-2.4],
+    ['breyer','Stephen Breyer','Breyer','Clinton','D',1994,2021,-0.6,-1.3],
+    ['jroberts','John Roberts','Roberts','G.W. Bush','R',2005,2024,0.8,0.5],
+    ['alito','Samuel Alito','Alito','G.W. Bush','R',2005,2024,1.4,2.6],
+    ['sotomayor','Sonia Sotomayor','Sotomayor','Obama','D',2009,2024,-1.7,-2.4],
+    ['kagan','Elena Kagan','Kagan','Obama','D',2010,2024,-1.0,-1.4],
+    ['gorsuch','Neil Gorsuch','Gorsuch','Trump','R',2017,2024,1.2,1.4],
+    ['kavanaugh','Brett Kavanaugh','Kavanaugh','Trump','R',2018,2024,0.6,0.5],
+    ['barrett','Amy Coney Barrett','Barrett','Trump','R',2020,2024,0.7,0.6],
+    ['kbjackson','Ketanji Brown Jackson','K. Jackson','Biden','D',2022,2024,-1.3,-1.4]
+  ];
+  const PRES_ORDER = ['Wilson','Harding','Coolidge','Hoover','F. Roosevelt','Truman','Eisenhower','Kennedy','Johnson','Nixon','Ford','Reagan','G.H.W. Bush','Clinton','G.W. Bush','Obama','Trump','Biden'];
+  const T0 = 1937, T1 = 2024;
+  const J = RAW.map((r,i)=>{
+    const j = {id:r[0],name:r[1],short:r[2],pres:r[3],party:r[4],s:r[5],e:r[6],a:r[7],b:r[8],series:{}};
+    let sum=0,n=0;
+    for(let t=j.s;t<=j.e;t++){
+      const f = j.e===j.s?0:(t-j.s)/(j.e-j.s);
+      const wob = Math.sin(t*0.9+i*1.7)*0.06 + Math.sin(t*0.3+i)*0.05;
+      const v = j.a+(j.b-j.a)*f+wob; j.series[t]=v; sum+=v; n++;
+    }
+    j.avg = sum/n; return j;
+  });
+  const byId = Object.fromEntries(J.map(j=>[j.id,j]));
+  const onCourt = t => J.filter(j=>j.s<=t && t<=j.e);
+  // Terms where a seat changed hands mid-term. Median reflects the Court AFTER the change.
+  const PARTIAL = {2005:{oconnor:'left',alito:'joined'}};
+  const seatedAtEnd = t => onCourt(t).filter(j=>!(PARTIAL[t]&&PARTIAL[t][j.id]==='left'));
+  const median = t => { const v = seatedAtEnd(t).map(j=>j.series[t]).sort((a,b)=>a-b); const m=v.length>>1; return v.length%2?v[m]:(v[m-1]+v[m])/2; };
+  let maxAbs = 0; J.forEach(j=>{for(const t in j.series) maxAbs=Math.max(maxAbs,Math.abs(j.series[t]))});
+  const DOM = Math.ceil((maxAbs+0.15)*2)/2; // fixed, symmetric, never rescales with the slider
+
+  /* ---------- state ---------- */
+  const S = {term:2023, appointed:'all', pres:'all', sort:'chron', selected:null, hover:null, playing:false};
+  const $ = s => document.querySelector(s);
+  const NS = 'http://www.w3.org/2000/svg';
+  function el(tag,attrs,parent,text){const n=document.createElementNS(NS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);if(text!=null)n.textContent=text;if(parent)parent.appendChild(n);return n}
+  const dim = j => (S.appointed!=='all' && j.party!==S.appointed) || (S.pres!=='all' && j.pres!==S.pres);
+  const col = j => j.party==='D' ? 'var(--dem)' : 'var(--rep)';
+  const yrs = t => `${t}\u2013${String((t+1)%100).padStart(2,'0')}`;
+  const tip = $('#tip');
+  function showTip(e,html){tip.innerHTML=html;tip.style.display='block';const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;tip.style.left=x+'px';tip.style.top=y+'px'}
+  function hideTip(){tip.style.display='none'}
+  const tipHtml = (j,extra)=>`<b>${j.name}</b><span class="m">Appointed by ${j.pres} (${j.party==='D'?'Democratic':'Republican'})<br>Served ${j.s}\u2013${j.e===T1?'present':j.e}</span>${extra?'<br>'+extra:''}`;
+
+  /* ---------- chart 1: single-axis strip ---------- */
+  function draw1(){
+    const svg=$('#c1'); const w=svg.clientWidth||600, h=270; svg.setAttribute('viewBox',`0 0 ${w} ${h}`); svg.setAttribute('height',h); svg.innerHTML='';
+    const L=28,R=28, ay=142, x=v=>L+(v+DOM)/(2*DOM)*(w-L-R);
+    el('line',{x1:L,x2:w-R,y1:ay,y2:ay,stroke:'var(--line-strong)','stroke-width':1.5},svg);
+    el('line',{x1:x(0),x2:x(0),y1:ay-6,y2:ay+6,stroke:'var(--line-strong)'},svg);
+    el('text',{x:L,y:h-6,fill:'var(--ink-muted)','font-size':12},svg,'More liberal');
+    el('text',{x:w-R,y:h-6,fill:'var(--ink-muted)','font-size':12,'text-anchor':'end'},svg,'More conservative');
+    const cur=onCourt(S.term).sort((a,b)=>a.series[S.term]-b.series[S.term]);
+    const m=x(median(S.term));
+    el('line',{x1:m,x2:m,y1:20,y2:h-30,stroke:'var(--ink)','stroke-dasharray':'3 3','stroke-width':1,opacity:.55},svg);
+    el('text',{x:m,y:12,'text-anchor':'middle',fill:'var(--ink)','font-size':12,'font-weight':600},svg,'Median');
+    // --- Beeswarm dodge: every dot keeps its TRUE x; dots that would overlap stack vertically.
+    const r=8, md=2*r+2.5;                       // min centre-to-centre distance
+    const placed=[];
+    cur.forEach((j,i)=>{
+      const px=x(j.series[S.term]), pref=i%2?1:-1;
+      const cand=[0];
+      placed.forEach(q=>{const dx=px-q.px; if(Math.abs(dx)<md){const dy=Math.sqrt(md*md-dx*dx);cand.push(q.off+dy,q.off-dy)}});
+      cand.sort((p,q)=>Math.abs(p)-Math.abs(q)||pref*(p-q));
+      const off=cand.find(y=>placed.every(q=>{const dx=px-q.px,dy=y-q.off;return dx*dx+dy*dy>=md*md-0.01}));
+      placed.push({j,px,off});
+    });
+    // --- Labels sit NEXT TO their dot. For each dot, try 8 positions (right, left, above, below,
+    //     diagonals) at increasing distance and keep the combination with the least overlap.
+    //     Only a label pushed out a ring gets a short leader line.
+    const wc={}, tw=n=>{if(wc[n]==null){const t=el('text',{'font-size':12.5},svg,n);wc[n]=t.getBBox().width;svg.removeChild(t)}return wc[n]};
+    const H=14, G=r+3, POS=['r','l','t','b','tr','tl','br','bl'], PREF=[0,1,1.5,1.5,3,3.5,3.5,4];
+    const boxOf=(it,pos,k)=>{
+      const wd=tw(it.j.short), g=G+k*16, d=g*.75, cx=it.px, cy=ay+it.off;
+      return {r:{x0:cx+g,x1:cx+g+wd,y0:cy-H/2,y1:cy+H/2,a:'start',tx:cx+g,ty:cy+4.5},
+              l:{x0:cx-g-wd,x1:cx-g,y0:cy-H/2,y1:cy+H/2,a:'end',tx:cx-g,ty:cy+4.5},
+              t:{x0:cx-wd/2,x1:cx+wd/2,y0:cy-g-H,y1:cy-g,a:'middle',tx:cx,ty:cy-g-3},
+              b:{x0:cx-wd/2,x1:cx+wd/2,y0:cy+g,y1:cy+g+H,a:'middle',tx:cx,ty:cy+g+H-3},
+              tr:{x0:cx+d,x1:cx+d+wd,y0:cy-d-H,y1:cy-d,a:'start',tx:cx+d,ty:cy-d-3},
+              tl:{x0:cx-d-wd,x1:cx-d,y0:cy-d-H,y1:cy-d,a:'end',tx:cx-d,ty:cy-d-3},
+              br:{x0:cx+d,x1:cx+d+wd,y0:cy+d,y1:cy+d+H,a:'start',tx:cx+d,ty:cy+d+H-3},
+              bl:{x0:cx-d-wd,x1:cx-d,y0:cy+d,y1:cy+d+H,a:'end',tx:cx-d,ty:cy+d+H-3}}[pos];
+    };
+    const ov=(a,b)=>Math.max(0,Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0))*Math.max(0,Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0));
+    const fixedBoxes=[{x0:m-26,x1:m+26,y0:0,y1:16},{x0:L,x1:L+76,y0:h-19,y1:h},{x0:w-R-108,x1:w-R,y0:h-19,y1:h}];
+    const dotBoxes=placed.map(it=>({x0:it.px-r-1,x1:it.px+r+1,y0:ay+it.off-r-1,y1:ay+it.off+r+1}));
+    const cands=placed.map(it=>{const arr=[];[0,1,2,3].forEach(k=>POS.forEach((pos,pi)=>arr.push({pos,k,box:boxOf(it,pos,k),pref:PREF[pi]+k*14})));return arr});
+    const chosen=placed.map(()=>null);
+    const cost=(i,c)=>{
+      const b=c.box; let v=c.pref;
+      dotBoxes.forEach(d=>v+=ov(b,d)*12);
+      fixedBoxes.forEach(f=>v+=ov(b,f)*12);
+      const pb={x0:b.x0-5,x1:b.x1+5,y0:b.y0-1,y1:b.y1+1};
+      chosen.forEach((o,j)=>{if(j!==i&&o)v+=ov(pb,o.box)*12});
+      if(b.x0<4)v+=(4-b.x0)*H*4; if(b.x1>w-4)v+=(b.x1-(w-4))*H*4;
+      if(b.y0<18)v+=(18-b.y0)*40; if(b.y1>h-22)v+=(b.y1-(h-22))*40;
+      if(b.y0<ay&&b.y1>ay)v+=40;                    // don't strike text through the axis line
+      if(b.x0<m&&b.x1>m)v+=12;                      // or through the median line, if avoidable
+      return v;
+    };
+    const pick=(i,from)=>cands[i].reduce((best,c)=>cost(i,c)<cost(i,best)?c:best,from);
+    const crowd=i=>placed.filter(q=>Math.abs(q.px-placed[i].px)<70).length;
+    const order=placed.map((_,i)=>i).sort((a,b)=>crowd(b)-crowd(a));
+    order.forEach(i=>{chosen[i]=pick(i,cands[i][0])});
+    for(let pass=0;pass<12;pass++){let ch=false;order.forEach(i=>{const nb=pick(i,chosen[i]);if(nb!==chosen[i]){chosen[i]=nb;ch=true}});if(!ch)break}
+
+    const layerL=el('g',{},svg), layerD=el('g',{},svg);
+    const bind=(n,j,part)=>{
+      n.addEventListener('mousemove',e=>showTip(e,tipHtml(j,`Score this term: <span class="mono">${j.series[S.term].toFixed(2)}</span>${part?'<br>'+(part==='left'?'Left the Court mid-term':'Joined the Court mid-term'):''}`)));
+      n.addEventListener('mouseleave',hideTip);
+      n.addEventListener('click',()=>select(j.id));
+    };
+    placed.forEach((it,i)=>{
+      const j=it.j, op=dim(j)?.22:1, sel=S.selected===j.id, cy=ay+it.off, c=chosen[i], b=c.box;
+      const part=PARTIAL[S.term]&&PARTIAL[S.term][j.id];
+      const gl=el('g',{opacity:op,style:'cursor:pointer'},layerL);
+      if(c.k>0){ // label pushed out a ring: short leader from the dot edge to the label
+        const ex=Math.max(b.x0,Math.min(b.x1,it.px)), ey=Math.max(b.y0,Math.min(b.y1,cy));
+        const dx=ex-it.px, dy=ey-cy, len=Math.hypot(dx,dy)||1;
+        el('line',{x1:it.px+dx/len*(r+1),y1:cy+dy/len*(r+1),x2:ex,y2:ey,stroke:'var(--line-strong)','stroke-width':1},gl);
+      }
+      el('text',{x:b.tx,y:b.ty,'text-anchor':b.a,fill:'var(--ink)','font-size':12.5,'font-weight':sel?600:400},gl,j.short);
+      const gd=el('g',{opacity:op,style:'cursor:pointer'},layerD);
+      if(sel) el('circle',{cx:it.px,cy,r:13,fill:'none',stroke:'var(--accent)','stroke-width':2.5},gd);
+      el('circle',{cx:it.px,cy,r:sel?9:r,fill:part?'var(--surface)':col(j),stroke:part?col(j):'var(--surface)','stroke-width':part?2.5:1.5},gd);
+      bind(gl,j,part); bind(gd,j,part);
+    });
+    // stats
+    const lib=cur[0], con=cur[cur.length-1];
+    const end=seatedAtEnd(S.term).sort((a,b)=>a.series[S.term]-b.series[S.term]);
+    let med; if(end.length%2){med=end[end.length>>1].short}else{med=`${end[(end.length>>1)-1].short} / ${end[end.length>>1].short}`}
+    const pt=PARTIAL[S.term]; let chg='';
+    if(pt){const lf=Object.keys(pt).filter(k=>pt[k]==='left').map(k=>byId[k].short),jn=Object.keys(pt).filter(k=>pt[k]==='joined').map(k=>byId[k].short);chg=`<div><small>Mid-term change</small><strong>${lf.join(', ')} left; ${jn.join(', ')} joined</strong></div>`}
+    $('#stats').innerHTML=`<div><small>Median justice</small><strong>${med}</strong></div><div><small>Most liberal</small><strong>${lib.short}</strong></div><div><small>Most conservative</small><strong>${con.short}</strong></div><div><small>Justices seated</small><strong class="mono">${cur.length}</strong></div>${chg}`;
+  }
+
+  /* ---------- chart 2: swarm rows grouped by appointing president ---------- */
+  function draw2(){
+    const svg=$('#c2'); const wrap=$('#c2wrap'); const w=wrap.clientWidth||900;
+    const rowH=30, gut=Math.min(140,w*.3), meta=72, L=gut, R=meta+8;
+    let rows=PRES_ORDER.map(p=>{const js=J.filter(j=>j.pres===p);const av=js.map(j=>j.avg);return {p,js,spread:Math.max(...av)-Math.min(...av),party:js[0].party}}).filter(r=>r.js.length);
+    rows.reverse(); // latest president first
+    if(S.sort==='spread') rows.sort((a,b)=>b.spread-a.spread||PRES_ORDER.indexOf(b.p)-PRES_ORDER.indexOf(a.p));
+    const h=rows.length*rowH+6; svg.setAttribute('viewBox',`0 0 ${w} ${h}`); svg.setAttribute('height',h); svg.innerHTML='';
+    const x=v=>L+(v+DOM)/(2*DOM)*(w-L-R);
+    el('line',{x1:x(0),x2:x(0),y1:0,y2:h,stroke:'var(--line)'},svg);
+    rows.forEach((r,i)=>{
+      const cy=i*rowH+rowH/2+3;
+      const sitting=r.js.some(j=>j.s<=S.term&&S.term<=j.e);
+      if(sitting) el('rect',{x:0,y:i*rowH+3,width:w,height:rowH,fill:'var(--accent)',opacity:.07},svg);
+      el('line',{x1:L,x2:w-R,y1:cy,y2:cy,stroke:'var(--line)'},svg);
+      const av=r.js.map(j=>j.avg), lo=Math.min(...av), hi=Math.max(...av);
+      if(r.js.length>1) el('line',{x1:x(lo),x2:x(hi),y1:cy,y2:cy,stroke:'var(--line-strong)','stroke-width':2},svg);
+      const rd=r.js.every(dim)?.35:1;
+      el('text',{x:8,y:cy+4,fill:'var(--ink)','font-size':13,'font-weight':sitting?600:400,opacity:rd},svg,r.p);
+      el('text',{x:w-R+10,y:cy+4,fill:'var(--ink-muted)','font-size':12,opacity:rd},svg,`${r.js.length} justice${r.js.length>1?'s':''}`);
+      r.js.slice().sort((a,b)=>a.avg-b.avg).forEach(j=>{
+        const g=el('g',{opacity:dim(j)?.22:1,style:'cursor:pointer'},svg);
+        const on=j.s<=S.term&&S.term<=j.e, sel=S.selected===j.id;
+        if(on||sel) el('circle',{cx:x(j.avg),cy,r:sel?10:8.5,fill:'none',stroke:sel?'var(--accent)':'var(--ink)','stroke-width':sel?2.5:1.4},g);
+        el('circle',{cx:x(j.avg),cy,r:5.5,fill:col(j),stroke:'var(--surface)','stroke-width':1},g);
+        g.addEventListener('mousemove',e=>showTip(e,tipHtml(j,`Career average: <span class="mono">${j.avg.toFixed(2)}</span>`)));
+        g.addEventListener('mouseleave',hideTip);
+        g.addEventListener('click',()=>select(j.id));
+      });
+    });
+  }
+
+  /* ---------- chart 3: every justice over time ---------- */
+  function draw3(){
+    const svg=$('#c3'); const w=svg.clientWidth||900,h=360; svg.setAttribute('viewBox',`0 0 ${w} ${h}`); svg.setAttribute('height',h); svg.innerHTML='';
+    const L=14,R=54,T=14,B=30, x=t=>L+(t-T0)/(T1-T0)*(w-L-R), y=v=>T+(1-(v+DOM)/(2*DOM))*(h-T-B);
+    const step=w<600?20:10; for(let t=1940;t<=2020;t+=step){el('line',{x1:x(t),x2:x(t),y1:T,y2:h-B,stroke:'var(--line)'},svg);el('text',{x:x(t),y:h-10,'text-anchor':'middle',fill:'var(--ink-faint)','font-size':11.5,class:'mono'},svg,t)}
+    el('line',{x1:L,x2:w-R,y1:y(0),y2:y(0),stroke:'var(--line-strong)'},svg);
+    el('text',{x:L+4,y:T+12,fill:'var(--ink-muted)','font-size':12},svg,'More conservative');
+    el('text',{x:L+4,y:h-B-6,fill:'var(--ink-muted)','font-size':12},svg,'More liberal');
+    const path=(j)=>{let d='';for(let t=j.s;t<=j.e;t++)d+=(t===j.s?'M':'L')+x(t).toFixed(1)+' '+y(j.series[t]).toFixed(1);return d};
+    const focus=S.hover||S.selected;
+    if(S.selected){const j=byId[S.selected];let up='',dn='';for(let t=j.s;t<=j.e;t++)up+=(t===j.s?'M':'L')+x(t)+' '+y(j.series[t]+0.45);for(let t=j.e;t>=j.s;t--)dn+='L'+x(t)+' '+y(j.series[t]-0.45);el('path',{d:up+dn+'Z',fill:col(j),opacity:.16},svg)}
+    const order=J.slice().sort((a,b)=>(dim(b)-dim(a)));
+    order.forEach(j=>{
+      const isF=focus===j.id;
+      const p=el('path',{d:path(j),fill:'none',stroke:col(j),'stroke-width':isF?3:1.3,opacity:isF?1:(dim(j)?.07:(focus?.16:.38)),'stroke-linejoin':'round'},svg);
+      const hit=el('path',{d:path(j),fill:'none',stroke:'transparent','stroke-width':10,style:'cursor:pointer'},svg);
+      hit.addEventListener('mouseenter',()=>{S.hover=j.id;draw3()});
+      hit.addEventListener('mouseleave',()=>{S.hover=null;draw3();hideTip()});
+      hit.addEventListener('mousemove',e=>showTip(e,tipHtml(j)));
+      hit.addEventListener('click',e=>{e.stopPropagation();select(j.id)});
+    });
+    if(focus){const j=byId[focus];el('text',{x:Math.min(w-R+4,x(j.e)+6),y:y(j.series[j.e])+4,fill:col(j),'font-size':12.5,'font-weight':600},svg,j.short)}
+    // court median
+    let d='';for(let t=T0;t<=T1;t++)d+=(t===T0?'M':'L')+x(t)+' '+y(median(t));
+    el('path',{d,fill:'none',stroke:'var(--ink)','stroke-width':2.8,'stroke-linejoin':'round','pointer-events':'none'},svg);
+    // playhead + markers for seated justices
+    el('line',{x1:x(S.term),x2:x(S.term),y1:T,y2:h-B,stroke:'var(--accent)','stroke-width':1.5,'stroke-dasharray':'4 3','pointer-events':'none'},svg);
+    onCourt(S.term).forEach(j=>{el('circle',{cx:x(S.term),cy:y(j.series[S.term]),r:3.2,fill:col(j),opacity:dim(j)?.2:1,'pointer-events':'none'},svg)});
+    // scrub layer (behind line hit-areas would block; keep on svg itself)
+    const scrub=e=>{const r=svg.getBoundingClientRect();const px=(e.clientX-r.left)*(w/r.width);const t=Math.round(T0+(px-L)/(w-L-R)*(T1-T0));setTerm(Math.max(T0,Math.min(T1,t)))};
+    svg.onpointerdown=e=>{svg.setPointerCapture(e.pointerId);scrub(e);svg.onpointermove=ev=>{if(ev.buttons)scrub(ev)}};
+    svg.onpointerup=()=>{svg.onpointermove=null};
+    $('#legend').innerHTML=`<span><i class="sw" style="border-color:var(--dem)"></i>Democratic appointee</span><span><i class="sw" style="border-color:var(--rep)"></i>Republican appointee</span><span><i class="sw" style="border-color:var(--ink);border-top-width:3px"></i>Court median</span>${S.selected?'<span><i class="sw" style="border-color:var(--accent);border-top-style:dashed"></i>Selected justice band</span>':''}`;
+  }
+
+  /* ---------- shared state plumbing ---------- */
+  function drawPicked(){
+    const p=$('#picked'); if(!S.selected){p.className='picked';p.innerHTML='';return}
+    const j=byId[S.selected]; p.className='picked on';
+    p.innerHTML=`<i class="dot ${j.party}"></i><strong>${j.name}</strong><span style="color:var(--ink-muted)">Appointed by ${j.pres} \u00b7 served ${j.s}\u2013${j.e===T1?'present':j.e}</span><button id="clr">Clear</button>`;
+    $('#clr').onclick=()=>select(null);
+  }
+  function render(){
+    $('#slider').value=S.term; const lab=`${S.term}\u2013${S.term+1}`; $('#tlab').textContent=lab; $('#slider').setAttribute('aria-valuetext',lab);
+    draw1();draw2();draw3();drawPicked();
+  }
+  function setTerm(t){S.term=t;render()}
+  function select(id){
+    S.selected = (id===S.selected)?null:id;
+    if(S.selected){const j=byId[S.selected]; if(!(j.s<=S.term&&S.term<=j.e)) S.term=j.s;}
+    render();
+  }
+
+  /* toolbar */
+  $('#slider').addEventListener('input',e=>{stop();setTerm(+e.target.value)});
+  let timer=null;
+  function stop(){S.playing=false;clearInterval(timer);$('#playicon').innerHTML='<path d="M3 1.5v11l9-5.5z"/>'}
+  $('#play').addEventListener('click',()=>{
+    if(S.playing){stop();return}
+    if(S.term>=T1) S.term=T0;
+    S.playing=true;$('#playicon').innerHTML='<path d="M2.5 1.5h3.2v11H2.5zM8.3 1.5h3.2v11H8.3z"/>';
+    timer=setInterval(()=>{ if(S.term>=T1){stop();return} setTerm(S.term+1); if(S.term>=T1) stop(); },140);
+  });
+  const presParty={}; J.forEach(j=>presParty[j.pres]=j.party);
+  const PRES_LIST=PRES_ORDER.filter(p=>presParty[p]);
+  function buildPres(){
+    // flat, latest president first; when a party pill is active, only that party's presidents
+    const list=PRES_LIST.filter(p=>S.appointed==='all'||presParty[p]===S.appointed).reverse();
+    $('#pres').innerHTML='<option value="all">All presidents</option>'+list.map(p=>`<option value="${p}">${p}</option>`).join('');
+    $('#pres').value=S.pres;
+  }
+  $('#appt').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.appointed=b.dataset.v;
+    if(S.pres!=='all'&&S.appointed!=='all'&&presParty[S.pres]!==S.appointed) S.pres='all'; // keep the two filters from contradicting
+    [...$('#appt').children].forEach(c=>c.setAttribute('aria-pressed',c===b));buildPres();render()});
+  $('#pres').addEventListener('change',e=>{S.pres=e.target.value;render()});
+  $('#sort').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.sort=b.dataset.v;[...$('#sort').children].forEach(c=>c.setAttribute('aria-pressed',c===b));draw2()});
+
+  /* search (lives inside chart 1's card; only selects a justice, never touches the filter) */
+  const q=$('#q'), res=$('#results');
+  q.addEventListener('input',()=>{
+    const v=q.value.trim().toLowerCase(); if(!v){res.hidden=true;return}
+    const m=J.filter(j=>j.name.toLowerCase().includes(v)).slice(0,8);
+    res.innerHTML=''; m.forEach(j=>{const b=document.createElement('button');b.innerHTML=`<i class="dot ${j.party}"></i>${j.name}<span style="margin-left:auto;color:var(--ink-faint);font-size:12px" class="mono">${j.s}\u2013${j.e===T1?'':j.e}</span>`;b.onclick=()=>{q.value='';res.hidden=true;S.selected=null;select(j.id)};res.appendChild(b)});
+    res.hidden=!m.length;
+  });
+  q.addEventListener('keydown',e=>{if(e.key==='Escape'){q.value='';res.hidden=true}if(e.key==='Enter'){const b=res.querySelector('button');if(b)b.click()}});
+  document.addEventListener('click',e=>{if(!e.target.closest('.search'))res.hidden=true});
+
+  addEventListener('resize',render);
+  buildPres();
+  render();
+})();
+</script>
+</body>
+</html>

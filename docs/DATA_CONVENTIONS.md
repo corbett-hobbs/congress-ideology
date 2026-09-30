@@ -227,6 +227,13 @@ Output lives in `pipeline/output/court/`; Zod schemas are in
 | `court_median_probabilities.json` | (term[, segment] × justice) | `term` + `segment` + `justice_id` | Long form of `court.csv`'s one-column-per-justice probabilities that each justice is the median. Only justices with a probability in that record are present. |
 | `_report.json` | run summary | — | Source hashes + release label, counts, term range, justices per term, explained anomalies, the crosswalk match list. No timestamps (deterministic). |
 
+**App-side shaping.** The Court pages read these four files through
+`lib/justice-data.ts`, which ships a compact client payload (`lib/court-types.ts`):
+per-justice `s`/`lo`/`hi` arrays aligned to the justice's first scored term
+(`t0`..`t1`) rather than per-row records. This is an in-memory convenience, not a
+new on-disk codec. Derivation rules (split-term median, fixed domain, turnover,
+presidents) are in `docs/SCOTUS_DATA_METHODOLOGY.md`.
+
 **`justice_id` is the SCDB numeric `justice` identifier** (e.g. 108 = Thomas,
 111 = John G. Roberts). This is a deliberate exception to §1's "no second
 person-identifier convention": justices have no `bioguide_id`. It is one id per

@@ -45,7 +45,7 @@ export const branches: readonly Branch[] = [
     id: "supreme-court",
     label: "Supreme Court",
     href: "/supreme-court",
-    status: "soon",
+    status: "live",
     sections: [{ id: "ideology", label: "Ideology", href: "/supreme-court" }],
     owns: (p) => p === "/supreme-court" || p.startsWith("/supreme-court/"),
   },

@@ -27,11 +27,11 @@ stored. See `docs/DATA_CONVENTIONS.md` for the full contract.
 | `_report.json`               | run summary / sanity numbers               | —                              | `transform/index.ts`         | humans |
 | `subcommittees.json`         | one row per subcommittee (119th)           | `subcommittee_id`              | `transform/committees.ts` (`buildSubcommittees`) | `lib/committee-data.ts` |
 | `subcommittee_memberships.json` | (legislator, subcommittee) (119th)      | `bioguide_id`                  | `transform/committees.ts`    | `lib/committee-data.ts` |
-| **Supreme Court track** (`court/`) — separate from Congress; no reader yet | | | | |
-| `court/justices.json`        | one row per justice (person)               | `justice_id` (SCDB numeric)    | `transform/court.ts` via `court-run.ts` | — (next session) |
-| `court/mq_scores.json`       | (justice, term)                            | `justice_id`+`term`            | `transform/court.ts`         | — |
-| `court/court_terms.json`     | (term[, segment a/b])                      | `term`+`segment`               | `transform/court.ts`         | — |
-| `court/court_median_probabilities.json` | (term[, segment], justice)      | `term`+`segment`+`justice_id`  | `transform/court.ts`         | — |
+| **Supreme Court track** (`court/`) — separate from Congress | | | | |
+| `court/justices.json`        | one row per justice (person)               | `justice_id` (SCDB numeric)    | `transform/court.ts` via `court-run.ts` | `lib/justice-data.ts` |
+| `court/mq_scores.json`       | (justice, term)                            | `justice_id`+`term`            | `transform/court.ts`         | `lib/justice-data.ts` |
+| `court/court_terms.json`     | (term[, segment a/b])                      | `term`+`segment`               | `transform/court.ts`         | `lib/justice-data.ts` |
+| `court/court_median_probabilities.json` | (term[, segment], justice)      | `term`+`segment`+`justice_id`  | `transform/court.ts`         | `lib/justice-data.ts` |
 | `court/_report.json`         | run summary                                | —                              | `transform/court-run.ts`     | humans |
 | `financial_disclosures.json` | (legislator, reporting year), band-count grain | `bioguide_id`+`year`       | Python sidecar: `pipeline/financial_disclosures/build.py` / `build_senate_html.py` / `build_ocr.py` | `lib/wealth-data.ts` |
 | `line-items/<year>.json`     | (legislator, reporting year) that reconciled, item grain | `bioguide_id`+`year`, sharded by `year` | `pipeline/financial_disclosures/build_line_items.py` | `lib/line-items-data.ts` |
@@ -65,7 +65,8 @@ latest Congress and carry no trend chart.
 
 | Route                                               | Kind | Renders |
 | --------------------------------------------------- | ---- | ------- |
-| `/`                                                 | static | Hub — a card per branch (`lib/verticals.ts`): Congress (party-mean sparkline + dim-1 gap stat for the latest Congress, from `getBothTrend()`) and Supreme Court (non-link "Coming soon"). Redirect target of nothing; bare `/` never redirects. |
+| `/`                                                 | static | Hub — a card per branch (`lib/verticals.ts`): Congress (party-mean sparkline + dim-1 gap stat for the latest Congress, from `getBothTrend()`) and Supreme Court (median justice's name for the latest term + court-median sparkline, from `getCourtHubSummary()` in `lib/justice-data.ts`; no numeric score). Redirect target of nothing; bare `/` never redirects. |
+| `/supreme-court`                                    | static | `CourtExplorer` — "How Does the Supreme Court Lean?": sticky toolbar (Appointed by party pills + president dropdown, term slider), chart 1 `JusticeStrip` (beeswarm of the selected term), chart 2 `PresidentRows` (career average by appointing president), chart 3 `JusticeTrajectory` (every justice over time). One shared `term` / `appointed` / `president` / `selectedId` in `CourtExplorer`. One section, so no secondary header row. |
 | `/congress`                                         | static | `SenateExplorer` — the compass / delegation / trend explorer, with a Members ↔ Committees toggle (119th only). Reads `?chamber`, `?state`, `?show`. |
 | `/congress/senators/[bioguide_id]/[name_slug]`      | SSG + dynamic | `MemberProfileView` (stale slug → 308, bad id → 404) |
 | `/congress/house/[bioguide_id]/[name_slug]`         | SSG + dynamic | `MemberProfileView` |
@@ -74,7 +75,7 @@ latest Congress and carry no trend chart.
 | `/congress/wealth`                                  | static | `WealthPageClient` — chamber/state filter bar, the net worth scatter ("where they started, where they are now"), highest/lowest lists. |
 | `/sitemap.xml`, `/robots.txt`, `/opengraph-image`   | static | — |
 
-`next.config.ts` `redirects()`: `/wealth` → `/congress/wealth` (308) and, for each explorer query param (`chamber`, `state`, `show`), `/?<param>` → `/congress` (308, query carried through). Bare `/` serves the hub. The `#delegation` hash can't be redirected server-side. `/supreme-court` is reserved for the Court branch (`status: 'soon'` in `lib/verticals.ts`; no route yet).
+`next.config.ts` `redirects()`: `/wealth` → `/congress/wealth` (308) and, for each explorer query param (`chamber`, `state`, `show`), `/?<param>` → `/congress` (308, query carried through). Bare `/` serves the hub. The `#delegation` hash can't be redirected server-side. `/supreme-court` is the Court branch (`status: 'live'` in `lib/verticals.ts`).
 
 Each `*/[.../name_slug]` route also has `opengraph-image.tsx` (rendered on
 demand) and `not-found.tsx`. Routes that read `pipeline/output/*.json` via `fs`
@@ -98,6 +99,8 @@ to members and committees at once — there is no forked chart code.
 | committee wrapper| `committee/CommitteeCompass`     | `ScatterPlot` + committee accessors (dot colour read straight off `CommitteeSummary.compassColorClass`, joint→neutral, `CommitteeDotTooltip`, `committeePath`) |
 | committee wrapper| `committee/CommitteeSwarm`       | `SwarmRows` + one row per committee, party-split meta, chamber-disambiguated labels |
 | control           | `charts/SortToggle`               | Shared "Widest spread / A–Z / Ideology" pill group behind both "How each state votes" and "How each committee votes" (`SenateExplorer`). "Ideology" is reversible (click again to flip direction) instead of pick-one-of-N; `DelegationChart` and `CommitteeSwarm` both take a `SortState` and sort their own row-level mean-dim1 field on it. |
+| control           | `charts/PillGroup`                | Generic controlled pick-one pill group in the same chrome as `ChamberSwitch`/`SortToggle`. Used by the Court explorer for "Appointed by" and the president sort. |
+| shell             | `charts/ChartCard`                | The explorer card chrome (serif title, optional action on the title row, lede, body) extracted from `SenateExplorer` and shared with `CourtExplorer`. |
 | primitive        | `charts/AlignmentTrack`           | Small inline two-dot [-1, 1] comparison (a member's own position vs. a reference point) — plain divs, not an SVG `ChartFrame` body, since it's one comparison per profile-card row rather than a shared-axis multi-row chart. Introduced for `profile/CommitteeMembershipsCard`; reusable anywhere a single "this thing vs. that thing" ideology comparison is needed. |
 
 `components/senate/BeeswarmChart` (d3-force collision layout) is still its own
@@ -155,7 +158,7 @@ trajectory chart).
 
 ### Two-tier nav and header back-link (`lib/verticals.ts`, `components/SiteHeader.tsx`, `components/SiteNav.tsx`, `components/BackLinkContext.tsx`)
 
-`lib/verticals.ts` holds `branches: Branch[]` — `{ id, label, href, status: 'live' | 'soon', sections, owns(pathname) }` — Congress (sections Ideology `/congress`, Wealth `/congress/wealth`) and Supreme Court (`/supreme-court`, one section, `status: 'soon'`). `SiteNav` is the primary row (live branches only, current one underlined; profile pages under `/congress/...` count as Congress). `SiteSectionNav` is the secondary tab row, rendered only for a live branch with two or more sections, on its section pages (not on profiles, the hub, or the Court). Flipping the Court's `status` to `live` adds its nav entry and makes its hub card a link. The header is **not** sticky; the explorer/wealth toolbars pin at `top-0 z-40` exactly as before.
+`lib/verticals.ts` holds `branches: Branch[]` — `{ id, label, href, status: 'live' | 'soon', sections, owns(pathname) }` — Congress (sections Ideology `/congress`, Wealth `/congress/wealth`) and Supreme Court (`/supreme-court`, one section, `status: 'live'`). `SiteNav` is the primary row (live branches only, current one underlined; profile pages under `/congress/...` count as Congress). `SiteSectionNav` is the secondary tab row, rendered only for a live branch with two or more sections, on its section pages (not on profiles, the hub, or the Court). The Court's `status` is now `live`, so it has its nav entry and a linked hub card. The header is **not** sticky; the explorer/wealth toolbars pin at `top-0 z-40` exactly as before.
 
 The wordmark is a plain link to `/` (no arrow) on `/`, `/congress`, `/congress/wealth`, `/supreme-court`; everywhere else it is `← InsideGov` going to whatever the page registered via `SetBackLink` (falls back to `/`). `BackLinkProvider` (wraps the body in `layout.tsx`) plus a page-level `<SetBackLink href={...} />` (used by `MemberProfileView` and `CommitteeProfileView`, now pointing under `/congress`) bridge the header/page gap. Always a fixed href, never `history.back()`.
 
@@ -448,8 +451,26 @@ inline in the tables above:
 `/` is now a hub; the explorer moved to `/congress`, wealth to `/congress/wealth`, with branch → section nav (see Routes and the header section above). Divergences from the session prompt:
 
 - **Explorer query params** are `chamber`, `state`, `show` (only those). Redirects use one `has` rule each; bare `/` stays the hub. Old `/#delegation` links now land on the hub (hash is client-only).
-- **No `"/"` tracing entry**: the hub is a static page reading JSON at build time, like the old `/`. Only serverless routes need `outputFileTracingIncludes`.
-- **Supreme Court**: pipeline output exists under `pipeline/output/court/` and `lib/court-entities.ts`, but no route or reader. Branch is `status: 'soon'`; hub card has no stat/sparkline.
+- **No `"/"` tracing entry** (at the time): the hub is a static page reading JSON at build time. The Court session added `"/"` and `"/supreme-court"` keys for `pipeline/output/court/*.json` anyway, per its brief.
+- **Supreme Court**: was pipeline-output-only here; the Court landing page shipped in the next session (below).
 - **OG images**: a page that sets its own `openGraph` doesn't inherit the root file-based image, so `/congress` and `/congress/wealth` set `images`/`twitter.images` to `/opengraph-image` explicitly.
 - **Sticky behavior**: header doesn't stick, so the secondary row scrolls away; toolbars unchanged.
 - `/congress`'s title is now "Congress ideology explorer"; the hub keeps the site-level title.
+
+---
+
+## Session: Supreme Court landing page (`/supreme-court`)
+
+Data: `lib/justice-data.ts` (server-only, cached) reads the four `court/*.json` outputs and calls the pure `lib/court-derive.ts` (`buildCourtPayload`) to produce one compact `CourtPayload` (`lib/court-types.ts`, client-safe: per-justice score/interval arrays by term, per-term court record incl. mid-term left/joined, presidents in office order, the fitted score domain). `getCourtHubSummary()` feeds the hub card. Rules (a/b median, domain, turnover, presidents) are in `docs/SCOTUS_DATA_METHODOLOGY.md`.
+
+Components (`components/court/`): `CourtExplorer` (state, cards, `<details>` table fallbacks), `CourtToolbar`, `JusticeSearch` (lives in chart 1's card), `JusticeStrip` (chart 1), `PresidentRows` (chart 2), `JusticeTrajectory` (chart 3), `CourtHubSparkline`.
+
+Which primitive carries which chart:
+
+- **Chart 1** `JusticeStrip`: `ChartFrame` + `Tooltip`; geometry is `lib/court-strip-layout.ts` (deterministic beeswarm dodge + label placement; pure, so `court-strip-layout.test.ts` audits every real term at six widths). `ScatterPlot`/`SwarmRows` don't fit a dodged single-axis strip with placed labels, so the smallest new thing is the layout function, not a parallel chart stack. Fixed pixel height (`STRIP_GEOMETRY`) so the card never resizes while playing; a 12.5px IBM Plex Sans label box is 16.5px tall (measured), and the layout is built on that.
+- **Chart 2** `PresidentRows`: `SwarmRows`, extended with optional `domain`, `showAxis`, and per-point `radius`/`opacity`/`ring` and per-row `tinted`/`faded`. All default to the Congress behaviour, so `DelegationChart`/`CommitteeSwarm` are unchanged. Card-height mechanism is `SenateExplorer`'s (grid `md:items-stretch`, list absolutely positioned in a `flex-1` wrapper at md+; below md it expands).
+- **Chart 3** `JusticeTrajectory`: `ChartFrame` + `Axis` (years) + `Tooltip`; playhead and click-to-scrub follow `TrendChart`; legend at the bottom.
+
+Reserved heights: the "Mid-term change" line and the selected-justice row always occupy their space so chart 1's card (and chart 2's stretched card) never change height with the term.
+
+Config/plumbing: `lib/verticals.ts` Court `status: 'live'`; `app/sitemap.ts` already emits every live branch, so `/supreme-court` is in it; `next.config.ts` `outputFileTracingIncludes` has `/supreme-court` and `/` keys for `./pipeline/output/court/*.json`.

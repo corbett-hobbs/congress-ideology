@@ -5,7 +5,6 @@ import {
   useEffect,
   useMemo,
   useState,
-  type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
 import { mean } from "d3-array";
@@ -39,41 +38,13 @@ import { CommitteeSwarm } from "@/components/committee/CommitteeSwarm";
 import { CommitteeSearch } from "@/components/committee/CommitteeSearch";
 import { CommitteeChamberLegend } from "@/components/committee/CommitteeChamberLegend";
 import { ordinal } from "./format";
+import { ChartCard as Card } from "@/components/charts/ChartCard";
 
 const PLAY_INTERVAL_MS = 450;
 const PRELOAD_DELAY_MS = 1500;
 
 const INTRO =
   "Political scientists Keith Poole and Howard Rosenthal built DW-NOMINATE to measure ideology from behavior. It looks at every yes-or-no vote a member has ever cast and finds the position that best explains their whole record, so members who vote alike land close together and members who vote oppositely land far apart. Each member ends up with two coordinates, plotted below as one dot — the horizontal position (dimension 1) is the familiar economic left–right spectrum and on its own explains most of how members differ; the vertical position (dimension 2) captures a secondary pattern whose meaning has shifted across history (tap the “i” by the vertical axis). Doing this for every Congress since 1789 turns the slider into a way to watch the chamber pull apart or come together over time, and picking a state shows whether its delegation votes as a bloc or splits down the middle.";
-
-function Card({
-  title,
-  lede,
-  action,
-  className,
-  children,
-}: {
-  title: string;
-  lede: string;
-  action?: ReactNode;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <section
-      className={`flex flex-col rounded-[10px] border border-line bg-surface p-[1.35rem_1.35rem_1.1rem] ${className ?? ""}`}
-    >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <h2 className="font-serif text-[1.05rem] font-medium">{title}</h2>
-        {action}
-      </div>
-      <p className="mb-4 mt-1 text-[0.82rem] leading-[1.5] text-ink-muted">
-        {lede}
-      </p>
-      {children}
-    </section>
-  );
-}
 
 interface ExplorerProps {
   senate: ChamberCurrent;

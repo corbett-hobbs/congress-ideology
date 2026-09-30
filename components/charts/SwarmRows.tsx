@@ -8,7 +8,7 @@ import { Tooltip, useTooltip } from "./Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 
 /**
- * A stack of one-dimensional rows on a shared [-1, 1] axis: a left label, a
+ * A stack of one-dimensional rows on a shared axis (default [-1, 1]): a left label, a
  * min→max connector, dots, and a right-hand meta string. This is the shape the
  * state-delegation "range" view and the committee beeswarm both draw — extracted
  * so `components/senate/DelegationChart` and `components/committee/CommitteeSwarm`
@@ -32,6 +32,12 @@ export interface SwarmPoint<TP> {
   /** Bigger, fully-opaque dot — a range endpoint, or either end of a dumbbell. */
   emphasized: boolean;
   highlighted?: boolean;
+  /** Dot radius override (default: 7 highlighted, 5 emphasized, 3 otherwise). */
+  radius?: number;
+  /** Opacity override (default: 1 emphasized, 0.5 otherwise). */
+  opacity?: number;
+  /** An extra ring around the dot — "seated" (neutral) or "selected" (accent, heavier). */
+  ring?: "seated" | "selected";
   /** Show a pointer cursor (a profile page exists to navigate to). */
   navigable?: boolean;
   onClick?: () => void;
@@ -45,6 +51,10 @@ export interface SwarmRowData<TP> {
   labelHighlighted?: boolean;
   /** Paint the selected-row background band and make the whole row a target. */
   selected?: boolean;
+  /** A faint tint behind the row (Court: a justice in the selected term sits here). */
+  tinted?: boolean;
+  /** Fade the row's label and meta text (every dot in the row is dimmed). */
+  faded?: boolean;
   onRowClick?: () => void;
   points: SwarmPoint<TP>[];
   /** Right-hand text — a party split ("14R·9D") or a gap number. */
@@ -59,6 +69,10 @@ interface SwarmRowsProps<TP> {
   margin: Margin;
   rowHeight: number;
   renderTooltip: (d: TP) => ReactNode;
+  /** Shared axis domain. Default [-1, 1] (DW-NOMINATE). */
+  domain?: [number, number];
+  /** Draw the tick axis and gridlines (default true). The Court charts turn it off. */
+  showAxis?: boolean;
 }
 
 export function SwarmRows<TP>({
@@ -67,6 +81,8 @@ export function SwarmRows<TP>({
   margin,
   rowHeight,
   renderTooltip,
+  domain = [-1, 1],
+  showAxis = true,
 }: SwarmRowsProps<TP>) {
   const tip = useTooltip<TP>();
   const labelTip = useTooltip<string>();
@@ -97,19 +113,21 @@ export function SwarmRows<TP>({
         ariaLabel={ariaLabel}
       >
         {({ innerWidth }) => {
-          const x = scaleLinear().domain([-1, 1]).range([0, innerWidth]);
+          const x = scaleLinear().domain(domain).range([0, innerWidth]);
 
           return (
             <>
-              <Axis
-                scale={x}
-                orientation="bottom"
-                ticks={ticks}
-                offset={-14}
-                gridExtent={-(plotH + 20)}
-                zeroAt={0}
-                format={(v) => v.toFixed(1)}
-              />
+              {showAxis && (
+                <Axis
+                  scale={x}
+                  orientation="bottom"
+                  ticks={ticks}
+                  offset={-14}
+                  gridExtent={-(plotH + 20)}
+                  zeroAt={0}
+                  format={(v) => v.toFixed(1)}
+                />
+              )}
 
               {rows.map((row, i) => {
                 const y = i * rowHeight + rowHeight / 2;
@@ -132,7 +150,17 @@ export function SwarmRows<TP>({
                         rx={3}
                       />
                     )}
+                    {row.tinted && (
+                      <rect
+                        className="swarm-row-tint"
+                        x={-effMargin.left}
+                        y={y - rowHeight / 2}
+                        width={innerWidth + effMargin.left + effMargin.right}
+                        height={rowHeight}
+                      />
+                    )}
                     <text
+                      opacity={row.faded ? 0.35 : undefined}
                       className={`deleg-state-label${row.labelHighlighted ? " is-selected" : ""}${row.label.length > maxLabelChars ? " is-clipped" : ""}`}
                       x={-effMargin.left + 2}
                       y={y + 4}
@@ -161,12 +189,22 @@ export function SwarmRows<TP>({
                     )}
                     {row.points.map((p, si) => (
                       <g key={`${p.id}:${si}`}>
+                        {p.ring && (
+                          <circle
+                            className={`swarm-ring is-${p.ring}`}
+                            cx={x(p.value)}
+                            cy={y}
+                            r={(p.radius ?? 5) + (p.ring === "selected" ? 5 : 3.5)}
+                            opacity={p.opacity}
+                            pointerEvents="none"
+                          />
+                        )}
                         <circle
                           className={`deleg-dot ${p.colorClass}${p.highlighted ? " is-highlighted" : ""}`}
                           cx={x(p.value)}
                           cy={y}
-                          r={p.highlighted ? 7 : p.emphasized ? 5 : 3}
-                          opacity={p.emphasized ? 1 : 0.5}
+                          r={p.radius ?? (p.highlighted ? 7 : p.emphasized ? 5 : 3)}
+                          opacity={p.opacity ?? (p.emphasized ? 1 : 0.5)}
                           style={p.navigable ? { cursor: "pointer" } : undefined}
                           onPointerEnter={(e) => tip.show(p.tooltip, e)}
                           onPointerMove={tip.move}
@@ -196,6 +234,7 @@ export function SwarmRows<TP>({
                     ))}
                     <text
                       className="deleg-gap-label"
+                      opacity={row.faded ? 0.35 : undefined}
                       x={innerWidth + effMargin.right - 4}
                       y={y + 4}
                       textAnchor="end"

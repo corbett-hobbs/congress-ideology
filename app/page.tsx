@@ -3,7 +3,9 @@ import Link from "next/link";
 import { getBothTrend } from "@/lib/congress-data";
 import { branches } from "@/lib/verticals";
 import { site } from "@/lib/site";
+import { getCourtHubSummary } from "@/lib/justice-data";
 import { HubSparkline } from "@/components/HubSparkline";
+import { CourtHubSparkline } from "@/components/court/CourtHubSparkline";
 import { SiteFooter } from "@/components/senate/SiteFooter";
 import { ordinal } from "@/components/senate/format";
 
@@ -22,7 +24,8 @@ const BLURBS: Record<string, string> = {
   congress:
     "Every member\u2019s votes as a two-dimensional ideology score, plus estimated net worth from financial disclosures.",
   "supreme-court":
-    "Where the justices sit over time, from Martin-Quinn ideology scores.",
+    // PLACEHOLDER COPY — awaiting Corby's edit.
+    "Where the justices sit over time, from Martin\u2013Quinn ideology scores.",
 };
 
 const fmt2 = (n: number) => n.toFixed(2);
@@ -32,6 +35,7 @@ export default function Hub() {
   const latest = [...trend]
     .reverse()
     .find((p) => p.dem != null && p.rep != null);
+  const court = getCourtHubSummary();
   const gap = latest ? (latest.rep as number) - (latest.dem as number) : null;
 
   return (
@@ -90,6 +94,18 @@ export default function Hub() {
                       </span>{" "}
                       gap between the party means on dimension 1,{" "}
                       {ordinal(latest!.congress)} Congress (House and Senate)
+                    </p>
+                  </div>
+                )}
+
+                {b.id === "supreme-court" && (
+                  <div className="flex flex-col gap-2">
+                    <CourtHubSparkline summary={court} />
+                    <p className="text-[0.85rem] text-ink-muted">
+                      <span className="font-serif text-2xl font-semibold text-ink">
+                        {court.medianJusticeName}
+                      </span>{" "}
+                      Median justice, {court.lastTerm} term
                     </p>
                   </div>
                 )}
