@@ -232,10 +232,11 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
           <h2 className="font-serif text-xl font-medium text-ink sm:text-2xl">
             Where they started, where they are now
           </h2>
-          <p className="mt-1 text-[0.85rem] text-ink-muted">
-            {chamberNoun} with 2+ years of data
-            {stateFilter && ` · ${stateName(stateFilter)} highlighted`}
-          </p>
+          {stateFilter && (
+            <p className="mt-1 text-[0.85rem] text-ink-muted">
+              {stateName(stateFilter)} highlighted
+            </p>
+          )}
         </div>
 
         <div className="relative w-full sm:w-64">
@@ -309,8 +310,8 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         </p>
       )}
 
-      <p className="mt-4 rounded-md border border-line bg-surface-raised px-3 py-2 text-[0.8rem] leading-relaxed text-ink-muted">
-        Diagonal = no change. Above it, they grew. Below it, they shrank. Distance from the
+      <p className="mt-4 text-[0.85rem] leading-relaxed text-ink-muted">
+        Includes {chamberNoun} with 2+ years of data. Diagonal = no change. Above it, they grew. Below it, they shrank. Distance from the
         line is the size of the change, not how fast it happened — the hover card has years
         and rate.
       </p>
