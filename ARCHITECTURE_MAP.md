@@ -32,6 +32,7 @@ stored. See `docs/DATA_CONVENTIONS.md` for the full contract.
 | `court/mq_scores.json`       | (justice, term)                            | `justice_id`+`term`            | `transform/court.ts`         | `lib/justice-data.ts` |
 | `court/court_terms.json`     | (term[, segment a/b])                      | `term`+`segment`               | `transform/court.ts`         | `lib/justice-data.ts` |
 | `court/court_median_probabilities.json` | (term[, segment], justice)      | `term`+`segment`+`justice_id`  | `transform/court.ts`         | `lib/justice-data.ts` |
+| `court/justice_bios.json`    | one row per justice with a matched Wikipedia article (+ public-domain portrait) | `justice_id` | `fetch/justice-bios.ts` (not the transform) | `lib/justice-data.ts` |
 | `court/_report.json`         | run summary                                | —                              | `transform/court-run.ts`     | humans |
 | `financial_disclosures.json` | (legislator, reporting year), band-count grain | `bioguide_id`+`year`       | Python sidecar: `pipeline/financial_disclosures/build.py` / `build_senate_html.py` / `build_ocr.py` | `lib/wealth-data.ts` |
 | `line-items/<year>.json`     | (legislator, reporting year) that reconciled, item grain | `bioguide_id`+`year`, sharded by `year` | `pipeline/financial_disclosures/build_line_items.py` | `lib/line-items-data.ts` |
@@ -67,6 +68,7 @@ latest Congress and carry no trend chart.
 | --------------------------------------------------- | ---- | ------- |
 | `/`                                                 | static | Hub — a card per branch (`lib/verticals.ts`): Congress (party-mean sparkline + dim-1 gap stat for the latest Congress, from `getBothTrend()`) and Supreme Court (median justice's name for the latest term + court-median sparkline, from `getCourtHubSummary()` in `lib/justice-data.ts`; no numeric score). Redirect target of nothing; bare `/` never redirects. |
 | `/supreme-court`                                    | static | `CourtExplorer` — "How Does the Supreme Court Lean?": sticky toolbar (Appointed by party pills + president dropdown, term slider), chart 1 `JusticeStrip` (beeswarm of the selected term), chart 2 `PresidentRows` (career average by appointing president), chart 3 `JusticeTrajectory` (every justice over time). One shared `term` / `appointed` / `president` / `selectedId` in `CourtExplorer`. One section, so no secondary header row. |
+| `/supreme-court/justices/[justice_id]/[name_slug]`  | SSG + dynamic | `JusticeProfileView` — one page per justice in the Martin-Quinn data (49). SCDB `justice_id`; stale slug → 308, unknown/non-numeric id → `not-found.tsx`. Identity row, "Ideology over time" card, "Where {Last} sits" swarm + roster card (one shared Served alongside / Nearest neighbors toggle), shared `AboutScoresCard`. In `sitemap.xml`; `outputFileTracingIncludes` covers `pipeline/output/court/*.json`. |
 | `/congress`                                         | static | `SenateExplorer` — the compass / delegation / trend explorer, with a Members ↔ Committees toggle (119th only). Reads `?chamber`, `?state`, `?show`. |
 | `/congress/senators/[bioguide_id]/[name_slug]`      | SSG + dynamic | `MemberProfileView` (stale slug → 308, bad id → 404) |
 | `/congress/house/[bioguide_id]/[name_slug]`         | SSG + dynamic | `MemberProfileView` |
@@ -155,6 +157,20 @@ header row in the table above; control + compact `14R·9D` split, shared with
 `CommitteeNeighborChips` in neighbour mode) + `CommitteeRosterCard`
 (single-row swarm + scrollable roster list, no
 trajectory chart).
+
+### Justice profile pages (`components/court/`, `lib/justice-*.ts`)
+
+Data: `lib/justice-derive.ts` (pure, unit-tested over the real data: career average, peers clipped to shared terms, four nearest by career average via `lib/neighbors.ts` with a constant `dim2`, one interval-aware score domain shared by every page, served/confirmed/elevated lines) → `lib/justice-data.ts` (`getJusticeProfile`, `getJusticeRefs`; server-only) → the flat `JusticeProfile` in `lib/justice-types.ts`. `lib/justice-url.ts` builds paths.
+
+| Component | Notes / why not an existing one |
+| --- | --- |
+| `JusticeProfileView` | client shell holding the toggle; `md:items-stretch` grid. The RIGHT card has fixed content height (same swarm height both modes, four-row roster viewport) and sets the row; the LEFT chart sits in a `flex-1` box and is filled via `useElementSize`, so it never drives the height. Verified by `pnpm check:justice-layout` (Playwright, 1280/1024/768/390). |
+| `JusticeHeader` | sibling of `ProfileHeader` (justice facts differ); same absolute-inset clamped bio column; drops the portrait slot when no public-domain photo. |
+| `JusticeOverTimeChart` | line + band + clipped peers + dashed median on `ChartFrame`/`Axis`/`Tooltip`; new because `MemberNetWorthChart`/`SenatorTrajectoryChart` are single-series with per-member domains. |
+| `JusticeSwarm` + `lib/justice-swarm-layout.ts` | `senate/BeeswarmChart` is typed to `ChamberMember`, fixed to [-1, 1] and its d3-force layout only approximates x; this reuses `court-strip-layout`'s exact-x `dodgeOffsets` (extracted and exported) and packs labels into rows reserved for the worse of the two modes. |
+| `JusticeRosterCard` | toggle (`charts/PillGroup`), swarm, roster; mobile cap-plus-expander like `MemberWealthItemsPanel`. |
+| `charts/AlignmentTrack` (extended) | optional `domain`, hollow `ring` point, `connect`, `zeroTick`; committee usage unchanged. |
+| `AboutScoresCard` | the one shared copy of the score note. |
 
 ### Two-tier nav and header back-link (`lib/verticals.ts`, `components/SiteHeader.tsx`, `components/SiteNav.tsx`, `components/BackLinkContext.tsx`)
 

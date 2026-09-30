@@ -152,3 +152,13 @@ domain): https://www.fjc.gov/history/judges. Files used:
 `demographics.csv`, `federal-judicial-service.csv` from
 `https://www.fjc.gov/sites/default/files/history/`; snapshot committed in
 `pipeline/raw/fjc/` (refresh with `pnpm fetch:fjc`).
+
+## Wikipedia — justice bios and portraits
+
+Justice bios (`pipeline/output/court/justice_bios.json`) are Wikipedia article
+leads, trimmed to whole sentences and never rewritten, shown with a
+"Source: Wikipedia, CC BY-SA 4.0" link to the article. Portraits are included
+only when the file's Wikimedia Commons / Wikipedia license metadata says public
+domain or CC0 (committed to `public/images/justices/`, source file recorded per
+row); everything else is omitted. Refresh with `pnpm fetch:justice-bios`.
+Martin-Quinn and FJC attribution for the justice pages is as above.

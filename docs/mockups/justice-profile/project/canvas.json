@@ -1,0 +1,95 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-09-30T18:00:00Z"
+ },
+ "title": "InsideGov \u2014 Justice profile page",
+ "launch": {
+  "view": "canvas"
+ },
+ "pages": [],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 1240,
+   "title": "Stevens \u2014 default (interactive toggle)",
+   "is_interactive": true
+  },
+  "Stevens-neighbors.dc.html": {
+   "x": 1360,
+   "y": 0,
+   "w": 1280,
+   "h": 1240,
+   "title": "Stevens \u2014 Nearest neighbors on"
+  },
+  "Thomas.dc.html": {
+   "x": 0,
+   "y": 1360,
+   "w": 1280,
+   "h": 1240,
+   "title": "Thomas \u2014 current justice"
+  },
+  "Stevens-mobile.dc.html": {
+   "x": 1360,
+   "y": 1360,
+   "w": 390,
+   "h": 2060,
+   "title": "Stevens \u2014 mobile (collapsed)"
+  },
+  "Stevens-mobile-expanded.dc.html": {
+   "x": 1830,
+   "y": 1360,
+   "w": 390,
+   "h": 2740,
+   "title": "Stevens \u2014 mobile (expanded)"
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Stevens-neighbors.dc.html",
+  "Thomas.dc.html",
+  "Stevens-mobile.dc.html",
+  "Stevens-mobile-expanded.dc.html"
+ ],
+ "notes": {
+  "t1": {
+   "x": 0,
+   "y": -320,
+   "text": "Justice profile page \u2014 mockup",
+   "kind": "title1",
+   "maxW": 2640
+  },
+  "s1": {
+   "x": 2720,
+   "y": 0,
+   "w": 340,
+   "fill": "orange",
+   "text": "Scores here are illustrative placeholders shaped like Martin\u2013Quinn output, not the real values. Tenures and appointing presidents are real; the real scores come from the pipeline."
+  },
+  "s2": {
+   "x": 2720,
+   "y": 520,
+   "w": 340,
+   "fill": "purple",
+   "text": "Nearest neighbors: closest career-average score among every justice in the data set (same scale as the swarm), so a neighbor may never have overlapped. The roster then shows tenure instead of terms together, and the left chart can only highlight neighbors who overlapped."
+  },
+  "s3": {
+   "x": 2720,
+   "y": 1040,
+   "w": 340,
+   "fill": "teal",
+   "text": "Bio: short Wikipedia-style summary with attribution. The copy here is my own placeholder wording, not pulled text. Roster under the swarm follows the toggle: peers who served together, or the nearest neighbors."
+  },
+  "s4": {
+   "x": 2300,
+   "y": 1360,
+   "w": 340,
+   "fill": "orange",
+   "text": "Mobile: the roster shows four rows with a Show all 18 / Show fewer expander, so the page doesn't turn into an 18-row scroll. Nearest neighbors is four rows, so it never needs the expander."
+  }
+ },
+ "designSystems": []
+}

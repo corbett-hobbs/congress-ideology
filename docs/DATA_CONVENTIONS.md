@@ -240,7 +240,7 @@ person-identifier convention": justices have no `bioguide_id`. It is one id per
 person — Stone and Rehnquist keep a single id across their Associate → Chief
 service (verified in the data; a person under two ids, or two people under one,
 is a build error). FJC's `nid` is a foreign id: it appears only in the
-crosswalk, not in the output.
+crosswalk and, since the justice profile pages, as `justices.json` `fjc_nid` (the bio-source key; `justice_id` stays the page/route key — a deliberate departure from "key by FJC id", because SCDB id is what every other court file already joins on).
 
 **Crosswalk.** `pipeline/transform/court-crosswalk.json` (committed, hand-reviewed)
 maps each MQ justice to an FJC record: `justice_id`, MQ name code, last name,
@@ -253,6 +253,31 @@ Roberts (Owen J. / John G.), Harlan (John Marshall I, 1877–1911 / II, 1955–7
 White (Byron / Edward Douglass), Marshall (Thurgood / John). FJC also lists the
 D.C. "Supreme Court" bench; rows are filtered to
 `Supreme Court of the United States` exactly.
+
+**Justice profile additions.** `justices.json` also carries `fjc_nid`,
+`senate_vote` (`{ayes, nays}` for the appointment in effect at the first scored
+term; `null` = voice vote — every null is an FJC "Voice" row) and
+`appointment_start` (that appointment's first day). The FJC `Ayes/Nays` cell is
+parsed strictly only for appointments that reach this file (18th-century rows
+hold junk like `10//14`). Service end is the FJC senior-status date, else the
+termination date (FJC's termination can be a death date years after retirement,
+e.g. Stevens 2019 vs. 2010) and is cross-checked at build time to be within a
+year of the last scored term + 1.
+
+`court/justice_bios.json` (**written by `pnpm fetch:justice-bios`, not the
+transform**, like `wikipedia_summaries.json`): one row per justice with a safely
+matched Wikipedia article — `justice_id`, `title`, trimmed `extract` (up to three
+sentences), `url`, `revision`, `fetched_at`, `needs_review`, and `photo`
+(`path` under `public/images/justices/`, `source_url`, `license`) or `null`.
+Matching is defensive: a candidate article is accepted only if the page is a
+standard article whose lead names the Supreme Court / a justice AND its Wikidata
+birth (and death) year equals FJC's (the REST lead strips the "(born …)"
+parenthetical, so Wikidata is the source for years). No acceptable candidate
+fails the run; fix with `TITLE_OVERRIDES` in `pipeline/fetch/justice-bios.ts`
+(Harlan II and Vinson/Byrnes/Rehnquist needed them). Photos only when the file
+page's license metadata says public domain / CC0 (Kagan's is CC BY-SA, so none;
+48 of 49 have one). `pnpm validate` checks the schema, id resolution and that
+every photo exists.
 
 **`term`** is the October Term start year as an integer (2024 = OT2024, Oct 2024
 – Jun 2025), never a Congress number.
