@@ -45,7 +45,7 @@ export function yearTicks(a: number, b: number, step = 5): number[] {
  * "Ideology over time": the subject's score by term as a heavy party-coloured
  * line with its 95% credible band, every justice who shared a term with them as
  * a thin muted trace clipped to those shared terms, and the Court median as a
- * dashed line. The y domain is one constant shared by every justice page.
+ * dashed line. The y domain is fitted to what this chart draws.
  * Modeled on `wealth/MemberNetWorthChart` (line + band, fills the height the
  * layout gives it) and `senate/SenatorTrajectoryChart`; built on the same
  * ChartFrame / Axis / Tooltip primitives.
@@ -65,7 +65,22 @@ export function JusticeOverTimeChart({
   const { justice, chart } = profile;
   const tip = useTooltip<Tip>();
   const narrow = size.width < 520;
-  const { domain, peers, median } = chart;
+  const { peers, median } = chart;
+
+  // Zoom to what is drawn (this justice's band, the overlapping traces, the
+  // median over their terms), not the league-wide extent.
+  const domain = useMemo((): [number, number] => {
+    const vals = [
+      ...profile.justice.lo,
+      ...profile.justice.hi,
+      ...peers.flatMap((p) => p.s),
+      ...median.filter((m) => m.term >= profile.justice.t0 && m.term <= profile.justice.t1).map((m) => m.median),
+    ];
+    const lo = Math.min(...vals);
+    const hi = Math.max(...vals);
+    const pad = (hi - lo) * 0.05;
+    return [Math.floor((lo - pad) * 2) / 2, Math.ceil((hi + pad) * 2) / 2];
+  }, [profile.justice, peers, median]);
 
   const labeled = useMemo(() => {
     const show = (p: PeerTrace) =>
@@ -109,7 +124,8 @@ export function JusticeOverTimeChart({
           const y = scaleLinear().domain(domain).range([innerHeight, 0]);
           const ticks = yearTicks(t0, t1, narrow && t1 - t0 > 30 ? 10 : 5);
           const yTicks: number[] = [];
-          for (let v = Math.ceil(domain[0] / 2) * 2; v <= domain[1]; v += 2) yTicks.push(v);
+          const step = domain[1] - domain[0] <= 6 ? 1 : 2;
+          for (let v = Math.ceil(domain[0] / step) * step; v <= domain[1]; v += step) yTicks.push(v);
 
           const path = (vals: number[], from: number) =>
             line<number>()

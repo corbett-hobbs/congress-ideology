@@ -9,7 +9,7 @@ import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { fmtScore, partyLabel } from "@/lib/court-types";
 import { justicePath } from "@/lib/justice-url";
-import { layoutSwarm, packLabels, rowCount, type LabelIn } from "@/lib/justice-swarm-layout";
+import { layoutSwarm } from "@/lib/justice-swarm-layout";
 import type { JusticeProfile, SwarmPoint } from "@/lib/justice-types";
 import { partyVar, type JusticeMode } from "./justice-mode";
 
@@ -17,21 +17,15 @@ const FALLBACK_W = 420;
 const PAD_X = 14;
 const R = 4.8;
 const R_SUBJECT = 7;
-const ROW_H = 15;
-const LABEL_GAP = 7; // label row stack -> top of the dots
 const AXIS_H = 24;
 const RANGE_H = 34;
 
-const labelWidth = (text: string, bold: boolean) => text.length * (bold ? 6.9 : 6.3) + 4;
-
 /**
  * "Where {Last} sits among all justices": a one-dimensional swarm of every
- * justice in the data set at career average, on the same score domain as the
+ * justice in the data set at career average, on a score axis fitted to the data, like the
  * chart beside it. The subject is ringed, the toggle's highlighted set is solid,
- * everyone else is faded. Labels (the subject; plus the four neighbors in
- * neighbors mode) stack in rows above the dots with leader lines. The label rows
- * reserved are the WORSE of the two modes, so the chart's height never changes
- * when the toggle flips. Under the axis, a bar spans the subject's lowest to
+ * everyone else is faded. There are no name labels (hover for names). The axis
+ * is fitted to the career averages. Under the axis, a bar spans the subject's lowest to
  * highest per-term score.
  */
 export function JusticeSwarm({
@@ -45,12 +39,17 @@ export function JusticeSwarm({
   const [ref, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || FALLBACK_W;
   const tip = useTooltip<SwarmPoint>();
-  const { justice, chart, swarm } = profile;
+  const { justice, swarm } = profile;
   const { points, range } = swarm;
 
   const geo = useMemo(() => {
+    const careers = points.map((p) => p.career);
+    const lo = Math.min(...careers, range.min);
+    const hi = Math.max(...careers, range.max);
+    const pad = (hi - lo) * 0.04;
+    const domain: [number, number] = [Math.floor((lo - pad) * 2) / 2, Math.ceil((hi + pad) * 2) / 2];
     const x = scaleLinear()
-      .domain(chart.domain)
+      .domain(domain)
       .range([PAD_X, W - PAD_X]);
     const items = points.map((p) => ({
       id: p.id,
@@ -60,23 +59,10 @@ export function JusticeSwarm({
     const { dots, halfHeight } = layoutSwarm(items);
     const dotById = new Map(dots.map((d) => [d.id, d]));
 
-    const labelsFor = (m: JusticeMode): LabelIn[] =>
-      points
-        .filter((p) => p.id === justice.id || (m === "neighbors" && p.neighbor))
-        .map((p) => ({
-          id: p.id,
-          x: x(p.career),
-          width: labelWidth(p.short, p.id === justice.id),
-        }));
-    const packed = {
-      alongside: packLabels(labelsFor("alongside"), W),
-      neighbors: packLabels(labelsFor("neighbors"), W),
-    };
-    const rows = Math.max(rowCount(packed.alongside), rowCount(packed.neighbors));
-    return { x, dotById, halfHeight, packed, rows };
-  }, [points, justice.id, chart.domain, W]);
+    return { x, dotById, halfHeight, domain };
+  }, [points, justice.id, range.min, range.max, W]);
 
-  const labelsH = geo.rows * ROW_H + LABEL_GAP;
+  const labelsH = 6;
   const swarmH = geo.halfHeight * 2;
   const height = labelsH + swarmH + AXIS_H + RANGE_H;
   const axisY = labelsH + swarmH;
@@ -87,7 +73,7 @@ export function JusticeSwarm({
   const ordered = [...points].sort((a, b) => tier(a) - tier(b));
 
   const ticks: number[] = [];
-  for (let v = Math.ceil(chart.domain[0] / 2) * 2; v <= chart.domain[1]; v += 2) ticks.push(v);
+  for (let v = Math.ceil(geo.domain[0] / 2) * 2; v <= geo.domain[1]; v += 2) ticks.push(v);
   const color = partyVar(justice.party);
   const { x } = geo;
 
@@ -111,26 +97,6 @@ export function JusticeSwarm({
               zeroAt={0}
               format={(v) => (v === 0 ? "0" : v > 0 ? `+${v}` : `−${Math.abs(v)}`)}
             />
-
-            {/* Leader lines first, so the dots sit on top of them. */}
-            {geo.packed[mode].map((l) => {
-              const d = geo.dotById.get(l.id)!;
-              const p = points.find((q) => q.id === l.id)!;
-              const isSubject = p.id === justice.id;
-              const top = labelsH - LABEL_GAP - l.row * ROW_H;
-              return (
-                <line
-                  key={l.id}
-                  x1={d.x}
-                  x2={d.x}
-                  y1={top + 3}
-                  y2={midY + d.y - (isSubject ? R_SUBJECT : R) - 1}
-                  stroke="var(--ink-faint)"
-                  strokeWidth={0.8}
-                  opacity={0.7}
-                />
-              );
-            })}
 
             {ordered.map((p) => {
               const d = geo.dotById.get(p.id)!;
@@ -164,25 +130,6 @@ export function JusticeSwarm({
                     onClick={isSubject ? undefined : () => router.push(href)}
                   />
                 </g>
-              );
-            })}
-
-            {geo.packed[mode].map((l) => {
-              const p = points.find((q) => q.id === l.id)!;
-              const isSubject = p.id === justice.id;
-              const top = labelsH - LABEL_GAP - l.row * ROW_H;
-              return (
-                <text
-                  key={l.id}
-                  x={l.left + 2}
-                  y={top}
-                  fontSize={isSubject ? 12 : 11}
-                  fontWeight={isSubject ? 700 : 500}
-                  fill={isSubject ? partyVar(p.party) : "var(--ink-muted)"}
-                  pointerEvents="none"
-                >
-                  {p.short}
-                </text>
               );
             })}
 
