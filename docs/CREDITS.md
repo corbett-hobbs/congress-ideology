@@ -121,3 +121,34 @@ ships in the package's own `LICENSE`.
 `bioguide_id` values originate from the Biographical Directory of the United
 States Congress — https://bioguide.congress.gov/ — a public-domain U.S.
 Government work.
+
+---
+
+## Martin-Quinn scores — Supreme Court ideal points
+
+Justice ideology estimates (`pipeline/output/court/mq_scores.json`) come from
+the Martin-Quinn scores published by Washington University in St. Louis.
+
+**Requested citation:**
+
+> Martin, Andrew D. and Kevin M. Quinn. 2002. "Dynamic Ideal Point Estimation
+> via Markov Chain Monte Carlo for the U.S. Supreme Court, 1953–1999."
+> *Political Analysis* 10:134–153.
+
+Source: https://mqscores.wustl.edu/measures.php. Release used: **2024 Release 01**
+(terms October 1937 – October 2024; the site describes it as built on the 2024
+Release 01 of the Supreme Court Database plus SCDB Legacy 07). The label is
+taken from the site's description as relayed at session start — the site's
+README was not retrievable (bot challenge), so `SOURCE.json` records it as
+supplied, not read from the file. Snapshot committed in `pipeline/raw/mq/2024/`
+(hand-placed; `retrieved_via: manual`).
+
+## Federal Judicial Center — justice biographies
+
+Full names, birth/death years, appointing president and party, and
+nomination / confirmation / service dates come from the Federal Judicial
+Center's *Biographical Directory of Article III Federal Judges* (public
+domain): https://www.fjc.gov/history/judges. Files used:
+`demographics.csv`, `federal-judicial-service.csv` from
+`https://www.fjc.gov/sites/default/files/history/`; snapshot committed in
+`pipeline/raw/fjc/` (refresh with `pnpm fetch:fjc`).

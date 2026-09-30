@@ -183,3 +183,40 @@ await step("output/wikipedia_summaries.json", async () => {
   }
   return `${rows.length} records ok, bioguide_id unique and resolves`;
 });
+
+// --- Supreme Court track: raw inputs (Martin-Quinn + FJC bios) ---------------
+// Cheap structural checks only; the full identity / crosswalk / sanity
+// validation lives in transform/court.ts and runs on every `pnpm transform`.
+await step("mq/<latest>: justices.csv + court.csv structure", async () => {
+  const { readdir } = await import("node:fs/promises");
+  const { COURT_HEADER, JUSTICES_HEADER, latestReleaseYear } = await import("../fetch/mq-check");
+  const year = latestReleaseYear(await readdir(`${RAW_DIR}/mq`));
+  if (year === null) throw new ValidationError(`${RAW_DIR}/mq`, "release folder", "no <year>/ folder found");
+  const dir = `${RAW_DIR}/mq/${year}`;
+  const check = async (name: string, cols: string[]) => {
+    const rows = await readCsvRows(`${dir}/${name}`);
+    const have = new Set(Object.keys(rows[0] ?? {}));
+    const missing = cols.filter((c) => !have.has(c));
+    if (missing.length > 0) throw new ValidationError(`${dir}/${name}`, "header", `missing columns: ${missing.join(", ")}`);
+    return rows.length;
+  };
+  const j = await check("justices.csv", JUSTICES_HEADER);
+  const c = await check("court.csv", COURT_HEADER);
+  return `release ${year}: ${j} justice-term rows, ${c} court rows`;
+});
+
+await step("fjc: federal-judicial-service.csv + demographics.csv structure", async () => {
+  const need = {
+    "federal-judicial-service.csv": ["nid", "Court Name", "Appointing President", "Party of Appointing President", "Commission Date", "Senior Status Date", "Termination Date"],
+    "demographics.csv": ["nid", "Last Name", "First Name", "Birth Year", "Death Year"],
+  };
+  let n = 0;
+  for (const [name, cols] of Object.entries(need)) {
+    const rows = await readCsvRows(`${RAW_DIR}/fjc/${name}`);
+    const have = new Set(Object.keys(rows[0] ?? {}));
+    const missing = cols.filter((c) => !have.has(c));
+    if (missing.length > 0) throw new ValidationError(`${RAW_DIR}/fjc/${name}`, "header", `missing columns: ${missing.join(", ")}`);
+    n += rows.length;
+  }
+  return `${n} rows, required columns present`;
+});

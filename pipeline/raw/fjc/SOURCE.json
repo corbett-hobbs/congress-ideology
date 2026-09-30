@@ -1,0 +1,12 @@
+{
+  "page": "https://www.fjc.gov/history/judges/biographical-directory-article-iii-federal-judges-export",
+  "urls": {
+    "demographics.csv": "https://www.fjc.gov/sites/default/files/history/demographics.csv",
+    "federal-judicial-service.csv": "https://www.fjc.gov/sites/default/files/history/federal-judicial-service.csv"
+  },
+  "retrieved_on": "2026-09-30",
+  "sha256": {
+    "demographics.csv": "7c153cfc2e6e5bff1bdb9fbffb1cf12b50bd75c3374f00461ae57a1a588b2e20",
+    "federal-judicial-service.csv": "3ff5303ceb8b9cd39f15545a6d9a07874069535ff00c6d11d9a71379b00c7642"
+  }
+}

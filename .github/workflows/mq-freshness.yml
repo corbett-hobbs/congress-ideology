@@ -1,0 +1,102 @@
+name: Martin-Quinn data freshness
+
+# Automate the check, gate the acceptance on a human.
+#
+# Monthly (MQ publishes about once a year): probe mqscores.wustl.edu for a
+# release newer than the newest folder in pipeline/raw/mq/, and if one exists
+# download it and open a pull request.
+#
+# The file host sits behind a Cloudflare bot challenge. We never try to get
+# past it. If the runner is challenged the job ends GREEN WITH A WARNING
+# ANNOTATION ("unable to check - bot challenge"), never a red failure and never
+# a silent pass. GitHub-hosted runners (datacenter IPs) are likely to be
+# challenged permanently; in that case the realistic process is the manual one:
+# download the CSVs in a browser, put them in pipeline/raw/mq/<year>/, and run
+# `pnpm fetch:mq -- --adopt <year>` (see docs/DATA_CONVENTIONS.md).
+#
+# Requires repo setting:
+#   Settings > Actions > General > "Allow GitHub Actions to create and
+#   approve pull requests"  (off by default)
+
+on:
+  schedule:
+    - cron: "23 9 1 * *" # 1st of each month, 09:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: mq-freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Probe for a newer MQ release
+        id: probe
+        run: |
+          set +e
+          pnpm fetch:mq -- --probe
+          code=$?
+          set -e
+          if [ "$code" -eq 2 ]; then
+            echo "blocked=true" >> "$GITHUB_OUTPUT"
+            echo "::warning title=MQ freshness check skipped::Unable to check - bot challenge from mqscores.wustl.edu. Check https://mqscores.wustl.edu/measures.php by hand and follow the manual-snapshot steps in docs/DATA_CONVENTIONS.md."
+            echo "### MQ check skipped: bot challenge" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$code" -ne 0 ]; then
+            exit "$code"
+          fi
+
+      - name: Detect changes
+        id: detect
+        if: steps.probe.outputs.blocked != 'true'
+        run: |
+          if [ -z "$(git status --porcelain -- pipeline/raw/mq)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No newer MQ release."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git status --short -- pipeline/raw/mq
+          fi
+
+      - name: Open pull request
+        if: steps.detect.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: pipeline/raw/mq
+          branch: data/mq-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): add new Martin-Quinn release"
+          title: "Martin-Quinn data refresh"
+          labels: data-refresh
+          body: |
+            The monthly check found a Martin-Quinn release newer than the
+            newest folder in `pipeline/raw/mq/`.
+
+            **Before merging**
+
+            - Review the new `pipeline/raw/mq/<year>/` snapshot and its `SOURCE.json`.
+            - Locally: `pnpm validate && pnpm transform`, commit the updated
+              `pipeline/output/court/`. New justices need a row in
+              `pipeline/transform/court-crosswalk.json` (the build fails with a
+              specific error until one exists) and a look at
+              `EXPLAINED_TERM_COUNTS` in `pipeline/transform/court.ts` if the
+              Court had mid-term turnover.
+            - Update the release label in `docs/CREDITS.md`.
+
+            Not auto-merged by design.

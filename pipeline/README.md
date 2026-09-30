@@ -53,6 +53,7 @@ why the committee feature is pinned to the latest Congress.
 | `committees.json`             | one row per top-level committee (current Congress) |
 | `committee_memberships.json`  | one row per (bioguide_id, committee_id), current Congress |
 | `_report.json`                | run summary and sanity numbers                |
+| `court/*.json`                | Supreme Court track (Martin-Quinn scores + FJC bios), a separate data track — see `docs/DATA_CONVENTIONS.md` §6. Built by `pnpm transform` from `raw/mq` + `raw/fjc`; `pnpm fetch:mq` / `pnpm fetch:fjc` are **not** part of `fetch:all` (MQ's host bot-challenges scripts). |
 | `member-photos.json`          | which current members have a committed photo (from `fetch:photos`, not re-derived by `pipeline:check`) |
 
 See `docs/DATA_CONVENTIONS.md` §2 for the full contract; schemas are in

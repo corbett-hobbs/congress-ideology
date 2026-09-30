@@ -25,8 +25,18 @@ stored. See `docs/DATA_CONVENTIONS.md` for the full contract.
 | `member-photos.json`         | which current members have a photo         | —                              | `fetch/photos.ts`            | `lib/congress-data.ts` |
 | `wikipedia_summaries.json`   | one row per current member with a usable Wikipedia article (trimmed lead) | `bioguide_id` | `fetch/wikipedia.ts` (+ `wikipedia/trim.ts`) | `lib/wikipedia-bio.ts` → `profile/ProfileHeader` |
 | `_report.json`               | run summary / sanity numbers               | —                              | `transform/index.ts`         | humans |
+| `subcommittees.json`         | one row per subcommittee (119th)           | `subcommittee_id`              | `transform/committees.ts` (`buildSubcommittees`) | `lib/committee-data.ts` |
+| `subcommittee_memberships.json` | (legislator, subcommittee) (119th)      | `bioguide_id`                  | `transform/committees.ts`    | `lib/committee-data.ts` |
+| **Supreme Court track** (`court/`) — separate from Congress; no reader yet | | | | |
+| `court/justices.json`        | one row per justice (person)               | `justice_id` (SCDB numeric)    | `transform/court.ts` via `court-run.ts` | — (next session) |
+| `court/mq_scores.json`       | (justice, term)                            | `justice_id`+`term`            | `transform/court.ts`         | — |
+| `court/court_terms.json`     | (term[, segment a/b])                      | `term`+`segment`               | `transform/court.ts`         | — |
+| `court/court_median_probabilities.json` | (term[, segment], justice)      | `term`+`segment`+`justice_id`  | `transform/court.ts`         | — |
+| `court/_report.json`         | run summary                                | —                              | `transform/court-run.ts`     | humans |
 | `financial_disclosures.json` | (legislator, reporting year), band-count grain | `bioguide_id`+`year`       | Python sidecar: `pipeline/financial_disclosures/build.py` / `build_senate_html.py` / `build_ocr.py` | `lib/wealth-data.ts` |
 | `line-items/<year>.json`     | (legislator, reporting year) that reconciled, item grain | `bioguide_id`+`year`, sharded by `year` | `pipeline/financial_disclosures/build_line_items.py` | `lib/line-items-data.ts` |
+
+Court raw sources: Martin-Quinn `pipeline/raw/mq/<year>/{justices,court}.csv` (hand-placed/`--adopt`ed — the host bot-challenges scripts; fetch: `fetch/mq.ts`, pure helpers `fetch/mq-check.ts`) and FJC bios `pipeline/raw/fjc/*.csv` (`fetch/fjc.ts`); committed hand-reviewed crosswalk `pipeline/transform/court-crosswalk.json`; schemas `lib/court-entities.ts`. Freshness: `.github/workflows/mq-freshness.yml` (monthly, warns instead of failing on a challenge). See DATA_CONVENTIONS §6.
 
 Raw sources: Voteview `HSall_members.csv` / `HSall_parties.csv`;
 `@unitedstates/congress-legislators` `legislators-current.yaml`,

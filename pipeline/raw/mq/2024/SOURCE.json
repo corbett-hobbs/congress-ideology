@@ -1,0 +1,12 @@
+{
+  "release_year": 2024,
+  "release_label": "2024 Release 01",
+  "retrieved_via": "manual",
+  "retrieved_on": "2026-09-30",
+  "page": "https://mqscores.wustl.edu/measures.php",
+  "urls": {},
+  "sha256": {
+    "justices.csv": "6f2eb2e956647a29679354759644b92a4b15a5b2c1fd9ae5f76fb5abfeaa3d54",
+    "court.csv": "dcfea1d879cc639f4440d0cf34f64c2fe3f583f4deda546567ff07bf3ce936a8"
+  }
+}

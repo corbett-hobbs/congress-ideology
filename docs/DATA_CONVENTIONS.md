@@ -208,3 +208,78 @@ reproducible and have no build-time network dependency. Source-data updates are
 reviewed as ordinary `git diff`s, and — for Voteview — proposed automatically by
 `.github/workflows/voteview-freshness.yml` as a pull request that a human
 merges. See `pipeline/README.md`.
+
+---
+
+## 6. Supreme Court track
+
+A **separate data track** from Congress: justices are not in `legislators.json`,
+`terms.json` or `ideology_scores.json`, and nothing here joins to `bioguide_id`.
+Output lives in `pipeline/output/court/`; Zod schemas are in
+`lib/court-entities.ts`; the transform is `pipeline/transform/court.ts`
+(pure logic) + `court-run.ts` (I/O), run as part of `pnpm transform`.
+
+| File | Grain | Key | Notes |
+| ---- | ----- | --- | ----- |
+| `justices.json` | one row per **person** | `justice_id` | Stable identity only: `name.{first,middle?,last,suffix?,full}`, `birth_year`, `death_year` (null = living), `appointing_president` + `appointing_party`, `nomination_date`, `confirmation_date`, `service_start`, `service_end` (null = serving). Source: FJC. Appointment fields describe the appointment **in effect at the justice's first scored term** (Stone → Coolidge's 1925 seat, Hughes → Hoover's 1930 Chief seat); `service_start`/`service_end` span all appointments (Hughes: 1910, with a 1916–1930 gap). Role (Associate vs. Chief) varies by term and is deliberately not stored. |
+| `mq_scores.json` | (justice × term) | `justice_id` + `term` | `mq_score` (`post_mn`, the site's recommended estimate), `mq_sd`, `mq_median`, `mq_lo95`, `mq_hi95`. The uncertainty fields are core. |
+| `court_terms.json` | (term[, segment]) | `term` + `segment` | `median_score` (`med`), `median_sd`, `min_score`, `max_score`, `median_justice_id` + `median_justice_probability`. `segment` is `"a"`/`"b"` for the four terms MQ publishes as two records (1937, 1938, 1956, 2005) and `null` otherwise. Never deduped by `term` alone. |
+| `court_median_probabilities.json` | (term[, segment] × justice) | `term` + `segment` + `justice_id` | Long form of `court.csv`'s one-column-per-justice probabilities that each justice is the median. Only justices with a probability in that record are present. |
+| `_report.json` | run summary | — | Source hashes + release label, counts, term range, justices per term, explained anomalies, the crosswalk match list. No timestamps (deterministic). |
+
+**`justice_id` is the SCDB numeric `justice` identifier** (e.g. 108 = Thomas,
+111 = John G. Roberts). This is a deliberate exception to §1's "no second
+person-identifier convention": justices have no `bioguide_id`. It is one id per
+person — Stone and Rehnquist keep a single id across their Associate → Chief
+service (verified in the data; a person under two ids, or two people under one,
+is a build error). FJC's `nid` is a foreign id: it appears only in the
+crosswalk, not in the output.
+
+**Crosswalk.** `pipeline/transform/court-crosswalk.json` (committed, hand-reviewed)
+maps each MQ justice to an FJC record: `justice_id`, MQ name code, last name,
+`fjc_nid`. On every run the transform re-derives each match from **last name
+plus service-window overlap with the justice's MQ terms** (never last name
+alone) and fails if an MQ justice has no entry, matches no FJC justice, matches
+more than one, or disagrees with the committed `fjc_nid`. Last-name collisions
+in the MQ era that the window resolves: Jackson (Robert H. / Ketanji Brown),
+Roberts (Owen J. / John G.), Harlan (John Marshall I, 1877–1911 / II, 1955–71),
+White (Byron / Edward Douglass), Marshall (Thurgood / John). FJC also lists the
+D.C. "Supreme Court" bench; rows are filtered to
+`Supreme Court of the United States` exactly.
+
+**`term`** is the October Term start year as an integer (2024 = OT2024, Oct 2024
+– Jun 2025), never a Congress number.
+
+**Validation (fails the build):** finite numbers; `mq_sd > 0`;
+`mq_lo95 ≤ mq_score ≤ mq_hi95`; `(justice_id, term)` unique; terms contiguous
+1937–latest; 9 justices per term except the documented turnover terms in
+`EXPLAINED_TERM_COUNTS` (1937, 1938, 1956, 1958, 1961, 1975, 2005 — a listed
+count that changes, or an unlisted deviation, fails); referential integrity both
+ways; `min ≤ median ≤ max`; median-justice probabilities sum to 1; and a **sign
+tripwire** (Thomas > Sotomayor and Scalia > Ginsburg in every shared term) so a
+flipped convention can't silently mislabel the site. Convention confirmed
+empirically: **negative = liberal, positive = conservative**.
+
+**Caveats any UI must respect**
+- **One dimension only** — there is no second axis.
+- Scores are **estimates with posterior uncertainty**; show `mq_sd`/interval
+  wherever a score is shown.
+- **The MQ scale is not comparable to DW-NOMINATE.** Never plot MQ and Congress
+  scores on one axis or compare them numerically.
+- The latest release **lags the current term** (the 2024 release ends at OT2024).
+- Scores exist only for justices serving from the 1937 term onward.
+- Within a term, scores are per-term estimates; turnover terms have more than
+  nine justices with scores.
+
+**Raw inputs and refresh.** `pipeline/raw/mq/<year>/` holds `justices.csv`,
+`court.csv`, optional `README.txt` and `SOURCE.json` (release label, how it was
+retrieved, SHA-256 of each file). The transform picks the **latest** year
+folder and refuses to run if a file no longer matches its recorded hash.
+`mqscores.wustl.edu` serves a Cloudflare bot challenge to scripts, so we do not
+scrape it: **the manual snapshot is the primary path** — download the CSVs in a
+browser, place them in `pipeline/raw/mq/<year>/`, run
+`pnpm fetch:mq -- --adopt <year>` (records `retrieved_via: manual` + local
+hashes), then `pnpm transform`. `pnpm fetch:mq` / `--probe` try a plain
+request and stop with instructions on a challenge; the monthly
+`mq-freshness.yml` Action does the same and ends with a warning annotation, not
+a failure. FJC bios: `pnpm fetch:fjc`.
