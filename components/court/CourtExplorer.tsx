@@ -20,6 +20,7 @@ import { JusticeSearch } from "./JusticeSearch";
 import { JusticeStrip } from "./JusticeStrip";
 import { PresidentRows, type PresidentSort } from "./PresidentRows";
 import { JusticeTrajectory } from "./JusticeTrajectory";
+import { PageHeader } from "@/components/PageHeader";
 
 const PLAY_INTERVAL_MS = 220;
 
@@ -114,7 +115,10 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
   const mostConservative = ordered[ordered.length - 1];
   const medianJustice = byId.get(rec.medianJusticeId);
   const names = (ids: number[]) =>
-    ids.map((id) => byId.get(id)?.short).filter(Boolean).join(", ");
+    ids
+      .map((id) => byId.get(id)?.short)
+      .filter(Boolean)
+      .join(", ");
   const selected = selectedId != null ? (byId.get(selectedId) ?? null) : null;
 
   return (
@@ -134,14 +138,9 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
       />
 
       <main className="mx-auto flex w-full max-w-[1120px] flex-col gap-5 px-4 pb-16 pt-7 sm:px-6">
-        <div>
-          <h1 className="mb-4 font-serif text-[clamp(1.7rem,3.6vw,2.35rem)] font-medium leading-[1.1] tracking-[-0.01em]">
-            How Does the Supreme Court Lean?
-          </h1>
-          <p className="text-[0.92rem] leading-[1.65] text-ink-muted">
-            {introFor(firstTerm, lastTerm)}
-          </p>
-        </div>
+        <PageHeader title="How Does the Supreme Court Lean?">
+          <p>{introFor(firstTerm, lastTerm)}</p>
+        </PageHeader>
 
         {/* Same card-height mechanism as the Congress explorer: the grid row is
             sized by chart 1's card (fixed-height strip + stats); chart 2's
@@ -162,10 +161,20 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
             />
 
             <dl className="mt-1 grid grid-cols-2 gap-x-6 gap-y-2 text-[0.82rem] lg:grid-cols-4">
-              <Stat label="Median justice" value={medianJustice?.short ?? "—"} />
+              <Stat
+                label="Median justice"
+                value={medianJustice?.short ?? "—"}
+              />
               <Stat label="Most liberal" value={mostLiberal?.short ?? "—"} />
-              <Stat label="Most conservative" value={mostConservative?.short ?? "—"} />
-              <Stat label="Justices seated" value={String(seated.length)} mono />
+              <Stat
+                label="Most conservative"
+                value={mostConservative?.short ?? "—"}
+              />
+              <Stat
+                label="Justices seated"
+                value={String(seated.length)}
+                mono
+              />
             </dl>
 
             {/* Reserved height so the card never resizes when a mid-term change appears. */}
@@ -186,13 +195,13 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
             </p>
 
             <p className="mt-2 text-[0.76rem] leading-[1.55] text-ink-faint">
-              Martin&ndash;Quinn scores run on a single liberal&ndash;conservative
-              scale and are not comparable in number to the DW-NOMINATE scores on
-              the Congress pages. Dimming a party&rsquo;s appointees never changes
-              the median. In terms with a mid-term change, hollow dots mark the
-              justices who left or joined, and in the four terms MQ scores as two
-              records (1937, 1938, 1956, 2005) the median is the Court after the
-              change.
+              Martin&ndash;Quinn scores run on a single
+              liberal&ndash;conservative scale and are not comparable in number
+              to the DW-NOMINATE scores on the Congress pages. Dimming a
+              party&rsquo;s appointees never changes the median. In terms with a
+              mid-term change, hollow dots mark the justices who left or joined,
+              and in the four terms MQ scores as two records (1937, 1938, 1956,
+              2005) the median is the Court after the change.
             </p>
             <SeatedTable term={term} seated={ordered} />
           </ChartCard>
@@ -225,9 +234,9 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
               </div>
             </div>
             <p className="mt-2 text-[0.76rem] leading-[1.55] text-ink-faint">
-              Career average is the mean of a justice&rsquo;s per-term scores. It
-              can hide justices who moved a long way. Justices still serving are
-              not final.
+              Career average is the mean of a justice&rsquo;s per-term scores.
+              It can hide justices who moved a long way. Justices still serving
+              are not final.
             </p>
             <CareerTable data={data} />
           </ChartCard>
@@ -257,8 +266,8 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
           <p className="m-0 max-w-[46rem]">
             Source: Martin, Andrew D. and Kevin M. Quinn. 2002. &ldquo;Dynamic
             Ideal Point Estimation via Markov Chain Monte Carlo for the U.S.
-            Supreme Court, 1953&ndash;1999.&rdquo; Political Analysis 10:134&ndash;153.
-            Scores from{" "}
+            Supreme Court, 1953&ndash;1999.&rdquo; Political Analysis
+            10:134&ndash;153. Scores from{" "}
             <a
               href="https://mqscores.wustl.edu/"
               className="text-ink-muted underline decoration-line-strong underline-offset-2 hover:decoration-accent"
@@ -277,11 +286,21 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
   );
 }
 
-function Stat({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+function Stat({
+  label,
+  value,
+  mono,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+}) {
   return (
     <div className="min-w-0">
       <dt className="text-[0.72rem] text-ink-muted">{label}</dt>
-      <dd className={`m-0 truncate font-medium ${mono ? "font-mono" : ""}`}>{value}</dd>
+      <dd className={`m-0 truncate font-medium ${mono ? "font-mono" : ""}`}>
+        {value}
+      </dd>
     </div>
   );
 }
@@ -289,23 +308,39 @@ function Stat({ label, value, mono }: { label: string; value: string; mono?: boo
 const TH =
   "border-b border-line px-2 py-1.5 text-left font-mono text-[0.65rem] uppercase tracking-[0.05em] text-ink-faint";
 
-function TableShell({ summary, children }: { summary: string; children: React.ReactNode }) {
+function TableShell({
+  summary,
+  children,
+}: {
+  summary: string;
+  children: React.ReactNode;
+}) {
   return (
     <details className="mt-3">
       <summary className="cursor-pointer text-[0.75rem] font-medium text-accent">
         {summary}
       </summary>
       <div className="mt-2 max-h-80 overflow-y-auto rounded-md border border-line">
-        <table className="w-full border-collapse text-[0.78rem]">{children}</table>
+        <table className="w-full border-collapse text-[0.78rem]">
+          {children}
+        </table>
       </div>
     </details>
   );
 }
 
-function SeatedTable({ term, seated }: { term: number; seated: CourtJustice[] }) {
+function SeatedTable({
+  term,
+  seated,
+}: {
+  term: number;
+  seated: CourtJustice[];
+}) {
   return (
     <TableShell summary="View as table">
-      <caption className="sr-only">Justices seated in {termLabel(term)}</caption>
+      <caption className="sr-only">
+        Justices seated in {termLabel(term)}
+      </caption>
       <thead className="sticky top-0 bg-surface-raised">
         <tr>
           {["Justice", "Appointed by", "Party", "Score"].map((h) => (
@@ -321,7 +356,9 @@ function SeatedTable({ term, seated }: { term: number; seated: CourtJustice[] })
             <td className="px-2 py-1">{j.name}</td>
             <td className="px-2 py-1">{j.pres}</td>
             <td className="px-2 py-1">{partyLabel(j.party)}</td>
-            <td className="px-2 py-1 font-mono">{fmtScore(scoreAt(j, term))}</td>
+            <td className="px-2 py-1 font-mono">
+              {fmtScore(scoreAt(j, term))}
+            </td>
           </tr>
         ))}
       </tbody>
@@ -333,14 +370,18 @@ function CareerTable({ data }: { data: CourtPayload }) {
   const byId = new Map(data.justices.map((j) => [j.id, j]));
   return (
     <TableShell summary="View as table">
-      <caption className="sr-only">Career average score by appointing president</caption>
+      <caption className="sr-only">
+        Career average score by appointing president
+      </caption>
       <thead className="sticky top-0 bg-surface-raised">
         <tr>
-          {["President", "Justice", "Career average", "Scored terms"].map((h) => (
-            <th key={h} className={TH}>
-              {h}
-            </th>
-          ))}
+          {["President", "Justice", "Career average", "Scored terms"].map(
+            (h) => (
+              <th key={h} className={TH}>
+                {h}
+              </th>
+            ),
+          )}
         </tr>
       </thead>
       <tbody>
@@ -376,11 +417,13 @@ function MedianTable({
       <caption className="sr-only">Court median score by term</caption>
       <thead className="sticky top-0 bg-surface-raised">
         <tr>
-          {["Term", "Court median", ...(selected ? [selected.name] : [])].map((h) => (
-            <th key={h} className={TH}>
-              {h}
-            </th>
-          ))}
+          {["Term", "Court median", ...(selected ? [selected.name] : [])].map(
+            (h) => (
+              <th key={h} className={TH}>
+                {h}
+              </th>
+            ),
+          )}
         </tr>
       </thead>
       <tbody>
@@ -390,7 +433,9 @@ function MedianTable({
             <td className="px-2 py-1 font-mono">{fmtScore(t.median)}</td>
             {selected && (
               <td className="px-2 py-1 font-mono">
-                {isSeated(selected, t.term) ? fmtScore(scoreAt(selected, t.term)) : "—"}
+                {isSeated(selected, t.term)
+                  ? fmtScore(scoreAt(selected, t.term))
+                  : "—"}
               </td>
             )}
           </tr>

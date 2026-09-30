@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { mean } from "d3-array";
 import type {
@@ -29,7 +24,11 @@ import { BeeswarmChart } from "./BeeswarmChart";
 import { Legend } from "./Legend";
 import { TrendChart } from "./TrendChart";
 import { DelegationChart } from "./DelegationChart";
-import { DEFAULT_SORT, SortToggle, type SortState } from "@/components/charts/SortToggle";
+import {
+  DEFAULT_SORT,
+  SortToggle,
+  type SortState,
+} from "@/components/charts/SortToggle";
 import { SenatorSearch } from "./SenatorSearch";
 import { SenateTableModal } from "./SenateTableModal";
 import { SiteFooter } from "./SiteFooter";
@@ -39,6 +38,7 @@ import { CommitteeSearch } from "@/components/committee/CommitteeSearch";
 import { CommitteeChamberLegend } from "@/components/committee/CommitteeChamberLegend";
 import { ordinal } from "./format";
 import { ChartCard as Card } from "@/components/charts/ChartCard";
+import { PageHeader } from "@/components/PageHeader";
 
 const PLAY_INTERVAL_MS = 450;
 const PRELOAD_DELAY_MS = 1500;
@@ -163,7 +163,9 @@ export function SenateExplorer({
 
   const stateMembers = useMemo(
     () =>
-      stateFilter ? plottable.filter((m) => m.state === stateFilter) : plottable,
+      stateFilter
+        ? plottable.filter((m) => m.state === stateFilter)
+        : plottable,
     [plottable, stateFilter],
   );
 
@@ -257,12 +259,9 @@ export function SenateExplorer({
       />
 
       <main className="mx-auto flex w-full max-w-[1120px] flex-col gap-5 px-4 pb-16 pt-7 sm:px-6">
-        <div>
-          <h1 className="mb-4 font-serif text-[clamp(1.7rem,3.6vw,2.35rem)] font-medium leading-[1.1] tracking-[-0.01em]">
-            How Does Congress Vote?
-          </h1>
-          <p className="text-[0.92rem] leading-[1.65] text-ink-muted">{INTRO}</p>
-        </div>
+        <PageHeader title="How Does Congress Vote?">
+          <p>{INTRO}</p>
+        </PageHeader>
 
         {/*
           Two-column card row, equal height via `md:items-stretch` (also the
@@ -284,7 +283,9 @@ export function SenateExplorer({
         <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.15fr_1fr] md:items-stretch">
           <Card
             title={
-              committeesActive ? "Where committees stand" : "Where members stand"
+              committeesActive
+                ? "Where committees stand"
+                : "Where members stand"
             }
             lede={
               committeesActive
@@ -401,7 +402,9 @@ export function SenateExplorer({
 
           <Card
             title={
-              committeesActive ? "How each committee votes" : "How each state votes"
+              committeesActive
+                ? "How each committee votes"
+                : "How each state votes"
             }
             lede={
               committeesActive
@@ -426,7 +429,10 @@ export function SenateExplorer({
             <div className="relative mt-1 flex-1">
               <div className="border-t border-line pt-1 sm:overflow-y-auto sm:max-md:max-h-[600px] md:absolute md:inset-0 md:overflow-y-auto">
                 {committeesActive ? (
-                  <CommitteeSwarm committees={viewCommittees} sort={delegSort} />
+                  <CommitteeSwarm
+                    committees={viewCommittees}
+                    sort={delegSort}
+                  />
                 ) : historyPending ? (
                   <p className="p-4 text-[0.85rem] text-ink-faint">Loading…</p>
                 ) : (
@@ -453,8 +459,8 @@ export function SenateExplorer({
                 ⓘ
               </span>
               <span>
-                Committee membership is only tracked for the current Congress, so
-                there&rsquo;s no trend view here. Switch back to{" "}
+                Committee membership is only tracked for the current Congress,
+                so there&rsquo;s no trend view here. Switch back to{" "}
                 <b className="font-medium text-ink">Members</b>, or move the
                 slider off the {ordinal(committeeCongress)} Congress, to see the
                 party-divergence trend.
@@ -462,34 +468,34 @@ export function SenateExplorer({
             </div>
           </section>
         ) : (
-        <Card
-          title="How far apart are the parties?"
-          lede="Each party's average position on the economic left–right axis, every Congress since 1789. Click or drag the chart to jump to any point — it moves the same slider as everything above."
-        >
-          {overlayVisible && (
-            <p className="mb-2 text-[0.76rem] text-ink-faint">
-              Solid lines are {stateName(stateFilter as string)}&rsquo;s{" "}
-              {view === "both" ? "" : `${chamberLabel(view)} `}delegation; the
-              dotted lines behind them are the national mean.
-              {smallSample &&
-                ` It's just ${stateMembers.length} ${
-                  stateMembers.length === 1 ? noun : nounPlural
-                } — expect it to look noisier than the national lines.`}
-            </p>
-          )}
-          <TrendChart
-            trend={current.trend}
-            minCongress={minCongress}
-            maxCongress={latestCongress}
-            congress={congress}
-            onScrub={(c) => stopAnd(() => goToCongress(c))}
-            stateOverlay={
-              overlayVisible && stateFilter
-                ? { trend: stateTrend, label: stateName(stateFilter) }
-                : null
-            }
-          />
-        </Card>
+          <Card
+            title="How far apart are the parties?"
+            lede="Each party's average position on the economic left–right axis, every Congress since 1789. Click or drag the chart to jump to any point — it moves the same slider as everything above."
+          >
+            {overlayVisible && (
+              <p className="mb-2 text-[0.76rem] text-ink-faint">
+                Solid lines are {stateName(stateFilter as string)}&rsquo;s{" "}
+                {view === "both" ? "" : `${chamberLabel(view)} `}delegation; the
+                dotted lines behind them are the national mean.
+                {smallSample &&
+                  ` It's just ${stateMembers.length} ${
+                    stateMembers.length === 1 ? noun : nounPlural
+                  } — expect it to look noisier than the national lines.`}
+              </p>
+            )}
+            <TrendChart
+              trend={current.trend}
+              minCongress={minCongress}
+              maxCongress={latestCongress}
+              congress={congress}
+              onScrub={(c) => stopAnd(() => goToCongress(c))}
+              stateOverlay={
+                overlayVisible && stateFilter
+                  ? { trend: stateTrend, label: stateName(stateFilter) }
+                  : null
+              }
+            />
+          </Card>
         )}
 
         <SiteFooter>
@@ -512,7 +518,9 @@ export function SenateExplorer({
             : histMembers.filter((m) => m.chamber === "senate")
         }
         houseMembers={
-          atLatest ? house.all : histMembers.filter((m) => m.chamber === "house")
+          atLatest
+            ? house.all
+            : histMembers.filter((m) => m.chamber === "house")
         }
         activeView={view}
         stateFilter={stateFilter}

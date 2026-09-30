@@ -8,6 +8,7 @@ import { HubSparkline } from "@/components/HubSparkline";
 import { CourtHubSparkline } from "@/components/court/CourtHubSparkline";
 import { SiteFooter } from "@/components/senate/SiteFooter";
 import { ordinal } from "@/components/senate/format";
+import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
   title: { absolute: `${site.name} · 1789–present` },
@@ -41,21 +42,18 @@ export default function Hub() {
   return (
     <>
       <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col gap-8 px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
-        <div className="flex max-w-[44rem] flex-col gap-3">
-          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            {site.tagline}
-          </h1>
-          <p className="text-[1.05rem] leading-relaxed text-ink-muted">
+        <PageHeader title={site.tagline} size="hero">
+          <p>
             Explore ideology, net worth, and more across all three branches of
             the U.S. government.
           </p>
-          <p className="text-[1.05rem] leading-relaxed text-ink-muted">
+          <p>
             Every roll call, every ruling, and every financial disclosure leaves
             a trail. We turn those public records into data you can scrub
             through, compare, and dig into. Start with Congress and the Supreme
             Court; the presidency is on the way.
           </p>
-        </div>
+        </PageHeader>
 
         <div className="grid gap-4 md:grid-cols-2">
           {branches.map((b) => {

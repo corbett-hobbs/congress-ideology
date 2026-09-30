@@ -8,6 +8,7 @@ import { HowToReadNotes } from "@/components/wealth/HowToReadNotes";
 import { WealthFilterBar } from "./WealthFilterBar";
 import { NetWorthScatterCard } from "./NetWorthScatterCard";
 import { WealthListsSection } from "./WealthListsSection";
+import { PageHeader } from "@/components/PageHeader";
 
 /**
  * Owns the one shared chamber/state filter for the whole page (plan §2,
@@ -22,7 +23,8 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
   const [stateFilter, setStateFilter] = useState<string | null>(null);
 
   const chamberPool = useMemo(
-    () => (view === "both" ? members : members.filter((m) => m.chamber === view)),
+    () =>
+      view === "both" ? members : members.filter((m) => m.chamber === view),
     [members, view],
   );
 
@@ -68,23 +70,20 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
       />
 
       <main className="mx-auto flex w-full max-w-[1120px] flex-col gap-8 px-4 pb-16 pt-7 sm:px-6">
-        <div>
-          <h1 className="mb-3 font-serif text-[clamp(1.7rem,3.6vw,2.35rem)] font-medium leading-[1.1] tracking-[-0.01em]">
-            How Much Is Congress Worth?
-          </h1>
-          <p className="text-[0.92rem] leading-[1.65] text-ink-muted">
+        <PageHeader title="How Much Is Congress Worth?">
+          <p>
             Members of Congress don&apos;t report their net worth. They file an
-            annual financial disclosure listing what they own and what they
-            owe, and for almost every line, they report a range instead of a
-            dollar figure. A stock might be &ldquo;$15,001-$50,000&rdquo;; a
-            loan might be &ldquo;$100,001-$250,000.&rdquo; We take the midpoint
-            of each range, add up the assets, subtract the liabilities, and get
-            an estimate of net worth for each member and year. The ranges are
-            wide, so treat every number here as an estimate rather than a
-            precise total. Where they add up to something big enough, the
-            estimates still show which members have grown their wealth the
-            fastest, which have fallen behind, and how much a member&apos;s
-            finances have changed since they took office.
+            annual financial disclosure listing what they own and what they owe,
+            and for almost every line, they report a range instead of a dollar
+            figure. A stock might be &ldquo;$15,001-$50,000&rdquo;; a loan might
+            be &ldquo;$100,001-$250,000.&rdquo; We take the midpoint of each
+            range, add up the assets, subtract the liabilities, and get an
+            estimate of net worth for each member and year. The ranges are wide,
+            so treat every number here as an estimate rather than a precise
+            total. Where they add up to something big enough, the estimates
+            still show which members have grown their wealth the fastest, which
+            have fallen behind, and how much a member&apos;s finances have
+            changed since they took office.
           </p>
           <details className="mt-3 text-[0.92rem] leading-[1.65] text-ink-muted">
             <summary className="cursor-pointer font-medium text-ink">
@@ -92,7 +91,7 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
             </summary>
             <HowToReadNotes />
           </details>
-        </div>
+        </PageHeader>
 
         <NetWorthScatterCard
           key={view}
