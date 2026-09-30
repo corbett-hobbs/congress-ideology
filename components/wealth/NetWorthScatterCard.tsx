@@ -362,9 +362,12 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         </div>
       </div>
 
-      <div className="mt-4 flex flex-nowrap gap-3 font-mono text-[0.78rem] text-ink-muted sm:flex-wrap sm:gap-x-6 sm:gap-y-1">
-        {stats.map((s) => (
-          <span key={s.label} className="min-w-0 flex-1 sm:flex-none">
+      <div className="mt-4 flex flex-nowrap justify-between gap-3 font-mono text-[0.78rem] text-ink-muted sm:justify-start sm:flex-wrap sm:gap-x-6 sm:gap-y-1">
+        {stats.map((s, i) => (
+          <span
+            key={s.label}
+            className={`min-w-0 sm:flex-none sm:text-left ${i === stats.length - 1 && i > 0 ? "text-right" : ""}`}
+          >
             <b className="block text-[1rem] text-ink sm:inline sm:text-[0.78rem]">{s.value}</b>{" "}
             <span className="block text-[0.7rem] leading-tight sm:inline sm:text-[0.78rem]">
               {s.label}
@@ -375,8 +378,9 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
 
       {singleYearNotice && (
         <p className="mt-2 text-[0.8rem] text-note">
-          {singleYearNotice.name} has only 1 year of data, so they aren’t plotted. Latest:{" "}
-          {formatPointUSD(singleYearNotice.points[0])} ({singleYearNotice.points[0].year}).
+          {singleYearNotice.points.length === 0
+            ? `${singleYearNotice.name} has no usable filings yet, so they aren’t plotted.`
+            : `${singleYearNotice.name} has only 1 year of data, so they aren’t plotted. Latest: ${formatPointUSD(singleYearNotice.points[0])} (${singleYearNotice.points[0].year}).`}
         </p>
       )}
 
