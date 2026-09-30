@@ -77,13 +77,20 @@ export function intersects(a: Box, b: Box): boolean {
   return overlap(a, b) > 0;
 }
 
-export function layoutStrip(items: StripItem[], p: StripParams): StripLayout {
-  const { width: w, height: h, axisY: ay, dotR: r, labelH: H } = p;
-  const md = 2 * r + 2.5; // min centre-to-centre distance
-
-  // --- beeswarm dodge ---
+/**
+ * Beeswarm dodge: dots keep their TRUE x; each is nudged vertically off the axis
+ * just far enough to clear every already-placed neighbour (placed left to right,
+ * smallest offset that fits, alternating preferred side). `minDist` is the
+ * centre-to-centre distance. Shared by the justice profile swarm
+ * (`lib/justice-swarm-layout.ts`).
+ */
+export function dodgeOffsets<T extends { id: number; x: number }>(
+  items: readonly T[],
+  minDist: number,
+): { it: T; off: number }[] {
+  const md = minDist;
   const sorted = [...items].sort((a, b) => a.x - b.x || a.id - b.id);
-  const placed: { it: StripItem; off: number }[] = [];
+  const placed: { it: T; off: number }[] = [];
   sorted.forEach((it, i) => {
     const pref = i % 2 ? 1 : -1;
     const cand = [0];
@@ -104,6 +111,15 @@ export function layoutStrip(items: StripItem[], p: StripParams): StripLayout {
     ) as number;
     placed.push({ it, off });
   });
+  return placed;
+}
+
+export function layoutStrip(items: StripItem[], p: StripParams): StripLayout {
+  const { width: w, height: h, axisY: ay, dotR: r, labelH: H } = p;
+  const md = 2 * r + 2.5; // min centre-to-centre distance
+
+  // --- beeswarm dodge ---
+  const placed = dodgeOffsets(items, md);
 
   // --- labels ---
   const G = r + 3;
