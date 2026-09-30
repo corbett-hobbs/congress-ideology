@@ -20,7 +20,7 @@ import {
 
 const FALLBACK_W = 1100;
 const H = 340;
-const MARGIN = { top: 14, right: 14, bottom: 30, left: 14 };
+const MARGIN = { top: 14, right: 14, bottom: 30, left: 38 };
 const partyVar = (j: CourtJustice) => (j.party === "D" ? "var(--dem)" : "var(--rep)");
 
 /**
@@ -75,6 +75,9 @@ export function JusticeTrajectory({
         {({ innerWidth, innerHeight }) => {
           const x = scaleLinear().domain([firstTerm, lastTerm]).range([0, innerWidth]);
           const y = scaleLinear().domain(data.domain).range([innerHeight, 0]);
+
+          const yTicks: number[] = [];
+          for (let v = Math.ceil(data.domain[0] / 2) * 2; v <= data.domain[1]; v += 2) yTicks.push(v);
 
           const path = (j: CourtJustice) =>
             line<number>()
@@ -140,6 +143,15 @@ export function JusticeTrajectory({
                 offset={innerHeight}
                 gridExtent={innerHeight}
                 format={(t) => String(t)}
+              />
+              <Axis
+                scale={y}
+                orientation="left"
+                ticks={yTicks}
+                offset={0}
+                gridExtent={innerWidth}
+                zeroAt={0}
+                format={(v) => (v === 0 ? "0" : v > 0 ? `+${v}` : `−${Math.abs(v)}`)}
               />
               <text x={4} y={12} fill="var(--ink-muted)" fontSize={12}>
                 More conservative
