@@ -363,9 +363,15 @@ export function buildJustices(spans: MqSpan[], matched: Map<number, FjcJustice>)
     const inEffect = j.appointments.filter((a) => a.start <= cutoff);
     const appt = inEffect[inEffect.length - 1];
     if (!appt) throw new CourtDataError(`justice ${span.justice_id} "${span.scdb_name}": no appointment in effect by ${cutoff}`);
-    if (appt.party !== "Democratic" && appt.party !== "Republican") {
-      throw new CourtDataError(`justice ${span.justice_id} "${span.scdb_name}": unexpected appointing party ${JSON.stringify(appt.party)} — extend the schema deliberately`);
-    }
+    const party = (a: FjcAppointment): "Democratic" | "Republican" => {
+      if (a.party !== "Democratic" && a.party !== "Republican") {
+        throw new CourtDataError(`justice ${span.justice_id} "${span.scdb_name}": unexpected appointing party ${JSON.stringify(a.party)} — extend the schema deliberately`);
+      }
+      return a.party;
+    };
+    const chiefs = j.appointments.filter((a) => a.title === "Chief Justice");
+    if (chiefs.length > 1) throw new CourtDataError(`justice ${span.justice_id} "${span.scdb_name}": ${chiefs.length} Chief Justice appointments — expected at most one`);
+    const chief = chiefs[0];
     if (j.birth_year === null) throw new CourtDataError(`justice ${span.justice_id} "${span.scdb_name}": FJC has no birth year`);
     const full = [j.first, j.middle, j.last].filter(Boolean).join(" ") + (j.suffix ? ` ${j.suffix}` : "");
     return {
@@ -380,9 +386,18 @@ export function buildJustices(spans: MqSpan[], matched: Map<number, FjcJustice>)
       birth_year: j.birth_year,
       death_year: j.death_year,
       appointing_president: appt.president,
-      appointing_party: appt.party,
+      appointing_party: party(appt),
       nomination_date: appt.nomination,
       confirmation_date: appt.confirmation,
+      chief_justice_appointment: chief
+        ? {
+            president: chief.president,
+            party: party(chief),
+            nomination_date: chief.nomination,
+            confirmation_date: chief.confirmation,
+            start_date: chief.start,
+          }
+        : null,
       service_start: j.start,
       service_end: j.end,
     };

@@ -133,6 +133,13 @@ describe("buildJustices", () => {
     const [j] = buildJustices([span], new Map([[74, stone]]));
     expect(j.appointing_president).toBe("Calvin Coolidge");
     expect(j.service_end).toBe("1946-04-22");
+    // ...and the later elevation is captured separately.
+    expect(j.chief_justice_appointment).toMatchObject({ president: "Franklin D. Roosevelt", party: "Democratic", start_date: "1941-07-03" });
+  });
+  it("leaves chief_justice_appointment null for a justice who was never Chief", () => {
+    const span = { justice_id: 84, scdb_name: "RHJackson", first_term: 1941, last_term: 1953 };
+    const [j] = buildJustices([span], new Map([[84, fjc({ nid: 10, last: "Jackson", start: "1941-07-11", end: "1954-10-09" })]]));
+    expect(j.chief_justice_appointment).toBeNull();
   });
 });
 
@@ -142,7 +149,7 @@ function dataset(): CourtValidationInput {
   const names = [[108, "Thomas"], [113, "Sotomayor"], [105, "Scalia"], [109, "Ginsburg"]] as const;
   const justices: Justice[] = names.map(([id, last]) => ({
     justice_id: id, name: { first: "X", last, full: `X ${last}` }, birth_year: 1950, death_year: null,
-    appointing_president: "P", appointing_party: "Republican" as const, nomination_date: null, confirmation_date: null,
+    appointing_president: "P", appointing_party: "Republican" as const, chief_justice_appointment: null, nomination_date: null, confirmation_date: null,
     service_start: "1990-01-01", service_end: null,
   }));
   const scores = [];
@@ -157,7 +164,7 @@ function dataset(): CourtValidationInput {
     courtTerms.push({ term: t, segment: null, median_score: 0, median_sd: 0.2, min_score: -3, max_score: 3, median_justice_id: 200, median_justice_probability: 0.5 });
   }
   for (let id = 200; id <= 204; id++) {
-    justices.push({ justice_id: id, name: { first: "F", last: `F${id}`, full: `F F${id}` }, birth_year: 1900, death_year: null, appointing_president: "P", appointing_party: "Democratic" as const, nomination_date: null, confirmation_date: null, service_start: "1930-01-01", service_end: null });
+    justices.push({ justice_id: id, name: { first: "F", last: `F${id}`, full: `F F${id}` }, birth_year: 1900, death_year: null, appointing_president: "P", appointing_party: "Democratic" as const, chief_justice_appointment: null, nomination_date: null, confirmation_date: null, service_start: "1930-01-01", service_end: null });
   }
   return { justices, scores, courtTerms, probabilities: [] };
 }

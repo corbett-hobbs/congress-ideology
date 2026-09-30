@@ -29,6 +29,19 @@ export const termSegment = z.enum(["a", "b"]).nullable();
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "ISO date");
 const score = z.number().finite();
 
+const partyEnum = z.enum(["Democratic", "Republican"]);
+
+/** The appointment (or elevation) to Chief Justice. */
+export const chiefJusticeAppointment = z.strictObject({
+  president: z.string().min(1),
+  party: partyEnum,
+  nomination_date: isoDate.nullable(),
+  confirmation_date: isoDate.nullable(),
+  /** Date the justice began serving as Chief Justice. */
+  start_date: isoDate,
+});
+export type ChiefJusticeAppointment = z.infer<typeof chiefJusticeAppointment>;
+
 /** Stable identity only — nothing that varies by term. */
 export const justice = z.strictObject({
   justice_id: justiceId,
@@ -43,9 +56,16 @@ export const justice = z.strictObject({
   death_year: z.number().int().gte(1700).lte(2200).nullable(),
   /** Appointment in effect at the justice's first scored term (Stone: Coolidge, not FDR's Chief appointment). */
   appointing_president: z.string().min(1),
-  appointing_party: z.enum(["Democratic", "Republican"]),
+  appointing_party: partyEnum,
   nomination_date: isoDate.nullable(),
   confirmation_date: isoDate.nullable(),
+  /**
+   * Set for every justice who served as Chief Justice (Hughes, Stone, Vinson,
+   * Warren, Burger, Rehnquist, Roberts), else null. For those appointed
+   * straight to Chief it repeats the appointing_* fields; for Stone and
+   * Rehnquist it is the later elevation by a different president.
+   */
+  chief_justice_appointment: chiefJusticeAppointment.nullable(),
   /** First day on the Court across all appointments (earliest recess/commission). */
   service_start: isoDate,
   /** Last day of active service (senior status or termination); null = still serving. */
