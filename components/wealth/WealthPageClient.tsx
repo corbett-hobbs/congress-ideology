@@ -72,7 +72,7 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
           <h1 className="mb-3 font-serif text-[clamp(1.7rem,3.6vw,2.35rem)] font-medium leading-[1.1] tracking-[-0.01em]">
             How Much Is Congress Worth?
           </h1>
-          <p className="max-w-[46rem] text-[0.92rem] leading-[1.65] text-ink-muted">
+          <p className="text-[0.92rem] leading-[1.65] text-ink-muted">
             Members of Congress don&apos;t report their net worth. They file an
             annual financial disclosure listing what they own and what they
             owe, and for almost every line, they report a range instead of a
@@ -86,7 +86,7 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
             fastest, which have fallen behind, and how much a member&apos;s
             finances have changed since they took office.
           </p>
-          <details className="mt-3 max-w-[46rem] text-[0.92rem] leading-[1.65] text-ink-muted">
+          <details className="mt-3 text-[0.92rem] leading-[1.65] text-ink-muted">
             <summary className="cursor-pointer font-medium text-ink">
               How to read this
             </summary>
