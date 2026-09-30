@@ -3,6 +3,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { mean } from "d3-array";
 import type { IdeologyScore, Legislator, Term } from "./entities";
+import {
+  displayName as formatDisplayName,
+  familyName,
+  givenName,
+} from "./display-name";
 import { CHAMBERS, type Chamber, type ChamberView } from "./chamber";
 import { stateName as stateNameOf } from "./states";
 import {
@@ -53,7 +58,12 @@ let photoBioguideCache: Set<string> | null = null;
 function photoBioguides(): Set<string> {
   if (photoBioguideCache) return photoBioguideCache;
   try {
-    const path = join(process.cwd(), "pipeline", "output", "member-photos.json");
+    const path = join(
+      process.cwd(),
+      "pipeline",
+      "output",
+      "member-photos.json",
+    );
     const { withPhoto } = JSON.parse(readFileSync(path, "utf8")) as {
       withPhoto: string[];
     };
@@ -75,8 +85,10 @@ function legislatorsById(): Map<string, Legislator> {
 }
 
 function displayName(l: Legislator): { name: string; lastName: string } {
-  const first = l.name.nickname ?? l.name.first;
-  return { name: `${first} ${l.name.last}`, lastName: l.name.last };
+  return {
+    name: formatDisplayName(l.name, l.bioguide_id),
+    lastName: familyName(l.name, l.bioguide_id),
+  };
 }
 
 interface FullChamber {
@@ -191,9 +203,9 @@ function buildFullChamber(chamber: Chamber): FullChamber {
 export function getBothTrend(): PartyMeanPoint[] {
   const h = buildFullChamber("house");
   const s = buildFullChamber("senate");
-  const congresses = [
-    ...new Set([...h.congresses, ...s.congresses]),
-  ].sort((a, b) => a - b);
+  const congresses = [...new Set([...h.congresses, ...s.congresses])].sort(
+    (a, b) => a - b,
+  );
   return congresses.map((congress) => {
     const scored = [
       ...(h.byCongress[congress] ?? []),
@@ -333,8 +345,8 @@ export function getMemberProfile(
   if (!current) return null;
 
   const leg = legislatorsById().get(bioguideId);
-  const firstName = leg?.name.nickname ?? leg?.name.first ?? current.name;
-  const lastName = leg?.name.last ?? current.lastName;
+  const firstName = leg ? givenName(leg.name, bioguideId) : current.name;
+  const lastName = leg ? familyName(leg.name, bioguideId) : current.lastName;
 
   const trajectory: MemberTrajectoryPoint[] = [];
   let careerDim1: number | null = null;

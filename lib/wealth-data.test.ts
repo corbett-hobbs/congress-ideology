@@ -2,7 +2,12 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gzipSync } from "node:zlib";
-import { financialDisclosure, type FinancialDisclosure } from "./entities";
+import { displayName } from "./display-name";
+import {
+  financialDisclosure,
+  type FinancialDisclosure,
+  type Legislator,
+} from "./entities";
 import {
   annualizedRate,
   buildWealthMembers,
@@ -47,9 +52,10 @@ function loadRealWealthMembers(): WealthMember[] {
       caucus: string | null;
     }[]
   >("terms.json");
-  const legislators = readJson<
-    { bioguide_id: string; name: { first: string; last: string; nickname?: string } }[]
-  >("legislators.json");
+  const legislators =
+    readJson<{ bioguide_id: string; name: Legislator["name"] }[]>(
+      "legislators.json",
+    );
   const legByBioguide = new Map(legislators.map((l) => [l.bioguide_id, l]));
   const { withPhoto } = readJson<{ withPhoto: string[] }>("member-photos.json");
   const hasPhotoSet = new Set(withPhoto);
@@ -67,9 +73,7 @@ function loadRealWealthMembers(): WealthMember[] {
     if (t.congress_number !== latestByChamber.get(t.chamber)) continue;
     if (currentMembers.has(t.bioguide_id)) continue; // first chamber wins, same as getChamberCurrent order
     const leg = legByBioguide.get(t.bioguide_id);
-    const name = leg
-      ? `${leg.name.nickname ?? leg.name.first} ${leg.name.last}`
-      : t.bioguide_id;
+    const name = leg ? displayName(leg.name, leg.bioguide_id) : t.bioguide_id;
     currentMembers.set(t.bioguide_id, {
       name,
       chamber: t.chamber,
