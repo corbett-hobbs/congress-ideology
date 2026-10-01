@@ -1,0 +1,270 @@
+{
+  "first_period": 2003,
+  "last_period": 2025,
+  "rows": 23,
+  "missing_periods": [],
+  "by_status": {
+    "final": 22,
+    "preliminary": 1
+  },
+  "blended_periods": [
+    2009,
+    2017,
+    2021,
+    2025
+  ],
+  "attribution": [
+    {
+      "period": 2003,
+      "administration_term_id": "2001-01-20",
+      "blended": false
+    },
+    {
+      "period": 2004,
+      "administration_term_id": "2001-01-20",
+      "blended": false
+    },
+    {
+      "period": 2005,
+      "administration_term_id": "2001-01-20",
+      "blended": false
+    },
+    {
+      "period": 2006,
+      "administration_term_id": "2001-01-20",
+      "blended": false
+    },
+    {
+      "period": 2007,
+      "administration_term_id": "2001-01-20",
+      "blended": false
+    },
+    {
+      "period": 2008,
+      "administration_term_id": "2001-01-20",
+      "blended": false
+    },
+    {
+      "period": 2009,
+      "administration_term_id": "2009-01-20",
+      "blended": true
+    },
+    {
+      "period": 2010,
+      "administration_term_id": "2009-01-20",
+      "blended": false
+    },
+    {
+      "period": 2011,
+      "administration_term_id": "2009-01-20",
+      "blended": false
+    },
+    {
+      "period": 2012,
+      "administration_term_id": "2009-01-20",
+      "blended": false
+    },
+    {
+      "period": 2013,
+      "administration_term_id": "2009-01-20",
+      "blended": false
+    },
+    {
+      "period": 2014,
+      "administration_term_id": "2009-01-20",
+      "blended": false
+    },
+    {
+      "period": 2015,
+      "administration_term_id": "2009-01-20",
+      "blended": false
+    },
+    {
+      "period": 2016,
+      "administration_term_id": "2009-01-20",
+      "blended": false
+    },
+    {
+      "period": 2017,
+      "administration_term_id": "2017-01-20",
+      "blended": true
+    },
+    {
+      "period": 2018,
+      "administration_term_id": "2017-01-20",
+      "blended": false
+    },
+    {
+      "period": 2019,
+      "administration_term_id": "2017-01-20",
+      "blended": false
+    },
+    {
+      "period": 2020,
+      "administration_term_id": "2017-01-20",
+      "blended": false
+    },
+    {
+      "period": 2021,
+      "administration_term_id": "2021-01-20",
+      "blended": true
+    },
+    {
+      "period": 2022,
+      "administration_term_id": "2021-01-20",
+      "blended": false
+    },
+    {
+      "period": 2023,
+      "administration_term_id": "2021-01-20",
+      "blended": false
+    },
+    {
+      "period": 2024,
+      "administration_term_id": "2021-01-20",
+      "blended": false
+    },
+    {
+      "period": 2025,
+      "administration_term_id": "2025-01-20",
+      "blended": true
+    }
+  ],
+  "corroborated_periods": [
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2023,
+    2024
+  ],
+  "single_source_periods": [
+    2003,
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2021,
+    2022,
+    2025
+  ],
+  "figure_read_periods": [
+    2021
+  ],
+  "anchors": [
+    {
+      "period": 2013,
+      "value": 368644,
+      "ok": true
+    },
+    {
+      "period": 2023,
+      "value": 142580,
+      "ok": true
+    }
+  ],
+  "breakdowns": [
+    {
+      "period": 2013,
+      "interior": 133551,
+      "border": 235093,
+      "total": 368644,
+      "ok": true
+    }
+  ],
+  "sources": [
+    {
+      "id": "ice-removals-aor-fy2003-2016",
+      "path": "pipeline/raw/ice/ice-removals-aor-fy2003-2016.xlsx",
+      "bytes": 24147,
+      "sha256": "33a55184182174badd81b0d9854b83540fde44f1d8d8d7b0e69145cf115a2080"
+    },
+    {
+      "id": "ice-immigration-removals-fy2013",
+      "path": "pipeline/raw/ice/ice-immigration-removals-fy2013.pdf",
+      "bytes": 317464,
+      "sha256": "97874400c44e56960b73b3d913c4e8a86c45c82e09c62ca1c2d961995c9ceb06"
+    },
+    {
+      "id": "ice-immigration-removals-fy2014",
+      "path": "pipeline/raw/ice/ice-immigration-removals-fy2014.pdf",
+      "bytes": 338237,
+      "sha256": "61769089bae8819dcea84cace4154c02ae3540fe2b46bbc9758684041853bd0c"
+    },
+    {
+      "id": "ice-ero-report-fy2015",
+      "path": "pipeline/raw/ice/ice-ero-report-fy2015.pdf",
+      "bytes": 1539907,
+      "sha256": "f26c1d9672690c740f0ae7badbf2003301cee7e111aff41dded80965d0cf27ed"
+    },
+    {
+      "id": "ice-removal-statistics-2016",
+      "path": "pipeline/raw/ice/ice-removal-statistics-2016.html",
+      "bytes": 136716,
+      "sha256": "7552ca0dcd247b91c7044fbc45a725820df8334e4024079d4706d199e66e41ad"
+    },
+    {
+      "id": "ice-removal-statistics-2017",
+      "path": "pipeline/raw/ice/ice-removal-statistics-2017.html",
+      "bytes": 163919,
+      "sha256": "42b4be955916ab0b70a2ca3c9b1d001afdc87187b92f789b7cace00f1bf73bb4"
+    },
+    {
+      "id": "ice-ero-report-fy2018",
+      "path": "pipeline/raw/ice/ice-ero-report-fy2018.pdf",
+      "bytes": 340533,
+      "sha256": "6c3b709dd3c1be0511bf9ca7d0be3a5e594795fb3f69ae0ed01d74b95914f9f4"
+    },
+    {
+      "id": "ice-ero-report-fy2019",
+      "path": "pipeline/raw/ice/ice-ero-report-fy2019.pdf",
+      "bytes": 363345,
+      "sha256": "8e4b535803fa39d0d128f7fd9fe7eaddce3629efa3c3bfb2c6a093f10c598bfe"
+    },
+    {
+      "id": "ice-ero-report-fy2020",
+      "path": "pipeline/raw/ice/ice-ero-report-fy2020.pdf",
+      "bytes": 823680,
+      "sha256": "88553c95d710941a6333b3fd11ff5f5b3e8ae41f0dab2da0052627325bd4e2bc"
+    },
+    {
+      "id": "ice-2022-year-review",
+      "path": "pipeline/raw/ice/ice-2022-year-review.html",
+      "bytes": 66229,
+      "sha256": "f9435d8046b3ac27037a049faeb82cd00d5737b6f52bdc640457a9bf520e6a5a"
+    },
+    {
+      "id": "ice-fy2023-annual-report-release",
+      "path": "pipeline/raw/ice/ice-fy2023-annual-report-release.html",
+      "bytes": 116871,
+      "sha256": "b193e8b103dc5519e0f13824da15ef50c7252331b3f6edf14ecfe60f66120cff"
+    },
+    {
+      "id": "ice-annual-report-fy2024",
+      "path": "pipeline/raw/ice/ice-annual-report-fy2024.pdf",
+      "bytes": 2941904,
+      "sha256": "ca5ec28b2b99fac101f80bf3c353811bfa5086c981a2e93a99ece427076ffad1"
+    },
+    {
+      "id": "dhs-fy2027-ice-budget",
+      "path": "pipeline/raw/ice/dhs-fy2027-ice-budget.pdf",
+      "bytes": 2501630,
+      "sha256": "0032b46d26c2740898cd5a10f531cc343202c1a5209175476361a3f42c338722"
+    },
+    {
+      "id": "ice-statistics",
+      "path": "pipeline/raw/ice/ice-statistics.html",
+      "bytes": 137065,
+      "sha256": "2901bcbcd7a1743c72c5e3b9ab8a405607fffee99cea9fbf055891f3a6dcd02e"
+    }
+  ]
+}

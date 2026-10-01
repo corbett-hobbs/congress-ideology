@@ -2,7 +2,7 @@
 
 A one-page index of where things live: the data layer, the routes, and the
 shared components every view is built from. Paths here are verified against the
-tree as of the economic-indicators data session (2026-09-30; the indicators track is data-only, no routes yet). When you touch an area, correct
+tree as of the ICE-removals data session (2026-09-30; the indicators and enforcement tracks are data-only, no routes yet). When you touch an area, correct
 anything that has drifted.
 
 ---
@@ -50,6 +50,13 @@ stored. See `docs/DATA_CONVENTIONS.md` for the full contract.
 | `indicators_report.json`     | counts, last observation per series, skipped missing values | —       | `transform/indicators-run.ts` | humans |
 
 Indicators raw source: `pipeline/raw/fred/<SERIES_ID>.json` (`pnpm fetch:fred`, needs `FRED_API_KEY` — `.env.local` locally, a repo secret in Actions; not part of `fetch:all`). Weekly `.github/workflows/indicators-freshness.yml` applies the materiality rule in `pipeline/fetch/fred-diff.ts` and opens a PR only when it trips; never auto-merged. Schemas, the series catalog and `INDICATORS_DISPLAY_START`: `lib/indicator-entities.ts`. Pure derivations (jobs added, inflation, windowing, date → Congress / presidential `term_id`): `lib/indicator-derive.ts`. Methodology: `docs/INDICATORS_METHODOLOGY.md`.
+
+| **Immigration enforcement track** — ICE removals by fiscal year; separate from Congress; joined to presidents through dates (DATA_CONVENTIONS §9) | | | | |
+| `enforcement_series.json`    | one row per `(period, metric, scope)`: ICE removals, FY2003–FY2025 | `period`+`metric`+`scope` (**not** a `bioguide_id`) | `transform/enforcement-run.ts` (pure logic: `transform/enforcement.ts`) | nothing yet (no UI) |
+| `enforcement_notes.json`     | definition/reporting changes with the fiscal-year range each applies to | `id` | `transform/enforcement-run.ts` | nothing yet |
+| `enforcement_report.json`    | run summary: gaps, status counts, blended years, corroboration, source hashes | — | `transform/enforcement-run.ts` | humans |
+
+Enforcement raw source: ICE documents snapshotted in `pipeline/raw/ice/` with a `.txt` extract each; the curated catalog (values + verbatim quotes + notes) is `pipeline/reference/ice-removals-catalog.json`; `pnpm fetch:ice` downloads/extracts (manual refresh, no workflow — ICE URLs are unstable). Schemas: `lib/enforcement-entities.ts`. Presidential attribution reuses `ADMINISTRATIONS` + `termIdForDate` (no second terms table). Methodology: `docs/IMMIGRATION_ENFORCEMENT_METHODOLOGY.md`; source findings: `docs/IMMIGRATION_SOURCE_NOTES.md`.
 
 Executive-orders raw source: `pipeline/raw/federal-register/executive_orders.json`
 (`pnpm fetch:executive-orders`; weekly `.github/workflows/executive-orders-freshness.yml`

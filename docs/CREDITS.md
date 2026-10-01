@@ -208,3 +208,19 @@ The FRED notice and agency credits are **not yet in the site footer**: no page
 shows indicator data yet (data-only session). The first page that does must add
 them next to the Voteview citation in `components/senate/SiteFooter.tsx`.
 
+---
+
+## U.S. Immigration and Customs Enforcement — removals
+
+ICE removal counts (`pipeline/output/enforcement_*.json`) are U.S. Government
+works published by ICE (and, for FY2025, in ICE's FY2027 budget overview hosted by
+DHS); no license restriction applies. Snapshots are committed in `pipeline/raw/ice/`
+and each row's `source` / `source_url` names the document. Credit as: *U.S.
+Immigration and Customs Enforcement, Enforcement and Removal Operations.* Note the
+counts are ICE's own definition (includes returns from FY2007) and must not be
+presented as DHS-wide totals. No page shows this data yet (data-only session); the
+first page that does must add this credit to its footer.
+
+The Deportation Data Project (UC Berkeley) was **consulted only to assess FY2025
+date-resolved data and is not used**; nothing from it is ingested or needs credit.
+

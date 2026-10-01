@@ -1,0 +1,38 @@
+ERO LESA Statistical Tracking Unit
+For Official Use Only (FOUO)/Pre-decisional
+FOIA #16-06761 FY2003 - 2016 Removal by AOR Stats
+AOR | TOTAL
+FY2003 | FY2004 | FY2005 | FY2006 | FY2007 | FY2008 | FY2009 | FY2010 | FY2011 | FY2012 | FY2013 | FY2014 | FY2015 | FY2016
+Total | 157080 | 175106 | 180189 | 207776 | 291060 | 369221 | 389834 | 392862 | 396906 | 409849 | 368644 | 315943 | 235413 | 240255
+Atlanta | 3103 | 3624 | 4129 | 5249 | 11272 | 18611 | 18812 | 20292 | 22963 | 19168 | 14744 | 12222 | 7377 | 5770
+Baltimore | 807 | 898 | 945 | 991 | 1092 | 821 | 712 | 859 | 1798 | 1728 | 1426 | 1165 | 667 | 683
+Boston | 2271 | 2683 | 2587 | 2920 | 3550 | 4125 | 3248 | 2990 | 3315 | 3727 | 2685 | 2059 | 1194 | 1344
+Buffalo | 1384 | 1646 | 1942 | 2395 | 2945 | 3453 | 2925 | 2876 | 3489 | 3234 | 2789 | 2138 | 1478 | 1454
+Chicago | 5232 | 6608 | 6768 | 7436 | 9072 | 11646 | 9830 | 10346 | 11786 | 10296 | 7825 | 6222 | 3266 | 2326
+Dallas | 5291 | 6635 | 6841 | 7364 | 13661 | 17997 | 19190 | 16136 | 15942 | 14770 | 16053 | 15030 | 12045 | 12154
+Denver | 3349 | 3249 | 3112 | 3911 | 5667 | 6261 | 7364 | 6617 | 5634 | 4461 | 3091 | 1748 | 1156 | 1033
+Detroit | 1815 | 2249 | 2380 | 3202 | 5137 | 8010 | 8358 | 8054 | 7298 | 5872 | 4473 | 3930 | 2431 | 2056
+El Paso | 9350 | 10403 | 11623 | 17421 | 19231 | 17869 | 19292 | 21255 | 36196 | 48813 | 48616 | 42490 | 38453 | 43590
+Houston | 11329 | 9045 | 6834 | 8479 | 13859 | 17312 | 21159 | 21645 | 20450 | 18452 | 16063 | 17220 | 14954 | 14681
+Los Angeles | 12747 | 12931 | 10450 | 13337 | 20990 | 24190 | 25488 | 23875 | 24826 | 20999 | 15223 | 9663 | 6869 | 6722
+Miami | 7967 | 7476 | 7685 | 7176 | 9283 | 13622 | 16543 | 15345 | 16578 | 12366 | 8475 | 7853 | 5351 | 5562
+New Orleans | 4488 | 4450 | 3480 | 4528 | 9871 | 14803 | 15540 | 15067 | 15363 | 14167 | 12693 | 10157 | 6281 | 4778
+New York City | 1689 | 2672 | 3145 | 3385 | 2726 | 2163 | 2421 | 2028 | 3522 | 3403 | 2948 | 2211 | 1255 | 1037
+Newark | 3343 | 3003 | 3111 | 3127 | 3389 | 4463 | 5112 | 5502 | 5305 | 5712 | 4361 | 2822 | 1960 | 1852
+Philadelphia | 4090 | 3734 | 3424 | 3653 | 5643 | 5531 | 6394 | 6629 | 6746 | 7037 | 5841 | 3795 | 3407 | 3291
+Phoenix | 27194 | 35631 | 42522 | 39878 | 44657 | 76450 | 81484 | 92592 | 56198 | 39560 | 34868 | 28277 | 17530 | 21984
+Salt Lake City | 3364 | 3370 | 3683 | 3556 | 6011 | 6854 | 8377 | 7699 | 6614 | 6023 | 3869 | 1769 | 1375 | 1731
+San Antonio | 10790 | 14464 | 22825 | 35275 | 53443 | 55189 | 58065 | 55124 | 63090 | 93664 | 103869 | 108634 | 78144 | 72597
+San Diego | 21572 | 23618 | 17101 | 16854 | 23915 | 24509 | 23181 | 18086 | 33006 | 46426 | 35528 | 22171 | 19603 | 23729
+San Francisco | 6566 | 7366 | 6134 | 7269 | 12124 | 17165 | 17225 | 21361 | 19120 | 14461 | 11617 | 6172 | 4747 | 5918
+Seattle | 4628 | 4340 | 4418 | 5278 | 7784 | 10910 | 10837 | 9833 | 7607 | 6733 | 4525 | 2341 | 1722 | 2124
+St. Paul | 3503 | 3415 | 3213 | 3177 | 4197 | 5309 | 6355 | 5925 | 5748 | 4753 | 3551 | 2821 | 1969 | 1838
+Washington | 1208 | 1596 | 1837 | 1915 | 1541 | 1958 | 1922 | 1847 | 2812 | 3567 | 3277 | 2913 | 2121 | 1986
+National Criminal Analysis and Targeting Center | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 879 | 1500 | 457 | 234 | 120 | 58 | 15
+FY2016 data are updated through 09/30/2016 (IIDS v.1.22.1 run date 10/03/2016; EID as of 10/01/2016).
+FY2003 through  FY2015 data are historical and remain static.
+Starting in FY2007 Removals data include returns. Returns include Voluntary Returns, Voluntary Departures and Withdrawals Under Docket Control.
+Starting in FY2009, ICE began to “lock” removal statistics on October 5th at the end of each fiscal year and counted only the aliens whose removal or return was already confirmed.  Aliens removed or returned in that fiscal year but not confirmed until after October 5th were excluded from the locked data and thus from ICE statistics.  To ensure an accurate and complete representation of all removals and returns, ICE will include the removals and returns confirmed after October 5th into the next fiscal year.    The number of removals in FY2009, excluding the "lag" from FY2008, was 387,790. The number of removals in FY2010, excluding the "lag" from FY2009, was 373,440. This number does not include 76,732 expedited removal cases which ICE closed on behalf of CBP in FY2010.  Of those 76,732, 33,900 cases resulted from a joint CBP/ICE operation in Arizona.  ICE spent $1,155,260 on those 33,900 cases. The number of removals in FY2011, excluding the "lag" from FY2010, was 385,145. The number of removals in FY2012, excluding the "lag" from FY2011, was 402,919. The number of removals in FY2013, excluding the "lag" from FY2012, was 363,144.   The number of removals in FY2014, excluding the "lag" from FY2013, was 311,111. The number of removals in FY2015, excluding the "lag" from FY2014, was 231,250. The number of removals in FY2016, excluding the "lag" from FY2015, was 235,524.
+FY Data Lag/Case Closure Lag is defined as the physical removal of an alien occurring in a given month; however, the case is not closed in EARM until a subsequent FY after the data is locked.  Since the data from the previous FY is locked, the removal is recorded in the month the case was closed and reported in the next FY Removals.  This will result in a higher number of recorded removals in a FY than actual departures. As an example, subjects may have departed the US prior to May 2013. The case was closed in May 2013 resulting in the removal statistic being calculated. 
+Since FY 2011, ICE has defined criminality as whether or not an alien has an ICE Threat Level (convicted criminal) or not (non-criminal immigration violator).  For purposes of prioritizing the removal of aliens convicted of crimes, ICE personnel refer to the following offense levels:  Level 1, Level 2, and Level 3 offenders.  Level 1 offenders are those aliens convicted of “aggravated felonies,” as defined in § 101(a)(43) of the Immigration and Nationality Act, or two (2) or more crimes each punishable by more than 1 year, commonly referred to as “felonies.”  Level 2 offenders are aliens convicted of any other felony or three (3) or more crimes each punishable by less than 1 year, commonly referred to as “misdemeanors.”  Level 3 offenders are aliens convicted of “misdemeanor” crime(s) punishable by less than 1 year.  Prior to FY 2011, ICE used SC levels 1, 2, and 3 for prioritization purposes.
+ERO Removals include aliens processed for Expedited Removal (ER) or Voluntary Return (VR) that are turned over to ERO for detention.  Aliens processed for ER and not detained by ERO or VR after June 1st, 2013 and not detained by ERO are primarily processed by Border Patrol.  CBP should be contacted for those statistics.

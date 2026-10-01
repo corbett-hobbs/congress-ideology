@@ -498,3 +498,34 @@ with no gap larger than twice its nominal frequency (an observation dated just
 before the start may cover it — an annual value dated Jan 1). Tail lag is allowed
 and reported (annual series trail by most of a year). No allowlist: if a gap
 appears, fix the cause or change the window deliberately.
+
+---
+
+## 9. Immigration enforcement track
+
+A fifth data track: ICE removals by fiscal year, shown later *by presidential
+administration*. Methodology: `docs/IMMIGRATION_ENFORCEMENT_METHODOLOGY.md`;
+schemas and the curated catalog types: `lib/enforcement-entities.ts`.
+
+**Key.** `(period, metric, scope)` — `period` = fiscal year (the calendar year it
+ends in), `metric = removals`, `scope = ice` (required, no default). **No
+`bioguide_id` and no member-level key.** One fact, one place: the source layer is
+the curated catalog; each output row is derived from it.
+
+**Join to presidents** is by date through the existing §7 identifier: the row's
+`administration_term_id` (a `term_id` into `administrations.json`) is the
+administration in office on the fiscal year's last day (Sept 30). `blended` and
+`administration_days` mark years where the administration changed. There is no
+second presidential-terms table.
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/raw/ice/*` | one snapshot per ICE/DHS document + `<name>.txt` extract | `id` in the catalog | `pnpm fetch:ice`. Transform reads only the `.txt`. |
+| `pipeline/reference/ice-removals-catalog.json` | sources, one entry per fiscal year (value + verbatim evidence + corroboration), breakdowns, notes | `fy` | Curated by hand from the snapshots; every value is verified against its quote at transform time. |
+| `pipeline/output/enforcement_series.json` | one row per `(period, metric, scope)` | as above | `value`, `source`, `source_url`, `as_of`, `status` (`final`/`preliminary`), `note_ids`, attribution fields. Missing years are absent — never 0/NaN/interpolated. |
+| `pipeline/output/enforcement_notes.json` | one row per note | `id` | `kind` (`definition_change`/`caveat`/`context`), `fy_start`, `fy_end` (null = to latest). |
+| `pipeline/output/enforcement_report.json` | run summary | — | Separate from the Congress `_report.json`, like the other non-Congress tracks. Deterministic. |
+
+**Validation** (fails `pnpm transform`): see the methodology doc. Never ingest DHS
+press-release totals, OHSS tables, CBP counts or any other agency's figures.
+
