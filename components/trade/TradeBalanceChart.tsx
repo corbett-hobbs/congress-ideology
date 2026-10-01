@@ -143,7 +143,12 @@ export function TradeBalanceChart(props: Props) {
         ariaLabel={ariaLabel}
         svgProps={{ style: { touchAction: "pan-y" } }}
         onPointerMove={(e) => {
-          if (e.pointerType === "touch") return; // taps pin (onClick); touch scrolling is left alone
+          if (e.pointerType === "touch") {
+            // A horizontal drag pins the month under the finger; vertical movement scrolls the page (touch-action: pan-y).
+            const d = dayAt(e);
+            if (d !== null) pinDay(d);
+            return;
+          }
           const d = dayAt(e);
           if (d === null) {
             leaveHover();

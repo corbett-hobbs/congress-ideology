@@ -469,3 +469,9 @@ body {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
+
+/* Keyboard focus for clickable SVG groups (president bands on the trade charts). */
+.term-band:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}

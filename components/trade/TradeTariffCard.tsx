@@ -2,11 +2,12 @@
 
 import { memo, useMemo } from "react";
 import { MONTH_ABBR } from "@/lib/indicator-time";
-import { rateScale, ratePercentSeries } from "@/lib/trade-chart";
+import { fmtDollars, fmtPercent, monthStartDay, rateReadingAtDay, rateScale, ratePercentSeries, termAtDay, termLabel } from "@/lib/trade-chart";
+import { MobileReadout } from "./MobileReadout";
 import type { Monthly, TariffFlag } from "@/lib/trade-types";
 import type { Era } from "./EraLayers";
 import { AUTHORITY_LABEL, TradeTariffChart } from "./TradeTariffChart";
-import { useTradeValues } from "./TradeState";
+import { activeDay, useTradeValues } from "./TradeState";
 
 const dateText = (iso: string) => {
   const [y, m, d] = iso.split("-").map(Number);
@@ -86,11 +87,17 @@ export function TradeTariffCard({
   loading: boolean;
   error: boolean;
 }) {
-  const { showCong } = useTradeValues();
+  const v = useTradeValues();
+  const { showCong } = v;
   const shown = countryName ? country : national;
   const main = useMemo(() => (shown ? ratePercentSeries(shown.duties, shown.imports) : null), [shown]);
   const reference = useMemo(() => (countryName ? ratePercentSeries(national.duties, national.imports) : null), [countryName, national]);
   const scale = useMemo(() => rateScale(...(main ? [main] : []), ...(reference ? [reference] : [])), [main, reference]);
+  const day = activeDay(v);
+  const lastIdx = main ? main.map((x) => x !== null).lastIndexOf(true) : -1;
+  const rd = shown ? rateReadingAtDay(shown.duties, shown.imports, day ?? (lastIdx >= 0 ? monthStartDay(lastIdx) : -1)) : null;
+  const pres = rd ? termAtDay(era.terms, monthStartDay(rd.month)) : undefined;
+  const mobileLine = rd ? `${rd.label} · Duty rate ${rd.rate === null ? "\u2014" : fmtPercent(rd.rate)}${rd.duties !== null ? ` · Duties ${fmtDollars(rd.duties)}` : ""}${pres ? ` · ${termLabel(pres)}` : ""}` : "";
   const title = countryName ? `Tariffs on imports from ${countryName}` : "Tariffs on imports";
   const aria = `${title}: calculated duties as a share of imports, monthly from 1993, with ${flags.length} tariff actions and court rulings marked, presidential terms and recessions. The same data is in the table below.`;
 
@@ -102,6 +109,7 @@ export function TradeTariffCard({
         Tariff actions and court rulings are marked where they took effect.
       </p>
 
+      {main && shown && <MobileReadout line={mobileLine} />}
       <div className="mt-3.5">
         {main && shown ? (
           <TradeTariffChart main={main} duties={shown.duties} imports={shown.imports} reference={reference} scale={scale} era={era} flags={flags} showCong={showCong} view={view} ariaLabel={aria} />

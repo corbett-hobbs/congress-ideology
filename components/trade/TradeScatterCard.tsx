@@ -95,6 +95,7 @@ export function TradeScatterCard({
 }) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const [query, setQuery] = useState("");
+  const [tapped, setTapped] = useState<string | null>(null);
   const tip = useTooltip<Dot>();
   const W = measured || FALLBACK_W;
   const compact = W < COMPACT_W;
@@ -134,6 +135,7 @@ export function TradeScatterCard({
     return q ? rows.filter((r) => r.name.toLowerCase().includes(q)).slice(0, 8) : [];
   }, [query, rows]);
 
+  const tappedRow = tapped ? rows.find((r) => r.code === tapped) ?? null : null;
   const selectedRow = country ? rows.find((r) => r.code === country) ?? null : null;
   const drawOrder = useMemo(() => [...dots].sort((a, b) => Number(a.row.code === country) - Number(b.row.code === country)), [dots, country]);
   const xTick = (v: number) => (v === 0 ? "0 pp" : `${v > 0 ? "+" : "−"}${Math.abs(v)} pp`);
@@ -227,15 +229,25 @@ export function TradeScatterCard({
                 const sel = c.row.code === country;
                 const className = `dot fill-ink${sel ? " is-highlighted" : ""}`;
                 const common = {
-                  onPointerEnter: (e: React.PointerEvent) => tip.show(c, e),
-                  onPointerMove: tip.move,
-                  onPointerLeave: tip.hide,
-                  onClick: () => onPickCountry(sel ? null : c.row.code),
+                  // Phones: a tap fills the card below the chart (no hover); the card holds the action.
+                  onPointerEnter: compact ? undefined : (e: React.PointerEvent) => tip.show(c, e),
+                  onPointerMove: compact ? undefined : tip.move,
+                  onPointerLeave: compact ? undefined : tip.hide,
+                  onClick: () => (compact ? setTapped(c.row.code) : onPickCountry(sel ? null : c.row.code)),
                   style: { cursor: "pointer" } as const,
                 };
                 if (c.d.pinned) {
                   const up = c.d.pinned === "top" || c.d.pinned === "right";
                   return <g key={c.row.code} {...common}><Triangle x={cx} y={cy} up={up} className={className} />{sel && <circle cx={cx} cy={cy} r={10} fill="none" stroke="var(--accent)" strokeWidth={2.5} />}</g>;
+                }
+                if (compact) {
+                  return (
+                    <g key={c.row.code} {...common}>
+                      <circle cx={cx} cy={cy} r={22} fill="transparent" />
+                      <circle cx={cx} cy={cy} r={sel || c.row.code === tapped ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} />
+                      {c.row.code === tapped && <circle cx={cx} cy={cy} r={11} fill="none" stroke="var(--ink)" strokeWidth={1.5} />}
+                    </g>
+                  );
                 }
                 return <circle key={c.row.code} cx={cx} cy={cy} r={sel ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} {...common} />;
               })}
@@ -257,6 +269,27 @@ export function TradeScatterCard({
           )}
         </Tooltip>
       </div>
+
+      {compact && (
+        <div className="mt-2 rounded-md border border-line bg-surface-raised p-3 text-[0.8rem]" aria-live="polite">
+          {tappedRow && tappedRow.plotted ? (
+            <>
+              <div className="font-medium text-ink">{tappedRow.name}</div>
+              <div className="mt-0.5 text-ink-muted">Duty rate <span className="font-mono text-ink">{pctRate(tappedRow.baseRate)} → {pctRate(tappedRow.latestRate)}</span> ({fmtPp(tappedRow.rateChangePp as number)})</div>
+              <div className="text-ink-muted">Imports <span className="font-mono text-ink">{fmtPct((tappedRow.importsChange as number) * 100)}</span></div>
+              <button
+                type="button"
+                onClick={() => onPickCountry(tappedRow.code)}
+                className="mt-2 min-h-11 w-full rounded-md border border-line-strong bg-surface px-3 text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+              >
+                Show {tappedRow.name} in the charts above
+              </button>
+            </>
+          ) : (
+            <span className="text-ink-muted">Tap a dot to see that country here.</span>
+          )}
+        </div>
+      )}
 
       <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">
         Calculated duties divided by imports for consumption, both from Census import data, over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}, so the season matches. Countries missing any month in either window are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles at the top edge are pinned outliers, with their true values in the tooltip. Bilateral figures can be distorted when goods are re-routed through other countries, so treat any one dot with care. Click a dot to pick that country above.

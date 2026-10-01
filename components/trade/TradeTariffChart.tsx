@@ -224,7 +224,11 @@ export function TradeTariffChart(props: Props) {
         ariaLabel={ariaLabel}
         svgProps={{ style: { touchAction: "pan-y" } }}
         onPointerMove={(e) => {
-          if (e.pointerType === "touch") return;
+          if (e.pointerType === "touch") {
+            const d = dayAt(e);
+            if (d !== null) pinDay(d);
+            return;
+          }
           const d = dayAt(e);
           if (d === null) {
             leaveHover();

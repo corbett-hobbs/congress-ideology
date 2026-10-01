@@ -17,6 +17,7 @@ import {
 import { balance } from "@/lib/trade-derive";
 import { MONTH_NAMES } from "@/lib/indicator-time";
 import { TradeBalanceChart, type Era } from "./TradeBalanceChart";
+import { MobileReadout } from "./MobileReadout";
 import { activeDay, useTradeActions, useTradeValues } from "./TradeState";
 
 const MEASURES = [
@@ -111,6 +112,10 @@ export function TradeBalanceCard({
       ? reading.balance === null ? "—" : fmtMoney(reading.balance, { signed: true })
       : reading.exports === null || reading.imports === null ? "—" : `${fmtMoney(reading.exports)} / ${fmtMoney(reading.imports)}`
     : "—";
+  const pres = reading ? termAtDay(era.terms, monthStartDay(reading.month)) : undefined;
+  const mobileLine = reading
+    ? `${reading.label} · ${measure === "balance" ? `Balance ${reading.balance === null ? "\u2014" : fmtMoney(reading.balance, { signed: true })}` : `Exports ${reading.exports === null ? "\u2014" : fmtMoney(reading.exports)} · Imports ${reading.imports === null ? "\u2014" : fmtMoney(reading.imports)}`}${pres ? ` · ${termLabel(pres)}` : ""}`
+    : "";
   const adjLabel = adjusted ? "Seasonally adjusted" : "Not seasonally adjusted";
   const aria = `${title}, monthly, ${adjLabel.toLowerCase()}, ${measure === "balance" ? "exports minus imports" : "exports and imports"}, with presidential terms and recessions marked. The same data is in the table below.`;
 
@@ -134,6 +139,7 @@ export function TradeBalanceCard({
         </div>
       </div>
 
+      {series && <MobileReadout line={mobileLine} />}
       <div className="mt-3.5">
         {series ? (
           <TradeBalanceChart series={series} measure={measure} scale={scale} era={era} showCong={showCong} view={view} year={year} ariaLabel={aria} />
@@ -159,8 +165,7 @@ export function TradeBalanceCard({
       </div>
 
       <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">
-        Census Bureau goods trade on the Census basis: monthly, {adjusted ? "seasonally adjusted, for the national line" : "not seasonally adjusted, for the country view"}.
-        {adjusted ? " The country view uses unadjusted data." : " The national line uses seasonally adjusted data."} Services are not included, so the figure differs from the
+        Census Bureau goods trade on the Census basis, monthly. The national line is seasonally adjusted; the country view is not. Services are not included, so the figure differs from the
         combined goods-and-services deficit usually quoted in the news. Click or drag on the chart to pin a month.
       </p>
       {series && <DataTable series={series} era={era} caption={`${title}, monthly, ${adjLabel.toLowerCase()}`} />}

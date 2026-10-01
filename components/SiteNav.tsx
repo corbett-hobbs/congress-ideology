@@ -58,9 +58,13 @@ export function SiteNav() {
 
 function SoonTag() {
   return (
-    <span className="rounded border border-line px-1 text-[0.55rem] tracking-[0.08em]">
-      soon
-    </span>
+    <>
+      {/* The visible tag costs ~35px, which pushes the last section pill off a 390px phone; screen readers still hear it. */}
+      <span aria-hidden className="hidden rounded border border-line px-1 text-[0.55rem] tracking-[0.08em] md:inline">
+        soon
+      </span>
+      <span className="sr-only">coming soon</span>
+    </>
   );
 }
 
@@ -81,7 +85,7 @@ export function SiteSectionNav() {
       >
         {row.branch.sections.map((s) => {
           const base =
-            "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] px-3 md:px-4 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition-colors md:tracking-[0.14em] md:h-9 md:text-[0.8rem]";
+            "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] px-2 md:px-4 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition-colors md:tracking-[0.14em] md:h-9 md:text-[0.8rem]";
           if (s.status !== "live") {
             return (
               <span

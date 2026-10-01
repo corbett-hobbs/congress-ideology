@@ -98,10 +98,19 @@ export function PresidentAndCongress({ era, view, X, left, bandY, houseY, senate
         return (
           <g
             key={t.termId}
-            className="cursor-pointer"
+            className="term-band cursor-pointer"
+            role="button"
+            tabIndex={0}
+            aria-label={`${t.full}, ${t.startYear} to ${t.endYear ?? "present"}. Show only these years.`}
             onClick={(e) => {
               e.stopPropagation();
               toggleRange(termYearRange(t.startYear, t.endYear, 1991, lastYear), [1991, lastYear]);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleRange(termYearRange(t.startYear, t.endYear, 1991, lastYear), [1991, lastYear]);
+              }
             }}
           >
             <title>{`${t.full}, ${t.startYear} to ${t.endYear ?? "present"}. Click to show only these years.`}</title>
