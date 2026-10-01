@@ -50,6 +50,8 @@ interface Props {
   showCong: boolean;
   /** Index into data.terms of the selected president, or null. */
   term: number | null;
+  /** Visible window `[start, end)` in axis days. */
+  view: readonly [number, number];
 }
 
 function termText(t: EconomyTerm, width: number, hero: boolean): string | null {
@@ -62,7 +64,7 @@ const BAND_H = 18;
 const ROW_H = 12;
 
 /** Pure layout for one chart at one measured width. Shared by the static layer and the crosshair overlay. */
-function geometry(W: number, hero: boolean, spec: ChartSpec, span: number, showCong: boolean) {
+function geometry(W: number, hero: boolean, spec: ChartSpec, view: readonly [number, number], showCong: boolean) {
   const ml = hero ? 60 : 44;
   const mr = 12;
   const mt = hero ? 22 : 8;
@@ -76,7 +78,7 @@ function geometry(W: number, hero: boolean, spec: ChartSpec, span: number, showC
   return {
     ml, mr, mt, H, pw, lo, hi, axisY, bandY, houseY, senateY,
     height: (showCong ? senateY + ROW_H : bandY + BAND_H) + 8,
-    X: (day: number) => ml + (day / span) * pw,
+    X: (day: number) => ml + ((day - view[0]) / (view[1] - view[0])) * pw,
     Y: (v: number) => mt + ((hi - v) / (hi - lo)) * H,
   };
 }
@@ -86,24 +88,30 @@ interface StaticProps extends Props {
 }
 
 /** Everything that doesn't change with the hovered date. Memoized so a hover frame doesn't rebuild 1,900-point paths nine times. */
-const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCong, term, W }: StaticProps) {
+const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCong, term, view, W }: StaticProps) {
   const { toggleTerm } = useEconomyActions();
-  const span = data.span;
-  const { ml, mr, mt, H, pw, lo, axisY, bandY, houseY, senateY, X, Y } = geometry(W, hero, spec, span, showCong);
+  const [vs, ve] = view;
+  const { ml, mr, mt, H, pw, lo, axisY, bandY, houseY, senateY, X, Y } = geometry(W, hero, spec, view, showCong);
   const clipId = `clip-${spec.key}`;
 
   const pts = chartPoints(data, spec.key);
+  /** Points inside the window: annotations (peak, latest, jobs extremes) describe what's on screen. */
+  const inView = pts.filter((p) => p.day >= vs && p.day < ve);
   const lineGen = line<SeriesPoint>()
     .defined((p) => p.value !== null)
     .x((p) => X(p.day))
     .y((p) => Y(p.value as number));
-  const clipped = (a: number, b: number): [number, number] => [X(Math.max(0, a)), X(Math.min(span, b))];
+  const clipped = (a: number, b: number): [number, number] => [X(Math.max(vs, a)), X(Math.min(ve, b))];
+  const visibleSpan = (a: number, b: number) => b > vs && a < ve;
   const sel = term === null ? null : data.terms[term];
+  // Label spacing follows the zoom: every year when zoomed in, every 5 or 10 at full width.
+  const yearsShown = (ve - vs) / 365.25;
+  const yearStep = [1, 2, 5, 10].find((s) => (pw / yearsShown) * s >= 42 && !(s === 2 && yearsShown > 20)) ?? 10;
   const years: number[] = [];
-  for (let y = 1995; dayOf(y, 0, 1) < span; y += 5) years.push(y);
+  for (let y = dateOfDay(vs).year; dayOf(y, 0, 1) < ve; y++) if (y % yearStep === 0 && dayOf(y, 0, 1) >= vs) years.push(y);
 
-  const lastNonNull = [...pts].reverse().find((p) => p.value !== null);
-  const peak = hero ? pts.reduce<SeriesPoint | null>((m, p) => (p.value !== null && (m === null || p.value > (m.value as number)) ? p : m), null) : null;
+  const lastNonNull = [...inView].reverse().find((p) => p.value !== null);
+  const peak = hero ? inView.reduce<SeriesPoint | null>((m, p) => (p.value !== null && (m === null || p.value > (m.value as number)) ? p : m), null) : null;
 
   return (
           <>
@@ -114,12 +122,12 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
             </defs>
 
             {/* Recession shading, behind everything. */}
-            {data.rec.map(([s, e]) => {
+            {data.rec.filter(([s, e]) => visibleSpan(s, e)).map(([s, e]) => {
               const [x0, x1] = clipped(s, e);
               return <rect key={s} x={x0} y={mt} width={Math.max(1, x1 - x0)} height={H} fill="var(--ink)" fillOpacity={0.09} />;
             })}
 
-            {sel && (() => {
+            {sel && visibleSpan(sel.s, sel.e) && (() => {
               const [x0, x1] = clipped(sel.s, sel.e);
               return <rect x={x0} y={mt} width={x1 - x0} height={H} fill={party(sel.party)} fillOpacity={0.14} />;
             })()}
@@ -180,7 +188,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
             </g>
 
             {spec.kind === "jobs" &&
-              pts.map((p) => {
+              inView.map((p) => {
                 if (p.value === null || Math.abs(p.value) <= JOBS_CAP) return null;
                 const up = p.value > 0;
                 const x = X(p.day) + 1.5;
@@ -190,7 +198,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
               })}
             {spec.kind === "jobs" &&
               (() => {
-                const over = pts.filter((p) => p.value !== null && Math.abs(p.value) > JOBS_CAP);
+                const over = inView.filter((p) => p.value !== null && Math.abs(p.value) > JOBS_CAP);
                 const big = [
                   over.reduce<SeriesPoint | null>((m, p) => (p.value! > 0 && (m === null || p.value! > m.value!) ? p : m), null),
                   over.reduce<SeriesPoint | null>((m, p) => (p.value! < 0 && (m === null || p.value! < m.value!) ? p : m), null),
@@ -207,7 +215,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
                 });
               })()}
 
-            {spec.key === "mort" && (
+            {spec.key === "mort" && data.mortBreak >= vs && data.mortBreak < ve && (
               <g>
                 <line x1={X(data.mortBreak)} x2={X(data.mortBreak)} y1={mt} y2={axisY} stroke={MUTED} strokeWidth={1} strokeDasharray="3 3" />
                 <text x={X(data.mortBreak) - 5} y={mt + 10} textAnchor="end" className="fill-ink-muted text-[10px]" style={HALO}>
@@ -232,10 +240,10 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
                 <text x={X(lastNonNull.day) - 8} y={Y(lastNonNull.value as number) - 10} textAnchor="end" className="fill-ink text-[11px] font-medium" style={HALO}>
                   {`${fmtMonthIndex(monthIndexOfDay(lastNonNull.day)).slice(0, 3)} ${dateOfDay(lastNonNull.day).year}: ${fx(lastNonNull.value as number, 1)}`}
                 </text>
-                {data.rec.map((r) => {
+                {data.rec.filter((r) => visibleSpan(r[0], r[1])).map((r) => {
                   const [x0, x1] = clipped(r[0], r[1]);
                   const label = recessionLabel(r, dateOfDay);
-                  const startsAtEdge = r[0] <= 0;
+                  const startsAtEdge = r[0] <= vs;
                   return (
                     <text key={r[0]} x={startsAtEdge ? x0 + 1 : (x0 + x1) / 2} y={14} textAnchor={startsAtEdge ? "start" : "middle"} className="fill-ink-muted text-[10px]">
                       {label}
@@ -247,7 +255,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
 
             {/* x axis */}
             <line x1={ml} x2={ml + pw} y1={axisY} y2={axisY} stroke="var(--line-strong)" />
-            {X(dayOf(1995, 0, 1)) - ml >= 40 && (
+            {vs === 0 && X(dayOf(1995, 0, 1)) - ml >= 40 && (
               <text x={ml} y={axisY + 14} textAnchor="start" className="fill-ink-muted font-mono text-[11px]">1991</text>
             )}
             {years.map((y) => (
@@ -262,8 +270,8 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
               {hero ? "President" : "Pres."}
             </text>
             {data.terms.map((t, i) => {
-              const x0 = X(t.s);
-              const x1 = X(t.e);
+              if (!visibleSpan(t.s, t.e)) return null;
+              const [x0, x1] = clipped(t.s, t.e);
               const text = termText(t, x1 - x0, hero);
               return (
                 <g
@@ -297,8 +305,8 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
                       {ch === "house" ? "House" : "Senate"}
                     </text>
                     {data.control[ch].map((c) => {
-                      const x0 = X(c.s);
-                      const x1 = X(c.e);
+                      if (!visibleSpan(c.s, c.e)) return null;
+                      const [x0, x1] = clipped(c.s, c.e);
                       return (
                         <g key={c.s}>
                           <rect x={x0} y={y} width={Math.max(0.5, x1 - x0 - 0.5)} height={ROW_H} fill={party(c.party)} />
@@ -324,11 +332,11 @@ const dotPos = (reading: Reading, spec: ChartSpec, g: ReturnType<typeof geometry
 };
 
 /** Crosshair and dots for the active date: the only layer that re-renders on hover. */
-function Overlay({ W, hero, spec, span, showCong, reading }: { W: number; hero: boolean; spec: ChartSpec; span: number; showCong: boolean; reading: Reading }) {
+function Overlay({ W, hero, spec, view, showCong, reading }: { W: number; hero: boolean; spec: ChartSpec; view: readonly [number, number]; showCong: boolean; reading: Reading }) {
   const v = useEconomyValues();
   const day = activeDay(v);
-  if (day === null) return null;
-  const g = geometry(W, hero, spec, span, showCong);
+  if (day === null || day < view[0] || day >= view[1]) return null;
+  const g = geometry(W, hero, spec, view, showCong);
   const dot = dotPos(reading, spec, g);
   const dot2 = reading.value2 !== null && reading.snap !== null ? { x: g.X(reading.snap), y: g.Y(reading.value2) } : null;
   const x = g.X(day);
@@ -341,10 +349,10 @@ function Overlay({ W, hero, spec, span, showCong, reading }: { W: number; hero: 
   );
 }
 
-export function EconomyChart({ data, spec, hero = false, showCong, term, reading }: Props & { reading: Reading }) {
+export function EconomyChart({ data, spec, hero = false, showCong, term, view, reading }: Props & { reading: Reading }) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || (hero ? 1140 : 540);
-  const g = geometry(W, hero, spec, data.span, showCong);
+  const g = geometry(W, hero, spec, view, showCong);
   const { moveHover, leaveHover, pinDay } = useEconomyActions();
   const tip = useTooltip<number>();
 
@@ -353,7 +361,7 @@ export function EconomyChart({ data, spec, hero = false, showCong, term, reading
     const r = e.currentTarget.getBoundingClientRect();
     const k = W / r.width;
     if ((e.clientY - r.top) * k > g.axisY + 6) return null;
-    return dayFromFraction(((e.clientX - r.left) * k - g.ml) / g.pw, data.span);
+    return dayFromFraction(((e.clientX - r.left) * k - g.ml) / g.pw, view[1] - view[0], view[0]);
   };
 
   return (
@@ -386,8 +394,8 @@ export function EconomyChart({ data, spec, hero = false, showCong, term, reading
       >
         {() => (
           <>
-            <StaticLayer data={data} spec={spec} hero={hero} showCong={showCong} term={term} W={W} />
-            <Overlay W={W} hero={hero} spec={spec} span={data.span} showCong={showCong} reading={reading} />
+            <StaticLayer data={data} spec={spec} hero={hero} showCong={showCong} term={term} view={view} W={W} />
+            <Overlay W={W} hero={hero} spec={spec} view={view} showCong={showCong} reading={reading} />
           </>
         )}
       </ChartFrame>

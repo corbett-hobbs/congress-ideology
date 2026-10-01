@@ -13,6 +13,8 @@ export interface EconomyValues {
   pin: number | null;
   /** Index into the terms array, or null for all presidents. */
   term: number | null;
+  /** Visible calendar years `[first, last]`, or null for the whole axis. One window for every chart. */
+  range: [number, number] | null;
 }
 
 export interface EconomyActions {
@@ -23,6 +25,7 @@ export interface EconomyActions {
   clearPin: () => void;
   setTerm: (i: number | null) => void;
   toggleTerm: (i: number) => void;
+  setRange: (r: [number, number] | null) => void;
 }
 
 const ValuesCtx = createContext<EconomyValues | null>(null);
@@ -32,6 +35,7 @@ export function EconomyStateProvider({ children }: { children: ReactNode }) {
   const [hover, setHover] = useState<number | null>(null);
   const [pin, setPin] = useState<number | null>(null);
   const [term, setTermState] = useState<number | null>(null);
+  const [range, setRangeState] = useState<[number, number] | null>(null);
   const pending = useRef<number | null>(null);
   const raf = useRef(0);
 
@@ -59,10 +63,11 @@ export function EconomyStateProvider({ children }: { children: ReactNode }) {
       },
       setTerm: (i) => setTermState(i),
       toggleTerm: (i) => setTermState((t) => (t === i ? null : i)),
+      setRange: (r) => setRangeState(r),
     }),
     [],
   );
-  const values = useMemo(() => ({ hover, pin, term }), [hover, pin, term]);
+  const values = useMemo(() => ({ hover, pin, term, range }), [hover, pin, term, range]);
   return (
     <ActionsCtx.Provider value={actions}>
       <ValuesCtx.Provider value={values}>{children}</ValuesCtx.Provider>

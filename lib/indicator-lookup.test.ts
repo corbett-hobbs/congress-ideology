@@ -99,6 +99,9 @@ describe("dayFromFraction", () => {
   it("clamps the right edge to the last real day", () => {
     expect(dayFromFraction(1, 13057)).toBe(13056);
     expect(dayFromFraction(0, 13057)).toBe(0);
+    expect(dayFromFraction(0, 365, 1000)).toBe(1000);
+    expect(dayFromFraction(1, 365, 1000)).toBe(1364);
+    expect(dayFromFraction(0.5, 366, 1000)).toBe(1183);
     expect(dayFromFraction(1.2, 13057)).toBe(13056);
   });
 });

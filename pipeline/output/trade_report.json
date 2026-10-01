@@ -1,0 +1,102 @@
+{
+  "sources": {
+    "country.xlsx": {
+      "rows": 9217,
+      "first_period": "1985-01",
+      "last_period": "2026-07",
+      "note": "output window starts 1991-01"
+    },
+    "gands.xlsx": {
+      "rows": 35,
+      "first_period": "1991",
+      "last_period": "2025",
+      "note": "annual BOP, output window starts 1991"
+    },
+    "duties (api)": {
+      "rows": 50021,
+      "first_period": "2010-01",
+      "last_period": "2026-07"
+    }
+  },
+  "countries": {
+    "rows": 261,
+    "partners": 244,
+    "partners_by_kind": {
+      "country": 237,
+      "former": 5,
+      "unallocated": 2
+    },
+    "aggregates": 17,
+    "distinct_country_codes": 241
+  },
+  "rows": {
+    "trade_national": 995,
+    "trade_by_country": 8544,
+    "duties_national": 199,
+    "duties_by_country": 3942
+  },
+  "coverage": {
+    "trade_by_country": {
+      "first_year": 1991,
+      "last_year": 2026,
+      "last_month": 7
+    },
+    "duties_by_country": {
+      "first_year": 2010,
+      "last_year": 2026,
+      "last_period": "2026-07"
+    }
+  },
+  "reconciliation": {
+    "tolerances": "see TOL in pipeline/transform/trade.ts",
+    "worst_country_sum_vs_world_1992_on": {
+      "period": "2026-04",
+      "flow": "imports",
+      "gap": 199.6,
+      "share": 0.0006647676160919614
+    },
+    "worst_country_sum_vs_world_1991": {
+      "period": "1991-12",
+      "flow": "exports",
+      "gap": 747.6,
+      "share": 0.021362380379528173
+    },
+    "worst_duties_country_sum_vs_total": {
+      "period": "2010-01",
+      "gap": 0,
+      "share": 0
+    },
+    "worst_months_vs_annual_column_usd_millions": 0.4
+  },
+  "duties_codes_not_carried": [
+    "0001 OPEC",
+    "0003 EUROPEAN UNION",
+    "0014 PACIFIC RIM COUNTRIES",
+    "0017 CAFTA-DR",
+    "0020 USMCA (NAFTA)",
+    "0021 TWENTY LATIN AMERICAN REPUBLICS",
+    "0022 OECD",
+    "0023 NATO",
+    "0024 LAFTA",
+    "0025 EURO AREA",
+    "0026 APEC",
+    "0027 ASEAN",
+    "0028 CACM",
+    "1XXX NORTH AMERICA",
+    "2XXX CENTRAL AMERICA",
+    "3XXX SOUTH AMERICA",
+    "4XXX EUROPE",
+    "5XXX ASIA",
+    "6XXX AUSTRALIA AND OCEANIA",
+    "7XXX AFRICA"
+  ],
+  "file_sizes_bytes": {
+    "countries.json": 44087,
+    "trade_national.json": 148560,
+    "duties_national.json": 16914,
+    "trade_by_country/* (total)": 2005910,
+    "trade_by_country/* (largest year)": 59052,
+    "duties_by_country/* (total)": 1555154,
+    "duties_by_country/* (largest year)": 93734
+  }
+}

@@ -49,8 +49,6 @@ interface Props<C extends StackColumn> {
   ariaLabel: string;
   yAxisLabel?: string;
   renderTooltip: (column: C) => ReactNode;
-  /** Label every n-th column on wide / narrow charts. */
-  labelEvery?: { wide: number; narrow: number };
 }
 
 const NARROW_W = 560;
@@ -79,7 +77,6 @@ export function StackedBars<C extends StackColumn>({
   ariaLabel,
   yAxisLabel,
   renderTooltip,
-  labelEvery = { wide: 2, narrow: 4 },
 }: Props<C>) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const width = measured || 960;
@@ -107,7 +104,8 @@ export function StackedBars<C extends StackColumn>({
             .range([innerHeight, 0])
             .nice(mode === "share" ? 4 : 5);
           const yTicks = mode === "share" ? [0, 0.25, 0.5, 0.75, 1] : y.ticks(5);
-          const every = narrow ? labelEvery.narrow : labelEvery.wide;
+          // Label as many columns as fit: a zoomed-in window gets every year, the full span every few.
+          const every = Math.max(1, Math.ceil((narrow ? 30 : 44) / step));
           const xOf = (i: number) => i * step;
 
           return (

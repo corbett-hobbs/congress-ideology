@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { PillGroup } from "@/components/charts/PillGroup";
+import { RangeSelector } from "@/components/charts/RangeSelector";
 import { StackedBars, type StackBand, type StackColumn, type StackSeries } from "@/components/charts/StackedBars";
 import { PageHeader } from "@/components/PageHeader";
 import {
@@ -69,7 +70,12 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
       })),
     [data.years],
   );
-  const bands = useMemo(() => termBands(data.administrations, first, data.years.length), [data.administrations, first, data.years.length]);
+  const [range, setRange] = useState<[number, number] | null>(null);
+  const lastYear = data.years[data.years.length - 1].year;
+  const [from, to] = range ?? [first, lastYear];
+  const visible = useMemo(() => columns.filter((c) => c.year.year >= from && c.year.year <= to), [columns, from, to]);
+  const bands = useMemo(() => termBands(data.administrations, from, visible.length), [data.administrations, from, visible.length]);
+  const presets = [10, 5].map((n) => ({ label: `Last ${n} years`, from: Math.max(first, lastYear - n + 1), to: lastYear }));
   const selectedYear = data.years.find((y) => String(y.year) === selected) ?? null;
   const last = data.years[data.years.length - 1];
 
@@ -138,7 +144,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
           </div>
 
           <StackedBars
-            columns={columns}
+            columns={visible}
             series={SERIES}
             mode={mode}
             highlight={topic}
@@ -147,8 +153,18 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             bands={bands}
             highlightBand={president}
             yAxisLabel={mode === "share" ? "SHARE OF YEAR’S ORDERS" : "EXECUTIVE ORDERS"}
-            ariaLabel={`Stacked columns of executive orders signed per year, ${first} to ${last.year}, by topic. Select a column to list that year's orders.`}
+            ariaLabel={`Stacked columns of executive orders signed per year, ${from} to ${to}, by topic. Select a column to list that year's orders.`}
             renderTooltip={(c) => <YearTooltip col={c} admins={adminById} mode={mode} throughDate={data.throughDate} />}
+          />
+
+          <RangeSelector
+            min={first}
+            max={lastYear}
+            value={[from, to]}
+            onChange={setRange}
+            format={String}
+            presets={presets}
+            ariaLabel="Years shown in the executive orders chart"
           />
 
           <p className="mb-0 mt-3 text-[0.75rem] leading-relaxed text-ink-faint">

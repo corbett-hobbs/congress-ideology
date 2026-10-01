@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { EconomyStateProvider, activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
-import { dateOfDay, MONTH_NAMES } from "@/lib/indicator-time";
+import { dateOfDay, dayOf, MONTH_NAMES } from "@/lib/indicator-time";
 import { PageHeader } from "@/components/PageHeader";
 import { fromEconomyPayload, type EconomyPayload } from "@/lib/indicator-payload";
 import { readAll } from "@/lib/indicator-lookup";
@@ -68,7 +68,11 @@ function EconomyPage({
 
   const lastFy = Math.max(...Object.keys(data.def).map(Number));
   const lastIncomeYear = Math.max(...Object.keys(data.inc).map(Number));
-  const common = { data, showCong, term };
+  const firstYear = dateOfDay(0).year;
+  const lastYear = dateOfDay(data.span - 1).year;
+  const range = useMemo<[number, number]>(() => values.range ?? [firstYear, lastYear], [values.range, firstYear, lastYear]);
+  const view = useMemo<[number, number]>(() => [dayOf(range[0], 0, 1), Math.min(data.span, dayOf(range[1] + 1, 0, 1))], [range, data.span]);
+  const common = { data, showCong, term, view, range, firstYear, lastYear };
 
   const notes: Partial<Record<keyof typeof SPECS, string>> = {
     infl: "The October 2025 gap is real: prices weren’t collected that month, so that year-over-year figure doesn’t exist.",

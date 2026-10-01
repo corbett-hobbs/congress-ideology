@@ -134,7 +134,10 @@ export function readAll(d: EconomyData, day: number | null): Record<EconomyKey, 
   };
 }
 
-/** Pointer fraction across the plot (0..1) to an axis day, clamped to the last real day of the window. */
-export function dayFromFraction(frac: number, span: number): number {
-  return Math.min(span - 1, Math.max(0, Math.round(frac * span)));
+/**
+ * Pointer fraction across the plot (0..1) to an axis day, clamped to the last real day of the window.
+ * `span` is the window's length in days and `start` its first day (0 when showing the whole axis).
+ */
+export function dayFromFraction(frac: number, span: number, start = 0): number {
+  return Math.min(start + span - 1, Math.max(start, start + Math.round(frac * span)));
 }

@@ -224,3 +224,21 @@ first page that does must add this credit to its footer.
 The Deportation Data Project (UC Berkeley) was **consulted only to assess FY2025
 date-resolved data and is not used**; nothing from it is ingested or needs credit.
 
+---
+
+## U.S. Census Bureau — international trade statistics
+
+Trade balances, partner-country goods trade and calculated duties come from the U.S. Census
+Bureau, Foreign Trade Division (with the Bureau of Economic Analysis for the balance-of-payments
+basis).
+
+> Source: U.S. Census Bureau, Foreign Trade Division, *U.S. International Trade in Goods and
+> Services* (`www.census.gov/foreign-trade`) and the Census international trade API
+> (`api.census.gov/data/timeseries/intltrade`).
+
+- Files used: `balance/country.xlsx`, `statistics/historical/gands.xlsx`, `schedules/c/country.txt`,
+  and API `imports/hs` (calculated duty, imports for consumption). Snapshots in
+  `pipeline/raw/census-trade/`; fetched by `pipeline/fetch/census-trade.ts`.
+- Federal government statistics, public domain. The API requires a free key (`CENSUS_API_KEY`);
+  this product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.
+- Methodology: `docs/TRADE_METHODOLOGY.md`.

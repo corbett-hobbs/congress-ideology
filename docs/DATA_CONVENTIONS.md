@@ -529,3 +529,24 @@ second presidential-terms table.
 **Validation** (fails `pnpm transform`): see the methodology doc. Never ingest DHS
 press-release totals, OHSS tables, CBP counts or any other agency's figures.
 
+---
+
+## 10. Trade track
+
+A sixth data track: U.S. trade with other countries (Census). Methodology:
+`docs/TRADE_METHODOLOGY.md`; schemas: `lib/trade-entities.ts`.
+
+**Key.** `country_code` (ISO 3166-1 alpha-3 where one exists; `XKX`/`XWB`/`XGZ` user-assigned;
+ISO 3166-3-style codes for dissolved states; `AGG_<code>` for aggregates; `UNALLOC_<code>` for
+Census residuals) is the join key for every trade file, the analog of `bioguide_id`. Several
+Census codes can share one `country_code` (a recode), and their months are summed. `countries.json`
+has `is_aggregate`; **filter on it before summing countries.** National series are keyed by
+`(period, frequency, basis, scope, adjustment)`. No person key anywhere; presidents join through
+dates (§7/§8), never stored pre-joined.
+
+**Bases.** BOP (goods and services, annual) and Census (goods, monthly, by country) are
+different by design and are never reconciled. Duties are *calculated* duties, 2010-01 onward only.
+
+**Validation** fails `pnpm transform`: row schemas, balance identity, no negatives, no duplicate
+keys, no gaps in the claimed ranges, country rows vs World, duties country rows vs the total.
+
