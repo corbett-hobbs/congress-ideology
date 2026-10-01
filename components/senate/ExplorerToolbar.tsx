@@ -34,12 +34,8 @@ const STATE_LOCK_TITLE = "Committees aren't scoped to a state.";
  * that merge needs. At `sm` and up all of that reverts to today's single-row
  * layout, unchanged.
  *
- * The joint-committee helper line genuinely diverges by breakpoint: at `sm`+
- * it's always in the DOM with its height reserved (opacity-toggled) so the
- * horizontal controls above it never jump while a person's eye is on them;
- * below `sm` nothing above it moves horizontally when it appears, so it's
- * conditionally rendered instead — the toolbar is simply shorter when it
- * doesn't apply, not showing a reserved gap.
+ * The joint-committee helper line is rendered only when it applies, so the
+ * toolbar is shorter otherwise.
  */
 export function ExplorerToolbar({
   states,
@@ -154,21 +150,11 @@ export function ExplorerToolbar({
           </div>
         </div>
 
-        {/* Mobile: absent unless both conditions hold — no reserved gap. */}
         {showJointHelper && (
-          <p className="pt-1 text-[0.72rem] leading-snug text-ink-muted sm:hidden">
+          <p className="pt-1 text-[0.72rem] leading-snug text-ink-muted">
             {jointNoteBody}
           </p>
         )}
-        {/* Desktop: always present, opacity-toggled — see the note above. */}
-        <p
-          aria-hidden={!showJointHelper}
-          className={`hidden min-h-[1.3rem] pt-1 text-[0.72rem] leading-snug text-ink-muted transition-opacity sm:block ${
-            showJointHelper ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          {jointNoteBody}
-        </p>
       </div>
     </div>
   );
