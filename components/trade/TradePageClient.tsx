@@ -9,14 +9,13 @@ import type { TradeCountryPayload, TradeYearPayload } from "@/lib/trade-types";
 import { TradeBalanceCard } from "./TradeBalanceCard";
 import { TradeFilterBar } from "./TradeFilterBar";
 import { TradePartnersCard } from "./TradePartnersCard";
-import { TradeBeforeAfterCard } from "./TradeBeforeAfterCard";
 import { TradeScatterCard } from "./TradeScatterCard";
 import { TradeTariffCard } from "./TradeTariffCard";
-import { activeDay, TradeStateProvider, useTradeActions, useTradeValues } from "./TradeState";
+import { TradeStateProvider, useTradeActions, useTradeValues } from "./TradeState";
 
 export function TradePageClient({ data }: { data: TradePageData }) {
   return (
-    <TradeStateProvider firstYear={data.firstYear} lastYear={data.lastYear}>
+    <TradeStateProvider lastYear={data.lastYear}>
       <TradePage data={data} />
     </TradeStateProvider>
   );
@@ -24,8 +23,8 @@ export function TradePageClient({ data }: { data: TradePageData }) {
 
 function TradePage({ data }: { data: TradePageData }) {
   const v = useTradeValues();
-  const { setRange, clearPin, setCountry, setShowCong, setYear, togglePlay } = useTradeActions();
-  const { era, national, countries, firstYear, lastYear, initialYear, scatter, beforeAfter, tariffFlags, tariffLastReviewed } = data;
+  const { setRange, clearPin, setCountry, setShowCong, setYear } = useTradeActions();
+  const { era, national, countries, firstYear, lastYear, initialYear, scatter, tariffFlags, tariffLastReviewed } = data;
   const [loaded, setLoaded] = useState<Record<string, TradeCountryPayload>>({});
   const [failed, setFailed] = useState<string | null>(null);
   const inflight = useRef<AbortController | null>(null);
@@ -54,7 +53,7 @@ function TradePage({ data }: { data: TradePageData }) {
     return () => ctl.abort();
   }, [v.country, loaded]);
 
-  // A year's partner rows are fetched once, when the slider first reaches it.
+  // A year's partner rows are fetched once, when the year dropdown first picks it.
   useEffect(() => {
     const y = v.year;
     if (years[y]) return;
@@ -89,13 +88,11 @@ function TradePage({ data }: { data: TradePageData }) {
   const range = useMemo<[number, number]>(() => v.range ?? [firstYear, lastYear], [v.range, firstYear, lastYear]);
   const view = useMemo<[number, number]>(() => [dayOf(range[0], 0, 1), Math.min(era.span, dayOf(range[1] + 1, 0, 1))], [range, era.span]);
 
-  const day = activeDay(v);
   const describe = (d: number) => {
     const { year, month } = dateOfDay(d);
     const t = termAtDay(era.terms, d);
     return `${MONTH_NAMES[month]} ${year}${t ? `, ${termLabel(t)}` : ""}`;
   };
-  const status = day === null ? "Hover a chart to compare a date. Click to pin it." : `${describe(day)}${v.hover === null ? ", pinned" : ""}`;
   // Announced only when a date is pinned, never on every mouse move.
   const announcement = v.pin === null ? "" : `Pinned ${describe(v.pin)}.`;
 
@@ -112,11 +109,6 @@ function TradePage({ data }: { data: TradePageData }) {
         onRange={setRange}
         showCong={v.showCong}
         onShowCong={setShowCong}
-        year={v.year}
-        playing={v.playing}
-        onYear={setYear}
-        onTogglePlay={togglePlay}
-        status={status}
         canClear={v.pin !== null}
         onClear={clearPin}
       />
@@ -155,19 +147,22 @@ function TradePage({ data }: { data: TradePageData }) {
           error={loadState === "error"}
         />
 
-        <TradePartnersCard
-          payload={yearPayload ?? lastShown}
-          year={v.year}
-          lastPeriod={national.lastPeriod}
-          country={v.country}
-          onPickCountry={setCountry}
-          loading={!yearPayload && yearFailed !== v.year}
-          error={!yearPayload && yearFailed === v.year}
-        />
-
-        <TradeBeforeAfterCard data={beforeAfter} country={v.country} onPickCountry={setCountry} />
-
-        <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} />
+        {/* Side by side on desktop, stacked below it. */}
+        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+          <TradePartnersCard
+            payload={yearPayload ?? lastShown}
+            year={v.year}
+            onYear={setYear}
+            firstYear={firstYear}
+            lastYear={lastYear}
+            lastPeriod={national.lastPeriod}
+            country={v.country}
+            onPickCountry={setCountry}
+            loading={!yearPayload && yearFailed !== v.year}
+            error={!yearPayload && yearFailed === v.year}
+          />
+          <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} />
+        </div>
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: U.S. Census Bureau (trade values and calculated duties, 2010 on); U.S. International Trade Commission

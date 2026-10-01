@@ -40,7 +40,7 @@ export interface TradeCountryPayload {
   dutyImports: Monthly;
 }
 
-/** One partner in one year: the partners chart and the year slider read this. */
+/** One partner in one year: the partners chart reads this. */
 export type YearPartnerRow = [
   code: string,
   name: string,

@@ -6,6 +6,7 @@ import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { MONTH_NAMES } from "@/lib/indicator-time";
 import { fmtMoney } from "@/lib/trade-chart";
 import {
@@ -24,7 +25,8 @@ import {
 } from "@/lib/trade-scatter";
 
 const FALLBACK_W = 1080;
-const COMPACT_W = 560;
+/** Below this chart width the layout drops long titles and labels (a half-width card on a laptop stays above it). */
+const COMPACT_W = 440;
 const LABEL_COUNT = 6;
 
 const monthYear = (p: string) => `${MONTH_NAMES[Number(p.slice(5)) - 1].slice(0, 3)} ${p.slice(0, 4)}`;
@@ -99,6 +101,8 @@ export function TradeScatterCard({
   const tip = useTooltip<Dot>();
   const W = measured || FALLBACK_W;
   const compact = W < COMPACT_W;
+  // Tap behaviour follows the device, not the width: a narrow card on a laptop still hovers.
+  const tapMode = !useMediaQuery("(hover: hover)");
   const margin = compact ? { top: 22, right: 14, bottom: 52, left: 52 } : { top: 22, right: 24, bottom: 56, left: 70 };
   const pw = W - margin.left - margin.right;
   const ph = compact ? 340 : 440;
@@ -230,17 +234,17 @@ export function TradeScatterCard({
                 const className = `dot fill-ink${sel ? " is-highlighted" : ""}`;
                 const common = {
                   // Phones: a tap fills the card below the chart (no hover); the card holds the action.
-                  onPointerEnter: compact ? undefined : (e: React.PointerEvent) => tip.show(c, e),
-                  onPointerMove: compact ? undefined : tip.move,
-                  onPointerLeave: compact ? undefined : tip.hide,
-                  onClick: () => (compact ? setTapped(c.row.code) : onPickCountry(sel ? null : c.row.code)),
+                  onPointerEnter: tapMode ? undefined : (e: React.PointerEvent) => tip.show(c, e),
+                  onPointerMove: tapMode ? undefined : tip.move,
+                  onPointerLeave: tapMode ? undefined : tip.hide,
+                  onClick: () => (tapMode ? setTapped(c.row.code) : onPickCountry(sel ? null : c.row.code)),
                   style: { cursor: "pointer" } as const,
                 };
                 if (c.d.pinned) {
                   const up = c.d.pinned === "top" || c.d.pinned === "right";
                   return <g key={c.row.code} {...common}><Triangle x={cx} y={cy} up={up} className={className} />{sel && <circle cx={cx} cy={cy} r={10} fill="none" stroke="var(--accent)" strokeWidth={2.5} />}</g>;
                 }
-                if (compact) {
+                if (tapMode) {
                   return (
                     <g key={c.row.code} {...common}>
                       <circle cx={cx} cy={cy} r={22} fill="transparent" />
@@ -270,7 +274,7 @@ export function TradeScatterCard({
         </Tooltip>
       </div>
 
-      {compact && (
+      {tapMode && (
         <div className="mt-2 rounded-md border border-line bg-surface-raised p-3 text-[0.8rem]" aria-live="polite">
           {tappedRow && tappedRow.plotted ? (
             <>

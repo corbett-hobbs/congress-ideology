@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { dateOfDay } from "./indicator-time";
 import { fmtMoney, fmtTick, lastIndexWithData, monthMidDay, monthStartDay, niceScale, plotted, readingAtDay, scaleFor, spanEnd, termAtDay } from "./trade-chart";
-import { startYear, stepYear } from "./trade-play";
 import type { EconomyTerm } from "./economy-presidents";
 
 describe("axis days", () => {
@@ -61,17 +60,5 @@ describe("series helpers", () => {
     const terms = [{ s: 0, e: 100, label: "A 1" }, { s: 100, e: 200, label: "B 2" }] as EconomyTerm[];
     expect(termAtDay(terms, 150)?.label).toBe("B 2");
     expect(termAtDay(terms, 100)?.label).toBe("B 2");
-  });
-});
-
-describe("play", () => {
-  it("restarts from the first year when pressed at the end, otherwise continues", () => {
-    expect(startYear(2026, 1991, 2026)).toBe(1991);
-    expect(startYear(2000, 1991, 2026)).toBe(2000);
-  });
-  it("steps one year and stops at the latest year without looping", () => {
-    expect(stepYear(2024, 2026)).toEqual({ year: 2025, done: false });
-    expect(stepYear(2025, 2026)).toEqual({ year: 2026, done: true });
-    expect(stepYear(2026, 2026)).toEqual({ year: 2026, done: true });
   });
 });

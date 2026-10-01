@@ -21,7 +21,7 @@ interface Props {
   showCong: boolean;
   /** Visible window `[start, end)` in axis days. */
   view: readonly [number, number];
-  /** The slider year, marked lightly on the plot. */
+  /** The partners chart's year, marked lightly on the plot. */
   year: number;
   ariaLabel: string;
 }

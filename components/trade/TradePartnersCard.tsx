@@ -64,22 +64,28 @@ const DataTable = memo(function DataTable({ rows, year }: { rows: PartnerChartRo
 });
 
 /**
- * Chart 3: every partner for the slider's year, imports (filled) and exports
+ * Chart 3: every partner for the selected year, imports (filled) and exports
  * (hollow) with the signed balance at right. Sorting is reversible on every
  * button. Clicking a row picks that country in the filter bar.
  */
 export function TradePartnersCard({
   payload,
   year,
+  onYear,
+  firstYear,
+  lastYear,
   lastPeriod,
   country,
   onPickCountry,
   loading,
   error,
 }: {
-  /** The slider year's rows; while the next year loads, the previous one stays on screen. */
+  /** The selected year's rows; while the next year loads, the previous one stays on screen. */
   payload: TradeYearPayload | null;
   year: number;
+  onYear: (y: number) => void;
+  firstYear: number;
+  lastYear: number;
   lastPeriod: string;
   country: string | null;
   onPickCountry: (code: string | null) => void;
@@ -122,21 +128,35 @@ export function TradePartnersCard({
         <div className="min-w-0 flex-1">
           <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">Who the U.S. trades with, {shown}{partial ? " so far" : ""}</h2>
           <p className="m-0 mt-2 text-[0.875rem] leading-[1.5] text-ink-muted">
-            Imports and exports of goods for the year on the slider. The line between them is the balance.
+            Imports and exports of goods for the selected year. The line between them is the balance.
             {partial ? ` ${shown} covers January to ${through}.` : ""}
           </p>
         </div>
-        <ReversibleSortToggle
-          options={SORTS}
-          active={sort.key}
-          reversed={sort.reversed}
-          onSelect={(k: PartnerSort) => setSort((s) => nextSort(s, k))}
-          ariaLabel="Sort partners"
-        />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <label className="flex items-center gap-2">
+            <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">Year</span>
+            <select
+              value={year}
+              onChange={(e) => onYear(Number(e.target.value))}
+              className="h-11 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-auto"
+            >
+              {Array.from({ length: lastYear - firstYear + 1 }, (_, i) => lastYear - i).map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+          </label>
+          <ReversibleSortToggle
+            options={SORTS}
+            active={sort.key}
+            reversed={sort.reversed}
+            onSelect={(k: PartnerSort) => setSort((s) => nextSort(s, k))}
+            ariaLabel="Sort partners"
+          />
+        </div>
       </div>
 
       {error && rows.length > 0 && shown !== year && (
-        <p role="status" className="m-0 mt-2 text-[0.8rem] text-ink-muted">{`Couldn’t load ${year}; still showing ${shown}. Move the slider to retry.`}</p>
+        <p role="status" className="m-0 mt-2 text-[0.8rem] text-ink-muted">{`Couldn’t load ${year}; still showing ${shown}. Pick the year again to retry.`}</p>
       )}
       <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
         <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="5" fill="var(--ink)" /></svg>Imports</span>
@@ -167,7 +187,7 @@ export function TradePartnersCard({
           />
         ) : (
           <div role="status" className="flex h-[200px] items-center justify-center rounded-md border border-dashed border-line text-[0.85rem] text-ink-muted">
-            {error ? `Couldn’t load ${year}. Move the slider to retry.` : `Loading ${year}…`}
+            {error ? `Couldn’t load ${year}. Pick the year again to retry.` : `Loading ${year}…`}
           </div>
         )}
       </div>

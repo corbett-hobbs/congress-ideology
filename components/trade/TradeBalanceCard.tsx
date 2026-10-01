@@ -160,7 +160,7 @@ export function TradeBalanceCard({
         <span className="inline-flex items-center gap-1.5"><Swatch color="var(--dem)" />Democratic</span>
         <span className="inline-flex items-center gap-1.5"><Swatch color="var(--rep)" />Republican</span>
         <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--ink) 9%, transparent)" border />Recession (NBER)</span>
-        <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--accent) 12%, transparent)" border />Year on the slider</span>
+        <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--accent) 12%, transparent)" border />Year in the partners chart</span>
         <span className="ml-auto">{adjLabel}{countryName ? `. Axis rescales to ${countryName}.` : "."}</span>
       </div>
 
