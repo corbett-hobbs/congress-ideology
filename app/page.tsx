@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getBothTrend } from "@/lib/congress-data";
+import { getBothTrend, getViewCurrent } from "@/lib/congress-data";
 import { branches } from "@/lib/verticals";
 import { site } from "@/lib/site";
-import { getCourtHubSummary } from "@/lib/justice-data";
+import { getCourtPayload } from "@/lib/justice-data";
 import { getExecutiveOrdersData } from "@/lib/executive-orders-data";
-import { HubSparkline } from "@/components/HubSparkline";
-import { CourtHubSparkline } from "@/components/court/CourtHubSparkline";
+import { HubEoChart } from "@/components/executive-orders/HubEoChart";
+import { TopicPatternDefs } from "@/components/executive-orders/TopicPatternDefs";
+import { HubCompass } from "@/components/HubCompass";
+import { CourtHubStrip } from "@/components/court/CourtHubStrip";
 import { SiteFooter } from "@/components/senate/SiteFooter";
-import { ordinal } from "@/components/senate/format";
 import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
@@ -32,19 +33,29 @@ const BLURBS: Record<string, string> = {
     "Executive orders signed each year since 1994, stacked by topic, with each presidential term marked.",
 };
 
-const fmt2 = (n: number) => n.toFixed(2);
 
 export default function Hub() {
   const trend = getBothTrend();
-  const latest = [...trend]
-    .reverse()
-    .find((p) => p.dem != null && p.rep != null);
-  const court = getCourtHubSummary();
+  const congress = getViewCurrent("both");
+  const court = getCourtPayload();
   const orders = getExecutiveOrdersData();
-  const gap = latest ? (latest.rep as number) - (latest.dem as number) : null;
+
+  // Party gap per Congress, to say how today's divide ranks historically.
+  const gaps = trend
+    .filter((p) => p.dem != null && p.rep != null)
+    .map((p) => ({ year: p.year, gap: (p.rep as number) - (p.dem as number) }));
+  const nowGap = gaps[gaps.length - 1];
+  const wider = gaps.filter((g) => g.gap > nowGap.gap).length;
+  const lastWider = [...gaps].reverse().find((g) => g.gap > nowGap.gap);
+
+  const seated = court.justices.filter(
+    (j) => j.t0 <= court.lastTerm && court.lastTerm <= j.t1,
+  );
+  const gopAppointed = seated.filter((j) => j.party === "R").length;
 
   return (
     <>
+      <TopicPatternDefs />
       <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col gap-8 px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
         <PageHeader title={site.tagline} size="hero">
           <p>
@@ -54,12 +65,12 @@ export default function Hub() {
           <p>
             Every roll call, every ruling, and every financial disclosure leaves
             a trail. We turn those public records into data you can scrub
-            through, compare, and dig into. Start with Congress, the Supreme Court,
-            or the presidency&rsquo;s executive orders.
+            through, compare, and dig into. Start with the presidency, Congress,
+            or the Supreme Court.
           </p>
         </PageHeader>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-3">
           {branches.map((b) => {
             const live = b.status === "live";
             const isCongress = b.id === "congress";
@@ -94,38 +105,47 @@ export default function Hub() {
                   {BLURBS[b.id]}
                 </p>
 
-                {isCongress && gap != null && (
+                {isCongress && (
                   <div className="flex flex-col gap-2">
-                    <HubSparkline trend={trend} />
+                    <HubCompass members={congress.plottable} />
                     <p className="text-[0.85rem] text-ink-muted">
                       <span className="font-serif text-2xl font-semibold text-ink">
-                        {fmt2(gap)}
+                        {wider === 0
+                          ? "Most divided ever"
+                          : `Most divided since ${lastWider!.year}`}
                       </span>{" "}
-                      gap between the party means on dimension 1,{" "}
-                      {ordinal(latest!.congress)} Congress (House and Senate)
+The two parties are{" "}
+                      {wider === 0
+                        ? "farther apart than at any point"
+                        : `farther apart than at any point since ${lastWider!.year}`}
+                      , judging by how members vote
                     </p>
                   </div>
                 )}
 
                 {b.id === "supreme-court" && (
                   <div className="flex flex-col gap-2">
-                    <CourtHubSparkline summary={court} />
+                    <CourtHubStrip data={court} />
                     <p className="text-[0.85rem] text-ink-muted">
                       <span className="font-serif text-2xl font-semibold text-ink">
-                        {court.medianJusticeName}
+                        {gopAppointed} of {seated.length}
                       </span>{" "}
-                      Median justice, {court.lastTerm} term
+                      justices were appointed by Republican presidents,{" "}
+                      {court.lastTerm} term
                     </p>
                   </div>
                 )}
 
                 {b.id === "presidency" && (
-                  <p className="text-[0.85rem] text-ink-muted">
-                    <span className="font-serif text-2xl font-semibold text-ink">
-                      {orders.total.toLocaleString("en-US")}
-                    </span>{" "}
-                    executive orders signed since {orders.years[0].year}
-                  </p>
+                  <div className="flex flex-col gap-2">
+                    <HubEoChart data={orders} />
+                    <p className="text-[0.85rem] text-ink-muted">
+                      <span className="font-serif text-2xl font-semibold text-ink">
+                        {orders.total.toLocaleString("en-US")}
+                      </span>{" "}
+                      executive orders signed since {orders.years[0].year}
+                    </p>
+                  </div>
                 )}
 
                 {live && (

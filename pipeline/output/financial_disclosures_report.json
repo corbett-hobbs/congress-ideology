@@ -9,10 +9,11 @@
   "total_member_years": 3632,
   "counts_by_parse_confidence": {
     "high": 3521,
-    "low": 272,
+    "low": 275,
     "no_filing_found": 622,
-    "ocr_low_confidence": 70,
+    "ocr_low_confidence": 65,
     "no_schedule_content_found": 55,
+    "ocr_skipped_oversized": 2,
     "unparseable_scanned": 110
   },
   "needs_review_count": 507,
@@ -4754,20 +4755,18 @@
     ]
   },
   "ocr_pass": {
-    "run_at": "2026-09-29T02:44:41Z",
+    "run_at": "2026-09-30T07:40:50Z",
     "phase": "2 (House, OCR)",
-    "rows_processed": 86,
+    "rows_processed": 10,
     "before_counts": {
-      "ocr_low_confidence": 73,
-      "unparseable_scanned": 13
+      "ocr_low_confidence": 10
     },
     "after_counts": {
-      "ocr_low_confidence": 32,
-      "low": 51,
-      "unparseable_scanned": 1,
-      "high": 2
+      "ocr_low_confidence": 5,
+      "low": 3,
+      "ocr_skipped_oversized": 2
     },
-    "elapsed_sec": 38900.3
+    "elapsed_sec": 3944.0
   },
   "senate_html_pass": {
     "run_at": "2026-09-24T17:19:38Z",

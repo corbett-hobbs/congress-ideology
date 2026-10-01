@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/wealth", destination: "/congress/wealth", permanent: true },
+      // The executive-orders page became the Presidency branch's home.
+      { source: "/executive-orders", destination: "/presidency", permanent: true },
       ...["chamber", "state", "show"].map((key) => ({
         source: "/",
         has: [{ type: "query" as const, key }],

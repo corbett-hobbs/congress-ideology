@@ -31,6 +31,16 @@ export interface Branch {
 
 export const branches: readonly Branch[] = [
   {
+    id: "presidency",
+    label: "Presidency",
+    href: "/presidency",
+    status: "live",
+    sections: [
+      { id: "executive-orders", label: "Executive orders", href: "/presidency" },
+    ],
+    owns: (p) => p === "/presidency" || p.startsWith("/presidency/"),
+  },
+  {
     id: "congress",
     label: "Congress",
     href: "/congress",
@@ -48,16 +58,6 @@ export const branches: readonly Branch[] = [
     status: "live",
     sections: [{ id: "ideology", label: "Ideology", href: "/supreme-court" }],
     owns: (p) => p === "/supreme-court" || p.startsWith("/supreme-court/"),
-  },
-  {
-    id: "presidency",
-    label: "Presidency",
-    href: "/executive-orders",
-    status: "live",
-    sections: [
-      { id: "executive-orders", label: "Executive orders", href: "/executive-orders" },
-    ],
-    owns: (p) => p === "/executive-orders" || p.startsWith("/executive-orders/"),
   },
 ];
 
