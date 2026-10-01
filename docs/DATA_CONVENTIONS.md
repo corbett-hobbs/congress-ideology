@@ -402,11 +402,13 @@ needing one; `-- --labels FILE` records labels for those (`model`).
   its own text and `needs_review` is set. Parents that disagree also set it.
 - `model` rows were assigned by a language model (Claude) reading each title,
   agencies and, for pointer orders, the parent — from titles only; the API has no
-  abstract for nearly every order. **They have not been validated by a person.**
+  abstract for nearly every order. **Only a 100-row sample has been validated by a person (see below).**
   `docs/eo-topic-audit.csv` is a seeded random sample of 100 for human review
   (columns for the reviewer's verdict are blank); regenerate with `pnpm
   classify:audit` (refuses to overwrite a reviewed file without `--force`).
-  Treat topic counts as classifier-assisted until that sample is reviewed.
+  The 100-row sample has been reviewed by a person (project owner): every row
+  marked `agree`, no disagreements. That is a spot check of 100 of ~1,540, not a
+  full audit, so topic counts remain classifier-assisted.
 
 ### Validation (`pnpm validate`, `pnpm transform`)
 
