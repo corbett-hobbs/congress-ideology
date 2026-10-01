@@ -66,3 +66,19 @@ export interface TradeCountryRef {
   firstYear: number | null;
   lastYear: number | null;
 }
+
+/** One curated tariff action, trimmed to what the chart needs (`tariff_actions.json`). */
+export interface TariffFlag {
+  id: string;
+  /** Effective date, ISO. */
+  date: string;
+  label: string;
+  description: string;
+  authority: string;
+  kind: string;
+  priority: 1 | 2;
+  cutover: boolean;
+  status: string;
+  statusNote: string | null;
+  rateNote: string | null;
+}

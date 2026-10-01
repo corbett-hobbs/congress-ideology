@@ -10,6 +10,7 @@ import { TradeBalanceCard } from "./TradeBalanceCard";
 import { TradeFilterBar } from "./TradeFilterBar";
 import { TradePartnersCard } from "./TradePartnersCard";
 import { TradeScatterCard } from "./TradeScatterCard";
+import { TradeTariffCard } from "./TradeTariffCard";
 import { activeDay, TradeStateProvider, useTradeActions, useTradeValues } from "./TradeState";
 
 export function TradePageClient({ data }: { data: TradePageData }) {
@@ -23,7 +24,7 @@ export function TradePageClient({ data }: { data: TradePageData }) {
 function TradePage({ data }: { data: TradePageData }) {
   const v = useTradeValues();
   const { setRange, clearPin, setCountry, setShowCong, setYear, togglePlay } = useTradeActions();
-  const { era, national, countries, firstYear, lastYear, initialYear, scatter } = data;
+  const { era, national, countries, firstYear, lastYear, initialYear, scatter, tariffFlags, tariffLastReviewed } = data;
   const [loaded, setLoaded] = useState<Record<string, TradeCountryPayload>>({});
   const [failed, setFailed] = useState<string | null>(null);
   const inflight = useRef<AbortController | null>(null);
@@ -137,6 +138,18 @@ function TradePage({ data }: { data: TradePageData }) {
           adjusted={!v.country}
           era={era}
           view={view}
+          loading={loadState === "loading"}
+          error={loadState === "error"}
+        />
+
+        <TradeTariffCard
+          national={{ duties: national.duties, imports: national.dutyImports }}
+          country={payload ? { duties: payload.duties, imports: payload.dutyImports } : null}
+          countryName={countryRef?.name ?? null}
+          era={era}
+          view={view}
+          flags={tariffFlags}
+          lastReviewed={tariffLastReviewed}
           loading={loadState === "loading"}
           error={loadState === "error"}
         />

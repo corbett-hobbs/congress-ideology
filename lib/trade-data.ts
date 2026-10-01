@@ -17,8 +17,9 @@ import { displayCountryName } from "./trade-names";
 import { getEraLayers } from "./indicator-data";
 import { spanEnd } from "./trade-chart";
 import type { EconomyPayload } from "./indicator-payload";
+import { tariffActionsFile } from "./tariff-actions-entities";
 import { buildScatterRows, scatterWindows, type ScatterRow, type ScatterWindows } from "./trade-scatter";
-import type { TradeCountryPayload, TradeCountryRef, TradeNationalPayload, TradeYearPayload } from "./trade-types";
+import type { TariffFlag, TradeCountryPayload, TradeCountryRef, TradeNationalPayload, TradeYearPayload } from "./trade-types";
 
 /**
  * Build-time trade dataset: reads the pipeline's trade files and hands the page
@@ -105,6 +106,9 @@ export interface TradePageData {
   era: Pick<EconomyPayload, "rec" | "terms" | "control"> & { span: number };
   firstYear: number;
   lastYear: number;
+  /** The curated tariff timeline (flags on Chart 2) and the date it was last reviewed. */
+  tariffFlags: TariffFlag[];
+  tariffLastReviewed: string;
   /** Chart 5: per-country change in duty rate and imports between the baseline and latest windows. */
   scatter: { windows: ScatterWindows; rows: ScatterRow[] };
   /** The latest year's partner rows, so the partners chart paints without a fetch. */
@@ -124,6 +128,7 @@ export function getTradePageData(): TradePageData {
     countries: getTradeCountryRefs(),
     era: { span, ...getEraLayers(span) },
     scatter: getScatter(),
+    ...getTariffFlags(),
     firstYear: 1991,
     lastYear,
     initialYear,
@@ -146,4 +151,25 @@ export function getScatter(): { windows: ScatterWindows; rows: ScatterRow[] } {
     return [{ code, name, duties: p.duties, imports: p.dutyImports }];
   });
   return { windows, rows: buildScatterRows(inputs, windows) };
+}
+
+/** The curated tariff actions (hand-maintained, see docs/TARIFF_ACTIONS_CURATION.md), trimmed for the chart. */
+export function getTariffFlags(): { tariffFlags: TariffFlag[]; tariffLastReviewed: string } {
+  const file = tariffActionsFile.parse(JSON.parse(readFileSync(join(OUT, "tariff_actions.json"), "utf8")));
+  return {
+    tariffLastReviewed: file.last_reviewed,
+    tariffFlags: file.actions.map((a) => ({
+      id: a.action_id,
+      date: a.date,
+      label: a.label_short,
+      description: a.description,
+      authority: a.authority,
+      kind: a.kind,
+      priority: a.flag_priority,
+      cutover: a.is_cutover,
+      status: a.legal_status,
+      statusNote: a.status_note ?? null,
+      rateNote: a.rate_note ?? null,
+    })),
+  };
 }

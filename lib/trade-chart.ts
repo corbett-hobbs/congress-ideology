@@ -115,3 +115,48 @@ export function termAtDay(terms: readonly EconomyTerm[], day: number): EconomyTe
 
 /** "Obama 44 (D)" */
 export const termLabel = (t: EconomyTerm) => `${t.label} (${t.party})`;
+
+// ------------------------------------------------------------ duty rate
+
+/** Calculated duties over imports for consumption, in percent, per month; null where either is missing or imports are zero. */
+export function ratePercentSeries(duties: Monthly, imports: Monthly): Monthly {
+  return duties.map((d, i) => {
+    const v = imports[i] ?? null;
+    return d === null || v === null || v <= 0 ? null : (d / v) * 100;
+  });
+}
+
+/** First month with a usable value, or -1. */
+export const firstIndexWithValue = (s: Monthly) => s.findIndex((v) => v !== null);
+
+/** A scale for percent values that always starts at 0. */
+export function rateScale(...series: Monthly[]): Scale {
+  const vals = series.flatMap((s) => s.filter((v): v is number => v !== null));
+  return vals.length ? niceScale(0, Math.max(...vals)) : { lo: 0, hi: 1, ticks: [0, 1] };
+}
+
+export const fmtPercent = (p: number) => `${p.toFixed(1)}%`;
+export const fmtPercentTick = (p: number) => (p === 0 ? "0" : `${p}%`);
+
+export interface RateReading {
+  month: number;
+  label: string;
+  /** Percent. */
+  rate: number | null;
+  /** Whole dollars. */
+  duties: number | null;
+  imports: number | null;
+}
+
+export function rateReadingAtDay(duties: Monthly, imports: Monthly, day: number): RateReading | null {
+  if (day < 0) return null;
+  const month = monthIndexOfDay(day);
+  if (month >= duties.length) return null;
+  const { year, month: m } = dateOfDay(monthStartDay(month));
+  const d = duties[month] ?? null;
+  const v = imports[month] ?? null;
+  return { month, label: `${MONTH_NAMES[m]} ${year}`, rate: d === null || v === null || v <= 0 ? null : (d / v) * 100, duties: d, imports: v };
+}
+
+/** Whole dollars to "$85.2B"; reuses the $M formatter. */
+export const fmtDollars = (dollars: number) => fmtMoney(dollars / 1e6);

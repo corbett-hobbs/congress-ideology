@@ -5,21 +5,13 @@ import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
-import type { EconomyTerm } from "@/lib/economy-presidents";
-import type { ControlSpan } from "@/lib/congress-control";
-import { dateOfDay, dayOf } from "@/lib/indicator-time";
+import { dayOf } from "@/lib/indicator-time";
 import { dayFromFraction } from "@/lib/indicator-lookup";
-import { recessionLabel } from "@/lib/indicator-payload";
-import { termYearRange } from "@/lib/year-range";
 import { fmtMoney, fmtTick, monthMidDay, plotted, readingAtDay, termAtDay, termLabel, type FlowSeries, type Measure, type Scale } from "@/lib/trade-chart";
 import { activeDay, useTradeActions, useTradeValues } from "./TradeState";
+import { BAND_H, PresidentAndCongress, RecessionLabels, RecessionShading, ROW_H, YearAxis, type Era } from "./EraLayers";
 
-export interface Era {
-  span: number;
-  rec: [number, number][];
-  terms: EconomyTerm[];
-  control: { house: ControlSpan[]; senate: ControlSpan[] };
-}
+export type { Era };
 
 interface Props {
   series: FlowSeries;
@@ -34,10 +26,6 @@ interface Props {
   ariaLabel: string;
 }
 
-const party = (p: "D" | "R") => (p === "D" ? "var(--dem)" : "var(--rep)");
-const EST_CHAR_W = 6.4;
-const BAND_H = 18;
-const ROW_H = 12;
 
 function geometry(W: number, view: readonly [number, number], scale: Scale, showCong: boolean) {
   const ml = 58;
@@ -57,34 +45,24 @@ function geometry(W: number, view: readonly [number, number], scale: Scale, show
   };
 }
 
-const termText = (t: EconomyTerm, width: number): string | null =>
-  [t.last, t.label].filter((s, i, a) => a.indexOf(s) === i).reverse().find((s) => s.length * EST_CHAR_W + 8 <= width) ?? null;
-
 interface StaticProps extends Props {
   W: number;
 }
 
 /** Everything that doesn't change with the hovered date; memoized so a hover frame doesn't rebuild the paths. */
 const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, showCong, view, year, W }: StaticProps) {
-  const { toggleRange } = useTradeActions();
   const [vs, ve] = view;
   const g = geometry(W, view, scale, showCong);
   const { ml, mt, H, pw, axisY, bandY, houseY, senateY, X, Y } = g;
-  const firstYear = 1991;
-  const lastYear = dateOfDay(era.span - 1).year;
-  const { main, second } = plotted(series, measure);
-  const clipId = "clip-trade-balance";
   const clipped = (a: number, b: number): [number, number] => [X(Math.max(vs, a)), X(Math.min(ve, b))];
   const visibleSpan = (a: number, b: number) => b > vs && a < ve;
+  const { main, second } = plotted(series, measure);
+  const clipId = "clip-trade-balance";
   const pts = (vals: readonly (number | null)[]) => vals.map((v, i) => ({ day: monthMidDay(i), value: v }));
   const gen = line<{ day: number; value: number | null }>()
     .defined((p) => p.value !== null)
     .x((p) => X(p.day))
     .y((p) => Y(p.value as number));
-  const yearsShown = (ve - vs) / 365.25;
-  const yearStep = [1, 2, 5, 10].find((s) => (pw / yearsShown) * s >= 42 && !(s === 2 && yearsShown > 20)) ?? 10;
-  const years: number[] = [];
-  for (let y = dateOfDay(vs).year; dayOf(y, 0, 1) < ve; y++) if (y % yearStep === 0 && dayOf(y, 0, 1) >= vs) years.push(y);
   const [ys, ye] = [dayOf(year, 0, 1), dayOf(year + 1, 0, 1)];
 
   return (
@@ -95,10 +73,7 @@ const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, sho
         </clipPath>
       </defs>
 
-      {era.rec.filter(([s, e]) => visibleSpan(s, e)).map(([s, e]) => {
-        const [x0, x1] = clipped(s, e);
-        return <rect key={s} x={x0} y={mt} width={Math.max(1, x1 - x0)} height={H} fill="var(--ink)" fillOpacity={0.09} />;
-      })}
+      <RecessionShading era={era} view={view} X={X} top={mt} height={H} />
       {visibleSpan(ys, ye) && (() => {
         const [x0, x1] = clipped(ys, ye);
         return <rect x={x0} y={mt} width={Math.max(1, x1 - x0)} height={H} fill="var(--accent)" fillOpacity={0.1} />;
@@ -118,69 +93,9 @@ const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, sho
         <path d={gen(pts(main)) ?? ""} fill="none" stroke="var(--ink)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
       </g>
 
-      <line x1={ml} x2={ml + pw} y1={axisY} y2={axisY} stroke="var(--line-strong)" />
-      {vs === 0 && X(dayOf(1995, 0, 1)) - ml >= 40 && (
-        <text x={ml} y={axisY + 14} textAnchor="start" className="fill-ink-muted font-mono text-[11px]">1991</text>
-      )}
-      {years.map((y) => (
-        <g key={y}>
-          <line x1={X(dayOf(y, 0, 1))} x2={X(dayOf(y, 0, 1))} y1={axisY} y2={axisY + 4} stroke="var(--line-strong)" />
-          <text x={X(dayOf(y, 0, 1))} y={axisY + 14} textAnchor="middle" className="fill-ink-muted font-mono text-[11px]">{y}</text>
-        </g>
-      ))}
-
-      <text x={ml - 7} y={bandY + 12.5} textAnchor="end" className="fill-ink-muted text-[11px]" opacity={showCong ? 1 : 0}>Pres.</text>
-      {era.terms.map((t) => {
-        if (!visibleSpan(t.s, t.e)) return null;
-        const [x0, x1] = clipped(t.s, t.e);
-        const text = termText(t, x1 - x0);
-        return (
-          <g
-            key={t.termId}
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleRange(termYearRange(t.startYear, t.endYear, firstYear, lastYear), [firstYear, lastYear]);
-            }}
-          >
-            <title>{`${t.full}, ${t.startYear} to ${t.endYear ?? "present"}. Click to show only these years.`}</title>
-            <rect x={x0} y={bandY} width={x1 - x0 - 0.5} height={BAND_H} fill={party(t.party)} />
-            {text && (
-              <text x={(x0 + x1) / 2} y={bandY + 12.6} textAnchor="middle" className="text-[11px] font-semibold" fill="#ffffff">{text}</text>
-            )}
-          </g>
-        );
-      })}
-
-      {showCong &&
-        (["house", "senate"] as const).map((ch) => {
-          const y = ch === "house" ? houseY : senateY;
-          return (
-            <g key={ch}>
-              <title>{ch === "house" ? "House majority" : "Senate majority"}</title>
-              <text x={ml - 7} y={y + 9.5} textAnchor="end" className="fill-ink-muted text-[11px]">{ch === "house" ? "House" : "Senate"}</text>
-              {era.control[ch].map((c) => {
-                if (!visibleSpan(c.s, c.e)) return null;
-                const [x0, x1] = clipped(c.s, c.e);
-                return (
-                  <g key={c.s}>
-                    <rect x={x0} y={y} width={Math.max(0.5, x1 - x0 - 0.5)} height={ROW_H} fill={party(c.party)} />
-                    {x1 - x0 >= 16 && <text x={(x0 + x1) / 2} y={y + 9} textAnchor="middle" className="text-[9px] font-semibold" fill="#ffffff">{c.party}</text>}
-                  </g>
-                );
-              })}
-            </g>
-          );
-        })}
-      {era.rec.filter(([s, e]) => visibleSpan(s, e)).map((r) => {
-        const [x0, x1] = clipped(r[0], r[1]);
-        if (x1 - x0 < 14) return null;
-        return (
-          <text key={`l${r[0]}`} x={r[0] <= vs ? x0 + 1 : (x0 + x1) / 2} y={mt - 3} textAnchor={r[0] <= vs ? "start" : "middle"} className="fill-ink-muted text-[10px]">
-            {recessionLabel(r, dateOfDay)}
-          </text>
-        );
-      })}
+      <YearAxis view={view} X={X} left={ml} plotW={pw} axisY={axisY} />
+      <PresidentAndCongress era={era} view={view} X={X} left={ml} bandY={bandY} houseY={houseY} senateY={senateY} showCong={showCong} />
+      <RecessionLabels era={era} view={view} X={X} y={mt - 3} />
     </>
   );
 });
