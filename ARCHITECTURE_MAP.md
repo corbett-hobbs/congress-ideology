@@ -2,7 +2,7 @@
 
 A one-page index of where things live: the data layer, the routes, and the
 shared components every view is built from. Paths here are verified against the
-tree as of the committees session (Session 5). When you touch an area, correct
+tree as of the economic-indicators data session (2026-09-30; the indicators track is data-only, no routes yet). When you touch an area, correct
 anything that has drifted.
 
 ---
@@ -38,10 +38,18 @@ stored. See `docs/DATA_CONVENTIONS.md` for the full contract.
 | `line-items/<year>.json`     | (legislator, reporting year) that reconciled, item grain | `bioguide_id`+`year`, sharded by `year` | `pipeline/financial_disclosures/build_line_items.py` | `lib/line-items-data.ts` |
 
 | **Executive orders track** — separate from Congress and the Court (DATA_CONVENTIONS §7) | | | | |
-| `executive_orders.json`      | one row per executive order, 1994-present  | `eo_number` (Federal Register number — **not** a `bioguide_id`) | `transform/executive-orders-run.ts` (pure logic: `transform/executive-orders.ts`) | `lib/executive-orders-data.ts` |
+| `executive_orders.json`      | one row per executive order, 1994-present  | `eo_number` (Federal Register number — **not** a `bioguide_id`) | `transform/executive-orders-run.ts` (pure logic: `transform/executive-orders.ts`) | `lib/indicator-data.ts` | Reads `indicator_series.json` + `indicator_observations.json`, `server-only`. `getIndicatorObservations(id)` (display-windowed; `{ fullHistory: true }` for everything), `getJobsAdded()`, `getInflation()` — derived over full history, then windowed. Nothing imports it yet (no UI). Pure math in `lib/indicator-derive.ts` (unit-tested). |
+| `lib/executive-orders-data.ts` |
 | `administrations.json`       | one row per uninterrupted presidential tenure | `term_id` (inauguration date) | `transform/executive-orders-run.ts` from the hand-maintained `transform/administrations.ts` | `lib/executive-orders-data.ts` |
 | `executive_orders_report.json` | run summary + anchors                     | —                              | `transform/executive-orders-run.ts` | humans |
 | `pipeline/classification/eo_topics.json` | committed topic cache, one row per EO | `eo_number`           | `pnpm classify:eos` (`pipeline/classify/executive-orders.ts`) — **never** run by CI or `pnpm transform` | `transform/executive-orders-run.ts` |
+
+| **Economic indicators track** — separate from Congress, the Court and the Presidency; time series joined through dates, not people (DATA_CONVENTIONS §8) | | | | |
+| `indicator_series.json`      | one row per FRED series (10)               | `series_id`                    | `transform/indicators-run.ts` (pure logic: `transform/indicators.ts`) | `lib/indicator-data.ts` |
+| `indicator_observations.json` | one row per (series, date), **full history, raw levels only** | `series_id`+`date` | `transform/indicators-run.ts` | `lib/indicator-data.ts` (applies the display window) |
+| `indicators_report.json`     | counts, last observation per series, skipped missing values | —       | `transform/indicators-run.ts` | humans |
+
+Indicators raw source: `pipeline/raw/fred/<SERIES_ID>.json` (`pnpm fetch:fred`, needs `FRED_API_KEY` — `.env.local` locally, a repo secret in Actions; not part of `fetch:all`). Weekly `.github/workflows/indicators-freshness.yml` applies the materiality rule in `pipeline/fetch/fred-diff.ts` and opens a PR only when it trips; never auto-merged. Schemas, the series catalog and `INDICATORS_DISPLAY_START`: `lib/indicator-entities.ts`. Pure derivations (jobs added, inflation, windowing, date → Congress / presidential `term_id`): `lib/indicator-derive.ts`. Methodology: `docs/INDICATORS_METHODOLOGY.md`.
 
 Executive-orders raw source: `pipeline/raw/federal-register/executive_orders.json`
 (`pnpm fetch:executive-orders`; weekly `.github/workflows/executive-orders-freshness.yml`

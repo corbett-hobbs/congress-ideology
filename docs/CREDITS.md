@@ -176,3 +176,35 @@ public domain; each order links back to its Federal Register page
 `.github/workflows/executive-orders-freshness.yml`. The topic labels are this
 project's own, classifier-assisted, and are not part of the Federal Register's
 data. Cited in the footer of `components/executive-orders/ExecutiveOrdersPageClient.tsx`.
+
+---
+
+## FRED — economic indicators
+
+Economic indicator series (`pipeline/output/indicator_*.json`) come from FRED®,
+the Federal Reserve Bank of St. Louis's [API](https://fred.stlouisfed.org/docs/api/fred/).
+Snapshots committed in `pipeline/raw/fred/`, refreshed weekly by
+`.github/workflows/indicators-freshness.yml`.
+
+**Required notice** (FRED API Terms of Use; show it wherever the data is
+displayed):
+
+> This product uses the FRED® API but is not endorsed or certified by the
+> Federal Reserve Bank of St. Louis.
+
+Cite the underlying agency per series (also stored in `indicator_series.json`
+`attribution`):
+
+| Series | Credit |
+| --- | --- |
+| `GASREGW` | U.S. Energy Information Administration |
+| `MORTGAGE30US` | Freddie Mac, Primary Mortgage Market Survey® — **third-party copyright**, "Reprinted with permission" per FRED's notes. FRED's terms require contacting the owner for any use beyond personal use; served here with attribution at the project owner's decision (2026-09-30). Permission from Freddie Mac has **not** been obtained or verified — revisit before launch. |
+| `PAYEMS`, `UNRATE`, `CPIAUCSL` | U.S. Bureau of Labor Statistics |
+| `MEHOINUSA672N` | U.S. Census Bureau |
+| `FYFSGDA188S`, `FYGFGDQ188S`, `GFDEGDQ188S` | U.S. Office of Management and Budget; calculated by the Federal Reserve Bank of St. Louis |
+| `USREC` | National Bureau of Economic Research business-cycle dates, as interpreted by the Federal Reserve Bank of St. Louis |
+
+The FRED notice and agency credits are **not yet in the site footer**: no page
+shows indicator data yet (data-only session). The first page that does must add
+them next to the Voteview citation in `components/senate/SiteFooter.tsx`.
+

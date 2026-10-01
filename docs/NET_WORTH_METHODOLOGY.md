@@ -2,8 +2,8 @@
 
 How `lib/wealth-bands.ts` / `lib/wealth-derive.ts` / `lib/wealth-data.ts` turn
 `pipeline/output/financial_disclosures.json` into the net worth track
-(`/wealth` — the plan calls this route `/congress/wealth`; shipped at
-`/wealth` instead, see `app/wealth/page.tsx`'s own doc comment — and each
+(`/congress/wealth` — `app/congress/wealth/`; an earlier version of this doc said it
+shipped at `/wealth`, which is no longer true — and each
 profile's "Net worth over time" card). Read `docs/DATA_CONVENTIONS.md` §1–2
 first for the general pipeline-output rules; this doc is the wealth-specific
 policy layered on top.

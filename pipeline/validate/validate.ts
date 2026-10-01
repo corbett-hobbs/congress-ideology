@@ -302,3 +302,36 @@ await step("output/executive_orders.json + administrations.json", async () => {
   }
   return `${eos.length} EOs, ${admins.length} tenures ok; every term_id resolves`;
 });
+
+// --- Economic indicators track ----------------------------------------------
+// Raw FRED snapshots (schema, FRED frequency unchanged, "." skipped, values
+// finite), then the same whole-output checks `transform` runs: (series_id, date)
+// unique and the display-window coverage assertion. Then our committed output.
+await step("fred/*.json", async () => {
+  const { buildIndicators, validateIndicators } = await import("../transform/indicators");
+  const { readRawFred } = await import("../transform/indicators-run");
+  const built = buildIndicators(await readRawFred());
+  const s = validateIndicators(built.series, built.observations);
+  return `${built.series.length} series, ${built.observations.length} observations ok; coverage ok from the display window start; last observations ${JSON.stringify(s.lastObservation)}`;
+});
+
+await step("output/indicator_series.json + indicator_observations.json", async () => {
+  const { indicatorObservation, indicatorSeries } = await import("../../lib/indicator-entities");
+  const { validateIndicators } = await import("../transform/indicators");
+  const serFile = "pipeline/output/indicator_series.json";
+  const obsFile = "pipeline/output/indicator_observations.json";
+  const series = validateAll(
+    serFile,
+    JSON.parse(await readFile(serFile, "utf8")) as unknown[],
+    indicatorSeries,
+    (row, i) => `record ${i} (${(row as { series_id?: string }).series_id ?? "?"})`,
+  );
+  const obs = validateAll(
+    obsFile,
+    JSON.parse(await readFile(obsFile, "utf8")) as unknown[],
+    indicatorObservation,
+    (row, i) => `record ${i} (${(row as { series_id?: string }).series_id ?? "?"} ${(row as { date?: string }).date ?? "?"})`,
+  );
+  validateIndicators(series, obs);
+  return `${series.length} series, ${obs.length} observations ok; (series_id, date) unique`;
+});

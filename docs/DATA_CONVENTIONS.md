@@ -447,3 +447,54 @@ They are **not** checked against `--oth` (the "other party" grey, never on this
 page; no muted palette clears the light-surface contrast and ΔE ≥ 0.10 from dem,
 rep *and* oth together). The validator passes with `topic-a/b/n` added to
 `NEW_KEYS`, `PALETTE_KEYS` and `FORCED_PAIRS`.
+
+---
+
+## 8. Economic indicators track
+
+A fourth data track, separate from Congress (§1–§3), the Court (§6) and executive
+orders (§7): economic indicators from FRED, shown as *context* beside the other
+views. Methodology, series list and caveats: `docs/INDICATORS_METHODOLOGY.md`.
+Schemas, the series catalog and the display-window constant:
+`lib/indicator-entities.ts`.
+
+**Time-axis join convention** — the sanctioned alternative to `bioguide_id` for
+non-person data. Indicator rows are time series keyed by `(series_id, date)` and
+carry **no person identifier at all**. They join to the rest of the site through
+dates, at build time, never stored pre-joined:
+
+- **date → Congress number.** Congress *n* begins January 3 of 1789 + 2(*n* − 1),
+  e.g. 1991-01-03 → 102. `congressForDate` in `lib/indicator-derive.ts`. **This
+  holds only from the 74th Congress (1935-01-03)**; Congresses before the 20th
+  Amendment began March 4, so the helper throws for earlier dates rather than
+  mislabel them. (`congressStartYear` in `lib/congress-types.ts` is the older
+  year-only helper and has the same pre-1935 limit.)
+- **date → president.** Through the existing identifier from §7: `term_id` (the
+  inauguration date) into `administrations.json`, `start <= date <= end`.
+  `termIdForDate`. No second president-id convention.
+- **Fiscal years** (an annual series dated by the year the fiscal year *ends*):
+  mapped to the Congress in session at that fiscal year's end, September 30 —
+  FY2023 → 2023-09-30 → 118th. **A convention, not a fact**; flagged for human
+  review. `congressForFiscalYear`.
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/raw/fred/<SERIES_ID>.json` | one snapshot per series | — | FRED's own values as strings (`"."` = missing), full history, `fetched_at`. `pnpm fetch:fred`. |
+| `pipeline/output/indicator_series.json` | one row per series | `series_id` | `title`, `units`, `frequency`, `seasonal_adjustment`, `source_agency`, `first_observation`, `last_observation`, `observation_count`, `attribution`, `suggested_rollup` (`level`/`flow`/`end_of_period`, metadata only), `caveats`, `fetched_at`. |
+| `pipeline/output/indicator_observations.json` | one row per (series, date) | `series_id` + `date` | `value` exactly as FRED reports it. Missing (`.`) rows are skipped — never 0/NaN. **Raw levels only; no derived values** (jobs added, inflation live in `lib/indicator-derive.ts`). |
+| `pipeline/output/indicators_report.json` | run summary | — | Counts, last observation per series, the skipped-missing dates. Deterministic. |
+
+**Window.** Each series' full history is ingested. `INDICATORS_DISPLAY_START`
+(1991-01-21) is applied in one place, `lib/indicator-data.ts`. It is not the 102nd
+Congress's Jan 3 start because FRED has no gas price for 1990-12-10..1991-01-14.
+**Revisions.** Latest revised values as of `fetched_at`; ALFRED vintages are not
+used. **Signs** are FRED's (deficit negative).
+
+**Validation (fails the build, `pnpm validate` / `pnpm transform`):** Zod on both
+outputs and the raw snapshots, FRED's frequency string unchanged from the catalog,
+`(series_id, date)` unique, finite values, and a **coverage assertion**: every
+series covers the window from `INDICATORS_DISPLAY_START` to its last observation
+with no gap larger than twice its nominal frequency (an observation dated just
+before the start may cover it — an annual value dated Jan 1). Tail lag is allowed
+and reported (annual series trail by most of a year). No allowlist: if a gap
+appears, fix the cause or change the window deliberately.
