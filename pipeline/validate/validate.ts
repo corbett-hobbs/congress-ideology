@@ -254,3 +254,51 @@ await step("fjc: federal-judicial-service.csv + demographics.csv structure", asy
   }
   return `${n} rows, required columns present`;
 });
+
+// --- Executive orders track --------------------------------------------------
+// The raw Federal Register snapshot: schema, one row per EO number, every
+// signing date inside a tenure whose president matches the Federal Register's,
+// eo_number monotonic with signing_date (known publication-order exceptions
+// allowlisted), every EO has a cached topic, and the count anchors.
+// The full build is `transform/executive-orders-run.ts`; this is the same pure
+// checks, run on the raw input before anything downstream reads it.
+await step("federal-register/executive_orders.json", async () => {
+  const { administration, executiveOrder } = await import("../../lib/executive-orders-entities");
+  const { ADMINISTRATIONS } = await import("../transform/administrations");
+  const { readRaw, readCache } = await import("../transform/executive-orders-run");
+  const ex = await import("../transform/executive-orders");
+  const administrations = ADMINISTRATIONS.map((a) => administration.parse(a));
+  const norm = ex.normalizeRaw(await readRaw());
+  const rows = ex
+    .buildExecutiveOrders(norm, administrations, await readCache())
+    .map((r) => executiveOrder.parse(r));
+  const s = ex.validateExecutiveOrders(rows, administrations);
+  return `${s.count} EOs ok (${s.firstSigning}..${s.lastSigning}), eo_number unique + monotonic (${s.explainedOutOfOrder.length} known publication-order exceptions), every topic cached, anchors ok (Biden ${s.bidenCount}, Trump 2025 ${s.trump2025Count}, 2025 total ${s.total2025})`;
+});
+
+// Our own output, committed — re-checked on every push like wikipedia_summaries.json.
+await step("output/executive_orders.json + administrations.json", async () => {
+  const { administration, executiveOrder } = await import("../../lib/executive-orders-entities");
+  const eoFile = "pipeline/output/executive_orders.json";
+  const eos = validateAll(
+    eoFile,
+    JSON.parse(await readFile(eoFile, "utf8")) as unknown[],
+    executiveOrder,
+    (row, i) => `record ${i} (EO ${(row as { eo_number?: number }).eo_number ?? "?"})`,
+  );
+  assertUnique(eoFile, eos, (r) => String(r.eo_number), (r) => `EO ${r.eo_number} ${r.title}`);
+  const adminFile = "pipeline/output/administrations.json";
+  const admins = validateAll(
+    adminFile,
+    JSON.parse(await readFile(adminFile, "utf8")) as unknown[],
+    administration,
+    (row, i) => `record ${i} (${(row as { term_id?: string }).term_id ?? "?"})`,
+  );
+  assertUnique(adminFile, admins, (r) => r.term_id, (r) => `${r.president} ${r.term_id}`);
+  const known = new Set(admins.map((a) => a.term_id));
+  const dangling = eos.filter((e) => !known.has(e.term_id));
+  if (dangling.length > 0) {
+    throw new ValidationError(eoFile, "term_id resolution", `${dangling.length} EO(s) name a term_id not in administrations.json`);
+  }
+  return `${eos.length} EOs, ${admins.length} tenures ok; every term_id resolves`;
+});

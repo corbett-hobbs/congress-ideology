@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "executive_orders": 1541,
+    "administrations": 6
+  },
+  "signing_range": [
+    "1994-01-15",
+    "2026-09-18"
+  ],
+  "dropped_not_an_eo": [
+    "95-23442 (1995-09-18) Continuation of Emergency With Respect to UNITA"
+  ],
+  "dropped_corrections": [
+    "C1-2009-31418 (EO 13526)",
+    "R1-2016-03141 (EO 13719)",
+    "R1-2026-03829 (EO 14388)"
+  ],
+  "out_of_order_numbering": [
+    {
+      "eo_number": 13300,
+      "reason": "signed 2003-05-09, numbered after 13299 (signed 2003-05-12): numbered at publication"
+    },
+    {
+      "eo_number": 13517,
+      "reason": "signed 2009-10-30, numbered after 13516 (signed 2009-11-02): numbered at publication"
+    },
+    {
+      "eo_number": 13947,
+      "reason": "signed 2020-07-24, numbered after 13946 (signed 2020-08-24): numbered at publication"
+    }
+  ],
+  "anchors": {
+    "biden": 162,
+    "trump_2025": 225,
+    "total_2025": 238
+  },
+  "topic_method": {
+    "model": 1418,
+    "parent-inherit": 123
+  },
+  "needs_review": 69
+}

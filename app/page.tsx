@@ -4,6 +4,7 @@ import { getBothTrend } from "@/lib/congress-data";
 import { branches } from "@/lib/verticals";
 import { site } from "@/lib/site";
 import { getCourtHubSummary } from "@/lib/justice-data";
+import { getExecutiveOrdersData } from "@/lib/executive-orders-data";
 import { HubSparkline } from "@/components/HubSparkline";
 import { CourtHubSparkline } from "@/components/court/CourtHubSparkline";
 import { SiteFooter } from "@/components/senate/SiteFooter";
@@ -27,6 +28,8 @@ const BLURBS: Record<string, string> = {
   "supreme-court":
     // PLACEHOLDER COPY — awaiting Corby's edit.
     "Where the justices sit over time, from Martin\u2013Quinn ideology scores.",
+  presidency:
+    "Executive orders signed each year since 1994, stacked by topic, with each presidential term marked.",
 };
 
 const fmt2 = (n: number) => n.toFixed(2);
@@ -37,6 +40,7 @@ export default function Hub() {
     .reverse()
     .find((p) => p.dem != null && p.rep != null);
   const court = getCourtHubSummary();
+  const orders = getExecutiveOrdersData();
   const gap = latest ? (latest.rep as number) - (latest.dem as number) : null;
 
   return (
@@ -50,8 +54,8 @@ export default function Hub() {
           <p>
             Every roll call, every ruling, and every financial disclosure leaves
             a trail. We turn those public records into data you can scrub
-            through, compare, and dig into. Start with Congress and the Supreme
-            Court; the presidency is on the way.
+            through, compare, and dig into. Start with Congress, the Supreme Court,
+            or the presidency&rsquo;s executive orders.
           </p>
         </PageHeader>
 
@@ -113,6 +117,15 @@ export default function Hub() {
                       Median justice, {court.lastTerm} term
                     </p>
                   </div>
+                )}
+
+                {b.id === "presidency" && (
+                  <p className="text-[0.85rem] text-ink-muted">
+                    <span className="font-serif text-2xl font-semibold text-ink">
+                      {orders.total.toLocaleString("en-US")}
+                    </span>{" "}
+                    executive orders signed since {orders.years[0].year}
+                  </p>
                 )}
 
                 {live && (

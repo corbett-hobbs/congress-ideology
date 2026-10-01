@@ -19,9 +19,12 @@
     "fetch:wikipedia": "tsx pipeline/fetch/wikipedia.ts",
     "fetch:mq": "tsx pipeline/fetch/mq.ts",
     "fetch:fjc": "tsx pipeline/fetch/fjc.ts",
+    "fetch:executive-orders": "tsx pipeline/fetch/executive-orders.ts",
+    "classify:eos": "tsx pipeline/classify/executive-orders.ts",
+    "classify:audit": "tsx pipeline/classify/executive-orders-audit.ts",
     "fetch:justice-bios": "tsx pipeline/fetch/justice-bios.ts",
     "validate": "tsx pipeline/validate/validate.ts",
-    "transform": "tsx pipeline/transform/index.ts && tsx pipeline/transform/court-run.ts",
+    "transform": "tsx pipeline/transform/index.ts && tsx pipeline/transform/court-run.ts && tsx pipeline/transform/executive-orders-run.ts",
     "pipeline": "pnpm fetch:all && pnpm validate && pnpm transform && pnpm fetch:photos && pnpm fetch:wikipedia",
     "check:justice-layout": "node scripts/check-justice-layout.mjs",
     "pipeline:check": "pnpm validate && pnpm transform && git diff --exit-code --stat -- pipeline/output"

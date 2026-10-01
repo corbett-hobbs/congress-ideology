@@ -315,3 +315,126 @@ hashes), then `pnpm transform`. `pnpm fetch:mq` / `--probe` try a plain
 request and stop with instructions on a challenge; the monthly
 `mq-freshness.yml` Action does the same and ends with a warning annotation, not
 a failure. FJC bios: `pnpm fetch:fjc`.
+
+---
+
+## 7. Executive orders track
+
+A third data track, separate from Congress (§1–§3) and the Court (§6): executive
+orders (EOs) 1994-present, shown as a per-year chart stacked by topic. Nothing
+here joins to `bioguide_id` entities.
+
+**Key.** `eo_number` — the Federal Register's `executive_order_number` — is a
+new natural key and **is not a `bioguide_id`**: it names a document, not a
+person. Presidents get **no person identifier** at all, only a `term_id` (an
+inauguration date) into `administrations.json`; the §1 "one person-id
+convention" rule is untouched. `amends` / `revokes` hold `eo_number`s and may
+point at pre-1994 orders outside the data.
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/raw/federal-register/executive_orders.json` | one row per API document | — | Fetched directly from `federalregister.gov/api/v1` by `pnpm fetch:executive-orders`. One row per line, sorted by EO number. |
+| `pipeline/output/executive_orders.json` | one row per EO | `eo_number` | `document_number`, `title`, `abstract` (nullable — the API has none for almost every order), `signing_date`, `publication_date`, `term_id`, `agencies[]`, `amends[]`, `revokes[]`, `topic`, `topic_method`, `needs_review`. Schema `executiveOrder` in `lib/executive-orders-entities.ts`. |
+| `pipeline/output/administrations.json` | one row per uninterrupted tenure | `term_id` | `term_id` = inauguration date; `president`, `president_slug` (the Federal Register's `president.identifier`, cross-checked against every EO), `party`, `start`, `end` (`null` while in office). Hand-maintained in `pipeline/transform/administrations.ts`. Trump's two non-consecutive stints are two rows; Clinton, Bush and Obama's consecutive terms are one tenure each. |
+| `pipeline/classification/eo_topics.json` | one row per EO | `eo_number` | The **committed classification cache** (below). |
+| `pipeline/output/executive_orders_report.json` | run summary | — | counts, dropped documents, anchors, topic methods. |
+
+**Real Federal Register field names** (verified against the live API):
+`executive_order_number`, `document_number`, `title`, `abstract`,
+`signing_date`, `publication_date`, `president` (`{identifier, name}`),
+`agencies[]` (`name`, `raw_name`), `executive_order_notes` (identical to
+`disposition_notes`), `html_url`, `pdf_url`, `citation`. **`executive_order_number`,
+`executive_order_notes` and `president` are not in the API's default field set** —
+they come back only when requested with `fields[]`. There is **no structured
+amends/revokes field**: the relationships live in the free-text notes
+("Amends: EO 13212, …\nRevokes: EO …\nSee: …"), which `parseNotes` reads (forward
+labels only; "Revoked by"/"Amended by" belong to the other order).
+
+**Year = signing date, never publication date.** A late-December signing never
+lands in January. `term_id` is the tenure in force on the signing date
+(`start <= date < next start`; Jan 20 → the incoming president). In a transition
+year the chart aggregates carry both presidents (`EoYear.byTerm`).
+
+**Documents the API files as EOs that are not.** `normalizeRaw` drops, and the
+report lists: documents with no EO number (a 1995 "Continuation of Emergency
+With Respect to UNITA" notice mis-filed as an EO) and the `C1-`/`R1-`
+correction/republication documents that duplicate an original's number
+(EOs 13526, 13719, 14388).
+
+**Numbering is by publication, not signing.** EOs 13300, 13517 and 13947 are
+signed a few days *before* the order numbered just ahead of them. These three
+are allowlisted by number (`KNOWN_OUT_OF_ORDER`) with a reason; a new inversion
+fails the build.
+
+### Topics: one primary topic per EO
+
+One topic per order so stacks sum to the true total. Secondary tags are not
+stored. Fixed order (the stack order — colour follows topic, not rank):
+`government_operations`, `economy_labor`, `trade`, `energy_environment`,
+`health_education`, `immigration_justice`, `foreign_policy`, `national_security`,
+`other`. The starting 13-category list (seeded from Ballotpedia's published
+categories as a *reference only* — no Ballotpedia data, tags or text is used)
+was **merged to 9** for two reasons: *administrative state* and *government
+operations* are the same set in practice (federal workforce, agency
+organisation, advisory committees, closings, succession orders), and 13 categories
+cannot be drawn distinguishably (palette note below). Merges: administrative
+state + government operations; economy and labor + technology (AI, cyber-economy
+and R&D orders are few, and the cyber/critical-infrastructure orders go to
+national security by purpose); health + education; immigration + policing and
+criminal justice. Trade and tariffs stays separate (the 2025 tariff orders are a
+distinct, large group). "First day" and "revokes a prior order" are not topics;
+revocation is derived from `revokes`.
+
+**Classification is a committed artifact, never computed at build time.**
+`pipeline/classification/eo_topics.json` is keyed by `eo_number` with
+`topic_method`: `parent-inherit` | `model` | `manual`. `pnpm transform`, `pnpm
+validate` and CI only *read* it; a new EO with no cached topic **fails loudly**
+(listing the missing numbers) and is never defaulted to "other". Maintenance is
+`pnpm classify:eos` (`pipeline/classify/executive-orders.ts`): it lets
+amending/revoking orders inherit a parent's topic, then reports the orders still
+needing one; `-- --labels FILE` records labels for those (`model`).
+- *Inheritance* applies only when the order's **title is just a pointer** to
+  another EO ("Amendment to Executive Order 13212", or the bare "Executive Order
+  N of <date>"), using the parent from the notes (or the number in the title).
+  A substantive order that merely revokes an old one ("Classified National
+  Security Information") is classified on its own title.
+- If the parent is **outside the data** (pre-1994), the order is classified from
+  its own text and `needs_review` is set. Parents that disagree also set it.
+- `model` rows were assigned by a language model (Claude) reading each title,
+  agencies and, for pointer orders, the parent — from titles only; the API has no
+  abstract for nearly every order. **They have not been validated by a person.**
+  `docs/eo-topic-audit.csv` is a seeded random sample of 100 for human review
+  (columns for the reviewer's verdict are blank); regenerate with `pnpm
+  classify:audit` (refuses to overwrite a reviewed file without `--force`).
+  Treat topic counts as classifier-assisted until that sample is reviewed.
+
+### Validation (`pnpm validate`, `pnpm transform`)
+
+Zod at the pipeline boundary (`lib/executive-orders-entities.ts`) plus
+`validateExecutiveOrders`: `eo_number` unique and ascending, monotonic with
+`signing_date` (three allowlisted exceptions), every `topic` in the enum, no null
+topics, ISO dates, `term_id` resolves, and the Federal Register's own
+`president` agrees with `administrations.ts` for every order. **Count anchors**
+(each checked against the Federal Register; failures fail the build, fix the
+anchor with a note, never loosen the check): Biden signed **162** EOs
+(**13985–14146**); Trump signed **225** in 2025 (14147–14371); the 2025 total
+across both presidents is **238** (Biden's 13 in January 2025, 14134–14146, plus
+Trump's 225). *The session brief said "2025 totals 225 across both presidents";
+that is Trump alone, and the anchor was corrected rather than loosened.*
+
+### Topic colours: a palette that cannot be distinct by colour alone
+
+Nine topics cannot be separated by colour under the project's CVD gate
+(`validate_palette.js`: ≥ 3:1 contrast on every surface, ΔE ≥ 0.10 under
+protan/deutan). A search over muted OKLCH candidates (avoiding the party hues)
+found no 13-colour, 9-colour or even 4-colour set that clears ΔE 0.10 on the
+light surfaces. So topics are **three colour families × three fills** (solid,
+hatch, dots — `lib/executive-orders-types.ts` `TOPIC_STYLE`, patterns in
+`components/executive-orders/TopicPatternDefs.tsx`): `--topic-a` plum, `--topic-b`
+teal, `--topic-n` charcoal/silver. Colours are checked only where a pair shares a
+fill (pairs differing in fill are separated by the pattern): the three families
+vs each other, and vs `--dem`/`--rep` (so a topic never reads as a party).
+They are **not** checked against `--oth` (the "other party" grey, never on this
+page; no muted palette clears the light-surface contrast and ΔE ≥ 0.10 from dem,
+rep *and* oth together). The validator passes with `topic-a/b/n` added to
+`NEW_KEYS`, `PALETTE_KEYS` and `FORCED_PAIRS`.

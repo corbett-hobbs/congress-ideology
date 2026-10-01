@@ -1,6 +1,6 @@
 /**
- * Two-tier site structure: branches (Congress, Supreme Court) each containing
- * one or more sections (Congress: Ideology, Wealth).
+ * Two-tier site structure: branches (Congress, Supreme Court, Presidency) each
+ * containing one or more sections (Congress: Ideology, Wealth).
  *
  * `/` is a hub linking to the branches. The persistent header shows the
  * branches as its primary nav and, for a branch with two or more sections, a
@@ -48,6 +48,16 @@ export const branches: readonly Branch[] = [
     status: "live",
     sections: [{ id: "ideology", label: "Ideology", href: "/supreme-court" }],
     owns: (p) => p === "/supreme-court" || p.startsWith("/supreme-court/"),
+  },
+  {
+    id: "presidency",
+    label: "Presidency",
+    href: "/executive-orders",
+    status: "live",
+    sections: [
+      { id: "executive-orders", label: "Executive orders", href: "/executive-orders" },
+    ],
+    owns: (p) => p === "/executive-orders" || p.startsWith("/executive-orders/"),
   },
 ];
 

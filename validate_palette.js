@@ -46,6 +46,7 @@ const PALETTE_KEYS = [
   "dem", "rep", "proadmin", "antiadmin", "federalist", "demrep",
   "adams", "antijackson", "jackson", "whig", "oth",
   "committee-house", "committee-senate",
+  "topic-a", "topic-b", "topic-n",
 ];
 const BG_KEYS = ["bg", "surface", "surface-raised"];
 
@@ -63,8 +64,19 @@ const FORCED_PAIRS = [
   ["committee-senate", "dem"],
   ["committee-senate", "rep"],
   ["committee-senate", "oth"],
+  // Executive-order topic colours (components/executive-orders). Nine topics
+  // are drawn as 3 colour families x 3 fills, so only same-fill pairs need to be
+  // separable by colour alone: each family vs the other two, and each vs
+  // --dem/--rep so a topic never reads as a party. Not checked against --oth
+  // (the "other party" grey): it never appears on that page, and no muted
+  // palette can clear 3:1 on the light surfaces AND dE >= 0.10 from dem, rep
+  // and oth at once.
+  ["topic-a", "topic-b"],
+  ["topic-a", "topic-n"],
+  ["topic-b", "topic-n"],
+  ...["topic-a", "topic-b", "topic-n"].flatMap((k) => ["dem", "rep"].map((p) => [k, p])),
 ];
-const NEW_KEYS = ["committee-house", "committee-senate"];
+const NEW_KEYS = ["committee-house", "committee-senate", "topic-a", "topic-b", "topic-n"];
 
 // ---- CLI overrides -------------------------------------------------------
 const override = { light: {}, dark: {} };
@@ -243,7 +255,7 @@ for (const [ti, theme] of ["light", "dark"].entries()) {
   // so the regression check above is a no-op for them (now === was). Hold
   // them to the same absolute bars instead: >= 3:1 contrast, and >= DE_GOOD
   // separation from dem/rep/oth and each other.
-  console.log("\n  new committee-chamber colours — absolute checks:");
+  console.log("\n  new non-party colours (committee chambers, executive-order topics) — absolute checks:");
   for (const k of NEW_KEYS) {
     const hex = T[k];
     const worst = Math.min(...BG_KEYS.map((bg) => contrast(hex, T[bg])));
