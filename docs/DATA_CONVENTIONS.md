@@ -372,7 +372,7 @@ One topic per order so stacks sum to the true total. Secondary tags are not
 stored. Fixed order (the stack order — colour follows topic, not rank):
 `government_operations`, `economy_labor`, `trade`, `energy_environment`,
 `health_education`, `immigration_justice`, `foreign_policy`, `national_security`,
-`other`. The starting 13-category list (seeded from Ballotpedia's published
+`civil_rights_civic`. The starting 13-category list (seeded from Ballotpedia's published
 categories as a *reference only* — no Ballotpedia data, tags or text is used)
 was **merged to 9** for two reasons: *administrative state* and *government
 operations* are the same set in practice (federal workforce, agency
@@ -382,7 +382,14 @@ state + government operations; economy and labor + technology (AI, cyber-economy
 and R&D orders are few, and the cyber/critical-infrastructure orders go to
 national security by purpose); health + education; immigration + policing and
 criminal justice. Trade and tariffs stays separate (the 2025 tariff orders are a
-distinct, large group). "First day" and "revokes a prior order" are not topics;
+distinct, large group). **There is no "other" topic**: the first pass had one (80
+orders), and nearly all of it was three coherent groups, so it was dissolved —
+faith-based / community / volunteer-office orders and the orders about law firms
+and federal media funding went to `government_operations`; civil rights and
+equity, tribal and identity orders, culture/commemoration/sports task forces and
+the like became `civil_rights_civic`. Every order now has a topic, but the
+residue (law-firm orders, English as official language) is a forced fit.
+"First day" and "revokes a prior order" are not topics;
 revocation is derived from `revokes`.
 
 **Classification is a committed artifact, never computed at build time.**
@@ -407,7 +414,7 @@ needing one; `-- --labels FILE` records labels for those (`model`).
   (columns for the reviewer's verdict are blank); regenerate with `pnpm
   classify:audit` (refuses to overwrite a reviewed file without `--force`).
   The 100-row sample has been reviewed by a person (project owner): every row
-  marked `agree`, no disagreements. That is a spot check of 100 of ~1,540, not a
+  marked `agree`, no disagreements — except the few rows that were "Other" at review time, which were reassigned afterwards and are back to unreviewed. That is a spot check of 100 of ~1,540, not a
   full audit, so topic counts remain classifier-assisted.
 
 ### Validation (`pnpm validate`, `pnpm transform`)

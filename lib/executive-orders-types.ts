@@ -78,7 +78,7 @@ export const TOPIC_STYLE: Record<EoTopic, { family: TopicFamily; fill: TopicFill
   immigration_justice: { family: "n", fill: "dots" },
   foreign_policy: { family: "b", fill: "hatch" },
   national_security: { family: "b", fill: "dots" },
-  other: { family: "n", fill: "solid" },
+  civil_rights_civic: { family: "n", fill: "solid" },
 };
 
 /** The `fill` value for a topic: a colour token, or a `<pattern>` from `TopicPatternDefs`. */

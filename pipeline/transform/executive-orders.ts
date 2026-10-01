@@ -159,7 +159,7 @@ export function buildExecutiveOrders(
   }
   if (missing.length > 0) {
     throw new ExecutiveOrderDataError(
-      `${missing.length} executive order(s) have no cached topic in pipeline/classification/eo_topics.json (the build never classifies on its own, and never defaults to "other"): ${missing.slice(0, 20).join(", ")}${missing.length > 20 ? ", …" : ""}\nRun \`pnpm classify:eos\` to inherit parent topics, then add a topic for each remaining order.`,
+      `${missing.length} executive order(s) have no cached topic in pipeline/classification/eo_topics.json (the build never classifies on its own, and never falls back to a default topic): ${missing.slice(0, 20).join(", ")}${missing.length > 20 ? ", …" : ""}\nRun \`pnpm classify:eos\` to inherit parent topics, then add a topic for each remaining order.`,
     );
   }
   return rows;

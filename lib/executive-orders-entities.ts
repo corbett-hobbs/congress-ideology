@@ -34,7 +34,7 @@ export const EO_TOPICS = [
   "immigration_justice",
   "foreign_policy",
   "national_security",
-  "other",
+  "civil_rights_civic",
 ] as const;
 export const eoTopic = z.enum(EO_TOPICS);
 export type EoTopic = z.infer<typeof eoTopic>;
@@ -48,7 +48,7 @@ export const EO_TOPIC_LABELS: Record<EoTopic, string> = {
   immigration_justice: "Immigration & justice",
   foreign_policy: "Foreign policy",
   national_security: "National security & defense",
-  other: "Other",
+  civil_rights_civic: "Civil rights & civic life",
 };
 
 export const eoTopicMethod = z.enum(["parent-inherit", "model", "manual"]);

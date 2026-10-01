@@ -20,7 +20,7 @@ import {
  * Executive-orders track transform: raw/federal-register + the committed
  * classification cache -> pipeline/output/{executive_orders,administrations}.json
  * + executive_orders_report.json. The build never classifies: a topic missing
- * from the cache is fatal (see executive-orders.ts), never silently "other".
+ * from the cache is fatal (see executive-orders.ts), never silently defaulted.
  */
 export const RAW = `${RAW_DIR}/federal-register/executive_orders.json`;
 export const CACHE = "pipeline/classification/eo_topics.json";
