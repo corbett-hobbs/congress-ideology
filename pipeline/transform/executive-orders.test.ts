@@ -85,7 +85,7 @@ describe("validateExecutiveOrders", () => {
   const row = (eo_number: number, signing_date: string, term_id: string): ExecutiveOrder => ({
     eo_number, document_number: `d${eo_number}`, title: "T", abstract: null, signing_date,
     publication_date: signing_date, term_id, agencies: [], amends: [], revokes: [],
-    topic: "other", topic_method: "manual", needs_review: false,
+    topic: "civil_rights_civic", topic_method: "manual", needs_review: false,
   });
   /** A synthetic set that satisfies every anchor. */
   const base = (): ExecutiveOrder[] => {

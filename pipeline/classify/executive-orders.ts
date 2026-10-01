@@ -20,7 +20,7 @@ import { inheritanceParents, normalizeRaw, parseNotes } from "../transform/execu
  *                                           tokens `<eo_number><code>`, e.g. `14431I 14430N`.
  *
  * Codes: G government_operations, E economy_labor, T trade, N energy_environment,
- * H health_education, I immigration_justice, F foreign_policy, S national_security, O other.
+ * H health_education, I immigration_justice, F foreign_policy, S national_security, C civil_rights_civic.
  *
  * Existing cache entries are never overwritten. An amending/revoking EO whose
  * parent is outside the data (pre-1994) cannot inherit: it is classified from
@@ -35,7 +35,7 @@ const CODES: Record<string, EoTopic> = {
   I: "immigration_justice",
   F: "foreign_policy",
   S: "national_security",
-  O: "other",
+  C: "civil_rights_civic",
 };
 if (Object.values(CODES).join() !== [...EO_TOPICS].join()) throw new Error("CODES out of sync with EO_TOPICS");
 
