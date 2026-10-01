@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { memo, type ReactNode } from "react";
 import { fiscalBars, quarterlyPoints, yearRows } from "@/lib/economy-series";
 import type { EconomyData } from "@/lib/indicator-payload";
 import type { Reading } from "@/lib/indicator-lookup";
@@ -17,7 +17,7 @@ function Readout({ spec, reading, hero }: { spec: ChartSpec; reading: Reading; h
 }
 
 /** `<details>` table fallback: one row per year (last reading, low, high), or the values themselves for annual series. */
-function DataTable({ data, spec }: { data: EconomyData; spec: ChartSpec }) {
+const DataTable = memo(function DataTable({ data, spec }: { data: EconomyData; spec: ChartSpec }) {
   const pts =
     spec.kind === "fiscal"
       ? fiscalBars(data.def).map((b) => ({ day: b.mid, value: b.value }))
@@ -55,7 +55,7 @@ function DataTable({ data, spec }: { data: EconomyData; spec: ChartSpec }) {
       </div>
     </details>
   );
-}
+});
 
 export function EconomyCard({
   data,
@@ -90,7 +90,7 @@ export function EconomyCard({
       </div>
       {hero && <p className="m-0 mt-2 text-[0.875rem] leading-[1.5] text-ink-muted">{desc}</p>}
       <div className={hero ? "mt-3.5" : "mt-3"}>
-        <EconomyChart data={data} spec={spec} hero={hero} showCong={showCong} term={term} />
+        <EconomyChart data={data} spec={spec} hero={hero} showCong={showCong} term={term} reading={reading} />
       </div>
       {legend}
       {footnote && <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">{footnote}</p>}

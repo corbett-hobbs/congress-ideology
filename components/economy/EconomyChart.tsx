@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { useElementWidth } from "@/lib/use-element-width";
@@ -16,6 +17,8 @@ import type { EconomyData } from "@/lib/indicator-payload";
 import { recessionLabel } from "@/lib/indicator-payload";
 import { dateOfDay, dayOf, fmtMonthIndex, monthIndexOfDay } from "@/lib/indicator-time";
 import type { EconomyTerm } from "@/lib/economy-presidents";
+import { dayFromFraction, type Reading } from "@/lib/indicator-lookup";
+import { activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
 import { JOBS_CAP, fx, type ChartSpec } from "./specs";
 
 /** Chart points for a spec's main series (the second debt line comes from `chartPoints2`). */
@@ -54,25 +57,38 @@ function termText(t: EconomyTerm, width: number, hero: boolean): string | null {
   return tries.find((s) => s.length * EST_CHAR_W + 8 <= width) ?? null;
 }
 
-export function EconomyChart({ data, spec, hero = false, showCong, term }: Props) {
-  const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
-  const W = measured || (hero ? 1140 : 540);
+const BAND_H = 18;
+const ROW_H = 12;
+
+/** Pure layout for one chart at one measured width. Shared by the static layer and the crosshair overlay. */
+function geometry(W: number, hero: boolean, spec: ChartSpec, span: number, showCong: boolean) {
   const ml = hero ? 60 : 44;
   const mr = 12;
   const mt = hero ? 22 : 8;
   const H = hero ? (W < 600 ? 170 : 200) : 150;
   const pw = W - ml - mr;
-  const span = data.span;
   const [lo, hi] = spec.domain;
-  const X = (day: number) => ml + (day / span) * pw;
-  const Y = (v: number) => mt + ((hi - v) / (hi - lo)) * H;
   const axisY = mt + H;
   const bandY = axisY + 23;
-  const BAND_H = 18;
-  const ROW_H = 12;
   const houseY = bandY + BAND_H + 3;
   const senateY = houseY + ROW_H + 2;
-  const height = (showCong ? senateY + ROW_H : bandY + BAND_H) + 8;
+  return {
+    ml, mr, mt, H, pw, lo, hi, axisY, bandY, houseY, senateY,
+    height: (showCong ? senateY + ROW_H : bandY + BAND_H) + 8,
+    X: (day: number) => ml + (day / span) * pw,
+    Y: (v: number) => mt + ((hi - v) / (hi - lo)) * H,
+  };
+}
+
+interface StaticProps extends Props {
+  W: number;
+}
+
+/** Everything that doesn't change with the hovered date. Memoized so a hover frame doesn't rebuild 1,900-point paths nine times. */
+const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCong, term, W }: StaticProps) {
+  const { toggleTerm } = useEconomyActions();
+  const span = data.span;
+  const { ml, mr, mt, H, pw, lo, axisY, bandY, houseY, senateY, X, Y } = geometry(W, hero, spec, span, showCong);
   const clipId = `clip-${spec.key}`;
 
   const pts = chartPoints(data, spec.key);
@@ -89,15 +105,6 @@ export function EconomyChart({ data, spec, hero = false, showCong, term }: Props
   const peak = hero ? pts.reduce<SeriesPoint | null>((m, p) => (p.value !== null && (m === null || p.value > (m.value as number)) ? p : m), null) : null;
 
   return (
-    <div ref={wrapRef}>
-      <ChartFrame
-        width={W}
-        height={height}
-        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-        ariaLabel={spec.aria}
-        svgProps={{ style: { touchAction: "pan-y" } }}
-      >
-        {() => (
           <>
             <defs>
               <clipPath id={clipId}>
@@ -258,8 +265,16 @@ export function EconomyChart({ data, spec, hero = false, showCong, term }: Props
               const x1 = X(t.e);
               const text = termText(t, x1 - x0, hero);
               return (
-                <g key={t.termId} opacity={term === null || term === i ? 1 : 0.35}>
-                  <title>{`${t.full}, ${t.startYear} to ${t.endYear ?? "present"}`}</title>
+                <g
+                  key={t.termId}
+                  opacity={term === null || term === i ? 1 : 0.35}
+                  className="cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleTerm(i);
+                  }}
+                >
+                  <title>{`${t.full}, ${t.startYear} to ${t.endYear ?? "present"}. Click to highlight this term.`}</title>
                   <rect x={x0} y={bandY} width={x1 - x0 - 0.5} height={BAND_H} fill={party(t.party)} />
                   {text && (
                     <text x={(x0 + x1) / 2} y={bandY + 12.6} textAnchor="middle" className="text-[11px] font-semibold" fill="#ffffff">
@@ -297,6 +312,72 @@ export function EconomyChart({ data, spec, hero = false, showCong, term }: Props
                   </g>
                 );
               })}
+          </>
+  );
+});
+
+const dotPos = (reading: Reading, spec: ChartSpec, g: ReturnType<typeof geometry>) => {
+  if (reading.value === null || reading.snap === null) return null;
+  const v = spec.kind === "jobs" ? Math.max(-JOBS_CAP, Math.min(JOBS_CAP, reading.value)) : reading.value;
+  return { x: g.X(reading.snap), y: g.Y(v) };
+};
+
+/** Crosshair and dots for the active date: the only layer that re-renders on hover. */
+function Overlay({ W, hero, spec, span, showCong, reading }: { W: number; hero: boolean; spec: ChartSpec; span: number; showCong: boolean; reading: Reading }) {
+  const v = useEconomyValues();
+  const day = activeDay(v);
+  if (day === null) return null;
+  const g = geometry(W, hero, spec, span, showCong);
+  const dot = dotPos(reading, spec, g);
+  const dot2 = reading.value2 !== null && reading.snap !== null ? { x: g.X(reading.snap), y: g.Y(reading.value2) } : null;
+  const x = g.X(day);
+  return (
+    <g pointerEvents="none">
+      <line x1={x} x2={x} y1={g.mt} y2={g.axisY} stroke="var(--accent)" strokeWidth={v.hover === null ? 1.5 : 1} />
+      {dot2 && <circle cx={dot2.x} cy={dot2.y} r={3.5} fill="var(--ink-faint)" stroke="var(--surface)" strokeWidth={1.5} />}
+      {dot && <circle cx={dot.x} cy={dot.y} r={4} fill="var(--ink)" stroke="var(--surface)" strokeWidth={1.5} />}
+    </g>
+  );
+}
+
+export function EconomyChart({ data, spec, hero = false, showCong, term, reading }: Props & { reading: Reading }) {
+  const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
+  const W = measured || (hero ? 1140 : 540);
+  const g = geometry(W, hero, spec, data.span, showCong);
+  const { moveHover, leaveHover, pinDay } = useEconomyActions();
+
+  /** Pointer x -> axis day, or null when the pointer is below the plot (the president band has its own click). */
+  const dayAt = (e: ReactPointerEvent<SVGSVGElement> | ReactMouseEvent<SVGSVGElement>): number | null => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const k = W / r.width;
+    if ((e.clientY - r.top) * k > g.axisY + 6) return null;
+    return dayFromFraction(((e.clientX - r.left) * k - g.ml) / g.pw, data.span);
+  };
+
+  return (
+    <div ref={wrapRef}>
+      <ChartFrame
+        width={W}
+        height={g.height}
+        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+        ariaLabel={spec.aria}
+        svgProps={{ style: { touchAction: "pan-y" } }}
+        onPointerMove={(e) => {
+          if (e.pointerType === "touch") return; // taps pin (onClick); touch scrolling is left alone
+          const d = dayAt(e);
+          if (d === null) leaveHover();
+          else moveHover(d);
+        }}
+        onPointerLeave={leaveHover}
+        onClick={(e) => {
+          const d = dayAt(e);
+          if (d !== null) pinDay(d);
+        }}
+      >
+        {() => (
+          <>
+            <StaticLayer data={data} spec={spec} hero={hero} showCong={showCong} term={term} W={W} />
+            <Overlay W={W} hero={hero} spec={spec} span={data.span} showCong={showCong} reading={reading} />
           </>
         )}
       </ChartFrame>

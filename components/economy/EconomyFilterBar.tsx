@@ -14,12 +14,19 @@ export function EconomyFilterBar({
   onTerm,
   showCong,
   onShowCong,
+  status,
+  canClear,
+  onClear,
 }: {
   terms: readonly EconomyTerm[];
   term: number | null;
   onTerm: (i: number | null) => void;
   showCong: boolean;
   onShowCong: (on: boolean) => void;
+  /** Month, year and president for the active date, or a hover/click hint. */
+  status: string;
+  canClear: boolean;
+  onClear: () => void;
 }) {
   const order = terms.map((_, i) => i).reverse(); // newest first
   return (
@@ -53,6 +60,18 @@ export function EconomyFilterBar({
             />
             Congress control
           </label>
+          <div className="flex min-w-0 items-center gap-2.5 sm:ml-auto">
+            <span className="text-[0.8rem] leading-snug text-ink">{status}</span>
+            {canClear && (
+              <button
+                type="button"
+                onClick={onClear}
+                className="flex-none rounded-md border border-line-strong bg-surface px-[0.65rem] py-[0.42rem] text-[0.8rem] text-ink transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+              >
+                Clear date
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

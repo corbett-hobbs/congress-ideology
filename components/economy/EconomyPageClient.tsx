@@ -1,10 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { EconomyStateProvider, activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
+import { dateOfDay, MONTH_NAMES } from "@/lib/indicator-time";
 import { PageHeader } from "@/components/PageHeader";
 import { fromEconomyPayload, type EconomyPayload } from "@/lib/indicator-payload";
 import { readAll } from "@/lib/indicator-lookup";
 import { EconomyCard } from "./EconomyCard";
+import type { EconomyData } from "@/lib/indicator-payload";
 import { EconomyFilterBar } from "./EconomyFilterBar";
 import { CARD_ORDER, SPECS } from "./specs";
 
@@ -15,19 +18,53 @@ function Swatch({ color, border }: { color: string; border?: boolean }) {
   return <span aria-hidden className="inline-block size-3" style={{ background: color, border: border ? "1px solid var(--line)" : undefined }} />;
 }
 
-export function EconomyPageClient({
-  payload,
-  fredNotice,
-  mortgageAttribution,
-}: {
+export function EconomyPageClient(props: PageProps) {
+  return (
+    <EconomyStateProvider>
+      <EconomyPage {...props} />
+    </EconomyStateProvider>
+  );
+}
+
+interface PageProps {
   payload: EconomyPayload;
   fredNotice: string;
   mortgageAttribution: string;
-}) {
+}
+
+/** "March 2009, Obama 44 (D)" for an axis day. */
+function describeDay(data: EconomyData, day: number): string {
+  const { year, month } = dateOfDay(day);
+  const t = data.terms.find((x) => day >= x.s && day < x.e) ?? data.terms[data.terms.length - 1];
+  return `${MONTH_NAMES[month]} ${year}, ${t.label} (${t.party})`;
+}
+
+function EconomyPage({
+  payload,
+  fredNotice,
+  mortgageAttribution,
+}: PageProps) {
   const data = useMemo(() => fromEconomyPayload(payload), [payload]);
-  const [term, setTerm] = useState<number | null>(null);
+  const values = useEconomyValues();
+  const { setTerm, clearPin } = useEconomyActions();
+  const term = values.term;
   const [showCong, setShowCong] = useState(false);
-  const latest = useMemo(() => readAll(data, null), [data]);
+  const day = activeDay(values);
+  // Hero and cards read the same date, from the same lookup module.
+  const latest = useMemo(() => readAll(data, day), [data, day]);
+  const pinned = useMemo(() => (values.pin === null ? null : readAll(data, values.pin)), [data, values.pin]);
+  const status =
+    day === null
+      ? "Hover a chart to compare a date. Click to pin it."
+      : `${describeDay(data, day)}${values.hover === null ? ", pinned" : ""}`;
+  // Announced only when a date is pinned, never on every mouse move.
+  const announcement =
+    values.pin === null || pinned === null
+      ? ""
+      : `Pinned ${describeDay(data, values.pin)}. ` +
+        (Object.keys(pinned) as (keyof typeof pinned)[])
+          .map((k) => `${SPECS[k].title} ${pinned[k].value === null ? "no reading" : SPECS[k].head(pinned[k].value!)}`)
+          .join("; ");
 
   const lastFy = Math.max(...Object.keys(data.def).map(Number));
   const lastIncomeYear = Math.max(...Object.keys(data.inc).map(Number));
@@ -45,7 +82,19 @@ export function EconomyPageClient({
 
   return (
     <>
-      <EconomyFilterBar terms={data.terms} term={term} onTerm={setTerm} showCong={showCong} onShowCong={setShowCong} />
+      <EconomyFilterBar
+        terms={data.terms}
+        term={term}
+        onTerm={setTerm}
+        showCong={showCong}
+        onShowCong={setShowCong}
+        status={status}
+        canClear={values.pin !== null}
+        onClear={clearPin}
+      />
+      <div aria-live="polite" className="sr-only">
+        {announcement}
+      </div>
       <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-16 pt-7 sm:px-6">
         <PageHeader title="What Was the Economy Like?">
           <p>

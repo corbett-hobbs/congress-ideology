@@ -17,7 +17,10 @@ export interface ChartSpec {
 }
 
 const MINUS = "−";
-export const fx = (x: number, n: number) => (x + (x >= 0 ? 1e-9 : -1e-9)).toFixed(n).replace("-", MINUS);
+export const fx = (x: number, n: number) => {
+  const s = (x + (x >= 0 ? 1e-9 : -1e-9)).toFixed(n);
+  return Number(s) === 0 ? s.replace("-", "") : s.replace("-", MINUS); // no "−0.0%"
+};
 const nf = (n: number) => String(Math.abs(Math.round(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 export const JOBS_CAP = 1000;
 
