@@ -124,15 +124,8 @@ export function TradePartnersCard({
 
   return (
     <section className="min-w-0 rounded-[10px] border border-line bg-surface p-5 sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
-        <div className="min-w-0 flex-1">
-          <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">Who the U.S. trades with, {shown}{partial ? " so far" : ""}</h2>
-          <p className="m-0 mt-2 text-[0.875rem] leading-[1.5] text-ink-muted">
-            Imports and exports of goods for the selected year. The line between them is the balance.
-            {partial ? ` ${shown} covers January to ${through}.` : ""}
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">Who the U.S. trades with, {shown}{partial ? " so far" : ""}</h2>
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
           <label className="flex items-center gap-2">
             <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">Year</span>
             <select
@@ -153,7 +146,10 @@ export function TradePartnersCard({
             ariaLabel="Sort partners"
           />
         </div>
-      </div>
+      <p className="m-0 mt-3 text-[0.875rem] leading-[1.5] text-ink-muted">
+            Imports and exports of goods for the selected year. The line between them is the balance.
+            {partial ? ` ${shown} covers January to ${through}.` : ""}
+          </p>
 
       {error && rows.length > 0 && shown !== year && (
         <p role="status" className="m-0 mt-2 text-[0.8rem] text-ink-muted">{`Couldn’t load ${year}; still showing ${shown}. Pick the year again to retry.`}</p>

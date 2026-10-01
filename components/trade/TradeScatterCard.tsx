@@ -148,14 +148,9 @@ export function TradeScatterCard({
 
   return (
     <section className="min-w-0 rounded-[10px] border border-line bg-surface p-5 sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
-        <div className="min-w-0 flex-1">
-          <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">Did tariffs shift trade?</h2>
-          <p className="m-0 mt-2 text-[0.875rem] leading-[1.5] text-ink-muted">
-            Each dot is a country. Across: how much calculated duties as a share of its imports changed, from {windowText(windows.baseline)} to {windowText(windows.latest)}. Up: how much U.S. imports from it changed over the same months.
-          </p>
-        </div>
-        <div className="relative w-full sm:w-64">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">Did tariffs shift trade?</h2>
+        <div className="relative w-full sm:w-44 sm:flex-none">
           <label className="sr-only" htmlFor="trade-scatter-search">Find a country</label>
           <input
             id="trade-scatter-search"
@@ -197,6 +192,9 @@ export function TradeScatterCard({
           )}
         </div>
       </div>
+      <p className="m-0 mt-3 text-[0.875rem] leading-[1.5] text-ink-muted">
+            Each dot is a country. Across: how much calculated duties as a share of its imports changed, from {windowText(windows.baseline)} to {windowText(windows.latest)}. Up: how much U.S. imports from it changed over the same months.
+          </p>
 
       <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 font-mono text-[0.78rem] text-ink-muted">
         <span><b className="text-ink">{plotted ? `${Math.round((higher / plotted) * 100)}%` : "—"}</b> higher duty rate</span>
