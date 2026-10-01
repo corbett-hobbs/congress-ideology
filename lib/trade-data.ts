@@ -17,6 +17,7 @@ import { displayCountryName } from "./trade-names";
 import { getEraLayers } from "./indicator-data";
 import { spanEnd } from "./trade-chart";
 import type { EconomyPayload } from "./indicator-payload";
+import { buildScatterRows, scatterWindows, type ScatterRow, type ScatterWindows } from "./trade-scatter";
 import type { TradeCountryPayload, TradeCountryRef, TradeNationalPayload, TradeYearPayload } from "./trade-types";
 
 /**
@@ -104,6 +105,8 @@ export interface TradePageData {
   era: Pick<EconomyPayload, "rec" | "terms" | "control"> & { span: number };
   firstYear: number;
   lastYear: number;
+  /** Chart 5: per-country change in duty rate and imports between the baseline and latest windows. */
+  scatter: { windows: ScatterWindows; rows: ScatterRow[] };
   /** The latest year's partner rows, so the partners chart paints without a fetch. */
   initialYear: TradeYearPayload;
 }
@@ -120,8 +123,27 @@ export function getTradePageData(): TradePageData {
     national,
     countries: getTradeCountryRefs(),
     era: { span, ...getEraLayers(span) },
+    scatter: getScatter(),
     firstYear: 1991,
     lastYear,
     initialYear,
   };
+}
+
+/** Chart 5 rows: every country that has a duties series, over the windows set in `lib/trade-scatter.ts`. */
+export function getScatter(): { windows: ScatterWindows; rows: ScatterRow[] } {
+  const d = load();
+  const last = readJson("duties_national.json").map((r) => dutiesNationalRow.parse(r)).map((r) => r.period).sort().pop();
+  if (!last) throw new Error("duties_national.json is empty");
+  const windows = scatterWindows(last);
+  const names = new Map(getTradeCountryRefs().map((c) => [c.code, c.name]));
+  const byCode = new Map<string, DutiesByCountryRow[]>();
+  for (const rows of d.duties.values()) for (const r of rows) (byCode.get(r.country_code) ?? byCode.set(r.country_code, []).get(r.country_code)!).push(r);
+  const inputs = [...byCode].flatMap(([code, rows]) => {
+    const name = names.get(code);
+    if (!name) return []; // aggregates carry no duties rows; an unknown code is skipped, not guessed
+    const p = buildCountryPayload({ country_code: code, name }, [], rows, d.length);
+    return [{ code, name, duties: p.duties, imports: p.dutyImports }];
+  });
+  return { windows, rows: buildScatterRows(inputs, windows) };
 }

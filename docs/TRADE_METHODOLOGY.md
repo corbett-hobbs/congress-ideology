@@ -86,6 +86,27 @@ so the same transform builds both.
   is not in DataWeb's country list fails the fetch; none did for 1993–2009.
 - Revisions: Census restates history; this pull is a snapshot as of `fetched_at` and is not refreshed.
 
+## "Did tariffs shift trade?" (the scatter)
+
+Built in `lib/trade-scatter.ts`; constants `LATEST_MONTHS = 6`, `BASELINE_YEAR = 2024`.
+
+- **Latest window:** the last six published months of calculated duties (Feb–Jul 2026 at the time of writing).
+- **Baseline:** the **same calendar months** of 2024, so seasonality cancels. A window that spans New Year
+  takes its baseline across 2023–24 the same way.
+- **Across (x):** change in the average calculated duty rate, in percentage points. Rate = total calculated
+  duties / total imports for consumption over the window (weighted by imports, not a mean of monthly rates).
+- **Up (y):** change in imports for consumption (customs value) over the same windows, in percent. This is
+  the rate's own denominator, not the goods-file imports, which also count bonded and trade-zone entries.
+- **Plotted only if every month of both windows is published** for that country and the baseline imports are
+  positive. Others stay in the table with "not plotted" and the months covered (6 of 236 at the time of writing).
+- **Scale:** the vertical axis is a symmetric log (linear within ±50%) from −100% to +1,000%. Anything beyond is
+  pinned to the edge as a triangle with its true value in the tooltip; two countries were at the time of writing
+  (tiny partners whose imports rose by thousands of percent from a very small base).
+- **Reading it:** these are changes in averages. They move with product mix, re-routing through other countries
+  and shipment timing as well as tariffs, and say nothing about cause. Bilateral figures can be distorted when
+  goods pass through a third country.
+- Both windows are 2010 or later, so they use the Census API source only; the DataWeb bridge is not involved.
+
 ## Country codes
 
 `country_code` is the join key. Rows in `countries.json` are one per **Census code**

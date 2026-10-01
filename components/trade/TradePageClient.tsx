@@ -9,6 +9,7 @@ import type { TradeCountryPayload, TradeYearPayload } from "@/lib/trade-types";
 import { TradeBalanceCard } from "./TradeBalanceCard";
 import { TradeFilterBar } from "./TradeFilterBar";
 import { TradePartnersCard } from "./TradePartnersCard";
+import { TradeScatterCard } from "./TradeScatterCard";
 import { activeDay, TradeStateProvider, useTradeActions, useTradeValues } from "./TradeState";
 
 export function TradePageClient({ data }: { data: TradePageData }) {
@@ -22,7 +23,7 @@ export function TradePageClient({ data }: { data: TradePageData }) {
 function TradePage({ data }: { data: TradePageData }) {
   const v = useTradeValues();
   const { setRange, clearPin, setCountry, setShowCong, setYear, togglePlay } = useTradeActions();
-  const { era, national, countries, firstYear, lastYear, initialYear } = data;
+  const { era, national, countries, firstYear, lastYear, initialYear, scatter } = data;
   const [loaded, setLoaded] = useState<Record<string, TradeCountryPayload>>({});
   const [failed, setFailed] = useState<string | null>(null);
   const inflight = useRef<AbortController | null>(null);
@@ -149,6 +150,8 @@ function TradePage({ data }: { data: TradePageData }) {
           loading={!yearPayload && yearFailed !== v.year}
           error={!yearPayload && yearFailed === v.year}
         />
+
+        <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: U.S. Census Bureau (trade values and calculated duties, 2010 on); U.S. International Trade Commission
