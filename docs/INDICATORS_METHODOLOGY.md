@@ -147,3 +147,30 @@ they bar mirroring all of FRED or replicating its user experience (ten series
 does neither). Third-party-copyrighted series are those with "Copyright" in
 their FRED notes — of ours only `MORTGAGE30US` (Freddie Mac). See CREDITS.md for
 the decision and the unresolved permission question.
+
+## The economy page (`/presidency/economy`)
+
+- **Shared axis:** whole days since 1991-01-01; the axis ends on September 30 of
+  the fiscal year containing the newest weekly observation.
+- **Date → reading rules** (`lib/indicator-lookup.ts`): weekly = last observation
+  on or before the date within 14 days; monthly = the exact month (missing →
+  "not collected", past the end → "not yet released"); income = calendar year,
+  plotted July 1; deficit = fiscal year (October starts the next), plotted
+  April 1; debt = calendar quarter, plotted at quarter start + 45 days; misery =
+  unemployment + inflation for the same month.
+- **Recessions:** contiguous runs of `USREC = 1`, first month through the end of
+  the last month.
+- **Presidents:** `administrations.json` plus George H. W. Bush
+  (`lib/economy-presidents.ts`), who is outside the EO data's 1994 start but
+  inside this page's 1991 window.
+- **Congress control:** `pipeline/reference/congress-control.json`, hand-curated
+  from senate.gov and history.house.gov. Not derived from `terms.json` because
+  roster counts include mid-Congress replacements and caucusing independents
+  (the 110th Senate is 51-51 on the roster). `lib/congress-control.test.ts`
+  checks continuity and loosely checks roster counts.
+- **Jobs axis** is capped at ±1M; six months in 2020 exceed it (Mar–Aug). All get
+  an edge triangle; the largest gain and loss are labeled with true values.
+- **Income units:** FRED's `units` field says 2025 dollars and the series was
+  updated 2026-09-16 with the 2025 observation, while its `notes` text still says
+  2024 (apparently stale). The page uses the `units` field. Not independently
+  verified.

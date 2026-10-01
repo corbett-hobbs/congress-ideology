@@ -7,6 +7,19 @@ import {
   type IndicatorObservation,
   type IndicatorSeries,
 } from "./indicator-entities";
+import { administration } from "./executive-orders-entities";
+import { congressControlFile, controlSpans } from "./congress-control";
+import { buildEconomyTerms } from "./economy-presidents";
+import {
+  annualTuples,
+  monthlySeries,
+  quarterlySeries,
+  recessionSpans,
+  weeklyTuples,
+  type EconomyPayload,
+} from "./indicator-payload";
+import { dayOf, dayOfIso, fiscalYearOfDay } from "./indicator-time";
+import { MORTGAGE_METHOD_CHANGE } from "./indicator-entities";
 import {
   monthlyChange,
   windowPoints,
@@ -70,4 +83,40 @@ export function getJobsAdded(): DerivedPoint[] {
 /** Inflation (%): year-over-year change in CPIAUCSL, windowed; null where the year-earlier month is missing. */
 export function getInflation(): DerivedPoint[] {
   return windowPoints(yearOverYearPercent(load().byId.get("CPIAUCSL") ?? []), "monthly");
+}
+
+/**
+ * The economy page's client payload: every series inside the display window,
+ * compacted (see `lib/indicator-payload.ts`), plus recession spans, presidential
+ * terms and chamber control on the shared day axis. The axis ends on September
+ * 30 of the fiscal year containing the newest weekly observation.
+ */
+export function getEconomyPayload(): EconomyPayload {
+  const { series, byId } = load();
+  const get = (id: string) => windowPoints(byId.get(id) ?? [], seriesOf(id).frequency);
+  const newest = [...get("GASREGW"), ...get("MORTGAGE30US")].reduce((m, p) => (p.date > m ? p.date : m), "");
+  const span = dayOf(fiscalYearOfDay(dayOfIso(newest)), 8, 30) + 1;
+  const admins = readRows("administrations.json", (r) => administration.parse(r));
+  const control = congressControlFile.parse(
+    JSON.parse(readFileSync(join(process.cwd(), "pipeline", "reference", "congress-control.json"), "utf8")),
+  );
+  return {
+    span,
+    gas: weeklyTuples(get("GASREGW"), 3),
+    mort: weeklyTuples(get("MORTGAGE30US"), 2),
+    jobs: monthlySeries(getJobsAdded(), 0),
+    un: monthlySeries(get("UNRATE"), 1),
+    infl: monthlySeries(getInflation(), 3),
+    inc: annualTuples(get("MEHOINUSA672N"), 0),
+    def: annualTuples(get("FYFSGDA188S"), 2),
+    held: quarterlySeries(get("FYGFGDQ188S"), 2),
+    tot: quarterlySeries(get("GFDEGDQ188S"), 2),
+    // Full history so a run that began before the window still has its true start.
+    rec: recessionSpans(byId.get("USREC") ?? []),
+    terms: buildEconomyTerms(admins, span),
+    control: { house: controlSpans(control.rows, "house", span), senate: controlSpans(control.rows, "senate", span) },
+    mortBreak: dayOfIso(MORTGAGE_METHOD_CHANGE),
+    incomeUnits: seriesOf("MEHOINUSA672N").units,
+    fetchedAt: series.map((s) => s.fetched_at).sort().slice(-1)[0],
+  };
 }

@@ -1,0 +1,25 @@
+{
+  "_note": "Which party held the majority of each chamber, by date. A committed reference table, not derived from terms.json: roster counts include mid-Congress replacements and caucusing independents, so a raw count can mislabel the majority (e.g. the 110th Senate is 51-51 on the roster). `from`/`to` are inclusive ISO dates; `to` null = current. Every chamber's rows are contiguous from 1991-01-03. Validated against roster counts (loosely) by lib/congress-control.test.ts.",
+  "sources": {
+    "senate": "U.S. Senate, Party Division in the Senate, 1789-Present, https://www.senate.gov/history/partydiv.htm (control by date, incl. the 2001 and 2021 mid-Congress changes; fetched 2026-10-01)",
+    "house": "U.S. House of Representatives, History, Art & Archives, Party Divisions of the House of Representatives, https://history.house.gov/Institution/Party-Divisions/Party-Divisions/ (fetched 2026-10-01)"
+  },
+  "rows": [
+    { "chamber": "house", "from": "1991-01-03", "to": "1995-01-02", "party": "D", "congresses": "102-103" },
+    { "chamber": "house", "from": "1995-01-03", "to": "2007-01-02", "party": "R", "congresses": "104-109" },
+    { "chamber": "house", "from": "2007-01-03", "to": "2011-01-02", "party": "D", "congresses": "110-111" },
+    { "chamber": "house", "from": "2011-01-03", "to": "2019-01-02", "party": "R", "congresses": "112-115" },
+    { "chamber": "house", "from": "2019-01-03", "to": "2023-01-02", "party": "D", "congresses": "116-117" },
+    { "chamber": "house", "from": "2023-01-03", "to": null, "party": "R", "congresses": "118-119" },
+    { "chamber": "senate", "from": "1991-01-03", "to": "1995-01-02", "party": "D", "congresses": "102-103" },
+    { "chamber": "senate", "from": "1995-01-03", "to": "2001-01-02", "party": "R", "congresses": "104-106" },
+    { "chamber": "senate", "from": "2001-01-03", "to": "2001-01-19", "party": "D", "congresses": "107", "note": "50-50; Vice President Gore's tiebreak" },
+    { "chamber": "senate", "from": "2001-01-20", "to": "2001-06-05", "party": "R", "congresses": "107", "note": "50-50; Vice President Cheney's tiebreak" },
+    { "chamber": "senate", "from": "2001-06-06", "to": "2002-11-11", "party": "D", "congresses": "107", "note": "Sen. Jeffords left the Republican conference" },
+    { "chamber": "senate", "from": "2002-11-12", "to": "2007-01-02", "party": "R", "congresses": "107-109", "note": "Republican control from 2002-11-12 per senate.gov" },
+    { "chamber": "senate", "from": "2007-01-03", "to": "2015-01-02", "party": "D", "congresses": "110-113" },
+    { "chamber": "senate", "from": "2015-01-03", "to": "2021-01-19", "party": "R", "congresses": "114-117" },
+    { "chamber": "senate", "from": "2021-01-20", "to": "2025-01-02", "party": "D", "congresses": "117-118", "note": "50-50 until 2023, then 51-49; Vice President Harris' tiebreak" },
+    { "chamber": "senate", "from": "2025-01-03", "to": null, "party": "R", "congresses": "119" }
+  ]
+}

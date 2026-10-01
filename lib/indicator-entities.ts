@@ -20,6 +20,13 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "ISO date");
  */
 export const INDICATORS_DISPLAY_START = "1991-01-21";
 
+/**
+ * Freddie Mac changed the MORTGAGE30US survey method on this date (a series
+ * break; see the series' caveats in `indicator_series.json`). The economy page
+ * marks it on the mortgage chart.
+ */
+export const MORTGAGE_METHOD_CHANGE = "2022-11-17";
+
 export const INDICATOR_FREQUENCIES = ["weekly", "monthly", "quarterly", "annual"] as const;
 export const indicatorFrequency = z.enum(INDICATOR_FREQUENCIES);
 export type IndicatorFrequency = z.infer<typeof indicatorFrequency>;
