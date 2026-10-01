@@ -53,6 +53,16 @@ interface BranchDef {
 
 const DEFS: readonly BranchDef[] = [
   {
+    id: "presidency",
+    label: "Presidency",
+    defaultSection: "executive-orders",
+    sections: [
+      { id: "executive-orders", label: "Executive orders", status: "live" },
+      { id: "economy", label: "Economy", status: "soon" },
+      { id: "immigration", label: "Immigration", status: "soon" },
+    ],
+  },
+  {
     id: "congress",
     label: "Congress",
     defaultSection: "ideology",
@@ -66,16 +76,6 @@ const DEFS: readonly BranchDef[] = [
     label: "Supreme Court",
     defaultSection: "ideology",
     sections: [{ id: "ideology", label: "Ideology", status: "live" }],
-  },
-  {
-    id: "presidency",
-    label: "Presidency",
-    defaultSection: "executive-orders",
-    sections: [
-      { id: "executive-orders", label: "Executive orders", status: "live" },
-      { id: "economy", label: "Economy", status: "soon" },
-      { id: "immigration", label: "Immigration", status: "soon" },
-    ],
   },
 ];
 
