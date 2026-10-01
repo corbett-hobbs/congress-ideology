@@ -3,6 +3,7 @@
 import { memo, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import {
   fiscalBars,
@@ -17,7 +18,7 @@ import type { EconomyData } from "@/lib/indicator-payload";
 import { recessionLabel } from "@/lib/indicator-payload";
 import { dateOfDay, dayOf, fmtMonthIndex, monthIndexOfDay } from "@/lib/indicator-time";
 import type { EconomyTerm } from "@/lib/economy-presidents";
-import { dayFromFraction, type Reading } from "@/lib/indicator-lookup";
+import { dayFromFraction, readAll, type Reading } from "@/lib/indicator-lookup";
 import { activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
 import { JOBS_CAP, fx, type ChartSpec } from "./specs";
 
@@ -345,6 +346,7 @@ export function EconomyChart({ data, spec, hero = false, showCong, term, reading
   const W = measured || (hero ? 1140 : 540);
   const g = geometry(W, hero, spec, data.span, showCong);
   const { moveHover, leaveHover, pinDay } = useEconomyActions();
+  const tip = useTooltip<number>();
 
   /** Pointer x -> axis day, or null when the pointer is below the plot (the president band has its own click). */
   const dayAt = (e: ReactPointerEvent<SVGSVGElement> | ReactMouseEvent<SVGSVGElement>): number | null => {
@@ -365,10 +367,18 @@ export function EconomyChart({ data, spec, hero = false, showCong, term, reading
         onPointerMove={(e) => {
           if (e.pointerType === "touch") return; // taps pin (onClick); touch scrolling is left alone
           const d = dayAt(e);
-          if (d === null) leaveHover();
-          else moveHover(d);
+          if (d === null) {
+            leaveHover();
+            tip.hide();
+          } else {
+            moveHover(d);
+            tip.show(d, e);
+          }
         }}
-        onPointerLeave={leaveHover}
+        onPointerLeave={() => {
+          leaveHover();
+          tip.hide();
+        }}
         onClick={(e) => {
           const d = dayAt(e);
           if (d !== null) pinDay(d);
@@ -381,6 +391,18 @@ export function EconomyChart({ data, spec, hero = false, showCong, term, reading
           </>
         )}
       </ChartFrame>
+      <Tooltip state={tip.state}>
+        {(day) => {
+          const r = readAll(data, day)[spec.key]; // computed from the pointer's own date, not the rAF-throttled shared state
+          return (
+          <div className="flex min-w-[8rem] flex-col gap-0.5 text-[0.78rem]">
+            <div className="opacity-75">{r.caption}</div>
+            <div className="font-mono text-[0.95rem] font-medium">{r.value === null ? "\u2014" : spec.head(r.value)}</div>
+            {r.value2 !== null && <div className="opacity-75">{`Total ${spec.head(r.value2)}`}</div>}
+          </div>
+          );
+        }}
+      </Tooltip>
     </div>
   );
 }
