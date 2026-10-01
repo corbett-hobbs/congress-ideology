@@ -5,7 +5,6 @@ import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
-import { dayOf } from "@/lib/indicator-time";
 import { dayFromFraction } from "@/lib/indicator-lookup";
 import { fmtMoney, fmtTick, monthMidDay, plotted, readingAtDay, termAtDay, termLabel, type FlowSeries, type Measure, type Scale } from "@/lib/trade-chart";
 import { activeDay, useTradeActions, useTradeValues } from "./TradeState";
@@ -21,8 +20,6 @@ interface Props {
   showCong: boolean;
   /** Visible window `[start, end)` in axis days. */
   view: readonly [number, number];
-  /** The partners chart's year, marked lightly on the plot. */
-  year: number;
   ariaLabel: string;
 }
 
@@ -50,12 +47,9 @@ interface StaticProps extends Props {
 }
 
 /** Everything that doesn't change with the hovered date; memoized so a hover frame doesn't rebuild the paths. */
-const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, showCong, view, year, W }: StaticProps) {
-  const [vs, ve] = view;
+const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, showCong, view, W }: StaticProps) {
   const g = geometry(W, view, scale, showCong);
   const { ml, mt, H, pw, axisY, bandY, houseY, senateY, X, Y } = g;
-  const clipped = (a: number, b: number): [number, number] => [X(Math.max(vs, a)), X(Math.min(ve, b))];
-  const visibleSpan = (a: number, b: number) => b > vs && a < ve;
   const { main, second } = plotted(series, measure);
   const clipId = "clip-trade-balance";
   const pts = (vals: readonly (number | null)[]) => vals.map((v, i) => ({ day: monthMidDay(i), value: v }));
@@ -63,7 +57,6 @@ const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, sho
     .defined((p) => p.value !== null)
     .x((p) => X(p.day))
     .y((p) => Y(p.value as number));
-  const [ys, ye] = [dayOf(year, 0, 1), dayOf(year + 1, 0, 1)];
 
   return (
     <>
@@ -74,10 +67,6 @@ const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, sho
       </defs>
 
       <RecessionShading era={era} view={view} X={X} top={mt} height={H} />
-      {visibleSpan(ys, ye) && (() => {
-        const [x0, x1] = clipped(ys, ye);
-        return <rect x={x0} y={mt} width={Math.max(1, x1 - x0)} height={H} fill="var(--accent)" fillOpacity={0.1} />;
-      })()}
 
       {scale.ticks.map((v) => (
         <g key={v}>

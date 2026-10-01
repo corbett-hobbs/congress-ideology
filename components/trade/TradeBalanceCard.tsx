@@ -99,7 +99,7 @@ export function TradeBalanceCard({
   loading: boolean;
   error: boolean;
 }) {
-  const { measure, showCong, year } = useTradeValues();
+  const { measure, showCong } = useTradeValues();
   const { setMeasure } = useTradeActions();
   const v = useTradeValues();
   const day = activeDay(v);
@@ -142,7 +142,7 @@ export function TradeBalanceCard({
       {series && <MobileReadout line={mobileLine} />}
       <div className="mt-3.5">
         {series ? (
-          <TradeBalanceChart series={series} measure={measure} scale={scale} era={era} showCong={showCong} view={view} year={year} ariaLabel={aria} />
+          <TradeBalanceChart series={series} measure={measure} scale={scale} era={era} showCong={showCong} view={view} ariaLabel={aria} />
         ) : (
           <div role="status" className="flex h-[260px] items-center justify-center rounded-md border border-dashed border-line text-[0.85rem] text-ink-muted">
             {error ? `Couldn’t load ${countryName ?? "that country"}. Pick it again to retry.` : loading ? `Loading ${countryName ?? "country"}…` : ""}
@@ -160,7 +160,6 @@ export function TradeBalanceCard({
         <span className="inline-flex items-center gap-1.5"><Swatch color="var(--dem)" />Democratic</span>
         <span className="inline-flex items-center gap-1.5"><Swatch color="var(--rep)" />Republican</span>
         <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--ink) 9%, transparent)" border />Recession (NBER)</span>
-        <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--accent) 12%, transparent)" border />Year in the partners chart</span>
         <span className="ml-auto">{adjLabel}{countryName ? `. Axis rescales to ${countryName}.` : "."}</span>
       </div>
 
