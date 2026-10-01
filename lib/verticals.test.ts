@@ -49,7 +49,7 @@ describe("verticals config", () => {
   it("resolves pathnames to vertical and section", () => {
     expect(activeBranch("/")).toBeUndefined();
     expect(activeBranch("/congress/senators/x/y")?.id).toBe("congress");
-    expect(activeSection(branches[0], "/congress/wealth")?.id).toBe("wealth");
+    expect(activeSection(branches.find((b) => b.id === "congress")!,"/congress/wealth")?.id).toBe("wealth");
     expect(sectionRow("/congress/senators/x/y")?.active).toBeUndefined();
     expect(sectionRow("/")).toBeNull();
   });
