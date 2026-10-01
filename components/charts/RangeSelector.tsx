@@ -31,9 +31,12 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
 
   return (
     <div role="group" aria-label={ariaLabel} className={`flex min-w-0 items-center gap-3 ${className}`}>
-      <div className="range-dual relative mx-[11px] h-6 min-w-0 flex-1">
-        <div aria-hidden className="absolute inset-x-[-11px] top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-line" />
-        <div aria-hidden className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-accent" style={{ left: `${left}%`, right: `${100 - right}%` }} />
+      {/* The inputs span the full width; a native thumb's centre only travels the inner width minus one thumb (22px),
+          so the visible track is inset by half a thumb to end exactly where the handles do. */}
+      <div className="range-dual relative h-6 min-w-0 flex-1">
+        <div aria-hidden className="absolute inset-x-[11px] top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-line">
+          <div aria-hidden className="absolute inset-y-0 rounded-full bg-accent" style={{ left: `${left}%`, right: `${100 - right}%` }} />
+        </div>
         <input
           type="range"
           min={min}

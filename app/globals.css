@@ -436,6 +436,7 @@ body {
   pointer-events: auto;
   appearance: none;
   -webkit-appearance: none;
+  box-sizing: border-box;
   width: 22px;
   height: 22px;
   border-radius: 9999px;
@@ -446,8 +447,9 @@ body {
 }
 .range-dual input[type="range"]::-moz-range-thumb {
   pointer-events: auto;
-  width: 18px;
-  height: 18px;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
   border-radius: 9999px;
   border: 2px solid var(--accent);
   background: var(--surface);
