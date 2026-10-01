@@ -112,7 +112,7 @@ export function MemberIdeologySection({
                 : ""}
               .{inChamber ? ` ${name} is ringed.` : ""}{" "}
               <Link
-                href={`/congress?chamber=house&state=${state}`}
+                href={`/congress/ideology?chamber=house&state=${state}`}
                 className="text-accent hover:underline"
               >
                 Open in the explorer →

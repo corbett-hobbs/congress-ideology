@@ -4,15 +4,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SiteNav, SiteSectionNav } from "./SiteNav";
 import { useBackLinkHref } from "./BackLinkContext";
+import { liveSections } from "@/lib/verticals";
 
 /** Pages where the primary nav is itself the way around: the wordmark is a
  *  plain link to "/" with no arrow. Every other page is a detail page. */
-const SECTION_PAGES = new Set(["/", "/congress", "/congress/wealth", "/supreme-court", "/presidency"]);
+const SECTION_PAGES = new Set(["/", ...liveSections().map((s) => s.href)]);
 
 /**
  * One header row at `md`+ (two slim rows below): wordmark, branch tabs
- * (SiteNav), then — for a branch with two or more sections — a divider and
- * the section pills (SiteSectionNav), all left-aligned; the right is empty. Each explorer/section renders its
+ * (SiteNav), then — on any live vertical's pages, even with one section — a
+ * divider and the section pills (SiteSectionNav), all left-aligned; the right
+ * is empty. Each explorer/section renders its
  * own controls below this — e.g. components/senate/ExplorerToolbar.tsx. The
  * header is not sticky; only those toolbars pin.
  *

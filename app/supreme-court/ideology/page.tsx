@@ -7,10 +7,10 @@ export const metadata: Metadata = {
   title: "Supreme Court ideology explorer",
   description:
     "Where each Supreme Court justice sits on the liberal–conservative scale, term by term, from Martin–Quinn scores.",
-  alternates: { canonical: "/supreme-court" },
+  alternates: { canonical: "/supreme-court/ideology" },
   openGraph: {
     title: "How Does the Supreme Court Lean?",
-    url: "/supreme-court",
+    url: "/supreme-court/ideology",
   },
 };
 

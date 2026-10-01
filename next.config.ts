@@ -1,19 +1,21 @@
 import type { NextConfig } from "next";
+import { verticalRedirects } from "./lib/verticals";
 
 const nextConfig: NextConfig = {
-  // The explorer moved from "/" to "/congress" and wealth from "/wealth" to
-  // "/congress/wealth". A bare "/" is the hub and must not redirect, so the
-  // explorer is matched on the query params it reads/writes (chamber, state,
-  // show — see lib/use-chamber.ts). Next carries the query string through.
+  // Verticals -> sections (lib/verticals.ts): "/<vertical>" redirects to the
+  // vertical's default section. A bare "/" is the hub and must not redirect, so
+  // the legacy explorer links that used to live at "/" are matched on the
+  // query params the explorer reads/writes (chamber, state, show — see
+  // lib/use-chamber.ts). Next carries the query string through.
   async redirects() {
     return [
       { source: "/wealth", destination: "/congress/wealth", permanent: true },
-      // The executive-orders page became the Presidency branch's home.
-      { source: "/executive-orders", destination: "/presidency", permanent: true },
+      { source: "/executive-orders", destination: "/presidency/executive-orders", permanent: true },
+      ...verticalRedirects().map((r) => ({ ...r, permanent: true })),
       ...["chamber", "state", "show"].map((key) => ({
         source: "/",
         has: [{ type: "query" as const, key }],
-        destination: "/congress",
+        destination: "/congress/ideology",
         permanent: true,
       })),
     ];
@@ -39,7 +41,7 @@ const nextConfig: NextConfig = {
     "/sitemap.xml": ["./pipeline/output/*.json"],
     // The Court pages and the hub card read pipeline/output/court/ via
     // lib/justice-data.ts.
-    "/supreme-court": ["./pipeline/output/court/*.json"],
+    "/supreme-court/ideology": ["./pipeline/output/court/*.json"],
     "/supreme-court/justices/[justice_id]/[name_slug]": ["./pipeline/output/court/*.json"],
     "/": ["./pipeline/output/court/*.json"],
   },

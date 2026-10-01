@@ -3,7 +3,7 @@ import { getWealthData } from "@/lib/wealth-data";
 import { WealthPageClient } from "@/components/wealth/WealthPageClient";
 import { site } from "@/lib/site";
 
-/** /congress/wealth — the Congress branch's net worth section. */
+/** /congress/wealth — the Congress vertical's Wealth section. */
 export const metadata: Metadata = {
   title: "Congressional net worth",
   description:

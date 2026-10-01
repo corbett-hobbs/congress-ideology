@@ -27,7 +27,7 @@ export function JusticeProfileView({ profile }: { profile: JusticeProfile }) {
 
   return (
     <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-7 px-4 pb-16 pt-9 sm:px-6 sm:pt-11">
-      <SetBackLink href="/supreme-court" />
+      <SetBackLink href="/supreme-court/ideology" />
 
       <JusticeHeader profile={profile} />
 

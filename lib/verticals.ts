@@ -1,65 +1,100 @@
 /**
- * Two-tier site structure: branches (Congress, Supreme Court, Presidency) each
- * containing one or more sections (Congress: Ideology, Wealth).
+ * Two-level site structure: verticals (Congress, Supreme Court, Presidency),
+ * each with ordered sections (Congress: Ideology, Wealth). Every section lands
+ * at `/<vertical>/<section>`; a bare `/<vertical>` redirects to the vertical's
+ * default section.
  *
- * `/` is a hub linking to the branches. The persistent header shows the
- * branches as its primary nav and, for a branch with two or more sections, a
- * secondary row of section tabs (see components/SiteHeader.tsx, SiteNav.tsx).
- * A member's profile page still stacks one section per content vertical (see
- * components/profile/MemberProfileView.tsx).
+ * This module is the single source of truth. The header nav, the sub-nav, the
+ * hub cards, the redirect list (next.config.ts) and the sitemap all derive
+ * from it. To publish a `soon` section: flip its `status` to `live` and add
+ * `app/<vertical>/<section>/page.tsx` — nothing else needs editing.
  *
- * To add a branch: append an entry here and build its routes. To publish a
- * branch that is `soon`, flip its `status` to `live` — the hub card and the
- * nav entry follow.
+ * Entity profile routes (senators, house members, committees, justices) keep
+ * their own URLs under the vertical and are not sections.
+ *
+ * `soon` sections have no route: they render disabled in the nav and hub, are
+ * absent from the sitemap, and a direct request 404s.
  */
+export type Status = "live" | "soon";
+
 export interface Section {
   id: string;
   label: string;
+  /** `/<vertical>/<section>` */
   href: string;
+  status: Status;
 }
 
 export interface Branch {
   id: string;
   label: string;
+  /** `/<vertical>` — redirects to the default section when the vertical is live. */
   href: string;
-  /** `soon`: no page yet — hub shows a non-link card, nav omits the entry. */
-  status: "live" | "soon";
+  /** Live iff the default section is live. */
+  status: Status;
+  defaultSection: string;
   sections: readonly Section[];
-  /** Does this pathname belong to the branch? Drives the active underline. */
+  /** Does this pathname belong to the vertical? Drives the active highlight. */
   owns: (pathname: string) => boolean;
 }
 
-export const branches: readonly Branch[] = [
-  {
-    id: "presidency",
-    label: "Presidency",
-    href: "/presidency",
-    status: "live",
-    sections: [
-      { id: "executive-orders", label: "Executive orders", href: "/presidency" },
-    ],
-    owns: (p) => p === "/presidency" || p.startsWith("/presidency/"),
-  },
+interface SectionDef {
+  id: string;
+  label: string;
+  status: Status;
+}
+
+interface BranchDef {
+  id: string;
+  label: string;
+  defaultSection: string;
+  sections: readonly SectionDef[];
+}
+
+const DEFS: readonly BranchDef[] = [
   {
     id: "congress",
     label: "Congress",
-    href: "/congress",
-    status: "live",
+    defaultSection: "ideology",
     sections: [
-      { id: "ideology", label: "Ideology", href: "/congress" },
-      { id: "wealth", label: "Wealth", href: "/congress/wealth" },
+      { id: "ideology", label: "Ideology", status: "live" },
+      { id: "wealth", label: "Wealth", status: "live" },
     ],
-    owns: (p) => p === "/congress" || p.startsWith("/congress/"),
   },
   {
     id: "supreme-court",
     label: "Supreme Court",
-    href: "/supreme-court",
-    status: "live",
-    sections: [{ id: "ideology", label: "Ideology", href: "/supreme-court" }],
-    owns: (p) => p === "/supreme-court" || p.startsWith("/supreme-court/"),
+    defaultSection: "ideology",
+    sections: [{ id: "ideology", label: "Ideology", status: "live" }],
+  },
+  {
+    id: "presidency",
+    label: "Presidency",
+    defaultSection: "executive-orders",
+    sections: [
+      { id: "executive-orders", label: "Executive orders", status: "live" },
+      { id: "economy", label: "Economy", status: "soon" },
+      { id: "immigration", label: "Immigration", status: "soon" },
+    ],
   },
 ];
+
+function build(def: BranchDef): Branch {
+  const href = `/${def.id}`;
+  const sections = def.sections.map((s) => ({ ...s, href: `${href}/${s.id}` }));
+  const dflt = sections.find((s) => s.id === def.defaultSection);
+  return {
+    id: def.id,
+    label: def.label,
+    href,
+    status: dflt?.status === "live" ? "live" : "soon",
+    defaultSection: def.defaultSection,
+    sections,
+    owns: (p) => p === href || p.startsWith(`${href}/`),
+  };
+}
+
+export const branches: readonly Branch[] = DEFS.map(build);
 
 export function getBranch(id: string): Branch {
   const b = branches.find((x) => x.id === id);
@@ -67,33 +102,43 @@ export function getBranch(id: string): Branch {
   return b;
 }
 
-/** The branch a pathname belongs to (profile pages under /congress/... count). */
+/** The vertical a pathname belongs to (profile pages beneath it count). */
 export function activeBranch(pathname: string): Branch | undefined {
   return branches.find((b) => b.owns(pathname));
 }
 
-/** The section tab that is current within a branch, by longest href match. */
+/** The section that is current within a vertical. Profile pages beneath the
+ *  vertical (senators, justices, …) match no section. */
 export function activeSection(
   branch: Branch,
   pathname: string,
 ): Section | undefined {
-  return [...branch.sections]
-    .sort((a, b) => b.href.length - a.href.length)
-    .find((s) =>
-      s.href === branch.href
-        ? pathname === s.href
-        : pathname === s.href || pathname.startsWith(`${s.href}/`),
-    );
+  return branch.sections.find(
+    (s) => pathname === s.href || pathname.startsWith(`${s.href}/`),
+  );
 }
 
-/** Section tabs show only for a live branch with two or more sections, on the
- *  branch's section pages (not on profile pages beneath it). */
+/** The sub-nav: shown under the header for any live vertical, even with a
+ *  single section. `active` is undefined on entity profile pages. */
 export function sectionRow(
   pathname: string,
-): { branch: Branch; active: Section } | null {
+): { branch: Branch; active: Section | undefined } | null {
   const branch = activeBranch(pathname);
-  if (!branch || branch.status !== "live" || branch.sections.length < 2)
-    return null;
-  const active = activeSection(branch, pathname);
-  return active ? { branch, active } : null;
+  if (!branch || branch.status !== "live") return null;
+  return { branch, active: activeSection(branch, pathname) };
+}
+
+/** Every live section, for the sitemap and the route-consistency test. */
+export function liveSections(): Section[] {
+  return branches.flatMap((b) => b.sections.filter((s) => s.status === "live"));
+}
+
+/** `/<vertical>` → default section, only for live verticals. */
+export function verticalRedirects(): { source: string; destination: string }[] {
+  return branches
+    .filter((b) => b.status === "live")
+    .map((b) => ({
+      source: b.href,
+      destination: `${b.href}/${b.defaultSection}`,
+    }));
 }

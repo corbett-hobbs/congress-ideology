@@ -16,11 +16,11 @@ import { SenateExplorer } from "@/components/senate/SenateExplorer";
 export const metadata: Metadata = {
   title: "Congress ideology explorer",
   description: site.description,
-  alternates: { canonical: "/congress" },
+  alternates: { canonical: "/congress/ideology" },
   openGraph: {
     title: site.name,
     description: site.description,
-    url: "/congress",
+    url: "/congress/ideology",
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: { images: ["/opengraph-image"] },

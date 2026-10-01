@@ -87,7 +87,7 @@ DW-NOMINATE scores must not be conflated) are written down in
   re-runs the pipeline and fails if the committed output drifts, then builds.
 
 ```
-app/          routes — the hub (/), the explorer (/congress), member profiles, committee pages, /congress/wealth
+app/          routes — the hub (/), the explorer (/congress/ideology), the Court (/supreme-court/ideology), executive orders (/presidency/executive-orders), member profiles, committee pages, /congress/wealth
 components/    charts/ (primitives), senate/ (the ideology views), profile/, committee/, wealth/
 lib/           the build-time data layer + shared helpers
 pipeline/      fetch → validate → transform → pipeline/output/*.json

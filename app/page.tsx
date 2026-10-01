@@ -88,7 +88,10 @@ export default function Hub() {
                     className="font-serif text-2xl font-semibold tracking-tight"
                   >
                     {live ? (
-                      <Link href={b.href} className="hover:text-accent">
+                      <Link
+                        href={`${b.href}/${b.defaultSection}`}
+                        className="hover:text-accent"
+                      >
                         {b.label}
                       </Link>
                     ) : (
@@ -150,15 +153,25 @@ The two parties are{" "}
 
                 {live && (
                   <div className="mt-auto flex flex-wrap gap-2 pt-1">
-                    {b.sections.map((s) => (
-                      <Link
-                        key={s.id}
-                        href={s.href}
-                        className="rounded-md border border-line-strong px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-ink-muted transition-colors hover:border-accent hover:text-ink"
-                      >
-                        {s.label} →
-                      </Link>
-                    ))}
+                    {b.sections.map((s) =>
+                      s.status === "live" ? (
+                        <Link
+                          key={s.id}
+                          href={s.href}
+                          className="rounded-md border border-line-strong px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-ink-muted transition-colors hover:border-accent hover:text-ink"
+                        >
+                          {s.label} →
+                        </Link>
+                      ) : (
+                        <span
+                          key={s.id}
+                          aria-disabled="true"
+                          className="rounded-md border border-line px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-ink-faint"
+                        >
+                          {s.label} · soon
+                        </span>
+                      ),
+                    )}
                   </div>
                 )}
               </section>
