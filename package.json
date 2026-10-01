@@ -21,6 +21,7 @@
     "fetch:fjc": "tsx pipeline/fetch/fjc.ts",
     "fetch:fred": "tsx pipeline/fetch/fred.ts",
     "fetch:census-trade": "tsx pipeline/fetch/census-trade.ts",
+    "fetch:dataweb-duties": "tsx pipeline/fetch/dataweb-duties.ts",
     "fetch:ice": "tsx pipeline/fetch/ice.ts",
     "fetch:executive-orders": "tsx pipeline/fetch/executive-orders.ts",
     "classify:eos": "tsx pipeline/classify/executive-orders.ts",

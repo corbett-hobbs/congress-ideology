@@ -98,7 +98,9 @@ Maarten). It lacks dissolved codes and the `00xx` aggregates, which are classifi
 
 ## D1b: bridging calculated duties back to 1991 (USITC DataWeb), 2026-10-01
 
-**Status: stopped at the owner-step gate. Nothing built; no pipeline output changed.**
+**Status: gate passed; bridge built for 1993–2009 (see results below). The first paragraph and the owner steps are kept as the record of how the token was obtained.**
+
+*(Original status: stopped at the owner-step gate, then resumed once the token was provided.)*
 The data query endpoint needs a DataWeb API token, which only the project owner can create
 (Login.gov account with multifactor authentication). The overlap validation (the gate in the
 session prompt) therefore has not been run, and no series may be merged until it is.
@@ -174,3 +176,40 @@ monthly and annual goods (BOP basis), services and total, balance, exports and i
 (only a search description), so treat the file layout as unconfirmed. It is out of scope for
 the first trade page build by decision. `docs/TRADE_METHODOLOGY.md` ("No monthly goods and
 services series") carries the same claim and should be corrected when this is next touched.
+
+### D1b results (run after the token was provided, 2026-10-01)
+
+Measure code `CONS_CALC_DUTY` (calculated duties) and `CONS_CUSTOMS_VALUE`; both work with all
+commodities aggregated, by country, monthly, back to **1989** (1989, 1991, 1993, 2005 spot-checked).
+`runReport` rate-limits (HTTP 429) after a few calls; the fetch script spaces requests 8 s apart.
+
+**Overlap gate (2010-01 to 2012-12, 36 months):**
+
+| Comparison | Cells | Exact matches | Differences |
+| --- | --- | --- | --- |
+| Country-month, calculated duties and customs value (230 countries) | 8,280 | 8,280 | 0 |
+| All-countries month, both measures | 36 | 36 | 0 |
+
+DataWeb is the same Census entry data. Two Census-API codes have no DataWeb country (Gaza Strip, West
+Bank), both with no duties before 2010. Tolerance: exact. **No disagreement, so the gate passed.**
+
+**National cross-check.** DataWeb 1989 national: duties $16,096,409,507, customs value
+$468,012,021,240; USITC's table (from its published figures): $16,096,410K and $468,012,021K. Match.
+Rate series, DataWeb national: 1993 3.19%, 1994 3.18%, 1995 2.51%, 1996 2.28%, 2000 1.64%, 2005 1.40%,
+2008 1.23%, 2009 1.37%; Census API 2010 1.36%. Continuous across the source change. (The table
+PDF itself could not be fetched or parsed here; only a search summary of it was read.)
+
+**Decisions made:**
+
+1. **Granularity:** monthly, available for the whole range. Nothing annual-only.
+2. **Start year: 1993, not 1991.** USITC says pre-1993 dutiable value and calculated duties are
+   overstated (9802 provisions not netted out). Not blended with later years. 1991–92 can be added as a flagged range if wanted.
+3. **Tolerance and failing countries:** exact on the overlap; no country failed, so there is no partial bridge.
+4. **Source flag:** `source` on every duties row; one source per year, enforced.
+5. **Oddities:** none new. Recodes and dissolved states use the existing Census codes. The Sudan/South
+   Sudan and Ethiopia/Eritrea breaks stay as documented. The 1995 step down in the average rate is real policy and mix
+   (NAFTA, Uruguay Round), not a source effect.
+
+**Diverged from the prompt:** start year 1993 instead of 1991; `source` added to every duties row,
+including 2010+ (values unchanged, verified row by row against `HEAD`); the one-time fetch script and a
+raw-file schema (`pipeline/fetch/dataweb-duties*.ts`) were added.

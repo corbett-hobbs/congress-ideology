@@ -2,9 +2,11 @@ import { readFileSync, readdirSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TradeDataError } from "../../lib/trade-entities";
 import { CENSUS_RAW_DIR, parseRawDuties } from "../fetch/census-trade-lib";
+import { DATAWEB_RAW_DIR, parseDataWebRaw } from "../fetch/dataweb-duties-lib";
 import {
   buildCountries,
   buildDuties,
+  type DutiesInput,
   buildGoods,
   goodsSightings,
   lastPublishedMonth,
@@ -20,10 +22,15 @@ const raw = (f: string) => readFileSync(`${CENSUS_RAW_DIR}/${f}`);
 const gandsRows = readXlsx(raw("gands.xlsx"));
 const goodsData = parseCountryXlsx(readXlsx(raw("country.xlsx")));
 const schedC = parseScheduleC(raw("country.txt").toString("latin1"));
-const rawDuties = readdirSync(`${CENSUS_RAW_DIR}/duties`)
+const censusDuties: DutiesInput[] = readdirSync(`${CENSUS_RAW_DIR}/duties`)
   .filter((f) => f.endsWith(".json"))
   .sort()
-  .map((f) => parseRawDuties(JSON.parse(readFileSync(`${CENSUS_RAW_DIR}/duties/${f}`, "utf8"))));
+  .map((f) => ({ ...parseRawDuties(JSON.parse(readFileSync(`${CENSUS_RAW_DIR}/duties/${f}`, "utf8"))), source: "census_api" as const }));
+const dataWebDuties: DutiesInput[] = readdirSync(DATAWEB_RAW_DIR)
+  .filter((f) => f.endsWith(".json"))
+  .sort()
+  .map((f) => ({ ...parseDataWebRaw(JSON.parse(readFileSync(`${DATAWEB_RAW_DIR}/${f}`, "utf8"))), source: "usitc_dataweb" as const }));
+const rawDuties = [...censusDuties, ...dataWebDuties];
 
 function buildAll() {
   const dutyNames = new Map<string, string>();
@@ -84,6 +91,41 @@ describe("country directory", () => {
   it("continues a country across a Census recode (Ethiopia 7740 -> 7749 shares one country_code)", () => {
     const codes = countries.filter((c) => c.country_code === "ETH").map((c) => c.census_code);
     expect(codes).toEqual(expect.arrayContaining(["7740", "7749"]));
+  });
+});
+
+describe("duties: USITC DataWeb bridge (1993-2009)", () => {
+  const { dutiesNational, dutiesCountry } = buildAll();
+  it("covers 1993-01 onward with no gap and marks the source by year", () => {
+    expect(dutiesNational[0].period).toBe("1993-01");
+    for (const r of dutiesNational) expect(r.source).toBe(Number(r.period.slice(0, 4)) < 2010 ? "usitc_dataweb" : "census_api");
+    for (const r of dutiesCountry) expect(r.source).toBe(r.year < 2010 ? "usitc_dataweb" : "census_api");
+  });
+  it("has 12 months for 2009 and no jump in the average rate across the 2009-to-2010 source change", () => {
+    const y = dutiesNational.filter((r) => r.period.startsWith("2009"));
+    expect(y).toHaveLength(12);
+    // Continuity across the source change: the average rate must not jump (2009 1.37% -> 2010 1.36%).
+    const rate = (yr: string) => {
+      const rows = dutiesNational.filter((r) => r.period.startsWith(yr));
+      return rows.reduce((s, r) => s + r.duties, 0) / rows.reduce((s, r) => s + r.import_value, 0);
+    };
+    expect(Math.abs(rate("2010") - rate("2009"))).toBeLessThan(0.002);
+  });
+  it("rejects a bridge year whose country rows disagree with the all-countries total (corrupted fixture)", () => {
+    const bad = JSON.parse(JSON.stringify(buildAll()));
+    const r = bad.dutiesCountry.find((x: { year: number; country_code: string }) => x.year === 2001 && x.country_code === "CHN");
+    r.duties[3] += 5_000_000_000;
+    r.rate[3] = r.duties[3] / r.import_value[3];
+    expect(() => validateTrade(bad)).toThrow(/duties 2001-04/);
+  });
+  it("rejects a country row whose source disagrees with its year's total", () => {
+    const bad = JSON.parse(JSON.stringify(buildAll()));
+    bad.dutiesCountry.find((x: { year: number }) => x.year === 2001).source = "census_api";
+    expect(() => validateTrade(bad)).toThrow(/source census_api differs/);
+  });
+  it("rejects a year supplied by both sources", () => {
+    const dup = { ...dataWebDuties[0], source: "census_api" as const, rows: [] };
+    expect(() => buildDuties([...dataWebDuties, dup], buildAll().countries)).toThrow(/a year has one source/);
   });
 });
 

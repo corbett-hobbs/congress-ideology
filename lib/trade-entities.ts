@@ -8,8 +8,14 @@ import { z } from "zod";
 
 /** First period every series on the page must cover (the Presidency page's window). */
 export const TRADE_START_YEAR = 1991;
-/** The international trade API has no duties data before this month. */
-export const DUTIES_START_PERIOD = "2010-01";
+/** First month of the duties series: the one-time USITC DataWeb bridge starts here (see docs/TRADE_METHODOLOGY.md). */
+export const DUTIES_START_PERIOD = "1993-01";
+/** The Census international trade API has no duties data before this month; DataWeb covers the months before it. */
+export const DUTIES_API_START_PERIOD = "2010-01";
+
+/** Where a duties row came from. Earlier years come from a different source, so the UI can say so. */
+export const dutiesSource = z.enum(["census_api", "usitc_dataweb"]);
+export type DutiesSource = z.infer<typeof dutiesSource>;
 
 const year = z.number().int().min(1985).max(2100);
 const period = z.string().regex(/^\d{4}(-(0[1-9]|1[0-2]))?$/);
@@ -93,6 +99,7 @@ export const dutiesByCountryRow = z
     duties_year: dollars,
     import_value_year: dollars,
     rate_year: rate.nullable(),
+    source: dutiesSource,
   })
   .strict();
 export type DutiesByCountryRow = z.infer<typeof dutiesByCountryRow>;
@@ -104,6 +111,7 @@ export const dutiesNationalRow = z
     duties: dollars,
     import_value: dollars,
     rate: rate.nullable(),
+    source: dutiesSource,
   })
   .strict();
 export type DutiesNationalRow = z.infer<typeof dutiesNationalRow>;

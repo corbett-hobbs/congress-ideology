@@ -5,6 +5,7 @@ import {
   type CountryRow,
   type DutiesByCountryRow,
   type DutiesNationalRow,
+  type DutiesSource,
   type TradeByCountryRow,
   type TradeNationalRow,
 } from "../../lib/trade-entities";
@@ -366,7 +367,10 @@ export interface DutiesBuild {
 
 const COUNTRY_CODE_RE = /^[1-9]\d{3}$/;
 
-export function buildDuties(raws: RawDuties[], countries: CountryRow[]): DutiesBuild {
+/** A year of duties rows plus where they came from (the Census API unless stated). */
+export type DutiesInput = Pick<RawDuties, "year" | "rows"> & { source?: DutiesSource };
+
+export function buildDuties(raws: DutiesInput[], countries: CountryRow[]): DutiesBuild {
   const toCountry = new Map(countries.map((c) => [c.census_code, c.country_code]));
   const names = new Map<string, string>();
   const dropped = new Set<string>();
@@ -374,9 +378,14 @@ export function buildDuties(raws: RawDuties[], countries: CountryRow[]): DutiesB
   const national = new Map<string, Cell>();
   const perCountry = new Map<string, Map<string, Cell>>(); // `${country_code}|${year}` -> period -> cell
   const seenRows = new Set<string>();
+  const sourceOfYear = new Map<number, DutiesSource>();
   let lastPeriod = "";
 
   for (const raw of raws) {
+    const source = raw.source ?? "census_api";
+    const prior = sourceOfYear.get(raw.year);
+    if (prior && prior !== source) throw new TradeDataError(`duties ${raw.year}: provided by both ${prior} and ${source}; a year has one source`);
+    sourceOfYear.set(raw.year, source);
     for (const [time, code, name, dutStr, valStr] of raw.rows) {
       const d = Number(dutStr);
       const v = Number(valStr);
@@ -430,12 +439,12 @@ export function buildDuties(raws: RawDuties[], countries: CountryRow[]): DutiesB
       vy += c.v;
     }
     if (dy === 0 && vy === 0) continue;
-    byCountry.push({ country_code, year, duties, import_value, rate, duties_year: dy, import_value_year: vy, rate_year: rateOf(dy, vy) });
+    byCountry.push({ country_code, year, duties, import_value, rate, duties_year: dy, import_value_year: vy, rate_year: rateOf(dy, vy), source: sourceOfYear.get(year) ?? "census_api" });
   }
   byCountry.sort((a, b) => a.year - b.year || a.country_code.localeCompare(b.country_code));
   const nat: DutiesNationalRow[] = [...national]
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([period, c]) => ({ period, duties: c.d, import_value: c.v, rate: rateOf(c.d, c.v) }));
+    .map(([period, c]) => ({ period, duties: c.d, import_value: c.v, rate: rateOf(c.d, c.v), source: sourceOfYear.get(Number(period.slice(0, 4))) ?? "census_api" }));
   return { byCountry, national: nat, lastPeriod, droppedAggregates: [...dropped].sort(), names };
 }
 
@@ -560,6 +569,8 @@ export function validateTrade(args: {
       }
     }
   }
+  const natSource = new Map(args.dutiesNational.map((r) => [Number(r.period.slice(0, 4)), r.source]));
+  for (const r of args.dutiesCountry) if (natSource.get(r.year) !== r.source) fail(`duties ${r.country_code} ${r.year}: source ${r.source} differs from the year's all-countries total (${natSource.get(r.year)})`);
   const dnat = new Set(args.dutiesNational.map((r) => r.period));
   const [dly, dlm] = [Number(args.dutiesLastPeriod.slice(0, 4)), Number(args.dutiesLastPeriod.slice(5))];
   for (const p of periodsFrom(Number(DUTIES_START_PERIOD.slice(0, 4)), 1, dly, dlm)) if (!dnat.has(p)) fail(`duties: all-countries total missing ${p}`);

@@ -19,15 +19,17 @@ All trade values are $ millions unless a field says whole dollars (duties).
 | `trade_national.json` `basis=bop`, `frequency=annual` | U.S. exports, imports, balance of goods and services (`scope` goods_services / goods / services) | Balance of payments | 1991–2025 (source starts 1960) |
 | `trade_national.json` `basis=census`, `scope=goods` | World goods total, monthly, seasonally adjusted (`sa`) and not (`nsa`), plus annual `nsa` | Census | 1991-01 – latest |
 | `trade_by_country/<year>.json` | Goods exports and imports per partner: 12 monthly values, annual totals, annual balance | Census | 1991 – latest (source starts 1985) |
-| `duties_by_country/<year>.json`, `duties_national.json` | Calculated duties, imports for consumption, derived rate | Census (entries) | **2010-01** – latest |
+| `duties_by_country/<year>.json`, `duties_national.json` | Calculated duties, imports for consumption, derived rate. Each row carries `source`: `census_api` (2010-01 onward, refreshed weekly) or `usitc_dataweb` (**1993-01 – 2009-12**, a frozen one-time pull) | Census (entries) | **1993-01** – latest |
 | `countries.json` | One row per Census partner code; the `country_code` join key | — | — |
 
 **BOP basis vs Census basis differ by design** (BOP adjusts Census goods for coverage and
 timing). 1991 goods: BOP −$76,937M vs Census −$66,723M. They are never reconciled or
 mixed; each row says which it is. 2025 goods: BOP −$1,240,941M vs Census −$1,234,619M.
 
-**No monthly goods *and services* series.** Census publishes only the rolling press-release
-exhibit for that; the monthly series here is goods only, Census basis. Annual goods and
+**Monthly goods and services is not built here.** Census's Seasonally Adjusted (Nominal) Data
+page appears to list a monthly goods, services and total series (BOP basis) from 1992 (not
+verified against the file; see `TRADE_INVESTIGATION.md`). It is out of scope for the first trade
+page by decision: the monthly series here is goods only, Census basis. Annual goods and
 services (BOP) covers the full window.
 
 ## Collected rate: what it is and is not
@@ -44,9 +46,45 @@ services (BOP) covers the full window.
   This is why a country's duties-file import value differs from its goods-file imports.
 - It is an **average rate on all imports**, so it moves with the mix (zero-duty goods, shifted
   sourcing) as well as with tariff policy. It is not a statutory rate.
-- The API has nothing before January 2010 (every endpoint returns 204 for 2009-12 and
-  earlier). There is no duties series for 1991–2009 from a free, automatable source.
+- The Census API has nothing before January 2010 (every endpoint returns 204 for 2009-12 and
+  earlier). **1993-01 to 2009-12 comes from USITC DataWeb** (next section).
 - Months with no import row for a country are 0 (rate `null`); months not yet published are `null`.
+
+## Duties bridge, 1993–2009 (USITC DataWeb)
+
+A **frozen, one-time pull**, not part of `fetch:all` or the freshness workflow, and not
+automated. Run by `pnpm fetch:dataweb-duties` (needs `DATAWEB_TOKEN`, a six-month API key from a
+DataWeb account) on 2026-10-01; raw files with their query parameters in
+`pipeline/raw/dataweb-duties/<year>.json`. Query: Imports for Consumption, Calculated Duties and
+Customs Value, all commodities aggregated, monthly, by country and all countries together. The
+raw rows use the Census API's tuple shape and Census country codes (DataWeb's country `value`),
+so the same transform builds both.
+
+- **Same measure, same basis.** DataWeb serves the Census Bureau's entry data. Over a 36-month overlap
+  (2010-01 to 2012-12) every one of 8,280 country-months (230 countries) and all 36 all-countries
+  months equal the Census API values to the dollar, for both calculated duties and customs value.
+  Tolerance proposed and used: exact for the overlap; the validation tolerance for the bridge
+  years is the existing 0.1% country-sum check (measured worst: 0 in every month).
+  Gaza Strip and West Bank are in the Census API but not DataWeb's country list; they carry no
+  duties before 2010.
+- **National cross-check.** DataWeb's 1989 national figures (duties $16,096,409,507; customs value
+  $468,012,021,240) equal USITC's published table (1891–2025: $16,096,410K and $468,012,021K). Only
+  that year was compared, from the search summary of the table; the PDF could not be fetched. The
+  average rate is continuous across the source change (2009 1.37%, 2010 1.36%).
+- **Why 1993, not 1991.** USITC states that dutiable value and calculated duties before 1993 are
+  **overstated** (not adjusted for the nondutiable part of imports under HTS 9802.00.60 and
+  9802.00.80). 1991–92 are therefore not on the same basis as later years and are not included. The
+  data exists in DataWeb (1989 on); adding them would need a decision to show them flagged.
+- **Granularity.** Monthly by country is available for the whole bridge; nothing is annual-only.
+- **A real break to expect, not an artifact:** the average rate falls from 3.2% (1993) to about 1.4% by 2007,
+  with a step down in 1995 (3.18% to 2.51%), the years of NAFTA and the Uruguay Round tariff cuts. The UI must not
+  describe a 1993 vs 2010 difference as a source effect, or as policy alone (mix matters; see above).
+- **Source flag.** `source: "usitc_dataweb"` on every 1993–2009 row (country and national), `"census_api"` from
+  2010. A year has exactly one source (the build fails otherwise), so no chart point blends them. The UI can say
+  earlier years come from USITC DataWeb.
+- Recodes and dissolved states are handled by the existing crosswalk (same Census codes). A DataWeb name that
+  is not in DataWeb's country list fails the fetch; none did for 1993–2009.
+- Revisions: Census restates history; this pull is a snapshot as of `fetched_at` and is not refreshed.
 
 ## Country codes
 
@@ -97,10 +135,11 @@ Zod on every output row, and, in `trade.ts` `validateTrade` (tolerances in `TOL`
   about 80 partners, so countries cannot sum to World: the tolerance there is 3% and the
   measured shortfall is 2.1% (worst month, 1991-12 exports). A page must not present 1991
   country shares as summing to 100%. BOP totals are never forced to match Census country sums.
-- Duties: country rows sum to the API's all-countries row within 0.1% for duties and imports
-  (measured worst: 0), `rate = duties / import value`, no duties row for an aggregate.
+- Duties: country rows sum to the all-countries row within 0.1% for duties and imports
+  (measured worst: 0, both sources), `rate = duties / import value`, no duties row for an aggregate, and every
+  row's `source` equals its year's all-countries source.
 - No gaps: BOP annual 1991–latest; monthly goods (NSA and SA) 1991-01 – latest; duties
-  2010-01 – latest; every year has country rows.
+  1993-01 – latest; every year has country rows.
 - An unmapped Census country code, a changed column layout in either spreadsheet, or a
   duties row with an unknown code fails with a specific message.
 

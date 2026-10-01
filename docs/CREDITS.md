@@ -241,4 +241,9 @@ basis).
   `pipeline/raw/census-trade/`; fetched by `pipeline/fetch/census-trade.ts`.
 - Federal government statistics, public domain. The API requires a free key (`CENSUS_API_KEY`);
   this product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.
+- **Calculated duties 1993–2009** come from the U.S. International Trade Commission's DataWeb
+  (`dataweb.usitc.gov`; Imports for Consumption, Calculated Duties and Customs Value, compiled from
+  Census Bureau data), pulled once on 2026-10-01 into `pipeline/raw/dataweb-duties/` by
+  `pipeline/fetch/dataweb-duties.ts`. Federal government statistics, public domain. The page must say
+  these earlier years come from USITC DataWeb.
 - Methodology: `docs/TRADE_METHODOLOGY.md`.

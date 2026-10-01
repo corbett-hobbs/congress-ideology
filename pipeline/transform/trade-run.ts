@@ -8,10 +8,12 @@ import {
   tradeByCountryRow,
   tradeNationalRow,
 } from "../../lib/trade-entities";
-import { CENSUS_RAW_DIR, parseRawDuties, type RawDuties } from "../fetch/census-trade-lib";
+import { CENSUS_RAW_DIR, parseRawDuties } from "../fetch/census-trade-lib";
+import { DATAWEB_RAW_DIR, parseDataWebRaw } from "../fetch/dataweb-duties-lib";
 import {
   buildCountries,
   buildDuties,
+  type DutiesInput,
   buildGoods,
   goodsSightings,
   parseCountryXlsx,
@@ -49,7 +51,7 @@ async function size(name: string): Promise<number> {
   return (await stat(`${OUT}/${name}`)).size;
 }
 
-async function readRawDuties(): Promise<RawDuties[]> {
+async function readRawDuties(): Promise<DutiesInput[]> {
   const dir = `${CENSUS_RAW_DIR}/duties`;
   let files: string[];
   try {
@@ -58,11 +60,17 @@ async function readRawDuties(): Promise<RawDuties[]> {
     throw new TradeDataError(`${dir} is missing — run pnpm fetch:census-trade`);
   }
   if (!files.length) throw new TradeDataError(`${dir} is empty — run pnpm fetch:census-trade`);
-  const out: RawDuties[] = [];
+  const out: DutiesInput[] = [];
   for (const f of files) {
     const raw = parseRawDuties(JSON.parse(await readFile(`${dir}/${f}`, "utf8")));
     if (`${raw.year}.json` !== f) throw new TradeDataError(`${dir}/${f}: year field ${raw.year} does not match the file name`);
-    out.push(raw);
+    out.push({ year: raw.year, rows: raw.rows, source: "census_api" });
+  }
+  // The frozen one-time USITC DataWeb bridge (earlier years). Absent => the series simply starts in 2010.
+  for (const f of (await readdir(DATAWEB_RAW_DIR).catch(() => [] as string[])).filter((f) => /^\d{4}\.json$/.test(f)).sort()) {
+    const raw = parseDataWebRaw(JSON.parse(await readFile(`${DATAWEB_RAW_DIR}/${f}`, "utf8")));
+    if (`${raw.year}.json` !== f) throw new TradeDataError(`${DATAWEB_RAW_DIR}/${f}: year field ${raw.year} does not match the file name`);
+    out.push({ year: raw.year, rows: raw.rows, source: "usitc_dataweb" });
   }
   return out;
 }
@@ -118,11 +126,16 @@ async function main() {
   const real = countries.filter((c) => !c.is_aggregate);
   const dutyYears = [...new Set(dutiesCountry.map((r) => r.year))].sort();
 
+  const sourceStats = (src: "census_api" | "usitc_dataweb") => {
+    const nat = dutiesNational.filter((r) => r.source === src);
+    return { rows: rawDuties.filter((r) => (r.source ?? "census_api") === src).reduce((s, r) => s + r.rows.length, 0), first_period: nat[0]?.period, last_period: nat[nat.length - 1]?.period, country_year_rows: dutiesCountry.filter((r) => r.source === src).length };
+  };
   const report = {
     sources: {
       "country.xlsx": { rows: goodsData.length, first_period: `${Math.min(...goodsData.map((r) => r.year))}-01`, last_period: v.goodsLastPeriod, note: "output window starts 1991-01" },
       "gands.xlsx": { rows: gands.length / 3, first_period: String(Math.min(...gands.map((r) => Number(r.period)))), last_period: String(Math.max(...gands.map((r) => Number(r.period)))), note: "annual BOP, output window starts 1991" },
-      "duties (api)": { rows: rawDuties.reduce((s, r) => s + r.rows.length, 0), first_period: duties.national[0]?.period, last_period: duties.lastPeriod },
+      "duties (census api)": sourceStats("census_api"),
+      "duties (usitc dataweb bridge)": sourceStats("usitc_dataweb"),
     },
     countries: {
       rows: countries.length,

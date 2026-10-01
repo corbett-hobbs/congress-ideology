@@ -12,10 +12,17 @@
       "last_period": "2025",
       "note": "annual BOP, output window starts 1991"
     },
-    "duties (api)": {
+    "duties (census api)": {
       "rows": 50021,
       "first_period": "2010-01",
-      "last_period": "2026-07"
+      "last_period": "2026-07",
+      "country_year_rows": 3942
+    },
+    "duties (usitc dataweb bridge)": {
+      "rows": 46188,
+      "first_period": "1993-01",
+      "last_period": "2009-12",
+      "country_year_rows": 3828
     }
   },
   "countries": {
@@ -32,8 +39,8 @@
   "rows": {
     "trade_national": 995,
     "trade_by_country": 8544,
-    "duties_national": 199,
-    "duties_by_country": 3942
+    "duties_national": 403,
+    "duties_by_country": 7770
   },
   "coverage": {
     "trade_by_country": {
@@ -42,7 +49,7 @@
       "last_month": 7
     },
     "duties_by_country": {
-      "first_year": 2010,
+      "first_year": 1993,
       "last_year": 2026,
       "last_period": "2026-07"
     }
@@ -62,7 +69,7 @@
       "share": 0.021362380379528173
     },
     "worst_duties_country_sum_vs_total": {
-      "period": "2010-01",
+      "period": "1993-01",
       "gap": 0,
       "share": 0
     },
@@ -93,10 +100,10 @@
   "file_sizes_bytes": {
     "countries.json": 44087,
     "trade_national.json": 148560,
-    "duties_national.json": 16914,
+    "duties_national.json": 43605,
     "trade_by_country/* (total)": 2005910,
     "trade_by_country/* (largest year)": 59052,
-    "duties_by_country/* (total)": 1555154,
-    "duties_by_country/* (largest year)": 93734
+    "duties_by_country/* (total)": 3235523,
+    "duties_by_country/* (largest year)": 98838
   }
 }

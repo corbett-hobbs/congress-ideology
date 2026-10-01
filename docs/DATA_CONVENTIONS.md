@@ -545,7 +545,8 @@ has `is_aggregate`; **filter on it before summing countries.** National series a
 dates (§7/§8), never stored pre-joined.
 
 **Bases.** BOP (goods and services, annual) and Census (goods, monthly, by country) are
-different by design and are never reconciled. Duties are *calculated* duties, 2010-01 onward only.
+different by design and are never reconciled. Duties are *calculated* duties, 1993-01 onward: 1993–2009 a frozen one-time USITC DataWeb pull,
+2010 on the Census API; every duties row carries `source`.
 
 **Validation** fails `pnpm transform`: row schemas, balance identity, no negatives, no duplicate
 keys, no gaps in the claimed ranges, country rows vs World, duties country rows vs the total.
