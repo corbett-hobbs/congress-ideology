@@ -12,7 +12,10 @@ import {
   type TradeByCountryRow,
 } from "./trade-entities";
 import { buildCountryPayload, buildNationalPayload, buildYearPayload } from "./trade-payload";
-import { monthCount } from "./trade-derive";
+import { monthCount, monthIndex } from "./trade-derive";
+import { getEraLayers } from "./indicator-data";
+import { spanEnd } from "./trade-chart";
+import type { EconomyPayload } from "./indicator-payload";
 import type { TradeCountryPayload, TradeCountryRef, TradeNationalPayload, TradeYearPayload } from "./trade-types";
 
 /**
@@ -91,4 +94,27 @@ export function getTradeYear(year: number): TradeYearPayload | null {
   const trade = d.trade.get(year);
   if (!trade) return null;
   return buildYearPayload(year, d.countries, trade, d.duties.get(year) ?? []);
+}
+
+export interface TradePageData {
+  national: TradeNationalPayload;
+  countries: TradeCountryRef[];
+  /** Presidential terms, recessions and chamber control on the shared day axis (same layers as the Economy page). */
+  era: Pick<EconomyPayload, "rec" | "terms" | "control"> & { span: number };
+  firstYear: number;
+  lastYear: number;
+}
+
+/** Everything the trade page ships inline: the national series, the country list and the era layers. */
+export function getTradePageData(): TradePageData {
+  const national = getTradeNational();
+  const last = monthIndex(national.lastPeriod);
+  const span = spanEnd(last);
+  return {
+    national,
+    countries: getTradeCountryRefs(),
+    era: { span, ...getEraLayers(span) },
+    firstYear: 1991,
+    lastYear: Number(national.lastPeriod.slice(0, 4)),
+  };
 }

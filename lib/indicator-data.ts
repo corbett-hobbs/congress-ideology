@@ -120,3 +120,20 @@ export function getEconomyPayload(): EconomyPayload {
     fetchedAt: series.map((s) => s.fetched_at).sort().slice(-1)[0],
   };
 }
+
+/**
+ * Presidential terms, NBER recession spans and chamber control on the shared day
+ * axis, for any page whose axis ends at `span` (exclusive). The trade page reuses
+ * the Economy page's era layers through this, so the two never disagree.
+ */
+export function getEraLayers(span: number): Pick<EconomyPayload, "rec" | "terms" | "control"> {
+  const admins = readRows("administrations.json", (r) => administration.parse(r));
+  const control = congressControlFile.parse(
+    JSON.parse(readFileSync(join(process.cwd(), "pipeline", "reference", "congress-control.json"), "utf8")),
+  );
+  return {
+    rec: recessionSpans(load().byId.get("USREC") ?? []),
+    terms: buildEconomyTerms(admins, span),
+    control: { house: controlSpans(control.rows, "house", span), senate: controlSpans(control.rows, "senate", span) },
+  };
+}

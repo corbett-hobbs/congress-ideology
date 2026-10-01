@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/PageHeader";
+import { TradePageClient } from "@/components/trade/TradePageClient";
+import { getTradePageData } from "@/lib/trade-data";
 import { site } from "@/lib/site";
 
 /**
- * /presidency/trade — the Presidency vertical's Trade section. This is the shell
- * (route, nav entry, data layer in lib/trade-data.ts); the filter bar and charts
- * land in later sessions.
+ * /presidency/trade — the Presidency vertical's Trade section. The filter bar and
+ * the trade-balance chart are in; the tariff, partner and scatter charts land in
+ * later sessions (docs: trade UI execution plan).
  */
 export const metadata: Metadata = {
   title: "How does the U.S. trade with the world?",
@@ -20,22 +21,5 @@ export const metadata: Metadata = {
 };
 
 export default function TradePage() {
-  return (
-    <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-16 pt-7 sm:px-6">
-      <PageHeader title="How Does the U.S. Trade With the World?">
-        <p>
-          Who the country buys from and sells to, what tariffs were in force, and what changed when the courts,
-          Congress and the White House pulled different levers. Trade values come from the Census Bureau. Calculated
-          duties on imports come from the Census Bureau from 2010 and from the U.S. International Trade Commission
-          for 1993 to 2009.
-        </p>
-      </PageHeader>
-
-      <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
-        Source: U.S. Census Bureau (trade values and calculated duties, 2010 on); U.S. International Trade Commission
-        DataWeb (calculated duties, 1993 to 2009). Goods only, Census basis; services are not included. Calculated duties
-        are computed from import entries, not Treasury receipts.
-      </p>
-    </main>
-  );
+  return <TradePageClient data={getTradePageData()} />;
 }

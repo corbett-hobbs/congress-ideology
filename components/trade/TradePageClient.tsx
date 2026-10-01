@@ -1,0 +1,125 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { PageHeader } from "@/components/PageHeader";
+import { dateOfDay, dayOf, MONTH_NAMES } from "@/lib/indicator-time";
+import { termAtDay, termLabel } from "@/lib/trade-chart";
+import type { TradePageData } from "@/lib/trade-data";
+import type { TradeCountryPayload } from "@/lib/trade-types";
+import { TradeBalanceCard } from "./TradeBalanceCard";
+import { TradeFilterBar } from "./TradeFilterBar";
+import { activeDay, TradeStateProvider, useTradeActions, useTradeValues } from "./TradeState";
+
+export function TradePageClient({ data }: { data: TradePageData }) {
+  return (
+    <TradeStateProvider firstYear={data.firstYear} lastYear={data.lastYear}>
+      <TradePage data={data} />
+    </TradeStateProvider>
+  );
+}
+
+function TradePage({ data }: { data: TradePageData }) {
+  const v = useTradeValues();
+  const { setRange, clearPin, setCountry, setShowCong, setYear, togglePlay } = useTradeActions();
+  const { era, national, countries, firstYear, lastYear } = data;
+  const [loaded, setLoaded] = useState<Record<string, TradeCountryPayload>>({});
+  const [failed, setFailed] = useState<string | null>(null);
+  const inflight = useRef<AbortController | null>(null);
+
+  // A country's file is fetched once, when first selected (precedent: /data/[chamber]).
+  useEffect(() => {
+    const code = v.country;
+    if (!code || loaded[code]) return;
+    const ctl = new AbortController();
+    inflight.current?.abort();
+    inflight.current = ctl;
+    fetch(`/data/trade/countries/${encodeURIComponent(code)}`, { signal: ctl.signal })
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json() as Promise<TradeCountryPayload>;
+      })
+      .then((p) => {
+        setFailed(null);
+        setLoaded((m) => ({ ...m, [p.code]: p }));
+      })
+      .catch((e) => {
+        if (e?.name !== "AbortError") setFailed(code);
+      });
+    return () => ctl.abort();
+  }, [v.country, loaded]);
+
+  const countryRef = v.country ? countries.find((c) => c.code === v.country) ?? null : null;
+  const payload = v.country ? loaded[v.country] : undefined;
+  const loadState: "idle" | "loading" | "error" | "ok" = !v.country ? "idle" : payload ? "ok" : failed === v.country ? "error" : "loading";
+  const series = useMemo(
+    () => (payload ? { exports: payload.exports, imports: payload.imports } : !v.country ? { exports: national.sa.exports, imports: national.sa.imports } : null),
+    [payload, national, v.country],
+  );
+
+  const range = useMemo<[number, number]>(() => v.range ?? [firstYear, lastYear], [v.range, firstYear, lastYear]);
+  const view = useMemo<[number, number]>(() => [dayOf(range[0], 0, 1), Math.min(era.span, dayOf(range[1] + 1, 0, 1))], [range, era.span]);
+
+  const day = activeDay(v);
+  const describe = (d: number) => {
+    const { year, month } = dateOfDay(d);
+    const t = termAtDay(era.terms, d);
+    return `${MONTH_NAMES[month]} ${year}${t ? `, ${termLabel(t)}` : ""}`;
+  };
+  const status = day === null ? "Hover a chart to compare a date. Click to pin it." : `${describe(day)}${v.hover === null ? ", pinned" : ""}`;
+  // Announced only when a date is pinned, never on every mouse move.
+  const announcement = v.pin === null ? "" : `Pinned ${describe(v.pin)}.`;
+
+  return (
+    <>
+      <TradeFilterBar
+        terms={era.terms}
+        countries={countries}
+        country={v.country}
+        onCountry={setCountry}
+        range={range}
+        firstYear={firstYear}
+        lastYear={lastYear}
+        onRange={setRange}
+        showCong={v.showCong}
+        onShowCong={setShowCong}
+        year={v.year}
+        playing={v.playing}
+        onYear={setYear}
+        onTogglePlay={togglePlay}
+        status={status}
+        canClear={v.pin !== null}
+        onClear={clearPin}
+      />
+      <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-16 pt-7 sm:px-6">
+        <div aria-live="polite" className="sr-only">
+          {announcement}
+        </div>
+        <PageHeader title="How Does the U.S. Trade With the World?">
+          <p>
+            Who the country buys from and sells to, what tariffs were in force, and what changed when the courts,
+            Congress and the White House pulled different levers. Trade values come from the Census Bureau. Calculated
+            duties on imports come from the Census Bureau from 2010 and from the U.S. International Trade Commission
+            for 1993 to 2009. Pick a president or a country above and every chart follows.
+          </p>
+        </PageHeader>
+
+        <TradeBalanceCard
+          series={series}
+          countryName={countryRef?.name ?? null}
+          adjusted={!v.country}
+          era={era}
+          view={view}
+          loading={loadState === "loading"}
+          error={loadState === "error"}
+        />
+
+        <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
+          Source: U.S. Census Bureau (trade values and calculated duties, 2010 on); U.S. International Trade Commission
+          DataWeb (calculated duties, 1993 to 2009). Goods only, Census basis; services are not included. Calculated
+          duties are computed from import entries, not Treasury receipts. Presidential terms and recession dates match the
+          Economy page.
+        </p>
+      </main>
+    </>
+  );
+}
