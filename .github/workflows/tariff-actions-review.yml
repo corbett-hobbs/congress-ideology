@@ -1,0 +1,50 @@
+name: Tariff actions review
+
+# The tariff-actions timeline is hand-curated (docs/TARIFF_ACTIONS_CURATION.md): nothing
+# fetches it, so nothing notices when it goes stale. Weekly, check `last_reviewed`; if it is
+# older than TARIFF_ACTIONS_STALE_DAYS (lib/tariff-actions-entities.ts) open ONE GitHub issue
+# asking a human to review and bump the date. An issue, not a red build: the timeline is
+# historical, and only the "Latest developments" list on the page hides when it is stale.
+# Never blocks a deploy and never edits data.
+
+on:
+  schedule:
+    - cron: "43 13 * * 1" # Mondays 13:43 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Is the review stale?
+        id: stale
+        continue-on-error: true
+        run: pnpm exec tsx pipeline/validate/tariff-actions-staleness.ts
+
+      - name: Open an issue (once)
+        if: steps.stale.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create tariff-actions-review --color BFD4F2 --description "Tariff timeline needs a review" 2>/dev/null || true
+          existing="$(gh issue list --state open --label tariff-actions-review --json number --jq 'length')"
+          if [ "$existing" = "0" ]; then
+            gh issue create \
+              --title "Review the tariff-actions timeline" \
+              --label tariff-actions-review \
+              --body "pipeline/output/tariff_actions.json has not been reviewed within the limit. Check for new tariff actions and court rulings (including ones that never reach the Federal Register), update pipeline/reference/tariff-actions.json, and bump last_reviewed. See docs/TARIFF_ACTIONS_CURATION.md."
+          else
+            echo "An open review issue already exists."
+          fi

@@ -1,0 +1,963 @@
+{
+ "last_reviewed": "2026-10-01",
+ "actions": [
+  {
+   "action_id": "2018-03-23-section-232-steel-aluminum",
+   "date": "2018-03-23",
+   "announced_date": "2018-03-08",
+   "label_short": "§232 steel and aluminum tariffs begin",
+   "description": "Proclamations under Section 232 impose an additional 25 percent ad valorem duty on steel articles and 10 percent on aluminum articles from all countries except Canada and Mexico.",
+   "authority": "section_232",
+   "kind": "imposed",
+   "countries": "all",
+   "scope_note": "All countries except Canada and Mexico.",
+   "legal_status": "in_effect",
+   "status_note": "Later proclamations (including those of February 10, 2025 and June 3, 2025) changed rates and exemptions. Executive Order 14389 of February 20, 2026 leaves duties under Section 232 and Section 301 unaffected.",
+   "rate_note": "25 percent on steel articles; 10 percent on aluminum articles",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2018-05478",
+    "2018-05477"
+   ],
+   "sources": [
+    {
+     "title": "Adjusting Imports of Steel Into the United States",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2018/03/15/2018-05478/adjusting-imports-of-steel-into-the-united-states",
+     "kind": "primary"
+    },
+    {
+     "title": "Adjusting Imports of Aluminum Into the United States",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2018/03/15/2018-05477/adjusting-imports-of-aluminum-into-the-united-states",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2018-07-06-section-301-china-list-1",
+   "date": "2018-07-06",
+   "announced_date": "2018-06-20",
+   "label_short": "First §301 tariffs on China begin",
+   "description": "The Section 301 action on China's technology transfer, intellectual property and innovation practices takes effect: an additional 25 percent ad valorem duty on products of China in 818 tariff subheadings, with an approximate annual trade value of $34 billion.",
+   "authority": "section_301",
+   "kind": "imposed",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "in_effect",
+   "status_note": "Executive Order 14389 of February 20, 2026 leaves duties under Section 232 and Section 301 unaffected. Later actions have modified rates and coverage.",
+   "rate_note": "25 percent on 818 tariff subheadings (about $34 billion of annual trade)",
+   "flag_priority": 1,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2018-13248"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Action and Request for Public Comment Concerning Proposed Determination of Action Pursuant to Section 301: China's Acts, Policies, and Practices Related to Technology Transfer, Intellectual Property, and Innovation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2018/06/20/2018-13248/notice-of-action-and-request-for-public-comment-concerning-proposed-determination-of-action-pursuant",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2018-08-23-section-301-china-list-2",
+   "date": "2018-08-23",
+   "announced_date": "2018-08-16",
+   "label_short": "§301 China tariffs extended to a second list",
+   "description": "A second tranche of the Section 301 action takes effect: an additional 25 percent ad valorem duty on products of China in 279 tariff subheadings, with an approximate annual trade value of $16 billion.",
+   "authority": "section_301",
+   "kind": "increased",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "in_effect",
+   "status_note": "Executive Order 14389 of February 20, 2026 leaves duties under Section 232 and Section 301 unaffected. Later actions have modified rates and coverage.",
+   "rate_note": "25 percent on 279 tariff subheadings (about $16 billion of annual trade)",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2018-17709"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Action Pursuant to Section 301: China's Acts, Policies, and Practices Related to Technology Transfer, Intellectual Property, and Innovation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2018/08/16/2018-17709/notice-of-action-pursuant-to-section-301-chinas-acts-policies-and-practices-related-to-technology",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2018-09-24-section-301-china-list-3",
+   "date": "2018-09-24",
+   "announced_date": "2018-09-21",
+   "label_short": "§301 China tariffs extended to a third list",
+   "description": "The Section 301 action is extended to a third list of products of China at an additional 10 percent ad valorem, with a stated increase to 25 percent on January 1, 2019.",
+   "authority": "section_301",
+   "kind": "increased",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "in_effect",
+   "status_note": "Executive Order 14389 of February 20, 2026 leaves duties under Section 232 and Section 301 unaffected. Later actions have modified rates and coverage.",
+   "rate_note": "10 percent from September 24, 2018; 25 percent scheduled for January 1, 2019",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2018-20610"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Modification of Section 301 Action: China's Acts, Policies, and Practices Related to Technology Transfer, Intellectual Property, and Innovation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2018/09/21/2018-20610/notice-of-modification-of-section-301-action-chinas-acts-policies-and-practices-related-to",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2019-05-10-section-301-china-list-3-to-25",
+   "date": "2019-05-10",
+   "announced_date": "2019-05-09",
+   "label_short": "§301 third-list rate rises to 25%",
+   "description": "The additional duty on products covered by the September 2018 Section 301 action increases from 10 percent to 25 percent ad valorem.",
+   "authority": "section_301",
+   "kind": "increased",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "in_effect",
+   "status_note": "Executive Order 14389 of February 20, 2026 leaves duties under Section 232 and Section 301 unaffected. Later actions have modified rates and coverage.",
+   "rate_note": "From 10 percent to 25 percent",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2019-09681"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Modification of Section 301 Action: China's Acts, Policies, and Practices Related to Technology Transfer, Intellectual Property, and Innovation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2019/05/09/2019-09681/notice-of-modification-of-section-301-action-chinas-acts-policies-and-practices-related-to",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2019-09-01-section-301-china-list-4a",
+   "date": "2019-09-01",
+   "announced_date": "2019-08-20",
+   "label_short": "§301 China tariffs begin on a fourth list",
+   "description": "Additional Section 301 duties begin on a fourth list of products of China. A notice of August 30, 2019 modified the rate set in the August 20 notice.",
+   "authority": "section_301",
+   "kind": "increased",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "in_effect",
+   "status_note": "Executive Order 14389 of February 20, 2026 leaves duties under Section 232 and Section 301 unaffected. Later actions have modified rates and coverage.",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2019-17865",
+    "2019-18838"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Modification of Section 301 Action: China's Acts, Policies, and Practices Related to Technology Transfer, Intellectual Property, and Innovation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2019/08/20/2019-17865/notice-of-modification-of-section-301-action-chinas-acts-policies-and-practices-related-to",
+     "kind": "primary"
+    },
+    {
+     "title": "Notice of Modification of Section 301 Action: China's Acts, Policies, and Practices Related to Technology Transfer, Intellectual Property, and Innovation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2019/08/30/2019-18838/notice-of-modification-of-section-301-action-chinas-acts-policies-and-practices-related-to",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2020-02-14-section-301-china-list-4a-to-7-5",
+   "date": "2020-02-14",
+   "announced_date": "2020-01-22",
+   "label_short": "§301 fourth-list rate cut to 7.5%",
+   "description": "With the U.S.–China phase one agreement entering into force, the additional duty on products covered by Annex A of the August 20, 2019 notice falls from 15 percent to 7.5 percent.",
+   "authority": "section_301",
+   "kind": "reduced",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "in_effect",
+   "status_note": "Executive Order 14389 of February 20, 2026 leaves duties under Section 232 and Section 301 unaffected. Later actions have modified rates and coverage.",
+   "rate_note": "From 15 percent to 7.5 percent",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2020-00904"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Modification of Section 301 Action: China's Acts, Policies, and Practices Related to Technology Transfer, Intellectual Property, and Innovation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2020/01/22/2020-00904/notice-of-modification-of-section-301-action-chinas-acts-policies-and-practices-related-to",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2024-09-27-section-301-china-four-year-review",
+   "date": "2024-09-27",
+   "announced_date": "2024-09-18",
+   "label_short": "§301 China increases under four-year review",
+   "description": "Following the four-year review, USTR increases Section 301 duties on selected products of China, including electric vehicles, with further increases scheduled for January 1, 2025 and 2026.",
+   "authority": "section_301",
+   "kind": "increased",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "in_effect",
+   "status_note": "Executive Order 14389 of February 20, 2026 leaves duties under Section 232 and Section 301 unaffected. Later actions have modified rates and coverage.",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2024-21217"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Modification: China's Acts, Policies and Practices Related to Technology Transfer, Intellectual Property and Innovation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2024/09/18/2024-21217/notice-of-modification-chinas-acts-policies-and-practices-related-to-technology-transfer",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-02-04-ieepa-fentanyl-china",
+   "date": "2025-02-04",
+   "announced_date": "2025-02-01",
+   "label_short": "IEEPA fentanyl tariff on China begins",
+   "description": "Executive Order 14195 imposes an additional 10 percent ad valorem duty on goods of China under IEEPA, citing the synthetic opioid supply chain.",
+   "authority": "ieepa",
+   "kind": "imposed",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "terminated",
+   "status_note": "Additional duties under IEEPA ended on February 24, 2026 (Executive Order 14389; CBP CSMS # 67834313). The Supreme Court held on February 20, 2026 that IEEPA does not authorize tariffs.",
+   "rate_note": "10 percent",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "links": {
+    "eo_numbers": [
+     14195
+    ]
+   },
+   "federal_register_documents": [
+    "2025-02408"
+   ],
+   "sources": [
+    {
+     "title": "Imposing Duties To Address the Synthetic Opioid Supply Chain in the People's Republic of China",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/02/07/2025-02408/imposing-duties-to-address-the-synthetic-opioid-supply-chain-in-the-peoples-republic-of-china",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-03-04-ieepa-fentanyl-canada-mexico",
+   "date": "2025-03-04",
+   "announced_date": "2025-02-01",
+   "label_short": "IEEPA fentanyl tariffs on Canada, Mexico begin",
+   "description": "Executive Orders 14193 and 14194 impose IEEPA duties on goods of Canada and Mexico; after a pause announced February 3, they take effect on March 4, 2025.",
+   "authority": "ieepa",
+   "kind": "imposed",
+   "countries": [
+    "CAN",
+    "MEX"
+   ],
+   "legal_status": "terminated",
+   "status_note": "Additional duties under IEEPA ended on February 24, 2026 (Executive Order 14389; CBP CSMS # 67834313). The Supreme Court held on February 20, 2026 that IEEPA does not authorize tariffs.",
+   "rate_note": "25 percent on most imports, per the Supreme Court's summary of the orders",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "links": {
+    "eo_numbers": [
+     14193,
+     14194,
+     14197,
+     14198,
+     14226,
+     14227
+    ]
+   },
+   "federal_register_documents": [
+    "2025-02478",
+    "2025-02479",
+    "2025-03728",
+    "2025-03729"
+   ],
+   "sources": [
+    {
+     "title": "Progress on the Situation at Our Northern Border",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/02/10/2025-02478/progress-on-the-situation-at-our-northern-border",
+     "kind": "primary"
+    },
+    {
+     "title": "Progress on the Situation at Our Southern Border",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/02/10/2025-02479/progress-on-the-situation-at-our-southern-border",
+     "kind": "primary"
+    },
+    {
+     "title": "Amendment to Duties To Address the Flow of Illicit Drugs Across Our Northern Border",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/03/06/2025-03728/amendment-to-duties-to-address-the-flow-of-illicit-drugs-across-our-northern-border",
+     "kind": "primary"
+    },
+    {
+     "title": "Amendment to Duties To Address the Situation at Our Southern Border",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/03/06/2025-03729/amendment-to-duties-to-address-the-situation-at-our-southern-border",
+     "kind": "primary"
+    },
+    {
+     "title": "Learning Resources, Inc. v. Trump, No. 24-1287 (opinion of February 20, 2026)",
+     "publisher": "Supreme Court of the United States",
+     "url": "https://www.supremecourt.gov/opinions/25pdf/607us2r12_8nj9.pdf",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-03-12-section-232-steel-aluminum-all-countries",
+   "date": "2025-03-12",
+   "announced_date": "2025-02-10",
+   "label_short": "§232 steel, aluminum tariffs extended to all",
+   "description": "Proclamations of February 10, 2025 raise the Section 232 aluminum rate from 10 percent to 25 percent and end the country exemptions and agreements for steel and aluminum articles as of March 12, 2025.",
+   "authority": "section_232",
+   "kind": "increased",
+   "countries": "all",
+   "legal_status": "in_effect",
+   "status_note": "Later proclamations (including those of June 3, 2025, April 2, 2026 and June 1, 2026) further adjusted these tariffs.",
+   "rate_note": "25 percent",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2025-02832",
+    "2025-02833"
+   ],
+   "sources": [
+    {
+     "title": "Adjusting Imports of Aluminum Into the United States",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/02/18/2025-02832/adjusting-imports-of-aluminum-into-the-united-states",
+     "kind": "primary"
+    },
+    {
+     "title": "Adjusting Imports of Steel Into the United States",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/02/18/2025-02833/adjusting-imports-of-steel-into-the-united-states",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-04-03-section-232-autos",
+   "date": "2025-04-03",
+   "announced_date": "2025-03-26",
+   "label_short": "§232 tariffs on autos begin",
+   "description": "A proclamation under Section 232 imposes a 25 percent tariff on automobiles, effective April 3, 2025, with automobile parts to follow on a date set by Federal Register notice.",
+   "authority": "section_232",
+   "kind": "imposed",
+   "countries": "all",
+   "legal_status": "in_effect",
+   "status_note": "Amended by a proclamation of April 29, 2025.",
+   "rate_note": "25 percent",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2025-05930"
+   ],
+   "sources": [
+    {
+     "title": "Adjusting Imports of Automobiles and Automobile Parts Into the United States",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/04/03/2025-05930/adjusting-imports-of-automobiles-and-automobile-parts-into-the-united-states",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-04-05-reciprocal-baseline",
+   "date": "2025-04-05",
+   "announced_date": "2025-04-02",
+   "label_short": "10% baseline 'reciprocal' tariff begins",
+   "description": "Executive Order 14257 imposes an additional 10 percent ad valorem duty under IEEPA on goods of all trading partners, citing large and persistent trade deficits.",
+   "authority": "ieepa",
+   "kind": "imposed",
+   "countries": "all",
+   "scope_note": "With the exceptions set out in the order.",
+   "legal_status": "terminated",
+   "status_note": "Additional duties under IEEPA ended on February 24, 2026 (Executive Order 14389; CBP CSMS # 67834313). The Supreme Court held on February 20, 2026 that IEEPA does not authorize tariffs.",
+   "rate_note": "10 percent",
+   "flag_priority": 1,
+   "is_cutover": false,
+   "links": {
+    "eo_numbers": [
+     14257
+    ]
+   },
+   "federal_register_documents": [
+    "2025-06063"
+   ],
+   "sources": [
+    {
+     "title": "Regulating Imports With a Reciprocal Tariff To Rectify Trade Practices That Contribute to Large and Persistent Annual United States Goods Trade Deficits",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/04/07/2025-06063/regulating-imports-with-a-reciprocal-tariff-to-rectify-trade-practices-that-contribute-to-large-and",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-04-10-reciprocal-pause-china-125",
+   "date": "2025-04-10",
+   "announced_date": "2025-04-09",
+   "label_short": "Country rates paused 90 days; China to 125%",
+   "description": "Executive Order 14266 suspends for 90 days the country-specific reciprocal rates that took effect on April 9, leaving the 10 percent baseline, and raises the additional duty on goods of China, which an April 8 order had set at 84 percent on April 9, to 125 percent.",
+   "authority": "ieepa",
+   "kind": "paused",
+   "countries": "all",
+   "scope_note": "The 125 percent rate applies to China only.",
+   "legal_status": "terminated",
+   "status_note": "Additional duties under IEEPA ended on February 24, 2026 (Executive Order 14389; CBP CSMS # 67834313). The Supreme Court held on February 20, 2026 that IEEPA does not authorize tariffs.",
+   "rate_note": "10 percent baseline during the pause; 125 percent on goods of China",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "links": {
+    "eo_numbers": [
+     14259,
+     14266
+    ]
+   },
+   "federal_register_documents": [
+    "2025-06378",
+    "2025-06462"
+   ],
+   "sources": [
+    {
+     "title": "Amendment to Reciprocal Tariffs and Updated Duties as Applied to Low-Value Imports From the People's Republic of China",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/04/14/2025-06378/amendment-to-reciprocal-tariffs-and-updated-duties-as-applied-to-low-value-imports-from-the-peoples",
+     "kind": "primary"
+    },
+    {
+     "title": "Modifying Reciprocal Tariff Rates To Reflect Trading Partner Retaliation and Alignment",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/04/15/2025-06462/modifying-reciprocal-tariff-rates-to-reflect-trading-partner-retaliation-and-alignment",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-05-14-ieepa-china-reduction",
+   "date": "2025-05-14",
+   "announced_date": "2025-05-12",
+   "label_short": "China reciprocal rate lowered to 10%",
+   "description": "Executive Order 14298 modifies the reciprocal tariff rate on goods of China to 10 percent, reflecting discussions with China.",
+   "authority": "ieepa",
+   "kind": "reduced",
+   "countries": [
+    "CHN"
+   ],
+   "legal_status": "terminated",
+   "status_note": "Additional duties under IEEPA ended on February 24, 2026 (Executive Order 14389; CBP CSMS # 67834313). The Supreme Court held on February 20, 2026 that IEEPA does not authorize tariffs.",
+   "rate_note": "10 percent",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "links": {
+    "eo_numbers": [
+     14298
+    ]
+   },
+   "federal_register_documents": [
+    "2025-09297"
+   ],
+   "sources": [
+    {
+     "title": "Modifying Reciprocal Tariff Rates To Reflect Discussions With the People's Republic of China",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/05/21/2025-09297/modifying-reciprocal-tariff-rates-to-reflect-discussions-with-the-peoples-republic-of-china",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-08-01-ieepa-canada-35",
+   "date": "2025-08-01",
+   "announced_date": "2025-07-31",
+   "label_short": "Canada IEEPA rate raised to 35%",
+   "description": "Executive Order 14325 raises the additional duty on Canadian goods subject to the 25 percent rate from 25 percent to 35 percent.",
+   "authority": "ieepa",
+   "kind": "increased",
+   "countries": [
+    "CAN"
+   ],
+   "legal_status": "terminated",
+   "status_note": "Additional duties under IEEPA ended on February 24, 2026 (Executive Order 14389; CBP CSMS # 67834313). The Supreme Court held on February 20, 2026 that IEEPA does not authorize tariffs.",
+   "rate_note": "From 25 percent to 35 percent",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "links": {
+    "eo_numbers": [
+     14325
+    ]
+   },
+   "federal_register_documents": [
+    "2025-14999"
+   ],
+   "sources": [
+    {
+     "title": "Amendment to Duties To Address the Flow of Illicit Drugs Across Our Northern Border",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/08/06/2025-14999/amendment-to-duties-to-address-the-flow-of-illicit-drugs-across-our-northern-border",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-08-06-ieepa-brazil-40",
+   "date": "2025-08-06",
+   "announced_date": "2025-07-30",
+   "label_short": "Brazil IEEPA tariff of 40% begins",
+   "description": "Executive Order 14323 imposes an additional 40 percent ad valorem duty on certain products of Brazil, effective seven days after the order.",
+   "authority": "ieepa",
+   "kind": "imposed",
+   "countries": [
+    "BRA"
+   ],
+   "legal_status": "terminated",
+   "status_note": "Additional duties under IEEPA ended on February 24, 2026 (Executive Order 14389; CBP CSMS # 67834313). The Supreme Court held on February 20, 2026 that IEEPA does not authorize tariffs.",
+   "rate_note": "40 percent",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "links": {
+    "eo_numbers": [
+     14323
+    ]
+   },
+   "federal_register_documents": [
+    "2025-14896"
+   ],
+   "sources": [
+    {
+     "title": "Addressing Threats to the United States by the Government of Brazil",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/08/05/2025-14896/addressing-threats-to-the-united-states-by-the-government-of-brazil",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2025-08-07-reciprocal-country-rates",
+   "date": "2025-08-07",
+   "announced_date": "2025-07-31",
+   "label_short": "Country-specific reciprocal rates take effect",
+   "description": "Executive Order 14326 sets modified reciprocal tariff rates for named trading partners, effective seven days after its signing.",
+   "authority": "ieepa",
+   "kind": "increased",
+   "countries": "all",
+   "scope_note": "Rates vary by trading partner, as set out in the order.",
+   "legal_status": "terminated",
+   "status_note": "Additional duties under IEEPA ended on February 24, 2026 (Executive Order 14389; CBP CSMS # 67834313). The Supreme Court held on February 20, 2026 that IEEPA does not authorize tariffs.",
+   "flag_priority": 1,
+   "is_cutover": false,
+   "links": {
+    "eo_numbers": [
+     14326
+    ]
+   },
+   "federal_register_documents": [
+    "2025-15010"
+   ],
+   "sources": [
+    {
+     "title": "Further Modifying the Reciprocal Tariff Rates",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2025/08/06/2025-15010/further-modifying-the-reciprocal-tariff-rates",
+     "kind": "primary"
+    },
+    {
+     "title": "CSMS # 65829726 - GUIDANCE: Reciprocal Tariff Updates Effective August 7, 2025",
+     "publisher": "U.S. Customs and Border Protection",
+     "url": "https://content.govdelivery.com/accounts/USDHSCBP/bulletins/3ec7b5e",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2026-02-20-supreme-court-ieepa-ruling",
+   "date": "2026-02-20",
+   "label_short": "Supreme Court: IEEPA does not authorize tariffs",
+   "description": "The Supreme Court decides Learning Resources, Inc. v. Trump. Its summary of the holding reads: \"The International Emergency Economic Powers Act, 91 Stat. 1626, does not authorize the President to impose tariffs.\" The judgment in No. 24-1287 is vacated and remanded with instructions to dismiss for lack of jurisdiction; the judgment in No. 25-250 is affirmed.",
+   "authority": "court",
+   "kind": "struck_down",
+   "countries": "all",
+   "legal_status": "decided",
+   "status_note": "The Court issued its judgment on March 24, 2026 (docket).",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "court_case": {
+    "name": "Learning Resources, Inc. v. Trump",
+    "docket": "24-1287 (consolidated with 25-250)",
+    "court": "Supreme Court of the United States"
+   },
+   "sources": [
+    {
+     "title": "Learning Resources, Inc. v. Trump, No. 24-1287 (opinion of February 20, 2026)",
+     "publisher": "Supreme Court of the United States",
+     "url": "https://www.supremecourt.gov/opinions/25pdf/607us2r12_8nj9.pdf",
+     "kind": "primary"
+    },
+    {
+     "title": "Docket No. 24-1287, Learning Resources, Inc. v. Trump",
+     "publisher": "Supreme Court of the United States",
+     "url": "https://www.supremecourt.gov/docket/docketfiles/html/public/24-1287.html",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2026-02-24-ieepa-ends-section-122-begins",
+   "date": "2026-02-24",
+   "announced_date": "2026-02-20",
+   "label_short": "IEEPA tariffs end; temporary 10% §122 tariff begins",
+   "description": "Following the Supreme Court's ruling of February 20, 2026, Executive Order 14389 ends the additional duties imposed under IEEPA, and CBP stops collecting them on February 24, 2026. The same day a Section 122 import surcharge of 10 percent ad valorem takes effect for a period of 150 days (Proclamation 11012).",
+   "authority": "ieepa",
+   "kind": "terminated",
+   "countries": "all",
+   "legal_status": "terminated",
+   "status_note": "IEEPA duties ended. The Section 122 surcharge was set for a period of 150 days from February 24, 2026.",
+   "rate_note": "Section 122 surcharge: 10 percent ad valorem, for 150 days",
+   "flag_priority": 1,
+   "is_cutover": true,
+   "links": {
+    "eo_numbers": [
+     14389
+    ]
+   },
+   "federal_register_documents": [
+    "2026-03832",
+    "2026-03824"
+   ],
+   "sources": [
+    {
+     "title": "Ending Certain Tariff Actions",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/02/25/2026-03832/ending-certain-tariff-actions",
+     "kind": "primary"
+    },
+    {
+     "title": "Imposing a Temporary Import Surcharge To Address Fundamental International Payments Problems",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/02/25/2026-03824/imposing-a-temporary-import-surcharge-to-address-fundamental-international-payments-problems",
+     "kind": "primary"
+    },
+    {
+     "title": "CSMS # 67834313 - Ending Collection of International Emergency Economic Powers Act Duties",
+     "publisher": "U.S. Customs and Border Protection",
+     "url": "https://content.govdelivery.com/accounts/USDHSCBP/bulletins/40b11c9",
+     "kind": "primary"
+    },
+    {
+     "title": "CSMS # 67844987 - Imposing Temporary Section 122 Duties",
+     "publisher": "U.S. Customs and Border Protection",
+     "url": "https://content.govdelivery.com/accounts/USDHSCBP/bulletins/40b3b7b",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2026-05-07-cit-section-122-ruling",
+   "date": "2026-05-07",
+   "label_short": "Trade court rules §122 tariff unlawful, for 3 plaintiffs",
+   "description": "In Slip Op. 26-47 the Court of International Trade grants summary judgment to three plaintiffs and enjoins collection of the Section 122 duties as to them, and dismisses the claims of other plaintiffs for lack of standing. The opinion includes a dissent.",
+   "authority": "court",
+   "kind": "struck_down",
+   "countries": "all",
+   "legal_status": "stayed",
+   "status_note": "Secondary reports say the Federal Circuit granted a stay pending appeal on June 11, 2026 (Nos. 2026-1804 and 2026-1805). Appeal outcome not reviewed.",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "court_case": {
+    "name": "State of Oregon v. United States; Burlap and Barrel, Inc. v. United States",
+    "docket": "Court Nos. 26-01472 and 26-01606",
+    "court": "U.S. Court of International Trade"
+   },
+   "sources": [
+    {
+     "title": "Slip Op. 26-47, State of Oregon v. United States; Burlap and Barrel, Inc. v. United States (May 7, 2026)",
+     "publisher": "U.S. Court of International Trade",
+     "url": "https://www.cit.uscourts.gov/sites/cit/files/26-47.pdf",
+     "kind": "primary"
+    },
+    {
+     "title": "Federal Circuit Stays Injunctions Against Section 122 'Balance-of-Payments' Tariffs Pending Appeal",
+     "publisher": "Subject to Inquiry",
+     "url": "https://www.subjecttoinquiry.com/2026/06/federal-circuit-stays-injunctions-against-section-122-balance-of-payments-tariffs-pending-appeal/",
+     "kind": "secondary"
+    }
+   ]
+  },
+  {
+   "action_id": "2026-07-22-section-301-brazil",
+   "date": "2026-07-22",
+   "announced_date": "2026-07-15",
+   "label_short": "Brazil §301 tariff of 25% begins",
+   "description": "USTR takes action in the Section 301 investigation of Brazil's acts, policies and practices related to digital trade and electronic payment services: a 25 percent tariff on all imports of Brazil, with certain exemptions.",
+   "authority": "section_301",
+   "kind": "imposed",
+   "countries": [
+    "BRA"
+   ],
+   "legal_status": "in_effect",
+   "rate_note": "25 percent, with exemptions",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2026-14542",
+    "2026-14654"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Action: Brazil's Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/07/20/2026-14542/notice-of-action-brazils-acts-policies-and-practices-related-to-digital-trade-and-electronic-payment",
+     "kind": "primary"
+    },
+    {
+     "title": "Action by the United States in the Investigation Under Section 301 of the Trade Act of 1974 of Brazil's Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/07/20/2026-14654/action-by-the-united-states-in-the-investigation-under-section-301-of-the-trade-act-of-1974-of",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2026-07-24-section-301-forced-labor",
+   "date": "2026-07-24",
+   "announced_date": "2026-07-23",
+   "label_short": "§301 forced-labor tariffs replace §122 (60 economies)",
+   "description": "USTR imposes Section 301 tariffs of 10 percent or 12.5 percent ad valorem, with exemptions, on goods of 60 economies found not to impose and effectively enforce a prohibition on importing goods made with forced labor.",
+   "authority": "section_301",
+   "kind": "replaced",
+   "countries": [
+    "AGO",
+    "ARE",
+    "ARG",
+    "AUS",
+    "AUT",
+    "BEL",
+    "BGD",
+    "BGR",
+    "BHR",
+    "BHS",
+    "BRA",
+    "CAN",
+    "CHE",
+    "CHL",
+    "CHN",
+    "COL",
+    "CRI",
+    "CYP",
+    "CZE",
+    "DEU",
+    "DNK",
+    "DOM",
+    "DZA",
+    "ECU",
+    "EGY",
+    "ESP",
+    "EST",
+    "FIN",
+    "FRA",
+    "GBR",
+    "GRC",
+    "GTM",
+    "GUY",
+    "HKG",
+    "HND",
+    "HRV",
+    "HUN",
+    "IDN",
+    "IND",
+    "IRL",
+    "IRQ",
+    "ISR",
+    "ITA",
+    "JOR",
+    "JPN",
+    "KAZ",
+    "KHM",
+    "KOR",
+    "KWT",
+    "LBY",
+    "LKA",
+    "LTU",
+    "LUX",
+    "LVA",
+    "MAR",
+    "MEX",
+    "MLT",
+    "MYS",
+    "NGA",
+    "NIC",
+    "NLD",
+    "NOR",
+    "NZL",
+    "OMN",
+    "PAK",
+    "PER",
+    "PHL",
+    "POL",
+    "PRT",
+    "QAT",
+    "ROU",
+    "RUS",
+    "SAU",
+    "SGP",
+    "SLV",
+    "SVK",
+    "SVN",
+    "SWE",
+    "THA",
+    "TTO",
+    "TUR",
+    "TWN",
+    "URY",
+    "VEN",
+    "VNM",
+    "ZAF"
+   ],
+   "scope_note": "60 economies: the 27 European Union member states count as one economy.",
+   "legal_status": "in_effect_under_challenge",
+   "status_note": "Challenged in the Court of International Trade (State of Oregon v. Trump, Court No. 26-03467, and Burlap and Barrel, Inc. v. Greer). The court heard arguments on September 30, 2026 and had not ruled as of October 1, 2026.",
+   "rate_note": "10 percent or 12.5 percent ad valorem, depending on the economy, with exemptions",
+   "flag_priority": 1,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2026-15181",
+    "2026-15274"
+   ],
+   "sources": [
+    {
+     "title": "Notice of Actions in Section 301 Investigations of Acts, Policies, and Practices of Various Economies Related to the Failure of Each Economy To Impose and Effectively Enforce a Prohibition on the Importation of Goods Produced With Forced Labor",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/07/28/2026-15181/notice-of-actions-in-section-301-investigations-of-acts-policies-and-practices-of-various-economies",
+     "kind": "primary"
+    },
+    {
+     "title": "Actions by the United States in the Investigations Under Section 301 of the Trade Act of 1974 of the Acts, Policies, and Practices of 60 Economies Related to the Failure of Each Economy To Impose and Effectively Enforce a Prohibition on the Importation of Goods Produced With Forced Labor",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/07/28/2026-15274/actions-by-the-united-states-in-the-investigations-under-section-301-of-the-trade-act-of-1974-of-the",
+     "kind": "primary"
+    },
+    {
+     "title": "Trump's latest global tariffs face trade court challenge",
+     "publisher": "CNBC",
+     "url": "https://www.cnbc.com/2026/09/30/trump-tariffs-trade-lawsuit.html",
+     "kind": "secondary"
+    },
+    {
+     "title": "Twenty-Five States Sue to Block the Section 301 Forced-Labor Tariffs",
+     "publisher": "Nakachi Eckhardt & Jacobson",
+     "url": "https://www.tradelawcounsel.com/insights-news/2026/8/7/twenty-five-states-sue-to-block-the-section-301-forced-labor-tariffs",
+     "kind": "secondary"
+    }
+   ]
+  },
+  {
+   "action_id": "2026-07-31-section-232-pharmaceuticals",
+   "date": "2026-07-31",
+   "announced_date": "2026-04-02",
+   "label_short": "§232 tariffs on patented pharmaceuticals begin",
+   "description": "A proclamation of April 2, 2026 under Section 232 imposes a 100 percent ad valorem duty on patented pharmaceuticals and associated ingredients, effective July 31, 2026 for companies listed in Annex III and September 29, 2026 for other companies, with other provisions for trade-deal partners.",
+   "authority": "section_232",
+   "kind": "imposed",
+   "countries": "all",
+   "scope_note": "Generic pharmaceuticals are not subject to these tariffs at this time.",
+   "legal_status": "in_effect",
+   "rate_note": "100 percent ad valorem on patented pharmaceuticals and associated ingredients, with other rates under the proclamation",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2026-06956"
+   ],
+   "sources": [
+    {
+     "title": "Adjusting Imports of Pharmaceuticals and Pharmaceutical Ingredients Into the United States",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/04/09/2026-06956/adjusting-imports-of-pharmaceuticals-and-pharmaceutical-ingredients-into-the-united-states",
+     "kind": "primary"
+    }
+   ]
+  },
+  {
+   "action_id": "2026-08-22-section-338-canada",
+   "date": "2026-08-22",
+   "announced_date": "2026-07-20",
+   "label_short": "Canada §338 duties of 50% begin",
+   "description": "Proclamations 11046, 11047 and 11048 under Section 338 of the Tariff Act of 1930 impose an additional 50 percent ad valorem duty on certain Canadian alcoholic beverages, dairy products and motor vehicles. The start was moved from August 19 to August 22, 2026.",
+   "authority": "other",
+   "authority_note": "Section 338 of the Tariff Act of 1930 (19 U.S.C. 1338)",
+   "kind": "imposed",
+   "countries": [
+    "CAN"
+   ],
+   "legal_status": "in_effect",
+   "status_note": "Proclamations of September 8, 2026 modify the products covered (effective September 15) and exclude certain alcoholic beverages from importation (effective September 29).",
+   "rate_note": "50 percent ad valorem on the products listed in each proclamation",
+   "flag_priority": 2,
+   "is_cutover": false,
+   "federal_register_documents": [
+    "2026-14991",
+    "2026-14992",
+    "2026-14997",
+    "2026-17294"
+   ],
+   "sources": [
+    {
+     "title": "Imposing Additional Duties To Offset Canadian Discrimination Against the Commerce of the United States With Respect to Alcoholic Beverages",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/07/23/2026-14991/imposing-additional-duties-to-offset-canadian-discrimination-against-the-commerce-of-the-united",
+     "kind": "primary"
+    },
+    {
+     "title": "Imposing Additional Duties To Offset Canadian Discrimination Against the Commerce of the United States With Respect to Dairy",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/07/23/2026-14992/imposing-additional-duties-to-offset-canadian-discrimination-against-the-commerce-of-the-united",
+     "kind": "primary"
+    },
+    {
+     "title": "Imposing Additional Duties To Offset Canadian Discrimination Against the Commerce of the United States With Respect to Motor Vehicles",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/07/23/2026-14997/imposing-additional-duties-to-offset-canadian-discrimination-against-the-commerce-of-the-united",
+     "kind": "primary"
+    },
+    {
+     "title": "Temporary Suspension of Additional Duties To Offset Canadian Discrimination Against the Commerce of the United States With Respect to Alcoholic Beverages, Dairy, and Motor Vehicles",
+     "publisher": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/08/24/2026-17294/temporary-suspension-of-additional-duties-to-offset-canadian-discrimination-against-the-commerce-of",
+     "kind": "primary"
+    }
+   ]
+  }
+ ]
+}

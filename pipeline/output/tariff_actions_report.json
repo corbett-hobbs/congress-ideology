@@ -1,0 +1,10 @@
+{
+  "rows": 25,
+  "first_date": "2018-03-23",
+  "last_date": "2026-08-22",
+  "priority_1": 5,
+  "priority_1_cap": 10,
+  "cutover": "2026-02-24-ieepa-ends-section-122-begins",
+  "last_reviewed": "2026-10-01",
+  "stale_after_days": 30
+}
