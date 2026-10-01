@@ -162,3 +162,17 @@ only when the file's Wikimedia Commons / Wikipedia license metadata says public
 domain or CC0 (committed to `public/images/justices/`, source file recorded per
 row); everything else is omitted. Refresh with `pnpm fetch:justice-bios`.
 Martin-Quinn and FJC attribution for the justice pages is as above.
+
+---
+
+## Federal Register — executive orders
+
+Executive-order text, numbers, dates, issuing agencies and amend/revoke notes
+come from the [Federal Register API](https://www.federalregister.gov/developers/documentation/api/v1)
+(`federalregister.gov/api/v1`, no key), 1994-present. U.S. government works,
+public domain; each order links back to its Federal Register page
+(`federalregister.gov/d/<document_number>`). Snapshot committed in
+`pipeline/raw/federal-register/`, refreshed weekly by
+`.github/workflows/executive-orders-freshness.yml`. The topic labels are this
+project's own, classifier-assisted, and are not part of the Federal Register's
+data. Cited in the footer of `components/executive-orders/ExecutiveOrdersPageClient.tsx`.

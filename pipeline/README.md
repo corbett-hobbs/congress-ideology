@@ -54,6 +54,7 @@ why the committee feature is pinned to the latest Congress.
 | `committee_memberships.json`  | one row per (bioguide_id, committee_id), current Congress |
 | `_report.json`                | run summary and sanity numbers                |
 | `court/*.json`                | Supreme Court track (Martin-Quinn scores + FJC bios), a separate data track — see `docs/DATA_CONVENTIONS.md` §6. Built by `pnpm transform` from `raw/mq` + `raw/fjc`; `pnpm fetch:mq` / `pnpm fetch:fjc` are **not** part of `fetch:all` (MQ's host bot-challenges scripts). |
+| `executive_orders.json`, `administrations.json`, `executive_orders_report.json` | Executive-orders track (Federal Register, 1994-present), keyed by `eo_number` — a separate data track, see `docs/DATA_CONVENTIONS.md` §7. Built by `pnpm transform` from `raw/federal-register` + the committed topic cache `pipeline/classification/eo_topics.json`; `pnpm fetch:executive-orders` is **not** part of `fetch:all`, and `pnpm classify:eos` (cache maintenance) is never run by CI. |
 | `member-photos.json`          | which current members have a committed photo (from `fetch:photos`, not re-derived by `pipeline:check`) |
 
 See `docs/DATA_CONVENTIONS.md` §2 for the full contract; schemas are in

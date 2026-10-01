@@ -7,7 +7,7 @@ import { useBackLinkHref } from "./BackLinkContext";
 
 /** Pages where the primary nav is itself the way around: the wordmark is a
  *  plain link to "/" with no arrow. Every other page is a detail page. */
-const SECTION_PAGES = new Set(["/", "/congress", "/congress/wealth", "/supreme-court"]);
+const SECTION_PAGES = new Set(["/", "/congress", "/congress/wealth", "/supreme-court", "/executive-orders"]);
 
 /**
  * One header row at `md`+ (two slim rows below): wordmark, branch tabs

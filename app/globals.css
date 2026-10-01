@@ -42,6 +42,15 @@
      way as the historical-party palette via validate_palette.js. */
   --committee-house: #124912;
   --committee-senate: #ad1f8a;
+  /* Executive-order topic colours — three families (a plum, b teal, n neutral
+     charcoal) x three fills (solid / hatch / dots, see lib/executive-orders-types.ts
+     and components/executive-orders/TopicPatternDefs.tsx). Deliberately NOT the
+     party hues. Pairs that share a fill are validated by validate_palette.js
+     (>= 3:1 on every surface, dE >= 0.10 under protan/deutan from each other
+     and from --dem/--rep/--oth). */
+  --topic-a: #7b4f87;
+  --topic-b: #3e9886;
+  --topic-n: #4a4a4a;
   /* Amber "note" accent — the wealth scatter's hover-card gap/off-scale
      lines (session 3). Not a party colour, so it sits outside
      validate_palette.js's co-occurrence checker; verified by hand instead —
@@ -80,6 +89,9 @@
     --antiadmin: #c1904f;
     --committee-house: #7dd175;
     --committee-senate: #c24799;
+    --topic-a: #b5a4ea;
+    --topic-b: #2d8f9e;
+    --topic-n: #c1c1c1;
     --note: #e3b04a;
     --focus: #9b84c7;
     color-scheme: dark;
@@ -110,6 +122,9 @@
   --antiadmin: #c1904f;
   --committee-house: #7dd175;
   --committee-senate: #c24799;
+  --topic-a: #b5a4ea;
+  --topic-b: #2d8f9e;
+  --topic-n: #c1c1c1;
   --note: #e3b04a;
   --focus: #9b84c7;
   color-scheme: dark;
