@@ -159,8 +159,9 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             <strong className="font-medium text-ink-muted">Method.</strong> Orders are counted in the year they were
             signed, not published. Each order has one primary topic, so a year&apos;s columns add up to its true total.
             Topic assignment is classifier-assisted: a language model read each order&apos;s title and issuing agencies,
-            and orders that only amend or revoke another order take that order&apos;s topic. The assignments have not
-            been fully reviewed by people, and a topic is a judgment call, so a count shows how many orders touched a
+            and orders that only amend or revoke another order take that order&apos;s topic. A random sample of 100
+            assignments was checked by a person and all were confirmed, but the rest have not been individually
+            reviewed, and a topic is a judgment call, so a count shows how many orders touched a
             subject, not how significant any of them were. In a transition year the orders signed before and after
             Inauguration Day count toward the outgoing and incoming president respectively.
           </p>

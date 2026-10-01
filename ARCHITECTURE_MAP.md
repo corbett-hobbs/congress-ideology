@@ -46,7 +46,7 @@ stored. See `docs/DATA_CONVENTIONS.md` for the full contract.
 Executive-orders raw source: `pipeline/raw/federal-register/executive_orders.json`
 (`pnpm fetch:executive-orders`; weekly `.github/workflows/executive-orders-freshness.yml`
 opens a PR, never auto-merged). Schemas: `lib/executive-orders-entities.ts`.
-`docs/eo-topic-audit.csv` is the 100-row human-review sample (awaiting review).
+`docs/eo-topic-audit.csv` is the 100-row human-review sample (reviewed, all agree).
 
 Court raw sources: Martin-Quinn `pipeline/raw/mq/<year>/{justices,court}.csv` (hand-placed/`--adopt`ed — the host bot-challenges scripts; fetch: `fetch/mq.ts`, pure helpers `fetch/mq-check.ts`) and FJC bios `pipeline/raw/fjc/*.csv` (`fetch/fjc.ts`); committed hand-reviewed crosswalk `pipeline/transform/court-crosswalk.json`; schemas `lib/court-entities.ts`. Freshness: `.github/workflows/mq-freshness.yml` (monthly, warns instead of failing on a challenge). See DATA_CONVENTIONS §6.
 
