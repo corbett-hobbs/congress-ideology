@@ -1,20 +1,19 @@
 "use client";
 
+import { sameRange, type YearRange } from "@/lib/year-range";
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 /**
  * The page's one source of truth for the hovered date, the pinned date and the
- * selected president (the site's "no chart keeps its own copy" convention).
+ * visible year window (the site's "no chart keeps its own copy" convention).
  * Dates are axis days. Two contexts, so the 9 charts' static layers — which
  * only need the stable actions — don't re-render on every hover frame.
  */
 export interface EconomyValues {
   hover: number | null;
   pin: number | null;
-  /** Index into the terms array, or null for all presidents. */
-  term: number | null;
   /** Visible calendar years `[first, last]`, or null for the whole axis. One window for every chart. */
-  range: [number, number] | null;
+  range: YearRange | null;
 }
 
 export interface EconomyActions {
@@ -23,9 +22,10 @@ export interface EconomyActions {
   leaveHover: () => void;
   pinDay: (day: number) => void;
   clearPin: () => void;
-  setTerm: (i: number | null) => void;
-  toggleTerm: (i: number) => void;
-  setRange: (r: [number, number] | null) => void;
+  /** Set the year window; null = the whole axis. */
+  setRange: (r: YearRange | null) => void;
+  /** Show `next`, or go back to the whole axis if it is already showing (a second click on a president band). */
+  toggleRange: (next: YearRange, full: YearRange) => void;
 }
 
 const ValuesCtx = createContext<EconomyValues | null>(null);
@@ -34,8 +34,7 @@ const ActionsCtx = createContext<EconomyActions | null>(null);
 export function EconomyStateProvider({ children }: { children: ReactNode }) {
   const [hover, setHover] = useState<number | null>(null);
   const [pin, setPin] = useState<number | null>(null);
-  const [term, setTermState] = useState<number | null>(null);
-  const [range, setRangeState] = useState<[number, number] | null>(null);
+  const [range, setRangeState] = useState<YearRange | null>(null);
   const pending = useRef<number | null>(null);
   const raf = useRef(0);
 
@@ -61,13 +60,12 @@ export function EconomyStateProvider({ children }: { children: ReactNode }) {
         setPin(null);
         setHover(null);
       },
-      setTerm: (i) => setTermState(i),
-      toggleTerm: (i) => setTermState((t) => (t === i ? null : i)),
+      toggleRange: (next, full) => setRangeState((cur) => (sameRange(cur ?? full, next) ? null : next)),
       setRange: (r) => setRangeState(r),
     }),
     [],
   );
-  const values = useMemo(() => ({ hover, pin, term, range }), [hover, pin, term, range]);
+  const values = useMemo(() => ({ hover, pin, range }), [hover, pin, range]);
   return (
     <ActionsCtx.Provider value={actions}>
       <ValuesCtx.Provider value={values}>{children}</ValuesCtx.Provider>

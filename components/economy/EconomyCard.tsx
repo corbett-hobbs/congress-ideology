@@ -2,9 +2,7 @@ import { memo, type ReactNode } from "react";
 import { fiscalBars, quarterlyPoints, yearRows } from "@/lib/economy-series";
 import type { EconomyData } from "@/lib/indicator-payload";
 import type { Reading } from "@/lib/indicator-lookup";
-import { RangeSelector } from "@/components/charts/RangeSelector";
 import { EconomyChart, chartPoints } from "./EconomyChart";
-import { useEconomyActions } from "./EconomyState";
 import { type ChartSpec } from "./specs";
 
 function Readout({ spec, reading, hero }: { spec: ChartSpec; reading: Reading; hero: boolean }) {
@@ -59,34 +57,13 @@ const DataTable = memo(function DataTable({ data, spec }: { data: EconomyData; s
   );
 });
 
-/** Years-shown control. Every card renders one; they all drive the page's single window. */
-function CardRange({ firstYear, lastYear, range }: { firstYear: number; lastYear: number; range: [number, number] }) {
-  const { setRange } = useEconomyActions();
-  const presets = [20, 10, 5].map((n) => ({ label: `Last ${n} years`, from: Math.max(firstYear, lastYear - n + 1), to: lastYear }));
-  return (
-    <RangeSelector
-      min={firstYear}
-      max={lastYear}
-      value={range}
-      onChange={(r) => setRange(r[0] <= firstYear && r[1] >= lastYear ? null : r)}
-      format={String}
-      presets={presets}
-      ariaLabel="Years shown in every economy chart"
-    />
-  );
-}
-
 export function EconomyCard({
   data,
   spec,
   reading,
   hero = false,
   showCong,
-  term,
   view,
-  range,
-  firstYear,
-  lastYear,
   desc,
   footnote,
   legend,
@@ -96,11 +73,7 @@ export function EconomyCard({
   reading: Reading;
   hero?: boolean;
   showCong: boolean;
-  term: number | null;
   view: readonly [number, number];
-  range: [number, number];
-  firstYear: number;
-  lastYear: number;
   desc: string;
   footnote?: ReactNode;
   legend?: ReactNode;
@@ -117,10 +90,9 @@ export function EconomyCard({
       </div>
       {hero && <p className="m-0 mt-2 text-[0.875rem] leading-[1.5] text-ink-muted">{desc}</p>}
       <div className={hero ? "mt-3.5" : "mt-3"}>
-        <EconomyChart data={data} spec={spec} hero={hero} showCong={showCong} term={term} view={view} reading={reading} />
+        <EconomyChart data={data} spec={spec} hero={hero} showCong={showCong} view={view} reading={reading} />
       </div>
       {legend}
-      <CardRange firstYear={firstYear} lastYear={lastYear} range={range} />
       {footnote && <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">{footnote}</p>}
       <DataTable data={data} spec={spec} />
     </section>

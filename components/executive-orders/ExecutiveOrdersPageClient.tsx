@@ -15,6 +15,7 @@ import {
   type EoTopic,
   type EoYear,
 } from "@/lib/executive-orders-types";
+import { sameRange, termYearRange, type YearRange } from "@/lib/year-range";
 import { TopicPatternDefs, TopicSwatch } from "./TopicPatternDefs";
 
 type Mode = "count" | "share";
@@ -54,7 +55,6 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
   const [mode, setMode] = useState<Mode>("count");
   const [topic, setTopic] = useState<EoTopic | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
-  const [president, setPresident] = useState<string | null>(null);
 
   const first = data.years[0].year;
   const adminById = useMemo(() => new Map(data.administrations.map((a) => [a.termId, a])), [data.administrations]);
@@ -70,12 +70,16 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
       })),
     [data.years],
   );
-  const [range, setRange] = useState<[number, number] | null>(null);
+  const [range, setRange] = useState<YearRange | null>(null);
   const lastYear = data.years[data.years.length - 1].year;
-  const [from, to] = range ?? [first, lastYear];
+  const full: YearRange = [first, lastYear];
+  const [from, to] = range ?? full;
+  const termRange = (a: EoAdmin) => termYearRange(Number(a.start.slice(0, 4)), a.end ? Number(a.end.slice(0, 4)) : null, first, lastYear);
+  // The president dropdown and the year slider are two views of one window: a president is "selected" when the window is exactly their years.
+  const president = data.administrations.find((a) => sameRange(termRange(a), [from, to]))?.termId ?? null;
+  const custom = !sameRange([from, to], full) && president === null;
   const visible = useMemo(() => columns.filter((c) => c.year.year >= from && c.year.year <= to), [columns, from, to]);
   const bands = useMemo(() => termBands(data.administrations, from, visible.length), [data.administrations, from, visible.length]);
-  const presets = [10, 5].map((n) => ({ label: `Last ${n} years`, from: Math.max(first, lastYear - n + 1), to: lastYear }));
   const selectedYear = data.years.find((y) => String(y.year) === selected) ?? null;
   const last = data.years[data.years.length - 1];
 
@@ -83,15 +87,20 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
     <>
       <TopicPatternDefs />
       <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 backdrop-blur">
-        <div className="mx-auto w-full max-w-[1180px] px-4 py-2.5 sm:px-6">
+        <div className="mx-auto flex w-full max-w-[1180px] flex-col px-4 py-2.5 sm:flex-row sm:items-center sm:px-6">
           <label className="flex items-center gap-2">
             <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">President</span>
             <select
-              value={president ?? ""}
-              onChange={(e) => setPresident(e.target.value || null)}
+              value={custom ? "custom" : (president ?? "")}
+              onChange={(e) => {
+                const a = data.administrations.find((x) => x.termId === e.target.value);
+                if (a) setRange(termRange(a));
+                else if (e.target.value === "") setRange(null);
+              }}
               className="min-w-0 flex-1 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-[15rem] sm:flex-none"
             >
               <option value="">All presidents</option>
+              {custom && <option value="custom">Custom years</option>}
               {[...data.administrations].reverse().map((a) => (
                 <option key={a.termId} value={a.termId}>
                   {`${a.president}, ${a.start.slice(0, 4)}–${a.end ? a.end.slice(0, 4) : "present"}`}
@@ -99,6 +108,15 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
               ))}
             </select>
           </label>
+          <RangeSelector
+            min={first}
+            max={lastYear}
+            value={[from, to]}
+            onChange={(r) => setRange(sameRange(r, full) ? null : r)}
+            format={String}
+            ariaLabel="Years shown"
+            className="mt-2 sm:ml-5 sm:mt-0 sm:min-w-[240px] sm:flex-1"
+          />
         </div>
       </div>
       <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-16 pt-7 sm:px-6">
@@ -119,7 +137,12 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
           lede={`${data.total.toLocaleString("en-US")} orders signed ${first}–${last.year}, counted in the year they were signed. ${last.year} is year to date, through ${fmtDate(data.throughDate)}.`}
           action={<PillGroup ariaLabel="Chart view" options={MODES} value={mode} onChange={setMode} />}
         >
-          <div role="group" aria-label="Highlight a topic" className="mb-3 flex flex-wrap gap-x-1.5 gap-y-1.5">
+          {/* Below `sm` the topic chips stay two rows tall and scroll sideways (see .neighbor-chip-row), so the chart isn't pushed down the page. */}
+          <div
+            role="group"
+            aria-label="Highlight a topic"
+            className="neighbor-chip-row mb-3 grid auto-cols-max grid-flow-col grid-rows-2 gap-1.5 overflow-x-auto pb-1.5 sm:flex sm:flex-wrap sm:overflow-visible sm:pb-0"
+          >
             {EO_TOPICS.map((t) => {
               const on = topic === t;
               return (
@@ -151,20 +174,9 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             selectedKey={selected}
             onSelect={setSelected}
             bands={bands}
-            highlightBand={president}
             yAxisLabel={mode === "share" ? "SHARE OF YEAR’S ORDERS" : "EXECUTIVE ORDERS"}
             ariaLabel={`Stacked columns of executive orders signed per year, ${from} to ${to}, by topic. Select a column to list that year's orders.`}
             renderTooltip={(c) => <YearTooltip col={c} admins={adminById} mode={mode} throughDate={data.throughDate} />}
-          />
-
-          <RangeSelector
-            min={first}
-            max={lastYear}
-            value={[from, to]}
-            onChange={setRange}
-            format={String}
-            presets={presets}
-            ariaLabel="Years shown in the executive orders chart"
           />
 
           <p className="mb-0 mt-3 text-[0.75rem] leading-relaxed text-ink-faint">
@@ -178,7 +190,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
           <TableFallback years={data.years} />
         </ChartCard>
 
-        <YearList year={selectedYear} years={data.years} president={president} onClearPresident={() => setPresident(null)} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
+        <YearList year={selectedYear} years={data.years} president={president} onClearPresident={() => setRange(null)} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
 
         <footer className="flex flex-col gap-2 border-t border-line pt-6 text-[0.76rem] leading-[1.6] text-ink-faint">
           <p className="m-0">

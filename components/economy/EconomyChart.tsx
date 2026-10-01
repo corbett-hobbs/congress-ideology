@@ -17,6 +17,7 @@ import {
 import type { EconomyData } from "@/lib/indicator-payload";
 import { recessionLabel } from "@/lib/indicator-payload";
 import { dateOfDay, dayOf, fmtMonthIndex, monthIndexOfDay } from "@/lib/indicator-time";
+import { termYearRange } from "@/lib/year-range";
 import type { EconomyTerm } from "@/lib/economy-presidents";
 import { dayFromFraction, readAll, type Reading } from "@/lib/indicator-lookup";
 import { activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
@@ -48,8 +49,6 @@ interface Props {
   spec: ChartSpec;
   hero?: boolean;
   showCong: boolean;
-  /** Index into data.terms of the selected president, or null. */
-  term: number | null;
   /** Visible window `[start, end)` in axis days. */
   view: readonly [number, number];
 }
@@ -88,8 +87,10 @@ interface StaticProps extends Props {
 }
 
 /** Everything that doesn't change with the hovered date. Memoized so a hover frame doesn't rebuild 1,900-point paths nine times. */
-const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCong, term, view, W }: StaticProps) {
-  const { toggleTerm } = useEconomyActions();
+const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCong, view, W }: StaticProps) {
+  const { toggleRange } = useEconomyActions();
+  const firstYear = dateOfDay(0).year;
+  const lastYear = dateOfDay(data.span - 1).year;
   const [vs, ve] = view;
   const { ml, mr, mt, H, pw, lo, axisY, bandY, houseY, senateY, X, Y } = geometry(W, hero, spec, view, showCong);
   const clipId = `clip-${spec.key}`;
@@ -103,7 +104,6 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
     .y((p) => Y(p.value as number));
   const clipped = (a: number, b: number): [number, number] => [X(Math.max(vs, a)), X(Math.min(ve, b))];
   const visibleSpan = (a: number, b: number) => b > vs && a < ve;
-  const sel = term === null ? null : data.terms[term];
   // Label spacing follows the zoom: every year when zoomed in, every 5 or 10 at full width.
   const yearsShown = (ve - vs) / 365.25;
   const yearStep = [1, 2, 5, 10].find((s) => (pw / yearsShown) * s >= 42 && !(s === 2 && yearsShown > 20)) ?? 10;
@@ -126,11 +126,6 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
               const [x0, x1] = clipped(s, e);
               return <rect key={s} x={x0} y={mt} width={Math.max(1, x1 - x0)} height={H} fill="var(--ink)" fillOpacity={0.09} />;
             })}
-
-            {sel && visibleSpan(sel.s, sel.e) && (() => {
-              const [x0, x1] = clipped(sel.s, sel.e);
-              return <rect x={x0} y={mt} width={x1 - x0} height={H} fill={party(sel.party)} fillOpacity={0.14} />;
-            })()}
 
             {/* Gridlines + y labels */}
             {spec.ticks.map((v) => (
@@ -269,21 +264,20 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
             <text x={ml - 7} y={bandY + 12.5} textAnchor="end" className="fill-ink-muted text-[11px]" opacity={showCong ? 1 : 0}>
               {hero ? "President" : "Pres."}
             </text>
-            {data.terms.map((t, i) => {
+            {data.terms.map((t) => {
               if (!visibleSpan(t.s, t.e)) return null;
               const [x0, x1] = clipped(t.s, t.e);
               const text = termText(t, x1 - x0, hero);
               return (
                 <g
                   key={t.termId}
-                  opacity={term === null || term === i ? 1 : 0.35}
                   className="cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleTerm(i);
+                    toggleRange(termYearRange(t.startYear, t.endYear, firstYear, lastYear), [firstYear, lastYear]);
                   }}
                 >
-                  <title>{`${t.full}, ${t.startYear} to ${t.endYear ?? "present"}. Click to highlight this term.`}</title>
+                  <title>{`${t.full}, ${t.startYear} to ${t.endYear ?? "present"}. Click to show only these years.`}</title>
                   <rect x={x0} y={bandY} width={x1 - x0 - 0.5} height={BAND_H} fill={party(t.party)} />
                   {text && (
                     <text x={(x0 + x1) / 2} y={bandY + 12.6} textAnchor="middle" className="text-[11px] font-semibold" fill="#ffffff">
@@ -349,7 +343,7 @@ function Overlay({ W, hero, spec, view, showCong, reading }: { W: number; hero: 
   );
 }
 
-export function EconomyChart({ data, spec, hero = false, showCong, term, view, reading }: Props & { reading: Reading }) {
+export function EconomyChart({ data, spec, hero = false, showCong, view, reading }: Props & { reading: Reading }) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || (hero ? 1140 : 540);
   const g = geometry(W, hero, spec, view, showCong);
@@ -394,7 +388,7 @@ export function EconomyChart({ data, spec, hero = false, showCong, term, view, r
       >
         {() => (
           <>
-            <StaticLayer data={data} spec={spec} hero={hero} showCong={showCong} term={term} view={view} W={W} />
+            <StaticLayer data={data} spec={spec} hero={hero} showCong={showCong} view={view} W={W} />
             <Overlay W={W} hero={hero} spec={spec} view={view} showCong={showCong} reading={reading} />
           </>
         )}
