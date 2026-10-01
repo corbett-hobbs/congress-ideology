@@ -1,6 +1,7 @@
 import type { CountryRow, DutiesByCountryRow, DutiesNationalRow, DutiesSource, TradeByCountryRow, TradeNationalRow } from "./trade-entities";
 import { AXIS_START_YEAR, type Monthly, type TradeCountryPayload, type TradeNationalPayload, type TradeYearPayload, type YearPartnerRow } from "./trade-types";
 import { monthCount, monthIndex } from "./trade-derive";
+import { displayCountryName } from "./trade-names";
 
 /**
  * Builds the trade page's client payloads from the pipeline rows. Pure (no
@@ -68,7 +69,7 @@ export function buildCountryPayload(
   duties: readonly DutiesByCountryRow[],
   length: number,
 ): TradeCountryPayload {
-  const out: TradeCountryPayload = { code: country.country_code, name: country.name, exports: blank(length), imports: blank(length), duties: blank(length), dutyImports: blank(length) };
+  const out: TradeCountryPayload = { code: country.country_code, name: displayCountryName(country.country_code, country.name), exports: blank(length), imports: blank(length), duties: blank(length), dutyImports: blank(length) };
   for (const r of trade) {
     if (r.country_code !== country.country_code) continue;
     put(out.exports, r.year, r.exports);
@@ -100,7 +101,7 @@ export function buildYearPayload(
     const c = byCode.get(r.country_code);
     if (!c) continue; // aggregates carry no country row
     const d = dutyBy.get(r.country_code);
-    partners.push([c.country_code, c.name, round1(r.exports_year), round1(r.imports_year), d?.duties_year ?? null, d?.import_value_year ?? null]);
+    partners.push([c.country_code, displayCountryName(c.country_code, c.name), round1(r.exports_year), round1(r.imports_year), d?.duties_year ?? null, d?.import_value_year ?? null]);
   }
   partners.sort((a, b) => a[1].localeCompare(b[1]));
   return { year, partners, dutySource: dutyBy.size ? [...dutyBy.values()][0].source : null };

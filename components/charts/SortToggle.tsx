@@ -103,3 +103,52 @@ export function SortToggle({
     </div>
   );
 }
+
+/**
+ * A pick-one sort control where EVERY button reverses on a second click: the
+ * active button carries a ▾ that flips when the order is reversed. Generic over
+ * the option keys, so any chart can use it (the trade charts do). Controlled;
+ * the page owns `{ key, reversed }` and decides what a click means (typically
+ * `nextSort` in lib/trade-derive.ts: same key flips, another key resets).
+ * The original `SortToggle` above is unchanged.
+ */
+export function ReversibleSortToggle<K extends string>({
+  options,
+  active,
+  reversed,
+  onSelect,
+  ariaLabel,
+}: {
+  options: readonly { key: K; label: string; /** Shown as the button's title: what the default order is. */ hint?: string }[];
+  active: K;
+  reversed: boolean;
+  onSelect: (key: K) => void;
+  ariaLabel: string;
+}) {
+  return (
+    <div role="group" aria-label={ariaLabel} className="flex flex-none overflow-hidden rounded-lg border border-line-strong text-[0.8rem] font-medium">
+      {options.map((o) => {
+        const on = o.key === active;
+        return (
+          <button
+            key={o.key}
+            type="button"
+            onClick={() => onSelect(o.key)}
+            aria-pressed={on}
+            title={on ? `${o.hint ? `${o.hint}. ` : ""}Click again to reverse the order` : o.hint}
+            className={`flex items-center gap-1 px-2 py-[0.35rem] transition-colors sm:px-[0.85rem] ${
+              on ? "bg-accent text-accent-ink" : "bg-surface-raised text-ink-muted hover:text-ink"
+            }`}
+          >
+            {o.label}
+            {on && (
+              <span aria-hidden className={`inline-block text-[0.6rem] leading-none transition-transform ${reversed ? "rotate-180" : ""}`}>
+                ▾
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}

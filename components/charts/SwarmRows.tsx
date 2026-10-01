@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { scaleLinear } from "d3-scale";
+import { scaleLinear, type ScaleContinuousNumeric } from "d3-scale";
 import { ChartFrame, type Margin } from "./ChartFrame";
 import { Axis } from "./Axis";
 import { Tooltip, useTooltip } from "./Tooltip";
@@ -38,6 +38,8 @@ export interface SwarmPoint<TP> {
   opacity?: number;
   /** An extra ring around the dot — "seated" (neutral) or "selected" (accent, heavier). */
   ring?: "seated" | "selected";
+  /** Hollow dot: filled with the surface colour and outlined in the dot's colour (the "other" end of a dumbbell). */
+  hollow?: boolean;
   /** Show a pointer cursor (a profile page exists to navigate to). */
   navigable?: boolean;
   onClick?: () => void;
@@ -73,6 +75,12 @@ interface SwarmRowsProps<TP> {
   domain?: [number, number];
   /** Draw the tick axis and gridlines (default true). The Court charts turn it off. */
   showAxis?: boolean;
+  /** Tick values for the axis (default: the [-1, 1] ticks). */
+  ticks?: number[];
+  /** Tick label format (default: one decimal). */
+  formatTick?: (v: number) => string;
+  /** Build the x scale for the measured inner width (default: linear over `domain`). Lets a page use a log-like scale. */
+  makeScale?: (innerWidth: number) => ScaleContinuousNumeric<number, number>;
 }
 
 export function SwarmRows<TP>({
@@ -83,12 +91,15 @@ export function SwarmRows<TP>({
   renderTooltip,
   domain = [-1, 1],
   showAxis = true,
+  ticks: ticksProp,
+  formatTick = (v) => v.toFixed(1),
+  makeScale,
 }: SwarmRowsProps<TP>) {
   const tip = useTooltip<TP>();
   const labelTip = useTooltip<string>();
   const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
   const W = measuredW || FALLBACK_W;
-  const ticks = W < 420 ? NARROW_TICKS : TICKS;
+  const ticks = ticksProp ?? (W < 420 ? NARROW_TICKS : TICKS);
   const plotH = rows.length * rowHeight;
 
   // The label gutter can't eat a narrow phone card — clamp it to a fraction of
@@ -113,7 +124,7 @@ export function SwarmRows<TP>({
         ariaLabel={ariaLabel}
       >
         {({ innerWidth }) => {
-          const x = scaleLinear().domain(domain).range([0, innerWidth]);
+          const x = makeScale ? makeScale(innerWidth) : scaleLinear().domain(domain).range([0, innerWidth]);
 
           return (
             <>
@@ -125,7 +136,7 @@ export function SwarmRows<TP>({
                   offset={-14}
                   gridExtent={-(plotH + 20)}
                   zeroAt={0}
-                  format={(v) => v.toFixed(1)}
+                  format={formatTick}
                 />
               )}
 
@@ -200,7 +211,7 @@ export function SwarmRows<TP>({
                           />
                         )}
                         <circle
-                          className={`deleg-dot ${p.colorClass}${p.highlighted ? " is-highlighted" : ""}`}
+                          className={`deleg-dot ${p.colorClass}${p.highlighted ? " is-highlighted" : ""}${p.hollow ? " is-hollow" : ""}`}
                           cx={x(p.value)}
                           cy={y}
                           r={p.radius ?? (p.highlighted ? 7 : p.emphasized ? 5 : 3)}

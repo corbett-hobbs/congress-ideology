@@ -5,9 +5,10 @@ import { PageHeader } from "@/components/PageHeader";
 import { dateOfDay, dayOf, MONTH_NAMES } from "@/lib/indicator-time";
 import { termAtDay, termLabel } from "@/lib/trade-chart";
 import type { TradePageData } from "@/lib/trade-data";
-import type { TradeCountryPayload } from "@/lib/trade-types";
+import type { TradeCountryPayload, TradeYearPayload } from "@/lib/trade-types";
 import { TradeBalanceCard } from "./TradeBalanceCard";
 import { TradeFilterBar } from "./TradeFilterBar";
+import { TradePartnersCard } from "./TradePartnersCard";
 import { activeDay, TradeStateProvider, useTradeActions, useTradeValues } from "./TradeState";
 
 export function TradePageClient({ data }: { data: TradePageData }) {
@@ -21,10 +22,12 @@ export function TradePageClient({ data }: { data: TradePageData }) {
 function TradePage({ data }: { data: TradePageData }) {
   const v = useTradeValues();
   const { setRange, clearPin, setCountry, setShowCong, setYear, togglePlay } = useTradeActions();
-  const { era, national, countries, firstYear, lastYear } = data;
+  const { era, national, countries, firstYear, lastYear, initialYear } = data;
   const [loaded, setLoaded] = useState<Record<string, TradeCountryPayload>>({});
   const [failed, setFailed] = useState<string | null>(null);
   const inflight = useRef<AbortController | null>(null);
+  const [years, setYears] = useState<Record<number, TradeYearPayload>>({ [initialYear.year]: initialYear });
+  const [yearFailed, setYearFailed] = useState<number | null>(null);
 
   // A country's file is fetched once, when first selected (precedent: /data/[chamber]).
   useEffect(() => {
@@ -47,6 +50,30 @@ function TradePage({ data }: { data: TradePageData }) {
       });
     return () => ctl.abort();
   }, [v.country, loaded]);
+
+  // A year's partner rows are fetched once, when the slider first reaches it.
+  useEffect(() => {
+    const y = v.year;
+    if (years[y]) return;
+    const ctl = new AbortController();
+    fetch(`/data/trade/years/${y}`, { signal: ctl.signal })
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json() as Promise<TradeYearPayload>;
+      })
+      .then((p) => {
+        setYearFailed(null);
+        setYears((m) => ({ ...m, [p.year]: p }));
+      })
+      .catch((e) => {
+        if (e?.name !== "AbortError") setYearFailed(y);
+      });
+    return () => ctl.abort();
+  }, [v.year, years]);
+  // While the next year loads, the previous one stays on screen (dimmed) instead of blanking the chart.
+  const [lastShown, setLastShown] = useState<TradeYearPayload>(initialYear);
+  const yearPayload = years[v.year] ?? null;
+  if (yearPayload && yearPayload !== lastShown) setLastShown(yearPayload);
 
   const countryRef = v.country ? countries.find((c) => c.code === v.country) ?? null : null;
   const payload = v.country ? loaded[v.country] : undefined;
@@ -111,6 +138,16 @@ function TradePage({ data }: { data: TradePageData }) {
           view={view}
           loading={loadState === "loading"}
           error={loadState === "error"}
+        />
+
+        <TradePartnersCard
+          payload={yearPayload ?? lastShown}
+          year={v.year}
+          lastPeriod={national.lastPeriod}
+          country={v.country}
+          onPickCountry={setCountry}
+          loading={!yearPayload && yearFailed !== v.year}
+          error={!yearPayload && yearFailed === v.year}
         />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">

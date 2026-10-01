@@ -304,6 +304,11 @@ body {
   stroke: var(--line-strong);
   stroke-width: 1.5;
 }
+.deleg-dot.is-hollow {
+  fill: var(--surface);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
 .deleg-dot {
   stroke: var(--surface);
   stroke-width: 1.25;

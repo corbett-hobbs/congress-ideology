@@ -13,6 +13,7 @@ import {
 } from "./trade-entities";
 import { buildCountryPayload, buildNationalPayload, buildYearPayload } from "./trade-payload";
 import { monthCount, monthIndex } from "./trade-derive";
+import { displayCountryName } from "./trade-names";
 import { getEraLayers } from "./indicator-data";
 import { spanEnd } from "./trade-chart";
 import type { EconomyPayload } from "./indicator-payload";
@@ -71,7 +72,7 @@ export function getTradeCountryRefs(): TradeCountryRef[] {
   for (const c of load().countries) {
     if (c.is_aggregate || seen.has(c.country_code)) continue;
     seen.add(c.country_code);
-    out.push({ code: c.country_code, name: c.name, firstYear: c.first_year, lastYear: c.last_year });
+    out.push({ code: c.country_code, name: displayCountryName(c.country_code, c.name), firstYear: c.first_year, lastYear: c.last_year });
   }
   return out.sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -103,6 +104,8 @@ export interface TradePageData {
   era: Pick<EconomyPayload, "rec" | "terms" | "control"> & { span: number };
   firstYear: number;
   lastYear: number;
+  /** The latest year's partner rows, so the partners chart paints without a fetch. */
+  initialYear: TradeYearPayload;
 }
 
 /** Everything the trade page ships inline: the national series, the country list and the era layers. */
@@ -110,11 +113,15 @@ export function getTradePageData(): TradePageData {
   const national = getTradeNational();
   const last = monthIndex(national.lastPeriod);
   const span = spanEnd(last);
+  const lastYear = Number(national.lastPeriod.slice(0, 4));
+  const initialYear = getTradeYear(lastYear);
+  if (!initialYear) throw new Error(`no trade shard for ${lastYear}`);
   return {
     national,
     countries: getTradeCountryRefs(),
     era: { span, ...getEraLayers(span) },
     firstYear: 1991,
-    lastYear: Number(national.lastPeriod.slice(0, 4)),
+    lastYear,
+    initialYear,
   };
 }
