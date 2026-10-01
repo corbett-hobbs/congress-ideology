@@ -45,7 +45,7 @@ function termBands(admins: readonly EoAdmin[], firstYear: number, columns: numbe
     const to = a.end
       ? Math.min(columns, dateIndex(new Date(Date.parse(`${a.end}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10), firstYear))
       : columns;
-    return to > from ? [{ id: a.termId, label: lastName(a.president), from, to }] : [];
+    return to > from ? [{ id: a.termId, label: lastName(a.president), from, to, fill: a.party === "Democratic" ? "var(--dem)" : "var(--rep)" }] : [];
   });
 }
 
@@ -53,6 +53,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
   const [mode, setMode] = useState<Mode>("count");
   const [topic, setTopic] = useState<EoTopic | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
+  const [president, setPresident] = useState<string | null>(null);
 
   const first = data.years[0].year;
   const adminById = useMemo(() => new Map(data.administrations.map((a) => [a.termId, a])), [data.administrations]);
@@ -75,6 +76,25 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
   return (
     <>
       <TopicPatternDefs />
+      <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 backdrop-blur">
+        <div className="mx-auto w-full max-w-[1180px] px-4 py-2.5 sm:px-6">
+          <label className="flex items-center gap-2">
+            <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">President</span>
+            <select
+              value={president ?? ""}
+              onChange={(e) => setPresident(e.target.value || null)}
+              className="min-w-0 flex-1 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-[15rem] sm:flex-none"
+            >
+              <option value="">All presidents</option>
+              {[...data.administrations].reverse().map((a) => (
+                <option key={a.termId} value={a.termId}>
+                  {`${a.president}, ${a.start.slice(0, 4)}–${a.end ? a.end.slice(0, 4) : "present"}`}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </div>
       <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-16 pt-7 sm:px-6">
         <PageHeader title="How Many Executive Orders Does Each President Sign?">
           <p>
@@ -133,7 +153,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
           <p className="mb-0 mt-3 text-[0.75rem] leading-relaxed text-ink-faint">
             Terms under the axis:{" "}
             {data.administrations
-              .map((a) => `${a.president} (${a.start.slice(0, 4)}–${a.end ? String(Number(a.end.slice(0, 4)) + 1) : "present"})`)
+              .map((a) => `${a.president} (${a.start.slice(0, 4)}–${a.end ? a.end.slice(0, 4) : "present"})`)
               .join(", ")}
             .
           </p>
@@ -141,7 +161,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
           <TableFallback years={data.years} />
         </ChartCard>
 
-        <YearList year={selectedYear} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
+        <YearList year={selectedYear} years={data.years} president={president} onClearPresident={() => setPresident(null)} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
 
         <footer className="flex flex-col gap-2 border-t border-line pt-6 text-[0.76rem] leading-[1.6] text-ink-faint">
           <p className="m-0">
@@ -215,17 +235,48 @@ function YearTooltip({
 
 function YearList({
   year,
+  years,
+  president,
+  onClearPresident,
   topic,
   admins,
   onClearTopic,
   throughDate,
 }: {
   year: EoYear | null;
+  years: readonly EoYear[];
+  president: string | null;
+  onClearPresident: () => void;
   topic: EoTopic | null;
   admins: Map<string, EoAdmin>;
   onClearTopic: () => void;
   throughDate: string;
 }) {
+  if (president) {
+    const a = admins.get(president);
+    const scope = year ? [year] : years;
+    const all = scope.flatMap((y) => y.items).filter((i) => i.termId === president);
+    const items = topic ? all.filter((i) => i.topic === topic) : all;
+    return (
+      <section aria-live="polite" aria-label={`Executive orders signed by ${a?.president ?? "this president"}`} className="rounded-[10px] border border-line bg-surface">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line px-5 py-3">
+          <h2 className="font-serif text-[1.05rem] font-medium">
+            {a?.president}: {items.length} executive orders{year ? ` signed in ${year.year}` : ""}
+          </h2>
+          <button type="button" onClick={onClearPresident} className="text-[0.78rem] font-medium text-accent hover:underline">
+            Show all presidents
+          </button>
+        </div>
+        {(topic || year) && (
+          <div className="border-b border-line bg-surface-raised px-5 py-2 text-[0.78rem] text-ink-muted">
+            Also filtered by{year ? ` year ${year.year}` : ""}
+            {topic ? `${year ? " and" : ""} topic ${EO_TOPIC_LABELS[topic]}` : ""}.
+          </div>
+        )}
+        <OrderRows items={items} showPresident={false} admins={admins} />
+      </section>
+    );
+  }
   if (!year) {
     return (
       <section aria-live="polite" className="rounded-[10px] border border-dashed border-line-strong px-5 py-6 text-[0.85rem] text-ink-muted">
@@ -253,30 +304,7 @@ function YearList({
           </button>
         </div>
       )}
-      <ol className="m-0 max-h-[32rem] list-none overflow-y-auto p-0">
-        {items.map((i) => (
-          <li key={i.n} className="grid grid-cols-[3.9rem_1fr] gap-x-3 gap-y-1 border-b border-line px-5 py-2.5 last:border-0 sm:grid-cols-[4.4rem_1fr_auto]">
-            <span className="pt-[0.1rem] font-mono text-[0.72rem] text-ink-faint">EO {i.n}</span>
-            <div className="min-w-0">
-              <a
-                href={`https://www.federalregister.gov/d/${i.doc}`}
-                className="text-[0.88rem] leading-snug text-ink hover:text-accent hover:underline"
-              >
-                {i.title}
-                <span className="sr-only"> (Federal Register)</span>
-              </a>
-              <div className="mt-0.5 text-[0.72rem] text-ink-faint">
-                Signed {fmtDate(i.signed)}
-                {year.byTerm.length > 1 ? ` · ${admins.get(i.termId)?.president ?? ""}` : ""}
-              </div>
-            </div>
-            <span className="col-start-2 flex items-center gap-1.5 text-[0.74rem] text-ink-muted sm:col-start-3 sm:justify-end">
-              <TopicSwatch topic={i.topic} size={10} />
-              {EO_TOPIC_LABELS[i.topic]}
-            </span>
-          </li>
-        ))}
-      </ol>
+      <OrderRows items={items} showPresident={year.byTerm.length > 1} admins={admins} />
     </section>
   );
 }
@@ -316,5 +344,34 @@ function TableFallback({ years }: { years: readonly EoYear[] }) {
         </table>
       </div>
     </details>
+  );
+}
+
+function OrderRows({ items, showPresident, admins }: { items: EoYear["items"]; showPresident: boolean; admins: Map<string, EoAdmin> }) {
+  return (
+    <ol className="m-0 max-h-[32rem] list-none overflow-y-auto p-0">
+      {items.map((i) => (
+        <li key={i.n} className="grid grid-cols-[3.9rem_1fr] gap-x-3 gap-y-1 border-b border-line px-5 py-2.5 last:border-0 sm:grid-cols-[4.4rem_1fr_auto]">
+          <span className="pt-[0.1rem] font-mono text-[0.72rem] text-ink-faint">EO {i.n}</span>
+          <div className="min-w-0">
+            <a
+              href={`https://www.federalregister.gov/d/${i.doc}`}
+              className="text-[0.88rem] leading-snug text-ink hover:text-accent hover:underline"
+            >
+              {i.title}
+              <span className="sr-only"> (Federal Register)</span>
+            </a>
+            <div className="mt-0.5 text-[0.72rem] text-ink-faint">
+              Signed {fmtDate(i.signed)}
+              {showPresident ? ` · ${admins.get(i.termId)?.president ?? ""}` : ""}
+            </div>
+          </div>
+          <span className="col-start-2 flex items-center gap-1.5 text-[0.74rem] text-ink-muted sm:col-start-3 sm:justify-end">
+            <TopicSwatch topic={i.topic} size={10} />
+            {EO_TOPIC_LABELS[i.topic]}
+          </span>
+        </li>
+      ))}
+    </ol>
   );
 }

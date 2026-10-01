@@ -30,6 +30,8 @@ export interface StackBand {
   label: string;
   from: number;
   to: number;
+  /** Any SVG fill; with it the label is drawn in white. Without, the neutral alternating grays. */
+  fill?: string;
 }
 
 interface Props<C extends StackColumn> {
@@ -227,7 +229,7 @@ export function StackedBars<C extends StackColumn>({
                           width={Math.max(0, w)}
                           height={BAND_H}
                           style={{
-                            fill: i % 2 === 0 ? "var(--surface-raised)" : "var(--line)",
+                            fill: b.fill ?? (i % 2 === 0 ? "var(--surface-raised)" : "var(--line)"),
                             stroke: "var(--line-strong)",
                             strokeWidth: 0.75,
                           }}
@@ -237,7 +239,7 @@ export function StackedBars<C extends StackColumn>({
                             x={x0 + w / 2}
                             y={BAND_H / 2 + 4}
                             textAnchor="middle"
-                            style={{ fill: "var(--ink-muted)", fontSize: 11, fontWeight: 500 }}
+                            style={{ fill: b.fill ? "#ffffff" : "var(--ink-muted)", fontSize: 11, fontWeight: b.fill ? 600 : 500 }}
                           >
                             {b.label}
                           </text>
