@@ -145,6 +145,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             selectedKey={selected}
             onSelect={setSelected}
             bands={bands}
+            highlightBand={president}
             yAxisLabel={mode === "share" ? "SHARE OF YEAR’S ORDERS" : "EXECUTIVE ORDERS"}
             ariaLabel={`Stacked columns of executive orders signed per year, ${first} to ${last.year}, by topic. Select a column to list that year's orders.`}
             renderTooltip={(c) => <YearTooltip col={c} admins={adminById} mode={mode} throughDate={data.throughDate} />}

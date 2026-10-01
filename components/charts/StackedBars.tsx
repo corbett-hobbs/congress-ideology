@@ -44,6 +44,8 @@ interface Props<C extends StackColumn> {
   selectedKey: string | null;
   onSelect: (key: string | null) => void;
   bands?: readonly StackBand[];
+  /** Id of a band to emphasise: its span is tinted behind the columns and the other bands dim. */
+  highlightBand?: string | null;
   ariaLabel: string;
   yAxisLabel?: string;
   renderTooltip: (column: C) => ReactNode;
@@ -73,6 +75,7 @@ export function StackedBars<C extends StackColumn>({
   selectedKey,
   onSelect,
   bands = [],
+  highlightBand = null,
   ariaLabel,
   yAxisLabel,
   renderTooltip,
@@ -126,6 +129,12 @@ export function StackedBars<C extends StackColumn>({
                 >
                   {yAxisLabel}
                 </text>
+              )}
+
+              {bands.map((b) =>
+                b.id === highlightBand ? (
+                  <rect key={`hl-${b.id}`} x={xOf(b.from)} y={0} width={Math.max(0, xOf(b.to) - xOf(b.from))} height={innerHeight} style={{ fill: b.fill ?? "var(--accent)", fillOpacity: 0.14 }} />
+                ) : null,
               )}
 
               {columns.map((col, i) => {
@@ -221,7 +230,7 @@ export function StackedBars<C extends StackColumn>({
                     const x0 = xOf(b.from);
                     const w = xOf(b.to) - x0;
                     return (
-                      <g key={b.id}>
+                      <g key={b.id} opacity={highlightBand === null || highlightBand === b.id ? 1 : 0.35}>
                         <title>{b.label}</title>
                         <rect
                           x={x0}
