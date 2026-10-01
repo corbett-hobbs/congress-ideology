@@ -86,6 +86,28 @@ so the same transform builds both.
   is not in DataWeb's country list fails the fetch; none did for 1993–2009.
 - Revisions: Census restates history; this pull is a snapshot as of `fetched_at` and is not refreshed.
 
+## "Before and after the ruling" (Chart 4)
+
+Built in `lib/trade-before-after.ts`; constants `WINDOW_MONTHS = 5`, `MIN_WINDOW_IMPORTS = $500M`.
+
+- **Cut-over date:** the one `is_cutover` row of `tariff_actions.json` (2026-02-24, the day IEEPA duty
+  collection ended). The chart reads it from the timeline, never from the component.
+- **Windows:** five full months before (Sep 2025 to Jan 2026) and five after (Mar to Jul 2026). The month
+  that contains the date is left out of both, because it is part before and part after. If the data ends
+  before five full months have passed, the after-window is shorter and the card says so.
+- **Rate:** total calculated duties over total imports for consumption in each window (weighted by imports).
+  The change is after minus before, in percentage points.
+- **Which countries are drawn:** every month of both windows must be published, and imports for consumption
+  must be at least $500M in each window. Below that a few shipments move a small partner's rate by tens of
+  points and bury the large partners (before the floor the top of "Biggest change" was Belarus and Laos).
+  Smaller partners and those with missing months stay in the table, labeled. At the time of writing: 77 drawn,
+  153 small, 6 with missing months.
+- **Sort:** "Biggest change" ranks by absolute size, so a fall of 8 points ranks above a rise of 3. Both sorts
+  reverse; countries that cannot be drawn never move to the top.
+- The after-window includes the Section 122 surcharge (Feb 24 to its 150-day end) and, from July 24, the
+  Section 301 forced-labor tariffs, so the change is not "IEEPA's effect": the replacement tariffs are in the
+  tariff chart above, and shipment timing blurs the cut-over.
+
 ## "Did tariffs shift trade?" (the scatter)
 
 Built in `lib/trade-scatter.ts`; constants `LATEST_MONTHS = 6`, `BASELINE_YEAR = 2024`.

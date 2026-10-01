@@ -18,6 +18,7 @@ import { getEraLayers } from "./indicator-data";
 import { spanEnd } from "./trade-chart";
 import type { EconomyPayload } from "./indicator-payload";
 import { tariffActionsFile } from "./tariff-actions-entities";
+import { beforeAfterWindows, buildBeforeAfter, type BeforeAfterRow, type BeforeAfterWindows } from "./trade-before-after";
 import { buildScatterRows, scatterWindows, type ScatterRow, type ScatterWindows } from "./trade-scatter";
 import type { TariffFlag, TradeCountryPayload, TradeCountryRef, TradeNationalPayload, TradeYearPayload } from "./trade-types";
 
@@ -109,6 +110,8 @@ export interface TradePageData {
   /** The curated tariff timeline (flags on Chart 2) and the date it was last reviewed. */
   tariffFlags: TariffFlag[];
   tariffLastReviewed: string;
+  /** Chart 4: duty rate before and after the cut-over. */
+  beforeAfter: BeforeAfterData;
   /** Chart 5: per-country change in duty rate and imports between the baseline and latest windows. */
   scatter: { windows: ScatterWindows; rows: ScatterRow[] };
   /** The latest year's partner rows, so the partners chart paints without a fetch. */
@@ -128,6 +131,7 @@ export function getTradePageData(): TradePageData {
     countries: getTradeCountryRefs(),
     era: { span, ...getEraLayers(span) },
     scatter: getScatter(),
+    beforeAfter: getBeforeAfter(),
     ...getTariffFlags(),
     firstYear: 1991,
     lastYear,
@@ -135,22 +139,45 @@ export function getTradePageData(): TradePageData {
   };
 }
 
-/** Chart 5 rows: every country that has a duties series, over the windows set in `lib/trade-scatter.ts`. */
-export function getScatter(): { windows: ScatterWindows; rows: ScatterRow[] } {
+/** Every country with a duties series, as monthly arrays on the shared axis (Charts 4 and 5). */
+function dutyInputs(): { code: string; name: string; duties: (number | null)[]; imports: (number | null)[] }[] {
   const d = load();
-  const last = readJson("duties_national.json").map((r) => dutiesNationalRow.parse(r)).map((r) => r.period).sort().pop();
-  if (!last) throw new Error("duties_national.json is empty");
-  const windows = scatterWindows(last);
   const names = new Map(getTradeCountryRefs().map((c) => [c.code, c.name]));
   const byCode = new Map<string, DutiesByCountryRow[]>();
   for (const rows of d.duties.values()) for (const r of rows) (byCode.get(r.country_code) ?? byCode.set(r.country_code, []).get(r.country_code)!).push(r);
-  const inputs = [...byCode].flatMap(([code, rows]) => {
+  return [...byCode].flatMap(([code, rows]) => {
     const name = names.get(code);
     if (!name) return []; // aggregates carry no duties rows; an unknown code is skipped, not guessed
     const p = buildCountryPayload({ country_code: code, name }, [], rows, d.length);
     return [{ code, name, duties: p.duties, imports: p.dutyImports }];
   });
-  return { windows, rows: buildScatterRows(inputs, windows) };
+}
+
+const lastDutiesPeriod = () => {
+  const last = readJson("duties_national.json").map((r) => dutiesNationalRow.parse(r)).map((r) => r.period).sort().pop();
+  if (!last) throw new Error("duties_national.json is empty");
+  return last;
+};
+
+/** Chart 5 rows: every country that has a duties series, over the windows set in `lib/trade-scatter.ts`. */
+export function getScatter(): { windows: ScatterWindows; rows: ScatterRow[] } {
+  const windows = scatterWindows(lastDutiesPeriod());
+  return { windows, rows: buildScatterRows(dutyInputs(), windows) };
+}
+
+export interface BeforeAfterData {
+  windows: BeforeAfterWindows;
+  rows: BeforeAfterRow[];
+  /** The cut-over event from the curated timeline (`is_cutover`), which sets the windows. */
+  cutover: { date: string; label: string; authority: string; kind: string };
+}
+
+/** Chart 4: average duty rate before and after the cut-over date in the tariff timeline. */
+export function getBeforeAfter(): BeforeAfterData {
+  const cut = getTariffFlags().tariffFlags.find((f) => f.cutover);
+  if (!cut) throw new Error("tariff_actions.json has no cut-over row");
+  const windows = beforeAfterWindows(cut.date, lastDutiesPeriod());
+  return { windows, rows: buildBeforeAfter(dutyInputs(), windows), cutover: { date: cut.date, label: cut.label, authority: cut.authority, kind: cut.kind } };
 }
 
 /** The curated tariff actions (hand-maintained, see docs/TARIFF_ACTIONS_CURATION.md), trimmed for the chart. */

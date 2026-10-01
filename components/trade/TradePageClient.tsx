@@ -9,6 +9,7 @@ import type { TradeCountryPayload, TradeYearPayload } from "@/lib/trade-types";
 import { TradeBalanceCard } from "./TradeBalanceCard";
 import { TradeFilterBar } from "./TradeFilterBar";
 import { TradePartnersCard } from "./TradePartnersCard";
+import { TradeBeforeAfterCard } from "./TradeBeforeAfterCard";
 import { TradeScatterCard } from "./TradeScatterCard";
 import { TradeTariffCard } from "./TradeTariffCard";
 import { activeDay, TradeStateProvider, useTradeActions, useTradeValues } from "./TradeState";
@@ -24,7 +25,7 @@ export function TradePageClient({ data }: { data: TradePageData }) {
 function TradePage({ data }: { data: TradePageData }) {
   const v = useTradeValues();
   const { setRange, clearPin, setCountry, setShowCong, setYear, togglePlay } = useTradeActions();
-  const { era, national, countries, firstYear, lastYear, initialYear, scatter, tariffFlags, tariffLastReviewed } = data;
+  const { era, national, countries, firstYear, lastYear, initialYear, scatter, beforeAfter, tariffFlags, tariffLastReviewed } = data;
   const [loaded, setLoaded] = useState<Record<string, TradeCountryPayload>>({});
   const [failed, setFailed] = useState<string | null>(null);
   const inflight = useRef<AbortController | null>(null);
@@ -163,6 +164,8 @@ function TradePage({ data }: { data: TradePageData }) {
           loading={!yearPayload && yearFailed !== v.year}
           error={!yearPayload && yearFailed === v.year}
         />
+
+        <TradeBeforeAfterCard data={beforeAfter} country={v.country} onPickCountry={setCountry} />
 
         <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} />
 
