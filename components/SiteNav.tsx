@@ -21,7 +21,7 @@ export function SiteNav() {
   return (
     <nav
       aria-label="Sections"
-      className="flex h-12 items-stretch gap-1 pr-2 md:h-auto md:gap-2 md:pr-0"
+      className="flex h-12 min-w-0 flex-1 items-stretch justify-end gap-0 overflow-x-auto pr-1 md:flex-none md:justify-start md:overflow-visible md:h-auto md:gap-2 md:pr-0"
     >
       {branches.map((b) => {
           if (b.status !== "live") {
@@ -29,7 +29,7 @@ export function SiteNav() {
               <span
                 key={b.id}
                 aria-disabled="true"
-                className="flex items-center gap-1.5 whitespace-nowrap border-b-[3px] border-transparent px-2 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-ink-faint md:px-3.5 md:text-[0.8rem] md:tracking-[0.14em]"
+                className="flex items-center gap-1.5 whitespace-nowrap border-b-[3px] border-transparent px-1.5 font-mono text-[0.72rem] uppercase tracking-[0.04em] text-ink-faint md:px-3.5 md:text-[0.8rem] md:tracking-[0.14em]"
               >
                 {b.label}
                 <SoonTag />
@@ -42,7 +42,7 @@ export function SiteNav() {
               key={b.id}
               href={b.href}
               aria-current={active ? "page" : undefined}
-              className={`flex items-center whitespace-nowrap border-b-[3px] px-2 font-mono text-[0.68rem] uppercase tracking-[0.1em] transition-colors md:px-3.5 md:text-[0.8rem] md:tracking-[0.14em] ${
+              className={`flex items-center whitespace-nowrap border-b-[3px] px-1.5 font-mono text-[0.72rem] uppercase tracking-[0.04em] transition-colors md:px-3.5 md:text-[0.8rem] md:tracking-[0.14em] ${
                 active
                   ? "border-accent text-ink"
                   : "border-transparent text-ink-muted hover:text-ink"
@@ -81,7 +81,7 @@ export function SiteSectionNav() {
       >
         {row.branch.sections.map((s) => {
           const base =
-            "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] px-4 font-mono text-[0.75rem] uppercase tracking-[0.14em] transition-colors md:h-9 md:text-[0.8rem]";
+            "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] px-3 md:px-4 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition-colors md:tracking-[0.14em] md:h-9 md:text-[0.8rem]";
           if (s.status !== "live") {
             return (
               <span
