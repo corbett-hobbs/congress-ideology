@@ -82,7 +82,7 @@ and validated at transform time.
   the FY2017 report and the FY2018 table row "Total 226,119 256,085"). FY2016 is
   240,255 in the FY2016 and FY2017 reports and the FOIA table.
 - **FY2012:** ICE's mid-year (Aug 2012) tracker showed 366,292 year-to-date; the
-  final is 409,849 (FOIA table, FY2012 press release). Interim documents are not
+  final is 409,849 (FOIA table). Interim documents are not
   used.
 - **FY2025:** press figures conflict (442,637 / ~329,000 / ~320,000 / ~340,000
   MPI). Only 442,637 is from ICE (its FY2027 budget overview; measure "returned or
