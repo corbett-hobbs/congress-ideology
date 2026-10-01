@@ -1,0 +1,1050 @@
+U.S. Immigration and Customs Enforcement
+Fiscal Year 2020 Enforcement and Removal
+Operations Report
+                                                        Table of Contents
+Executive Summary ....................................................................................................................... 3
+ICE Custody and Case Management .............................................................................................. 5
+    ICE Initial Book-Ins from CBP Apprehensions ....................................................................... 6
+    ICE Average Daily Population ................................................................................................ 7
+    Detained Population ................................................................................................................ 9
+    Average Length of Stay………………………………………………….………...………...10
+    ICE Non-Detained National Docket ...................................................................................... 11
+    Alternatives to Detention ....................................................................................................... 12
+ERO Administrative Arrests ......................................................................................................... 12
+Criminal Arrests and Prosecutions................................................................................................ 16
+ICE Detainers ................................................................................................................................ 17
+ICE Removals ............................................................................................................................... 18
+    Title 42 Expulsions ................................................................................................................ 20
+    Removals of USBP Apprehended Family Units and Unaccompanied Alien Children.......... 20
+    Removals by Criminality ....................................................................................................... 23
+Conclusion .................................................................................................................................... 25
+Appendix ....................................................................................................................................... 26
+    Appendix A: Methodology ..................................................................................................... 26
+    Appendix B: Removals by Country of Citizenship ................................................................. 26
+
+
+
+
+                                                                                                                                                 2
+Executive Summary
+
+U.S. Immigration and Customs Enforcement (ICE) Enforcement and Removal Operations (ERO)
+shares responsibility for administering and enforcing the nation’s immigration laws with ICE
+Homeland Security Investigations (HSI), as well as other Department of Homeland Security
+(DHS) component agencies, including U.S. Customs and Border Protection (CBP) and U.S.
+Citizenship and Immigration Services (USCIS). ICE ERO is responsible for protecting the
+homeland through the arrest, detention, and removal of aliens who undermine public safety or
+the integrity of United States immigration laws, and its main areas of focus are interior
+enforcement operations, management of the agency’s detained population nationwide, and
+repatriation of aliens who have received a final order of removal.
+
+During Fiscal Year (FY) 2020,1 ICE ERO faced an unprecedented challenge in the form of the
+coronavirus disease 2019 (COVID-19) global pandemic. Like nearly every agency in the United
+States Government, ICE ERO experienced impacts to its workforce and daily operations as a
+result, and made significant changes to ensure the safety of both detainees and personnel in order
+to meet or exceed Centers for Disease Control and Prevention (CDC) guidance.2 Pandemic safety
+measures, along with extremely low numbers of CBP apprehensions along the Southwest Border
+due to the use of 42 U.S.C. §§ 265 and 268 authority,3 have resulted in temporary decreases in
+many of ICE ERO’s traditional metrics. However, the agency has continued to carry out its
+public safety mission while refocusing many of its efforts on ensuring health and safety during
+the pandemic.
+
+This report presents ICE ERO’s FY 2020 year-end statistics in the following areas: Custody and
+Case Management, Administrative and Criminal Arrests, ICE Detainers, and Removals. While
+many of these metrics have fallen by a third or more since FY 2019, ICE notes that these
+decreases are the result of temporary conditions during a global pandemic, and projects that
+conditions may shift rapidly once conditions resolve. As a result, while these metrics provide a
+snapshot in time, they do not reflect post-pandemic operational conditions or resource
+requirements.
+
+    •   Custody and Case Management: During the COVID-19 pandemic, ICE ERO decreased
+        its detained population to allow for social distancing, temporarily adjusted its
+        enforcement posture to narrowly focus on criminal aliens and public safety threats, and
+        received far fewer intakes from CBP. While ICE ERO’s detained population generally
+        averages around 45,000 and peaked at 55,000 during the 2019 border surge, it fell to
+        approximately 20,000 by the end of FY 2020.
+
+        However, detention remained necessary for some aliens, and it continued to be the
+        primary pathway by which ICE ERO was able to effectuate removals. Throughout the
+
+
+1
+  FY 2020 indicates October 1, 2019 through September 30, 2020.
+2
+  The CDC remains the authoritative information source on how to reduce exposure to and the spread of COVID-19.
+3
+  This use of title 42 U.S.C. §§ 265 and 268 authority allows the expulsion of aliens from the United States to
+prevent the introduction of COVID-19 into the country.
+                                                                                                              3
+    pandemic, ICE ERO has taken multiple steps ensure safety in its detention facilities,
+    including the development and implementation of comprehensive protocols in
+    accordance with CDC guidance, reduction of the detained population, and the continual
+    expansion of COVID-19 testing capabilities. As of the end of FY 2020, ICE ERO had
+    tested more than 40,000 detainees.
+
+    Additionally, beyond managing ICE’s detained population, ICE ERO also manages non-
+    detained cases. In FY 2020, the number of aliens on ICE ERO’s non-detained national
+    docket remained consistent with FY 2019 at 3.26 million cases. ICE’s Alternatives to
+    Detention (ATD) program, which has expanded dramatically in recent years, remained
+    relatively constant during FY 2020, with 90,000 aliens enrolled in the program at the end
+    of the year. However, ATD experienced an increase in absconder rates among both single
+    adult enrollees and family units, and the overall absconder rate of 33 percent in FY 2020
+    demonstrated the continuing challenges associated with the growth of this program in
+    recent years.
+
+•   Administrative and Criminal Arrests: Due to the COVID-19 pandemic, in March 2020,
+    ICE ERO temporarily adjusted its enforcement posture to narrowly focus enforcement
+    efforts on public safety risks and individuals subject to mandatory detention based on
+    criminal grounds. In FY 2020 ICE ERO conducted 103,603 administrative arrests, a 28
+    percent decline from FY 2019, and 90 percent of those arrested had criminal convictions
+    or pending criminal charges at the time of arrest.
+
+    In addition to arresting aliens for administrative violations of the immigration laws, ICE
+    ERO also conducts criminal arrests and assists with pursuing prosecutions related to such
+    criminal activity. In FY 2020, ICE ERO enforcement activities resulted in 4,360 criminal
+    arrests, 4,479 criminal charges, and 5,397 convictions.
+
+•   ICE Detainers: In FY 2020, ICE ERO issued 122,233 detainers, a 26 percent decline
+    from FY 2019. This was likely impacted by decreased numbers of individuals in state and
+    local custody nationwide, ICE’s own temporary reduction in enforcement activity early in
+    the pandemic, an increasing number of jurisdictions that do not cooperate with
+    immigration enforcement activities, and court rulings limiting ICE’s ability to lodge
+    detainers.
+
+•   Removals: ICE ERO conducted 185,884 removals during FY 2020, a 30 percent decrease
+    from FY 2019. This decrease primarily resulted from a sharp decline in CBP
+    apprehensions at the Southwest Border due to the use of authority under 42 U.S.C. §§
+    265 and 268 to expel aliens from the United States to prevent the introduction of COVID-
+    19, though it was also impacted by a decline in ICE ERO interior arrests. The vast
+    majority of ICE ERO’s interior removals – 92 percent – had criminal convictions or
+    pending criminal charges, demonstrating ICE ERO’s commitment to removing those who
+    pose the greatest risk to the safety and security of the United States. Additionally, despite
+    the overall decrease in removals, ICE ERO assisted CBP with 17,000 air charter
+
+
+                                                                                               4
+        expulsions under Title 42, and also saw increases in removals to several countries that
+        were previously uncooperative with removal efforts.
+
+ICE Custody and Case Management
+
+ICE custody and case management operations are integral to effectuating removals. ICE ERO
+detains individuals to ensure their presence for immigration proceedings and to secure their
+departure from the United States once they become subject to an executable final order of
+removal. While operations have changed due to COVID-19, detention remained necessary for
+some aliens, and it continued to be the primary pathway by which ICE ERO was able to
+effectuate removals. For example, in FY 2020, 82 percent of those removed spent time in ICE
+detention prior to their departure from the country.
+
+The health and safety of both detainees and personnel is of paramount importance, especially
+during a global pandemic, and ICE ERO has taken a number of steps to ensure safety and allow
+for social distancing, including a temporary reduction in the detained population. ICE began
+developing and implementing comprehensive protocols in accordance with CDC guidance on
+January 22, 2020, and contributed to the development of the CDC’s Interim Guidance on
+Management of COVID-19 in Correctional and Detention Facilities4 by sharing expertise related
+to ICE ERO’s handling of infectious diseases in a custodial environment. Guidance provided by
+the CDC rapidly evolved as epidemiologists and public health experts learned more about
+COVID-19. As a result, ICE ERO medical and operational personnel monitor and review this
+guidance daily, and continually update applicable policies and procedures.
+
+On March 27, 2020, ICE ERO issued a memorandum to all Detention Wardens and
+Superintendents entitled, Memorandum on COVID-19 Action Plan, Revision 1.5 The measures in
+the memorandum were developed to reduce exposure to COVID-19, protect the detained
+population, and optimize employee health and availability for duty. Subsequently, on April 10,
+2020, ICE ERO released the COVID-19 Pandemic Response Requirements (PRR),6 a guidance
+document developed in consultation with the CDC that builds upon previously issued guidance,
+and sets forth specific requirements that must be adopted by all detention facilities housing ICE
+detainees, as well as best practices for such facilities. ICE ERO subsequently released updated
+versions of the PRR on June 22, July 28, September 4, and October 27, and continues to monitor
+evolving conditions and court rulings.
+
+In March 2020, ICE ERO convened a working group of medical professionals, disease control
+specialists, detention experts, and field operators to identify enhanced steps to minimize the
+
+
+
+4
+  Centers of Disease Control and Prevention, Interim Guidance on Management of Coronavirus Disease 2019
+(COVID-19) in Correctional and Detention Facilities (July 22, 2020),
+https://www.cdc.gov/coronavirus/2019-ncov/community/correction-detention/guidance-correctional-detention.html
+(last visited Oct. 15, 2020).
+5
+  Memorandum from Executive Associate Director Enrique Lucero, Enforcement and Removal Operations,
+Memorandum on Coronavirus 2019 (COVID-19) Action Plan, Revision 1 (Mar. 27, 2020)
+6
+  Pandemic Response Requirements (PRR), https://www.ice.gov/coronavirus/prr (last visited Oct. 27, 2020).
+                                                                                                            5
+spread of COVID-19, which recommended that all facilities make efforts to reduce the
+population at detention facilities to 75 percent of capacity or less to allow for increased social
+distancing opportunities. ICE ERO asked local jails to meet this target as quickly as possible and
+also set a target of 70 percent of population capacity for ICE dedicated facilities, exceeding the
+CDC and working group recommendations of 75 percent.
+
+Like many federal, state, and local agencies and facilities across the country, ICE has been
+impacted by nationwide COVID-19 testing shortages. However, in addition to decreasing
+detention facility capacity, ICE ERO has been evaluating its testing processes and increasing
+these capabilities throughout the pandemic. This has included gains in testing upon intake,
+saturation testing (one-time testing of an entire population at a location to detect potential
+asymptomatic positive cases), and implementation of testing protocols for transfers and
+removals. As of the end of FY 2020, seventy-four facilities were testing all new intakes, and ICE
+ERO has continued to expand saturation testing at multiple sites across the country. From the
+initial test in February 2020 through the end of FY 2020, more than 42,000 detainees had been
+tested for COVID-19, and the agency continues to publish the latest data on testing at
+ice.gov/coronavirus.
+
+As a result of the extensive pandemic mitigation measures ICE has implemented, as well as a
+sharp decrease in arrivals at the Southwest Border, initial book-ins to ICE custody as well as the
+overall Average Daily Population (ADP) in ICE custody decreased significantly in FY 2020.
+However, the non-detained docket, which contains more than 3.26 million cases of aliens in all
+stages of the immigration process across the country, has remained consistent throughout FY
+2020 as the pandemic slowed the previously growing national docket.
+
+ICE Initial Book-Ins from CBP Apprehensions
+
+When an alien is apprehended by CBP, he or she may be returned immediately by CBP or
+transferred to ICE custody pending removal proceedings or execution of a removal order. An
+initial book-in to an ICE detention facility is defined as the first time an alien enters ICE custody
+for a detention stay and does not include transfers between facilities. In FY 2020, ICE ERO
+experienced a decline in overall book-ins from CBP largely due to border closures and fewer
+apprehensions at the border throughout the global pandemic, as well as CBP’s use of Title 42
+authority. During FY 2020, initial book-ins to ICE custody from CBP declined by 78 percent
+over FY 2019.
+
+Overall, there were 182,869 initial book-ins to ICE custody in FY 2020 resulting from both CBP
+and ICE ERO arrests. These began to decline sharply in April 2020, coinciding with changes
+resulting from the global pandemic. Forty-five percent of initial book-ins were turned over from
+CBP in FY 2020, compared to 73 percent in FY 2019.
+
+
+
+
+                                                                                                     6
+          Figure 1: FY 2018 – FY 2020 ICE Initial Book-Ins by Arresting Agency
+
+
+
+
+    Figure 2: FY 2019 – FY 2020 ICE Initial Book-Ins by Arresting Agency and Month
+
+
+
+
+ICE Average Daily Population
+
+
+ICE ERO’s ADP measures the number of individuals in ICE custody on an average day during
+the fiscal year. In FY 2020, the ADP was 33,724, a decline of 33 percent compared to FY 2019.
+Like ICE ERO’s initial book-ins, the decrease in ADP in FY 2020 was driven by a reduction in
+
+                                                                                                7
+CBP apprehensions turned over to ICE for detention and removal, as well as necessary
+mitigation measures due to COVID-19.
+
+
+       Figure 3: FY 2018 – FY 2020 Average Daily Population by Arresting Agency
+
+
+
+
+ Figure 4: FY 2019 – FY 2020 Average Daily Population by Arresting Agency and Month
+
+
+
+
+                                                                                       8
+Detained Population
+
+ICE ERO detains individuals to secure their presence for immigration proceedings and removal
+from the United States, with detention resources focused on those who represent a danger to
+persons or property, for whom detention is mandatory by law,7 or who may be a flight risk.
+
+While ICE ERO has temporarily drawn down its detained population to 75 percent or less in line
+with CDC and working group guidance, it has continued to detain a relatively small number of
+aliens during the pandemic. In general, ICE’s detained population of between 20,000 and 50,000
+represents a small fraction of the overall number of removal cases it manages nationwide, which
+stood at more than 3.26 million at the end of FY 2020.
+
+From March 1 through August 1, 2020, ICE’s detained population decreased by 44 percent, and
+by the end of FY 2020 the detained population stood at just 19,068 - 63 percent less than at the
+end of FY 2019. The majority of those detained were subject to mandatory detention (63 percent)
+and of the remaining 37 percent who were not subject to mandatory detention, 71 percent had
+criminal convictions and/or pending criminal charges.
+
+These significant decreases came as direct result of COVID-19 mitigation efforts, as well as
+extremely low numbers of arrivals at the Southwest Border during the pandemic. However, DHS
+and its component agencies have handled multiple historic migration surges at the Southwest
+Border since 2014, with ICE’s detained population peaking at more than 55,000 during the
+summer of 2019. Because COVID-19 has severely impacted the global economy, once pandemic
+conditions begin to resolve within the United States, ICE anticipates that migration may meet or
+surpass pre-pandemic levels, and the agency will require adequate resources to address such a
+shift.
+
+
+
+
+7
+ Under the Immigration and Nationality Act (INA), ICE may not release any alien subject to mandatory detention
+unless ordered to do so by a judge, and these provisions have been upheld by the Supreme Court.
+                                                                                                                 9
+Figure 5: FY 2018 – FY 2020 Currently Detained Population Snapshots by Arresting Agency
+
+
+
+
+Average Length of Stay (ALOS)
+
+The average length of stay (ALOS) represents the average amount of time an alien is detained in
+ICE custody. While ICE ERO’s ALOS has been decreasing for several years, in FY 2020, the
+downward trend reversed for an overall ALOS of 63.5 days.
+
+Although the average length of stay remained relatively stable from October 2019 until March
+2020, it increased significantly in April 2020, the first full month of the COVID-19 pandemic.
+The pandemic has resulted in a number of factors which have significantly changed the removal
+landscape, including closure of the Southwest Border, courts not operating normally and
+processing times increasing significantly, limited availability of commercial flights, CDC
+recommendations for 14-day cohorting to reduce the spread of illness in detention, and foreign
+governments which have denied or delayed the return of their nationals. As a result, while ALOS
+is complex, ICE’s analysis shows that pandemic-related factors played a major role in this
+increase.
+
+
+
+
+                                                                                             10
+        Figure 7: FY 2018 – FY 2020 Average Length of Stay by Arresting Agency
+
+
+
+
+ICE Non-Detained National Docket
+
+ICE ERO manages cases amenable to removal going through the immigration process via the
+ICE Non-detained National Docket. The national docket includes all aliens in removal
+proceedings and encompasses both the smaller detained docket and the much larger non-detained
+docket. Cases on the non-detained docket include aliens who are both pre- and post-final order,
+and who have been released on parole, bond, an Order of Recognizance, or an Order of
+Supervision. In FY 2020, the number of aliens on ICE’s non-detained national docket remained
+consistent with FY 2019 at 3.26 million cases.
+
+
+                 Figure 8: End of FY 2020 ICE National Docket Snapshot
+
+
+
+
+                                                                                            11
+Alternatives to Detention
+
+ICE ERO’s ATD program uses technology and case management to monitor aliens’ court
+appearances and compliance with release conditions while their removal proceedings are
+pending on the non-detained immigration court docket. ATD is not a substitute for detention, but
+instead complements immigration enforcement efforts by offering increased supervision for a
+subset of eligible aliens who are not currently detained.
+
+ATD may serve as an appropriate additional layer of supervision for an alien who is released
+from detention pursuant to an Order of Recognizance, an Order of Supervision (for aliens
+already subject to final removal orders), a grant of parole, or a bond. Adults age 18 and over may
+be eligible for participation in ATD but must be thoroughly vetted by ERO officers, who review
+an alien’s criminal, immigration, and supervision history, family and/or community ties, status as
+a caregiver or provider, and humanitarian or medical considerations when making enrollment
+determinations in order to determine whether a candidate is likely to comply with the terms of
+the program. ICE ERO typically utilizes ATD to encourage compliance for aliens who may be a
+flight risk but either lack a criminal history or the criminal history is minor or non-violent. ICE
+ERO strongly recommends against the use of ATD to monitor those who have been accused of
+serious and violent criminal activity, as it does nothing to prevent such an individual from
+reoffending or to protect the initial victim.8
+
+While ICE ERO has expanded its use of ATD from approximately 23,000 participants in FY
+2014 to 90,000 as of the end of FY 2020, this expansion has come with a number of challenges,
+including increasing levels of absconders among both single adult enrollees as well as family
+units. Between FY 2019 and FY 2020, the absconder rate9 for family units increased from 26.9
+percent to 39 percent, while the absconder rate among single adults increased from 12.3 percent
+to 21 percent. Overall, FY 2020 saw a 33 percent absconder rate for ATD participants,
+demonstrating the growing challenges that large numbers of ATD enrollments create for
+immigration enforcement.
+
+Additionally, there are currently over 3.26 million cases assigned to the non-detained docket.
+With approximately 5,300 ERO officers across 24 field offices, ICE ERO’s ability to closely
+monitor the majority of cases on its non-detained docket and to provide robust case management
+for this segment of the population is extremely limited. On average, participants currently spend
+between 14 and 18 months enrolled in the program before they are removed or terminated from
+the program to make room for new participants who have recently entered the United States
+and/or those who are being released from ICE custody.
+
+
+
+
+8
+  See Matter of Urena, 25 I&N Dec. 140 (BIA 2009) (holding that aliens posing a danger to the United States should
+be detained without bond pending their removal proceedings, as conditions of release only mitigate the risk of
+flight).
+9
+  Absconder Rate = Count of Absconders/Count of Overall Terminations. ICE calculates the percentage of
+absconders by looking at the overall number of aliens who concluded the ATD program in a given time period
+(“overall terminations”), and the number of those terminations which occurred due to a participant absconding.
+                                                                                                               12
+Ultimately, because ICE ERO lacks sufficient resources to keep all current participants enrolled
+through the pendency of their removal proceedings, or to locate and arrest the significant number
+of participants who abscond, current problems with the ATD program will only be exacerbated
+by enrolling greater numbers of participants without the addition of appropriate case
+management and enforcement resources. While ICE ERO has continued to expand the use of
+ATD to monitor the non-detained population in FY 2020, particularly in light of the pandemic,
+the program will need to be further resourced in order to appropriately monitor participants,
+including through the addition of officers who can locate, arrest, and remove those who fail to
+adhere to conditions of enrollment.
+
+ERO Administrative Arrests
+
+ICE ERO arrests aliens for administrative violations of United States immigration law. ICE ERO
+conducts enforcement actions based on intelligence-driven leads in communities nationwide (at-
+large arrests) and also works with prisons and jails to identify aliens who are amenable to
+removal and who have been arrested by state or local authorities for criminal activity (custodial
+arrests).
+
+Due to the COVID-19 pandemic, in March 2020 ICE ERO temporarily adjusted its enforcement
+posture to narrowly focus enforcement efforts on public safety risks and individuals subject to
+mandatory detention based on criminal grounds. ERO officers have continued to undertake
+enforcement actions during the pandemic and have implemented procedures to effectively
+perform their duties in light of COVID-19. However, ICE enforcement activities, including ERO
+administrative arrests, slowed sharply for several months during the spring and summer,
+contributing to a lower number of arrests overall during the fiscal year. There were 103,603 ERO
+administrative arrests in FY 2020, a 28 percent decline from FY 2019, with similar declines in
+both at-large and custodial arrests.
+
+While ICE ERO administrative arrests have declined since FY 2019, ICE remains committed to
+directing its enforcement resources to those aliens posing the greatest risk to public safety and
+security threats to the United States. As a result, the majority of aliens arrested by ICE ERO are
+convicted criminals, followed by those with pending criminal charges at the time of arrest. In FY
+2020, 90 percent of ICE ERO’s administrative arrests were for aliens with criminal convictions
+or pending criminal charges while the remaining 10 percent were other immigration violators.10
+Many of those arrested have extensive criminal histories with multiple criminal convictions or
+pending charges, and the agency continued to carry out its key public safety mission during the
+pandemic by locating and arresting such aliens. Of the 93,061 ERO administrative arrests with
+criminal convictions or pending criminal charges in FY 2020, the criminal history for this group
+
+
+
+10
+  ICE defines immigration violators’ criminality in the following manner: Convicted Criminal: Immigration
+Violators with a criminal conviction entered into the ICE system of record at the time of the enforcement action;
+Pending Criminal Charges: Immigration Violators with pending criminal charges entered into the ICE system of
+record at the time of the enforcement action; Other Immigration Violators: Immigration Violators without any
+known criminal convictions, or pending charges entered into the ICE system of record at the time of the enforcement
+action.
+                                                                                                                13
+included more than 374,000 total criminal convictions and pending charges as of the date of
+arrest – an average of four per alien.
+
+
+         Figure 9: FY 2018 – FY 2020 ERO Administrative Arrests by Criminality
+
+
+
+
+           Figure 10: FY 2019 – FY 2020 ERO Administrative Arrests by Month
+
+
+
+
+                                                                                              14
+                   Figure 11: FY 2018 – FY 2020 At-Large Arrests by Criminality
+
+
+
+
+  Table 1: FY 2020 Criminal Charges and Convictions for ERO Administrative Arrests11, 12
+                 Criminal Charge Category                Criminal Criminal       Total
+                                                          Charge Conviction Offenses
+Traffic Offenses – DUI                                     20,091      35,716     55,807
+Dangerous Drugs                                            15,265      36,647     51,912
+Traffic Offenses                                           19,910      29,009     48,919
+Immigration                                                 7,637      40,921     48,558
+Assault                                                    17,232      20,015     37,247
+Obstructing Judiciary, Congress, Legislature, Etc.          7,310       6,949     14,259
+General Crimes                                              5,895       7,166     13,061
+Larceny                                                     3,459       8,847     12,306
+Obstructing the Police                                      4,386       6,815     11,201
+Fraudulent Activities                                       2,977       5,888      8,865
+
+
+
+ 11
+    The specific criminal charges and convictions represent the criminal history as entered in the ICE system of
+ record based on the FBI’s National Crime Information Center (NCIC) offense codes. Each alien may have multiple
+ criminal convictions or charges at the time of their administrative arrest, and Table 1 lists categories which
+ accounted for at least 1,000 combined charges and convictions among those who were administratively arrested by
+ ERO in FY 2020.
+ 12
+    Notes: “Traffic Offenses” include (besides Traffic Offenses – DUI which is listed separately) Hit and Run,
+ Transport Dangerous Material, and Traffic Offense. “Immigration” offenses include Illegal Entry, Illegal Reentry,
+ False Claim to U.S. Citizenship, and Alien Smuggling. “Obstructing Judiciary, Congress, Legislature, Etc.,” refers
+ to several related offenses including, but not limited to: Perjury; Contempt; Obstructing Justice; Misconduct; Parole
+ and Probation Violations; and Failure to Appear. “General Crimes” include Conspiracy, Crimes Against Person,
+ Licensing Violation, Money Laundering, Morals - Decency Crimes, Property Crimes, Public Order Crimes,
+ Racketeer Influenced and Corrupt Organizations Act (RICO), and Structuring.
+                                                                                                                    15
+                Criminal Charge Category                         Criminal Criminal  Total
+                                                                 Charge Conviction Offenses
+Burglary                                                            1,988     6,149   8,137
+Weapon Offenses                                                     2,688     5,426   8,114
+Public Peace                                                        2,695     4,114   6,809
+Sex Offenses (Not Involving Assault or Commercialized Sex)          1,733     4,184   5,917
+Sexual Assault                                                      1,334     3,051   4,385
+Invasion of Privacy                                                 1,512     2,817   4,329
+Family Offenses                                                     1,880     2,336   4,216
+Robbery                                                               883     2,933   3,816
+Stolen Vehicle                                                      1,104     2,697   3,801
+Forgery                                                             1,095     2,240   3,335
+Damage Property                                                     1,434     1,652   3,086
+Liquor                                                              1,602     1,424   3,026
+Flight / Escape                                                     1,010     1,647   2,657
+Stolen Property                                                       808     1,674   2,482
+Homicide                                                              369     1,468   1,837
+Kidnapping                                                            736       901   1,637
+Health / Safety                                                       398       659   1,057
+
+
+ Criminal Arrests and Prosecutions
+
+ In addition to arresting aliens for administrative violations of immigration law, ICE ERO also
+ conducts criminal arrests and assists with pursuing prosecutions related to such criminal activity.
+ In FY 2020, ERO enforcement activities resulted in 4,360 criminal arrests (a 35 percent decline
+ from FY 2019), 4,479 charges (a 34 percent decline from FY 2019), and 5,397 convictions (a 24
+ percent decline from FY 2019). These efforts resulted in the prosecutions of offenses which
+ include, but are not limited to: 8 U.S.C. § 1253, Penalties Related to Removal, U.S.C § 1325,
+ Illegal Entry into the United States; 8 U.S.C § 1326, Illegal Re-Entry of Removed Alien; 18
+ U.S.C. § 1361, Destruction of Government Property, 18 U.S.C § 1546, Fraud and Misuse of
+ Visas, Permits and Other Documents; 18 U.S.C § 111, Assaulting and/or Resisting an Officer;
+ and 18 U.S.C § 922(g)(5), Felon in Possession of a Firearm.
+
+
+
+
+                                                                                                  16
+                         Figure 12: FY 2018 – FY 2020 Prosecution Statistics
+
+
+
+
+ICE Detainers
+
+A detainer is a request from ICE to local law enforcement agencies to notify DHS as early as
+practicable before a removable alien is released from local custody. Detainers also request that
+local law enforcement agencies maintain custody of the alien for a period not to exceed 48 hours
+beyond the time the alien would otherwise be released, which allows DHS to assume custody for
+removal purposes in accordance with federal law.
+
+Detainers reduce potential risks to ERO officers, removable aliens, and the general public by
+allowing arrests to be made in secure custodial settings as opposed to at-large in communities.
+The use of detainers also conserves scarce government resources and allows ICE ERO to assume
+custody of criminal aliens before they have an opportunity to reoffend. In FY 2020, ICE ERO
+issued 122,233 detainers, and the aliens who were the subjects of these detainers had criminal
+histories13 including, but not limited to, the following crimes: more than 1,900 homicide-related
+offenses, 1,900 kidnappings, 3,600 robberies, 42,800 assaults, and 11,900 sex crimes.
+
+Similar to other decreases in interior enforcement activity due to COVID-19, the number of
+detainers issued in FY 2020 declined by 26 percent. Reduced detained populations in state and
+local jails, along ICE ERO’s own temporary reduction in enforcement activity early in the
+pandemic, likely contributed to this decrease. However, ICE also continues to encounter
+jurisdictions that do not cooperate with its enforcement efforts and estimates that limited
+visibility into state and local law enforcement activities in non-cooperating jurisdictions also
+
+
+
+13
+   "Criminal history” includes all criminal convictions and pending charges associated with the group of aliens who
+were the subjects of detainers in FY 2020. Criminal charges may be added or dropped at any point and convictions
+may be overturned, so this data is a snapshot in time but is representative of the serious criminal histories and
+corresponding public safety risk associated with this group of individuals.
+                                                                                                                  17
+impacted the number of detainers issued. Additionally, the court’s ruling in Gonzalez v. U.S.
+Immigr. and Customs Enf’t, 416 F. Supp. 3d 995 (C.D. Cal. 2019), which limited the agency’s
+ability to lodge biometric detainers, may have further contributed to reduced activity in this area.
+
+
+                     Figure 13: FY 2018 – FY 2020 ICE ERO Detainers Issued
+
+
+
+
+ICE Removals
+
+An ICE removal is the compulsory and confirmed movement of an inadmissible or deportable
+alien out of the United States.14 ICE removals include both aliens arrested by ICE ERO in the
+interior of the country and aliens who are apprehended by CBP and subsequently turned over to
+ICE ERO for removal. While ICE removal operations continued throughout FY 2020, the overall
+removal number decreased due to 1) much lower numbers of aliens arriving at the Southwest
+Border, 2) CBP’s use of Title 42 authority, 3) a temporary decrease in ICE ERO enforcement
+actions within the interior of the country, 4) precautions taken by ICE ERO to help ensure the
+safety of those being removed, as well as staff and contractors, 5) restrictions on air travel, and 6)
+the reluctance of a number of countries to accept the return of their nationals early on in the
+pandemic. In FY 2020, ICE ERO conducted 185,884 removals, a 30 percent decrease over FY
+2019. However, ICE ERO noted significant increases in removals to countries that were
+previously non-cooperative, including Bangladesh, Cuba, Haiti, and India, a direct result of
+engagement efforts by ICE and the Department of State (Appendix B).
+
+
+
+14
+  ICE removals include removals and returns where aliens were turned over to ICE for removal efforts. This
+includes aliens who have received a final order of removal, as well as those who have been processed for Expedited
+Removal (ER) or Voluntary Return (VR) that are turned over to ICE for detention. Aliens processed for ER and not
+detained by ERO or VRs after June 1st, 2013 and not detained by ICE are primarily processed by the USBP. CBP
+should be contacted for those statistics.
+                                                                                                                18
+During the pandemic, ICE ERO has taken significant steps toward safeguarding aliens with final
+orders of removal and does not remove any detainee who is confirmed or suspected of having
+COVID-19. Medical checks occur at several stages in custody, and if an individual exhibits
+symptom of respiratory disease, he or she is referred to a medical provider and segregated from
+others. Additionally, while the CDC recommends a temperature threshold of 100.4 degrees, out
+of an abundance of caution ICE ERO has lowered this threshold even further, to 99 degrees.
+Temperature checks are performed no more than 12 hours before a detainee’s departure, and
+anyone recording a temperature of 99 degrees or higher or exhibiting symptoms of a health
+condition that is potentially contagious to other detainees, staff, or third parties is denied
+boarding and referred for further screening and evaluation. All detainees must wear a mask prior
+to arrival at the flight line, and ICE ERO also conducts COVID-19 testing prior to removal
+where deemed warranted/practicable and by specific bilateral arrangement with a given nation’s
+government.
+
+
+                        Figure 14: FY 2018 – FY 2020 ICE Removals
+
+
+
+
+                                                                                              19
+             Figure 15: FY 2018 – FY 2020 ICE Removals by Arresting Agency
+
+
+
+
+       Figure 16: FY 2018 – FY 2020 ICE Removals by Arresting Agency and Month
+
+
+
+
+Title 42 Expulsions
+
+In addition to the removal of aliens represented in Figures 14, 15, and 16, during FY 2020, ICE
+ERO also assisted CBP with a subset of Title 42 expulsions. While individuals returned to their
+last transit point or countries of origin under Title 42 authority represent CBP “expulsions” rather
+than ICE removals, ICE plays a supporting role in this process.
+
+
+
+
+                                                                                                 20
+During the COVID-19 pandemic, the CDC determined the potential introduction and spread of
+the virus in CBP stations and facilities presented a serious danger to migrants, CBP’s frontline
+agents and officers, and the general populace. As a result, the U.S. Department of Health and
+Human Services issued an order pursuant to its authority under 42 U.S.C. §§ 265 and 268, which
+directs that DHS assist it in preventing the introduction into the United States persons who create
+a serious danger of introducing communicable diseases. On March 21, the CDC issued an order
+under Title 42 for assistance by DHS customs officers. Under this authority, illegal border
+crossers may be expeditiously returned to their country of last transit – Canada or Mexico – or,
+when such a return is not possible, to their country of origin. While both CBP and ICE are tasked
+with supporting the CDC in the application of Title 42, CBP determines which aliens are subject
+to Title 42 expulsions, while ERO’s role is limited to obtaining a foreign government’s
+authorization to receive Title 42 expulsions, as well as coordinating such expulsions. In FY
+2020, from March 23 to September 30, ICE ERO assisted with more than 17,000 air charter
+expulsions under Title 42.
+
+Removals of USBP Apprehended Family Units and Unaccompanied Alien Children
+
+Since the initial surge at the Southwest Border in FY 2014 and through the start of FY 2020, the
+United States border experienced a sustained increase in arrivals of both family unit members
+and Unaccompanied Alien Children (UAC). The large number of arrivals placed a strain on DHS
+resources at the border, as well as United States Government resources in the interior of the
+country. During FY 2018, FY 2019, and FY 2020 as a whole, the U.S. Border Patrol (USBP)
+apprehended 601,534 family unit members and 148,012 UAC, while ICE ERO removed only
+22,912 family unit members and 15,978 UAC during the same time period – a 3.8 percent and
+10.8 percent removal rate, respectively.15 Although apprehensions at the Southwest Border
+decreased during the COVID-19 pandemic, ICE anticipates a renewed increase in border arrivals
+once pandemic conditions in the United States subside, which may pose significant resource and
+policy challenges for the United States Government and DHS agencies.
+
+In FY 2020 ICE ERO removed 14,499 aliens identified as family unit members based on USBP
+apprehension data from the initial surge in FY 2014 through FY 2020. Although these removals
+represent only a small percentage of overall family unit apprehensions, they increased by 154
+percent from FY 2019, primarily as a result of the Electronic Nationality Verification (ENV)
+Program, which began in July 2019 and reduces time spent in detention by returning nationals of
+participating countries (currently El Salvador, Guatemala, and Honduras) in an expeditious
+manner by verifying nationality electronically. However, ICE notes that more than 13,000 of the
+family unit removals in FY 2020 (90 percent) occurred between October 2019 and March 2020,
+and the onset of the COVID-19 pandemic resulted in a sharp decrease.
+
+
+
+
+15
+  ICE ERO removals of family unit members and UAC include all those identified as members of these populations
+by the USBP; some of the removals that occurred during this three-year time period may correspond to aliens who
+were apprehended prior to this time period.
+                                                                                                             21
+In FY 2020 ICE ERO also removed 4,056 UAC who were identified as UAC from FY 2009
+through FY 2020 based on USBP data.16 The removals of UAC declined 36 percent from FY
+2019.
+
+
+Figure 17: FY 2018 – FY 2020 ICE Removals of USBP-Identified Family Unit Apprehensions
+
+
+
+
+       Figure 18: FY 2018 – FY 2020 ICE Removals of Unaccompanied Alien Children
+
+
+
+
+16
+  Removal counts are based on UAC designation at the time of initial book-in, and subjects may no longer be under
+the age of 18 at the time of removal.
+                                                                                                               22
+Removals by Criminality
+
+During FY 2020, ICE ERO maintained its commitment to removing those aliens posing the
+greatest risk to the safety and security of the United States. The vast majority of removals in FY
+2020 were of aliens with a criminal history. For FY 2020 interior removals, meaning those who
+were initially arrested by ICE ERO (not CBP), 92 percent had criminal convictions or pending
+criminal charges.
+
+
+                Figure 19: FY 2018 – FY 2020 ICE Removals by Criminality
+
+
+
+
+            Figure 20: FY 2018 – FY 2020 ICE Interior Removals by Criminality
+
+
+
+
+                                                                                                 23
+ICE ERO removals of known or suspected gang members and known or suspected terrorists
+(KSTs) are instrumental to the agency’s national security and public safety mission. ICE ERO
+identifies gang members and KSTs by checking an alien’s background in federal law
+enforcement databases, conducting interviews with aliens, and reviewing information received
+from its law enforcement partners, which is noted accordingly in the agency’s system of record.
+In FY 2020, ICE ERO removed 4,276 known or suspected gang members and 31 known or
+suspected terrorists.
+
+
+   Figure 21: FY 2018 – FY 2020 ICE Removals of Known or Suspected Gang Members
+
+
+
+
+      Figure 22: FY 2018 – FY 2020 ICE Removals of Known or Suspected Terrorists
+
+
+
+
+                                                                                              24
+Conclusion
+
+As the agency primarily responsible for immigration enforcement efforts in the interior of the
+United States, ICE ERO plays a critical role in upholding the immigration laws set by the United
+States Congress, as well as helping ensure public safety and the integrity of the immigration
+system. Like many other agencies, ICE ERO was significantly impacted by the COVID-19
+pandemic, with effects on its workforce, its enforcement operations, and the detained population.
+Despite the pandemic, however, key front-line law enforcement operations such as arrests of
+aliens who represent a threat to public safety or border security, management of the detained
+population, and removals of those who have received a final order have continued to the extent
+possible. As of the close of FY 2020, ICE ERO personnel continue to monitor and adapt to
+operational conditions resulting from the pandemic, and the agency continues to prepare for a
+shift in operational posture once current conditions resolve.
+
+
+
+
+                                                                                               25
+Appendix
+Appendix A: Methodology
+
+Data Source
+Data used to report ICE statistics are obtained through the ICE Integrated Decision Support
+(IIDS) system data warehouse.
+
+Data Run Dates
+FY2020: IIDS v.1.34 run date 10/04/2020; ENFORCE Integrated Database (EID) as of
+10/02/2020
+FY2019: IIDS v.1.34 run date 10/06/2019; ENFORCE Integrated Database (EID) as of
+10/04/2019
+FY2018: IIDS v.1.34 run date 10/08/2018; ENFORCE Integrated Database (EID) as of
+10/06/2018
+
+Removals
+ICE Removals include removals and returns initiated by ICE and those initiated by other
+agencies in which aliens were turned over to ERO for repatriation efforts. Returns include
+Voluntary Returns, Voluntary Departures, and Withdrawals Under Docket Control. Any
+voluntary return recorded on or after June 1, 2013 without an ICE intake case is not recorded as
+an ICE removal.
+
+Removals data are historical and remain static. In FY 2009, ERO began to “lock” removal
+statistics on October 5 at the end of each fiscal year and counted only aliens whose removal or
+return was already confirmed. Aliens removed or returned in that fiscal year but not confirmed
+until after October 5 were excluded from the locked data, and thus from ICE statistics. To ensure
+an accurate and complete representation of all removals and returns, ICE will count removals
+and returns confirmed after October 5 toward the next fiscal year. The number of removals in FY
+2017, excluding the “lag” from FY 2016, was 220,649. The number of removals in FY 2018,
+excluding the “lag” from FY 2017, was 252,405. The number of removals in FY 2019, excluding
+the “lag” from FY 2018, was 262,591. The number of removals in FY 2020, excluding the “lag”
+from FY 2019, was 177,516.
+
+Appendix B: Removals by Country of Citizenship
+
+        Table X: FY 2018 – FY 2020 ICE Removals by Country of Citizenship17
+   Country of Citizenship        FY 2018           FY 2019            FY 2020
+ Total                                256,085           267,258             185,884
+ AFGHANISTAN                               30                36                  25
+ ALBANIA                                   98                80                  53
+ ALGERIA                                   17                20                   5
+
+
+17
+  Country of citizenship is reported as it appears in ICE’s system of record at the time the data is pulled but may be updated as
+additional information is discovered or verified.
+                                                                                                                                26
+  Country of Citizenship   FY 2018        FY 2019       FY 2020
+ANDORRA                              0              0             1
+ANGOLA                              32             40            43
+ANGUILLA                             0              2             0
+ANTIGUA-BARBUDA                     24             12             6
+ARGENTINA                          121            130            87
+ARMENIA                             27             48            31
+ARUBA                                1              1             0
+AUSTRALIA                           39             40            39
+AUSTRIA                              7              8             6
+AZERBAIJAN                          14             10             9
+BAHAMAS                            101            109            76
+BAHRAIN                              1              2             0
+BANGLADESH                         147            159           305
+BARBADOS                            17             29             6
+BELARUS                             10             18            11
+BELGIUM                             17              7            10
+BELIZE                              91             90            78
+BENIN                               10              9             5
+BERMUDA                              5              2             1
+BHUTAN                               1              1             0
+BOLIVIA                             81             64            49
+BOSNIA-HERZEGOVINA                  47             36            27
+BOTSWANA                             1              3             2
+BRAZIL                           1,691          1,770         1,902
+BRITISH VIRGIN ISLANDS               1              4             5
+BRUNEI                               0              0             0
+BULGARIA                            34             21            21
+BURKINA FASO                        35             20             4
+BURMA                               40             29            26
+BURUNDI                             14              5            10
+CAMBODIA                           110             80            32
+CAMEROON                            72             76            54
+CANADA                             342            318           320
+CAPE VERDE                          68             50            15
+CAYMAN ISLANDS                       0              3             1
+CENTRAL AFRICAN
+REPUBLIC                              2             7             1
+CHAD                                 13             3             1
+                                                                  27
+   Country of Citizenship   FY 2018         FY 2019         FY 2020
+CHILE                                 166             253             351
+CHINA, PEOPLES
+REPUBLIC OF                         726             637             337
+CHRISTMAS ISLAND                      0               0               0
+COLOMBIA                          1,162           1,158             931
+COMOROS                               0               0               0
+CONGO                                18              15              12
+COSTA RICA                          162             176             130
+CROATIA                              12               9               4
+CUBA                                463           1,179           1,583
+CYPRUS                                3               1               2
+CZECH REPUBLIC                       47              56              22
+CZECHOSLOVAKIA                        4               2               1
+DEM REP OF THE CONGO                 79              81              96
+DENMARK                               2               5              12
+DJIBOUTI                              3               3               0
+DOMINICA                             19              16              13
+DOMINICAN REPUBLIC                1,769           2,186           1,835
+EAST TIMOR                            0               0               0
+ECUADOR                           1,264           2,253           2,951
+EGYPT                                85              57              78
+EL SALVADOR                      15,445          18,981          12,590
+EQUATORIAL GUINEA                     5               5               7
+ERITREA                              62              49              37
+ESTONIA                              13               9               6
+ESWATINI                              0               1               0
+ETHIOPIA                             36              32              43
+FIJI                                 21              11               9
+FINLAND                               3               3               4
+FRANCE                               85              78              83
+FRENCH GUIANA                         0               2               0
+FRENCH POLYNESIA                      0               2               0
+GABON                                 6               8               4
+GAMBIA                              111             124              45
+GEORGIA                              20              38              44
+GERMANY                              72              77              63
+GHANA                               243             203             121
+GREECE                               22              32              17
+                                                                        28
+   Country of Citizenship   FY 2018       FY 2019       FY 2020
+GRENADA                               9            13             6
+GUADELOUPE                            1             1             1
+GUATEMALA                        50,390        54,919        29,790
+GUINEA                              219           102            44
+GUINEA-BISSAU                         5             4             0
+GUYANA                              142           125            84
+HAITI                               934           690           895
+HONDURAS                         28,894        41,800        21,139
+HONG KONG                            15             7             3
+HUNGARY                              81            71            44
+ICELAND                               2             0             1
+INDIA                               611         1,616         2,312
+INDONESIA                           110            77            62
+IRAN                                 22            21            16
+IRAQ                                 48            84            32
+IRELAND                              47            33            19
+ISRAEL                               93            89            52
+ITALY                               125           140           139
+IVORY COAST                          82            39            41
+JAMAICA                             792           751           523
+JAPAN                                28            21            27
+JORDAN                               94           106            70
+KAZAKHSTAN                           30            26            25
+KENYA                               140           122            85
+KIRIBATI                              0             0             0
+KOREA                                32            59            23
+KOSOVO                               14            15            13
+KUWAIT                               11            21            14
+KYRGYZSTAN                           15            19             3
+LAOS                                  8             5            11
+LATVIA                               17            15            19
+LEBANON                              51            48            41
+LESOTHO                               1             0             0
+LIBERIA                             113           108           112
+LIBYA                                 8             6             4
+LIECHTENSTEIN                         0             0             0
+LITHUANIA                            49            37            22
+LUXEMBOURG                            0             0             1
+                                                                  29
+  Country of Citizenship   FY 2018         FY 2019         FY 2020
+MACAU                                1               2               1
+MACEDONIA                           18               0               0
+MADAGASCAR                           1               0               0
+MALAWI                               3               1               2
+MALAYSIA                            11               9              11
+MALDIVES                             1               0               0
+MALI                                63              52              15
+MALTA                                0               1               1
+MARSHALL ISLANDS                    35              32              16
+MARTINIQUE                           0               0               0
+MAURITANIA                          98              41              25
+MAURITIUS                            0               1               0
+MEXICO                         141,045         127,492         100,388
+MICRONESIA,
+FEDERATED STATES OF                   99              91             24
+MOLDOVA                               38              28             17
+MONACO                                 0               0              0
+MONGOLIA                              28              19             19
+MONTENEGRO                            18              23              7
+MONTSERRAT                             1               1              0
+MOROCCO                               58              33             27
+MOZAMBIQUE                             0               3              2
+NAMIBIA                                2               0              0
+NAURU                                  0               0              1
+NEPAL                                 45             162             97
+NETHERLANDS                           40              40             31
+NETHERLANDS
+ANTILLES                               2             6               4
+NEW CALEDONIA                          0             0               0
+NEW ZEALAND                           24            22              13
+NICARAGUA                            879         2,240           1,416
+NIGER                                  5            13               5
+NIGERIA                              369           286             199
+NORTH KOREA                            0             0               0
+NORTH MACEDONIA                        0            15              10
+NORWAY                                 7             9              11
+OMAN                                   0             0               2
+PAKISTAN                             235           202             207
+
+                                                                      30
+   Country of Citizenship   FY 2018         FY 2019         FY 2020
+PALAU                                   9              10               4
+PALESTINE                               0               0               0
+PANAMA                                 59              55              36
+PAPUA NEW GUINEA                        1               2               1
+PARAGUAY                                6               7               9
+PERU                                  581             571             353
+PHILIPPINES                           217             176             120
+PITCAIRN ISLANDS                        0               0               0
+POLAND                                123             135             102
+PORTUGAL                               96             101              47
+QATAR                                   2               3               1
+REUNION                                 0               0               0
+ROMANIA                               403             400             263
+RUSSIA                                107             153             108
+RWANDA                                  2              12               8
+SAMOA                                  30              17               4
+SAN MARINO                              0               0               0
+SAO TOME AND PRINCIPE                   0               0               0
+SAUDI ARABIA                          135              79              60
+SENEGAL                               125              55              52
+SERBIA                                 30              31              16
+SERBIA AND
+MONTENEGRO                              2               2               1
+SEYCHELLES                              0               1               1
+SIERRA LEONE                           79              86              23
+SINGAPORE                               6               3               5
+SLOVAKIA                               35              22              12
+SLOVENIA                                1               1               2
+SOLOMON ISLANDS                         0               0               0
+SOMALIA                               229             151             112
+SOUTH AFRICA                           42              39              31
+SOUTH KOREA                           122             127             129
+SOUTH SUDAN                            61              65              41
+SPAIN                                 209             259             235
+SRI LANKA                              36             112             119
+ST. HELENA                              0               0               0
+ST. KITTS-NEVIS                        15              11               3
+ST. LUCIA                              28              22              10
+                                                                        31
+   Country of Citizenship   FY 2018         FY 2019         FY 2020
+ST. PIERRE AND
+MIQUELON                                0               0               0
+ST. VINCENT-
+GRENADINES                             13              19               8
+STATELESS                               0               0               0
+SUDAN                                  42              18              17
+SURINAME                               19              12               1
+SWAZILAND                               0               0               0
+SWEDEN                                 19              21               9
+SWITZERLAND                             4               6              10
+SYRIA                                   7               9               2
+TAIWAN                                 27              51              42
+TAJIKISTAN                              8               4               4
+TANZANIA                               19              25              13
+THAILAND                               55              46              25
+TOGO                                   24              16              14
+TONGA                                  21              10              10
+TRINIDAD AND TOBAGO                   104             106              73
+TUNISIA                                16              20               6
+TURKEY                                 85             113              77
+TURKMENISTAN                            2               4               0
+TURKS AND CAICOS
+ISLANDS                                 4               3               3
+TUVALU                                  0               0               0
+UGANDA                                 13              22              21
+UKRAINE                               105             125             106
+UNITED ARAB EMIRATES                    2               3               3
+UNITED KINGDOM                        209             198             173
+UNKNOWN                                42              46              30
+URUGUAY                                47              51              28
+UZBEKISTAN                             41              45              49
+VANUATU                                 0               0               0
+VENEZUELA                             336             327             193
+VIETNAM                               122              80              93
+YEMEN                                  24              46              14
+YUGOSLAVIA                              5               3               6
+ZAMBIA                                 12               7               8
+ZIMBABWE                               19              16              16
+
+                                                                        32
+

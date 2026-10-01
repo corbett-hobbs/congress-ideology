@@ -92,10 +92,10 @@ function EconomyPage({
         canClear={values.pin !== null}
         onClear={clearPin}
       />
-      <div aria-live="polite" className="sr-only">
-        {announcement}
-      </div>
       <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-16 pt-7 sm:px-6">
+        <div aria-live="polite" className="sr-only">
+          {announcement}
+        </div>
         <PageHeader title="What Was the Economy Like?">
           <p>
             Gas, mortgage rates, jobs, prices, income and the federal budget, month by month since 1991. The colored bar

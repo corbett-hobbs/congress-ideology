@@ -1,0 +1,746 @@
+ICE Enforcement and
+Removal Operations Report
+Fiscal Year 2014
+
+December 19, 2014
+
+
+
+
+                    U.S. Immigration and Customs Enforcement
+                                       .
+                        Enforcement and Removal Operations
+
+Table of Contents
+
+  Background ......................................................................................................................     1
+
+  Discussion ........................................................................................................................   2
+
+  Appendix A ...................................................................................................................... 12
+
+  Appendix B ...................................................................................................................... 18
+
+
+
+
+                                                                        i
+I.     Background
+This report summarizes U.S. Immigration and Customs Enforcement’s (ICE) Fiscal Year
+(FY) 2014 civil immigration enforcement and removal operations. ICE shares
+responsibility for enforcing the Nation’s civil immigration laws with U.S. Customs and
+Border Protection (CBP) and U.S. Citizenship and Immigration Services (USCIS). In
+executing its enforcement duties, ICE focuses on two core missions: (1) identifying and
+apprehending public safety threats—including criminal aliens and national security
+targets—and other removable individuals within the United States; and (2) detaining and
+removing individuals apprehended by ICE and CBP officers and agents patrolling our
+Nation’s borders.
+
+Each year, ICE immigration enforcement is impacted by operational factors, including
+the size of the removable population found in the interior and encountered at the border
+by CBP, appropriated resources, fluctuating migration patterns, and the legal authorities
+that govern ICE’s activities. In 2014, each of these factors affected ICE operations and
+contributed to the number of ICE’s FY 2014 removals, which was 315,943, down from
+368,644 in FY 2013. This report sets forth and analyzes ICE’s FY 2014 immigration
+enforcement statistics.
+
+
+
+
+                                            1
+II. Discussion
+Shifting Migration Patterns and Demographics
+
+In FY 2014, the surge of illegal border crossings in the Rio Grande Valley (RGV) in
+South Texas and significant increase in Central American migrants presented unique
+challenges to ICE’s immigration enforcement efforts.
+
+   The Surge in the Rio Grande Valley
+
+In 2014, the United States experienced an unprecedented surge of illegal border
+crossings in the RGV, particularly by unaccompanied children and family units from
+Central America. CBP apprehensions in the RGV—a sector containing just 320
+miles of our 2,000 mile border with Mexico—accounted for 72.8 percent of the
+unaccompanied children and 76.2 percent of the family units apprehended in FY
+2014. In FY 2013, the Border Patrol apprehended a total of 21,553 unaccompanied
+children and 7,265 family units in the RGV. In 2014 those numbers were 49,959
+and 52,326, respectively. In June alone, at the height of the surge, the Border Patrol
+apprehended 8,730 unaccompanied children and 13,370 family units in the RGV,
+which placed significant strain on a number of DHS resources and operations,
+including ICE.
+
+
+
+
+                                             2
+As part of DHS’s response to this unprecedented migration, and to stem the tide, in
+FY 2014, ICE devoted significant resources, both transportation assets and ICE
+Enforcement and Removal Operations (ERO) officers, to transfer 56,029
+unaccompanied children apprehended at the southwest border to the Department of
+Health and Human Services (HHS), as the law requires. While these
+unaccompanied children did not occupy ICE detention space, they required ICE to
+reallocate resources, including officer time, to support DHS’s response to this urgent
+humanitarian situation. For example, approximately 800 ERO officers and support
+personnel (over 10 percent of ERO’s entire workforce) were detailed to support
+southwest border operations.
+
+The significant increase in illegal migration of unaccompanied children and family
+units also contributed to operational challenges for ICE. ICE does not detain
+unaccompanied children. Under the law, ICE is required to transfer unaccompanied
+children to HHS, generally within 72 hours. HHS then becomes responsible for
+their care and is required by law to place unaccompanied minors in the least
+restrictive setting that is in the best interest of the child, which generally results in
+placement with a family member. Unlike adults apprehended at the border who are
+placed into expedited removal, the law requires that unaccompanied children be
+placed in removal proceedings before an immigration judge (as opposed to
+expedited removal). These cases are placed on the non-detained immigration court
+docket, and due to a number of factors, generally take significantly longer to be
+adjudicated than those of adults.
+
+Like single adults, family units apprehended at the border may be placed into
+expedited removal proceedings and detained. However, this process requires ICE to
+maintain an increased level of family detention space, which historically has been
+limited to fewer than 100 beds nationwide. ICE cannot detain family units,
+including children, in adult detention facilities. As a result, in the summer ICE
+sought substantial resources and authority to build additional detention capacity to
+detain and remove family units, and since then ICE has opened three additional
+facilities for this purpose. All of these efforts required ERO officer time, support
+personnel, and significant funding.
+
+At the height of the surge, in order to sustain ICE and CBP response efforts, the
+President submitted an emergency supplemental funding request to Congress to help
+address these unique and urgent challenges, including significantly increased ICE
+detention capacity for family units and ICE transportation resources for
+unaccompanied children. That request was not acted upon, and as a result DHS was
+required to reprogram funds from other key homeland security priorities. In doing
+so, and coupled with a broader public messaging campaign and sustained foreign
+counterpart engagement, DHS efforts helped contribute to dramatically reducing
+migration in the RGV, down to 1,491 unaccompanied children and 1,704 family
+units apprehended in September, the last month of the fiscal year. However, ICE
+
+                                              3
+and DHS components remain vigilant and will continue to work with Congress and
+our interagency and foreign counterparts to sustain our progress.
+
+    The Spike of Central Americans
+
+In addition to the surge of unaccompanied children and family units, between FY
+2013 and FY 2014, ICE experienced another key demographic shift in the
+population of the individuals it detained and removed. Specifically, ICE removals of
+Mexican nationals decreased from 66 to 56 percent of total ICE removals during this
+period. At the same time, the number of aliens removed to El Salvador, Guatemala,
+and Honduras increased by 15 percent due to the increased share of apprehensions
+involving such nationals at the border. Removals of individuals at the border from
+countries other than Mexico increased 26 percent.
+
+Removal of nationals to non-contiguous countries are far more costly, take
+significantly more time, and require added officer resources as compared to
+removals of Mexican nationals. Instead of quickly returning Mexican nationals
+apprehended at the border, ICE must take custody of Central Americans and other
+individuals from non-contiguous countries, detain them, obtain travel documents
+from the host country, and expend transportation and flight resources.
+
+                      FY 2014 Demographic Shift for ICE Removals
+
+                         COUNTRY                     FY 2013            FY 2014
+                         El Salvador                 21,602             27,180
+                         Guatemala                   47,749             54,423
+                         Honduras                    37,049             40,695
+                         Mexico                      241,493            176,968
+
+
+Increasing Jurisdictions Declining to Honor ICE Detainers
+In the interior, ICE successfully focused its enforcement actions on criminals; 85
+percent of interior enforcement removals were of convicted criminals. ICE’s efforts
+in the interior, however, were impacted by an increasing number of state and local
+jurisdictions that are declining to honor ICE detainers. 1 As a result, instead of state
+and local jails transferring criminal aliens in their custody to ICE for removal, such
+
+1
+  On November 20, 2014, Secretary Johnson issued a memorandum directing ICE to discontinue the Secure
+Communities program and replace it with the Priority Enforcement Program (PEP) to more effectively identify and
+facilitate the removal of criminal aliens in the custody of state and local law enforcement agencies. PEP will
+continue to rely on fingerprint-based biometric data submitted during bookings by state and local law enforcement
+agencies to the Federal Bureau of Investigation for criminal background checks. But ICE will only seek the transfer
+of an alien in the custody of such agencies when the alien has been convicted of certain offenses that pose the
+greatest threat to public safety. See Secure Communities Memorandum dated November 20, 2014. See also
+Policies for Apprehension, Detention and Removal of Undocumented Immigrants Memorandum dated November
+20, 2014.
+                                                         4
+aliens were released by state and local authorities. Since January 2014, state and
+local law enforcement authorities declined to honor 10,182 detainers. 2 This required
+ICE to expend additional resources attempting to locate, apprehend, and remove
+criminal aliens who were released into the community, rather than transferred
+directly into custody. These changes further contributed to decreased ICE removals.
+
+Refined Focus on Convicted Criminals
+In recent years, ICE has increased its focus on identifying, locating, apprehending,
+and removing convicted criminal aliens who are at-large, requiring significantly
+more officers, time, money, and other resources as compared to those individuals
+who are in a custodial setting. In FY 2014, while total criminal removals declined
+from last year, a significant percentage of ICE’s interior removals—85 percent—
+remained focused on criminal aliens. The substantial share of convicted criminals
+removed from the interior represents a steady and significant increase from 2008,
+when that figure was just 38 percent and 2011 when it was 67 percent. 3 ICE’s focus
+on criminal removals in the interior is also reflected in the total number of criminal
+removals: in FY 2007 and FY 2008, ICE removed 102,024 and 114,415 convicted
+criminals, respectively, as compared to 216,810 in FY 2013 and 177,960 in 2014. In
+addition, ICE removed 2,802 individuals in FY 2014 who were classified as
+suspected or confirmed gang members. As a result, while overall removals declined
+in FY 2014, ICE has sustained the improved quality of its removals by focusing on
+the most serious public safety and national security threats.
+
+Reduced Use of the Alien Transfer Exit Program
+Key operational changes to the Alien Transfer Exit Program (ATEP) impacted ICE’s
+operations and the removal of Mexican nationals. ATEP is a joint effort between
+ICE ERO and CBP Border Patrol in which Mexican nationals apprehended in one
+sector of the southwest border are transported for removal through a different sector
+in order to disrupt the smuggling cycle by separating migrants from their smugglers.
+In 2013, ICE began reallocating limited resources away from ATEP to focus on the
+increasing number of Central American migrants and other priorities. In FY 2014,
+ICE continued to scale back ATEP and re-tasked ATEP-dedicated transportation
+resources to effectively manage the influx of family units and unaccompanied
+children apprehended in the RGV. As a result, in FY 2014, the number of ATEP
+ICE removals dramatically decreased as compared to the 52,965 Mexican nationals
+removed through ATEP in FY 2013. This contributed to a reduction in total ICE
+removals in FY 2014. However, the Border Patrol supported ICE’s reduction in
+ATEP transportation resources by removing or voluntarily returning those
+individuals who would have met the criteria for ATEP.
+
+2
+  ICE began collecting information on declined detainers beginning January 2014.
+3
+  Because ICE’s crime entry screen did not exist in its systems prior to 2011, the ability to electronically capture and
+report criminal conviction information prior to 2011 was limited.
+                                                           5
+Legal Requirements
+ICE’s interior operations were also challenged by federal court decisions, including
+the decision of the U.S. Court of Appeals for the Ninth Circuit in Rodriguez v.
+Robbins, 715 F.3d 1127 (9th Cir. 2013). Under Rodriguez, individuals who are
+detained while in removal proceedings, including those subject to mandatory
+detention, must be granted individual bond hearings within 180 days of the
+commencement of immigration detention, regardless of ICE’s custody
+determination. Rodriguez applies throughout the Ninth Circuit, the largest federal
+jurisdiction. As a result, a greater number of individuals have been released on
+immigration judge-determined bonds and transferred from the detained docket to the
+non-detained docket. This has directly impacted removals in the short term because
+cases on the non-detained docket take longer to adjudicate, and require additional
+ICE resources.
+
+In addition, ICE relies on the cooperation of foreign governments to effectuate
+removal of their nationals. ICE often cannot repatriate individuals within the legally
+prescribed time limits because their countries of origin or nationality fail to issue
+required travel documents in a timely manner. This occurs despite ICE and
+Department of State efforts to work with these countries to procure necessary
+documents. In these cases, ICE is generally required by law to release individuals
+from custody. Individuals may be released on bond or an order of supervision and
+may be enrolled in the Alternatives to Detention (ATD) program, which may include
+GPS monitoring and telephonic reporting. While ICE continues to engage countries
+that do not cooperate in the timely repatriation of their nationals, their failure to
+cooperate poses a significant challenge to removals.
+
+
+
+
+                                            6
+In FY 2014:
+    • ICE conducted 315,943 removals.
+    • ICE conducted 102,224 removals                        Key Term Definitions
+
+      of individuals apprehended in the                     Border Removal: An individual removed by ICE who is
+                                                            apprehended by a CBP officer or agent while attempting to
+      interior of the United States.                        illicitly enter the United States at or between the ports of
+          o 86,923 (85 percent) of all                      entry. These individuals are also referred to as recent border
+                                                            crossers.
+              interior removals involved
+                                                            Criminal Offender: An individual convicted in the United
+              individuals previously                        States for one or more criminal offenses. This does not
+              convicted of a crime.                         include civil traffic offenses.
+    • ICE conducted 213,719 removals                        Immigration Fugitives: An individual who has failed to
+                                                            leave the United States based on a final order of removal,
+      of individuals apprehended while                      deportation, or exclusion, or has failed to report to ICE after
+      attempting to unlawfully enter the                    receiving notice to do so.
+      United States. 4                                      Interior Removal: An individual removed by ICE who is
+    • 56 percent of all ICE removals, or                    identified or apprehended in the United States by an ICE
+                                                            officer or agent. This category excludes those apprehended at
+      177,960, involved individuals who                     the immediate border while attempting to unlawfully enter
+      were previously convicted of a                        the United States.
+      crime.                                                Other Removable Alien: An individual who is not a
+                                                            confirmed convicted criminal, recent border crosser, or other
+          o ICE apprehended and                             ICE civil enforcement priority category. This category may
+              removed 86,923 criminals                      include individuals removed on national security grounds or
+              from the interior of the U.S.                 for general immigration violations.
+
+          o ICE removed 91,037                              Previously Removed Alien: An individual previously
+              criminals apprehended                         removed or returned who has re-entered the country illegally.
+
+              while attempting to                           Reinstatement of Final Removal Order: The removal of an
+              unlawfully enter the United                   alien based on the reinstatement of a prior removal order,
+                                                            where the alien departed the United States under an order of
+              States.                                       removal and illegally reentered the United States (INA §
+    • 98 percent of all ICE FY 2014                         241(a)(5)). The alien may be removed without a hearing
+                                                            before an immigration court.
+      removals, or 309,477, clearly met
+      one or more of ICE’s stated civil                     Removal: The compulsory and confirmed movement of an
+      immigration enforcement                               inadmissible or deportable alien out of the United States
+                                                            based on an order of removal. An individual who is removed
+      priorities. 5                                         may have administrative or criminal consequences placed on
+    • Of the 137,983 individuals                            subsequent reentry because of the removal. ICE removals
+                                                            also include voluntary returns, voluntary departures, and
+      removed who had no criminal                           withdrawals of admission for cases managed by ICE officers
+      conviction, 89 percent, or 122,682,                   and agents.
+      were apprehended at or near the
+      border while attempting to
+      unlawfully enter the country. 6
+
+4
+  Approximately 96 percent of these individuals were apprehended by CBP Border Patrol agents and then processed,
+detained, and removed by ICE. The remaining individuals were apprehended by CBP officers at ports of entry.
+5
+  As defined in the March 2011 ICE Memorandum: Civil Immigration Enforcement: Priorities for the Apprehension,
+Detention, and Removal of Aliens.
+6
+  ICE defines criminality via a recorded criminal conviction obtained by ICE officers and agents from certified
+criminal history repositories. These individuals include recent border crossers, immigration fugitives, and repeat
+immigration violators.
+                                                        7
+       • The leading countries of origin for removals were Mexico, Guatemala, Honduras,
+         and El Salvador.
+       • 2,802 individuals removed by ICE were classified as suspected or confirmed gang
+         members. 7
+
+Border Removals
+In FY 2014, ICE continued to prioritize border security, partnering with CBP to process
+and remove individuals apprehended while attempting to unlawfully enter the United
+States.
+
+In FY 2014, ICE conducted 213,179 removals of recent border crossers. Many of those
+apprehended along the border had prior criminal or civil immigration violations in the
+United States. Of these recent border crosser removals, 91,037 involved individuals with
+at least one criminal conviction.
+
+
+                                      FY 2014 ICE Border Removals by
+                                     Apprehending Program and Priority
+                       Apprehending
+                        CBP Office                 Level/Priority                   Removals
+                                                               Level 1               17,772
+                                              Convicted
+                                                               Level 2               19,733
+                                              Criminal
+                                                               Level 3               49,948
+                         Office of
+                                               Immigration Fugitives                  1,776
+                       Border Patrol
+                          (OBP)                 Repeat Immigration
+                                                      Violators                       54,115
+                                               Other Border Removals                  61,714
+                                                     Total OBP                       205,058
+                                                               Level 1                 1,490
+                                              Convicted
+                                                               Level 2                  866
+                                              Criminal
+                                                               Level 3                 1,228
+                       Office of Field
+                                               Immigration Fugitives                     56
+                        Operations
+                           (OFO)                Repeat Immigration
+                                                      Violators                        995
+                                               Other Border Removals                  4,026
+                                                     Total OFO                        8,661
+
+
+
+
+7
+    Gang affiliation is documented as part of the intake process in the Risk Classification Assessment (RCA).
+                                                           8
+Changing Border Apprehension Demographics
+In FY 2014, ICE carried out 110,021 border removals of individuals from countries other
+than Mexico, a 26 percent increase over the 90,461 such individuals removed by ICE in
+FY 2013. Given this shift in border apprehension demographics, ICE was required in FY
+2014 to use more of its detention and removal resources for recent border crossers from
+countries other than Mexico and Canada—as CBP must rely on ICE to effectuate the
+removal of individuals from countries that are not contiguous with the United States.
+
+In FY 2014, Mexico continued to be the leading country of origin for individuals
+removed, followed by Guatemala, Honduras, and El Salvador.
+
+                             FY 2014 Top 10 Countries of
+                             ICE Removal by Citizenship
+                                 Citizenship      Total
+                            Mexico               176,968
+                            Guatemala             54,423
+                            Honduras              40,695
+                            El Salvador           27,180
+                            Dominican Republic     2,130
+                            Ecuador                1,565
+                            Nicaragua              1,266
+                            Colombia               1,181
+                            Jamaica                  938
+                            Brazil                   850
+                            Total                307,196
+
+Interior Apprehensions and Removals
+In FY 2014, ICE conducted 102,224 removals of individuals apprehended in the interior
+of the United States. ICE focused interior enforcement operations on individuals with
+criminal convictions, emphasizing those convicted of the most serious crimes. Notably,
+85 percent of all removals from the interior of the United States involved individuals who
+were previously convicted of a criminal offense, while 76 percent of the convicted
+criminals removed from the interior were convicted of an ICE Level 1 or Level 2 offense.
+
+Level 1 offenders are aliens convicted of (1) an “aggravated felony,” as defined in §
+101(a)(43) of the Immigration and Nationality Act, or (2) two or more crimes each
+punishable by more than one year, commonly referred to as “felonies.” Level 2 offenders
+are aliens convicted of any other felony or three or more crimes each punishable by less
+
+
+                                            9
+than one year, commonly referred to as “misdemeanors.” Level 3 offenders are aliens
+convicted of “misdemeanor” crime(s) punishable by less than one year.
+
+                            FY 2014 ICE Interior Criminal
+                                 Removals by Level
+                      Level 1         43,897      50.5 percent
+                      Level 2             22,191       25.5 percent
+                      Level 3             20,835        24 percent
+                      Total               86,923       100 percent
+
+Almost two thirds of individuals with criminal convictions who were removed from the
+interior of the United States also fell into other ICE priority categories. For example, 62
+percent of ICE’s interior criminal alien removals were previously removed from the
+United States or were immigration fugitives, and 65 percent of all interior Level 3
+removals had been previously removed or were immigration fugitives.
+
+
+                          FY 2014 ICE Interior Removals by
+                                       Priority
+                          Threat Level/Priority   Removals
+                                         Level 1      43,897
+                         Convicted
+                                         Level 2      22,191
+                          Criminal
+                                         Level 3      20,835
+                        Immigration Fugitives          1,629
+                        Repeat Immigration
+                        Violators                      7,206
+                        Other Removals                 6,466
+                        Total                       102,224
+
+
+
+
+                                             10
+Criminal Alien Removals
+In FY 2014, approximately 56 percent (177,960) of all ICE removals involved
+individuals with criminal convictions. Overall, in FY 2014, 63,159 of the convicted
+criminal removals were Level 1 offenders, 42,790 were Level 2 offenders, and 72,011
+were Level 3 offenders.
+
+The majority of Level 1 and Level 2 offenders—62 percent—were apprehended in the
+interior of the United States. Conversely, 71 percent of all Level 3 offenders were
+apprehended at or near the border.
+
+Non-Criminal Removals
+The vast majority of ICE non-criminal removals in FY 2014 involved individuals
+encountered by CBP agents and officers while trying to unlawfully enter the United
+States. Specifically, 89 percent (122,682) of ICE’s 137,983 non-criminal removals
+involved individuals attempting to unlawfully enter the United States. A full 95 percent
+of ICE’s non-criminal removals involved recent border crossers, repeat immigration
+violators, or immigration court fugitives.
+
+
+
+
+                                           11
+III. Appendix A: FY 2014 Removals by Citizenship
+                  FY 2014 ICE Removals by Citizenship
+                          Citizenship                Total
+           Mexico                                   176,968
+           Guatemala                                 54,423
+           Honduras                                  40,695
+           El Salvador                               27,180
+           Dominican Republic                         2,130
+           Ecuador                                    1,565
+           Nicaragua                                  1,266
+           Colombia                                   1,181
+           Jamaica                                      938
+           Brazil                                       850
+           Peru                                         678
+           China                                        534
+           Canada                                       457
+           Haiti                                        382
+           India                                        359
+           Philippines                                  302
+           Nigeria                                      261
+           Costa Rica                                   245
+           United Kingdom                               213
+           Poland                                       159
+           Trinidad and Tobago                          158
+           South Korea                                  154
+           Venezuela                                    153
+           Romania                                      143
+           Guyana                                       136
+           Belize                                       123
+           Spain                                        121
+           Kenya                                        113
+           Russia                                       112
+           Bahamas                                      110
+           Saudi Arabia                                 105
+           Argentina                                    101
+           Pakistan                                      98
+           Ukraine                                       96
+
+                                 12
+       FY 2014 ICE Removals by Citizenship
+               Citizenship                Total
+Ghana                                         91
+Italy                                         91
+France                                        87
+Bolivia                                       85
+Israel                                        83
+Korea                                         83
+Jordan                                        80
+Germany                                       77
+Cambodia                                      75
+Panama                                        73
+Indonesia                                     71
+Chile                                         69
+Bangladesh                                    66
+Somalia                                       65
+Portugal                                      64
+Micronesia                                    63
+Egypt                                         62
+Hungary                                       60
+Turkey                                        60
+Bosnia-Herzegovina                            53
+Lebanon                                       53
+Thailand                                      52
+Albania                                       50
+Vietnam                                       48
+Uruguay                                       45
+Nepal                                         44
+Morocco                                       43
+South Africa                                  42
+Australia                                     41
+Netherlands                                   39
+Uzbekistan                                    39
+Czech Republic                                34
+Japan                                         34
+Bulgaria                                      33
+Ireland                                       33
+Latvia                                        32
+Ethiopia                                      31
+                        13
+       FY 2014 ICE Removals by Citizenship
+                Citizenship               Total
+Lithuania                                     31
+Marshall Islands                              31
+Sri Lanka                                     31
+Tanzania                                      31
+Armenia                                       30
+Cameroon                                      30
+Greece                                        30
+Iraq                                          29
+Taiwan                                        29
+Tonga                                         29
+Moldova                                       26
+Cuba                                          24
+Iran                                          23
+Kazakhstan                                    23
+Mongolia                                      23
+Afghanistan                                   22
+Georgia                                       22
+Uganda                                        22
+Malaysia                                      21
+Kyrgyzstan                                    20
+St. Vincent Grenadines                        19
+Belarus                                       18
+Fiji                                          18
+New Zealand                                   18
+Senegal                                       18
+Liberia                                       17
+St. Kitts-Nevis                               17
+Sweden                                        17
+Barbados                                      16
+Dominica                                      16
+Mali                                          16
+Slovakia                                      16
+Unknown                                       16
+Antigua-Barbuda                               15
+Hong Kong                                     15
+Palau                                         15
+Yemen                                         15
+                         14
+       FY 2014 ICE Removals by Citizenship
+                Citizenship               Total
+Sudan                                         14
+Angola                                        13
+Guinea                                        13
+Grenada                                       12
+Macedonia                                     12
+Paraguay                                      12
+Serbia                                        12
+Sierra Leone                                  12
+Singapore                                     12
+St. Lucia                                     12
+Tunisia                                       12
+Ivory Coast                                   11
+Libya                                         11
+Congo                                         10
+Kosovo                                        10
+Niger                                         10
+Zambia                                        10
+Zimbabwe                                      10
+Azerbaijan                                     9
+Belgium                                        9
+Cape Verde                                     9
+Czechoslovakia                                 9
+Samoa                                          9
+South Sudan                                    9
+Syria                                          9
+Estonia                                        8
+British Virgin Islands                         7
+Gambia                                         7
+Mauritania                                     7
+Montenegro                                     7
+Norway                                         7
+Tajikistan                                     7
+Bermuda                                        6
+Burkina Faso                                   6
+Dem Rep of the Congo                           6
+Denmark                                        6
+Kuwait                                         6
+                         15
+                                 FY 2014 ICE Removals by Citizenship
+                                         Citizenship                Total
+                          Switzerland                                    6
+                          Togo                                           6
+                          Benin                                          5
+                          Burma                                          5
+                          Croatia                                        5
+                          Slovenia                                       5
+                          Suriname                                       5
+                          Yugoslavia                                     5
+                          Algeria                                        4
+                          Austria                                        4
+                          Burundi                                        4
+                          Equatorial Guinea                              4
+                          Gabon                                          4
+                          Malawi                                         4
+                          Oman                                           4
+                          Botswana                                       3
+                          Cayman Islands                                 3
+                          Finland                                        3
+                          Iceland                                        3
+                          Laos                                           3
+                          Namibia                                        3
+                          Netherlands Antilles                           3
+                          Turkmenistan                                   3
+                          Turks and Caicos Islands                       3
+                          Chad                                           2
+                          Cyprus                                         2
+                          Mauritius                                      2
+                          Rwanda                                         2
+                          United Arab Emirates                           2
+                                 8
+                          USSR                                           2
+                          Andorra                                        1
+                          Bahrain                                        1
+                          Comoros                                        1
+                          Eritrea                                        1
+
+8
+ Denotes aliens subject to removal who are nationals of countries that were member states of the Union of Soviet
+Socialist Republics (USSR), but who did not become citizens of the Russian Federation after the dissolution of the
+USSR.
+                                                        16
+      FY 2014 ICE Removals by Citizenship
+              Citizenship                Total
+French Guiana                                 1
+Guadeloupe                                    1
+Guinea-Bissau                                 1
+Macau                                         1
+Madagascar                                    1
+Malta                                         1
+Monaco                                        1
+Montserrat                                    1
+Papua New Guinea                              1
+San Marino                                    1
+Total                                  315,943
+
+
+
+
+                      17
+Appendix B: Methodology
+Data Source:
+Data used to report ICE statistics are obtained through the ICE Integrated Decision
+Support (IIDS) system data warehouse.
+
+Data Run Dates
+FY 2014: IIDS v1.16 run date 10/05/2014; ENFORCE Integrated Database (EID) as of
+10/03/2014
+
+FY 2013: IIDS v1.14 run date 10/06/2013; EID as of 10/04/2013
+
+FY 2012: IIDS v1.12 run date 10/07/2012; EID as of 10/05/2012
+
+FY 2011: IIDS run date 10/07/2011; EID as of 10/05/2011
+
+FY 2010: IIDS run date 10/05/2010; EID as of 10/03/2010
+
+FY 2009: Removals and Returns are an adjusted historical number of an IIDS run date of
+8/16/2010 (EID as of 8/14/10) and will remain static.
+
+Removals
+Removal data is historical and remains static. Removals include Returns. Returns include
+Voluntary Returns, Voluntary Departures, and Withdrawals Under Docket Control.
+
+In FY 2009, ICE began to “lock” removal statistics on October 5 at the end of each fiscal
+year, and counted only aliens whose removal or return was already confirmed. Aliens
+removed or returned in that fiscal year but not confirmed until after October 5 were
+excluded from the locked data, and thus from ICE statistics. To ensure an accurate and
+complete representation of all removals and returns, ICE will count removals and returns
+confirmed after October 5 toward the next fiscal year. FY 2012 removals, excluding FY
+2011 “lag,” were 402,919. FY 2013 removals, excluding FY 2012 “lag,” were 363,144.
+FY 2014 removals, excluding FY 2013 “lag,” were 311,111.
+
+Fiscal Year Data Lag/Case Closure Lag is defined as the physical removal of an alien
+occurring in a given month; however, the case is not closed in EARM until the fiscal year
+after the data is locked. Since data from the previous fiscal year are locked, the removal is
+recorded in the month the case was closed and reported in subsequent fiscal year
+removals. This will result in a higher number of recorded removals in a fiscal year than
+actual departures.
+
+                                             18
+Any voluntary return on or after June 1, 2013 without an ICE intake case will not be
+recorded as an ICE removal.
+
+ERO Removals include aliens processed for Expedited Removal (ER) and turned over to
+ERO for detention. Aliens processed for ER and not detained by ERO are primarily
+processed by Border Patrol. CBP should be contacted for those statistics.
+
+Gang affiliation is documented as part of the intake process in the Risk Classification
+Assessment (RCA).
+FY 2012 – FY 2013 Removals include ATEP removals.
+
+Criminality
+ICE Levels reflect priorities outlined in the June 2010 memorandum entitled “ICE Civil
+Immigration Enforcement Priorities effective October 1, 2010.” Since FY 2011, ICE has
+defined criminality as a recorded criminal conviction from certified criminal history
+repositories. To prioritize the removal of convicted criminal aliens, ICE personnel refer to
+the following offense levels: Level 1, Level 2, and Level 3 offenders. Level 1 offenders
+are aliens convicted of “aggravated felonies,” as defined in § 101(a)(43) of the
+Immigration and Nationality Act, or two or more crimes, each punishable by more than
+one year, commonly referred to as “felonies.” Level 2 offenders are aliens convicted of
+any other felony or three or more crimes, each punishable by less than one year,
+commonly referred to as “misdemeanors.” Level 3 offenders are aliens convicted of
+“misdemeanor” crime(s) punishable by less than one year. Prior to FY 2011, ICE used
+Secure Communities (SC) Levels 1, 2, and 3 for prioritization purposes.
+
+
+
+
+                                            19
+

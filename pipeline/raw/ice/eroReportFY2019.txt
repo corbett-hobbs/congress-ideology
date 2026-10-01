@@ -1,0 +1,1485 @@
+U.S. Immigration and Customs Enforcement
+Fiscal Year 2019 Enforcement and Removal
+Operations Report
+Table of Contents
+Overview ......................................................................................................................................... 3
+ICE Custody and Case Management .............................................................................................. 4
+   Initial Book-Ins Resulting from CBP Apprehensions Increased ................................................. 4
+   Average Daily Population Resulting from CBP Apprehensions Increased ................................ 5
+   Currently Detained Population Shifted due to CBP Apprehensions........................................... 6
+   Average Length of Stay in ICE Custody Declined ...................................................................... 8
+   Use of Family Residential Centers Decreased ........................................................................... 8
+    ICE’s Non-Detained National Docket Continued to Grow ...................................................... 10
+   Alternatives to Detention Expanded ......................................................................................... 11
+ERO Administrative Arrests ......................................................................................................... 11
+   Administrative Arrests Declined but Focused on Criminals..................................................... 12
+   ERO Continued to Pursue Criminal Arrests and Prosecutions ................................................ 15
+ICE Detainers ................................................................................................................................ 16
+ICE Removals ............................................................................................................................... 18
+   Removals with CBP as the Arresting Agency Increased ........................................................... 19
+   Removals of USBP-Identified Family Unit and Unaccompanied Alien Children Apprehensions
+   Continued to Increase ............................................................................................................... 20
+   Removals of Criminals Remained a Priority............................................................................. 21
+Conclusion .................................................................................................................................... 25
+Appendix ....................................................................................................................................... 26
+   Appendix A: Methodology ......................................................................................................... 26
+   Appendix B: Removals by Country of Citizenship .................................................................... 27
+
+
+
+
+                                                                                                                                                  2
+Overview
+This report summarizes U.S. Immigration and Customs Enforcement (ICE) Enforcement and
+Removal Operations (ERO) activities during Fiscal Year (FY) 2019 1 and highlights the impact
+of changing migration patterns on the agency’s operations.
+
+ICE shares responsibility for administering and enforcing the nation’s immigration laws with
+Department of Homeland Security (DHS) component agencies, including U.S. Customs and
+Border Protection (CBP) and U.S. Citizenship and Immigration Services. ICE ERO is
+responsible for the identification, arrest, and removal of aliens who present a danger to national
+security or a threat to public safety, or who otherwise undermine border control and the integrity
+of the U.S. immigration system. As a result, ICE ERO’s main areas of focus are interior
+enforcement operations, management of the agency's detained population nationwide, and
+removal of aliens who have received a final order.
+
+While ERO’s targeted immigration enforcement operations focus on the interior of the country,
+changes in migration flows at the Southwest Border directly impact nearly every area of the
+agency’s operations, including interior enforcement, detention capacity, transportation, removals,
+personnel, and overall expenditures. Despite some decrease in apprehensions toward the end of
+the fiscal year, CBP has continued to apprehend record numbers of migrants, particularly family
+units and Unaccompanied Alien Children (UAC), along the Southwest Border, and DHS and its
+component agencies continue to experience the ramifications of this unprecedented migration
+across operational areas.
+
+According to CBP data, during FY 2019, the number of individuals apprehended or found
+inadmissible nationwide totaled 1,148,024, an increase of 68 percent over the previous fiscal
+year. The vast majority of this activity occurred along the Southwest Border, where the U.S.
+Border Patrol (USBP) apprehended 851,508 aliens, an increase of 115 percent over the previous
+year, and a higher number than any of the previous ten fiscal years. Among those apprehended
+were 473,682 family unit members, representing the highest number for any year on record and
+342 percent higher than the previous year’s record of 107,212. Overall, family unit members and
+UAC accounted for 64.5 percent of all individuals apprehended by the USBP at the Southwest
+Border during FY 2019, demonstrating both the magnitude and the changing demographics that
+have fueled a border security and humanitarian crisis and have compromised ICE’s ability to
+conduct enforcement in the interior.
+
+This sustained increase in migration has stretched resources across the U.S. government,
+requiring ERO to redirect its enforcement personnel and detention capacity to support border
+enforcement efforts as well as a significantly increased detained population. This has negatively
+impacted the number of ERO’s interior arrests, as well as the percentage of removals stemming
+from such arrests, and has also changed the overall composition of ICE’s detained population.
+Because much of ERO’s limited detention capacity has been dedicated to housing aliens arrested
+by CBP, many of whom are subject to mandatory detention under U.S. immigration laws
+regardless of criminality, the increase in border apprehensions has resulted in a lower overall
+percentage of ICE detainees who have a criminal history (the vast majority of those arrested by
+
+1 FY 2019 indicates October 1, 2018 through September 30, 2019.
+
+
+
+                                                                                                 3
+ERO in the interior have criminal convictions or pending criminal charges, while those arrested
+by CBP at the border often do not have any known criminal history).
+
+In addition, the situation at the Southwest Border has also driven a significant increase in the
+number of non-detained cases 2 ERO manages nationwide, which surpassed 3.2 million cases in
+FY 2019, after steadily increasing from 2.6 million cases in FY 2018 and 2.4 million cases in FY
+2017. With 5,300 3 law enforcement officers across 24 field offices, ERO does not have sufficient
+resources to effectively manage the sustained increase in non-detained cases.
+
+This report presents ERO’s FY 2019 year-end statistics in the following areas: 1) ICE Custody
+and Case Management, 2) ERO Administrative Arrests, 3) ICE Detainers, and 4) ICE Removals.
+
+
+ICE Custody and Case Management
+ERO detains individuals to ensure their presence for immigration proceedings and to secure their
+departure from the United States once they become subject to an executable final order of
+removal. Detention is an important and necessary part of immigration enforcement, and in FY
+2019, 85 percent of those removed by ERO had spent time in ICE detention prior to their
+departure from the country. Because ERO’s limited detention beds account for only a small
+fraction of those who are amenable to removal, the agency’s detention resources are primarily
+focused on individuals who represent a threat to public safety, for whom detention is mandatory
+by law, or who may be a flight risk.
+
+In addition, ERO manages a non-detained docket of more than 3.2 million cases, which includes
+aliens in all stages of the immigration process across the country. During FY 2019, ICE’s
+detained and non-detained dockets both increased significantly, which was overwhelmingly due
+to the historic levels of CBP apprehensions at the Southwest Border.
+
+Initial Book-Ins Resulting from CBP Apprehensions Increased
+Typically, when an alien is apprehended by CBP, he or she is transferred to ICE custody pending
+removal proceedings. An initial book-in to an ICE detention facility is defined as the first time an
+alien enters ICE custody for a detention stay and does not include transfers between facilities. In
+FY 2019, ERO experienced an increase in overall book-ins resulting from CBP activity at the
+border. During this time period, 73 percent of all initial book-ins to ICE custody resulted from
+CBP apprehensions, while overall initial book-ins to ICE custody increased 29 percent compared
+to FY 2018 and 58 percent compared to FY 2017.
+
+
+
+
+2 Non-detained cases consist of active removal cases for aliens not in ICE Custody.
+3 ERO estimates that as of the end of FY 2019, there were approximately 5,300 Deportation Officers in its 24 field offices,
+
+excluding supervisory and headquarters personnel.
+
+                                                                                                                              4
+             Figure 1: FY 2017 – FY 2019 Initial Book-Ins by Arresting Agency
+
+                                              CBP      ICE
+           600,000
+                                                                      510,854
+           500,000
+                                                                      137,084
+                                                396,448                (27%)
+           400,000
+                              323,591
+                                                153,670
+           300,000                               (39%)
+                              139,553
+                               (43%)
+           200,000                                                    373,770
+                                                                       (73%)
+                                                242,778
+           100,000            184,038            (61%)
+                               (57%)
+                 0
+                              FY2017             FY2018               FY2019
+
+
+
+Average Daily Population Resulting from CBP Apprehensions Increased
+ERO’s Average Daily Population (ADP) measures the number of individuals in ICE custody on
+an average day during the fiscal year. ERO’s ADP reached 50,165 in FY 2019, an increase of 19
+percent compared to FY 2018. Like ERO’s initial book-ins, the increase in overall ADP was
+driven by the increased CBP activity at the border, with CBP apprehensions accounting for 60
+percent of those in custody, and ERO administrative arrests in the interior accounting for only 40
+percent.
+
+
+        Figure 2: FY 2018 – FY 2019 Average Daily Population by Arresting Agency
+
+                         FY2018                                FY2019
+                         ICE      CBP                         ICE      CBP
+
+
+
+                                                                          ICE
+                       CBP
+                                                            CBP         20,115
+                     19,219
+                                      ICE                 30,050         (40%)
+                      (46%)
+                                    22,969                 (60%)
+                                     (54%)
+
+
+
+
+                                                                                                 5
+Currently Detained Population Shifted due to CBP Apprehensions
+ERO provides a range of comprehensive services to ensure the welfare of all those in its custody,
+including medical, dental, and mental healthcare, access to legal and educational resources, and
+recreational opportunities. It utilizes a nationwide network of detention facilities, including five
+ICE-owned, contractor operated Service Processing Centers, eight privately owned and/or
+operated Contract Detention Facilities, 12 Intergovernmental Service Agreement (IGSA)
+facilities which are dedicated to detaining ICE detainees, and approximately 200 shared-use
+IGSAs. Through a robust inspections program, the agency ensures detention facilities utilized to
+detain ICE detainees do so in accordance with ICE national detention standards, which are
+typically much more rigorous than those that apply to other detained populations and conform to
+or exceed American Correctional Association guidance.
+
+ICE’s currently detained population represents a small fraction of the overall number of removal
+cases it manages nationwide, and the agency prioritizes its detention resources to focus on public
+safety and national security threats, flight risks, and those who are subject by law to mandatory
+detention. Since many recent border entrants are subject to mandatory detention under the
+Immigration and Nationality Act (INA), increased CBP apprehensions have caused a major shift
+in the composition of the detained population. At the end of FY 2019, 63 percent of the detained
+population was initially apprehended by CBP, an increase from 52 percent at the end of FY 2018
+and 40 percent at the end of FY 2017.
+
+This shift has forced ERO to balance its public safety mission in the interior with support for
+CBP operations at the Southwest Border, and ERO’s corresponding adjustment of resources has
+come at a significant cost to other operational areas. As the detained population has grown, ERO
+officers have had to be redeployed across the country to assist with detained docket
+management. These temporary deployments and reassignments have come at a significant cost to
+ERO’s interior enforcement and public safety efforts.
+
+
+
+
+                                                                                                   6
+Figure 3: End of FY 2019 ICE                        Figure 4: End of FY 2019
+  National Docket Snapshot                             Currently Detained
+                                                     Population Snapshot by
+                                                        Arresting Agency
+  Detained      Non-Detained
+                          50,922
+                                                           ICE         CBP
+
+
+
+                                                                          ICE
+                                                                        18,881
+                                                                         (37%)
+                                                         CBP
+                                                       32,041
+    3,274,244
+                                                        (63%)
+
+
+
+
+   Figure 5: FY 2017- FY 2019 Currently Detained Population Snapshots by
+                             Arresting Agency
+
+
+                                   CBP       ICE
+     60,000
+                                                         50,922
+     50,000
+                                         43,746
+                                                         18,881
+     40,000        37,931
+                                                          (37%)
+                                         21,195
+     30,000                               (48%)
+                   22,724
+                    (60%)
+     20,000
+                                                         32,041
+                                         22,551           (63%)
+     10,000        15,207                 (52%)
+                    (40%)
+         0
+                 End of FY2017      End of FY2018      End of FY2019
+
+
+
+
+                                                                                 7
+Average Length of Stay in ICE Custody Declined
+The average length of stay (ALOS) represents the average amount of time an alien was detained
+while in ICE custody. ICE’s ALOS has been trending downward since FY 2017, which is
+primarily due to changes in the composition of the detained population.
+
+In FY 2019, ICE’s ALOS for its detained population was 34.3 days, which decreased from 39.4
+days in FY 2018 and 43.7 days in FY 2017. The primary drivers for this decrease in ALOS were
+a greater percentage of CBP cases and a smaller percentage of criminal aliens as a result (CBP
+apprehensions typically have shorter stays in detention while criminal cases tend to have longer
+stays), more family unit cases (which are usually booked in and out of custody quickly due to the
+Flores Settlement Agreement (FSA) 4), and the need to prioritize extremely limited detention
+resources (including through the release of aliens not subject to mandatory detention, or who do
+not appear to pose a public safety threat or flight risk).
+
+
+                 Figure 6: FY 2017 – FY 2019 Average Length of Stay in ICE Custody
+                                                     ICE       CBP         Overall
+                 60
+                                                          53.9                           54.5
+                            51
+                 50
+                                           43.7
+                                   38.6                                    39.4
+                 40
+                                                                                                          34.3
+                                                                  29.8
+                 30                                                                              26.6
+
+                 20
+
+                 10
+
+                  0
+                                 FY 2017                         FY 2018                        FY 2019
+
+
+
+Use of Family Residential Centers Decreased
+While CBP apprehensions at the Southwest Border have increased overall in recent years, the
+composition of those apprehended has also changed. DHS and its component agencies have seen
+a significant increase in families and UAC, predominantly from El Salvador, Guatemala, and
+Honduras (collectively known as the Northern Triangle countries), either being apprehended
+along the Southwest Border or who are determined to be inadmissible upon presenting
+themselves at ports of entry. While for many years the majority of those apprehended along the
+4 Based upon a ruling by the U.S. Court of Appeals for the Ninth Circuit that the FSA applies to all alien minors detained in DHS
+
+custody, including accompanied minors, Flores v. Lynch, 828 F.3d 898, 905 (9th Cir. 2016), such alien minors must be released
+or transferred to a “licensed program” “as expeditiously as possible[,]” pursuant to paragraph 12 of the FSA. In the context of
+expedited removal and reinstatement of removal, the U.S. District Court for the Central District of California noted that “if 20
+days is as fast as Defendants, in good faith and in the exercise of due diligence, can possibly go in screening family members for
+reasonable or credible fear” that may fall within the standard. Flores v. Lynch, 212 F. Supp.3d 907, 914 (C.D. Cal. 2015).
+
+                                                                                                                                 8
+Southwest Border were adult males from Mexico, the composition of arrivals has changed
+dramatically. In FY 2019, USBP apprehensions of family units at the Southwest Border
+increased more than 340 percent compared to FY 2018.
+
+In FY 2019, 5 there were over 470,000 USBP apprehensions of members of family units and
+37,906 initial book-ins to ICE’s three Family Residential Centers 6, while ICE directly released
+approximately 200,000 family unit members from its custody7 as a result of the high volume of
+CBP apprehensions during this time period. Due to the humanitarian crisis caused by the record
+number of family unit members arriving at the border, CBP was also forced to conduct direct
+releases of thousands of members of this population who were never turned over to ICE and are
+not represented in ICE’s release data as a result.
+
+Pursuant to the FSA and subsequent court interpretations, pre-final order children accompanied
+by their parents generally cannot be held in immigration detention for more than 20 days. As a
+result, few migrant families spend time in detention and most of those that do are quickly
+released into the interior of the United States where they may wait years for their court cases to
+conclude. As a result, very few members of this population have been removed from the country,
+even after receiving a final order of removal from a Department of Justice Executive Office for
+Immigration Review immigration judge (Figure 15).
+
+
+       Figure 7: FY 2017 – FY 2019 Initial Book-Ins to ICE Family Residential Centers
+                40,000                                                                   37,906
+
+                35,000                                         32,786
+
+                30,000
+                                    26,900
+                25,000
+
+                20,000
+
+                15,000
+
+                10,000
+
+                  5,000
+
+                       -
+                                    FY2017                    FY2018                     FY2019
+
+
+
+
+5 “Southwest Border Migration 2019,” https://www.cbp.gov/newsroom/stats/sw-border-migration/fy-2019.
+6 ICE Family Residential Centers include Berks County Family Shelter, Karnes County Residential Center, and South Texas
+
+Family Residential Center.
+7 ICE began manually tracking the number of family unit members released from its custody on December 21, 2018. Between
+
+December 2018 and September 30, 2019, ICE released approximately 200,000 family unit members across its four Field Offices
+covering the Southwest Border. Most of these aliens were apprehended by the USBP, subsequently transferred to ICE custody,
+and released into the interior of the country shortly thereafter.
+
+                                                                                                                          9
+ICE’s Non-Detained National Docket Continued to Grow
+ERO manages active removal cases via the ICE National Docket. The national docket includes
+all aliens in removal proceedings and encompasses both the smaller detained docket and the
+much larger non-detained docket. Cases on the non-detained docket include aliens who are both
+pre- and post-final order, and who have been released on parole, bond, an order of recognizance,
+an order of supervision, or who are from countries where ERO is in the process of obtaining the
+necessary travel documents for repatriation. 8
+
+In FY 2019, the number of aliens on ICE’s non-detained docket continued to increase, surpassing
+3.2 million cases for the first time, up from 2.6 million cases at the end of FY 2018 and 2.4
+million at the end of FY 2017. Like other increases in agency statistics this fiscal year, Southwest
+Border activity – including more than 470,000 USBP apprehensions of family units – accounted
+for nearly all of the growth on the non-detained docket.
+
+As the ICE National Docket has continued to grow over the last several years, the number of
+fugitive aliens 9 on the non-detained docket has continued to grow as well. At the end of FY
+2019, the number of fugitives stood at 595,430, an increase from 565,892 in FY 2018 and
+540,836 in FY 2017. The continued growth of the fugitive backlog is a direct result of the
+pressures placed on the immigration system by the crisis at the Southwest Border, as well as the
+fact that ICE’s Fugitive Operations resources have remained static for many years in the absence
+of additional appropriations.
+
+
+                Figure 8: Non-Detained National Docket Cases at End of Fiscal Year
+
+                3,500,000                                                                    3,274,244
+
+                3,000,000
+                                                                 2,641,589
+                2,500,000
+                                      2,404,323
+
+                2,000,000
+
+                1,500,000
+
+                1,000,000
+
+                   500,000
+
+                           0
+                                     End of FY2017              End of FY2018              End of FY2019
+
+
+
+8 While most countries cooperate with ICE’s requests to issue travel documents to their citizens who have been ordered removed
+
+by an immigration judge, a small number of countries fail to honor such requests or take a longer time to do so, which adds to
+removal timelines and results in aliens from these countries spending more time on the non-detained docket (and for those who
+are on the detained docket, more time in detention).
+9 An ICE fugitive is defined as an alien who has failed to leave the United States based upon a final order of removal, deportation
+
+or exclusion, or who has failed to report to ICE after receiving notice to do so.
+
+                                                                                                                                10
+Alternatives to Detention Expanded
+ICE’s Alternatives to Detention (ATD) program uses technology and case management to
+monitor aliens’ court appearances and compliance with release conditions while their removal
+proceedings are pending on the non-detained immigration court docket. ATD is not a substitute
+for detention, but instead complements immigration enforcement efforts by offering increased
+supervision for a small subset of eligible aliens who are not currently in ICE detention.
+
+ATD may serve as an appropriate additional layer of supervision for an alien who is released
+from detention pursuant to an Order of Recognizance, an Order of Supervision (for aliens
+already subject to final removal orders), a grant of parole, or a bond. Adults age 18 and over may
+be eligible for participation in ATD but must be thoroughly vetted by ERO officers, who review
+an alien’s criminal, immigration, and supervision history, family and/or community ties, status as
+a caregiver or provider, and humanitarian or medical considerations when making enrollment
+determinations in order to determine whether a candidate is likely to comply with the terms of
+the program.
+
+While ERO has expanded its use of ATD from approximately 23,000 participants in FY 2014 to
+96,000 as of the end of FY 2019, this expansion has come with a number of challenges,
+including high levels of absconders among recently enrolled family units. In FY 2019, the
+absconder rate 10 for family units was 26.9 percent, more than double the 12.3 percent absconder
+rate for non-family unit participants, demonstrating the growing challenges such enrollments
+create for immigration enforcement.
+
+Thus, while ATD can complement other immigration enforcement efforts when used
+appropriately on a vetted and monitored population of participants, the program was not
+designed to facilitate ERO’s mission of removing aliens with final orders. Additionally, ERO
+lacks sufficient resources to keep all current participants enrolled through the pendency of their
+proceedings, or to locate and arrest the significant number of participants who abscond, problems
+which will only be exacerbated by enrolling greater numbers of participants without the addition
+of enforcement resources. While ERO has continued to expand the use of ATD to monitor the
+non-detained population in FY 2019, the program will need to be further resourced in order to
+appropriately monitor participants, including through the addition of officers who can locate,
+arrest, and remove those who fail to adhere to conditions of enrollment. Finally, while additional
+resources would improve the efficacy of ATD at current levels of enrollment, ERO notes that the
+program is not a viable solution for addressing the magnitude of cases on the non-detained
+docket, which surpassed 3.2 million in FY 2019.
+
+
+ERO Administrative Arrests
+ERO primarily arrests aliens for civil violations of U.S. immigration law. In furtherance of this
+mission, it conducts enforcement actions based on intelligence-driven leads in communities
+
+
+10 Absconder Rate = Count of Absconders/Count of Overall Terminations. ICE calculates the percentage of absconders by
+
+looking at the overall number of aliens who concluded the ATD program in a given time period (“overall terminations”), and the
+number of those terminations which occurred due to a participant absconding.
+
+                                                                                                                           11
+nationwide (at-large arrests) and works with jails to identify aliens who are amenable to removal
+and who have been arrested by state or local authorities for criminal activity (custodial arrests).
+
+In FY 2019, ERO’s overall administrative arrests decreased by 10 percent over the last fiscal
+year, while administrative arrests of convicted criminals decreased by 12 percent, and at-large
+arrests decreased by 12 percent. As with other enforcement activity in FY 2019, this was
+significantly impacted by the reallocation of resources in response to the crisis at the border.
+These resources included approximately 350 ERO officers who were reassigned in support of
+Southwest Border operations. Thus, while ERO continues to conduct enforcement in the interior
+of the United States, in light of its limited resources and the sheer volume of aliens attempting to
+enter the country, the agency has had to balance its support for border security with its interior
+public safety mission.
+
+Administrative Arrests Declined but Focused on Criminals
+While ERO administrative arrests, including arrests of criminals, have declined overall since FY
+2018, ICE remains committed to directing its enforcement resources to those aliens posing the
+greatest risk to the safety and security of the United States. As a result, the majority of aliens
+arrested by ERO are convicted criminals, followed by those with pending criminal charges at the
+time of arrest. In FY 2019, 86 percent of ERO’s administrative arrests consisted of aliens with
+criminal convictions or pending criminal charges. 11
+
+ERO continues to carry out its public safety mission with limited resources, and as a result, many
+of the criminal aliens it arrests have extensive criminal histories with multiple convictions or
+pending charges. Of the 123,128 ERO administrative arrests in FY 2019 with criminal
+convictions or pending criminal charges, the criminal history for this group represented 489,063
+total criminal convictions and pending charges as of the date of arrest, which equates to an
+average of four criminal arrests/convictions per alien, highlighting the recidivist nature of the
+aliens that ICE arrests.
+
+
+
+
+11 ICE defines immigration violators’ criminality in the following manner: Convicted Criminal: Immigration Violators with a
+
+criminal conviction entered into ICE systems of record at the time of the enforcement action; Pending Criminal Charges:
+Immigration Violators with pending criminal charges entered into ICE system of record at the time of the enforcement action;
+Other Immigration Violators: Immigration Violators without any known criminal convictions, or pending charges entered into ICE
+system of record at the time of the enforcement action.
+
+                                                                                                                         12
+  Figure 9: FY 2017 – FY 2019 ERO Administrative Arrests by Criminality
+      Convicted Criminal     Pending Criminal Charges   Other Immigration Violator
+
+    200,000
+
+                                           158,581
+    150,000         143,470                                      143,099
+                                            20,464
+                     15,478                                       19,971
+                     22,256                 32,977
+                                                                  31,020
+    100,000
+
+
+
+     50,000         105,736                105,140
+                                                                  92,108
+
+
+
+            -
+                    FY2017                  FY2018               FY2019
+
+
+
+
+Figure 10: FY 2017 – FY 2019 At-Large Administrative Arrests by Criminality
+
+      Convicted Criminal     Pending Criminal Charges   Other Immigration Violator
+
+    50,000
+
+                   40,066                  40,536
+    40,000                                                       35,666
+                    8,824                  10,987
+    30,000                                                        10,245
+                    4,776
+                                            6,425
+                                                                  5,648
+    20,000
+
+                    26,466
+                                           23,124
+    10,000                                                        19,773
+
+
+        -
+                   FY2017                  FY2018                FY2019
+
+
+
+
+                                                                                     13
+Table 1: FY 2017 – FY 2019 ERO Administrative Arrests of Other Immigration Violators 12
+
+       ERO Administrative                            FY2017                       FY2018                       FY2019
+          Arrest Type                         Arrests     Percentage       Arrests     Percentage       Arrests      Percentage
+   Other Immigration Violators                15,478         100%          20,464         100%          19,971         100%
+  Notice to Appear                              7,642         49%          11,570          57%           11,272         56%
+  Fugitives                                     2,350         15%           2,791          14%            2,560         13%
+  Reinstatement                                 1,695         11%           1,846          9%             1,981         10%
+  Other                                         3,791         24%           4,257          21%            4,158         21%
+
+
+
+Table 2: FY 2019 Criminal Charges and Convictions for ERO Administrative Arrests 13, 14
+
+                                                                                  Criminal Criminal   Total
+                     Criminal Charge Category
+                                                                                   Charge Conviction Offenses
+ Traffic Offenses - DUI                                                                25,417             49,106         74,523
+ Traffic Offenses                                                                      28,519             39,717         68,236
+ Dangerous Drugs                                                                       20,277             47,453         67,730
+ Immigration                                                                           10,769             46,888         57,657
+ Assault                                                                               19,648             26,156         45,804
+ Obstructing Judiciary, Congress, Legislature, Etc.                                    10,442             10,287         20,729
+ General Crimes                                                                         8,114              9,891         18,005
+ Larceny                                                                                4,599             12,456         17,055
+ Obstructing the Police                                                                 5,641              8,776         14,417
+ Fraudulent Activities                                                                  4,145              7,875         12,020
+ Burglary                                                                               2,565              7,757         10,322
+ Weapon Offenses                                                                        3,281              6,997         10,278
+ Public Peace                                                                           3,605              5,838          9,443
+ Sex Offenses (Not Involving Assault or Commercialized Sex)                             1,992              4,658          6,650
+ Invasion of Privacy                                                                    2,078              4,233          6,311
+ Family Offenses                                                                        2,296              3,139          5,435
+ Stolen Vehicle                                                                         1,568              3,686          5,254
+ Sexual Assault                                                                         1,654              3,407          5,061
+ Robbery                                                                                1,155              3,581          4,736
+ Forgery                                                                                1,549              2,979          4,528
+ Damage Property                                                                        1,653              2,245          3,898
+
+12 “Other” types of arrests of Other Immigration Violators include, but are not limited to, arrests for Expedited Removal, Visa
+
+Waiver Program Removal, Administrative Removal, and Voluntary Departure/Removal.
+13 The specific criminal charges and convictions represent the criminal history as entered in the ICE system of record based on
+
+the FBI’s National Crime Information Center (NCIC) offense codes. Each alien may have multiple criminal convictions or
+charges at the time of their administrative arrest, and Table 2 lists categories which accounted for at least 1,000 combined charges
+and convictions among those who were administratively arrested by ERO in FY 2019.
+14 Notes: “Traffic Offenses” include (besides Traffic Offenses – DUI which is listed separately) Hit and Run, Transport
+
+Dangerous Material, and Traffic Offense (describe offense). “Immigration” offenses include Illegal Entry, Illegal Reentry, False
+Claim to U.S. Citizenship, and Alien Smuggling. “Obstructing Judiciary, Congress, Legislature, Etc.,” refers to several related
+offenses including, but not limited to: Perjury; Contempt; Obstructing Justice; Misconduct; Parole and Probation Violations; and
+Failure to Appear. “General Crimes” include Conspiracy, Crimes Against Person, Licensing Violation, Money Laundering,
+Morals - Decency Crimes, Property Crimes, Public Order Crimes, Racketeer Influenced and Corrupt Organizations Act (RICO),
+and Structuring.
+
+                                                                                                                                  14
+                                                             Criminal Criminal   Total
+               Criminal Charge Category
+                                                              Charge Conviction Offenses
+ Liquor                                                           1,991         1,799       3,790
+ Stolen Property                                                  1,181         2,562       3,743
+ Flight / Escape                                                  1,171         2,012       3,183
+ Homicide                                                           374         1,549       1,923
+ Kidnapping                                                         723         1,110       1,833
+ Health / Safety                                                    481         1,012       1,493
+ Commercialized Sexual Offenses                                     605           743       1,348
+ Threat                                                             534           658       1,192
+
+
+ERO Continued to Pursue Criminal Arrests and Prosecutions
+ICE is committed to protecting the safety and security of the homeland and adhering to the
+President’s June 20, 2018 Executive Order 13841, Affording Congress the Opportunity to
+Address Family Separation, which directs the Executive Branch to continue to rigorously
+enforce immigration laws and to prosecute illegal border entrants. When compared to FY 2018,
+ERO notes a slight drop in overall criminal arrests, which aligns with the 10 percent decrease in
+administrative arrests as well as other decreases in enforcement activity during the year.
+However, enforcement efforts still resulted in a significant number of criminal arrests and
+prosecutions.
+
+In FY 2019, ERO enforcement activities resulted in 6,739 criminal arrests (10 percent drop from
+FY 2018), 6,802 Indictments/Bills of Information (a seven percent drop from FY 2018), and
+7,142 Convictions (a less than one percent drop from FY 2018). These efforts resulted in the
+prosecutions of offenses which include, but are not limited to: 8 U.S.C. § 1253, Penalties Related
+to Removal, U.S.C § 1325, Illegal Entry into the United States; 8 U.S.C § 1326, Illegal Re-Entry
+of Removed Alien; 18 U.S.C. § 1361, Destruction of Government Property, 18 U.S.C § 1546,
+Fraud and Misuse of Visas, Permits and Other Documents; 18 U.S.C § 111, Assaulting and/or
+Resisting an Officer; and 18 U.S.C § 922(g)(5), Felon in Possession of a Firearm.
+
+
+
+
+                                                                                                15
+                            Figure 11: FY 2017 – FY 2019 Prosecution Statistics
+
+                                              FY2017         FY2018           FY2019
+                 8,000                7,449                       7,326                       7,197 7,142
+                                              6,739                       6,802
+                 7,000
+                              5,790
+                 6,000
+
+                 5,000
+                                                          4,212
+                 4,000                                                                3,445
+
+                 3,000
+
+                 2,000
+
+                 1,000
+
+                      0
+                                Criminal Arrest           Indictments/Bills of             Convictions
+                                                              Information
+
+
+
+
+ICE Detainers
+A detainer is a request from ICE to local law enforcement agencies to notify DHS as early as
+practicable before a removable alien is released from local custody. Detainers request that local
+law enforcement agencies maintain custody of the alien for a period not to exceed 48 hours
+beyond the time the alien would otherwise be released, to allow DHS to assume custody for
+removal purposes in accordance with federal law. ICE also serves a warrant of removal or
+warrant of arrest at the time the detainer is lodged with the receiving law enforcement agency in
+accordance with existing legal requirements 15 and a formal ICE policy directive issued in 2017. 16
+
+Detainers reduce potential risks to ERO officers and the general public by allowing arrests to be
+made in secure custodial settings as opposed to at-large in communities, conserve scarce
+government resources, and allow ERO to assume custody of criminal aliens before they have an
+opportunity to reoffend. In FY 2019, ERO issued 165,487 detainers; the aliens who were the
+subjects of these detainers had criminal histories 17 including, but not limited to, the following
+crimes: more than 56,000 assaults, 14,500 sex crimes, 5,000 robberies, 2,500 homicides, and
+2,500 kidnappings.
+
+
+
+15 Federal law vests authority in immigration officers – rather than federal judges – to issue warrants for violations of civil
+
+immigration law provisions. See INA § 287, 8 U.S.C. § 1357. As a result, no judge in the United States has the authority to issue
+a warrant for a civil immigration violation.
+16 ICE Policy Directive No. 10074.2, Issuance of Detainers by ICE Immigration Officers (Mar. 24, 2017), available at:
+
+https://www.ice.gov/sites/default/files/documents/Document/2017/10074-2.pdf.
+17 “Criminal history” includes all criminal convictions and pending charges associated with the group of aliens who were the
+
+subjects of detainers in FY 2019. Criminal charges may be added or dropped at any point and convictions may be overturned, so
+this data is a snapshot in time but is representative of the serious criminal histories and corresponding public safety risk
+associated with this group of individuals.
+
+                                                                                                                              16
+Detainers are one of the most critical public safety tools ERO officers have at their disposal.
+However, in recent years, the agency has experienced an increase in the number of jurisdictions
+that do not cooperate with its enforcement efforts or who do not honor detainers. While ERO has
+limited visibility into whether a detainer has been honored unless an alien is subsequently
+rearrested, a number of aliens who have been released under these circumstances have gone on to
+commit additional crimes that could have been prevented if ERO had been able to assume
+custody in accordance with federal immigration laws. As a result, ICE uses its unique law
+enforcement authorities to help prevent such crimes from occurring, and continues to seek ways
+to maintain and strengthen its state and local partnerships nationwide in furtherance of its
+national security and public safety mission.
+
+ICE detainers issued in FY 2019 decreased slightly (by seven percent) from those issued in FY
+2018. Like other decreases in interior enforcement activity, this was impacted by the diversion of
+resources to the Southwest Border as well as limited detention space. However, ICE has also
+experienced an increase in the number of jurisdictions that do not cooperate with its enforcement
+efforts nationwide, and estimates that limited visibility into the actions of state and local law
+enforcement in non-cooperating jurisdictions has also impacted the number of detainers issued.
+
+
+                      Figure 12: FY 2017 – FY 2019 ICE Detainers Issued
+            200,000
+                                                 177,147
+                                                                      165,487
+
+            150,000         142,356
+
+
+
+            100,000
+
+
+
+
+             50,000
+
+
+
+
+                  0
+                            FY2017               FY2018                FY2019
+
+
+
+
+One of the biggest impediments to ERO’s public safety efforts during FY 2019 was the lack of
+cooperation from an increasing number of jurisdictions nationwide. However, in keeping with its
+goal to build cooperative, respective relationships with law enforcement partners and guarantee
+public safety, ICE continued to collaborate with its law enforcement partners to help ensure – to
+the greatest extent possible – that removable aliens who may pose a safety threat are not released
+into the community. In furtherance of this mission, ERO has continued to operate its 287(g) Jail
+
+
+
+
+                                                                                               17
+Enforcement Model (JEM) Program, 18 a valuable force multiplier which enhances community
+safety by allowing ICE to partner with state and local law enforcement agencies to identify and
+remove criminal aliens and immigration law violators before they are released. At end of FY
+2019, ICE had 77 signed and operational Memorandums of Agreement (MOAs) nationwide.
+
+Additionally, ICE launched the 287(g) Warrant Service Officer (WSO) Program in May 2019 to
+provide an opportunity for jurisdictions that seek to cooperate with enforcement efforts but who
+are precluded from honoring ICE detainers as a matter of local policy or state law. While WSO
+officers can serve and execute administrative warrants on designated aliens in their jails under
+the terms of the MOA, unlike the traditional 287(g) JEM Program, WSO officers do not
+interview individuals regarding alienage and removability, and do not process aliens who are in
+the United States in violation of immigration law. By the end of FY 2019, approximately 40
+jurisdictions had expressed interest, with 42 subsequently signing MOAs with ICE during the
+first month of FY 2020. ICE is currently pursuing additional agreements nationwide.
+
+
+ICE Removals
+An ICE removal is the compulsory and confirmed movement of an inadmissible or deportable
+alien out of the United States. 19 ICE removals include both aliens arrested by ERO in the interior
+of the country and aliens who were apprehended by CBP and turned over to ERO for removal
+efforts. While ICE’s overall removals increased slightly from FY 2018 to FY 2019, the portion
+of removals resulting from CBP apprehensions increased significantly during this time period.
+
+Detention remains a necessary tool for facilitating the repatriation of those who have received a
+final order of removal, and 85 percent of those removed by ICE in FY 2019 had spent time in
+ICE detention prior to repatriation to their home country. In FY 2019, there were 226,400
+removals with detention involved, a slight increase from 209,928 such removals in FY 2018,
+demonstrating the continued importance of detention for the removal process.
+
+
+
+
+18 Section 287(g) of the INA authorizes ICE to delegate the limited authority to state and local law enforcement officers to
+
+enforce federal immigration law under a signed memorandum of agreement.
+19 ICE removals include removals and returns where aliens were turned over to ICE for removal efforts. This includes aliens who
+
+have received a final order of removal, as well as those who have been processed for Expedited Removal (ER) or Voluntary
+Return (VR) that are turned over to ICE for detention. Aliens processed for ER and not detained by ERO or VRs after June 1st,
+2013 and not detained by ICE are primarily processed by the USBP. CBP should be contacted for those statistics.
+
+                                                                                                                               18
+                         Figure 13: FY 2017 – FY 2019 ICE Removals
+
+            300,000
+                                                                    267,258
+                                                256,085
+            250,000
+                            226,119
+
+            200,000
+
+
+            150,000
+
+
+            100,000
+
+
+             50,000
+
+
+                     -
+                             FY2017             FY2018              FY2019
+
+
+
+Removals with CBP as the Arresting Agency Increased
+During FY 2019, a much greater percentage of ICE’s removals stemmed from an initial
+apprehension by CBP (68 percent) rather than an arrest by ICE (32 percent). In comparison,
+during FY 2018, removals stemming from a CBP apprehension accounted for 63 percent and
+removals stemming from an ICE arrest accounted for 37 percent. This is consistent with other
+shifts in ICE workload resulting from the crisis at the Southwest Border during FY 2019.
+
+
+             Figure 14: FY 2017 – FY 2019 ICE Removals by Arresting Agency
+
+                                         CBP        ICE
+           300,000
+                                                                    267,258
+                                                256,085
+           250,000         226,119
+                                                                     85,958
+                                                95,360                32%
+           200,000          81,603               37%
+                             36%
+           150,000
+
+
+           100,000                                                  181,300
+                                                160,725              68%
+                            144,516
+                                                 63%
+                             64%
+             50,000
+
+
+                 -
+                            FY2017              FY2018               FY2019
+
+
+
+
+                                                                                               19
+Removals of USBP-Identified Family Unit and Unaccompanied Alien Children Apprehensions
+Continued to Increase
+Since the initial surge at the Southwest Border in FY 2014, there has been a continued increase in
+the arrival of both family units and UAC. In FY 2019, there were approximately 76,000 UAC and
+470,000 family unit members apprehended by USBP at the Southwest Border, a 52 percent increase
+for UAC and a 341 percent increase for family unit members from the previous fiscal year.
+
+While USBP routinely turns apprehended family unit members over to ERO for removal
+proceedings, judicial interpretations of the FSA and other adverse court rulings impose practical
+limitations on ICE’s ability to detain family units through the completion of removal
+proceedings, making removal of members of this population extremely challenging. At the peak
+of CBP’s apprehensions in May 2019, the USBP apprehended nearly 85,000 family units in a
+single month, 20 forcing both CBP and ICE to directly release members of this population into the
+United States.
+
+DHS is responsible for transferring apprehended UAC to the custody to the Department of
+Health and Human Services (HHS) within 72 hours, absent exceptional circumstances, and the
+agency’s primary role consists of transporting UAC from CBP to HHS custody. Like DHS, HHS
+is similarly limited in their ability to detain this population through the pendency of removal
+proceedings, so few UAC are ultimately removed.
+
+In FY 2019, ERO conducted a number of targeted enforcement efforts in the interior of the
+country, including Operation Border Resolve, in order to uphold the integrity of the U.S.
+immigration system by locating, arresting, and removing members of the family unit and UAC
+populations with final orders of removal. As a result, during the fiscal year ERO removed 5,702
+aliens identified as family unit members based on USBP apprehension data from the initial surge
+in FY 2014 through the end of FY 2019, as well as 6,351 UAC. 21 While this represents a 110
+percent increase in removals of family unit members and a 14 percent increase in removals of
+UAC from FY 2018 to FY 2019, it remains a small fraction of overall apprehensions for these
+populations.
+
+During FY 2017, FY 2018, and FY 2019 as a whole, the USBP apprehended 656,516 family unit
+members and 167,491 UAC, while in the same time period, ICE removed 10,739 family unit
+members and 15,520 UAC – a 1.6 percent and 9.2 percent removal rate, respectively. 22 These
+low removals of family unit members and UAC are a result of the significant challenges ICE
+faces when enforcing final orders issued for members of these populations. In addition to the
+sheer volume of arrivals and limited government resources, a growing immigration court case
+backlog, high numbers of absconders among family units, and judicial and legislative
+
+
+
+
+20 “Southwest Border Migration 2019,” https://www.cbp.gov/newsroom/stats/sw-border-migration/fy-2019.
+21 ICE notes that this analysis is based on cross-referencing data with another agency, and that these figures are accurate to the
+
+best of its knowledge based on currently available information.
+22 ICE removals of family unit members and UAC include all those identified as members of these populations by the USBP;
+
+some of the removals that occurred during the past three years may correspond to aliens who were apprehended prior to this time
+period.
+
+                                                                                                                               20
+constraints 23 also contribute to extremely low numbers of removals and corresponding strain
+across the U.S. immigration system.
+
+
+       Figure 15: FY 2017 – FY 2019 ICE Removals of USBP-Identified Family Unit
+   Apprehensions (FMUA) and USBP-Identified Unaccompanied Children Apprehensions
+                                        (UAC)
+                                                        FMUA           UAC
+               7,000
+                                                                                                 6,351
+               6,000                                                 5,571             5,702
+
+               5,000
+
+               4,000                     3,598
+
+               3,000                                       2,711
+                               2,326
+               2,000
+
+               1,000
+
+                    -
+                                   FY2017                      FY2018                      FY2019
+
+
+
+
+Removals of Criminals Remained a Priority
+ICE remains committed to directing its enforcement resources to those aliens posing the greatest
+risk to the safety and security of the United States. Despite shifts in the composition of the
+detained population, including an increase in removals of “other immigration violators” resulting
+from CBP apprehensions, ICE removals of aliens with criminal convictions and pending criminal
+charges continued to increase in FY 2019.
+
+Interior removals are those initially arrested by ICE who were subsequently removed by ERO. In
+FY 2019, the overwhelming majority (91 percent) had criminal convictions or pending criminal
+charges at the time of arrest, demonstrating ICE’s continued efforts to prioritize public safety in
+the interior despite resource constraints.
+
+
+
+
+23 By creating barriers to the removal of minors and family unit members, the FSA and the Trafficking Victims Protection
+
+Reauthorization Act in its current form are exploited by transnational criminal organizations and human smugglers, and create
+legal loopholes that incentivize a high volume of illegal immigration among family units and UAC.
+
+                                                                                                                                21
+                Figure 16: FY 2017 – FY 2019 ICE Removals by Criminality
+
+             Convicted Criminal   Pending Criminal Charges   Other Immigration Violator
+           300,000
+                                                                     267,258
+                                                256,085
+           250,000         226,119
+                                                 88,027               93,459
+           200,000
+                            82,046
+                                                 22,796               23,658
+           150,000
+                            16,374
+
+           100,000
+                                                 145,262              150,141
+                           127,699
+            50,000
+
+                 -
+                           FY2017                FY2018               FY2019
+
+
+           Figure 17: FY 2017 – FY 2019 ICE Interior Removals by Criminality
+
+             Convicted Criminal   Pending Criminal Charges   Other Immigration Violator
+
+            100,000                              95,360
+                                                  8,619               85,958
+                            81,603
+             80,000                              14,114                7,469
+                             5,833
+                             7,911                                     13,498
+
+             60,000
+
+
+             40,000
+                            67,859               72,627
+                                                                       64,991
+
+             20,000
+
+
+                 -
+                            FY2017               FY2018               FY2019
+
+
+
+ICE removals of known or suspected gang members and known or suspected terrorists (KSTs)
+are instrumental to ICE’s national security and public safety mission. ICE identifies gang
+members and KSTs by checking an alien’s background in federal law enforcement databases,
+conducting interviews with aliens, and reviewing information received from its law enforcement
+partners, which is flagged accordingly in ERO’s system of record. In FY 2019, ICE removed
+5,497 known or suspected gang members, a slight decrease from FY 2018 that aligns with other
+decreases in interior enforcement. However, ICE’s KST removals increased from 42 to 58.
+
+
+
+
+                                                                                            22
+         Figure 18: FY 2017 – FY                                Figure 19: FY 2017 – FY
+          2019 ICE Removals of                                   2019 ICE Removals of
+        Known or Suspected Gang                                   Known or Suspected
+                Members                                                Terrorists
+7,000                                                      70
+                    5,872                                                               58
+6,000                         5,497                        60
+           5,396
+
+5,000                                                      50       45
+                                                                              42
+4,000                                                      40
+
+3,000                                                      30
+
+2,000                                                      20
+
+1,000                                                      10
+
+   -                                                        -
+          FY2017    FY2018    FY2019                              FY2017    FY2018    FY2019
+
+
+
+Examples of KSTs and suspected gang members removed by ERO in FY 2019 include the
+following:
+
+   •    Ali Caby, aka “Alex Caby”, a 41-year-old Iranian national, was removed to Bulgaria on
+        March 21, 2019. Caby ran the Bulgaria office of AW-Tronics, a Miami export company
+        that shipped and exported various aircraft parts and equipment to Syrian Arab Airlines.
+        Ali Caby supervised and encouraged subordinate employees of AW-Tronics in the willful
+        exportation of the parts and equipment to SDN Syrian Air, whose activities have assisted
+        the Syrian government’s violent crackdown on its people. Syrian Air is an OFAC-
+        designated entity for transporting weapons and ammunition to Syria in conjunction with
+        Hizballah, a terrorist organization, and the Iranian Revolutionary Guard Corps.
+
+        On December 19, 2017, Caby was convicted in U.S. District Court for the Southern
+        District of Florida of conspiracy to violate the International Emergency Economic
+        Powers Act for illegally exporting aviation parts and equipment to Syria without
+        obtaining a license or authorization, following an investigation by ICE Homeland
+        Security Investigations (HSI), the Federal Bureau of Investigation (FBI), the Department
+        of Commerce, the Defense Criminal Investigative Service, CBP, and the South Florida
+        Joint Terrorism Task Force, and sentenced to 24 months in prison, followed by two years
+        of supervised release. On Jan. 15, 2019, an immigration judge ordered Caby removed
+
+
+
+
+                                                                                               23
+         from the United States to Bulgaria, where Caby had legal permanent residency, or Iran as
+         an alternative, and ERO subsequently removed him from the country. 24
+
+    •    Carlos Alfredo Luna-Guebara, a 26-year-old national of El Salvador, was removed to
+         El Salvador on May 15, 2019. Luna-Guebara was a wanted fugitive in his native country
+         for aggravated homicide, conspiracy to commit homicide, and terrorist organization
+         membership, and Salvadoran officials indicated to ERO that he is a documented active
+         member of the 18th Street criminal gang.
+
+         Luna-Guebara previously entered the United States on an unknown date and at an
+         unknown location without admission or parole by an immigration officer, and was
+         subsequently arrested on local charges in Pennsylvania. He was ordered removed by an
+         immigration judge on April 8, 2019, and ERO subsequently removed him from the
+         country and turned him over to Salvadoran officials without incident. 25
+
+    •    Yassin Muhiddin Aref, a 38-year-old Iraqi national, was removed to Iraq on June 10,
+         2019. In the summer of 2003, the FBI began investigating Aref after they received
+         information indicating he had possible ties to terrorist organizations. His name and
+         telephone number were found in three different suspected Ansar-al-Islam camps in Iraq,
+         and telephone records for his telephone in Albany, New York, reflected 14 calls to the
+         Syrian office of the Islamic Movement in Kurdistan. The FBI subsequently arrested him
+         for conspiring to conceal the proceeds of the sale of a surface-to-air-missile he believed
+         was unlawfully imported into the United States, knowing it would be sold to foreign
+         terrorist group Jaish-E-Mohammed.
+
+         On March 8, 2007, Aref was convicted in U.S. District Court for the Northern District of
+         New York and sentenced to 180 months imprisonment on seven counts relating to
+         material support of terrorism and weapons of mass destruction, including conspiracy to
+         use, attempt to use, or conspire to use, a weapon of mass destruction against any person
+         within the United States, in violation of 18 USC § 2339A; and conspiracy to provide
+         material support and resources to a Foreign Terrorist Organization, in violation of 18
+         USC § 2239B. He was ordered removed by an immigration judge on October 9, 2018,
+         and ERO subsequently removed him from the country. 26
+
+    •    Houcine Ghoul, a 45-year-old Tunisian national, was removed to Tunisia on June 19,
+         2019. Ghoul previously entered the United States on a tourist visa in 2001, overstayed his
+         visa, and subsequently obtained status as a legal permanent resident through a sham
+         marriage to a U.S. citizen, who he later divorced.
+
+         The investigation into Ghoul’s conduct began in April 2014 when Ghoul posted a photo
+         online that explicitly displayed support for the Islamic State of Iraq and al-Sham (ISIS), a
+
+24 “ICE removes Iranian man convicted of violating the International Emergency Economic Powers Act,”
+
+https://www.ice.gov/news/releases/ice-removes-iranian-man-convicted-violating-international-emergency-economic-powers.
+25 “ICE removes Mara 18th Street Gang member to El Salvador,” https://www.ice.gov/news/releases/ice-removes-mara-18th-
+
+street-gang-member-el-salvador.
+26 “ICE removes Iraqi man convicted of terrorism related charges,” https://www.ice.gov/news/releases/ice-removes-iraqi-man-
+
+convicted-terrorism-related-charges.
+
+                                                                                                                              24
+          designated foreign terrorist organization. This photo displayed an individual holding a
+          sign with the Arabic phrase, “The victory of the Islamic State in Iraq and Syria,” and then
+          below in English, “ISIS,” and “N. Carolina, USA,” the state where Ghoul was then
+          residing. The photo later appeared in an online propaganda video posted by others to
+          display worldwide support for ISIS, along with a self-description within the account,
+          describing Ghoul as “Extremist, terrorist, tough, brain-washed, radical, I love explosions,
+          booby trapping, beheading the enemy, and am among the supporters of establishing the
+          religion with the sword.”
+
+          In August 2018, Ghoul was sentenced to 24 months in prison, followed by deportation,
+          for attempted unlawful procurement of naturalization and making false statements on his
+          tax return, following an investigation conducted by ICE HSI, the FBI and the Internal
+          Revenue Service. ERO lodged a detainer on Ghoul, and upon his release from Bureau of
+          Prisons custody, removed him from the country. 27
+
+
+Conclusion
+As the agency primarily responsible for immigration enforcement efforts in the interior of the
+United States, ICE plays a critical role in the national security and public safety of this country
+by upholding America’s immigration laws as set by Congress. During FY 2019, ICE operations
+were significantly impacted by the surge at the Southwest Border, including extremely high
+numbers of aliens turned over from CBP to ERO for detention and removal, many of them
+subject to mandatory detention, and record numbers of family units and UAC – the vast majority
+of whom remain on ICE’s continually growing non-detained docket of more than 3.2 million
+cases. This high volume of migration, including unprecedented numbers of family unit and UAC
+arrivals, stretched both ERO resources and those of the entire U.S. government to the breaking
+point, and created a severe humanitarian crisis and border security crisis that continues to cripple
+the immigration system.
+
+In FY 2019, record migration at the Southwest Border took up limited ICE detention resources,
+drove increases in the agency’s ADP and decreases in its interior arrests (including arrests of
+criminals), and forced ICE to balance its critical public safety mission in the interior with its
+support for DHS efforts to secure the border. While CBP apprehensions decreased somewhat
+toward the end of FY 2019 from their peak during the months of May, June, and July, sustained
+high levels of migration over the course of several years have severely taxed ERO’s ability to
+execute key aspects of its mission. ICE projects that until fundamental changes are made to the
+immigration enforcement process – including legislation that addresses current legal loopholes
+that incentivize high levels of illegal migration – the crisis situation at the border will continue,
+and the hundreds of thousands of cases that began during FY 2019 will continue to impact the
+entire immigration system for many years to come.
+
+
+
+
+27 “Tunisian national with terrorist ties removed from US,” https://www.ice.gov/news/releases/tunisian-national-terrorist-ties-
+
+removed-us.
+
+
+                                                                                                                                  25
+Appendix
+Appendix A: Methodology
+
+
+Data Source:
+Data used to report ICE statistics are obtained through the ICE Integrated Decision Support
+(IIDS) system data warehouse.
+
+
+Data Run Dates:
+FY2019: IIDS v.1.3.4 run date 10/06/2019; ENFORCE Integrated Database (EID) as of
+10/04/2019
+FY2018: IIDS v.1.34 run date 10/08/2018; ENFORCE Integrated Database (EID) as of
+10/06/2018
+FY2017: IIDS v.1.28 run date 10/09/2017; ENFORCE Integrated Database (EID) as of
+10/07/2017
+
+
+Removals
+ICE Removals include removals and returns initiated by ICE and those initiated by other
+agencies in which aliens were turned over to ERO for repatriation efforts. Returns include
+Voluntary Returns, Voluntary Departures, and Withdrawals Under Docket Control. Any
+voluntary return recorded on or after June 1, 2013 without an ICE intake case is not recorded as
+an ICE removal.
+Removals data are historical and remain static. In FY 2009, ERO began to “lock” removal
+statistics on October 5 at the end of each fiscal year and counted only aliens whose removal or
+return was already confirmed. Aliens removed or returned in that fiscal year but not confirmed
+until after October 5 were excluded from the locked data, and thus from ICE statistics. To ensure
+an accurate and complete representation of all removals and returns, ICE will count removals
+and returns confirmed after October 5 toward the next fiscal year. The number of removals in FY
+2017, excluding the “lag” from FY 2016, was 220,649. The number of removals in FY 2018,
+excluding the “lag” from FY 2017, was 252,405. The number of removals in FY 2019, excluding
+the “lag” from FY 2018, was 262,591.
+
+
+
+
+                                                                                               26
+Appendix B: Removals by Country of Citizenship
+
+             Table 3: FY 2018 – FY 2019 ICE Removals by Country of Citizenship 2829
+                            Country of Citizenship                                FY 2018              FY 2019
+              Total                                                                 256,085              267,258
+              AFGHANISTAN                                                                30                   36
+              ALBANIA                                                                    98                   80
+              ALGERIA                                                                    17                   20
+              ANDORRA                                                                     0                    0
+              ANGOLA                                                                     32                   40
+              ANGUILLA                                                                    0                    2
+              ANTIGUA-BARBUDA                                                            24                   12
+              ARGENTINA                                                                 121                  130
+              ARMENIA                                                                    27                   48
+              ARUBA                                                                       1                    1
+              AUSTRALIA                                                                  39                   40
+              AUSTRIA                                                                     7                    8
+              AZERBAIJAN                                                                 14                   10
+              BAHAMAS                                                                   101                  109
+              BAHRAIN                                                                     1                    2
+              BANGLADESH                                                                147                  159
+              BARBADOS                                                                   17                   29
+              BELARUS                                                                    10                   18
+              BELGIUM                                                                    17                    7
+              BELIZE                                                                     91                   90
+              BENIN                                                                      10                    9
+              BERMUDA                                                                     5                    2
+              BHUTAN                                                                      1                    1
+              BOLIVIA                                                                    81                   64
+              BOSNIA-HERZEGOVINA                                                         47                   36
+              BOTSWANA                                                                    1                    3
+              BRAZIL                                                                  1,691                1,770
+              BRITISH VIRGIN ISLANDS                                                      1                    4
+              BRUNEI                                                                      0                    0
+              BULGARIA                                                                   34                   21
+              BURKINA FASO                                                               35                   20
+              BURMA                                                                      40                   29
+              BURUNDI                                                                    14                    5
+              CAMBODIA                                                                  110                   80
+              CAMEROON                                                                   72                   76
+
+28 Country of citizenship is reported as it appears in ICE’s system of record at the time the data is pulled but may be updated as
+
+additional information is discovered or verified.
+29 For FY 2019, the Swaziland country of citizenship has been changed to Eswatini and Macedonia has been changed to North
+
+Macedonia to reflect these countries’ name changes. Countries of citizenship for FY 2018 remain unchanged.
+
+                                                                                                                                 27
+        Country of Citizenship   FY 2018     FY 2019
+CANADA                                 342         318
+CAPE VERDE                              68          50
+CAYMAN ISLANDS                           0           3
+CENTRAL AFRICAN REPUBLIC                 2           7
+CHAD                                    13           3
+CHILE                                  166         253
+CHINA, PEOPLES REPUBLIC OF             726         637
+CHRISTMAS ISLAND                         0           0
+COLOMBIA                             1,162       1,158
+COMOROS                                  0           0
+CONGO                                   18          15
+COSTA RICA                             162         176
+CROATIA                                 12           9
+CUBA                                   463       1,179
+CYPRUS                                   3           1
+CZECH REPUBLIC                          47          56
+CZECHOSLOVAKIA                           4           2
+DEM REP OF THE CONGO                    79          81
+DENMARK                                  2           5
+DJIBOUTI                                 3           3
+DOMINICA                                19          16
+DOMINICAN REPUBLIC                   1,769       2,186
+EAST TIMOR                               0           0
+ECUADOR                              1,264       2,253
+EGYPT                                   85          57
+EL SALVADOR                         15,445      18,981
+EQUATORIAL GUINEA                        5           5
+ERITREA                                 62          49
+ESTONIA                                 13           9
+ESWATINI                                 0           1
+ETHIOPIA                                36          32
+FIJI                                    21          11
+FINLAND                                  3           3
+FRANCE                                  85          78
+FRENCH GUIANA                            0           2
+FRENCH POLYNESIA                         0           2
+GABON                                    6           8
+GAMBIA                                 111         124
+GEORGIA                                 20          38
+GERMANY                                 72          77
+GHANA                                  243         203
+GREECE                                  22          32
+GRENADA                                  9          13
+GUADELOUPE                               1           1
+
+                                                         28
+        Country of Citizenship   FY 2018     FY 2019
+GUATEMALA                           50,390      54,919
+GUINEA                                 219         102
+GUINEA-BISSAU                            5           4
+GUYANA                                 142         125
+HAITI                                  934         690
+HONDURAS                            28,894      41,800
+HONG KONG                               15           7
+HUNGARY                                 81          71
+ICELAND                                  2           0
+INDIA                                  611       1,616
+INDONESIA                              110          77
+IRAN                                    22          21
+IRAQ                                    48          84
+IRELAND                                 47          33
+ISRAEL                                  93          89
+ITALY                                  125         140
+IVORY COAST                             82          39
+JAMAICA                                792         751
+JAPAN                                   28          21
+JORDAN                                  94         106
+KAZAKHSTAN                              30          26
+KENYA                                  140         122
+KIRIBATI                                 0           0
+KOREA                                   32          59
+KOSOVO                                  14          15
+KUWAIT                                  11          21
+KYRGYZSTAN                              15          19
+LAOS                                     8           5
+LATVIA                                  17          15
+LEBANON                                 51          48
+LESOTHO                                  1           0
+LIBERIA                                113         108
+LIBYA                                    8           6
+LIECHTENSTEIN                            0           0
+LITHUANIA                               49          37
+LUXEMBOURG                               0           0
+MACAU                                    1           2
+MACEDONIA                               18           0
+MADAGASCAR                               1           0
+MALAWI                                   3           1
+MALAYSIA                                11           9
+MALDIVES                                 1           0
+MALI                                    63          52
+MALTA                                    0           1
+
+                                                         29
+        Country of Citizenship    FY 2018     FY 2019
+MARSHALL ISLANDS                         35          32
+MARTINIQUE                                0           0
+MAURITANIA                               98          41
+MAURITIUS                                 0           1
+MEXICO                              141,045     127,492
+MICRONESIA, FEDERATED STATES OF          99          91
+MOLDOVA                                  38          28
+MONACO                                    0           0
+MONGOLIA                                 28          19
+MONTENEGRO                               18          23
+MONTSERRAT                                1           1
+MOROCCO                                  58          33
+MOZAMBIQUE                                0           3
+NAMIBIA                                   2           0
+NAURU                                     0           0
+NEPAL                                    45         162
+NETHERLANDS                              40          40
+NETHERLANDS ANTILLES                      2           6
+NEW CALEDONIA                             0           0
+NEW ZEALAND                              24          22
+NICARAGUA                               879       2,240
+NIGER                                     5          13
+NIGERIA                                 369         286
+NORTH KOREA                               0           0
+NORTH MACEDONIA                           0          15
+NORWAY                                    7           9
+OMAN                                      0           0
+PAKISTAN                                235         202
+PALAU                                     9          10
+PALESTINE                                 0           0
+PANAMA                                   59          55
+PAPUA NEW GUINEA                          1           2
+PARAGUAY                                  6           7
+PERU                                    581         571
+PHILIPPINES                             217         176
+PITCAIRN ISLANDS                          0           0
+POLAND                                  123         135
+PORTUGAL                                 96         101
+QATAR                                     2           3
+REUNION                                   0           0
+ROMANIA                                 403         400
+RUSSIA                                  107         153
+RWANDA                                    2          12
+SAMOA                                    30          17
+
+                                                          30
+        Country of Citizenship   FY 2018    FY 2019
+SAN MARINO                              0          0
+SAO TOME AND PRINCIPE                   0          0
+SAUDI ARABIA                          135         79
+SENEGAL                               125         55
+SERBIA                                 30         31
+SERBIA AND MONTENEGRO                   2          2
+SEYCHELLES                              0          1
+SIERRA LEONE                           79         86
+SINGAPORE                               6          3
+SLOVAKIA                               35         22
+SLOVENIA                                1          1
+SOLOMON ISLANDS                         0          0
+SOMALIA                               229        151
+SOUTH AFRICA                           42         39
+SOUTH KOREA                           122        127
+SOUTH SUDAN                            61         65
+SPAIN                                 209        259
+SRI LANKA                              36        112
+ST. HELENA                              0          0
+ST. KITTS-NEVIS                        15         11
+ST. LUCIA                              28         22
+ST. PIERRE AND MIQUELON                 0          0
+ST. VINCENT-GRENADINES                 13         19
+STATELESS                               0          0
+SUDAN                                  42         18
+SURINAME                               19         12
+SWAZILAND                               0          0
+SWEDEN                                 19         21
+SWITZERLAND                             4          6
+SYRIA                                   7          9
+TAIWAN                                 27         51
+TAJIKISTAN                              8          4
+TANZANIA                               19         25
+THAILAND                               55         46
+TOGO                                   24         16
+TONGA                                  21         10
+TRINIDAD AND TOBAGO                   104        106
+TUNISIA                                16         20
+TURKEY                                 85        113
+TURKMENISTAN                            2          4
+TURKS AND CAICOS ISLANDS                4          3
+TUVALU                                  0          0
+UGANDA                                 13         22
+UKRAINE                               105        125
+
+                                                       31
+       Country of Citizenship   FY 2018    FY 2019
+UNITED ARAB EMIRATES                   2          3
+UNITED KINGDOM                       209        198
+UNKNOWN                               42         46
+URUGUAY                               47         51
+UZBEKISTAN                            41         45
+VANUATU                                0          0
+VENEZUELA                            336        327
+VIETNAM                              122         80
+YEMEN                                 24         46
+YUGOSLAVIA                             5          3
+ZAMBIA                                12          7
+ZIMBABWE                              19         16
+
+
+
+
+                                                      32
+
