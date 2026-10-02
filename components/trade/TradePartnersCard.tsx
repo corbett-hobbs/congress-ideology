@@ -21,7 +21,7 @@ const SORTS = [
 ] as const;
 
 const ROW_H = 26;
-const MARGIN = { top: 28, right: 76, bottom: 8, left: 150 };
+const MARGIN = { top: 28, right: 62, bottom: 8, left: 108 };
 
 interface Tip {
   row: PartnerChartRow;
@@ -156,12 +156,13 @@ export function TradePartnersCard({
       {error && rows.length > 0 && shown !== year && (
         <p role="status" className="m-0 mt-2 text-[0.8rem] text-ink-muted">{`Couldn’t load ${year}; still showing ${shown}. Pick the year again to retry.`}</p>
       )}
-      <div className="mt-3 grid min-w-0 flex-1 grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+      <div className="mt-3 grid min-w-0 flex-1 grid-cols-1 gap-x-4 gap-y-4 lg:grid-cols-[2fr_1fr]">
+      <TradeMap map={map} model={model} measure={measure} shown={shown} country={country} onPickCountry={onPickCountry} loading={loading} />
       <div className="flex min-w-0 flex-col">
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
         <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="5" fill="var(--ink)" /></svg>Imports</span>
         <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="4.5" fill="var(--surface)" stroke="var(--ink)" strokeWidth="2" /></svg>Exports</span>
-        <span className="ml-auto">Right: {sort.key === "total" ? "total trade" : "balance"}. Scale: symmetric log.</span>
+        <span className="ml-auto">Scale: symmetric log.</span>
       </div>
 
       {/* The list fills whatever height the row gives the card (the scatter card beside it sets that on desktop); on narrow screens it is a fixed 26rem. Absolute inner box so the long list never stretches the card. */}
@@ -200,7 +201,6 @@ export function TradePartnersCard({
       </div>
 
       </div>
-      <TradeMap map={map} model={model} measure={measure} shown={shown} country={country} onPickCountry={onPickCountry} loading={loading} />
       </div>
 
       <MethodologyNote><p>
