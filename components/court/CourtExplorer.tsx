@@ -162,15 +162,17 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
               onSelect={onToggleSelect}
             />
 
-            <dl className="mt-1 flex justify-between gap-x-3 text-[0.82rem]">
+            <dl className="mt-1 grid grid-cols-[1fr_auto_1fr] gap-x-3 text-[0.82rem]">
+              <Stat label="Most liberal" value={mostLiberal?.short ?? "—"} />
               <Stat
                 label="Median"
                 value={medianJustice?.short ?? "—"}
+                align="center"
               />
-              <Stat label="Most liberal" value={mostLiberal?.short ?? "—"} />
               <Stat
                 label="Most conservative"
                 value={mostConservative?.short ?? "—"}
+                align="right"
               />
             </dl>
 
@@ -290,12 +292,14 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
 function Stat({
   label,
   value,
+  align = "left",
 }: {
   label: string;
   value: string;
+  align?: "left" | "center" | "right";
 }) {
   return (
-    <div className="min-w-0">
+    <div className={`min-w-0 ${align === "center" ? "text-center" : align === "right" ? "text-right" : ""}`}>
       <dt className="whitespace-nowrap text-[0.72rem] text-ink-muted">{label}</dt>
       <dd className="m-0 truncate font-medium">
         {value}
