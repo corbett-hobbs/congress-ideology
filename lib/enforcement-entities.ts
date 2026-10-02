@@ -122,3 +122,20 @@ export const enforcementRow = z.strictObject({
   administration_days: z.array(administrationDays).min(1),
 });
 export type EnforcementRow = z.infer<typeof enforcementRow>;
+
+/**
+ * `enforcement_report.json`: only the fields the page reads (the transform
+ * writes more). Loose on purpose; the invariants the page depends on are
+ * asserted in `lib/immigration-derive.ts`.
+ */
+export const enforcementReport = z.object({
+  first_period: fiscalYear,
+  last_period: fiscalYear,
+  by_status: z.record(z.string(), z.number().int()),
+  blended_periods: z.array(fiscalYear),
+  corroborated_periods: z.array(fiscalYear),
+  single_source_periods: z.array(fiscalYear),
+  figure_read_periods: z.array(fiscalYear),
+  anchors: z.array(z.object({ period: fiscalYear, value: z.number().int(), ok: z.boolean() })),
+});
+export type EnforcementReport = z.infer<typeof enforcementReport>;

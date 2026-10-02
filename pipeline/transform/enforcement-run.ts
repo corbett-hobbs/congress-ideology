@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { z } from "zod";
 import { iceCatalog } from "../../lib/enforcement-entities";
+import { assertEnforcementInvariants } from "../../lib/immigration-derive";
 import { RAW_DIR } from "../fetch/lib";
 import { ADMINISTRATIONS } from "./administrations";
 import { buildEnforcement, EnforcementDataError } from "./enforcement";
@@ -34,6 +35,9 @@ async function main() {
   }
   const figureFiles = new Set(await readdir(RAW));
   const built = buildEnforcement({ catalog, texts, figureFiles, administrations: ADMINISTRATIONS });
+
+  // The page's invariants (contiguous years, day sums, attribution, anchors) fail here, not at the next site build.
+  assertEnforcementInvariants(built.series, built.report, ADMINISTRATIONS);
 
   const sources = await Promise.all(
     catalog.sources.map(async (s) => {

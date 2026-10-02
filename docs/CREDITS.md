@@ -218,8 +218,8 @@ DHS); no license restriction applies. Snapshots are committed in `pipeline/raw/i
 and each row's `source` / `source_url` names the document. Credit as: *U.S.
 Immigration and Customs Enforcement, Enforcement and Removal Operations.* Note the
 counts are ICE's own definition (includes returns from FY2007) and must not be
-presented as DHS-wide totals. No page shows this data yet (data-only session); the
-first page that does must add this credit to its footer.
+presented as DHS-wide totals. `/presidency/immigration` carries this credit in its page footnote (the same
+place Economy and Trade credit their sources).
 
 The Deportation Data Project (UC Berkeley) was **consulted only to assess FY2025
 date-resolved data and is not used**; nothing from it is ingested or needs credit.

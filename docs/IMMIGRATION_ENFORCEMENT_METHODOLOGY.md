@@ -1,6 +1,6 @@
 # Immigration enforcement — methodology
 
-Data-only track (no routes yet). Source findings and the year-by-year inventory:
+Feeds `/presidency/immigration` (`lib/immigration-data.ts`). Source findings and the year-by-year inventory:
 `docs/IMMIGRATION_SOURCE_NOTES.md`. Schemas: `lib/enforcement-entities.ts`.
 
 ## What the series is
@@ -89,3 +89,25 @@ or replace a preliminary one: (1) add the ICE document to `sources` in
 verbatim quote; (2) `pnpm fetch:ice` (needs `pdftotext` and `unzip`) to snapshot
 it and write the text extract; (3) `pnpm transform`; (4) review the diff. Append
 the next inauguration to `ADMINISTRATIONS` first when a new term starts.
+
+## On the page (`/presidency/immigration`)
+
+One full-width bar chart, FY2003–FY2025, colored by the administration in office
+for most of each fiscal year. The President dropdown filters to that
+administration's years; the y-axis stays fixed. The five definition changes above
+are numbered markers on the timeline (dates curated in `ICE_MARKERS`, since the
+notes only carry fiscal-year granularity): ICE created Mar 1, 2003; returns
+counted from FY2007; returns shift to Border Patrol Jun 1, 2013; Title 42
+(Mar 2020 to May 11, 2023, approximate to the month, shaded); ICE Air expedited
+removals counted from May 12, 2023. FY2003–FY2006 are hatched (returns not
+counted), FY2025 is dashed (preliminary: a DHS budget document, not a locked ICE
+release), and FY2026 is an empty slot until ICE locks its counts (around Oct 5).
+The page shows ICE only: no CBP actions, no Title 42 expulsions, no per-president
+averages, and the FY2013 interior/border split is not displayed.
+
+Build-time checks (`assertEnforcementInvariants`, run by the transform and the
+site build, tested in `lib/immigration-derive.test.ts`): contiguous years from
+FY2003, at most one preliminary year and only the latest, each year's
+administration days sum to 365/366, the majority-days administration equals
+`administration_term_id`, `blended_periods` matches the rows, and both report
+anchors (FY2013, FY2023) hold.

@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 
 interface PageHeaderProps {
   title: ReactNode;
+  /** Small kicker above the title, e.g. "Presidency · Immigration". */
+  eyebrow?: ReactNode;
   /** Subtitle / intro copy. Pass one node or several paragraphs. */
   children?: ReactNode;
   /** `hero` is the homepage scale; `page` is for explorers and dashboards. */
@@ -26,12 +28,16 @@ const BODY: Record<NonNullable<PageHeaderProps["size"]>, string> = {
  * anything passed in; narrow the text by narrowing <main>, not the header.
  */
 export function PageHeader({
+  eyebrow,
   title,
   children,
   size = "page",
 }: PageHeaderProps) {
   return (
     <div className="flex w-full flex-col gap-3">
+      {eyebrow && (
+        <div className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.08em] text-accent">{eyebrow}</div>
+      )}
       <h1 className={TITLE[size]}>{title}</h1>
       {children && (
         <div
