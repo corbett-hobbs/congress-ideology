@@ -1,0 +1,106 @@
+name: Legislators freshness
+
+# Automate the check, gate the acceptance on a human.
+#
+# Daily: re-fetch the unitedstates/congress-legislators files (current and historical legislators,
+# current committees and their rosters). Members leave office through deaths, resignations and
+# party switches, and committee rosters move, whenever the maintainers commit. If any file differs
+# from the snapshot in pipeline/raw/congress-legislators/, rebuild pipeline/output/ and open a PR
+# with both. One PR per upstream change; never auto-merged. The files are small, so the diff of
+# the downloaded bytes is the change check (no stored ETag or SHA to go stale).
+#
+# A validation failure (an unmapped bioguide id, a malformed roster) fails the job loudly
+# instead of opening a PR.
+#
+# Needs the repo setting
+#   Settings > Actions > General > "Allow GitHub Actions to create and
+#   approve pull requests"  (off by default)
+#
+# Note: the PR branch is pushed with GITHUB_TOKEN, so it does NOT trigger the
+# CI workflow. Run `pnpm pipeline:check` locally before merging.
+
+on:
+  schedule:
+    - cron: "11 8 * * *" # Daily 08:11 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: legislators-freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Re-fetch legislators and committees
+        run: |
+          pnpm fetch:legislators
+          pnpm fetch:committees
+
+      - name: Detect changes
+        id: detect
+        run: |
+          if git diff --quiet -- pipeline/raw/congress-legislators; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "congress-legislators snapshot is unchanged."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- pipeline/raw/congress-legislators
+          fi
+
+      - name: Rebuild and validate
+        if: steps.detect.outputs.changed == 'true'
+        run: pnpm validate && pnpm transform
+
+      - name: Summarize
+        id: diff
+        if: steps.detect.outputs.changed == 'true'
+        run: |
+          {
+            echo "summary<<EOF"
+            git diff --stat -- pipeline/raw/congress-legislators pipeline/output | tail -n 25
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open pull request
+        if: steps.detect.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: |
+            pipeline/raw/congress-legislators
+            pipeline/output
+          branch: data/legislators-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): refresh legislators and committees"
+          title: "Legislators and committees refresh"
+          labels: data-refresh
+          body: |
+            The daily check found upstream changes in `unitedstates/congress-legislators`. The rebuilt `pipeline/output/` is included. Validation passed (a failure would have failed the job instead of opening this PR).
+
+            **Changes**
+
+            ${{ steps.diff.outputs.summary }}
+
+            **Before merging**
+
+            - Skim the raw diff: a departure, a new member, or a roster move.
+            - A new member has no photo or Wikipedia summary yet; `pnpm fetch:photos` and `pnpm fetch:wikipedia` fill them in, or the weekly Wikipedia job will.
+            - Run `pnpm pipeline:check` locally.
+
+            Not auto-merged by design.

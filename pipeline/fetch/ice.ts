@@ -13,8 +13,9 @@ import { iceCatalog, type IceSource } from "../../lib/enforcement-entities";
  *
  * There is no scheduled refresh: ICE's year-end figures are locked once
  * published and its URLs are not stable (a new year arrives in a new report or
- * dashboard, not at a known address). See docs/IMMIGRATION_ENFORCEMENT_METHODOLOGY.md,
- * "Refreshing". Existing snapshots are never re-downloaded unless `--refresh`.
+ * dashboard, not at a known address). A monthly workflow (ice-annual-review.yml) opens an issue
+ * when a year that should be locked is missing from the catalog. See
+ * docs/IMMIGRATION_ENFORCEMENT_METHODOLOGY.md, "Refreshing". Existing snapshots are never re-downloaded unless `--refresh`.
  *
  * Needs `pdftotext` (poppler) and `unzip` on PATH for the text extracts.
  */

@@ -83,7 +83,10 @@ ICE document, which are single-source, the FY2021 chart read, source hashes).
 
 **Manual.** ICE's year-end figures are locked once published, and its URLs are
 unstable (dead links, new locations each year, dashboards with no export), so a
-scheduled scraper would be brittle and no GitHub Action was added. To add a year
+scheduled scraper would be brittle, so none fetches. A monthly workflow
+(`.github/workflows/ice-annual-review.yml`) opens one issue when a fiscal year
+that should be locked by now (60 days after it ends) is missing from the
+catalog or still `preliminary`. To add a year
 or replace a preliminary one: (1) add the ICE document to `sources` in
 `pipeline/reference/ice-removals-catalog.json`, plus a `years` row with a
 verbatim quote; (2) `pnpm fetch:ice` (needs `pdftotext` and `unzip`) to snapshot

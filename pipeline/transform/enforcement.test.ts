@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { iceCatalog, type IceCatalog } from "../../lib/enforcement-entities";
+import { expectedFinalFiscalYear, iceCatalog, latestFinalFiscalYear, type IceCatalog } from "../../lib/enforcement-entities";
 import { ADMINISTRATIONS } from "./administrations";
 import {
   ANCHORS,
@@ -154,5 +154,18 @@ describe("buildEnforcement", () => {
     const d = base();
     d.years.push({ ...d.years[1] });
     expect(() => build(d)).toThrow(/duplicate/);
+  });
+});
+
+describe("ICE annual-report freshness", () => {
+  it("expects a fiscal year to be final only after the grace period", () => {
+    expect(expectedFinalFiscalYear("2026-10-01")).toBe(2025);
+    expect(expectedFinalFiscalYear("2026-11-29")).toBe(2025);
+    expect(expectedFinalFiscalYear("2026-11-30")).toBe(2026);
+    expect(expectedFinalFiscalYear("2027-06-15")).toBe(2026);
+  });
+  it("ignores preliminary years", () => {
+    expect(latestFinalFiscalYear([{ fy: 2024, status: "final" }, { fy: 2025, status: "preliminary" }])).toBe(2024);
+    expect(latestFinalFiscalYear([])).toBeNull();
   });
 });

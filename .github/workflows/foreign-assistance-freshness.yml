@@ -1,0 +1,99 @@
+name: Foreign assistance freshness
+
+# Automate the check, gate the acceptance on a human.
+#
+# Weekly: read the "Data last updated on" date that ForeignAssistance.gov publishes and compare it
+# with pipeline/raw/foreign-assistance/meta.json (`pnpm fetch:foreign-assistance --check`, which
+# fetches no data). Only when the site has moved: re-fetch, rebuild pipeline/output/, and open a PR
+# if the output differs. A validation or reconciliation failure fails the job loudly instead of
+# opening a PR. Never auto-merged.
+#
+# Needs no secrets; the repo setting
+#   Settings > Actions > General > "Allow GitHub Actions to create and
+#   approve pull requests"  (off by default)
+#
+# Note: the PR branch is pushed with GITHUB_TOKEN, so it does NOT trigger the
+# CI workflow. Run `pnpm pipeline:check` locally before merging.
+
+on:
+  schedule:
+    - cron: "29 12 * * 2" # Tuesdays 12:29 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: foreign-assistance-freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Has the site published newer data?
+        id: check
+        run: pnpm fetch:foreign-assistance --check
+
+      - name: Re-fetch and rebuild
+        if: steps.check.outputs.stale == 'true'
+        run: |
+          pnpm fetch:foreign-assistance
+          pnpm exec tsx pipeline/transform/foreign-aid-run.ts
+
+      - name: Did the output change?
+        id: diff
+        if: steps.check.outputs.stale == 'true'
+        run: |
+          if [ -n "$(git status --porcelain -- pipeline/output)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "summary<<EOF"
+              git diff --stat -- pipeline/output | tail -n 25
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: |
+            pipeline/raw/foreign-assistance
+            pipeline/output/foreign_assistance.json
+            pipeline/output/foreign_assistance_meta.json
+            pipeline/output/foreign_assistance_report.json
+          branch: data/foreign-assistance-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): refresh foreign assistance data"
+          title: "Foreign assistance data refresh"
+          labels: data-refresh
+          body: |
+            ForeignAssistance.gov reports data through **${{ steps.check.outputs.data_through }}**, newer than the committed snapshot. The rebuilt `pipeline/output/` differs from what is committed. Validation and reconciliation passed (a failure would have failed the job instead of opening this PR).
+
+            **Output changes**
+
+            ${{ steps.diff.outputs.summary }}
+
+            **Before merging**
+
+            - Check `foreign_assistance_report.json` (reconciliation gaps, country-crosswalk coverage).
+            - A country the crosswalk does not know fails the build until it is mapped deliberately.
+            - Run `pnpm pipeline:check` locally.
+
+            Not auto-merged by design.

@@ -139,3 +139,22 @@ export const enforcementReport = z.object({
   anchors: z.array(z.object({ period: fiscalYear, value: z.number().int(), ok: z.boolean() })),
 });
 export type EnforcementReport = z.infer<typeof enforcementReport>;
+
+// ---- annual-report freshness ----
+
+/** Days after a fiscal year ends before ICE's locked annual report is expected (its report lands Dec–Jan). */
+export const ICE_REPORT_GRACE_DAYS = 60;
+
+/** Newest fiscal year whose end plus the grace period is on or before `today` (YYYY-MM-DD): the year that should be `final` by now. */
+export function expectedFinalFiscalYear(today: string): number {
+  const d = new Date(`${today}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - ICE_REPORT_GRACE_DAYS);
+  // A fiscal year ends Sep 30 of its own number; Oct 1 onward belongs to the next one.
+  return d.getUTCMonth() >= 9 ? d.getUTCFullYear() : d.getUTCFullYear() - 1;
+}
+
+/** Newest fiscal year the catalog carries as `final`, or null. */
+export function latestFinalFiscalYear(years: readonly Pick<IceYear, "fy" | "status">[]): number | null {
+  const final = years.filter((y) => y.status === "final").map((y) => y.fy);
+  return final.length ? Math.max(...final) : null;
+}

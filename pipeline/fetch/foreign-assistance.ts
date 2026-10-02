@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import { run } from "./lib";
 import {
   FA_RAW_DIR,
@@ -23,8 +23,10 @@ import {
  *               U.S. sector), plus the Military-assistance subset at the same grain
  *   meta.json   fetch time, the site's data-through date, source record counts, sector taxonomy
  *
- * Keyless and public (the site's own data API; no credentials anywhere). Freshness: re-run by hand;
- * the output is diff-friendly (`fetched_at` is carried over while a year's rows are unchanged).
+ * Keyless and public (the site's own data API; no credentials anywhere). Freshness: the weekly
+ * workflow (.github/workflows/foreign-assistance-freshness.yml) runs `--check`, which compares the
+ * site's data-through date with meta.json and fetches nothing; a full run follows only when it moved.
+ * The output is diff-friendly (`fetched_at` is carried over while a year's rows are unchanged).
  *
  * `data_through` is not an API field: the site renders "Data last updated on: M/D/YYYY" from a
  * constant in its JS bundle. We read that constant; if the site changes shape, pass
@@ -102,6 +104,14 @@ const toRaw = (r: SectorApiRow | TxApiRow): RawRow => [r.country_code, r.country
 await run("foreign-assistance", async () => {
   await mkdir(FA_RAW_DIR, { recursive: true });
   const dataThrough = await readDataThrough();
+
+  if (process.argv.includes("--check")) {
+    const have = existsSync(FA_RAW_META_PATH) ? parseRawMeta(JSON.parse(await readFile(FA_RAW_META_PATH, "utf8"))).data_through : null;
+    const stale = have !== dataThrough;
+    console.log(`  site data through ${dataThrough}; snapshot ${have ?? "missing"} -> ${stale ? "refresh needed" : "up to date"}`);
+    if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, `stale=${stale}\ndata_through=${dataThrough}\n`);
+    return;
+  }
 
   const sector: SectorApiRow[] = [];
   const expected: RawMeta["expected_records"] = { sector: {}, military: {} };

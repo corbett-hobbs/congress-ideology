@@ -1,0 +1,50 @@
+name: ICE annual review
+
+# ICE's removal figures are locked once published, but its URLs are unstable (dead links, new
+# locations each year, dashboards with no export), so nothing here scrapes. Monthly, check whether
+# a fiscal year that should be locked by now is missing from (or still `preliminary` in)
+# pipeline/reference/ice-removals-catalog.json (lib/enforcement-entities.ts: ICE_REPORT_GRACE_DAYS);
+# if so, open ONE GitHub issue asking a human to add it. An issue, not a red build. Never blocks a
+# deploy and never edits data.
+
+on:
+  schedule:
+    - cron: "43 14 1 * *" # 1st of each month, 14:43 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Is a locked year missing?
+        id: stale
+        continue-on-error: true
+        run: pnpm exec tsx pipeline/validate/ice-staleness.ts
+
+      - name: Open an issue (once)
+        if: steps.stale.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create ice-annual-review --color BFD4F2 --description "ICE removals catalog needs a new year" 2>/dev/null || true
+          existing="$(gh issue list --state open --label ice-annual-review --json number --jq 'length')"
+          if [ "$existing" = "0" ]; then
+            gh issue create \
+              --title "Add ICE's latest locked removals year" \
+              --label ice-annual-review \
+              --body "ICE should have published a locked removals figure for a fiscal year the catalog does not carry as final (or still carries as preliminary). Find the ICE annual report or statistics page, add it to pipeline/reference/ice-removals-catalog.json with a verbatim quote, then run pnpm fetch:ice and pnpm transform. See \"Refreshing\" in docs/IMMIGRATION_ENFORCEMENT_METHODOLOGY.md."
+          else
+            echo "An open review issue already exists."
+          fi
