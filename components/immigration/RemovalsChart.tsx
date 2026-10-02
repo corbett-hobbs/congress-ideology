@@ -51,7 +51,6 @@ export function RemovalsChart({
   yMax,
   pending,
   pendingFy,
-  onShadeShown,
 }: {
   years: readonly IceYear[];
   terms: readonly IceTerm[];
@@ -59,8 +58,6 @@ export function RemovalsChart({
   yMax: number;
   pending: boolean;
   pendingFy: number;
-  /** Reports whether the Title 42 shading is on screen without its in-chart label, for the legend. */
-  onShadeShown?: (needsLegend: boolean) => void;
 }) {
   const [ref, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || FALLBACK_W;
@@ -99,9 +96,6 @@ export function RemovalsChart({
   const shade = markers.map((m) => ({ m, span: shadeSpan(m, firstFy, slots) })).find((s) => s.span);
   const shadeW = shade?.span ? (shade.span[1] - shade.span[0]) * slotW : 0;
   const shadeLabelled = shadeW >= 110;
-  useEffect(() => {
-    onShadeShown?.(!!shade && !shadeLabelled);
-  }, [shade, shadeLabelled, onShadeShown]);
 
   const segs = termSegments(years, pending);
   const termById = new Map(terms.map((t) => [t.termId, t]));

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { RETURNS_COUNTED_FROM, filterYears, showsPendingSlot, type ImmigrationPageData } from "@/lib/immigration-derive";
 import { RemovalsChart } from "./RemovalsChart";
@@ -10,7 +9,6 @@ const SWATCH = "inline-block h-2.5 w-2.5 flex-none align-[-1px]";
 export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; selection: string }) {
   const years = filterYears(data.years, selection);
   const pending = showsPendingSlot(data, selection);
-  const [shadeLegend, setShadeLegend] = useState(false);
   const termsById = new Map(data.terms.map((t) => [t.termId, t]));
   return (
     <ChartCard
@@ -24,7 +22,6 @@ export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; s
         yMax={data.yMax}
         pending={pending}
         pendingFy={data.lastFy + 1}
-        onShadeShown={setShadeLegend}
       />
 
       <ul className="m-0 mt-3 flex list-none flex-wrap gap-x-5 gap-y-1.5 p-0 text-[0.72rem] text-ink-muted">
@@ -36,30 +33,6 @@ export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; s
           <span className={SWATCH} style={{ background: "var(--rep)" }} />
           Republican administration
         </li>
-        <li className="flex items-center gap-1.5">
-          <span
-            className={SWATCH}
-            style={{
-              border: "1px solid var(--rep)",
-              background:
-                "repeating-linear-gradient(45deg, var(--rep) 0 2px, color-mix(in srgb, var(--rep) 16%, var(--surface)) 2px 4px)",
-            }}
-          />
-          Hatched: removals only
-        </li>
-        <li className="flex items-center gap-1.5">
-          <span
-            className={SWATCH}
-            style={{ border: "1px dashed var(--ink)", background: "color-mix(in srgb, var(--ink) 35%, transparent)" }}
-          />
-          Preliminary
-        </li>
-        {shadeLegend && (
-          <li className="flex items-center gap-1.5">
-            <span className={SWATCH} style={{ background: "color-mix(in srgb, var(--oth) 30%, transparent)" }} />
-            Shaded: Title 42
-          </li>
-        )}
       </ul>
 
       <p className="m-0 mt-3 text-[0.75rem] leading-[1.6] text-ink-muted">
