@@ -94,7 +94,7 @@ export function CommitteeCompass({
       if (!explorer || dimUnfocused) return [];
       return anchorCommittees(points).map((c) => {
         const left = (c.dim1 as number) < 0;
-        return { x: c.dim1 as number, y: c.dim2 as number, text: c.chamber === "joint" ? `Joint ${c.shortName}` : `${c.shortName} (${c.chamber === "house" ? "H" : "S"})`, anchor: left ? ("start" as const) : ("end" as const), dx: left ? 10 : -10, dy: 6, className: "dot-label is-legend-label" };
+        return { x: c.dim1 as number, y: c.dim2 as number, text: c.chamber === "joint" ? (/^joint\b/i.test(c.shortName) ? c.shortName : `Joint ${c.shortName}`) : `${c.shortName} (${c.chamber === "house" ? "H" : "S"})`, anchor: left ? ("start" as const) : ("end" as const), dx: left ? 10 : -10, dy: 6, className: "dot-label is-legend-label" };
       });
     }
     return [
