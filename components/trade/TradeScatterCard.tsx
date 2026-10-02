@@ -306,7 +306,7 @@ export function TradeScatterCard({
           canZoomIn={zoom.canZoomIn}
           zoomed={zoomed}
           className=""
-          style={{ left: margin.left + 6, top: margin.top + 22 }}
+          style={{ right: margin.right + 6, top: margin.top + 6 }}
         />
         <Tooltip state={tip.state}>
           {({ row, d }) => (
