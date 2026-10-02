@@ -560,7 +560,7 @@ A seventh data track: U.S. foreign assistance by recipient, year and sector (For
 
 | File | Grain | Key | Notes |
 | --- | --- | --- | --- |
-| `pipeline/output/foreign_assistance/<fiscal_year>.json` | one row per (recipient, fiscal year, sector category), FY2001- | `recipient_type` + `recipient_name` + `fiscal_year` + `sector_category`; join key to trade is `country_key` = `countries.json` `country_code` | Headline `disbursements_usd` (nominal), `obligations_usd?`, `military_disbursements_usd`. Regional and global rows are kept: **filter on `recipient_type` before summing countries.** National totals are derived at build time, never stored. |
+| `pipeline/output/foreign_assistance.json` | one row per (recipient, fiscal year, sector category), FY2001- | `recipient_type` + `recipient_name` + `fiscal_year` + `sector_category`; join key to trade is `country_key` = `countries.json` `country_code` | Headline `disbursements_usd` (nominal), `obligations_usd?`, `military_disbursements_usd`. Regional and global rows are kept: **filter on `recipient_type` before summing countries.** National totals are derived at build time, never stored. |
 | `pipeline/output/foreign_assistance_meta.json` | one object | — | `data_through`, first/latest fiscal year, per-year `is_partial` (a documented calendar rule: the source publishes no completeness flag), sector taxonomy. |
 | `pipeline/output/foreign_assistance_report.json` | run summary | — | Crosswalk results incl. **unmapped** entities, negative-row counts, reconciliation against the published cross-check targets, file sizes. Deterministic. |
 

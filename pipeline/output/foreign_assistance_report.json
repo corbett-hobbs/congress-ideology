@@ -258,7 +258,6 @@
     ]
   },
   "file_sizes_bytes": {
-    "foreign_assistance/* (total)": 7350154,
-    "foreign_assistance/* (largest year)": 314196
+    "foreign_assistance.json": 7350079
   }
 }

@@ -1,7 +1,7 @@
 # Foreign assistance methodology
 
 How `pipeline/fetch/foreign-assistance.ts` and `pipeline/transform/foreign-aid{,-run}.ts` turn
-ForeignAssistance.gov into `pipeline/output/foreign_assistance/<fiscal_year>.json`,
+ForeignAssistance.gov into `pipeline/output/foreign_assistance.json`,
 `foreign_assistance_meta.json` and `foreign_assistance_report.json`. Schemas:
 `lib/foreign-aid-entities.ts`. General pipeline rules: `docs/DATA_CONVENTIONS.md` §11. This is the data layer only;
 the Presidency → Foreign policy page does not exist yet.
@@ -86,9 +86,7 @@ the source labels it. Assigning fiscal years to administrations is a serving-lay
 ## Grain and shape
 
 One row per (`recipient_type`, `recipient_name`, `fiscal_year`, `sector_category`), sharded by fiscal year
-(`foreign_assistance/<fy>.json`, 26 files, ~7.4 MB total, largest ~0.31 MB; the raw snapshots are 5.6 MB). Sharding
-follows the `trade_by_country/<year>.json` / `line-items/<year>.json` precedent; a single file would have been ~7 MB,
-which is allowed, but per-year shards fit how the page will fetch (one year at a time).
+(a single `foreign_assistance.json`, ~7.4 MB, one row per line; the raw snapshots are sharded by year, 5.6 MB total). It is one file because nothing consumes it yet, and a single file keeps the schema and diffs simple.
 National totals are never stored; derive them at build time.
 
 - **`recipient_type`**: `country`, `regional` (names ending "Region"), `global` (the source's `WLD` "World"). Regional and

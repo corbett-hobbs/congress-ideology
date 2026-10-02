@@ -7,12 +7,11 @@ import { buildAid, reconcile, validateAid } from "./foreign-aid";
 
 /**
  * Foreign-assistance transform: raw/foreign-assistance/* + output/countries.json (trade) ->
- *   foreign_assistance/<fiscal_year>.json, foreign_assistance_meta.json, foreign_assistance_report.json
+ *   foreign_assistance.json, foreign_assistance_meta.json, foreign_assistance_report.json
  * Run after trade-run (the crosswalk target is the trade pipeline's countries.json). Deterministic
  * (no run timestamp). Fails the build on any validation error.
  */
 const OUT = "pipeline/output";
-const DIR = `${OUT}/foreign_assistance`;
 
 const oneRowPerLine = (rows: readonly unknown[]) => (rows.length === 0 ? "[]\n" : `[\n${rows.map((r) => JSON.stringify(r)).join(",\n")}\n]\n`);
 
@@ -47,14 +46,8 @@ async function main() {
   aidMeta.parse(built.meta);
 
   await mkdir(OUT, { recursive: true });
-  await rm(DIR, { recursive: true, force: true });
-  await mkdir(DIR, { recursive: true });
-  const sizes: Record<string, number> = {};
-  for (const y of built.meta.years) {
-    const path = `${DIR}/${y.fiscal_year}.json`;
-    await writeFile(path, oneRowPerLine(built.rows.filter((r) => r.fiscal_year === y.fiscal_year)));
-    sizes[`${y.fiscal_year}.json`] = (await stat(path)).size;
-  }
+  await rm(`${OUT}/foreign_assistance`, { recursive: true, force: true }); // the old per-year shards
+  await writeFile(`${OUT}/foreign_assistance.json`, oneRowPerLine(built.rows));
   await writeFile(`${OUT}/foreign_assistance_meta.json`, JSON.stringify(built.meta, null, 2) + "\n");
 
   const recon = reconcile(built.rows);
@@ -85,7 +78,7 @@ async function main() {
     },
     reconciliation: { thresholds: "<=0.5% pass; 0.5-5% investigate; >5% stop; FY2026 sanity only", targets: recon },
     top_country_recipients: { 2024: top(2024), 2025: top(2025), 2026: top(2026) },
-    file_sizes_bytes: { "foreign_assistance/* (total)": Object.values(sizes).reduce((a, b) => a + b, 0), "foreign_assistance/* (largest year)": Math.max(...Object.values(sizes)) },
+    file_sizes_bytes: { "foreign_assistance.json": (await stat(`${OUT}/foreign_assistance.json`)).size },
   };
   await writeFile(`${OUT}/foreign_assistance_report.json`, JSON.stringify(report, null, 2) + "\n");
 
