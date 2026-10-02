@@ -1,0 +1,158 @@
+{
+  "first_fiscal_year": 2014,
+  "last_fiscal_year": 2024,
+  "fiscal_years": [
+    {
+      "fiscal_year": 2014,
+      "source_doc": "ice-immigration-removals-fy2014",
+      "as_of": "2014-10-05",
+      "rows": 189,
+      "zero_rows_dropped": 0,
+      "sum": 315943,
+      "printed_total": 315943,
+      "national_total": 315943,
+      "other_documents": [],
+      "needs_review_rows": 0
+    },
+    {
+      "fiscal_year": 2015,
+      "source_doc": "ice-ero-report-fy2015",
+      "as_of": "2015-10-04",
+      "rows": 180,
+      "zero_rows_dropped": 0,
+      "sum": 235413,
+      "printed_total": 235413,
+      "national_total": 235413,
+      "other_documents": [],
+      "needs_review_rows": 1
+    },
+    {
+      "fiscal_year": 2016,
+      "source_doc": "ice-removal-statistics-2017",
+      "as_of": "2016-10-04",
+      "rows": 186,
+      "zero_rows_dropped": 10,
+      "sum": 240255,
+      "printed_total": 240255,
+      "national_total": 240255,
+      "other_documents": [],
+      "needs_review_rows": 0
+    },
+    {
+      "fiscal_year": 2017,
+      "source_doc": "ice-removal-statistics-2017",
+      "as_of": "2017-10-09",
+      "rows": 190,
+      "zero_rows_dropped": 6,
+      "sum": 226119,
+      "printed_total": 226119,
+      "national_total": 226119,
+      "other_documents": [
+        "ice-ero-report-fy2018"
+      ],
+      "needs_review_rows": 0
+    },
+    {
+      "fiscal_year": 2018,
+      "source_doc": "ice-ero-report-fy2018",
+      "as_of": "2018-10-08",
+      "rows": 187,
+      "zero_rows_dropped": 9,
+      "sum": 256085,
+      "printed_total": 256085,
+      "national_total": 256085,
+      "other_documents": [
+        "ice-ero-report-fy2019",
+        "ice-ero-report-fy2020"
+      ],
+      "needs_review_rows": 0
+    },
+    {
+      "fiscal_year": 2019,
+      "source_doc": "ice-ero-report-fy2019",
+      "as_of": "2019-10-06",
+      "rows": 191,
+      "zero_rows_dropped": 32,
+      "sum": 267258,
+      "printed_total": 267258,
+      "national_total": 267258,
+      "other_documents": [
+        "ice-ero-report-fy2020",
+        "ice-annual-report-fy2024"
+      ],
+      "needs_review_rows": 0
+    },
+    {
+      "fiscal_year": 2020,
+      "source_doc": "ice-ero-report-fy2020",
+      "as_of": "2020-10-04",
+      "rows": 184,
+      "zero_rows_dropped": 39,
+      "sum": 185884,
+      "printed_total": 185884,
+      "national_total": 185884,
+      "other_documents": [
+        "ice-annual-report-fy2024"
+      ],
+      "needs_review_rows": 7
+    },
+    {
+      "fiscal_year": 2021,
+      "source_doc": "ice-annual-report-fy2024",
+      "as_of": "2024-09-30",
+      "rows": 169,
+      "zero_rows_dropped": 59,
+      "sum": 59011,
+      "printed_total": 59011,
+      "national_total": 59011,
+      "other_documents": [],
+      "needs_review_rows": 1
+    },
+    {
+      "fiscal_year": 2022,
+      "source_doc": "ice-annual-report-fy2024",
+      "as_of": "2024-09-30",
+      "rows": 167,
+      "zero_rows_dropped": 61,
+      "sum": 72177,
+      "printed_total": 72177,
+      "national_total": 72177,
+      "other_documents": [],
+      "needs_review_rows": 2
+    },
+    {
+      "fiscal_year": 2023,
+      "source_doc": "ice-annual-report-fy2024",
+      "as_of": "2024-09-30",
+      "rows": 180,
+      "zero_rows_dropped": 48,
+      "sum": 142580,
+      "printed_total": 142580,
+      "national_total": 142580,
+      "other_documents": [],
+      "needs_review_rows": 2
+    },
+    {
+      "fiscal_year": 2024,
+      "source_doc": "ice-annual-report-fy2024",
+      "as_of": "2024-09-30",
+      "rows": 177,
+      "zero_rows_dropped": 51,
+      "sum": 271484,
+      "printed_total": 271484,
+      "national_total": 271484,
+      "other_documents": [],
+      "needs_review_rows": 2
+    }
+  ],
+  "uncovered_fiscal_years": [
+    {
+      "fiscal_year": 2013,
+      "reason": "ICE's FY2013 report prints only the top ten countries."
+    },
+    {
+      "fiscal_year": 2025,
+      "reason": "ICE has published no country table for FY2025 (no annual report; the statistics dashboards have no export)."
+    }
+  ]
+}

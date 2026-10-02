@@ -25,6 +25,8 @@ export interface CountrySourceSpec {
 export interface RawCountryRow {
   name: string;
   values: number[];
+  /** The name was joined from two printed lines (ICE wraps long names); the likeliest place for a misread. */
+  wrapped: boolean;
 }
 
 export interface ParsedTable {
@@ -67,7 +69,7 @@ function readColumns(lines: string[], spec: CountrySourceSpec): ParsedTable {
     const m = row.exec(line);
     // A long name wraps onto the line above ("SERBIA AND" / "MONTENEGRO  2  2  1"): the text-only line
     // directly above a row belongs to its name.
-    const wrapped = prev && !/\d/.test(prev) ? prev : "";
+    const wrapped = prev && !/\d/.test(prev) && !/citizenship|^total$/i.test(prev) ? prev : "";
     prev = line.trim();
     if (!m) {
       if (/\d/.test(line)) skipped.push(line.trim());
@@ -78,7 +80,7 @@ function readColumns(lines: string[], spec: CountrySourceSpec): ParsedTable {
     if (/^total$/i.test(name)) {
       if (total) throw new RemovalsCountryError(`${spec.source}: two Total rows`);
       total = values;
-    } else rows.push({ name, values });
+    } else rows.push({ name, values, wrapped: wrapped !== "" });
   }
   if (!total) throw new RemovalsCountryError(`${spec.source}: no Total row inside the table`);
   return { rows, total, skipped };
@@ -98,7 +100,7 @@ function readStacked(lines: string[], spec: CountrySourceSpec): ParsedTable {
     if (!isNum(name) && vals.length === n && vals.every(isNum)) {
       const values = vals.map(num);
       if (/^total$/i.test(name)) total = values;
-      else rows.push({ name: cleanName(name), values });
+      else rows.push({ name: cleanName(name), values, wrapped: false });
       i += n + 1;
     } else {
       if (/\d/.test(name)) skipped.push(name);

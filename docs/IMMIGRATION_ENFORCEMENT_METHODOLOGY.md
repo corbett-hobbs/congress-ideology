@@ -79,6 +79,54 @@ increasing periods; unknown note ids fail. Results: `enforcement_report.json`
 (rows, gaps, status counts, blended years, which years are corroborated by a second
 ICE document, which are single-source, the FY2021 chart read, source hashes).
 
+## By country of citizenship (`removals_by_country.json`)
+
+**Country of citizenship, not destination.** A person removed to a third country is
+counted under their own citizenship. Same agency and definition as the national
+series above (ICE only; headline totals; returns included from FY2007), so a
+fiscal year's countries always sum to that year's value in `enforcement_series.json`
+and the two are never combined with any other agency's counts.
+
+**Coverage: FY2014–FY2024, eleven years.** ICE prints a full country table in its
+FY2014, FY2015, FY2016/17, FY2017/18, FY2018/19, FY2018–20 and FY2019–24 reports.
+FY2013 prints the top ten only and FY2025 has no table at all (no annual report;
+the statistics dashboards have no export), so both are absent, not filled from OHSS
+or anything else (`uncovered_fiscal_years` in the report). FY2003–FY2012 have no ICE
+country-level document.
+
+**Rows.** One per `(fiscal_year, country_key)`: `country_key` is the trade
+pipeline's `country_code` (ISO 3166-1 alpha-3). Non-ISO entities ICE counts get
+documented codes: `XKX` Kosovo, the former entities `CSK`/`SUN`/`YUG`/`SCG`/`ANT`,
+`XUN` Unknown (citizenship not stated or documented), `XST` Stateless, `PSE`
+Palestine, and `XKO` "Korea (unspecified)" — ICE prints a "Korea" row beside North
+and South Korea and the table does not say which it is, so it is kept apart.
+Spelling changes between vintages are an alias table (`ICE_ALIASES`): Burma/Myanmar,
+Macedonia/North Macedonia, Swaziland/Eswatini, Turkey/Türkiye, "Congo" (Republic) vs
+"Dem Rep of the Congo", "St." names, and upper-case vintages. A name that maps nowhere
+fails the build. Countries ICE lists with zero removals in a year have no row.
+
+**Sources.** Each year takes its rows from one document (`source_doc`); `as_of` is the
+data run date ICE prints for that year (FY2021–23: the FY2024 report's Sep 30, 2024
+currency date, since ICE calls FY2019–23 "locked"). Years that more than one ICE
+document prints (FY2017–FY2020, the FY2019–24 table) agree country by country; a
+disagreement fails the build.
+
+**Gates (fail `pnpm transform`).** (1) Each table's rows sum to the Total printed in
+that table. (2) Each year's rows sum to the national ICE series, zero tolerance — no
+unexplained difference exists. (3) Overlapping documents agree. (4) Every ICE name
+resolves to a key.
+
+**Review flags.** `needs_review` marks rows whose name wrapped across two printed
+lines (FY2020 and the FY2021–24 table: "China, Peoples Republic of", "Micronesia,
+Federated States of", …) or where two ICE rows were merged. One known oddity: ICE's
+FY2015 table prints "South Korea" twice (105 and 43); the second is probably the
+"Korea" row (FY2014: 83, FY2016: 46), but ICE does not say, so both are summed into
+South Korea (148) and flagged.
+
+**Not available.** No ICE document crosses country with criminality for removals
+(its statistics page offers arrests and detention by country and criminal history
+only through interactive dashboards), so there is no criminality breakdown here.
+
 ## Refreshing
 
 **Manual.** ICE's year-end figures are locked once published, and its URLs are
@@ -90,7 +138,7 @@ catalog or still `preliminary`. To add a year
 or replace a preliminary one: (1) add the ICE document to `sources` in
 `pipeline/reference/ice-removals-catalog.json`, plus a `years` row with a
 verbatim quote; (2) `pnpm fetch:ice` (needs `pdftotext` and `unzip`) to snapshot
-it and write the text extract; (3) `pnpm transform`; (4) review the diff. Append
+it and write the text extract; (3) `pnpm transform`; (4) review the diff. A new country table is added to `COUNTRY_TABLES` in `pipeline/transform/removals-country.ts`. Append
 the next inauguration to `ADMINISTRATIONS` first when a new term starts.
 
 ## On the page (`/presidency/immigration`)

@@ -139,3 +139,31 @@ comparison, but not total removals; not used.)
   2001, 2009, 2017, 2021, 2025 match the inaugurations. A Jan 20 day belongs to the
   incoming president (the table's documented rule).
 - **No extension and no discrepancy** — nothing was changed in the table.
+
+## 5. Country of citizenship — Phase A findings (2026-10-01)
+
+- **Where:** only inside ICE's annual ERO reports, as appendix tables (PDF text or
+  the ice.gov web page). The ERO statistics dashboards (removals by country exist
+  there) have no export, so nothing can be snapshotted from them.
+- **Coverage:** FY2014 (FY2014 report App. A), FY2015 (App. C), FY2016–17 (FY2017
+  web page App. B), FY2017–18 (FY2018 report App. B), FY2018–19 (FY2019 App. B),
+  FY2018–20 (FY2020 App. B), FY2019–24 (FY2024 report appendix). FY2013 is top-10
+  only; FY2025 and FY2003–12 have none. **Covered range: FY2014–FY2024**, shorter
+  than the national series, so the card's year range is this range; nothing is
+  borrowed from OHSS yearbooks (which include CBP).
+- **Country × criminality for removals:** not published in any snapshot. The
+  statistics page describes arrests and detention by country and criminal history
+  (dashboards only). Decision: plain bars.
+- **Names:** upper-case in FY2019/20; "Peoples Republic" with/without apostrophe;
+  Macedonia → North Macedonia and Swaziland → Eswatini from FY2019; Turkey → Türkiye
+  in FY2024; "Congo" and "Dem Rep of the Congo" are separate rows; "Korea" is its own
+  row; Unknown, Stateless, Czechoslovakia, Yugoslavia, Serbia and Montenegro,
+  Netherlands Antilles, USSR appear as rows; a "Montenegro - Raps" row is zero in
+  every year (dropped with other zero rows). Long names wrap onto two lines in the
+  FY2020 PDF.
+- **Reconciliation:** every country table's rows sum exactly to its printed Total, and
+  every covered year sums exactly to the national ICE series (difference 0 in all
+  eleven years). Overlapping vintages agree country by country: ICE restated nothing.
+- **Definition caveat for the UI:** the country tables carry the same totals as the
+  national series, which **include returns from FY2007**. They are not "removals
+  under an order of removal" only; copy must not say returns are excluded.
