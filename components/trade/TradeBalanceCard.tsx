@@ -19,6 +19,7 @@ import { MONTH_NAMES } from "@/lib/indicator-time";
 import { TradeBalanceChart, type Era } from "./TradeBalanceChart";
 import { MobileReadout } from "./MobileReadout";
 import { activeDay, useTradeActions, useTradeValues } from "./TradeState";
+import { MethodologyNote } from "@/components/MethodologyNote";
 
 const MEASURES = [
   { value: "balance", label: "Balance" },
@@ -158,13 +159,10 @@ export function TradeBalanceCard({
         <span className="ml-auto">{adjLabel}{countryName ? `. Axis rescales to ${countryName}.` : "."}</span>
       </div>
 
-      <details className="mt-3">
-        <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">See methodology</summary>
-        <p className="m-0 mt-1.5 text-[0.75rem] leading-[1.45] text-ink-muted">
+      <MethodologyNote><p>
         Census Bureau goods trade on the Census basis, monthly. The national line is seasonally adjusted; the country view is not. Services are not included, so the figure differs from the
         combined goods-and-services deficit usually quoted in the news. Click or drag on the chart to pin a month.
-        </p>
-      </details>
+        </p></MethodologyNote>
       {series && <DataTable series={series} era={era} caption={`${title}, monthly, ${adjLabel.toLowerCase()}`} />}
     </section>
   );

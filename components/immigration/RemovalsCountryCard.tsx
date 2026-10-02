@@ -15,6 +15,7 @@ import {
 } from "@/lib/removals-country-derive";
 import type { RemovalsCountryPayload } from "@/lib/removals-country-types";
 import { InfoMarker } from "./InfoMarker";
+import { MethodologyNote } from "@/components/MethodologyNote";
 
 const n = (v: number) => v.toLocaleString("en-US");
 const dateLabel = (iso: string) =>
@@ -173,13 +174,15 @@ export function RemovalsCountryCard({
         </div>
       </div>
 
-      <p className="m-0 mt-3 text-[0.75rem] leading-[1.6] text-ink-muted">
+      <MethodologyNote>
+      <p>
         FY{fy}: {n(year.total)} removals across {ranked.length} countries and categories, matching the timeline above. Source:{" "}
         <a href={year.sourceUrl} target="_blank" rel="noreferrer" className="text-accent underline-offset-2 hover:underline">
           {year.source}
         </a>
         , data as of {dateLabel(year.asOf)}.
       </p>
+      </MethodologyNote>
 
       <details className="mt-3 text-[0.8rem] text-ink-muted">
         <summary className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">View as table</summary>

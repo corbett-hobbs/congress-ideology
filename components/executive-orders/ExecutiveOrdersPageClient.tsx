@@ -18,6 +18,7 @@ import {
 } from "@/lib/executive-orders-types";
 import { sameRange, termYearRange, type YearRange } from "@/lib/year-range";
 import { TopicPatternDefs, TopicSwatch } from "./TopicPatternDefs";
+import { MethodologyNote } from "@/components/MethodologyNote";
 
 type Mode = "count" | "share";
 
@@ -227,8 +228,9 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             (federalregister.gov API), executive orders signed {first} to present. Each order links to its
             Federal Register page.
           </p>
-          <p className="m-0">
-            <strong className="font-medium text-ink-muted">Method.</strong> Orders are counted in the year they were
+          <MethodologyNote className="mt-0">
+          <p>
+            Orders are counted in the year they were
             signed, not published. Each order has one primary topic, so a year&apos;s columns add up to its true total.
             Topic assignment is classifier-assisted: a language model read each order&apos;s title and issuing agencies,
             and orders that only amend or revoke another order take that order&apos;s topic. A random sample of 100
@@ -237,6 +239,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             subject, not how significant any of them were. In a transition year the orders signed before and after
             Inauguration Day count toward the outgoing and incoming president respectively.
           </p>
+          </MethodologyNote>
         </footer>
       </main>
     </>

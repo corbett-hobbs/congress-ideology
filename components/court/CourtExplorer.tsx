@@ -21,6 +21,7 @@ import { JusticeStrip } from "./JusticeStrip";
 import { PresidentRows, type PresidentSort } from "./PresidentRows";
 import { JusticeTrajectory } from "./JusticeTrajectory";
 import { PageHeader } from "@/components/PageHeader";
+import { MethodologyNote } from "@/components/MethodologyNote";
 
 const PLAY_INTERVAL_MS = 220;
 
@@ -254,11 +255,13 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
             onSelect={onToggleSelect}
             onScrub={changeTerm}
           />
-          <p className="mt-2 text-[0.76rem] leading-[1.55] text-ink-faint">
-            Scores are smoothed by the model, so a justice&rsquo;s stability is
-            partly an assumption of the method. The shaded band for a selected
-            justice is its 95% estimation interval.
-          </p>
+          <MethodologyNote className="mt-2">
+            <p>
+              Scores are smoothed by the model, so a justice&rsquo;s stability is
+              partly an assumption of the method. The shaded band for a selected
+              justice is its 95% estimation interval.
+            </p>
+          </MethodologyNote>
           <MedianTable data={data} selected={selected} />
         </ChartCard>
 

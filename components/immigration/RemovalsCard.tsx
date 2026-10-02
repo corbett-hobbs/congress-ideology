@@ -3,6 +3,7 @@
 import { ChartCard } from "@/components/charts/ChartCard";
 import { RETURNS_COUNTED_FROM, filterYears, showsPendingSlot, type ImmigrationPageData } from "@/lib/immigration-derive";
 import { RemovalsChart } from "./RemovalsChart";
+import { MethodologyNote } from "@/components/MethodologyNote";
 
 export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; selection: string }) {
   const years = filterYears(data.years, selection);
@@ -22,13 +23,15 @@ export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; s
         pendingFy={data.lastFy + 1}
       />
 
-      <p className="m-0 mt-3 text-[0.75rem] leading-[1.6] text-ink-muted">
+      <MethodologyNote>
+      <p>
         Smaller caveats sit on each bar’s hover or tap card — for example, FY2010 leaves out 76,732 expedited removals ICE
         closed for CBP, and counts lock around October 5, so late closures roll into the next year. ICE figures only:
         Border Patrol actions, including Title 42 expulsions, are not included. Across the full series,{" "}
         {data.finalCount} of {data.years.length} years are final and {data.corroboratedCount} are confirmed by a second
         source.
       </p>
+      </MethodologyNote>
 
       <details className="mt-3 text-[0.8rem] text-ink-muted">
         <summary className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">

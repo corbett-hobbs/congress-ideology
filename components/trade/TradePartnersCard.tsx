@@ -8,6 +8,7 @@ import { nextSort, type PartnerSort, type SortState } from "@/lib/trade-derive";
 import { partnerChartRows, partnerMeta, partnerScale, type PartnerChartRow } from "@/lib/trade-partners";
 import type { TradeYearPayload } from "@/lib/trade-types";
 import { MONTH_NAMES } from "@/lib/indicator-time";
+import { MethodologyNote } from "@/components/MethodologyNote";
 
 
 const SORTS = [
@@ -188,13 +189,10 @@ export function TradePartnersCard({
         </div>
       </div>
 
-      <details className="mt-3">
-        <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">See methodology</summary>
-        <p className="m-0 mt-1.5 text-[0.75rem] leading-[1.45] text-ink-muted">
+      <MethodologyNote><p>
         Census Bureau goods trade, Census basis. Sorted by {sort.key === "balance" ? "balance: the largest deficits first, then surpluses" : sort.key === "total" ? "total trade, largest first" : "name"}
         {sort.reversed ? ", reversed" : ""}; click the active sort again to reverse it. Click a row to pick that country above. The scale is symmetric log, so small partners stay visible next to China; distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.
-        </p>
-      </details>
+        </p></MethodologyNote>
       {rows.length > 0 && <DataTable rows={rows} year={shown} />}
     </section>
   );

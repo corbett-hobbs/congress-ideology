@@ -26,6 +26,7 @@ import {
   type ScatterRow,
   type ScatterWindows,
 } from "@/lib/trade-scatter";
+import { MethodologyNote } from "@/components/MethodologyNote";
 
 const FALLBACK_W = 1080;
 /** Below this chart width the layout drops long titles and labels (a half-width card on a laptop stays above it). */
@@ -351,12 +352,9 @@ export function TradeScatterCard({
         </div>
       )}
 
-      <details className="mt-3">
-        <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">See methodology</summary>
-        <p className="m-0 mt-1.5 text-[0.75rem] leading-[1.45] text-ink-muted">
+      <MethodologyNote><p>
         Calculated duties divided by imports for consumption, both from Census import data, over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}, so the season matches. Countries missing any month in either window are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles at the top edge are pinned outliers, with their true values in the tooltip. Bilateral figures can be distorted when goods are re-routed through other countries, so treat any one dot with care. Click a dot to pick that country above.
-        </p>
-      </details>
+        </p></MethodologyNote>
       <DataTable rows={rows} windows={windows} />
     </section>
   );
