@@ -5,14 +5,13 @@ import { ChartCard } from "@/components/charts/ChartCard";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
-import { SLOT_NAME, formatAidMoney, topRecipientsByYear, topRuns, type TopYear } from "@/lib/foreign-aid-derive";
+import { SLOT_NAME, formatAidAxis, formatAidMoney, niceDollarTicks, topRecipientsByYear, topRuns, type TopYear } from "@/lib/foreign-aid-derive";
 import { useAidState } from "./ForeignAidState";
 import { HatchDefs, SectorLegend, TD, TH, TableView, slotColor, useSectorLabel } from "./shared";
 import { administrationForTermLabel } from "./term-labels";
 
 const LABEL_H = 22;
 const TICK = 5;
-const MX = 14;
 
 /**
  * "Who's been No. 1": the largest recipient country per fiscal year as run-length spans, with a bar
@@ -36,15 +35,18 @@ export function FirstPlaceCard() {
   const narrow = W < 520;
   const n = years.length;
   // Phones keep extra room on the right so the last run's slanted name stays inside the chart.
-  const MR = narrow ? 34 : MX;
+  const MX = narrow ? 36 : 44; // left room for the dollar axis
+  const MR = narrow ? 34 : 14;
   const step = (W - MX - MR) / n;
   // Phones get a taller span so a name too narrow to read across can run up the span instead.
   const labelH = narrow ? 62 : LABEL_H;
   const bracketY = labelH + 6;
-  const baseY = narrow ? 142 : 116;
-  const maxH = narrow ? 52 : 62;
+  const maxH = narrow ? 120 : 150;
+  const plotTop = bracketY + TICK + 16;
+  const baseY = plotTop + maxH;
   const H = baseY + 24;
-  const maxTop = Math.max(1, ...years.map((y) => y.ranked[0]?.value ?? 0));
+  const { ticks, top: maxTop } = niceDollarTicks(Math.max(1, ...years.map((y) => y.ranked[0]?.value ?? 0)));
+  const yOf = (v: number) => baseY - (v / maxTop) * maxH;
   const si = year - range[0];
   const bw = Math.min(Math.max(3, step * 0.62), 40);
 
@@ -102,6 +104,12 @@ export function FirstPlaceCard() {
               <HatchDefs id={hatchId} />
               {si >= 0 && si < n && <rect x={MX + si * step} y={0} width={step} height={baseY + 3} rx={2} style={{ fill: "var(--surface-raised)", stroke: "var(--line-strong)" }} />}
               {hover >= 0 && hover < n && hover !== si && <rect x={MX + hover * step} y={0} width={step} height={baseY + 3} rx={2} style={{ fill: "none", stroke: "var(--line-strong)", strokeDasharray: "3 3" }} />}
+              {ticks.map((t) => (
+                <g key={t}>
+                  <line x1={MX} x2={W - MR} y1={yOf(t)} y2={yOf(t)} className={t === 0 ? "zero-line" : "grid-line"} />
+                  {t > 0 && <text className="axis-tick-label" x={MX - 6} y={yOf(t) + 3.5} textAnchor="end">{formatAidAxis(t)}</text>}
+                </g>
+              ))}
               {runs.map((r) => {
                 if (r.ci < 0) return null;
                 const x = MX + r.from * step;
