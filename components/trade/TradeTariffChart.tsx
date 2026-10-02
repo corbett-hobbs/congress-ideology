@@ -3,6 +3,8 @@
 import { memo, useEffect, useMemo, useState, type ReactNode, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { ExtremeMarks, type ExtremeMark } from "@/components/charts/ExtremeMarks";
+import { findExtremes } from "@/lib/chart-extremes";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { dateOfDay, dayOfIso, MONTH_ABBR, MONTH_NAMES } from "@/lib/indicator-time";
@@ -185,6 +187,25 @@ const StaticLayer = memo(function StaticLayer({ main, reference, scale, era, sho
   );
 });
 
+/** Peak and low of the duty rate inside the window. Fades while a date is hovered or pinned. */
+function Marks({ W, main, scale, view, showCong, flagInputs, era }: { W: number; main: Monthly; scale: Scale; view: readonly [number, number]; showCong: boolean; flagInputs: readonly FlagInput[]; era: Era }) {
+  const v = useTradeValues();
+  const g = layout(W, view, scale, showCong, flagInputs, era);
+  const marks = useMemo(() => {
+    const pts = main.map((value, i) => ({ day: monthMidDay(i), value })).filter((p) => p.day >= view[0] && p.day < view[1]);
+    const { peak, low } = findExtremes(pts);
+    const out: ExtremeMark[] = [];
+    for (const [p, kind] of [[peak, "peak"], [low, "low"]] as const) {
+      if (!p || p.value === null) continue;
+      const { year, month } = dateOfDay(p.day);
+      out.push({ kind, x: g.X(p.day), y: g.Y(p.value), text: `${MONTH_ABBR[month]} ${year}: ${fmtPercent(p.value)}` });
+    }
+    return out;
+  }, [main, view, g]);
+  if (marks.length === 0) return null;
+  return <ExtremeMarks marks={marks} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={activeDay(v) !== null} />;
+}
+
 function Overlay({ W, main, scale, view, showCong, flagInputs, era }: { W: number; main: Monthly; scale: Scale; view: readonly [number, number]; showCong: boolean; flagInputs: readonly FlagInput[]; era: Era }) {
   const v = useTradeValues();
   const day = activeDay(v);
@@ -293,6 +314,7 @@ export function TradeTariffChart(props: Props) {
               } else if (pinned) return;
               flagTip.show(ids, e);
             }} onFlagLeave={() => !pinned && flagTip.hide()} />
+            <Marks W={W} main={main} scale={scale} view={view} showCong={showCong} flagInputs={flagInputs} era={era} />
             <Overlay W={W} main={main} scale={scale} view={view} showCong={showCong} flagInputs={flagInputs} era={era} />
           </>
         )}

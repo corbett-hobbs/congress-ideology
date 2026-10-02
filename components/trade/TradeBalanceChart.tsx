@@ -1,8 +1,11 @@
 "use client";
 
-import { memo, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { memo, useMemo, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { ExtremeMarks, type ExtremeMark } from "@/components/charts/ExtremeMarks";
+import { findExtremes } from "@/lib/chart-extremes";
+import { dateOfDay, MONTH_ABBR } from "@/lib/indicator-time";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { dayFromFraction } from "@/lib/indicator-lookup";
@@ -89,6 +92,36 @@ const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, sho
   );
 });
 
+/** Peak and low of the plotted series inside the window (balance: the best and worst month; exports and imports: the peak of each). Fades while a date is hovered or pinned. */
+function Marks({ W, series, measure, scale, view, showCong }: { W: number; series: FlowSeries; measure: Measure; scale: Scale; view: readonly [number, number]; showCong: boolean }) {
+  const v = useTradeValues();
+  const g = geometry(W, view, scale, showCong);
+  const marks = useMemo(() => {
+    const { main, second } = plotted(series, measure);
+    const inWin = (vals: readonly (number | null)[]) =>
+      vals.map((value, i) => ({ day: monthMidDay(i), value })).filter((p) => p.day >= view[0] && p.day < view[1]);
+    const text = (day: number, value: number, signed: boolean) => {
+      const { year, month } = dateOfDay(day);
+      return `${MONTH_ABBR[month]} ${year}: ${fmtMoney(value, { signed })}`;
+    };
+    const out: ExtremeMark[] = [];
+    const add = (p: { day: number; value: number | null } | null, kind: "peak" | "low", signed: boolean) => {
+      if (p && p.value !== null) out.push({ kind, x: g.X(p.day), y: g.Y(p.value), text: text(p.day, p.value, signed) });
+    };
+    if (measure === "balance") {
+      const { peak, low } = findExtremes(inWin(main));
+      add(peak, "peak", true);
+      add(low, "low", true);
+    } else {
+      add(findExtremes(inWin(main)).peak, "peak", false);
+      if (second) add(findExtremes(inWin(second)).peak, "peak", false);
+    }
+    return out;
+  }, [series, measure, view, g]);
+  if (marks.length === 0) return null;
+  return <ExtremeMarks marks={marks} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={activeDay(v) !== null} />;
+}
+
 /** Crosshair and dots for the active date: the only layer that re-renders on hover. */
 function Overlay({ W, series, measure, scale, view, showCong }: { W: number; series: FlowSeries; measure: Measure; scale: Scale; view: readonly [number, number]; showCong: boolean }) {
   const v = useTradeValues();
@@ -159,6 +192,7 @@ export function TradeBalanceChart(props: Props) {
         {() => (
           <>
             <StaticLayer {...props} W={W} />
+            <Marks W={W} series={series} measure={measure} scale={scale} view={view} showCong={showCong} />
             <Overlay W={W} series={series} measure={measure} scale={scale} view={view} showCong={showCong} />
           </>
         )}

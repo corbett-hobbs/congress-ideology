@@ -83,13 +83,13 @@ export function SiteSectionNav() {
       <ScrollRow label={`${row.branch.label} views`}>
         {row.branch.sections.map((s) => {
           const base =
-            "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] px-2 md:px-2.5 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition-colors md:tracking-[0.09em] md:h-9 md:text-[0.8rem]";
+            "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap px-2 md:px-2.5 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition-colors md:tracking-[0.09em] md:h-9 md:text-[0.8rem]";
           if (s.status !== "live") {
             return (
               <span
                 key={s.id}
                 aria-disabled="true"
-                className={`${base} text-ink-faint`}
+                className={`${base} border-b-2 border-transparent text-ink-faint`}
               >
                 {s.label}
                 <SoonTag />
@@ -104,8 +104,8 @@ export function SiteSectionNav() {
               aria-current={active ? "page" : undefined}
               className={`${base} ${
                 active
-                  ? "bg-accent text-accent-ink"
-                  : "text-ink-muted hover:text-ink"
+                  ? "border-b-2 border-accent text-ink"
+                  : "border-b-2 border-transparent text-ink-muted hover:text-ink"
               }`}
             >
               {s.label}

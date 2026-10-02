@@ -1,8 +1,10 @@
 "use client";
 
-import { memo, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent } from "react";
+import { memo, useMemo, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { ExtremeMarks, type ExtremeMark } from "@/components/charts/ExtremeMarks";
+import { findExtremes } from "@/lib/chart-extremes";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import {
@@ -21,7 +23,7 @@ import { termYearRange } from "@/lib/year-range";
 import type { EconomyTerm } from "@/lib/economy-presidents";
 import { dayFromFraction, readAll, type Reading } from "@/lib/indicator-lookup";
 import { activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
-import { JOBS_CAP, fx, type ChartSpec } from "./specs";
+import { JOBS_CAP, type ChartSpec } from "./specs";
 
 /** Chart points for a spec's main series (the second debt line comes from `chartPoints2`). */
 export function chartPoints(d: EconomyData, key: ChartSpec["key"]): SeriesPoint[] {
@@ -92,7 +94,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
   const firstYear = dateOfDay(0).year;
   const lastYear = dateOfDay(data.span - 1).year;
   const [vs, ve] = view;
-  const { ml, mr, mt, H, pw, lo, axisY, bandY, houseY, senateY, X, Y } = geometry(W, hero, spec, view, showCong);
+  const { ml, mt, H, pw, lo, axisY, bandY, houseY, senateY, X, Y } = geometry(W, hero, spec, view, showCong);
   const clipId = `clip-${spec.key}`;
 
   const pts = chartPoints(data, spec.key);
@@ -110,8 +112,6 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
   const years: number[] = [];
   for (let y = dateOfDay(vs).year; dayOf(y, 0, 1) < ve; y++) if (y % yearStep === 0 && dayOf(y, 0, 1) >= vs) years.push(y);
 
-  const lastNonNull = [...inView].reverse().find((p) => p.value !== null);
-  const peak = hero ? inView.reduce<SeriesPoint | null>((m, p) => (p.value !== null && (m === null || p.value > (m.value as number)) ? p : m), null) : null;
 
   return (
           <>
@@ -191,25 +191,6 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
                 const tri = up ? `${x - 4},${y + 6} ${x + 4},${y + 6} ${x},${y - 1}` : `${x - 4},${y - 6} ${x + 4},${y - 6} ${x},${y + 1}`;
                 return <polygon key={p.day} points={tri} fill="var(--ink)" />;
               })}
-            {spec.kind === "jobs" &&
-              (() => {
-                const over = inView.filter((p) => p.value !== null && Math.abs(p.value) > JOBS_CAP);
-                const big = [
-                  over.reduce<SeriesPoint | null>((m, p) => (p.value! > 0 && (m === null || p.value! > m.value!) ? p : m), null),
-                  over.reduce<SeriesPoint | null>((m, p) => (p.value! < 0 && (m === null || p.value! < m.value!) ? p : m), null),
-                ];
-                return big.map((p) => {
-                  if (!p) return null;
-                  const up = p.value! > 0;
-                  const label = `${fmtMonthIndex(monthIndexOfDay(p.day)).slice(0, 3)} ${dateOfDay(p.day).year}: ${up ? "+" : "−"}${(Math.abs(p.value!) / 1000).toFixed(1)}M`;
-                  return (
-                    <text key={p.day} x={X(p.day) - 8} y={up ? mt + 9 : mt + H - 3} textAnchor="end" className="fill-ink text-[11px] font-medium" style={HALO}>
-                      {label}
-                    </text>
-                  );
-                });
-              })()}
-
             {spec.key === "mort" && data.mortBreak >= vs && data.mortBreak < ve && (
               <g>
                 <line x1={X(data.mortBreak)} x2={X(data.mortBreak)} y1={mt} y2={axisY} stroke={MUTED} strokeWidth={1} strokeDasharray="3 3" />
@@ -219,22 +200,8 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
               </g>
             )}
 
-            {hero && peak && lastNonNull && (
+            {hero && (
               <g>
-                <circle cx={X(peak.day)} cy={Y(peak.value as number)} r={3.5} fill="var(--ink)" />
-                <text
-                  x={X(peak.day) + (X(peak.day) + 110 > W - mr ? -9 : 9)}
-                  y={Y(peak.value as number) + 4}
-                  textAnchor={X(peak.day) + 110 > W - mr ? "end" : "start"}
-                  className="fill-ink text-[11px] font-medium"
-                  style={HALO}
-                >
-                  {`${fmtMonthIndex(monthIndexOfDay(peak.day)).slice(0, 3)} ${dateOfDay(peak.day).year}: ${fx(peak.value as number, 1)}`}
-                </text>
-                <circle cx={X(lastNonNull.day)} cy={Y(lastNonNull.value as number)} r={3.5} fill="var(--ink)" />
-                <text x={X(lastNonNull.day) - 8} y={Y(lastNonNull.value as number) - 10} textAnchor="end" className="fill-ink text-[11px] font-medium" style={HALO}>
-                  {`${fmtMonthIndex(monthIndexOfDay(lastNonNull.day)).slice(0, 3)} ${dateOfDay(lastNonNull.day).year}: ${fx(lastNonNull.value as number, 1)}`}
-                </text>
                 {data.rec.filter((r) => visibleSpan(r[0], r[1])).map((r) => {
                   const [x0, x1] = clipped(r[0], r[1]);
                   const label = recessionLabel(r, dateOfDay);
@@ -319,6 +286,32 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
   );
 });
 
+/** "Mar 2020", "2019" (yearly series) or "FY2020" (fiscal bars): the date half of a peak/low label. */
+function markDate(kind: ChartSpec["kind"], day: number): string {
+  const { year } = dateOfDay(day);
+  if (kind === "income") return String(year);
+  if (kind === "fiscal") return `FY${year}`;
+  return fmtMonthIndex(monthIndexOfDay(day)).slice(0, 3) + ` ${year}`;
+}
+
+/** The chart's peak and low inside the visible window, drawn on the line. Fades while a date is hovered or pinned. */
+function Marks({ data, spec, hero, showCong, view, W }: { data: EconomyData; spec: ChartSpec; hero: boolean; showCong: boolean; view: readonly [number, number]; W: number }) {
+  const v = useEconomyValues();
+  const { peak, low } = useMemo(() => {
+    const pts = chartPoints(data, spec.key).filter((p) => p.day >= view[0] && p.day < view[1]);
+    return findExtremes(pts);
+  }, [data, spec.key, view]);
+  const g = geometry(W, hero, spec, view, showCong);
+  const mark = (p: SeriesPoint | null, kind: "peak" | "low"): ExtremeMark[] => {
+    if (!p || p.value === null) return [];
+    const val = spec.kind === "jobs" ? Math.max(-JOBS_CAP, Math.min(JOBS_CAP, p.value)) : p.value;
+    return [{ kind, x: g.X(p.day), y: g.Y(val), text: `${markDate(spec.kind, p.day)}: ${spec.kind === "jobs" && Math.abs(p.value) >= 1000 ? `${p.value > 0 ? "+" : "−"}${(Math.abs(p.value) / 1000).toFixed(1)}M` : spec.head(p.value)}` }];
+  };
+  const marks = [...mark(peak, "peak"), ...mark(low, "low")];
+  if (marks.length === 0) return null;
+  return <ExtremeMarks marks={marks} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={activeDay(v) !== null || v.pin !== null} />;
+}
+
 const dotPos = (reading: Reading, spec: ChartSpec, g: ReturnType<typeof geometry>) => {
   if (reading.value === null || reading.snap === null) return null;
   const v = spec.kind === "jobs" ? Math.max(-JOBS_CAP, Math.min(JOBS_CAP, reading.value)) : reading.value;
@@ -394,6 +387,7 @@ export function EconomyChart({ data, spec, hero = false, showCong, view, reading
         {() => (
           <>
             <StaticLayer data={data} spec={spec} hero={hero} showCong={showCong} view={view} W={W} />
+            <Marks data={data} spec={spec} hero={hero} showCong={showCong} view={view} W={W} />
             <Overlay W={W} hero={hero} spec={spec} view={view} showCong={showCong} reading={reading} />
           </>
         )}
