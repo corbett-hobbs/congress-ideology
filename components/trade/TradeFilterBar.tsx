@@ -1,6 +1,7 @@
 "use client";
 
 import { CountryCombobox } from "./CountryCombobox";
+import { RangeReset } from "@/components/charts/RangeReset";
 import { RangeSelector } from "@/components/charts/RangeSelector";
 import type { EconomyTerm } from "@/lib/economy-presidents";
 import type { TradeCountryRef } from "@/lib/trade-types";
@@ -102,6 +103,7 @@ export function TradeFilterBar({
             ariaLabel="Years shown"
             className="hidden sm:flex sm:min-w-[260px] sm:flex-1"
           />
+          <RangeReset show={!isFull} onReset={() => onRange(null)} className="hidden sm:block" />
           {canClear && (
             <button
               type="button"

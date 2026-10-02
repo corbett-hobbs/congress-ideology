@@ -1,5 +1,6 @@
 "use client";
 
+import { RangeReset } from "@/components/charts/RangeReset";
 import { RangeSelector } from "@/components/charts/RangeSelector";
 import type { EconomyTerm } from "@/lib/economy-presidents";
 import { sameRange, termYearRange, type YearRange } from "@/lib/year-range";
@@ -90,6 +91,7 @@ export function EconomyFilterBar({
             ariaLabel="Years shown"
             className="order-last w-full sm:order-none sm:w-auto sm:min-w-[220px] sm:flex-1"
           />
+          <RangeReset show={!isFull} onReset={() => onRange(null)} className="order-last sm:order-none" />
           <div className="flex min-w-0 items-center gap-2.5 sm:ml-auto">
             <span className="text-[0.8rem] leading-snug text-ink">{status}</span>
             {canClear && (

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { PillGroup } from "@/components/charts/PillGroup";
+import { RangeReset } from "@/components/charts/RangeReset";
 import { RangeSelector } from "@/components/charts/RangeSelector";
 import { StackedBars, type StackBand, type StackColumn, type StackSeries } from "@/components/charts/StackedBars";
 import { PageHeader } from "@/components/PageHeader";
@@ -108,6 +109,21 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
               ))}
             </select>
           </label>
+          <label className="mt-2 flex items-center gap-2 sm:ml-5 sm:mt-0">
+            <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">Topic</span>
+            <select
+              value={topic ?? ""}
+              onChange={(e) => setTopic((e.target.value || null) as EoTopic | null)}
+              className="min-w-0 flex-1 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-[13rem] sm:flex-none"
+            >
+              <option value="">All topics</option>
+              {EO_TOPICS.map((t) => (
+                <option key={t} value={t}>
+                  {EO_TOPIC_LABELS[t]}
+                </option>
+              ))}
+            </select>
+          </label>
           <RangeSelector
             min={first}
             max={lastYear}
@@ -117,6 +133,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             ariaLabel="Years shown"
             className="mt-2 sm:ml-5 sm:mt-0 sm:min-w-[240px] sm:flex-1"
           />
+          <RangeReset show={!sameRange([from, to], full)} onReset={() => setRange(null)} className="mt-1 sm:ml-4 sm:mt-0" />
         </div>
       </div>
       <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-16 pt-7 sm:px-6">
