@@ -304,7 +304,7 @@ function YearList({
   if (president) {
     const a = admins.get(president);
     const scope = year ? [year] : years;
-    const all = scope.flatMap((y) => y.items).filter((i) => i.termId === president);
+    const all = scope.flatMap((y) => y.items).filter((i) => i.termId === president).sort((a, b) => b.n - a.n);
     const items = topic ? all.filter((i) => i.topic === topic) : all;
     return (
       <section aria-live="polite" aria-label={`Executive orders signed by ${a?.president ?? "this president"}`} className="rounded-[10px] border border-line bg-surface">

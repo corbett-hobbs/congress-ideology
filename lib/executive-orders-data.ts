@@ -61,7 +61,7 @@ export function aggregateByYear(
           signed: o.signing_date,
           termId: o.term_id,
         }))
-        .sort((a, b) => a.n - b.n),
+        .sort((a, b) => b.n - a.n), // newest first, everywhere the orders are listed
     });
   }
   return years;
