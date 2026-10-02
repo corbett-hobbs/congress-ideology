@@ -13,7 +13,6 @@ import {
   type RemovalsSortKey,
 } from "@/lib/removals-country-derive";
 import type { RemovalsCountryPayload } from "@/lib/removals-country-types";
-import { InfoMarker } from "./InfoMarker";
 import { MethodologyNote } from "@/components/MethodologyNote";
 
 const n = (v: number) => v.toLocaleString("en-US");
@@ -50,16 +49,7 @@ export function RemovalsCountryCard({
   const ranked = useMemo(() => (year ? rankYear(year) : []), [year]);
   const list = useMemo(() => sortRanked(ranked, names, key, reversed), [ranked, names, key, reversed]);
 
-  const title = (
-    <span className="inline-flex items-center gap-2">
-      Who gets removed
-      <InfoMarker n={1} label="What counts as a removal">
-        A removal is a confirmed movement of a non-citizen out of the U.S. that the government enforces. These are ICE’s headline counts, which since FY2007
-        include returns (voluntary returns, voluntary departures and withdrawals under docket control). ICE only: removals carried out by Border Patrol, and
-        Title 42 expulsions, are not counted.
-      </InfoMarker>
-    </span>
-  );
+  const title = "Who gets removed";
 
   if (!year) {
     return (
@@ -93,19 +83,7 @@ export function RemovalsCountryCard({
   return (
     <ChartCard
       title={title}
-      lede={
-        <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span>ICE removals · FY{fy} · by country of citizenship</span>
-          <InfoMarker n={2} label="Citizenship versus destination">
-            Country of citizenship, not where a person was sent. A person removed to a third country is counted under their own citizenship.
-          </InfoMarker>
-          <span>· bars show removals</span>
-          <InfoMarker n={3} label="Data coverage">
-            ICE prints country tables for {coverage} only. FY2013 lists just the top ten and FY2025 has no table, so neither can be chosen. Countries with no
-            removals in a year are left out; “Unknown” and “Stateless” are ICE categories, not countries. FY2020 to FY2023 leave out Title 42 expulsions.
-          </InfoMarker>
-        </span>
-      }
+      lede={`ICE removals · FY${fy} · by country of citizenship · bars show removals`}
       action={
         selectedName ? (
           <span className="rounded-md border border-line-strong bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">
@@ -150,6 +128,16 @@ export function RemovalsCountryCard({
       </div>
 
       <MethodologyNote>
+      <p>
+        A removal is a confirmed movement of a non-citizen out of the U.S. that the government enforces. These are ICE’s headline counts, which since FY2007
+        include returns (voluntary returns, voluntary departures and withdrawals under docket control). ICE only: removals carried out by Border Patrol, and
+        Title 42 expulsions, are not counted. Countries are countries of citizenship, not where a person was sent: a person removed to a third country is
+        counted under their own citizenship.
+      </p>
+      <p>
+        ICE prints country tables for {coverage} only. FY2013 lists just the top ten and FY2025 has no table, so neither can be chosen. Countries with no
+        removals in a year are left out; “Unknown” and “Stateless” are ICE categories, not countries. FY2020 to FY2023 leave out Title 42 expulsions.
+      </p>
       <p>
         FY{fy}: {n(year.total)} removals across {ranked.length} countries and categories, matching the timeline above. Source:{" "}
         <a href={year.sourceUrl} target="_blank" rel="noreferrer" className="text-accent underline-offset-2 hover:underline">
