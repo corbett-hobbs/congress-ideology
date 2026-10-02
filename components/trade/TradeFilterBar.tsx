@@ -94,16 +94,19 @@ export function TradeFilterBar({
             />
             Congress control
           </label>
-          <RangeSelector
-            min={firstYear}
-            max={lastYear}
-            value={range}
-            onChange={(r) => onRange(sameRange(r, full) ? null : r)}
-            format={String}
-            ariaLabel="Years shown"
-            className="hidden sm:flex sm:min-w-[260px] sm:flex-1"
-          />
-          <RangeReset show={!isFull} onReset={() => onRange(null)} className="hidden sm:block" />
+          {/* Phones: the years slider is its own pinned line under the two dropdowns, Reset beside it. */}
+          <div className="col-span-2 flex min-w-0 items-center gap-3 sm:contents">
+            <RangeSelector
+              min={firstYear}
+              max={lastYear}
+              value={range}
+              onChange={(r) => onRange(sameRange(r, full) ? null : r)}
+              format={String}
+              ariaLabel="Years shown"
+              className="min-w-0 flex-1 sm:min-w-[260px]"
+            />
+            <RangeReset show={!isFull} onReset={() => onRange(null)} />
+          </div>
           {canClear && (
             <button
               type="button"

@@ -148,7 +148,7 @@ function TradePage({ data }: { data: TradePageData }) {
         />
 
         {/* Side by side on desktop, stacked below it. */}
-        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
           <TradePartnersCard
             payload={yearPayload ?? lastShown}
             year={v.year}

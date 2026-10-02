@@ -8,10 +8,9 @@ import { nextSort, type PartnerSort, type SortState } from "@/lib/trade-derive";
 import { partnerChartRows, partnerMeta, partnerScale, type PartnerChartRow } from "@/lib/trade-partners";
 import type { TradeYearPayload } from "@/lib/trade-types";
 import { MONTH_NAMES } from "@/lib/indicator-time";
-import { useMediaQuery } from "@/lib/use-media-query";
 
-/** Rows shown on a phone before "Show all". */
-const PHONE_ROWS = 6;
+/** Rows visible before the list scrolls. */
+const VISIBLE_ROWS = 10;
 
 const SORTS = [
   { key: "balance", label: "Balance", hint: "Largest deficit first" },
@@ -93,16 +92,12 @@ export function TradePartnersCard({
   error: boolean;
 }) {
   const [sort, setSort] = useState<SortState>({ key: "balance", reversed: false });
-  const phone = useMediaQuery("(max-width: 767px)");
-  const [expanded, setExpanded] = useState(false);
   const shown = payload?.year ?? year;
   const rows = useMemo(() => (payload ? partnerChartRows(payload.partners, sort) : []), [payload, sort]);
   const scale = useMemo(() => partnerScale(rows), [rows]);
-  const collapsed = phone && !expanded && rows.length > PHONE_ROWS;
-  const visibleRows = useMemo(() => (collapsed ? rows.slice(0, PHONE_ROWS) : rows), [collapsed, rows]);
   const swarm = useMemo<SwarmRowData<Tip>[]>(
     () =>
-      visibleRows.map((r) => {
+      rows.map((r) => {
         const tooltip = { row: r, year: shown };
         return {
           id: r.code,
@@ -117,7 +112,7 @@ export function TradePartnersCard({
           ],
         };
       }),
-    [visibleRows, shown, country, onPickCountry],
+    [rows, shown, country, onPickCountry],
   );
   const partial = shown === Number(lastPeriod.slice(0, 4)) && lastPeriod.slice(5) !== "12";
   const through = MONTH_NAMES[Number(lastPeriod.slice(5)) - 1];
@@ -160,11 +155,11 @@ export function TradePartnersCard({
         <span className="ml-auto">Right: balance. Scale: symmetric log.</span>
       </div>
 
-      <div className={`mt-2 md:max-h-[36rem] md:overflow-y-auto ${loading ? "opacity-60" : ""}`} aria-busy={loading}>
-        {visibleRows.length > 0 ? (
+      <div className={`mt-2 overflow-y-auto ${loading ? "opacity-60" : ""}`} style={{ maxHeight: MARGIN.top + VISIBLE_ROWS * ROW_H + MARGIN.bottom }} aria-busy={loading} tabIndex={0} aria-label="Partner list, scrollable">
+        {rows.length > 0 ? (
           <SwarmRows<Tip>
             rows={swarm}
-            ariaLabel={`U.S. goods imports and exports by partner, ${shown}, ${rows.length} partners${collapsed ? `, the first ${PHONE_ROWS} shown` : ""}, with the balance for each`}
+            ariaLabel={`U.S. goods imports and exports by partner, ${shown}, ${rows.length} partners, with the balance for each`}
             margin={MARGIN}
             rowHeight={ROW_H}
             domain={[0, scale.max]}
@@ -187,17 +182,6 @@ export function TradePartnersCard({
           </div>
         )}
       </div>
-
-      {phone && rows.length > PHONE_ROWS && (
-        <button
-          type="button"
-          onClick={() => setExpanded((e) => !e)}
-          aria-expanded={expanded}
-          className="mt-2 min-h-11 w-full rounded-md border border-line-strong bg-surface-raised px-3 text-[0.85rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-        >
-          {expanded ? "Show fewer countries" : `Show all ${rows.length} countries`}
-        </button>
-      )}
 
       <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">
         Census Bureau goods trade, Census basis. Sorted by {sort.key === "balance" ? "balance: the largest deficits first, then surpluses" : sort.key === "total" ? "total trade, largest first" : "name"}
