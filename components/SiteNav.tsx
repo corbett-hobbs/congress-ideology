@@ -139,7 +139,7 @@ function ScrollRow({ label, children }: { label: string; children: ReactNode }) 
     return () => ro.disconnect();
   }, [measure, children]);
   return (
-    <div className="relative order-3 min-w-0 basis-full md:order-none md:basis-auto">
+    <div className="relative order-3 min-w-0 basis-full md:order-none md:basis-auto md:self-center">
       <nav
         ref={ref}
         aria-label={label}

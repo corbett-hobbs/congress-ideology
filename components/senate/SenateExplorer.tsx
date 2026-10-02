@@ -424,10 +424,11 @@ export function SenateExplorer({
                 grid row's height. The row is therefore sized by the compass
                 card, this card stretches to match, and the list fills exactly
                 that height and scrolls — both cards end level, no gap on
-                either. Single column (sm–md): normal flow, capped so the page
-                isn't one giant list. Mobile (<sm): expands. */}
+                either. Below md (phones and single column): a fixed ~12-row box
+                (22rem) that scrolls inside the card on tap-and-drag, never an
+                auto-expanding list. */}
             <div className="relative mt-1 flex-1">
-              <div className="border-t border-line pt-1 sm:overflow-y-auto sm:max-md:max-h-[600px] md:absolute md:inset-0 md:overflow-y-auto">
+              <div className="border-t border-line pt-1 max-md:max-h-[22rem] max-md:touch-scroll max-md:overflow-y-auto max-md:overscroll-contain md:absolute md:inset-0 md:overflow-y-auto" tabIndex={0} aria-label="State list, scrollable">
                 {committeesActive ? (
                   <CommitteeSwarm
                     committees={viewCommittees}
