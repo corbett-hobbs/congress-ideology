@@ -88,10 +88,10 @@ describe("stacking and priority", () => {
 });
 
 describe("compact mode", () => {
-  it("returns numbered markers in date order with no label text", () => {
+  it("returns numbered markers in date order, each with one short line of text for the key", () => {
     const out = placeFlags([f("b", 2025, 4, 5, "B"), f("a", 2018, 7, 6, "A")], opts({ labels: false }));
     expect(out.map((p) => p.number)).toEqual([1, 2]);
-    expect(out.every((p) => p.text === "")).toBe(true);
+    expect(out.map((p) => p.text)).toEqual(["Jul 6, 2018 · A", "Apr 5, 2025 · B"]);
     expect(out[0].ids).toEqual(["a"]);
   });
 });

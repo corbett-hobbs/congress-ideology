@@ -120,7 +120,8 @@ export function placeFlags(flags: readonly FlagInput[], o: PlaceOptions): Placed
   for (const i of order) {
     const c = clusters[i];
     const pri = priorityOf(c);
-    const text = o.labels ? textOf(c) : "";
+    // Text is always built (numbered markers list it beside the chart); only label mode reserves room for it.
+    const text = textOf(c);
     const w = o.labels ? text.length * charW + 10 : MARKER_W;
     let anchor: "start" | "end" = c.x + w <= o.plotRight ? "start" : "end";
     let x0 = anchor === "start" ? c.x : c.x - w;

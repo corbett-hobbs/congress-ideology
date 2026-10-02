@@ -22,7 +22,7 @@ import { activeDay, useTradeActions, useTradeValues } from "./TradeState";
 
 const MEASURES = [
   { value: "balance", label: "Balance" },
-  { value: "flows", label: "Exports and imports" },
+  { value: "flows", label: "Exports & imports" },
 ] as const;
 
 const Swatch = ({ color, border }: { color: string; border?: boolean }) => (
@@ -121,21 +121,18 @@ export function TradeBalanceCard({
 
   return (
     <section className="min-w-0 rounded-[10px] border border-line bg-surface p-5 sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
-        <div className="min-w-0 flex-1">
-          <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">{title}</h2>
-          <p className="m-0 mt-2 text-[0.875rem] leading-[1.5] text-ink-muted">
-            {countryName
-              ? `Exports minus imports of goods with ${countryName}, month by month, under each president. Recessions are shaded.`
-              : "Exports minus imports of goods, month by month, under each president. Recessions are shaded."}
-          </p>
-        </div>
-        <div className="flex flex-none flex-col items-end gap-2">
-          <PillGroup options={MEASURES} value={measure} onChange={(m) => setMeasure(m as Measure)} ariaLabel="Measure" />
-          <div className="text-right">
-            <div className="font-mono text-[1.6rem] font-medium leading-tight text-ink">{headline}</div>
-            <div className="mt-0.5 text-[0.75rem] text-ink-muted">{reading ? reading.label : ""}</div>
-          </div>
+      <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">{title}</h2>
+      <p className="m-0 mt-2 text-[0.875rem] leading-[1.5] text-ink-muted">
+        {countryName
+          ? `Exports minus imports of goods with ${countryName}, month by month, under each president. Recessions are shaded.`
+          : "Exports minus imports of goods, month by month, under each president. Recessions are shaded."}
+      </p>
+      {/* The measure toggle and the headline number share one line under the subhead. */}
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+        <PillGroup options={MEASURES} value={measure} onChange={(m) => setMeasure(m as Measure)} ariaLabel="Measure" />
+        <div className="min-w-0 text-right">
+          <div className="whitespace-nowrap font-mono text-[1.25rem] font-medium leading-tight text-ink sm:text-[1.6rem]">{headline}</div>
+          <div className="mt-0.5 text-[0.75rem] text-ink-muted">{reading ? reading.label : ""}</div>
         </div>
       </div>
 

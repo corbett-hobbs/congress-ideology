@@ -112,7 +112,26 @@ export function TradeTariffCard({
       {main && shown && <MobileReadout line={mobileLine} />}
       <div className="mt-3.5">
         {main && shown ? (
-          <TradeTariffChart main={main} duties={shown.duties} imports={shown.imports} reference={reference} scale={scale} era={era} flags={flags} showCong={showCong} view={view} ariaLabel={aria} />
+          <TradeTariffChart
+            main={main}
+            duties={shown.duties}
+            imports={shown.imports}
+            reference={reference}
+            scale={scale}
+            era={era}
+            flags={flags}
+            showCong={showCong}
+            view={view}
+            ariaLabel={aria}
+            legend={
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
+          <span className="inline-flex items-center gap-1.5"><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>{countryName ? `${countryName}` : "All countries"}, calculated duties ÷ imports</span>
+          {countryName && <span className="inline-flex items-center gap-1.5"><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="1.75" /></svg>All countries, for reference</span>}
+          <span className="inline-flex items-center gap-1.5"><svg width="22" height="10" aria-hidden><line x1="11" x2="11" y1="0" y2="10" stroke="var(--accent)" strokeWidth="1.4" /><circle cx="11" cy="3" r="2.8" fill="var(--accent)" /></svg>Tariff action (solid: major; dashed: other)</span>
+          <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--ink) 9%, transparent)" border />Recession (NBER)</span>
+        </div>
+            }
+          />
         ) : (
           <div role="status" className="flex h-[260px] items-center justify-center rounded-md border border-dashed border-line text-[0.85rem] text-ink-muted">
             {error ? `Couldn’t load ${countryName ?? "that country"}. Pick it again to retry.` : loading ? `Loading ${countryName ?? "country"}…` : ""}
@@ -120,21 +139,15 @@ export function TradeTariffCard({
         )}
       </div>
 
-      <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
-        <span className="inline-flex items-center gap-1.5"><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>{countryName ? `${countryName}` : "All countries"}, calculated duties ÷ imports</span>
-        {countryName && <span className="inline-flex items-center gap-1.5"><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="1.75" /></svg>All countries, for reference</span>}
-        <span className="inline-flex items-center gap-1.5"><svg width="22" height="10" aria-hidden><line x1="11" x2="11" y1="0" y2="10" stroke="var(--accent)" strokeWidth="1.4" /><circle cx="11" cy="3" r="2.8" fill="var(--accent)" /></svg>Tariff action (solid: major; dashed: other)</span>
-        <span className="inline-flex items-center gap-1.5"><Swatch color="var(--dem)" />Democratic</span>
-        <span className="inline-flex items-center gap-1.5"><Swatch color="var(--rep)" />Republican</span>
-        <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--ink) 9%, transparent)" border />Recession (NBER)</span>
-      </div>
-
-      <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">
-        The line is calculated duties divided by imports for consumption, both from Census import data: from the Census Bureau from January 2010, and from the U.S. International Trade Commission’s
+      <details className="mt-3">
+        <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">See methodology</summary>
+        <p className="m-0 mt-1.5 text-[0.75rem] leading-[1.45] text-ink-muted">
+          The line is calculated duties divided by imports for consumption, both from Census import data: from the Census Bureau from January 2010, and from the U.S. International Trade Commission’s
         DataWeb for 1993 to 2009, which serves the same Census entries (the two sources match exactly over 2010 to 2012). Calculated duties are computed from import entries, not taken from Treasury’s receipts, so don’t read them as tariff revenue.
         The line can fall without any tariff being cut if importers shift to other countries or products, and exemptions and timing also move it. Not seasonally adjusted. Census data runs about two months behind,
         so the latest events may sit at the edge of the line; actions dated after the last month of data are pinned to the right edge. Dates are when each action took effect. Legal status is as of the last review, {dateText(lastReviewed)}.
-      </p>
+        </p>
+      </details>
       <EventsTable flags={flags} lastReviewed={lastReviewed} />
     </section>
   );

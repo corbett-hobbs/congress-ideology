@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useMemo, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { memo, useMemo, type ReactNode, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
@@ -40,6 +40,8 @@ interface Props {
   showCong: boolean;
   view: readonly [number, number];
   ariaLabel: string;
+  /** Drawn directly under the chart, above the numbered key on narrow screens. */
+  legend?: ReactNode;
 }
 
 const dateText = (iso: string) => {
@@ -197,7 +199,7 @@ function Overlay({ W, main, scale, view, showCong, flagInputs, era }: { W: numbe
 }
 
 export function TradeTariffChart(props: Props) {
-  const { main, duties, imports, scale, era, flags, showCong, view, ariaLabel } = props;
+  const { main, duties, imports, scale, era, flags, showCong, view, ariaLabel, legend } = props;
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || 1140;
   const flagInputs = useFlagInputs(flags);
@@ -257,12 +259,14 @@ export function TradeTariffChart(props: Props) {
         )}
       </ChartFrame>
 
+      {legend}
+
       {g.compact && g.placed.length > 0 && (
-        <ol className="m-0 mt-2 list-none space-y-0.5 p-0 text-[0.72rem] text-ink-muted">
+        <ol className="m-0 mt-3 list-none space-y-1 p-0 text-[0.75rem] leading-snug text-ink-muted">
           {g.placed.map((p) => (
-            <li key={p.ids.join("+")}>
-              <span className="mr-1.5 inline-flex size-4 items-center justify-center rounded-full bg-accent text-[0.6rem] font-semibold text-accent-ink">{p.number}</span>
-              {p.ids.map((id) => byId.get(id)).filter((f): f is TariffFlag => !!f).map((f) => `${dateText(f.date)} · ${f.label}`).join("; ")}
+            <li key={p.ids.join("+")} className="flex items-start gap-2">
+              <span className="mt-px inline-flex size-4 flex-none items-center justify-center rounded-full bg-accent text-[0.6rem] font-semibold text-accent-ink">{p.number}</span>
+              <span>{p.text}</span>
             </li>
           ))}
         </ol>
