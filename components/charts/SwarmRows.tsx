@@ -40,6 +40,8 @@ export interface SwarmPoint<TP> {
   ring?: "seated" | "selected";
   /** Hollow dot: filled with the surface colour and outlined in the dot's colour (the "other" end of a dumbbell). */
   hollow?: boolean;
+  /** Vertical nudge in px, to stagger dots that would otherwise sit on top of each other. */
+  dy?: number;
   /** Show a pointer cursor (a profile page exists to navigate to). */
   navigable?: boolean;
   onClick?: () => void;
@@ -204,7 +206,7 @@ export function SwarmRows<TP>({
                           <circle
                             className={`swarm-ring is-${p.ring}`}
                             cx={x(p.value)}
-                            cy={y}
+                            cy={y + (p.dy ?? 0)}
                             r={(p.radius ?? 5) + (p.ring === "selected" ? 5 : 3.5)}
                             opacity={p.opacity}
                             pointerEvents="none"
@@ -213,7 +215,7 @@ export function SwarmRows<TP>({
                         <circle
                           className={`deleg-dot ${p.colorClass}${p.highlighted ? " is-highlighted" : ""}${p.hollow ? " is-hollow" : ""}`}
                           cx={x(p.value)}
-                          cy={y}
+                          cy={y + (p.dy ?? 0)}
                           r={p.radius ?? (p.highlighted ? 7 : p.emphasized ? 5 : 3)}
                           opacity={p.opacity ?? (p.emphasized ? 1 : 0.5)}
                           style={p.navigable ? { cursor: "pointer" } : undefined}

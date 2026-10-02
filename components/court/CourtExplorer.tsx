@@ -223,7 +223,7 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
                 wrapper (see the grid comment above); below md it simply
                 expands and the page scrolls — no nested scroll on touch. */}
             <div className="relative mt-1 flex-1 md:min-h-[300px]">
-              <div className="border-t border-line pt-1 md:absolute md:inset-0 md:overflow-y-auto">
+              <div className="touch-scroll border-t border-line pt-1 max-md:max-h-[22rem] max-md:overflow-y-auto max-md:overscroll-contain md:absolute md:inset-0 md:overflow-y-auto" tabIndex={0} aria-label="Presidents, scrollable">
                 <PresidentRows
                   data={data}
                   term={term}

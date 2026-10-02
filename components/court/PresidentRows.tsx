@@ -14,8 +14,19 @@ import {
 
 export type PresidentSort = "chronological" | "spread";
 
-const MARGIN = { top: 4, right: 84, bottom: 4, left: 112 };
-const ROW_H = 30;
+// Room above the plot for the score axis; the label gutter fits the longest president key ("G.H.W. Bush").
+const MARGIN = { top: 26, right: 72, bottom: 8, left: 84 };
+const ROW_H = 34;
+/** Dots closer than this fraction of the axis span are staggered up and down so they stay readable. */
+const CLOSE = 0.07;
+
+/** Integer ticks across a domain, with a real minus sign. */
+const tickValues = ([lo, hi]: [number, number]) => {
+  const out: number[] = [];
+  for (let v = Math.ceil(lo); v <= Math.floor(hi); v++) out.push(v);
+  return out;
+};
+const fmtTick = (v: number) => (v === 0 ? "0" : `${v < 0 ? "−" : "+"}${Math.abs(v)}`);
 
 interface Tip {
   j: CourtJustice;
@@ -42,6 +53,12 @@ export function PresidentRows({
   sort: PresidentSort;
   onSelect: (id: number) => void;
 }) {
+  // Fit the axis to the justices' career averages (padded) rather than the wide interval domain, so the dots spread out.
+  const domain = useMemo<[number, number]>(() => {
+    const c = data.justices.map((j) => j.career);
+    return [Math.floor((Math.min(...c) - 0.3) * 2) / 2, Math.ceil((Math.max(...c) + 0.3) * 2) / 2];
+  }, [data.justices]);
+
   const rows = useMemo<SwarmRowData<Tip>[]>(() => {
     const byId = new Map(data.justices.map((j) => [j.id, j]));
     // Latest president first — also the tie-break for "Widest spread".
@@ -68,7 +85,9 @@ export function PresidentRows({
         meta: `${js.length} justice${js.length === 1 ? "" : "s"}`,
         points: [...js]
           .sort((a, b) => a.career - b.career)
-          .map((j) => ({
+          .map((j, i, arr) => ({
+            // Alternate close neighbours above and below the row's line.
+            dy: i > 0 && j.career - arr[i - 1].career < CLOSE * (domain[1] - domain[0]) ? (i % 2 ? -7 : 7) : 0,
             id: String(j.id),
             value: j.career,
             colorClass: j.party === "D" ? "fill-dem" : "fill-rep",
@@ -87,7 +106,7 @@ export function PresidentRows({
           })),
       };
     });
-  }, [data, term, filter, selectedId, sort, onSelect]);
+  }, [data, term, filter, selectedId, sort, onSelect, domain]);
 
   return (
     <SwarmRows
@@ -95,8 +114,9 @@ export function PresidentRows({
       ariaLabel="Justices grouped by appointing president, at their career average score"
       margin={MARGIN}
       rowHeight={ROW_H}
-      domain={data.domain}
-      showAxis={false}
+      domain={domain}
+      ticks={tickValues(domain)}
+      formatTick={fmtTick}
       renderTooltip={({ j }) => (
         <>
           <b>{j.name}</b>
