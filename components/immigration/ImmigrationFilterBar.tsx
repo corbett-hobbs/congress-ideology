@@ -29,13 +29,15 @@ export function ImmigrationFilterBar({
   return (
     <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 shadow-[0_2px_6px_rgba(26,34,51,0.08)] backdrop-blur sm:shadow-none">
       <div className="mx-auto w-full max-w-[1180px] px-4 pb-2 pt-2 sm:px-6 sm:py-2.5">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-x-5">
-        <label className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
-          <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">President</span>
+        {/* Phones: the dropdown and the slider share one row (two controls per row; the label is dropped, "All presidents" says it). */}
+        <div className="flex items-center gap-2 sm:gap-x-5">
+        <label className="flex flex-none items-center gap-2">
+          <span className="hidden font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint sm:inline">President</span>
           <select
+            aria-label="President"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="h-11 w-full min-w-0 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-auto sm:w-[15rem] sm:py-[0.42rem]"
+            className="h-11 w-[8.25rem] min-w-0 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-auto sm:w-[15rem] sm:py-[0.42rem]"
           >
             <option value="all">All presidents</option>
             {termsNewestFirst(terms).map((t) => (
