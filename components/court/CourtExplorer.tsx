@@ -179,22 +179,20 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
               />
             </dl>
 
-            {/* Reserved height so the card never resizes when a mid-term change appears. */}
-            <p className="mt-2 min-h-[2.6rem] text-[0.82rem] text-ink-muted lg:min-h-[1.4rem]">
-              {(rec.left.length > 0 || rec.joined.length > 0) && (
-                <>
-                  <span className="text-ink-faint">Mid-term change </span>
-                  <span className="font-medium text-ink">
-                    {[
-                      rec.left.length ? `${names(rec.left)} left` : "",
-                      rec.joined.length ? `${names(rec.joined)} joined` : "",
-                    ]
-                      .filter(Boolean)
-                      .join("; ")}
-                  </span>
-                </>
-              )}
-            </p>
+            {/* Only present in terms with a mid-term change; the cards sit in a stretched grid row, so showing or hiding it doesn't resize the row. */}
+            {(rec.left.length > 0 || rec.joined.length > 0) && (
+              <p className="mt-2 text-[0.82rem] text-ink-muted">
+                <span className="text-ink-faint">Mid-term change </span>
+                <span className="font-medium text-ink">
+                  {[
+                    rec.left.length ? `${names(rec.left)} left` : "",
+                    rec.joined.length ? `${names(rec.joined)} joined` : "",
+                  ]
+                    .filter(Boolean)
+                    .join("; ")}
+                </span>
+              </p>
+            )}
 
             <MethodologyNote className="mt-2">
             <p>
