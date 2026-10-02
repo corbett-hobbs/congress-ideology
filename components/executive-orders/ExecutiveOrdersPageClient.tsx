@@ -207,7 +207,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
           <TableFallback years={data.years} />
         </ChartCard>
 
-        <YearList year={selectedYear} years={data.years} president={president} onClearPresident={() => setRange(null)} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
+        <YearList year={selectedYear} years={data.years} range={[from, to]} president={president} onClearPresident={() => setRange(null)} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
 
         <footer className="flex flex-col gap-2 border-t border-line pt-6 text-[0.76rem] leading-[1.6] text-ink-faint">
           <p className="m-0">
@@ -282,6 +282,7 @@ function YearTooltip({
 function YearList({
   year,
   years,
+  range,
   president,
   onClearPresident,
   topic,
@@ -291,6 +292,8 @@ function YearList({
 }: {
   year: EoYear | null;
   years: readonly EoYear[];
+  /** The years shown in the chart, inclusive. */
+  range: readonly [number, number];
   president: string | null;
   onClearPresident: () => void;
   topic: EoTopic | null;
@@ -320,6 +323,24 @@ function YearList({
           </div>
         )}
         <OrderRows items={items} showPresident={false} admins={admins} />
+      </section>
+    );
+  }
+  if (!year && topic) {
+    // A topic with no year selected: every order on that topic in the years the chart shows, newest first.
+    const items = years.filter((y) => y.year >= range[0] && y.year <= range[1]).flatMap((y) => y.items).filter((i) => i.topic === topic).sort((a, b) => b.n - a.n);
+    return (
+      <section aria-live="polite" aria-label={`Executive orders on ${EO_TOPIC_LABELS[topic]}`} className="rounded-[10px] border border-line bg-surface">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line px-5 py-3">
+          <h2 className="font-serif text-[1.05rem] font-medium">
+            {EO_TOPIC_LABELS[topic]}: {items.length} executive orders, {range[0]}–{range[1]}
+          </h2>
+          <button type="button" onClick={onClearTopic} className="text-[0.78rem] font-medium text-accent hover:underline">
+            Show all topics
+          </button>
+        </div>
+        <div className="border-b border-line bg-surface-raised px-5 py-2 text-[0.78rem] text-ink-muted">Newest first. Select a year in the chart to narrow the list to that year.</div>
+        <OrderRows items={items} showPresident admins={admins} />
       </section>
     );
   }
