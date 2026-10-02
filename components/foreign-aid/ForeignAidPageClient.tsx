@@ -1,12 +1,11 @@
 "use client";
 
-import { ChartCard } from "@/components/charts/ChartCard";
 import { PageHeader } from "@/components/PageHeader";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
 import type { AidPayload } from "@/lib/foreign-aid-types";
 import { ForeignAidFilterBar } from "./ForeignAidFilterBar";
 import { AidStateProvider } from "./ForeignAidState";
-import { SelectionReadout } from "./Placeholders";
+import { FirstPlaceCard } from "./FirstPlaceCard";
 import { MapAndRanked } from "./MapAndRanked";
 import { SpendingCard } from "./SpendingCard";
 
@@ -35,9 +34,7 @@ export function ForeignAidPageClient({ payload, map }: { payload: AidPayload; ma
 
         <MapAndRanked map={map} />
 
-        <ChartCard title="Who’s been No. 1" lede="The largest recipient country in each fiscal year.">
-          <SelectionReadout what="No. 1 strip" />
-        </ChartCard>
+        <FirstPlaceCard />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: ForeignAssistance.gov, disbursements in nominal dollars, data through {dateLabel(payload.dataThrough)}. A fiscal year runs October 1 to

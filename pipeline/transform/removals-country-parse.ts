@@ -61,14 +61,19 @@ function readColumns(lines: string[], spec: CountrySourceSpec): ParsedTable {
   const rows: RawCountryRow[] = [];
   const skipped: string[] = [];
   let total: number[] | null = null;
+  let prev = "";
   for (const raw of lines) {
     const line = raw.replace(/\f/g, "");
     const m = row.exec(line);
+    // A long name wraps onto the line above ("SERBIA AND" / "MONTENEGRO  2  2  1"): the text-only line
+    // directly above a row belongs to its name.
+    const wrapped = prev && !/\d/.test(prev) ? prev : "";
+    prev = line.trim();
     if (!m) {
       if (/\d/.test(line)) skipped.push(line.trim());
       continue;
     }
-    const name = cleanName(m[1]);
+    const name = cleanName(`${wrapped} ${m[1]}`);
     const values = m[2].split(/\s+/).map(num);
     if (/^total$/i.test(name)) {
       if (total) throw new RemovalsCountryError(`${spec.source}: two Total rows`);
