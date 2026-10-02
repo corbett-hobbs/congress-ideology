@@ -3,7 +3,7 @@
 import { forwardRef, useMemo, useRef, useState, type PointerEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MethodologyNote } from "@/components/MethodologyNote";
-import { PillGroup } from "@/components/charts/PillGroup";
+import { ReversibleSortToggle } from "@/components/charts/SortToggle";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useZoomPan } from "@/components/charts/use-zoom-pan";
 import { ZoomControls } from "@/components/charts/ZoomControls";
@@ -11,9 +11,12 @@ import { SECTOR_LABEL, SLOT_NAME, formatAidMoney, militaryShareAvailable, slotOf
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
 import { DOLLAR_MIX, SHARE_BINS, SHARE_MIX, buildPathIndex, dollarBins, dollarClass, nodeValue, notOnMap, shareClass, undrawnCountries, type NodeValue } from "@/lib/foreign-aid-map";
 import { useAidState } from "./ForeignAidState";
+import { RankedList } from "./RankedList";
 import { TD, TH, TableView, slotColor } from "./shared";
 
 type Measure = "dollars" | "share";
+/** The one toggle: which measure the map shades and the list ranks by. Clicking the active button reverses the list only. */
+type Pick = { key: Measure; reversed: boolean };
 
 interface Hit {
   title: string;
@@ -34,7 +37,7 @@ const MAX_ZOOM = 8;
  */
 export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function MapCard({ map }, ref) {
   const { data, year, sector, country, toggleCountry, isPartial } = useAidState();
-  const [measure, setMeasure] = useState<Measure>("dollars");
+  const [pick, setPick] = useState<Pick>({ key: "dollars", reversed: false });
   const tip = useTooltip<Hit>();
   const svgRef = useRef<SVGSVGElement>(null);
   // The hook's square [-1, 1] domain is normalized onto the map's viewBox, so zoom and pan work by moving the viewBox.
@@ -48,7 +51,8 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
   const { k, cx, cy } = zoom.view;
   const yi = year - data.payload.years[0];
   const shareOk = militaryShareAvailable(sector);
-  const share = measure === "share" && shareOk;
+  const share = pick.key === "share" && shareOk;
+  const reversed = (share ? pick.key === "share" : pick.key === "dollars") && pick.reversed;
   const names = data.payload.countries;
 
   const pathIndex = useMemo(() => buildPathIndex(data, map), [data, map]);
@@ -116,43 +120,58 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
     return out.sort((a, b) => b.v - a.v);
   }, [data, yi, sector]);
 
+  const selRank = (() => {
+    const i = rowsAll.findIndex((r) => r.ci === country);
+    return i < 0 ? null : { rank: i + 1, v: rowsAll[i].v };
+  })();
+
   const legend = share ? SHARE_BINS.labels : bins.labels;
   const legendMix = share ? SHARE_MIX : DOLLAR_MIX;
 
   return (
     <ChartCard
       ref={ref}
-      title="Where it goes"
+      title="Where it goes, and who receives the most"
       lede={
         share ? (
           <>
             FY{year}
-            {isPartial(year) ? " (partial)" : ""} · share of {sectorWord === "all" ? "all" : "Peace and security"} dollars that was military
+            {isPartial(year) ? " (partial)" : ""} · share of {sectorWord === "all" ? "all" : "Peace and security"} dollars that was military · bars show each country’s sector mix
           </>
         ) : (
           <>
             FY{year}
-            {isPartial(year) ? " (partial)" : ""} · <b className="font-semibold text-ink">{formatAidMoney(n.countries)}</b> to {n.countryCount} countries
+            {isPartial(year) ? " (partial)" : ""} · <b className="font-semibold text-ink">{formatAidMoney(n.countries)}</b> to {n.countryCount} countries · bars show each country’s sector mix
           </>
         )
       }
       action={
-        <PillGroup<Measure>
-          ariaLabel="Map measure"
-          value={share ? "share" : "dollars"}
-          onChange={setMeasure}
-          options={[
-            { value: "dollars", label: "Dollars" },
-            {
-              value: "share",
-              label: "Military share",
-              disabled: !shareOk,
-              title: shareOk ? undefined : "Military assistance sits within Peace and Security, so this view needs Sector set to All or Peace and security.",
-            },
-          ]}
-        />
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {country >= 0 && (
+            <span className="rounded-md border border-line-strong bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">
+              {selRank ? `${names[country].name} · No. ${selRank.rank} · ${formatAidMoney(selRank.v)}` : `${names[country].name} · no disbursements`}
+            </span>
+          )}
+          <ReversibleSortToggle<Measure>
+            ariaLabel="Map measure and list order"
+            active={share ? "share" : "dollars"}
+            reversed={reversed}
+            onSelect={(k) => setPick((p) => (p.key === k ? { key: k, reversed: !p.reversed } : { key: k, reversed: false }))}
+            options={[
+              { key: "dollars", label: "Dollars", hint: "Largest first; click again to reverse the list (the map doesn’t change)" },
+              {
+                key: "share",
+                label: "Military share",
+                hint: shareOk ? "Highest military share first; click again to reverse the list" : "Military assistance sits within Peace and Security, so this view needs Sector set to All or Peace and security.",
+                disabled: !shareOk,
+              },
+            ]}
+          />
+        </div>
       }
     >
+      <div className="grid grid-cols-1 gap-x-4 gap-y-4 md:grid-cols-[1.5fr_1fr] md:items-stretch">
+      <div className="flex min-w-0 flex-col">
       <div className="relative">
       <svg
         ref={svgRef}
@@ -239,6 +258,10 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
           </span>
         )}
       </div>
+      </div>
+      <RankedList mode={share ? "share" : "dollars"} reversed={reversed} />
+      </div>
+
       <MethodologyNote>
         <p>
         {share ? (
