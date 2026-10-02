@@ -16,7 +16,7 @@ const useIsoLayoutEffect = typeof window === "undefined" ? () => {} : useLayoutE
  */
 export function MethodologyNote({
   children,
-  label = "See methodology",
+  label = "Data notes",
   className = "mt-3",
 }: {
   children: ReactNode;
