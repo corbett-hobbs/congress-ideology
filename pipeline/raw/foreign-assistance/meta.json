@@ -1,0 +1,364 @@
+{
+  "fetched_at": "2026-10-02T05:32:08.040Z",
+  "data_through": "2026-09-30",
+  "expected_records": {
+    "sector": {
+      "2": 72857,
+      "3": 77961
+    },
+    "military": {
+      "2001-2": 650,
+      "2001-3": 650,
+      "2002-2": 491,
+      "2002-3": 491,
+      "2003-2": 583,
+      "2003-3": 583,
+      "2004-2": 382,
+      "2004-3": 380,
+      "2005-2": 1348,
+      "2005-3": 1206,
+      "2006-2": 695,
+      "2006-3": 565,
+      "2007-2": 567,
+      "2007-3": 567,
+      "2008-2": 445,
+      "2008-3": 430,
+      "2009-2": 574,
+      "2009-3": 581,
+      "2010-2": 607,
+      "2010-3": 617,
+      "2011-2": 735,
+      "2011-3": 735,
+      "2012-2": 660,
+      "2012-3": 660,
+      "2013-2": 643,
+      "2013-3": 645,
+      "2014-2": 644,
+      "2014-3": 640,
+      "2015-2": 798,
+      "2015-3": 795,
+      "2016-2": 867,
+      "2016-3": 919,
+      "2017-2": 660,
+      "2017-3": 669,
+      "2018-2": 1014,
+      "2018-3": 1027,
+      "2019-2": 2301,
+      "2019-3": 3037,
+      "2020-2": 1484,
+      "2020-3": 1898,
+      "2021-2": 882,
+      "2021-3": 907,
+      "2022-2": 3467,
+      "2022-3": 3455,
+      "2023-2": 4360,
+      "2023-3": 3580,
+      "2024-2": 3870,
+      "2024-3": 3262,
+      "2025-2": 2033,
+      "2025-3": 1184,
+      "2026-2": 78,
+      "2026-3": 189
+    }
+  },
+  "categories": [
+    {
+      "id": 1,
+      "name": "Peace and Security"
+    },
+    {
+      "id": 2,
+      "name": "Democracy, Human Rights, and Governance"
+    },
+    {
+      "id": 3,
+      "name": "Health"
+    },
+    {
+      "id": 4,
+      "name": "Education and Social Services"
+    },
+    {
+      "id": 5,
+      "name": "Economic Development"
+    },
+    {
+      "id": 6,
+      "name": "Environment"
+    },
+    {
+      "id": 7,
+      "name": "Humanitarian Assistance"
+    },
+    {
+      "id": 8,
+      "name": "Program Support"
+    },
+    {
+      "id": 9,
+      "name": "Multi-sector"
+    }
+  ],
+  "sectors": [
+    {
+      "id": 1,
+      "category_id": 1,
+      "name": "Counter-Terrorism"
+    },
+    {
+      "id": 2,
+      "category_id": 1,
+      "name": "Combating Weapons of Mass Destruction (WMD)"
+    },
+    {
+      "id": 3,
+      "category_id": 1,
+      "name": "Stabilization Operations and Security Sector Reform"
+    },
+    {
+      "id": 4,
+      "category_id": 1,
+      "name": "Counter-Narcotics"
+    },
+    {
+      "id": 5,
+      "category_id": 1,
+      "name": "Transnational Crime"
+    },
+    {
+      "id": 6,
+      "category_id": 1,
+      "name": "Conflict Mitigation and Reconciliation"
+    },
+    {
+      "id": 7,
+      "category_id": 2,
+      "name": "Rule of Law and Human Rights"
+    },
+    {
+      "id": 8,
+      "category_id": 2,
+      "name": "Good Governance"
+    },
+    {
+      "id": 9,
+      "category_id": 2,
+      "name": "Political Competition and Consensus-Building"
+    },
+    {
+      "id": 10,
+      "category_id": 2,
+      "name": "Civil Society"
+    },
+    {
+      "id": 11,
+      "category_id": 3,
+      "name": "HIV/AIDS"
+    },
+    {
+      "id": 12,
+      "category_id": 3,
+      "name": "Tuberculosis"
+    },
+    {
+      "id": 13,
+      "category_id": 3,
+      "name": "Malaria"
+    },
+    {
+      "id": 14,
+      "category_id": 3,
+      "name": "Pandemic Influenza and Other Emerging Threats (PIOET)"
+    },
+    {
+      "id": 15,
+      "category_id": 3,
+      "name": "Other Public Health Threats"
+    },
+    {
+      "id": 16,
+      "category_id": 3,
+      "name": "Maternal and Child Health"
+    },
+    {
+      "id": 17,
+      "category_id": 3,
+      "name": "Family Planning and Reproductive Health"
+    },
+    {
+      "id": 18,
+      "category_id": 3,
+      "name": "Water Supply and Sanitation"
+    },
+    {
+      "id": 19,
+      "category_id": 3,
+      "name": "Nutrition"
+    },
+    {
+      "id": 20,
+      "category_id": 4,
+      "name": "Basic Education"
+    },
+    {
+      "id": 21,
+      "category_id": 4,
+      "name": "Higher Education"
+    },
+    {
+      "id": 22,
+      "category_id": 4,
+      "name": "Policies, Regulations, and Systems"
+    },
+    {
+      "id": 23,
+      "category_id": 4,
+      "name": "Social Services"
+    },
+    {
+      "id": 24,
+      "category_id": 4,
+      "name": "Social Assistance"
+    },
+    {
+      "id": 25,
+      "category_id": 5,
+      "name": "Macroeconomic Foundation for Growth"
+    },
+    {
+      "id": 26,
+      "category_id": 5,
+      "name": "Trade and Investment"
+    },
+    {
+      "id": 27,
+      "category_id": 5,
+      "name": "Financial Sector"
+    },
+    {
+      "id": 28,
+      "category_id": 5,
+      "name": "Infrastructure"
+    },
+    {
+      "id": 29,
+      "category_id": 5,
+      "name": "Agriculture"
+    },
+    {
+      "id": 30,
+      "category_id": 5,
+      "name": "Private Sector Competitiveness"
+    },
+    {
+      "id": 31,
+      "category_id": 5,
+      "name": "Economic Opportunity"
+    },
+    {
+      "id": 32,
+      "category_id": 5,
+      "name": "Labor Policies and Markets"
+    },
+    {
+      "id": 33,
+      "category_id": 5,
+      "name": "Manufacturing"
+    },
+    {
+      "id": 34,
+      "category_id": 5,
+      "name": "Mining and Natural Resources"
+    },
+    {
+      "id": 35,
+      "category_id": 6,
+      "name": "Natural Resources and Biodiversity"
+    },
+    {
+      "id": 36,
+      "category_id": 6,
+      "name": "Clean Productive Environment"
+    },
+    {
+      "id": 37,
+      "category_id": 7,
+      "name": "Protection, Assistance and Solutions"
+    },
+    {
+      "id": 38,
+      "category_id": 7,
+      "name": "Disaster Readiness"
+    },
+    {
+      "id": 39,
+      "category_id": 7,
+      "name": "Migration Management"
+    },
+    {
+      "id": 40,
+      "category_id": 9,
+      "name": "Debt Relief"
+    },
+    {
+      "id": 41,
+      "category_id": 8,
+      "name": "Direct Administrative Costs"
+    },
+    {
+      "id": 42,
+      "category_id": 8,
+      "name": "Monitoring and Evaluation"
+    },
+    {
+      "id": 43,
+      "category_id": 9,
+      "name": "International Contributions"
+    },
+    {
+      "id": 44,
+      "category_id": 6,
+      "name": "Environment"
+    },
+    {
+      "id": 45,
+      "category_id": 1,
+      "name": "Peace and Security - General"
+    },
+    {
+      "id": 46,
+      "category_id": 2,
+      "name": "Democracy, Human Rights, and Governance - General"
+    },
+    {
+      "id": 47,
+      "category_id": 3,
+      "name": "Health - General"
+    },
+    {
+      "id": 48,
+      "category_id": 4,
+      "name": "Education and Social Services - General"
+    },
+    {
+      "id": 49,
+      "category_id": 5,
+      "name": "Economic Development - General"
+    },
+    {
+      "id": 50,
+      "category_id": 6,
+      "name": "Environment - General"
+    },
+    {
+      "id": 51,
+      "category_id": 7,
+      "name": "Humanitarian Assistance - General"
+    },
+    {
+      "id": 52,
+      "category_id": 9,
+      "name": "Multi-sector - Unspecified"
+    }
+  ]
+}
