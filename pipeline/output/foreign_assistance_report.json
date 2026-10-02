@@ -1,0 +1,264 @@
+{
+  "source": {
+    "data_through": "2026-09-30",
+    "fetched_at": "2026-10-02T05:32:08.040Z",
+    "source_sector_rows": 150818
+  },
+  "rows": {
+    "foreign_assistance": 32604,
+    "by_recipient_type": {
+      "country": 28171,
+      "regional": 4199,
+      "global": 234
+    }
+  },
+  "coverage": {
+    "first_fiscal_year": 2001,
+    "latest_fiscal_year": 2026,
+    "partial_years": [
+      2026
+    ]
+  },
+  "crosswalk": {
+    "recipients": 247,
+    "identity": 208,
+    "rule": 36,
+    "unmapped": 3,
+    "rules_applied": [
+      {
+        "recipient_name": "Czechoslovakia (former)",
+        "source_code": null,
+        "country_key": "CSK",
+        "rule": "Source gives no code; matched by name to the trade pipeline's Czechoslovakia (CSK)."
+      },
+      {
+        "recipient_name": "Kosovo",
+        "source_code": "CS-KM",
+        "country_key": "XKX",
+        "rule": "ForeignAssistance.gov labels Kosovo CS-KM; the trade pipeline's user-assigned code is XKX."
+      }
+    ],
+    "country_recipients_without_trade_key": [
+      {
+        "recipient_name": "West Bank and Gaza",
+        "source_code": "PSE",
+        "rule": "West Bank and Gaza is one aid recipient; trade reports West Bank (XWB) and Gaza (XGZ) separately, so there is no single trade counterpart."
+      }
+    ],
+    "unmapped_entities": [
+      {
+        "recipient_name": "China (Tibet)",
+        "source_code": "TIB"
+      },
+      {
+        "recipient_name": "Pacific Island Trust Territory",
+        "source_code": "PIT"
+      },
+      {
+        "recipient_name": "Sudan (former)",
+        "source_code": "SDF"
+      }
+    ]
+  },
+  "sanity": {
+    "negative_disbursement_rows": 439,
+    "military_exceeds_total_rows": 17,
+    "note": "Negative disbursements are documented source adjustments; kept as published."
+  },
+  "reconciliation": {
+    "thresholds": "<=0.5% pass; 0.5-5% investigate; >5% stop; FY2026 sanity only",
+    "targets": [
+      {
+        "label": "FY2025 total disbursements",
+        "expected": 47317850037,
+        "actual": 47841390743,
+        "diff_pct": 1.106,
+        "status": "investigate"
+      },
+      {
+        "label": "FY2024 total disbursements",
+        "expected": 71576179502,
+        "actual": 71550094693,
+        "diff_pct": -0.036,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 Peace and Security",
+        "expected": 7316232703,
+        "actual": 7451348420,
+        "diff_pct": 1.847,
+        "status": "investigate"
+      },
+      {
+        "label": "FY2024 Peace and Security",
+        "expected": 18246109424,
+        "actual": 18244180571,
+        "diff_pct": -0.011,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 Health",
+        "expected": 10933117708,
+        "actual": 10937153596,
+        "diff_pct": 0.037,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 Humanitarian Assistance",
+        "expected": 8987429153,
+        "actual": 8987429153,
+        "diff_pct": 0,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 Ukraine total",
+        "expected": 6697398275,
+        "actual": 6752933185,
+        "diff_pct": 0.829,
+        "status": "investigate"
+      },
+      {
+        "label": "FY2025 Ukraine military",
+        "expected": 1011759817,
+        "actual": 1011759817,
+        "diff_pct": 0,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 Ukraine non-military",
+        "expected": 5685638458,
+        "actual": 5741173368,
+        "diff_pct": 0.977,
+        "status": "investigate"
+      },
+      {
+        "label": "FY2025 Israel total",
+        "expected": 3310740466,
+        "actual": 3310792558,
+        "diff_pct": 0.002,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 Israel military",
+        "expected": 3305572360,
+        "actual": 3305572360,
+        "diff_pct": 0,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 Jordan total",
+        "expected": 1652265359,
+        "actual": 1653205369,
+        "diff_pct": 0.057,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 global-program share (%)",
+        "expected": 26.5,
+        "actual": 26.45,
+        "diff_pct": -0.192,
+        "status": "pass"
+      },
+      {
+        "label": "FY2025 regional share (%)",
+        "expected": 7.7,
+        "actual": 7.62,
+        "diff_pct": -1.022,
+        "status": "investigate"
+      },
+      {
+        "label": "FY2026 total (Pew: through Jul 1)",
+        "expected": 6969294181,
+        "actual": 11754427569,
+        "diff_pct": 68.66,
+        "status": "sanity"
+      },
+      {
+        "label": "FY2026 Jordan (Pew: through Jul 1)",
+        "expected": 965700000,
+        "actual": 1239239866,
+        "diff_pct": 28.326,
+        "status": "sanity"
+      },
+      {
+        "label": "FY2026 Ukraine (Pew: through Jul 1)",
+        "expected": 214400000,
+        "actual": 482869613,
+        "diff_pct": 125.219,
+        "status": "sanity"
+      }
+    ]
+  },
+  "top_country_recipients": {
+    "2024": [
+      {
+        "name": "Ukraine",
+        "disbursements_usd": 10162507122
+      },
+      {
+        "name": "Israel",
+        "disbursements_usd": 6818569348
+      },
+      {
+        "name": "Jordan",
+        "disbursements_usd": 1743306146
+      },
+      {
+        "name": "Taiwan",
+        "disbursements_usd": 1500737621
+      },
+      {
+        "name": "Ethiopia",
+        "disbursements_usd": 1308264444
+      }
+    ],
+    "2025": [
+      {
+        "name": "Ukraine",
+        "disbursements_usd": 6752933185
+      },
+      {
+        "name": "Israel",
+        "disbursements_usd": 3310792558
+      },
+      {
+        "name": "Jordan",
+        "disbursements_usd": 1653205369
+      },
+      {
+        "name": "Ethiopia",
+        "disbursements_usd": 919783491
+      },
+      {
+        "name": "Democratic Republic of the Congo",
+        "disbursements_usd": 749911359
+      }
+    ],
+    "2026": [
+      {
+        "name": "Jordan",
+        "disbursements_usd": 1239239866
+      },
+      {
+        "name": "West Bank and Gaza",
+        "disbursements_usd": 520429454
+      },
+      {
+        "name": "Ukraine",
+        "disbursements_usd": 482869613
+      },
+      {
+        "name": "Ethiopia",
+        "disbursements_usd": 402993852
+      },
+      {
+        "name": "Nigeria",
+        "disbursements_usd": 320431080
+      }
+    ]
+  },
+  "file_sizes_bytes": {
+    "foreign_assistance/* (total)": 7350154,
+    "foreign_assistance/* (largest year)": 314196
+  }
+}

@@ -29,6 +29,7 @@ import {
 
 const VOTEVIEW = `${RAW_DIR}/voteview`;
 const LEGISLATORS = `${RAW_DIR}/congress-legislators`;
+const FA_DIR = `${RAW_DIR}/foreign-assistance`;
 
 console.log("validate");
 
@@ -334,4 +335,42 @@ await step("output/indicator_series.json + indicator_observations.json", async (
   );
   validateIndicators(series, obs);
   return `${series.length} series, ${obs.length} observations ok; (series_id, date) unique`;
+});
+
+// --- Foreign assistance track ------------------------------------------------
+// Raw ForeignAssistance.gov snapshots (schema, file name = fiscal year, snapshot is the whole
+// fetch: row counts equal the source's own totals), then our committed output.
+await step("foreign-assistance/*.json", async () => {
+  const { readRawAid } = await import("../transform/foreign-aid-run");
+  const { TX_DISBURSEMENTS, TX_OBLIGATIONS } = await import("../fetch/foreign-assistance-lib");
+  const { meta, years } = await readRawAid();
+  for (const tx of [TX_OBLIGATIONS, TX_DISBURSEMENTS]) {
+    const got = years.reduce((s, y) => s + y.sector_rows.filter((r) => r[4] === tx).length, 0);
+    const want = meta.expected_records.sector[String(tx)];
+    if (got !== want) throw new ValidationError(`${FA_DIR}`, "row count", `transaction type ${tx}: ${got} rows, source reported ${want}`);
+  }
+  return `${years.length} fiscal years (${years[0].fiscal_year}–${years[years.length - 1].fiscal_year}), row counts match the source's totals, data through ${meta.data_through}`;
+});
+
+await step("output/foreign_assistance/<year>.json + foreign_assistance_meta.json", async () => {
+  const { aidMeta, aidRow } = await import("../../lib/foreign-aid-entities");
+  const { readdir } = await import("node:fs/promises");
+  const meta = aidMeta.parse(JSON.parse(await readFile("pipeline/output/foreign_assistance_meta.json", "utf8")));
+  const dir = "pipeline/output/foreign_assistance";
+  const files = (await readdir(dir)).filter((f) => /^\d{4}\.json$/.test(f)).sort();
+  if (files.join() !== meta.years.map((y) => `${y.fiscal_year}.json`).join()) {
+    throw new ValidationError(dir, "years", "shard files do not match foreign_assistance_meta.json's years");
+  }
+  let n = 0;
+  const cats = new Set(meta.sector_categories);
+  for (const f of files) {
+    const rows = validateAll(`${dir}/${f}`, JSON.parse(await readFile(`${dir}/${f}`, "utf8")) as unknown[], aidRow, (row, i) => `record ${i} (${(row as { recipient_name?: string }).recipient_name ?? "?"})`);
+    assertUnique(`${dir}/${f}`, rows, (r) => `${r.recipient_type}|${r.recipient_name}|${r.fiscal_year}|${r.sector_category}`, (r) => `${r.recipient_name} ${r.fiscal_year} ${r.sector_category}`);
+    for (const r of rows) {
+      if (`${r.fiscal_year}.json` !== f) throw new ValidationError(`${dir}/${f}`, "fiscal_year", `${r.recipient_name} has fiscal_year ${r.fiscal_year}`);
+      if (!cats.has(r.sector_category)) throw new ValidationError(`${dir}/${f}`, "sector_category", `${r.sector_category} is not in the source taxonomy`);
+    }
+    n += rows.length;
+  }
+  return `${n} rows across ${files.length} shards ok; (recipient, fiscal_year, sector_category) unique`;
 });

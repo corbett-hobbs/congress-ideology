@@ -1,0 +1,127 @@
+{
+  "source": "ForeignAssistance.gov",
+  "measure": "disbursements",
+  "dollars": "nominal",
+  "data_through": "2026-09-30",
+  "first_fiscal_year": 2001,
+  "latest_fiscal_year": 2026,
+  "partial_basis": "calendar_rule",
+  "partial_rule": "A fiscal year is partial until data_through is at least 45 days (the source's stated quarterly reporting lag) after September 30 of that year. The source publishes no per-year completeness flag.",
+  "years": [
+    {
+      "fiscal_year": 2001,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2002,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2003,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2004,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2005,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2006,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2007,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2008,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2009,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2010,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2011,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2012,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2013,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2014,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2015,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2016,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2017,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2018,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2019,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2020,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2021,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2022,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2023,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2024,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2025,
+      "is_partial": false
+    },
+    {
+      "fiscal_year": 2026,
+      "is_partial": true
+    }
+  ],
+  "sector_categories": [
+    "Peace and Security",
+    "Democracy, Human Rights, and Governance",
+    "Health",
+    "Education and Social Services",
+    "Economic Development",
+    "Environment",
+    "Humanitarian Assistance",
+    "Program Support",
+    "Multi-sector"
+  ]
+}
