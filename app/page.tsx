@@ -30,7 +30,7 @@ const BLURBS: Record<string, string> = {
     // PLACEHOLDER COPY — awaiting Corby's edit.
     "Where the justices sit over time, from Martin\u2013Quinn ideology scores.",
   presidency:
-    "Executive orders signed each year since 1994, stacked by topic, with each presidential term marked.",
+    "Executive orders, the economy, trade, and immigration, laid out against each presidential term, from gas prices and tariffs to deportations.",
 };
 
 
@@ -59,14 +59,16 @@ export default function Hub() {
       <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col gap-8 px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
         <PageHeader title={site.tagline} size="hero">
           <p>
-            Explore ideology, net worth, and more across all three branches of
-            the U.S. government.
+            Explore the presidency, Congress, and the Supreme Court through the
+            public record: executive orders, the economy, trade, immigration,
+            ideology, and net worth.
           </p>
           <p>
-            Every roll call, every ruling, and every financial disclosure leaves
-            a trail. We turn those public records into data you can scrub
-            through, compare, and dig into. Start with the presidency, Congress,
-            or the Supreme Court.
+            Every order signed, roll call cast, ruling issued, and financial
+            disclosure filed leaves a trail. We turn those records into data you
+            can scrub through, compare, and dig into. Start with the presidency
+            to see what each administration did and what was happening in the
+            country while it did.
           </p>
         </PageHeader>
 

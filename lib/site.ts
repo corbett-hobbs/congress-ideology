@@ -19,7 +19,7 @@ export const site = {
   tagline: "The U.S. government, by the numbers",
   /** Homepage / whole-site blurb; `description` below is Congress-specific. */
   hubDescription:
-    "Explore ideology, net worth, and more across all three branches of the U.S. government. Start with Congress, the Supreme Court, or the presidency's executive orders.",
+    "Explore the presidency, Congress, and the Supreme Court through the public record: executive orders, the economy, trade, immigration, ideology, and net worth.",
   description:
     "Every member of Congress's votes reduced to a two-dimensional ideology score (DW-NOMINATE, 1st–119th Congress). Scrub through 236 years of the House and Senate, filter a state's delegation, and read any current member's trajectory.",
 } as const;
