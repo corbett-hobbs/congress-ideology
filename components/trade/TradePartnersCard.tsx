@@ -13,8 +13,8 @@ import { MethodologyNote } from "@/components/MethodologyNote";
 
 
 const SORTS = [
-  { key: "balance", label: "Balance", hint: "Largest deficit first" },
   { key: "total", label: "Total trade", hint: "Largest total first" },
+  { key: "balance", label: "Balance", hint: "Largest deficit first" },
   { key: "alpha", label: "A–Z", hint: "Alphabetical" },
 ] as const;
 
@@ -91,7 +91,7 @@ export function TradePartnersCard({
   loading: boolean;
   error: boolean;
 }) {
-  const [sort, setSort] = useState<SortState>({ key: "balance", reversed: false });
+  const [sort, setSort] = useState<SortState>({ key: "total", reversed: false });
   const shown = payload?.year ?? year;
   const rows = useMemo(() => (payload ? partnerChartRows(payload.partners, sort) : []), [payload, sort]);
   const scale = useMemo(() => partnerScale(rows), [rows]);
