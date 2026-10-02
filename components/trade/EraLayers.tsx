@@ -113,8 +113,9 @@ export function PresidentAndCongress({ era, view, X, left, bandY, houseY, senate
             }}
           >
             <title>{`${t.full}, ${t.startYear} to ${t.endYear ?? "present"}. Click to show only these years.`}</title>
-            <rect x={x0} y={bandY} width={x1 - x0 - 0.5} height={BAND_H} fill={partyColor(t.party)} />
-            {text && <text x={(x0 + x1) / 2} y={bandY + 12.6} textAnchor="middle" className="text-[11px] font-semibold" fill="#ffffff">{text}</text>}
+            <rect x={x0} y={bandY} width={x1 - x0 - 0.5} height={BAND_H} rx={2} style={{ fill: `color-mix(in oklab, ${partyColor(t.party)} 20%, var(--surface))` }} />
+            <rect x={x0} y={bandY} width={x1 - x0 - 0.5} height={2.5} fill={partyColor(t.party)} />
+            {text && <text x={(x0 + x1) / 2} y={bandY + 14} textAnchor="middle" className="text-[11px]" style={{ fill: "var(--ink)" }}>{text}</text>}
           </g>
         );
       })}

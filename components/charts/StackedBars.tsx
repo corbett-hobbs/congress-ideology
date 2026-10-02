@@ -266,23 +266,31 @@ export function StackedBars<C extends StackColumn>({
                     return (
                       <g key={b.id}>
                         <title>{b.label}</title>
-                        <rect
-                          x={x0}
-                          y={0}
-                          width={Math.max(0, w)}
-                          height={BAND_H}
-                          style={{
-                            fill: b.fill ?? (i % 2 === 0 ? "var(--surface-raised)" : "var(--line)"),
-                            stroke: "var(--line-strong)",
-                            strokeWidth: 0.75,
-                          }}
-                        />
+                        {b.fill ? (
+                          <>
+                            {/* Same look as the foreign-aid term band: a light tint, a solid party-colour rule on top, ink label. */}
+                            <rect x={x0 + 0.5} y={0} width={Math.max(0, w - 1)} height={BAND_H} rx={2} style={{ fill: `color-mix(in oklab, ${b.fill} 20%, var(--surface))` }} />
+                            <rect x={x0 + 0.5} y={0} width={Math.max(0, w - 1)} height={2.5} style={{ fill: b.fill }} />
+                          </>
+                        ) : (
+                          <rect
+                            x={x0}
+                            y={0}
+                            width={Math.max(0, w)}
+                            height={BAND_H}
+                            style={{
+                              fill: i % 2 === 0 ? "var(--surface-raised)" : "var(--line)",
+                              stroke: "var(--line-strong)",
+                              strokeWidth: 0.75,
+                            }}
+                          />
+                        )}
                         {w > Math.max(28, b.label.length * 6.4 + 6) && (
                           <text
                             x={x0 + w / 2}
                             y={BAND_H / 2 + 4}
                             textAnchor="middle"
-                            style={{ fill: b.fill ? "#ffffff" : "var(--ink-muted)", fontSize: 11, fontWeight: b.fill ? 600 : 500 }}
+                            style={{ fill: b.fill ? "var(--ink)" : "var(--ink-muted)", fontSize: 11, fontWeight: 500 }}
                           >
                             {b.label}
                           </text>
