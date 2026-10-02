@@ -51,6 +51,8 @@ export function RemovalsChart({
   yMax,
   pending,
   pendingFy,
+  selectedFy,
+  onSelectFy,
 }: {
   years: readonly IceYear[];
   terms: readonly IceTerm[];
@@ -58,6 +60,9 @@ export function RemovalsChart({
   yMax: number;
   pending: boolean;
   pendingFy: number;
+  /** The fiscal year the pinned slider is on (its country list is the card below). */
+  selectedFy?: number;
+  onSelectFy?: (fy: number) => void;
 }) {
   const [ref, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || FALLBACK_W;
@@ -231,15 +236,19 @@ export function RemovalsChart({
                     onPointerEnter={(e) => e.pointerType === "mouse" && !open?.pinned && openBar(yr.fy, false)}
                     onPointerLeave={(e) => e.pointerType === "mouse" && setOpen((o) => (o && !o.pinned ? null : o))}
                     onFocus={(e) => e.currentTarget.matches(":focus-visible") && openBar(yr.fy, true)}
-                    onClick={() => toggle(key)}
+                    onClick={() => {
+                      toggle(key);
+                      onSelectFy?.(yr.fy);
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                         toggle(key);
+                        onSelectFy?.(yr.fy);
                       }
                     }}
                   >
-                    <rect x={x} y={PLOT_TOP} width={slotW} height={PLOT_H} fill={active ? "var(--accent)" : "transparent"} fillOpacity={0.09} />
+                    <rect x={x} y={PLOT_TOP} width={slotW} height={PLOT_H} rx={2} fill={active ? "var(--accent)" : "transparent"} fillOpacity={0.09} style={yr.fy === selectedFy ? { fill: "var(--surface-raised)", fillOpacity: 1, stroke: "var(--line-strong)" } : undefined} />
                     <rect
                       x={bx}
                       y={top}
@@ -300,7 +309,7 @@ export function RemovalsChart({
               {[...years.map((v) => v.fy), ...(pending ? [pendingFy] : [])].map((fy, i) => {
                 const label = yearLabel(fy, mode);
                 if (!label) return null;
-                const bold = open?.key === `b${fy}`;
+                const bold = open?.key === `b${fy}` || fy === selectedFy;
                 return (
                   <text
                     key={fy}

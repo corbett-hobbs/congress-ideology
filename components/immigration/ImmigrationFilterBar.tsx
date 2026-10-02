@@ -1,24 +1,35 @@
 "use client";
 
+import { FiscalYearPlayer } from "@/components/charts/FiscalYearPlayer";
 import { termOptionLabel, termsNewestFirst, type IceTerm } from "@/lib/immigration-derive";
 
 /**
  * The pinned filter bar for /presidency/immigration, directly under the site
- * navigation: one President dropdown. Choosing a president filters the chart to
- * that administration's fiscal years (a time series filters; it never dims).
+ * navigation: a President dropdown and a fiscal-year slider with play/pause (the foreign-aid pattern).
+ * Choosing a president filters the timeline to that administration's fiscal years (a time series
+ * filters; it never dims) and clamps the slider to them; the slider picks the one year the country
+ * list below shows, and is marked on the timeline.
  */
 export function ImmigrationFilterBar({
   terms,
   value,
   onChange,
+  fy,
+  fyRange,
+  onFy,
 }: {
   terms: readonly IceTerm[];
   value: string;
   onChange: (selection: string) => void;
+  fy: number;
+  /** The fiscal years the timeline shows (the President selection's window). */
+  fyRange: readonly [number, number];
+  onFy: (fy: number) => void;
 }) {
   return (
     <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 shadow-[0_2px_6px_rgba(26,34,51,0.08)] backdrop-blur sm:shadow-none">
       <div className="mx-auto w-full max-w-[1180px] px-4 pb-2 pt-2 sm:px-6 sm:py-2.5">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-x-5">
         <label className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
           <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">President</span>
           <select
@@ -34,6 +45,8 @@ export function ImmigrationFilterBar({
             ))}
           </select>
         </label>
+        <FiscalYearPlayer year={fy} range={fyRange} onYear={onFy} valueText={`FY${fy}, October ${fy - 1} to September ${fy}`} span={`Oct ${fy - 1} – Sep ${fy}`} />
+        </div>
       </div>
     </div>
   );

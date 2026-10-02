@@ -6,7 +6,7 @@ import { RETURNS_COUNTED_FROM, filterYears, showsPendingSlot, type ImmigrationPa
 import { RemovalsChart } from "./RemovalsChart";
 import { MethodologyNote } from "@/components/MethodologyNote";
 
-export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; selection: string }) {
+export function RemovalsCard({ data, selection, fy, onFy }: { data: ImmigrationPageData; selection: string; fy: number; onFy: (fy: number) => void }) {
   const years = filterYears(data.years, selection);
   const pending = showsPendingSlot(data, selection);
   const termsById = new Map(data.terms.map((t) => [t.termId, t]));
@@ -22,6 +22,8 @@ export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; s
         yMax={data.yMax}
         pending={pending}
         pendingFy={data.lastFy + 1}
+        selectedFy={fy}
+        onSelectFy={onFy}
       />
 
       <MethodologyNote>
