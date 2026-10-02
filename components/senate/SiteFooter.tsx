@@ -8,9 +8,9 @@ interface SiteFooterProps {
  */
 export function SiteFooter({ children }: SiteFooterProps) {
   return (
-    <footer className="flex flex-col items-start gap-[0.85rem] border-t border-line pt-6">
+    <footer className="flex flex-col items-start gap-[0.85rem]">
       {children}
-      <p className="m-0 max-w-[46rem] text-[0.76rem] leading-[1.6] text-ink-faint">
+      <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
         Ideology data: Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam
         Boche, Aaron Rudkin &amp; Luke Sonnet (2026),{" "}
         <a

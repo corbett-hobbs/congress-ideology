@@ -195,7 +195,8 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
               )}
             </p>
 
-            <p className="mt-2 text-[0.76rem] leading-[1.55] text-ink-faint">
+            <MethodologyNote className="mt-2">
+            <p>
               Martin&ndash;Quinn scores run on a single
               liberal&ndash;conservative scale and are not comparable in number
               to the DW-NOMINATE scores on the Congress pages. Dimming a
@@ -204,6 +205,7 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
               and in the four terms MQ scores as two records (1937, 1938, 1956,
               2005) the median is the Court after the change.
             </p>
+            </MethodologyNote>
             <SeatedTable term={term} seated={ordered} />
           </ChartCard>
 
@@ -234,11 +236,13 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
                 />
               </div>
             </div>
-            <p className="mt-2 text-[0.76rem] leading-[1.55] text-ink-faint">
+            <MethodologyNote className="mt-2">
+            <p>
               Career average is the mean of a justice&rsquo;s per-term scores.
               It can hide justices who moved a long way. Justices still serving
               are not final.
             </p>
+            </MethodologyNote>
             <CareerTable data={data} />
           </ChartCard>
         </div>
@@ -265,8 +269,8 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
           <MedianTable data={data} selected={selected} />
         </ChartCard>
 
-        <footer className="flex flex-col gap-1.5 border-t border-line pt-6 text-[0.76rem] leading-[1.6] text-ink-faint">
-          <p className="m-0 max-w-[46rem]">
+        <div className="flex flex-col gap-2.5 text-[0.8rem] leading-[1.6] text-ink-muted">
+          <p className="m-0">
             Source: Martin, Andrew D. and Kevin M. Quinn. 2002. &ldquo;Dynamic
             Ideal Point Estimation via Markov Chain Monte Carlo for the U.S.
             Supreme Court, 1953&ndash;1999.&rdquo; Political Analysis
@@ -279,11 +283,11 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
             </a>
             .
           </p>
-          <p className="m-0 max-w-[46rem]">
+          <p className="m-0">
             Appointing president and party from the Federal Judicial Center
             biographical directory.
           </p>
-        </footer>
+        </div>
       </main>
     </>
   );

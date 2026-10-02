@@ -60,8 +60,8 @@ export function JusticeProfileView({ profile }: { profile: JusticeProfile }) {
 
       <AboutScoresCard />
 
-      <footer className="border-t border-line pt-6 text-[0.76rem] leading-[1.6] text-ink-faint">
-        <p className="m-0 max-w-[46rem]">
+      <footer>
+        <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Scores: Martin&ndash;Quinn. Appointment data: Federal Judicial Center
           biographical directory. Biographies: Wikipedia, text abridged, under
           CC BY-SA 4.0. Portraits: public-domain images via Wikimedia Commons.
