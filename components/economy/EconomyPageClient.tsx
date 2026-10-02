@@ -117,8 +117,6 @@ function EconomyPage({
           desc={SPECS.mis.desc}
           legend={
             <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
-              <span className="inline-flex items-center gap-1.5"><Swatch color="var(--dem)" />Democratic</span>
-              <span className="inline-flex items-center gap-1.5"><Swatch color="var(--rep)" />Republican</span>
               <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--ink) 9%, transparent)" border />Recession (NBER)</span>
             </div>
           }

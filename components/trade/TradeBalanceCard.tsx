@@ -154,8 +154,6 @@ export function TradeBalanceCard({
             <span className="inline-flex items-center gap-1.5"><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="2" strokeDasharray="4 3" /></svg>Imports</span>
           </>
         )}
-        <span className="inline-flex items-center gap-1.5"><Swatch color="var(--dem)" />Democratic</span>
-        <span className="inline-flex items-center gap-1.5"><Swatch color="var(--rep)" />Republican</span>
         <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--ink) 9%, transparent)" border />Recession (NBER)</span>
         <span className="ml-auto">{adjLabel}{countryName ? `. Axis rescales to ${countryName}.` : "."}</span>
       </div>

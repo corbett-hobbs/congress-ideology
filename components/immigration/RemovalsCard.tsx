@@ -4,8 +4,6 @@ import { ChartCard } from "@/components/charts/ChartCard";
 import { RETURNS_COUNTED_FROM, filterYears, showsPendingSlot, type ImmigrationPageData } from "@/lib/immigration-derive";
 import { RemovalsChart } from "./RemovalsChart";
 
-const SWATCH = "inline-block h-2.5 w-2.5 flex-none align-[-1px]";
-
 export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; selection: string }) {
   const years = filterYears(data.years, selection);
   const pending = showsPendingSlot(data, selection);
@@ -23,17 +21,6 @@ export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; s
         pending={pending}
         pendingFy={data.lastFy + 1}
       />
-
-      <ul className="m-0 mt-3 flex list-none flex-wrap gap-x-5 gap-y-1.5 p-0 text-[0.72rem] text-ink-muted">
-        <li className="flex items-center gap-1.5">
-          <span className={SWATCH} style={{ background: "var(--dem)" }} />
-          Democratic
-        </li>
-        <li className="flex items-center gap-1.5">
-          <span className={SWATCH} style={{ background: "var(--rep)" }} />
-          Republican
-        </li>
-      </ul>
 
       <p className="m-0 mt-3 text-[0.75rem] leading-[1.6] text-ink-muted">
         Smaller caveats sit on each bar’s hover or tap card — for example, FY2010 leaves out 76,732 expedited removals ICE
