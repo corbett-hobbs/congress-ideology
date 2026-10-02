@@ -9,7 +9,6 @@ import type { TradeCountryPayload, TradeYearPayload } from "@/lib/trade-types";
 import { topByTotal } from "@/lib/trade-map";
 import { TradeBalanceCard } from "./TradeBalanceCard";
 import { TradeFilterBar } from "./TradeFilterBar";
-import { TradeMapCard } from "./TradeMapCard";
 import { TradePartnersCard } from "./TradePartnersCard";
 import { TradeScatterCard } from "./TradeScatterCard";
 import { TradeTariffCard } from "./TradeTariffCard";
@@ -152,9 +151,9 @@ function TradePage({ data }: { data: TradePageData }) {
           error={loadState === "error"}
         />
 
-        {/* Partners and map side by side on desktop, stacked below it. */}
-        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+        {/* One card: the list and the map share the year and the Total trade / Balance choice. */}
           <TradePartnersCard
+            map={worldMap}
             payload={yearPayload ?? lastShown}
             year={v.year}
             onYear={setYear}
@@ -166,16 +165,6 @@ function TradePage({ data }: { data: TradePageData }) {
             loading={!yearPayload && yearFailed !== v.year}
             error={!yearPayload && yearFailed === v.year}
           />
-          <TradeMapCard
-            map={worldMap}
-            payload={yearPayload ?? lastShown}
-            year={v.year}
-            lastPeriod={national.lastPeriod}
-            country={v.country}
-            onPickCountry={setCountry}
-            loading={!yearPayload && yearFailed !== v.year}
-          />
-        </div>
 
         {/* Full width: the scatter needs the room for its labels. */}
         <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} topCodes={topCodes} />
