@@ -549,3 +549,24 @@ body {
   outline: 2px solid var(--focus);
   outline-offset: 1px;
 }
+
+/* Dropdowns: draw our own caret so it sits a comfortable distance from the right edge (the native one is
+   jammed against it). Unlayered on purpose: it must beat the per-select Tailwind padding utilities, so
+   the text never runs under the caret. Caret colour follows --ink-muted in light and dark. */
+select:not([multiple]) {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 1.5rem;
+  background-repeat: no-repeat;
+  background-position: right 0.55rem center;
+  background-size: 0.7rem 0.7rem;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%235b6472' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) select:not([multiple]) {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%239aa2af' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  }
+}
+:root[data-theme="dark"] select:not([multiple]) {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%239aa2af' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
