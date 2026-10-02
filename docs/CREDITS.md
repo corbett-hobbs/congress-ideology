@@ -247,3 +247,16 @@ basis).
   `pipeline/fetch/dataweb-duties.ts`. Federal government statistics, public domain. The page must say
   these earlier years come from USITC DataWeb.
 - Methodology: `docs/TRADE_METHODOLOGY.md`.
+
+---
+
+## ForeignAssistance.gov and Natural Earth — foreign aid page
+
+Foreign assistance disbursements come from ForeignAssistance.gov (U.S. Department of State, with USAID's
+successor programs and the other reporting agencies), through the site's public data API; U.S. government data,
+public domain. Snapshots in `pipeline/raw/foreign-assistance/`; methodology `docs/FOREIGN_AID_METHODOLOGY.md`.
+
+The world map is drawn from Natural Earth 1:50m Admin 0 – Countries (`ne_50m_admin_0_countries.geojson`, from the
+`nvkelso/natural-earth-vector` mirror, snapshot in `pipeline/raw/natural-earth/`). Natural Earth is in the public
+domain; no credit is required, and this is given as a courtesy ("Made with Natural Earth"). It is projected,
+simplified and keyed to our country codes by `pipeline/transform/world-map.ts` (never hand-edited).
