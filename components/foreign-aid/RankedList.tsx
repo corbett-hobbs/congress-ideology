@@ -9,7 +9,7 @@ import { SectorLegend, slotColor } from "./shared";
 /**
  * The ranked recipient list inside the combined "Where it goes" card: every country for the selected
  * year, each with a sector-split bar on one shared scale. `mode` is the card's toggle: Dollars ranks
- * by dollars (largest first), Military share by the military slice of each country's total (countries
+ * by dollars (largest first), Military share by the military slice of each country's total, then by military dollars (countries
  * with none last); `reversed` flips either, for this list only, and the map beside it is unaffected.
  * The selected country is highlighted and the rest dimmed, never reduced to one row; the list scrolls
  * inside its box and never auto-scrolls.
@@ -21,20 +21,26 @@ export function RankedList({ mode, reversed }: { mode: "dollars" | "share"; reve
   const names = data.payload.countries;
 
   const list = useMemo(() => {
-    const items = ranked.map((r) => ({ r, share: r.value > 0 ? countryMilitary(data, r.ci, yi, sector) / r.value : 0 }));
+    const items = ranked.map((r) => {
+      const mil = countryMilitary(data, r.ci, yi, sector);
+      return { r, mil, share: r.value > 0 ? mil / r.value : 0 };
+    });
     // Largest first; ranked already comes back dollars-descending, so Dollars only needs `reversed`.
-    if (mode === "share") items.sort((a, b) => b.share - a.share || b.r.value - a.r.value);
+    // Ties on the displayed percent (every country at 100%, say) break on military dollars, then total dollars.
+    if (mode === "share") items.sort((a, b) => Math.round(b.share * 100) - Math.round(a.share * 100) || b.mil - a.mil || b.r.value - a.r.value);
     if (reversed) items.reverse();
     return items;
   }, [ranked, mode, reversed, data, yi, sector]);
 
   const scaleMax = Math.max(1, ...ranked.map((r) => Math.max(0, r.value)));
-  const rows: StackedRowData[] = list.map(({ r, share }, i) => ({
+  const rows: StackedRowData[] = list.map(({ r, share, mil }, i) => ({
     id: String(r.ci),
     rank: mode === "share" ? i + 1 : r.rank,
     label: names[r.ci].name,
     segments: r.slots.map((v, k) => ({ value: v, color: slotColor(k), title: `${SLOT_NAME[k]}: ${formatAidMoney(v)}` })),
     total: mode === "share" ? (share > 0 ? `${Math.round(share * 100)}%` : "–") : formatAidMoney(r.value),
+    // Military share mode: the share, then the military dollars behind it, in the column that held the change.
+    delta: mode === "share" && share > 0 ? formatAidMoney(mil) : undefined,
     selected: r.ci === country,
     dimmed: country >= 0 && r.ci !== country,
   }));
