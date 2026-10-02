@@ -320,9 +320,10 @@ export function RemovalsChart({
                 const text = bandLabel(w, t.president, t.last);
                 return (
                   <g key={`${s.termId}-${s.from}`} aria-hidden>
-                    <rect x={xSlot(s.from) + 0.5} y={BAND_Y} width={Math.max(0, w - 1)} height={BAND_H} fill={partyVar(s.party)} />
+                    <rect x={xSlot(s.from) + 0.5} y={BAND_Y} width={Math.max(0, w - 1)} height={BAND_H} rx={2} style={{ fill: `color-mix(in oklab, ${partyVar(s.party)} 20%, var(--surface))` }} />
+                    <rect x={xSlot(s.from) + 0.5} y={BAND_Y} width={Math.max(0, w - 1)} height={2.5} fill={partyVar(s.party)} />
                     {text && (
-                      <text x={xSlot(s.from) + w / 2} y={BAND_Y + 15} textAnchor="middle" className="text-[11px] font-semibold" fill="#ffffff">
+                      <text x={xSlot(s.from) + w / 2} y={BAND_Y + 16} textAnchor="middle" className="text-[11px]" style={{ fill: "var(--ink)" }}>
                         {text}
                       </text>
                     )}
