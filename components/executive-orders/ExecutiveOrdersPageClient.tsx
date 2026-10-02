@@ -355,9 +355,17 @@ function YearList({
     );
   }
   if (!year) {
+    // Nothing selected: every order in the years the chart shows, newest first.
+    const items = years.filter((y) => y.year >= range[0] && y.year <= range[1]).flatMap((y) => y.items).sort((a, b) => b.n - a.n);
     return (
-      <section aria-live="polite" className="rounded-[10px] border border-dashed border-line-strong px-5 py-6 text-[0.85rem] text-ink-muted">
-        Select a year in the chart to list its executive orders.
+      <section aria-live="polite" aria-label="Executive orders in the years shown" className="rounded-[10px] border border-line bg-surface">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line px-5 py-3">
+          <h2 className="font-serif text-[1.05rem] font-medium">
+            All executive orders: {items.length}, {range[0]}–{range[1]}
+          </h2>
+        </div>
+        <div className="border-b border-line bg-surface-raised px-5 py-2 text-[0.78rem] text-ink-muted">Newest first. Select a year or a topic in the chart to narrow the list.</div>
+        <OrderRows items={items} showPresident admins={admins} />
       </section>
     );
   }
