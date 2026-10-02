@@ -3,6 +3,7 @@
 import { forwardRef, useMemo, useRef, useState, type PointerEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MethodologyNote } from "@/components/MethodologyNote";
+import { MapCallouts } from "@/components/charts/MapCallouts";
 import { ReversibleSortToggle } from "@/components/charts/SortToggle";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useZoomPan } from "@/components/charts/use-zoom-pan";
@@ -49,6 +50,7 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
     onViewChange: tip.hide,
   });
   const { k, cx, cy } = zoom.view;
+  const vb = { x: ((cx + 1) / 2) * map.width - map.width / (2 * k), y: ((1 - cy) / 2) * map.height - map.height / (2 * k), w: map.width / k, h: map.height / k };
   const yi = year - data.payload.years[0];
   const shareOk = militaryShareAvailable(sector);
   const share = pick.key === "share" && shareOk;
@@ -120,6 +122,21 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
     return out.sort((a, b) => b.v - a.v);
   }, [data, yi, sector]);
 
+  // The three leading recipients (by dollars, or by military share in that view), named on the map.
+  const callouts = useMemo(() => {
+    const list = share
+      ? rowsAll.filter((r) => r.m > 0 && r.v > 0).sort((a, b) => Math.round((b.m / b.v) * 100) - Math.round((a.m / a.v) * 100) || b.m - a.m)
+      : rowsAll;
+    const out: { key: string; text: string }[] = [];
+    for (const r of list) {
+      const rec = map.recipients.find((x) => x.name === names[r.ci].name);
+      if (!rec?.paths.length) continue;
+      out.push({ key: rec.paths[0], text: share ? `${names[r.ci].name} ${Math.round((r.m / r.v) * 100)}%` : `${names[r.ci].name} ${formatAidMoney(r.v)}` });
+      if (out.length === 3) break;
+    }
+    return out;
+  }, [rowsAll, share, map, names]);
+
   const selRank = (() => {
     const i = rowsAll.findIndex((r) => r.ci === country);
     return i < 0 ? null : { rank: i + 1, v: rowsAll[i].v };
@@ -175,7 +192,7 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
       <div className="relative">
       <svg
         ref={svgRef}
-        viewBox={`${((cx + 1) / 2) * map.width - map.width / (2 * k)} ${((1 - cy) / 2) * map.height - map.height / (2 * k)} ${map.width / k} ${map.height / k}`}
+        viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
         role="img"
         aria-label={`World map of U.S. foreign aid ${share ? "military share" : "disbursements"} by recipient country, FY${year}. The ranked list and table view carry the same figures.`}
         className="block h-auto w-full"
@@ -233,6 +250,7 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
             />
           );
         })}
+        <MapCallouts svgRef={svgRef} entries={callouts} view={vb} />
       </svg>
       <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
       </div>

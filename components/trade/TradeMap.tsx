@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, type PointerEvent } from "react";
+import { MapCallouts } from "@/components/charts/MapCallouts";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useZoomPan } from "@/components/charts/use-zoom-pan";
 import { ZoomControls } from "@/components/charts/ZoomControls";
@@ -49,6 +50,7 @@ export function TradeMap({
     onViewChange: tip.hide,
   });
   const { k, cx, cy } = zoom.view;
+  const vb = { x: ((cx + 1) / 2) * map.width - map.width / (2 * k), y: ((1 - cy) / 2) * map.height - map.height / (2 * k), w: map.width / k, h: map.height / k };
 
   const fillOf = (row: PartnerChartRow | undefined) => {
     const f = mapFill(row, measure);
@@ -57,6 +59,15 @@ export function TradeMap({
     return mix(f.side === "deficit" ? DEFICIT : SURPLUS, BALANCE_MIX[f.cls - 1]);
   };
 
+  // The three biggest partners on the chosen measure (total trade, or the size of the balance), named on the map.
+  const callouts = useMemo(() => {
+    const rows = [...model.byCode.values()];
+    const size = (r: PartnerChartRow) => (measure === "total" ? r.exports + r.imports : Math.abs(r.balance));
+    return rows
+      .sort((a, b) => size(b) - size(a))
+      .slice(0, 3)
+      .map((r) => ({ key: r.code, text: `${r.name} ${measure === "total" ? fmtMoney(r.exports + r.imports) : fmtMoney(r.balance, { signed: true })}` }));
+  }, [model, measure]);
   const ordered = useMemo(
     () => [...map.features.filter((f) => f.key !== country), ...map.features.filter((f) => f.key === country)],
     [map, country],
@@ -115,7 +126,7 @@ export function TradeMap({
         <div className="relative w-full">
           <svg
             ref={svgRef}
-            viewBox={`${((cx + 1) / 2) * map.width - map.width / (2 * k)} ${((1 - cy) / 2) * map.height - map.height / (2 * k)} ${map.width / k} ${map.height / k}`}
+            viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
             role="img"
             aria-label={`World map of U.S. goods ${measure === "total" ? "total trade" : "trade balance"} by partner, ${shown}. The partner chart and the table carry the same figures.`}
             className="block h-auto w-full"
@@ -153,6 +164,7 @@ export function TradeMap({
                 />
               );
             })}
+            <MapCallouts svgRef={svgRef} entries={callouts} view={vb} />
           </svg>
           <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, type PointerEvent } from "react";
+import { MapCallouts } from "@/components/charts/MapCallouts";
 import { PillGroup } from "@/components/charts/PillGroup";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useZoomPan } from "@/components/charts/use-zoom-pan";
@@ -59,6 +60,8 @@ export function RemovalsMap({
   const zoom = useZoomPan({ svgRef, extent: 1, maxK: 8, getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null, onViewChange: tip.hide });
   const { k, cx, cy } = zoom.view;
   const [bx, by, bw, bh] = VIEW[region];
+  const vb = { x: bx + ((cx + 1) / 2) * bw - bw / (2 * k), y: by + ((1 - cy) / 2) * bh - bh / (2 * k), w: bw / k, h: bh / k };
+  const callouts = useMemo(() => [...rows].sort((a, b) => b.removals - a.removals).slice(0, 3).map((r) => ({ key: r.key, text: `${r.name} ${n(r.removals)}` })), [rows]);
   const byKey = useMemo(() => new Map(rows.map((r) => [r.key, r])), [rows]);
   const drawn = useMemo(() => new Set(features.map((f) => f.key)), [features]);
   const undrawn = rows.filter((r) => !drawn.has(r.key));
@@ -108,7 +111,7 @@ export function RemovalsMap({
         <div className="relative w-full">
           <svg
             ref={svgRef}
-            viewBox={`${bx + ((cx + 1) / 2) * bw - bw / (2 * k)} ${by + ((1 - cy) / 2) * bh - bh / (2 * k)} ${bw / k} ${bh / k}`}
+            viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
             role="img"
             aria-label={`Map of ICE removals by country of citizenship, FY${fy}. The ranked list and table carry the same figures.`}
             className="mx-auto block h-auto max-h-[30rem] w-full"
@@ -150,6 +153,7 @@ export function RemovalsMap({
                 />
               );
             })}
+            <MapCallouts svgRef={svgRef} entries={callouts} view={vb} />
           </svg>
           <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
         </div>
