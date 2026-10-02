@@ -108,6 +108,8 @@ export function TradeScatterCard({
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const [query, setQuery] = useState("");
   const [tapped, setTapped] = useState<string | null>(null);
+  /** Legend filter: one continent, or null for all. */
+  const [continent, setContinent] = useState<string | null>(null);
   const tip = useTooltip<Dot>();
   const W = measured || FALLBACK_W;
   const compact = W < COMPACT_W;
@@ -155,9 +157,9 @@ export function TradeScatterCard({
   const dots = useMemo<Dot[]>(
     () => rows.flatMap((row) => {
       const d = toDot(row, axes);
-      return d ? [{ row, d }] : [];
+      return d && (!continent || continentOf(row.code) === continent) ? [{ row, d }] : [];
     }),
-    [rows, axes],
+    [rows, axes, continent],
   );
   const plotted = dots.length;
   const higher = dots.filter((d) => (d.row.rateChangePp as number) > 0).length;
@@ -271,8 +273,8 @@ export function TradeScatterCard({
                 <g className="fill-ink-faint font-mono text-[10px] uppercase" pointerEvents="none" style={{ letterSpacing: "0.06em" }}>
                   <text x={4} y={ph + 30}>← Lower tariff rate</text>
                   <text x={pw - 4} y={ph + 30} textAnchor="end">Higher tariff rate →</text>
-                  <text x={6} y={12}>More imports ↑</text>
-                  <text x={6} y={ph - 6}>Fewer imports ↓</text>
+                  <text x={64} y={12}>More imports ↑</text>
+                  <text x={64} y={ph - 6}>Fewer imports ↓</text>
                 </g>
               )}
               <clipPath id={clipId}><rect x={-6} y={-8} width={pw + 12} height={ph + 16} /></clipPath>
@@ -335,13 +337,32 @@ export function TradeScatterCard({
         </Tooltip>
       </div>
 
-      <ul className="m-0 mt-3 flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-[0.78rem] text-ink-muted" aria-label="Continent colors">
-        {CONTINENTS.filter((c) => c.id !== "other" || rows.some((r) => r.plotted && continentOf(r.code) === "other")).map((c) => (
-          <li key={c.id} className="inline-flex items-center gap-1.5">
-            <span aria-hidden className="inline-block size-2.5 rounded-full" style={{ background: `var(--cont-${c.id})` }} />
-            {c.label}
+      <ul className="m-0 mt-3 flex list-none flex-wrap gap-x-2 gap-y-1 p-0 text-[0.78rem] text-ink-muted" aria-label="Continent filter">
+        {CONTINENTS.filter((c) => c.id !== "other" || rows.some((r) => r.plotted && continentOf(r.code) === "other")).map((c) => {
+          const on = continent === c.id;
+          return (
+            <li key={c.id}>
+              <button
+                type="button"
+                aria-pressed={on}
+                title={on ? "Show every continent" : `Show only ${c.label}`}
+                onClick={() => {
+                  setContinent(on ? null : c.id);
+                  setTapped(null);
+                }}
+                className={`inline-flex min-h-8 items-center gap-1.5 rounded-md border px-2 py-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${on ? "border-line-strong bg-surface-raised font-medium text-ink" : "border-transparent hover:text-ink"} ${continent && !on ? "opacity-50" : ""}`}
+              >
+                <span aria-hidden className="inline-block size-2.5 rounded-full" style={{ background: `var(--cont-${c.id})` }} />
+                {c.label}
+              </button>
+            </li>
+          );
+        })}
+        {continent && (
+          <li>
+            <button type="button" onClick={() => setContinent(null)} className="min-h-8 px-2 text-ink-faint underline hover:text-ink">Show all</button>
           </li>
-        ))}
+        )}
       </ul>
 
       {tapMode && (
@@ -366,7 +387,7 @@ export function TradeScatterCard({
       )}
 
       <MethodologyNote><p>
-        Calculated duties divided by imports for consumption, both from Census import data, over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}, so the season matches. Countries missing any month in either window are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles at the top edge are pinned outliers, with their true values in the tooltip. Bilateral figures can be distorted when goods are re-routed through other countries, so treat any one dot with care. Click a dot to pick that country above.
+        Calculated duties divided by imports for consumption, both from Census import data, over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}, so the season matches. Countries missing any month in either window are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles at the top edge are pinned outliers, with their true values in the tooltip. Bilateral figures can be distorted when goods are re-routed through other countries, so treat any one dot with care. Click a continent in the legend to show only its countries (click it again to show all); the counts above follow. Click a dot to pick that country above.
         </p></MethodologyNote>
       <DataTable rows={rows} windows={windows} />
     </section>
