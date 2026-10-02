@@ -58,7 +58,7 @@ export function FiscalYearPlayer({
   };
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-3 sm:ml-auto sm:min-w-[14rem] sm:gap-2.5">
+    <div className="flex min-w-0 flex-1 items-center gap-2 sm:ml-auto sm:min-w-[14rem] sm:gap-2.5">
       <button
         type="button"
         onClick={() => (playing ? stop() : start())}
