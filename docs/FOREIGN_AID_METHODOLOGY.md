@@ -3,8 +3,8 @@
 How `pipeline/fetch/foreign-assistance.ts` and `pipeline/transform/foreign-aid{,-run}.ts` turn
 ForeignAssistance.gov into `pipeline/output/foreign_assistance.json`,
 `foreign_assistance_meta.json` and `foreign_assistance_report.json`. Schemas:
-`lib/foreign-aid-entities.ts`. General pipeline rules: `docs/DATA_CONVENTIONS.md` §11. This is the data layer only;
-the Presidency → Foreign policy page does not exist yet.
+`lib/foreign-aid-entities.ts`. General pipeline rules: `docs/DATA_CONVENTIONS.md` §11. The page is `/presidency/foreign-aid`;
+its display rules are in "The page" below.
 
 ## Scope: assistance, not total security transfers
 
@@ -150,8 +150,20 @@ source is not available. A definition or bug problem would not leave the militar
 
 ## Out of scope / known gaps
 
-No UI, no constant dollars, no pre-FY2001 bridge, no Foreign Military Sales. Agency × sector × year (the "what happened
+No constant (inflation-adjusted) dollars, no pre-FY2001 bridge, no Foreign Military Sales. Agency × sector × year (the "what happened
 to USAID" cut) is **not built**: `by-managing-agency` and `by-funding-agency` have agency × country × year with no sector,
 so agency × sector needs the full 1.7M-line `complete-data` file (~1.2 KB/line, on the order of 2 GB), which paginates unreliably in bulk (see above)
-and would have to be pulled in small filtered slices; deferred to its own session. No scheduled freshness Action: the fetch is re-runnable and diff-friendly
-(`fetched_at` is carried over while rows are unchanged; rows are sorted).
+and would have to be pulled in small filtered slices; deferred to its own session. The weekly `foreign-assistance-freshness.yml` Action opens a PR when the source moves; the fetch is diff-friendly
+(`fetched_at` is carried over while rows are unchanged; rows are sorted). FY2026 flips to complete once `data_through` reaches 2026-11-14, so check a refresh around then.
+
+## The page (`/presidency/foreign-aid`)
+
+- **Disbursements, not obligations; nominal dollars.** Exact integers end to end; the old mockup's $1,000 rounding is not used.
+- **Default year** is the latest fiscal year not flagged `is_partial` (FY2025 today), derived from the meta file, never hardcoded.
+- **Partial years** (FY2026 today) are hatched and badged "partial"; "Change vs. prior year" is disabled for a partial year and for FY2001.
+- **Fiscal year to administration:** the administration in office for most of the year (days between Oct 1 and Sep 30), from `administrations.json`: FY2001–08 Bush, 09–16 Obama, 17–20 Trump, 21–24 Biden, 25– Trump. Choosing a president narrows the time series to those years.
+- **Military share numerator:** Sector = All counts every military dollar (about $300.5B over all years, of which about $295.8B sit inside Peace and Security and about $4.7B under other sectors); Sector = Peace and Security counts only that sector's own military rows; any other sector has no military share (the control is disabled). The footnote says so.
+- **Negative disbursements** (439 rows) are kept as published and enter totals; bars draw only the positive part of each sector, so a bar can sit slightly above a net total.
+- **Countries on the map:** a recipient is drawn on its modern outline. Sudan (former) is drawn on Sudan and South Sudan, and West Bank and Gaza on the Palestine outline (`RECIPIENT_PATHS` in `pipeline/transform/world-map.ts`). Recipients whose outline is under 14 px² at 1000px wide get a centroid marker. Entities with no modern outline, counted in totals but not drawn: Czechoslovakia (former), Netherlands Antilles (former), Serbia and Montenegro (former), China (Tibet), Pacific Island Trust Territory, Martinique, French Guiana. Regional and global programs are stated under the map ("Not on the map", about 34% of FY2025).
+- **Sector labels:** the source's title-case names are the data keys; the page shows sentence case (`SECTOR_LABEL` in `lib/foreign-aid-derive.ts`). Five sectors have their own color; the other four share a neutral "All other (4 sectors)" because nine categorical hues cannot pass the color-vision check.
+- **Reconciliation "investigate" items** (FY2025 total +1.1%, Peace and Security +1.8%, Ukraine +0.8% / +1.0%, regional share −1.0%) are explained above as late reporting and revisions after Pew's July 1 snapshot; the pipeline is unchanged.

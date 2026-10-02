@@ -85,7 +85,7 @@ export function SiteSectionNav() {
       >
         {row.branch.sections.map((s) => {
           const base =
-            "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] px-2 md:px-4 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition-colors md:tracking-[0.14em] md:h-9 md:text-[0.8rem]";
+            "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] px-2 md:px-2.5 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition-colors md:tracking-[0.09em] md:h-9 md:text-[0.8rem]";
           if (s.status !== "live") {
             return (
               <span

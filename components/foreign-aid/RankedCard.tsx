@@ -71,6 +71,7 @@ export function RankedCard({ style }: { style?: React.CSSProperties }) {
         ) : undefined
       }
     >
+      <div className="self-start">
       <ReversibleSortToggle
         ariaLabel="Sort countries"
         active={key}
@@ -87,6 +88,7 @@ export function RankedCard({ style }: { style?: React.CSSProperties }) {
           { key: "name", label: "A–Z", hint: "Alphabetical" },
         ]}
       />
+      </div>
       <div className="relative mt-2 min-h-[7.5rem] flex-1">
         <div className="absolute inset-0 overflow-auto pr-0.5">
           <StackedRows rows={rows} scaleMax={scaleMax} onRowClick={(id) => toggleCountry(Number(id))} ariaLabel="Recipient countries, ranked" emptyText="No disbursements recorded." />
