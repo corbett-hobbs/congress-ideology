@@ -68,13 +68,13 @@ export function CompassChart({
 
     const out: ScatterLabel[] = [];
     // Explorer: name one dot per party in the legend so the dots have a face. At the latest Congress that is
-    // each party's leader (House: the Speaker and the Minority Leader; Senate: the Majority and Minority
-    // Leaders); for earlier Congresses, which carry no leadership data, it is the party's most extreme member.
+    // each chamber's two party leaders (House: the Speaker and the Minority Leader; Senate: the Majority and
+    // Minority Leaders); for earlier Congresses, which carry no leadership data, it is the party's most extreme member.
     if (explorer && !dimUnfocused) {
-      const houseShown = members.some((m) => m.chamber === "house");
+      // Whatever chambers are shown: House Speaker + Minority Leader, Senate Majority + Minority Leader (so "Both" shows all four).
       const leaders = members.filter((m) => {
         if (m.dim1 == null || m.dim2 == null || !m.leaderRole) return false;
-        return houseShown ? m.chamber === "house" && m.leaderRole !== "majority_leader" : m.leaderRole !== "speaker";
+        return m.chamber === "house" ? m.leaderRole !== "majority_leader" : m.leaderRole !== "speaker";
       });
       const reps =
         leaders.length >= 2
