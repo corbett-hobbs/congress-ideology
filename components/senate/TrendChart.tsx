@@ -12,7 +12,7 @@ import { useElementWidth } from "@/lib/use-element-width";
 const FALLBACK_W = 1160;
 const H = 190;
 // No wide right margin — the lines run to the edge and the legend sits below.
-const MARGIN = { top: 14, right: 14, bottom: 24, left: 44 };
+const MARGIN = { top: 14, right: 14, bottom: 24, left: 10 };
 const Y_DOMAIN: [number, number] = [-0.6, 0.65];
 const Y_TICKS = [-0.5, 0, 0.5];
 const YEAR_TICKS = [1789, 1829, 1869, 1909, 1949, 1989, 2025];

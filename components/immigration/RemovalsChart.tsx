@@ -62,7 +62,7 @@ export function RemovalsChart({
   const [ref, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || FALLBACK_W;
   const compact = W < 520;
-  const left = compact ? 34 : 44;
+  const left = 10; // y labels sit inside the plot
   const right = 8;
   const plotW = W - left - right;
   const slots = years.length + (pending ? 1 : 0);

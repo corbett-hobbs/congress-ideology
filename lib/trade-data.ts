@@ -15,6 +15,7 @@ import { buildCountryPayload, buildNationalPayload, buildYearPayload } from "./t
 import { monthCount, monthIndex } from "./trade-derive";
 import { displayCountryName } from "./trade-names";
 import { getEraLayers } from "./indicator-data";
+import { getWorldMap } from "./foreign-aid-data";
 import { spanEnd } from "./trade-chart";
 import type { EconomyPayload } from "./indicator-payload";
 import { tariffActionsFile } from "./tariff-actions-entities";
@@ -113,6 +114,8 @@ export interface TradePageData {
   scatter: { windows: ScatterWindows; rows: ScatterRow[] };
   /** The latest year's partner rows, so the partners chart paints without a fetch. */
   initialYear: TradeYearPayload;
+  /** Outlines for the trade map, keyed by trade `country_code` (the same world map the foreign-aid page draws). */
+  worldMap: { width: number; height: number; features: { key: string; name: string; d: string }[] };
 }
 
 /** Everything the trade page ships inline: the national series, the country list and the era layers. */
@@ -132,6 +135,7 @@ export function getTradePageData(): TradePageData {
     firstYear: 1991,
     lastYear,
     initialYear,
+    worldMap: (({ width, height, features }) => ({ width, height, features }))(getWorldMap()),
   };
 }
 

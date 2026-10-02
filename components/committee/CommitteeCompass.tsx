@@ -27,7 +27,7 @@ function anchorCommittees(points: readonly CommitteeSummary[]): CommitteeSummary
   return out;
 }
 
-const MARGIN = { top: 20, right: 64, bottom: 30, left: 58 };
+const MARGIN = { top: 20, right: 64, bottom: 30, left: 24 };
 const EXPLORER_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
 
 interface CommitteeCompassProps {

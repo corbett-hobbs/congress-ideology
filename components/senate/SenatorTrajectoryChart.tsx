@@ -14,7 +14,7 @@ import { congressStartYear, GROUP_LABEL, GROUP_VAR } from "./format";
 const W = 620;
 const H = 240;
 // No wide right gutter — the lines run to the edge and the legend sits below.
-const MARGIN = { top: 20, right: 16, bottom: 26, left: 40 };
+const MARGIN = { top: 20, right: 16, bottom: 26, left: 10 };
 /** Minimum vertical span so a genuinely stable senator isn't over-magnified. */
 const MIN_Y_SPAN = 0.5;
 const clamp = (v: number) => Math.max(-1, Math.min(1, v));

@@ -13,8 +13,8 @@ import { MethodologyNote } from "@/components/MethodologyNote";
 
 
 const SORTS = [
-  { key: "balance", label: "Balance", hint: "Largest deficit first" },
   { key: "total", label: "Total trade", hint: "Largest total first" },
+  { key: "balance", label: "Balance", hint: "Largest deficit first" },
   { key: "alpha", label: "A–Z", hint: "Alphabetical" },
 ] as const;
 
@@ -91,7 +91,7 @@ export function TradePartnersCard({
   loading: boolean;
   error: boolean;
 }) {
-  const [sort, setSort] = useState<SortState>({ key: "balance", reversed: false });
+  const [sort, setSort] = useState<SortState>({ key: "total", reversed: false });
   const shown = payload?.year ?? year;
   const rows = useMemo(() => (payload ? partnerChartRows(payload.partners, sort) : []), [payload, sort]);
   const scale = useMemo(() => partnerScale(rows), [rows]);
@@ -105,14 +105,14 @@ export function TradePartnersCard({
           labelHighlighted: r.code === country,
           selected: r.code === country,
           onRowClick: () => onPickCountry(r.code === country ? null : r.code),
-          meta: partnerMeta(r),
+          meta: partnerMeta(r, sort.key),
           points: [
             { id: "exports", value: r.exports, colorClass: "fill-ink", emphasized: true, hollow: true, tooltip },
             { id: "imports", value: r.imports, colorClass: "fill-ink", emphasized: true, tooltip },
           ],
         };
       }),
-    [rows, shown, country, onPickCountry],
+    [rows, shown, country, onPickCountry, sort.key],
   );
   const partial = shown === Number(lastPeriod.slice(0, 4)) && lastPeriod.slice(5) !== "12";
   const through = MONTH_NAMES[Number(lastPeriod.slice(5)) - 1];
@@ -152,7 +152,7 @@ export function TradePartnersCard({
       <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
         <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="5" fill="var(--ink)" /></svg>Imports</span>
         <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="4.5" fill="var(--surface)" stroke="var(--ink)" strokeWidth="2" /></svg>Exports</span>
-        <span className="ml-auto">Right: balance. Scale: symmetric log.</span>
+        <span className="ml-auto">Right: {sort.key === "total" ? "total trade" : "balance"}. Scale: symmetric log.</span>
       </div>
 
       {/* The list fills whatever height the row gives the card (the scatter card beside it sets that on desktop); on narrow screens it is a fixed 26rem. Absolute inner box so the long list never stretches the card. */}
@@ -165,7 +165,7 @@ export function TradePartnersCard({
             {rows.length > 0 ? (
               <SwarmRows<Tip>
                 rows={swarm}
-                ariaLabel={`U.S. goods imports and exports by partner, ${shown}, ${rows.length} partners, with the balance for each`}
+                ariaLabel={`U.S. goods imports and exports by partner, ${shown}, ${rows.length} partners, with the ${sort.key === "total" ? "total trade" : "balance"} for each`}
                 margin={MARGIN}
                 rowHeight={ROW_H}
                 domain={[0, scale.max]}
