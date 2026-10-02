@@ -296,13 +296,19 @@ export function TradeTariffChart(props: Props) {
       <Tooltip state={flagTip.state}>
         {(ids) => (
           <div className="flex max-w-[22rem] flex-col gap-2 text-[0.78rem]">
-            {ids.map((id) => byId.get(id)).filter((f): f is TariffFlag => !!f).map((f) => (
-              <div key={f.id} className="flex flex-col gap-0.5">
-                <div className="font-medium">{dateText(f.date)} · {f.label}</div>
-                <div className="opacity-75">{AUTHORITY_LABEL[f.authority] ?? f.authority}{f.rateNote ? ` · ${f.rateNote}` : ""}</div>
-                <div>{f.description}</div>
-              </div>
-            ))}
+            {(() => {
+              // Only the lead event (highest priority, then earliest) that the chart labels; merged neighbors are left out.
+              const f = ids
+                .map((id) => byId.get(id))
+                .filter((x): x is TariffFlag => !!x)
+                .sort((a, b) => a.priority - b.priority || a.date.localeCompare(b.date))[0];
+              return f ? (
+                <div className="flex flex-col gap-0.5">
+                  <div className="font-medium">{dateText(f.date)} · {f.label}</div>
+                  <div>{f.description}</div>
+                </div>
+              ) : null;
+            })()}
           </div>
         )}
       </Tooltip>

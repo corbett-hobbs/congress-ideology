@@ -1,9 +1,12 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
+import { memo, useId, useMemo, useRef, useState } from "react";
 import { scaleLinear, scaleSymlog } from "d3-scale";
 import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { useZoomPan, viewDomains } from "@/components/charts/use-zoom-pan";
+import { ZoomControls } from "@/components/charts/ZoomControls";
+import { CONTINENTS, continentOf } from "@/lib/trade-continents";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -28,6 +31,8 @@ const FALLBACK_W = 1080;
 /** Below this chart width the layout drops long titles and labels (a half-width card on a laptop stays above it). */
 const COMPACT_W = 440;
 const LABEL_COUNT = 6;
+const MAX_ZOOM = 12;
+const contFill = (code: string) => `var(--cont-${continentOf(code)})`;
 
 const monthYear = (p: string) => `${MONTH_NAMES[Number(p.slice(5)) - 1].slice(0, 3)} ${p.slice(0, 4)}`;
 const windowText = (w: { from: string; to: string }) => (w.from.slice(0, 4) === w.to.slice(0, 4) ? `${MONTH_NAMES[Number(w.from.slice(5)) - 1].slice(0, 3)}–${monthYear(w.to)}` : `${monthYear(w.from)}–${monthYear(w.to)}`);
@@ -38,8 +43,8 @@ interface Dot {
   d: PlottedDot;
 }
 
-const Triangle = ({ x, y, up, className }: { x: number; y: number; up: boolean; className?: string }) => (
-  <polygon points={up ? `${x - 5},${y + 6} ${x + 5},${y + 6} ${x},${y - 5}` : `${x - 5},${y - 6} ${x + 5},${y - 6} ${x},${y + 5}`} className={className} />
+const Triangle = ({ x, y, up, className, fill }: { x: number; y: number; up: boolean; className?: string; fill?: string }) => (
+  <polygon points={up ? `${x - 5},${y + 6} ${x + 5},${y + 6} ${x},${y - 5}` : `${x - 5},${y - 6} ${x + 5},${y - 6} ${x},${y + 5}`} className={className} fill={fill} />
 );
 
 const DataTable = memo(function DataTable({ rows, windows }: { rows: ScatterRow[]; windows: ScatterWindows }) {
@@ -108,9 +113,40 @@ export function TradeScatterCard({
   const ph = compact ? 340 : 440;
   const H = ph + margin.top + margin.bottom;
 
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const clipId = `trade-scatter-clip-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const zoom = useZoomPan({
+    svgRef,
+    extent: 1, // the plot is zoomed as a unit square; the scales below map it back to data
+    maxK: MAX_ZOOM,
+    getPlotBox: () => {
+      const svg = svgRef.current;
+      if (!svg) return null;
+      const r = svg.getBoundingClientRect();
+      const k = r.width / W;
+      return { left: r.left + margin.left * k, top: r.top + margin.top * k, width: pw * k, height: ph * k };
+    },
+    onViewChange: () => tip.hide(),
+  });
+
   const axes = useMemo(() => scatterAxes(rows), [rows]);
-  const x = useMemo(() => scaleLinear().domain([axes.xMin, axes.xMax]).range([0, pw]), [axes, pw]);
-  const y = useMemo(() => scaleSymlog().constant(Y_SYMLOG_CONSTANT).domain([Y_MIN_PCT, Y_CAP_PCT]).range([ph, 0]), [ph]);
+  const x0 = useMemo(() => scaleLinear().domain([axes.xMin, axes.xMax]).range([0, pw]), [axes, pw]);
+  const y0 = useMemo(() => scaleSymlog().constant(Y_SYMLOG_CONSTANT).domain([Y_MIN_PCT, Y_CAP_PCT]).range([ph, 0]), [ph]);
+  // Zooming narrows the visible window of the same scales, so dots and text keep their pixel size.
+  const win = viewDomains(zoom.view, 1);
+  const x = useMemo(
+    () => x0.copy().domain([x0.invert(((win.x[0] + 1) / 2) * pw), x0.invert(((win.x[1] + 1) / 2) * pw)]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [x0, pw, win.x[0], win.x[1]],
+  );
+  const y = useMemo(
+    () => y0.copy().domain([y0.invert(((1 - win.y[0]) / 2) * ph), y0.invert(((1 - win.y[1]) / 2) * ph)]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [y0, ph, win.y[0], win.y[1]],
+  );
+  const zoomed = zoom.zoomed;
+  const xTicksShown = zoomed ? x.ticks(6) : axes.xTicks;
+  const yTicksShown = zoomed ? (() => { const t = Y_TICKS_PCT.filter((v) => v >= y.domain()[0] && v <= y.domain()[1]); return t.length >= 3 ? t : y.ticks(6); })() : Y_TICKS_PCT;
   const dots = useMemo<Dot[]>(
     () => rows.flatMap((row) => {
       const d = toDot(row, axes);
@@ -206,11 +242,11 @@ export function TradeScatterCard({
       )}
 
       <div ref={wrapRef} className="relative mt-3 touch-scroll">
-        <ChartFrame width={W} height={H} margin={margin} ariaLabel={aria} onPointerLeave={() => tip.hide()}>
+        <ChartFrame width={W} height={H} margin={margin} ariaLabel={aria} svgRef={svgRef} svgProps={zoom.svgProps} onPointerLeave={() => tip.hide()}>
           {() => (
             <>
-              <Axis scale={x} orientation="bottom" ticks={axes.xTicks} offset={ph} gridExtent={ph} zeroAt={0} format={xTick} />
-              <Axis scale={y} orientation="left" ticks={Y_TICKS_PCT} offset={0} gridExtent={pw} zeroAt={0} format={yTick} />
+              <Axis scale={x} orientation="bottom" ticks={xTicksShown} offset={ph} gridExtent={ph} zeroAt={0} format={xTick} />
+              <Axis scale={y} orientation="left" ticks={yTicksShown} offset={0} gridExtent={pw} zeroAt={0} format={yTick} />
               <text className="axis-caption" x={pw / 2} y={ph + 44} textAnchor="middle">
                 {compact ? "Change in duty rate" : "Change in duties as a share of the country’s imports"}
               </text>
@@ -218,18 +254,21 @@ export function TradeScatterCard({
                 {compact ? "Change in imports" : "Change in U.S. imports from the country"}
               </text>
               {!compact && (
-                <g className="fill-ink-faint font-mono text-[10px] uppercase" style={{ letterSpacing: "0.06em" }}>
+                <g className="fill-ink-faint font-mono text-[10px] uppercase" pointerEvents="none" style={{ letterSpacing: "0.06em" }}>
                   <text x={4} y={ph + 30}>← Lower tariff rate</text>
                   <text x={pw - 4} y={ph + 30} textAnchor="end">Higher tariff rate →</text>
                   <text x={6} y={12}>More imports ↑</text>
                   <text x={6} y={ph - 6}>Fewer imports ↓</text>
                 </g>
               )}
+              <clipPath id={clipId}><rect x={-6} y={-8} width={pw + 12} height={ph + 16} /></clipPath>
+              <g clipPath={`url(#${clipId})`}>
               {drawOrder.map((c) => {
                 const cx = x(c.d.x);
                 const cy = y(c.d.yPct);
                 const sel = c.row.code === country;
-                const className = `dot fill-ink${sel ? " is-highlighted" : ""}`;
+                const className = `dot${sel ? " is-highlighted" : ""}`;
+                const fill = contFill(c.row.code);
                 const common = {
                   // Phones: a tap fills the card below the chart (no hover); the card holds the action.
                   onPointerEnter: tapMode ? undefined : (e: React.PointerEvent) => tip.show(c, e),
@@ -240,25 +279,35 @@ export function TradeScatterCard({
                 };
                 if (c.d.pinned) {
                   const up = c.d.pinned === "top" || c.d.pinned === "right";
-                  return <g key={c.row.code} {...common}><Triangle x={cx} y={cy} up={up} className={className} />{sel && <circle cx={cx} cy={cy} r={10} fill="none" stroke="var(--accent)" strokeWidth={2.5} />}</g>;
+                  return <g key={c.row.code} {...common}><Triangle x={cx} y={cy} up={up} className={className} fill={fill} />{sel && <circle cx={cx} cy={cy} r={10} fill="none" stroke="var(--accent)" strokeWidth={2.5} />}</g>;
                 }
                 if (tapMode) {
                   return (
                     <g key={c.row.code} {...common}>
                       <circle cx={cx} cy={cy} r={22} fill="transparent" />
-                      <circle cx={cx} cy={cy} r={sel || c.row.code === tapped ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} />
+                      <circle cx={cx} cy={cy} r={sel || c.row.code === tapped ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} fill={fill} />
                       {c.row.code === tapped && <circle cx={cx} cy={cy} r={11} fill="none" stroke="var(--ink)" strokeWidth={1.5} />}
                     </g>
                   );
                 }
-                return <circle key={c.row.code} cx={cx} cy={cy} r={sel ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} {...common} />;
+                return <circle key={c.row.code} cx={cx} cy={cy} r={sel ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} fill={fill} {...common} />;
               })}
               {labels.map((l) => (
                 <text key={l.code} x={l.x} y={l.y} className="dot-label" style={{ paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 3 }}>{l.name}</text>
               ))}
+              </g>
             </>
           )}
         </ChartFrame>
+        <ZoomControls
+          onZoomIn={zoom.zoomIn}
+          onZoomOut={zoom.zoomOut}
+          onReset={zoom.reset}
+          canZoomIn={zoom.canZoomIn}
+          zoomed={zoomed}
+          className=""
+          style={{ left: margin.left + 6, top: margin.top + 22 }}
+        />
         <Tooltip state={tip.state}>
           {({ row, d }) => (
             <div className="flex min-w-[10rem] flex-col gap-0.5 text-[0.78rem]">
@@ -271,6 +320,15 @@ export function TradeScatterCard({
           )}
         </Tooltip>
       </div>
+
+      <ul className="m-0 mt-3 flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-[0.78rem] text-ink-muted" aria-label="Continent colors">
+        {CONTINENTS.filter((c) => c.id !== "other" || rows.some((r) => r.plotted && continentOf(r.code) === "other")).map((c) => (
+          <li key={c.id} className="inline-flex items-center gap-1.5">
+            <span aria-hidden className="inline-block size-2.5 rounded-full" style={{ background: `var(--cont-${c.id})` }} />
+            {c.label}
+          </li>
+        ))}
+      </ul>
 
       {tapMode && (
         <div className="mt-2 rounded-md border border-line bg-surface-raised p-3 text-[0.8rem]" aria-live="polite">

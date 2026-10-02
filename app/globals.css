@@ -61,6 +61,13 @@
      token needs its own light-mode value, same as every other token here. */
   --note: #8a5a12;
   --focus: #5c4b7a;
+  --cont-north-america: #2f6bb3;
+  --cont-south-america: #2f9a5c;
+  --cont-europe: #7b4f9d;
+  --cont-asia: #d1792a;
+  --cont-africa: #b8902a;
+  --cont-oceania: #1f9aa8;
+  --cont-other: #83817d;
   color-scheme: light;
 }
 
@@ -94,6 +101,13 @@
     --topic-n: #c1c1c1;
     --note: #e3b04a;
     --focus: #9b84c7;
+  --cont-north-america: #5b95de;
+  --cont-south-america: #4fbf80;
+  --cont-europe: #a67fd0;
+  --cont-asia: #ec9b52;
+  --cont-africa: #d9b350;
+  --cont-oceania: #45bccb;
+  --cont-other: #a5a39c;
     color-scheme: dark;
   }
 }
@@ -127,6 +141,13 @@
   --topic-n: #c1c1c1;
   --note: #e3b04a;
   --focus: #9b84c7;
+  --cont-north-america: #5b95de;
+  --cont-south-america: #4fbf80;
+  --cont-europe: #a67fd0;
+  --cont-asia: #ec9b52;
+  --cont-africa: #d9b350;
+  --cont-oceania: #45bccb;
+  --cont-other: #a5a39c;
   color-scheme: dark;
 }
 

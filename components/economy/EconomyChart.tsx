@@ -329,14 +329,19 @@ const dotPos = (reading: Reading, spec: ChartSpec, g: ReturnType<typeof geometry
 function Overlay({ W, hero, spec, view, showCong, reading }: { W: number; hero: boolean; spec: ChartSpec; view: readonly [number, number]; showCong: boolean; reading: Reading }) {
   const v = useEconomyValues();
   const day = activeDay(v);
-  if (day === null || day < view[0] || day >= view[1]) return null;
+  const pinInView = v.pin !== null && v.pin >= view[0] && v.pin < view[1];
+  if ((day === null || day < view[0] || day >= view[1]) && !pinInView) return null;
   const g = geometry(W, hero, spec, view, showCong);
+  const pinX = pinInView && v.hover !== null && v.hover !== v.pin ? g.X(v.pin!) : null;
+  if (day === null || day < view[0] || day >= view[1])
+    return <g pointerEvents="none"><line x1={g.X(v.pin!)} x2={g.X(v.pin!)} y1={g.mt} y2={g.axisY} stroke="var(--accent)" strokeWidth={1.5} /></g>;
   const dot = dotPos(reading, spec, g);
   const dot2 = reading.value2 !== null && reading.snap !== null ? { x: g.X(reading.snap), y: g.Y(reading.value2) } : null;
   const x = g.X(day);
   return (
     <g pointerEvents="none">
-      <line x1={x} x2={x} y1={g.mt} y2={g.axisY} stroke="var(--accent)" strokeWidth={v.hover === null ? 1.5 : 1} />
+      {pinX !== null && <line x1={pinX} x2={pinX} y1={g.mt} y2={g.axisY} stroke="var(--accent)" strokeWidth={1.5} />}
+      <line x1={x} x2={x} y1={g.mt} y2={g.axisY} stroke="var(--accent)" strokeWidth={v.hover === null ? 1.5 : 1} strokeOpacity={pinX !== null ? 0.5 : 1} />
       {dot2 && <circle cx={dot2.x} cy={dot2.y} r={3.5} fill="var(--ink-faint)" stroke="var(--surface)" strokeWidth={1.5} />}
       {dot && <circle cx={dot.x} cy={dot.y} r={4} fill="var(--ink)" stroke="var(--surface)" strokeWidth={1.5} />}
     </g>
