@@ -203,6 +203,8 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             renderTooltip={(c) => <YearTooltip col={c} admins={adminById} mode={mode} throughDate={data.throughDate} />}
           />
 
+          <YearList year={selectedYear} years={data.years} range={[from, to]} president={president} onClearPresident={() => setRange(null)} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
+
           <MethodologyNote>
             <p>
               Orders are counted in the year they were
@@ -219,7 +221,6 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
           <TableFallback years={data.years} />
         </ChartCard>
 
-        <YearList year={selectedYear} years={data.years} range={[from, to]} president={president} onClearPresident={() => setRange(null)} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
             Source:{" "}
@@ -304,10 +305,10 @@ function YearList({
   if (president) {
     const a = admins.get(president);
     const scope = year ? [year] : years;
-    const all = scope.flatMap((y) => y.items).filter((i) => i.termId === president);
+    const all = scope.flatMap((y) => y.items).filter((i) => i.termId === president).sort((a, b) => b.n - a.n);
     const items = topic ? all.filter((i) => i.topic === topic) : all;
     return (
-      <section aria-live="polite" aria-label={`Executive orders signed by ${a?.president ?? "this president"}`} className="rounded-[10px] border border-line bg-surface">
+      <section aria-live="polite" aria-label={`Executive orders signed by ${a?.president ?? "this president"}`} className="mt-4 overflow-hidden rounded-lg border border-line">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line px-5 py-3">
           <h2 className="font-serif text-[1.05rem] font-medium">
             {a?.president}: {items.length} executive orders{year ? ` signed in ${year.year}` : ""}
@@ -330,7 +331,7 @@ function YearList({
     // A topic with no year selected: every order on that topic in the years the chart shows, newest first.
     const items = years.filter((y) => y.year >= range[0] && y.year <= range[1]).flatMap((y) => y.items).filter((i) => i.topic === topic).sort((a, b) => b.n - a.n);
     return (
-      <section aria-live="polite" aria-label={`Executive orders on ${EO_TOPIC_LABELS[topic]}`} className="rounded-[10px] border border-line bg-surface">
+      <section aria-live="polite" aria-label={`Executive orders on ${EO_TOPIC_LABELS[topic]}`} className="mt-4 overflow-hidden rounded-lg border border-line">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line px-5 py-3">
           <h2 className="font-serif text-[1.05rem] font-medium">
             {EO_TOPIC_LABELS[topic]}: {items.length} executive orders, {range[0]}–{range[1]}
@@ -348,7 +349,7 @@ function YearList({
     // Nothing selected: every order in the years the chart shows, newest first.
     const items = years.filter((y) => y.year >= range[0] && y.year <= range[1]).flatMap((y) => y.items).sort((a, b) => b.n - a.n);
     return (
-      <section aria-live="polite" aria-label="Executive orders in the years shown" className="rounded-[10px] border border-line bg-surface">
+      <section aria-live="polite" aria-label="Executive orders in the years shown" className="mt-4 overflow-hidden rounded-lg border border-line">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line px-5 py-3">
           <h2 className="font-serif text-[1.05rem] font-medium">
             All executive orders: {items.length}, {range[0]}–{range[1]}
@@ -361,7 +362,7 @@ function YearList({
   }
   const items = topic ? year.items.filter((i) => i.topic === topic) : year.items;
   return (
-    <section aria-live="polite" aria-label={`Executive orders signed in ${year.year}`} className="rounded-[10px] border border-line bg-surface">
+    <section aria-live="polite" aria-label={`Executive orders signed in ${year.year}`} className="mt-4 overflow-hidden rounded-lg border border-line">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line px-5 py-3">
         <h2 className="font-serif text-[1.05rem] font-medium">
           {year.year}: {year.total} executive orders

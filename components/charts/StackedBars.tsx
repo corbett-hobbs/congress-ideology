@@ -6,6 +6,7 @@ import { ChartFrame } from "./ChartFrame";
 import { Axis } from "./Axis";
 import { Tooltip, useTooltip } from "./Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
+import { findExtremes } from "@/lib/chart-extremes";
 
 export interface StackSeries {
   id: string;
@@ -54,6 +55,8 @@ const MARGIN = { top: 34, right: 6, left: 10 };
 const BAND_H = 22;
 const AXIS_H = 34;
 const DIM = 0.2;
+const MARK_CHAR_W = 6.3;
+const MARK_HALO = { stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" } as const;
 
 /**
  * Stacked columns over a categorical axis: count or share-of-column, a fixed
@@ -82,6 +85,20 @@ export function StackedBars<C extends StackColumn>({
   const tip = useTooltip<C>();
 
   const maxTotal = useMemo(() => Math.max(1, ...columns.map((c) => c.total)), [columns]);
+  // Peak and low of what the chart is about: each column's total, or the highlighted topic's own
+  // count (share of the year in Share mode). Share totals are all 100%, so with no topic picked
+  // there is nothing to mark. Follows the window, since `columns` is already sliced to it.
+  const marks = useMemo(() => {
+    if (mode === "share" && !highlight) return [];
+    const val = (c: C) => (highlight ? (c.values[highlight] ?? 0) / (mode === "share" ? c.total || 1 : 1) : c.total);
+    const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: val(c) })));
+    const fmt = (v: number) => (mode === "share" ? `${Math.round(v * 100)}%` : String(v));
+    // A topic's low is usually a year with none of it (0): that is not worth a label.
+    return [peak, highlight && low?.value === 0 ? null : low].flatMap((p, k) =>
+      p ? [{ i: p.day, kind: k === 0 ? ("peak" as const) : ("low" as const), text: `${columns[p.day].label}: ${fmt(p.value as number)}` }] : [],
+    );
+  }, [columns, mode, highlight]);
+  const highlightFill = highlight ? series.find((s) => s.id === highlight)?.fill : undefined;
   const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 ? BAND_H + 6 : 0) };
 
   return (
@@ -193,6 +210,32 @@ export function StackedBars<C extends StackColumn>({
                 );
               })}
 
+              {/* Peak and low, labelled above their bars; they fade while a column is hovered or picked. */}
+              <g pointerEvents="none" opacity={tip.state || selectedKey ? 0.25 : 1} style={{ transition: "opacity .12s" }}>
+                {marks.map((m, k) => {
+                  const col = columns[m.i];
+                  const w = m.text.length * MARK_CHAR_W + (highlightFill ? 12 : 0);
+                  const clampX = (x: number) => Math.min(Math.max(x, w / 2 + 2), innerWidth - w / 2 - 2);
+                  const cx0 = clampX(xOf(m.i) + step / 2);
+                  const first = marks[0];
+                  const peakCx = clampX(xOf(first.i) + step / 2);
+                  // The low label slides to the far side of its own bar when it would land on the peak's (close in both x and height).
+                  const peakTop = mode === "share" ? y(1) : y(columns[first.i].total);
+                  const clash = k === 1 && Math.abs(cx0 - peakCx) < w && Math.abs((mode === "share" ? y(1) : y(col.total)) - peakTop) < 14;
+                  const anchor = clash ? (m.i < first.i ? "end" : "start") : "middle";
+                  const cx = clash ? xOf(m.i) + step / 2 + (anchor === "end" ? 6 : -6) : cx0;
+                  if (clash && (anchor === "end" ? cx > peakCx - w / 2 - 4 : cx < peakCx + w / 2 + 4)) return null;
+                  // Count mode sits above the bar; Share mode (every bar full height) above the plot's top edge.
+                  const topY = mode === "share" ? y(1) : y(col.total);
+                  return (
+                    <text key={m.kind} x={cx} y={topY - 6} textAnchor={anchor} className="fill-ink text-[11px] font-medium" style={MARK_HALO}>
+                      {highlightFill && <tspan style={{ fill: highlightFill }}>● </tspan>}
+                      {m.text}
+                    </text>
+                  );
+                })}
+              </g>
+
               {/* x labels */}
               {columns.map((col, i) => {
                 const show = i % every === 0 || i === columns.length - 1;
@@ -223,23 +266,31 @@ export function StackedBars<C extends StackColumn>({
                     return (
                       <g key={b.id}>
                         <title>{b.label}</title>
-                        <rect
-                          x={x0}
-                          y={0}
-                          width={Math.max(0, w)}
-                          height={BAND_H}
-                          style={{
-                            fill: b.fill ?? (i % 2 === 0 ? "var(--surface-raised)" : "var(--line)"),
-                            stroke: "var(--line-strong)",
-                            strokeWidth: 0.75,
-                          }}
-                        />
+                        {b.fill ? (
+                          <>
+                            {/* Same look as the foreign-aid term band: a light tint, a solid party-colour rule on top, ink label. */}
+                            <rect x={x0 + 0.5} y={0} width={Math.max(0, w - 1)} height={BAND_H} rx={2} style={{ fill: `color-mix(in oklab, ${b.fill} 20%, var(--surface))` }} />
+                            <rect x={x0 + 0.5} y={0} width={Math.max(0, w - 1)} height={2.5} style={{ fill: b.fill }} />
+                          </>
+                        ) : (
+                          <rect
+                            x={x0}
+                            y={0}
+                            width={Math.max(0, w)}
+                            height={BAND_H}
+                            style={{
+                              fill: i % 2 === 0 ? "var(--surface-raised)" : "var(--line)",
+                              stroke: "var(--line-strong)",
+                              strokeWidth: 0.75,
+                            }}
+                          />
+                        )}
                         {w > Math.max(28, b.label.length * 6.4 + 6) && (
                           <text
                             x={x0 + w / 2}
                             y={BAND_H / 2 + 4}
                             textAnchor="middle"
-                            style={{ fill: b.fill ? "#ffffff" : "var(--ink-muted)", fontSize: 11, fontWeight: b.fill ? 600 : 500 }}
+                            style={{ fill: b.fill ? "var(--ink)" : "var(--ink-muted)", fontSize: 11, fontWeight: 500 }}
                           >
                             {b.label}
                           </text>
