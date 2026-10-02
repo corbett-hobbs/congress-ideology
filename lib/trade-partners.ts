@@ -54,5 +54,6 @@ export function partnerScale(rows: readonly PartnerChartRow[]): PartnerScale {
   };
 }
 
-/** The right-hand label: the signed balance. */
-export const partnerMeta = (r: PartnerChartRow) => fmtMoney(r.balance, { signed: true });
+/** The right-hand label: total trade when ranked by total, otherwise the signed balance. */
+export const partnerMeta = (r: PartnerChartRow, sortKey: string = "balance") =>
+  sortKey === "total" ? fmtMoney(r.exports + r.imports) : fmtMoney(r.balance, { signed: true });
