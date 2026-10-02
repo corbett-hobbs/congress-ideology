@@ -12,7 +12,7 @@ import { RemovalsCountryCard } from "./RemovalsCountryCard";
 const asOfLabel = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
-export function ImmigrationPageClient({ data, countries }: { data: ImmigrationPageData; countries: RemovalsCountryPayload }) {
+export function ImmigrationPageClient({ data, countries, worldMap }: { data: ImmigrationPageData; countries: RemovalsCountryPayload; worldMap: { width: number; height: number; features: { key: string; name: string; d: string }[] } }) {
   // Two pieces of page state: the President selection ("all" or a term id) filters the timeline, and the
   // fiscal year (the pinned slider) picks the year the country list shows and is marked on the timeline.
   const covered = useMemo(() => new Set(countries.years.map((y) => y.fy)), [countries]);
@@ -49,7 +49,7 @@ export function ImmigrationPageClient({ data, countries }: { data: ImmigrationPa
 
         <RemovalsCard data={data} selection={selection} fy={fy} onFy={setFy} />
 
-        <RemovalsCountryCard payload={countries} fy={fy} />
+        <RemovalsCountryCard payload={countries} fy={fy} worldMap={worldMap} />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: U.S. Immigration and Customs Enforcement removal statistics, FY{data.firstFy}–FY{data.lastFy} (FY

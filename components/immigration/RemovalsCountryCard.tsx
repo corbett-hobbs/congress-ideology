@@ -14,6 +14,7 @@ import {
 } from "@/lib/removals-country-derive";
 import type { RemovalsCountryPayload } from "@/lib/removals-country-types";
 import { MethodologyNote } from "@/components/MethodologyNote";
+import { RemovalsMap, undrawnRemovals } from "./RemovalsMap";
 
 const n = (v: number) => v.toLocaleString("en-US");
 const dateLabel = (iso: string) =>
@@ -29,8 +30,10 @@ const dateLabel = (iso: string) =>
 export function RemovalsCountryCard({
   payload,
   fy,
+  worldMap,
 }: {
   payload: RemovalsCountryPayload;
+  worldMap: { width: number; height: number; features: { key: string; name: string; d: string }[] };
   /** The fiscal year the page slider is on. */
   fy: number;
 }) {
@@ -79,6 +82,8 @@ export function RemovalsCountryCard({
     };
   });
   const prev = `FY${String(fy - 1).slice(2)}`;
+  const mapRows = ranked.map((r) => ({ key: names[r.ci].key, name: names[r.ci].name, removals: r.removals }));
+  const off = undrawnRemovals(worldMap.features, mapRows);
 
   return (
     <ChartCard
@@ -92,6 +97,15 @@ export function RemovalsCountryCard({
         ) : undefined
       }
     >
+      <div className="grid grid-cols-1 gap-x-4 gap-y-4 md:grid-cols-[1.5fr_1fr] md:items-stretch">
+        <RemovalsMap
+          features={worldMap.features}
+          rows={mapRows}
+          country={country}
+          onPick={setCountry}
+          fy={fy}
+        />
+        <div className="flex min-w-0 flex-col">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <ReversibleSortToggle
           ariaLabel="Sort countries"
@@ -113,7 +127,7 @@ export function RemovalsCountryCard({
 
       <div className="mt-3 border-t border-line pt-1">
         <div
-          className="max-h-[27rem] overflow-y-auto overscroll-contain pr-0.5 touch-scroll"
+          className="max-h-[24rem] md:max-h-[27rem] overflow-y-auto overscroll-contain pr-0.5 touch-scroll"
           tabIndex={0}
           aria-label={`Removals by country, FY${fy}, ${ranked.length} countries, scrollable`}
         >
@@ -124,6 +138,9 @@ export function RemovalsCountryCard({
             ariaLabel={`ICE removals by country of citizenship, FY${fy}, ranked`}
             emptyText="No removals recorded."
           />
+        </div>
+      </div>
+
         </div>
       </div>
 
@@ -139,6 +156,7 @@ export function RemovalsCountryCard({
         removals in a year are left out; “Unknown” and “Stateless” are ICE categories, not countries. FY2020 to FY2023 leave out Title 42 expulsions.
       </p>
       <p>
+        {off.count > 0 && <>Not drawn on the map: {off.count} rows with no outline (ICE categories such as Unknown and Stateless, and small or former states), {n(off.removals)} removals in all; they are in the list and the table. </>}
         FY{fy}: {n(year.total)} removals across {ranked.length} countries and categories, matching the timeline above. Source:{" "}
         <a href={year.sourceUrl} target="_blank" rel="noreferrer" className="text-accent underline-offset-2 hover:underline">
           {year.source}

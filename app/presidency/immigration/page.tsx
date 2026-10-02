@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ImmigrationPageClient } from "@/components/immigration/ImmigrationPageClient";
 import { getImmigrationPageData } from "@/lib/immigration-data";
+import { getWorldMap } from "@/lib/foreign-aid-data";
 import { getRemovalsCountryPayload } from "@/lib/removals-country-data";
 import { site } from "@/lib/site";
 
@@ -18,5 +19,5 @@ export const metadata: Metadata = {
 };
 
 export default function ImmigrationPage() {
-  return <ImmigrationPageClient data={getImmigrationPageData()} countries={getRemovalsCountryPayload()} />;
+  return <ImmigrationPageClient data={getImmigrationPageData()} countries={getRemovalsCountryPayload()} worldMap={(({ width, height, features }) => ({ width, height, features }))(getWorldMap())} />;
 }
