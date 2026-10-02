@@ -6,6 +6,7 @@ import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
+import { findExtremes } from "@/lib/chart-extremes";
 import { administrationForTermLabel } from "./term-labels";
 import { SLOT_NAME, fiscalYearSpan, formatAidAxis, formatAidMoney, niceDollarTicks, type SpendingYear } from "@/lib/foreign-aid-derive";
 import { useAidState } from "./ForeignAidState";
@@ -80,6 +81,16 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
   };
 
   const visible = terms.map((t) => ({ t, s: Math.max(t.fromFy, range[0]), e: Math.min(t.toFy, range[1]) })).filter((o) => o.s <= o.e);
+  // Peak and low fiscal year of the drawn totals, labelled above their bars (the same idea as the
+  // line charts and the executive-orders bars). Complete years only: a partial year is always low.
+  // A filtered chart (one country or one sector) carries no labels.
+  const marks =
+    country < 0 && sector < 0
+      ? (() => {
+          const { peak, low } = findExtremes(rows.map((r, i) => ({ day: i, value: isPartial(r.fy) ? null : r.drawn })));
+          return [peak, low].flatMap((p) => (p && p.day !== si ? [{ i: p.day, text: `FY${rows[p.day].fy}: ${formatAidMoney(rows[p.day].drawn)}` }] : []));
+        })()
+      : [];
   const chipLabel = `FY${year}${isPartial(year) ? " · partial" : ""}`;
   const chipW = chipLabel.length * 6.6;
 
@@ -131,6 +142,20 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
                 </g>
               );
             })}
+            <g pointerEvents="none" opacity={hover >= 0 ? 0.25 : 1} style={{ transition: "opacity .12s" }}>
+              {marks.map((m) => {
+                const w = m.text.length * 6.3;
+                const cx = Math.min(Math.max(m.i * step + step / 2, w / 2 + 2), innerW - w / 2 - 2);
+                // Sit above the tallest bar the label spans, so a clamped label never lands on a neighbour.
+                let tall = rows[m.i].drawn;
+                for (let j = Math.max(0, Math.floor((cx - w / 2) / step)); j <= Math.min(n - 1, Math.floor((cx + w / 2) / step)); j++) tall = Math.max(tall, rows[j].drawn);
+                return (
+                  <text key={m.i} x={cx} y={y(tall) - 6} textAnchor="middle" className="fill-ink text-[11px] font-medium" style={{ stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" }}>
+                    {m.text}
+                  </text>
+                );
+              })}
+            </g>
             {rows.map((r, i) =>
               n <= 10 || r.fy % 5 === 0 || i === 0 ? (
                 <text key={r.fy} className="axis-tick-label" x={i * step + step / 2} y={innerH + 14} textAnchor="middle" style={r.fy === year ? { fill: "var(--ink)", fontWeight: 600 } : undefined}>
