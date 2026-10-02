@@ -1,5 +1,6 @@
 "use client";
 
+import { CountryCombobox } from "./CountryCombobox";
 import { RangeSelector } from "@/components/charts/RangeSelector";
 import type { EconomyTerm } from "@/lib/economy-presidents";
 import type { TradeCountryRef } from "@/lib/trade-types";
@@ -79,17 +80,10 @@ export function TradeFilterBar({
               })}
             </select>
           </label>
-          <label className="flex min-w-0 flex-col gap-0.5 sm:flex-1 sm:flex-none sm:flex-row sm:items-center sm:gap-2">
+          <div className="flex min-w-0 flex-col gap-0.5 sm:flex-1 sm:flex-none sm:flex-row sm:items-center sm:gap-2">
             <span className={LABEL}>Country</span>
-            <select value={country ?? ""} onChange={(e) => onCountry(e.target.value || null)} className={`${SELECT} h-11 w-full sm:h-auto sm:w-[12rem]`}>
-              <option value="">All countries</option>
-              {countries.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </label>
+            <CountryCombobox countries={countries} value={country} onChange={onCountry} className="w-full sm:w-[12rem]" />
+          </div>
           <label className="hidden flex-none cursor-pointer items-center gap-2 rounded-md border border-line-strong bg-surface-raised px-[0.65rem] py-[0.42rem] text-[0.8rem] text-ink sm:flex">
             <input
               type="checkbox"
