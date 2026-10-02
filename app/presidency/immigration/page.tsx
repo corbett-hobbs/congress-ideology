@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ImmigrationPageClient } from "@/components/immigration/ImmigrationPageClient";
 import { getImmigrationPageData } from "@/lib/immigration-data";
+import { getRemovalsCountryPayload } from "@/lib/removals-country-data";
 import { site } from "@/lib/site";
 
 /** /presidency/immigration — ICE removals by fiscal year, by administration, with the definition changes marked. */
@@ -17,5 +18,5 @@ export const metadata: Metadata = {
 };
 
 export default function ImmigrationPage() {
-  return <ImmigrationPageClient data={getImmigrationPageData()} />;
+  return <ImmigrationPageClient data={getImmigrationPageData()} countries={getRemovalsCountryPayload()} />;
 }

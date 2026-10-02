@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import type { ImmigrationPageData } from "@/lib/immigration-derive";
+import { coverageLabel } from "@/lib/removals-country-derive";
+import type { RemovalsCountryPayload } from "@/lib/removals-country-types";
 import { ImmigrationFilterBar } from "./ImmigrationFilterBar";
 import { RemovalsCard } from "./RemovalsCard";
+import { RemovalsCountryCard } from "./RemovalsCountryCard";
 
 const asOfLabel = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
-export function ImmigrationPageClient({ data }: { data: ImmigrationPageData }) {
+export function ImmigrationPageClient({ data, countries }: { data: ImmigrationPageData; countries: RemovalsCountryPayload }) {
   // One selection ("all" or a term id) drives the chart; no other page state.
   const [selection, setSelection] = useState("all");
   return (
@@ -29,10 +32,15 @@ export function ImmigrationPageClient({ data }: { data: ImmigrationPageData }) {
 
         <RemovalsCard data={data} selection={selection} />
 
+        <RemovalsCountryCard payload={countries} data={data} selection={selection} />
+
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: U.S. Immigration and Customs Enforcement removal statistics, FY{data.firstFy}–FY{data.lastFy} (FY
           {data.lastFy} from the DHS FY2027 ICE budget overview). Data as of {asOfLabel(data.asOf)}. Each fiscal year is
           assigned to the administration in office for most of it; inauguration-year splits are shown on the year’s card.
+          The country list uses the removals-by-country-of-citizenship tables in ICE’s annual reports ({coverageLabel(countries)}); each year’s
+          countries add up to that year’s ICE total. Countries are countries of citizenship, not destinations. One agency, one definition: ICE
+          only, never combined with Border Patrol or DHS-wide counts.
         </p>
       </main>
     </>

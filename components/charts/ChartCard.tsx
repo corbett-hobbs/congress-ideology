@@ -1,7 +1,7 @@
 import { forwardRef, type CSSProperties, type ReactNode } from "react";
 
 interface ChartCardProps {
-  title: string;
+  title: ReactNode;
   lede: ReactNode;
   action?: ReactNode;
   className?: string;
