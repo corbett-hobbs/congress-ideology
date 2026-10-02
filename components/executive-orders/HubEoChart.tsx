@@ -7,8 +7,7 @@ const M = { top: 6, right: 4, bottom: 4, left: 4 };
 
 /**
  * Static snapshot of the executive-orders explorer: orders per year, stacked by
- * topic (count mode, no axes or interaction). Needs `TopicPatternDefs` once on
- * the page for the hatched / dotted topic fills. Server-rendered.
+ * topic (count mode, no axes or interaction).
  */
 export function HubEoChart({ data }: { data: EoPayload }) {
   const n = data.years.length;

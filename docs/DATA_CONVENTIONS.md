@@ -433,20 +433,14 @@ that is Trump alone, and the anchor was corrected rather than loosened.*
 
 ### Topic colours: a palette that cannot be distinct by colour alone
 
-Nine topics cannot be separated by colour under the project's CVD gate
-(`validate_palette.js`: ≥ 3:1 contrast on every surface, ΔE ≥ 0.10 under
-protan/deutan). A search over muted OKLCH candidates (avoiding the party hues)
-found no 13-colour, 9-colour or even 4-colour set that clears ΔE 0.10 on the
-light surfaces. So topics are **three colour families × three fills** (solid,
-hatch, dots — `lib/executive-orders-types.ts` `TOPIC_STYLE`, patterns in
-`components/executive-orders/TopicPatternDefs.tsx`): `--topic-a` plum, `--topic-b`
-teal, `--topic-n` charcoal/silver. Colours are checked only where a pair shares a
-fill (pairs differing in fill are separated by the pattern): the three families
-vs each other, and vs `--dem`/`--rep` (so a topic never reads as a party).
-They are **not** checked against `--oth` (the "other party" grey, never on this
+Nine topics cannot pass the project's CVD gate (`validate_palette.js`) as colours alone, but
+patterns (hatch, dots) read as noise on phones, so each topic is **one solid colour**:
+`--topic-<topic>` tokens in `app/globals.css`, referenced by `topicFill` in
+`lib/executive-orders-types.ts`. The tooltip, legend and list chips carry the topic name, so
+colour is never the only cue. Colours avoid the party hues (`--dem`/`--rep`). They are **not** checked against `--oth` (the "other party" grey, never on this
 page; no muted palette clears the light-surface contrast and ΔE ≥ 0.10 from dem,
-rep *and* oth together). The validator passes with `topic-a/b/n` added to
-`NEW_KEYS`, `PALETTE_KEYS` and `FORCED_PAIRS`.
+rep *and* oth together). The topic tokens are no longer in the validator:
+nine solid hues are not gated.
 
 ---
 

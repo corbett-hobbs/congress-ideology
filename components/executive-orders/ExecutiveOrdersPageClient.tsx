@@ -17,7 +17,7 @@ import {
   type EoYear,
 } from "@/lib/executive-orders-types";
 import { sameRange, termYearRange, type YearRange } from "@/lib/year-range";
-import { TopicPatternDefs, TopicSwatch } from "./TopicPatternDefs";
+import { TopicSwatch } from "./TopicSwatch";
 import { MethodologyNote } from "@/components/MethodologyNote";
 
 type Mode = "count" | "share";
@@ -87,7 +87,6 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
 
   return (
     <>
-      <TopicPatternDefs />
       <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-[1180px] flex-col px-4 py-2.5 sm:flex-row sm:items-center sm:px-6">
           {/* Phones: President and Topic share one line (long names truncate with an ellipsis), the slider sits below. */}
@@ -203,13 +202,15 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             renderTooltip={(c) => <YearTooltip col={c} admins={adminById} mode={mode} throughDate={data.throughDate} />}
           />
 
-          <p className="mb-0 mt-3 text-[0.75rem] leading-relaxed text-ink-faint">
-            Terms under the axis:{" "}
-            {data.administrations
-              .map((a) => `${a.president} (${a.start.slice(0, 4)}–${a.end ? a.end.slice(0, 4) : "present"})`)
-              .join(", ")}
-            .
-          </p>
+          <MethodologyNote>
+            <p>
+              Terms under the axis:{" "}
+              {data.administrations
+                .map((a) => `${a.president} (${a.start.slice(0, 4)}–${a.end ? a.end.slice(0, 4) : "present"})`)
+                .join(", ")}
+              .
+            </p>
+          </MethodologyNote>
 
           <TableFallback years={data.years} />
         </ChartCard>

@@ -1,9 +1,12 @@
 "use client";
 
-import { forwardRef, useMemo, useState, type PointerEvent } from "react";
+import { forwardRef, useMemo, useRef, useState, type PointerEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
+import { MethodologyNote } from "@/components/MethodologyNote";
 import { PillGroup } from "@/components/charts/PillGroup";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import { useZoomPan } from "@/components/charts/use-zoom-pan";
+import { ZoomControls } from "@/components/charts/ZoomControls";
 import { SECTOR_LABEL, SLOT_NAME, formatAidMoney, militaryShareAvailable, slotOfSector } from "@/lib/foreign-aid-derive";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
 import { DOLLAR_MIX, SHARE_BINS, SHARE_MIX, buildPathIndex, dollarBins, dollarClass, nodeValue, notOnMap, shareClass, undrawnCountries, type NodeValue } from "@/lib/foreign-aid-map";
@@ -21,6 +24,7 @@ interface Hit {
 const LAND = "color-mix(in oklab, var(--ink) 7%, var(--surface))";
 const mix = (base: string, pct: number) => `color-mix(in oklab, ${base} ${pct}%, var(--surface))`;
 const MARKER_R = 3.4;
+const MAX_ZOOM = 8;
 
 /**
  * "Where it goes": a choropleth of the selected fiscal year on fixed absolute bins, so years stay
@@ -32,6 +36,16 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
   const { data, year, sector, country, toggleCountry, isPartial } = useAidState();
   const [measure, setMeasure] = useState<Measure>("dollars");
   const tip = useTooltip<Hit>();
+  const svgRef = useRef<SVGSVGElement>(null);
+  // The hook's square [-1, 1] domain is normalized onto the map's viewBox, so zoom and pan work by moving the viewBox.
+  const zoom = useZoomPan({
+    svgRef,
+    extent: 1,
+    maxK: MAX_ZOOM,
+    getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null,
+    onViewChange: tip.hide,
+  });
+  const { k, cx, cy } = zoom.view;
   const yi = year - data.payload.years[0];
   const shareOk = militaryShareAvailable(sector);
   const share = measure === "share" && shareOk;
@@ -139,13 +153,24 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
         />
       }
     >
+      <div className="relative">
       <svg
-        viewBox={`0 0 ${map.width} ${map.height}`}
+        ref={svgRef}
+        viewBox={`${((cx + 1) / 2) * map.width - map.width / (2 * k)} ${((1 - cy) / 2) * map.height - map.height / (2 * k)} ${map.width / k} ${map.height / k}`}
         role="img"
         aria-label={`World map of U.S. foreign aid ${share ? "military share" : "disbursements"} by recipient country, FY${year}. The ranked list and table view carry the same figures.`}
         className="block h-auto w-full"
-        onPointerMove={onMove}
-        onPointerDown={onMove}
+        style={{ touchAction: zoom.zoomed ? "none" : "pan-y", cursor: zoom.zoomed ? "grab" : undefined }}
+        {...zoom.svgProps}
+        onPointerMove={(e) => {
+          zoom.svgProps.onPointerMove(e);
+          if (e.buttons === 0 || e.pointerType !== "mouse") onMove(e);
+          else tip.hide();
+        }}
+        onPointerDown={(e) => {
+          zoom.svgProps.onPointerDown(e);
+          onMove(e);
+        }}
         onPointerLeave={tip.hide}
         onClick={onClick}
       >
@@ -161,8 +186,8 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
               style={{
                 fill: v ? fillOf(v) : LAND,
                 stroke: sel ? "var(--accent)" : "var(--surface)",
-                strokeWidth: sel ? 1.7 : 0.35,
-                vectorEffect: sel ? "non-scaling-stroke" : undefined,
+                strokeWidth: sel ? 1.7 : 0.5,
+                vectorEffect: "non-scaling-stroke",
                 opacity: country >= 0 && !sel ? 0.4 : 1,
                 cursor: has ? "pointer" : "default",
                 transition: "opacity .12s",
@@ -178,7 +203,7 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
               data-m={m.name}
               cx={m.x}
               cy={m.y}
-              r={MARKER_R}
+              r={MARKER_R / Math.sqrt(k)}
               style={{
                 fill: fillOf(m.value),
                 stroke: sel ? "var(--accent)" : "var(--ink-muted)",
@@ -190,6 +215,8 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
           );
         })}
       </svg>
+      <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
+      </div>
       <Tooltip state={tip.state}>{(h) => <MapTip hit={h} year={year} />}</Tooltip>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[0.75rem] text-ink-muted">
@@ -212,7 +239,8 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
           </span>
         )}
       </div>
-      <p className="m-0 mt-2.5 text-[0.78rem] leading-[1.5] text-ink-muted">
+      <MethodologyNote>
+        <p>
         {share ? (
           <>Each country’s military assistance as a share of its {sector === 0 ? "Peace and security" : "total"} disbursements in FY{year}.</>
         ) : (
@@ -222,7 +250,8 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
             {n.undrawn > 5e6 ? `, plus ${formatAidMoney(n.undrawn)} to entities with no modern outline` : ""}.
           </>
         )}
-      </p>
+        </p>
+      </MethodologyNote>
 
       <TableView caption={`Disbursements by recipient country, FY${year}`}>
         <thead>

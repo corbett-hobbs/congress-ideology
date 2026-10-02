@@ -42,12 +42,12 @@ export function FiscalYearControl() {
   };
 
   return (
-    <div className="col-span-2 flex min-w-0 flex-1 items-center gap-2.5 sm:col-auto sm:min-w-[19rem]">
+    <div className="flex min-w-0 items-center gap-1.5 self-end sm:ml-auto sm:min-w-[14rem] sm:flex-1 sm:gap-2.5">
       <button
         type="button"
         onClick={() => (playing ? stop() : start())}
         aria-label={playing ? "Pause" : "Play through fiscal years"}
-        className="grid h-11 w-11 flex-none place-items-center rounded-md border border-line-strong bg-surface-raised text-ink hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-8 sm:w-8"
+        className="grid h-11 w-8 flex-none place-items-center rounded-md border border-line-strong bg-surface-raised text-ink hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-8 sm:w-8"
       >
         <svg viewBox="0 0 14 14" className="h-3.5 w-3.5 fill-current" aria-hidden>
           {playing ? <path d="M3 2h3v10H3zM8 2h3v10H8z" /> : <path d="M3 1.5v11l9-5.5z" />}
@@ -62,11 +62,11 @@ export function FiscalYearControl() {
         onChange={(e) => setYear(Number(e.target.value))}
         aria-label="Fiscal year"
         aria-valuetext={`FY${year}, ${fiscalYearSpan(year)}${isPartial(year) ? ", partial year" : ""}`}
-        className="h-6 min-w-[5rem] flex-1 accent-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+        className="h-6 w-0 min-w-[2.5rem] flex-1 accent-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       />
       <div className="flex min-w-0 items-baseline gap-2 whitespace-nowrap">
-        <b className="font-serif text-[1.05rem] font-semibold tabular-nums text-ink">FY{year}</b>
-        <span className="hidden text-[0.75rem] text-ink-muted sm:inline">{fiscalYearSpan(year)}</span>
+        <b className="font-serif text-[0.95rem] sm:text-[1.05rem] font-semibold tabular-nums text-ink">FY{year}</b>
+        <span className="hidden text-[0.75rem] text-ink-muted lg:inline">{fiscalYearSpan(year)}</span>
         {isPartial(year) && <em className="rounded border border-line-strong px-1.5 text-[0.7rem] not-italic text-ink-muted">partial</em>}
       </div>
     </div>

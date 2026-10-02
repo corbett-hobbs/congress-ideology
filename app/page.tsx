@@ -6,7 +6,6 @@ import { site } from "@/lib/site";
 import { getCourtPayload } from "@/lib/justice-data";
 import { getExecutiveOrdersData } from "@/lib/executive-orders-data";
 import { HubEoChart } from "@/components/executive-orders/HubEoChart";
-import { TopicPatternDefs } from "@/components/executive-orders/TopicPatternDefs";
 import { HubCompass } from "@/components/HubCompass";
 import { CourtHubStrip } from "@/components/court/CourtHubStrip";
 import { SiteFooter } from "@/components/senate/SiteFooter";
@@ -55,7 +54,6 @@ export default function Hub() {
 
   return (
     <>
-      <TopicPatternDefs />
       <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col gap-8 px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
         <PageHeader title={site.tagline} size="hero">
           <p>

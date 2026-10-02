@@ -42,15 +42,16 @@
      way as the historical-party palette via validate_palette.js. */
   --committee-house: #124912;
   --committee-senate: #ad1f8a;
-  /* Executive-order topic colours — three families (a plum, b teal, n neutral
-     charcoal) x three fills (solid / hatch / dots, see lib/executive-orders-types.ts
-     and components/executive-orders/TopicPatternDefs.tsx). Deliberately NOT the
-     party hues. Pairs that share a fill are validated by validate_palette.js
-     (>= 3:1 on every surface, dE >= 0.10 under protan/deutan from each other
-     and from --dem/--rep/--oth). */
-  --topic-a: #7b4f87;
-  --topic-b: #3e9886;
-  --topic-n: #4a4a4a;
+  /* Executive-order topic colours: one solid colour per topic (nine categorical hues), deliberately not the party hues. */
+  --topic-government_operations: #7b4f87;
+  --topic-economy_labor: #c28a2c;
+  --topic-trade: #3e9886;
+  --topic-energy_environment: #6f9a3c;
+  --topic-health_education: #d0627f;
+  --topic-immigration_justice: #8a5a3c;
+  --topic-foreign_policy: #5a86b5;
+  --topic-national_security: #4a4a4a;
+  --topic-civil_rights_civic: #9a8fd0;
   /* Foreign-aid sector colours (lib/foreign-aid-derive.ts SLOT_VAR): five sectors plus a neutral
      "All other". Nine categorical hues cannot pass the CVD gate, so four small sectors share one slot.
      Validated by validate_palette.js (FORCED_PAIRS: all six pairwise, >= 3:1 on every surface). */
@@ -105,9 +106,15 @@
     --antiadmin: #c1904f;
     --committee-house: #7dd175;
     --committee-senate: #c24799;
-    --topic-a: #b5a4ea;
-    --topic-b: #2d8f9e;
-    --topic-n: #c1c1c1;
+    --topic-government_operations: #b58ac4;
+    --topic-economy_labor: #e0b04e;
+    --topic-trade: #4fb7a2;
+    --topic-energy_environment: #98c460;
+    --topic-health_education: #e88ca4;
+    --topic-immigration_justice: #c08a62;
+    --topic-foreign_policy: #7fa8d6;
+    --topic-national_security: #c1c1c1;
+    --topic-civil_rights_civic: #b5a4ea;
     --sector-ps: #c236d8;
     --sector-health: #b1f0d1;
     --sector-hum: #f1d431;
@@ -151,9 +158,15 @@
   --antiadmin: #c1904f;
   --committee-house: #7dd175;
   --committee-senate: #c24799;
-  --topic-a: #b5a4ea;
-  --topic-b: #2d8f9e;
-  --topic-n: #c1c1c1;
+  --topic-government_operations: #b58ac4;
+  --topic-economy_labor: #e0b04e;
+  --topic-trade: #4fb7a2;
+  --topic-energy_environment: #98c460;
+  --topic-health_education: #e88ca4;
+  --topic-immigration_justice: #c08a62;
+  --topic-foreign_policy: #7fa8d6;
+  --topic-national_security: #c1c1c1;
+  --topic-civil_rights_civic: #b5a4ea;
   --sector-ps: #c236d8;
   --sector-health: #b1f0d1;
   --sector-hum: #f1d431;

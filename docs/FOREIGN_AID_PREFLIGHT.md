@@ -52,7 +52,7 @@ question has a yes/no with the file path.
 
 ## Palette pipeline
 
-- Tokens: raw custom properties in `app/globals.css` — `:root` (light), `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])`, and `:root[data-theme="dark"]`; re-exported to Tailwind in `@theme inline` as `--color-<name>` (so `bg-…`, `fill-…`, `text-…` utilities). Existing non-party sets: `--committee-house/senate`, `--topic-a/b/n`, `--cont-*`.
+- Tokens: raw custom properties in `app/globals.css` — `:root` (light), `@media (prefers-color-scheme: dark) :root:not([data-theme="light"])`, and `:root[data-theme="dark"]`; re-exported to Tailwind in `@theme inline` as `--color-<name>` (so `bg-…`, `fill-…`, `text-…` utilities). Existing non-party sets: `--committee-house/senate`, `--topic-<topic>`, `--cont-*`.
 - `lib/party-palette.ts` / `lib/committee-palette.ts` are TS facades over those tokens.
 - Gate: `validate_palette.js` — `PALETTE_KEYS`, `FORCED_PAIRS`, `NEW_KEYS` (absolute checks: ≥ 3:1 on bg/surface/surface-raised; OKLab dE ≥ `DE_GOOD` under normal/protan/deutan for each forced pair). New sector keys go in `PALETTE_KEYS` and `NEW_KEYS`, with `FORCED_PAIRS` for every pair on the same chart (the six sector slots against each other). `--set key=light,dark` tries a candidate. Run: `node validate_palette.js`.
 

@@ -66,23 +66,7 @@ export interface EoPayload {
  * are separated by colour under the CVD gate in validate_palette.js; pairs
  * that share a colour are separated by fill.
  */
-export type TopicFamily = "a" | "b" | "n";
-export type TopicFill = "solid" | "hatch" | "dots";
-
-export const TOPIC_STYLE: Record<EoTopic, { family: TopicFamily; fill: TopicFill }> = {
-  government_operations: { family: "b", fill: "solid" },
-  economy_labor: { family: "a", fill: "solid" },
-  trade: { family: "a", fill: "hatch" },
-  energy_environment: { family: "a", fill: "dots" },
-  health_education: { family: "n", fill: "hatch" },
-  immigration_justice: { family: "n", fill: "dots" },
-  foreign_policy: { family: "b", fill: "hatch" },
-  national_security: { family: "b", fill: "dots" },
-  civil_rights_civic: { family: "n", fill: "solid" },
-};
-
-/** The `fill` value for a topic: a colour token, or a `<pattern>` from `TopicPatternDefs`. */
+/** The `fill` value for a topic: its `--topic-<topic>` colour token (one solid colour per topic). */
 export function topicFill(topic: EoTopic): string {
-  const { family, fill } = TOPIC_STYLE[topic];
-  return fill === "solid" ? `var(--topic-${family})` : `url(#eo-pat-${topic})`;
+  return `var(--topic-${topic})`;
 }

@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
+import { MethodologyNote } from "@/components/MethodologyNote";
 import { SLOT_NAME, changeVsPrior, formatAidMoney, spendingByYear } from "@/lib/foreign-aid-derive";
 import { useAidState } from "./ForeignAidState";
 import { SpendingChart } from "./SpendingChart";
@@ -32,11 +33,12 @@ export function SpendingCard() {
       action={showing.length > 0 ? <span className="rounded-md border border-line-strong bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">Showing {showing.join(" · ")} only</span> : undefined}
     >
       <SpendingChart rows={rows} />
-      <SectorLegend partial={anyPartial}>
-        <span>
-          Band under the axis: administration in office for most of the year (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic)
-        </span>
-      </SectorLegend>
+      <SectorLegend partial={anyPartial} />
+      <MethodologyNote>
+        <p>
+          Band under the axis: administration in office for most of the year (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic).
+        </p>
+      </MethodologyNote>
       <TableView caption="Disbursements by fiscal year and sector">
         <thead>
           <tr>

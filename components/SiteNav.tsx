@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { branches, sectionRow } from "@/lib/verticals";
 
 /**
@@ -79,10 +80,7 @@ export function SiteSectionNav() {
         aria-hidden
         className="mx-6 hidden h-7 w-px self-center bg-line md:block"
       />
-      <nav
-        aria-label={`${row.branch.label} views`}
-        className="order-3 flex h-12 min-w-0 basis-full items-center gap-1 overflow-x-auto border-t border-line bg-surface-raised px-4 py-0.5 md:order-none md:h-auto md:basis-auto md:gap-1.5 md:border-t-0 md:bg-transparent md:p-0"
-      >
+      <ScrollRow label={`${row.branch.label} views`}>
         {row.branch.sections.map((s) => {
           const base =
             "flex h-11 flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] px-2 md:px-2.5 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition-colors md:tracking-[0.09em] md:h-9 md:text-[0.8rem]";
@@ -114,7 +112,50 @@ export function SiteSectionNav() {
             </Link>
           );
         })}
-      </nav>
+      </ScrollRow>
     </>
+  );
+}
+
+/**
+ * The section pills. Below `md` the row scrolls sideways, so a fade and chevron on the right edge say
+ * there is more while anything is cut off, and the active pill is scrolled into view on load.
+ */
+function ScrollRow({ label, children }: { label: string; children: ReactNode }) {
+  const ref = useRef<HTMLElement>(null);
+  const [more, setMore] = useState(false);
+  const measure = useCallback(() => {
+    const el = ref.current;
+    if (el) setMore(el.scrollWidth - el.clientWidth - el.scrollLeft > 4);
+  }, []);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const active = el.querySelector<HTMLElement>('[aria-current="page"]');
+    if (active && active.offsetLeft + active.offsetWidth > el.clientWidth) el.scrollLeft = active.offsetLeft - 16;
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [measure, children]);
+  return (
+    <div className="relative order-3 min-w-0 basis-full md:order-none md:basis-auto">
+      <nav
+        ref={ref}
+        aria-label={label}
+        onScroll={measure}
+        className="flex h-12 items-center gap-1 overflow-x-auto border-t border-line bg-surface-raised px-4 py-0.5 md:h-auto md:gap-1.5 md:border-t-0 md:bg-transparent md:p-0"
+      >
+        {children}
+      </nav>
+      {more && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 flex w-12 items-center justify-end bg-gradient-to-l from-surface-raised from-40% to-transparent pr-2 font-mono text-[1.1rem] text-ink-muted md:hidden"
+        >
+          ›
+        </span>
+      )}
+    </div>
   );
 }
