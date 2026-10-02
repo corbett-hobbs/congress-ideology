@@ -74,6 +74,21 @@ function photoBioguides(): Set<string> {
   return photoBioguideCache;
 }
 
+let leaderCache: Map<string, { chamber: Chamber; role: NonNullable<ChamberMember["leaderRole"]> }[]> | null = null;
+/** Current Speaker / floor leaders by bioguide id, from `pipeline/output/leadership.json` (empty before the transform has run). */
+function leadersByBioguide() {
+  if (leaderCache) return leaderCache;
+  const map = new Map<string, { chamber: Chamber; role: NonNullable<ChamberMember["leaderRole"]> }[]>();
+  try {
+    const rows = JSON.parse(readFileSync(join(process.cwd(), "pipeline", "output", "leadership.json"), "utf8")) as { bioguide_id: string; chamber: Chamber; role: NonNullable<ChamberMember["leaderRole"]> }[];
+    for (const r of rows) map.set(r.bioguide_id, [...(map.get(r.bioguide_id) ?? []), { chamber: r.chamber, role: r.role }]);
+    leaderCache = map; // cached only once the manifest has been read
+  } catch {
+    // no manifest yet: no leader labels (and retry on the next call)
+  }
+  return map;
+}
+
 let legByIdCache: Map<string, Legislator> | null = null;
 function legislatorsById(): Map<string, Legislator> {
   if (!legByIdCache) {
@@ -169,6 +184,8 @@ function buildFullChamber(chamber: Chamber): FullChamber {
   for (const m of allByCongress[latestCongress] ?? []) {
     m.isCurrent = true;
     m.hasPhoto = withPhoto.has(m.bioguideId);
+    const held = leadersByBioguide().get(m.bioguideId)?.find((r) => r.chamber === m.chamber);
+    if (held) m.leaderRole = held.role;
   }
 
   const trend: PartyMeanPoint[] = congresses.map((congress) => {

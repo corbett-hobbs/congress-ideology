@@ -13,6 +13,7 @@ import {
 } from "../../lib/entities";
 import { buildIdCrosswalk } from "./crosswalk";
 import { buildLegislators } from "./legislators";
+import { buildLeadership } from "./leadership";
 import { buildTerms } from "./terms";
 import { buildIdeologyScores, KNOWN_UNRESOLVABLE } from "./scores";
 import { buildCommittees, buildSubcommittees } from "./committees";
@@ -94,6 +95,8 @@ async function main() {
   // --- legislators -----------------------------------------------------
   const legislatorEntities = buildLegislators(legislators);
   await writeEntities("legislators", legislatorEntity, legislatorEntities);
+
+  await writeJson("leadership.json", buildLeadership(legislators));
 
   // --- terms ---------------------------------------------------------- -
   const { terms, collisions } = buildTerms(legislators, capCongress);

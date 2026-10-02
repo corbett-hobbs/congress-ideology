@@ -165,6 +165,8 @@ export const legislator = z.looseObject({
     gender: z.enum(["M", "F"]),
   }),
   terms: z.array(legislatorTerm).min(1),
+  /** Party and chamber leadership posts; a post with no `end` is held today. */
+  leadership_roles: z.array(z.looseObject({ title: z.string(), chamber: z.enum(["house", "senate"]), start: isoDate, end: isoDate.optional() })).optional(),
 });
 export type Legislator = z.infer<typeof legislator>;
 

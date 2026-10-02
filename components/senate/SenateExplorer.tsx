@@ -450,25 +450,8 @@ export function SenateExplorer({
           </Card>
         </div>
 
-        {committeesActive ? (
-          <section className="flex flex-col rounded-[10px] border border-line bg-surface p-[1.35rem_1.35rem_1.1rem]">
-            <h2 className="font-serif text-[1.05rem] font-medium">
-              How far apart are the parties?
-            </h2>
-            <div className="mt-3 flex items-start gap-2.5 rounded-lg border border-dashed border-line-strong bg-surface-raised p-[1.1rem_1.25rem] text-[0.82rem] leading-[1.6] text-ink-muted">
-              <span aria-hidden className="text-[0.95rem] leading-none">
-                ⓘ
-              </span>
-              <span>
-                Committee membership is only tracked for the current Congress,
-                so there&rsquo;s no trend view here. Switch back to{" "}
-                <b className="font-medium text-ink">Members</b>, or move the
-                slider off the {ordinal(committeeCongress)} Congress, to see the
-                party-divergence trend.
-              </span>
-            </div>
-          </section>
-        ) : (
+        {/* Committee membership is only tracked for the current Congress, so there is no party trend to show: the card is hidden in the Committees view. */}
+        {!committeesActive && (
           <Card
             title="How far apart are the parties?"
             lede="Each party's average position on the economic left–right axis, every Congress since 1789. Click or drag the chart to jump to any point — it moves the same slider as everything above."

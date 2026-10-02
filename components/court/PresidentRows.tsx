@@ -15,15 +15,15 @@ import {
 export type PresidentSort = "chronological" | "spread";
 
 // Room above the plot for the score axis; the label gutter fits the longest president key ("G.H.W. Bush").
-const MARGIN = { top: 26, right: 72, bottom: 8, left: 84 };
-const ROW_H = 34;
+const MARGIN = { top: 26, right: 92, bottom: 8, left: 84 };
+const ROW_H = 38;
 /** Dots closer than this fraction of the axis span are staggered up and down so they stay readable. */
 const CLOSE = 0.07;
 
-/** Integer ticks across a domain, with a real minus sign. */
+/** Every other integer (…, −4, −2, 0, 2, 4, …) across a domain, so the axis labels and gridlines stay sparse. */
 const tickValues = ([lo, hi]: [number, number]) => {
   const out: number[] = [];
-  for (let v = Math.ceil(lo); v <= Math.floor(hi); v++) out.push(v);
+  for (let v = Math.ceil(lo / 2) * 2; v <= hi; v += 2) out.push(v);
   return out;
 };
 const fmtTick = (v: number) => (v === 0 ? "0" : `${v < 0 ? "−" : "+"}${Math.abs(v)}`);
@@ -56,7 +56,8 @@ export function PresidentRows({
   // Fit the axis to the justices' career averages (padded) rather than the wide interval domain, so the dots spread out.
   const domain = useMemo<[number, number]>(() => {
     const c = data.justices.map((j) => j.career);
-    return [Math.floor((Math.min(...c) - 0.3) * 2) / 2, Math.ceil((Math.max(...c) + 0.3) * 2) / 2];
+    // Padding keeps the outermost dots (and their rings) clear of the row labels and the "N justices" text on a phone.
+    return [Math.floor((Math.min(...c) - 0.6) * 2) / 2, Math.ceil((Math.max(...c) + 0.8) * 2) / 2];
   }, [data.justices]);
 
   const rows = useMemo<SwarmRowData<Tip>[]>(() => {
@@ -87,7 +88,7 @@ export function PresidentRows({
           .sort((a, b) => a.career - b.career)
           .map((j, i, arr) => ({
             // Alternate close neighbours above and below the row's line.
-            dy: i > 0 && j.career - arr[i - 1].career < CLOSE * (domain[1] - domain[0]) ? (i % 2 ? -7 : 7) : 0,
+            dy: i > 0 && j.career - arr[i - 1].career < CLOSE * (domain[1] - domain[0]) ? (i % 2 ? -9 : 9) : 0,
             id: String(j.id),
             value: j.career,
             colorClass: j.party === "D" ? "fill-dem" : "fill-rep",

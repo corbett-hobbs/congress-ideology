@@ -45,7 +45,7 @@ const CODE_KEY = {
 const PALETTE_KEYS = [
   "dem", "rep", "proadmin", "antiadmin", "federalist", "demrep",
   "adams", "antijackson", "jackson", "whig", "oth",
-  "committee-house", "committee-senate",
+  "committee-house", "committee-senate", "committee-joint",
   "sector-ps", "sector-health", "sector-hum", "sector-econ", "sector-prog", "sector-other",
 ];
 const BG_KEYS = ["bg", "surface", "surface-raised"];
@@ -58,12 +58,13 @@ const BG_KEYS = ["bg", "surface", "surface-raised"];
 // "Both" compass legend shows all three at once).
 const FORCED_PAIRS = [
   ["committee-house", "committee-senate"],
+  ["committee-house", "committee-joint"],
+  ["committee-senate", "committee-joint"],
   ["committee-house", "dem"],
-  ["committee-house", "rep"],
-  ["committee-house", "oth"],
+  // committee-house (amber) vs rep (red) is deliberately not forced: the two never share a chart (committee dots are
+  // chamber-coloured, never party-coloured) and no amber that clears 3:1 on white separates from red under deutan vision.
   ["committee-senate", "dem"],
   ["committee-senate", "rep"],
-  ["committee-senate", "oth"],
   // Executive-order topic colours (components/executive-orders). Nine topics
   // are drawn as 3 colour families x 3 fills, so only same-fill pairs need to be
   // separable by colour alone: each family vs the other two, and each vs
@@ -76,7 +77,7 @@ const FORCED_PAIRS = [
 // so every pair must be separable. They never meet a party hue on that page, so no dem/rep pairs.
 const SECTOR_KEYS = ["sector-ps", "sector-health", "sector-hum", "sector-econ", "sector-prog", "sector-other"];
 FORCED_PAIRS.push(...SECTOR_KEYS.flatMap((a, i) => SECTOR_KEYS.slice(i + 1).map((b) => [a, b])));
-const NEW_KEYS = ["committee-house", "committee-senate", ...SECTOR_KEYS];
+const NEW_KEYS = ["committee-house", "committee-senate", "committee-joint", ...SECTOR_KEYS];
 
 // ---- CLI overrides -------------------------------------------------------
 const override = { light: {}, dark: {} };

@@ -48,6 +48,8 @@ export interface ChamberMember {
    * navigate-on-click with `hasProfilePage()` in lib/member-url.ts.
    */
   isCurrent?: boolean;
+  /** Speaker / floor-leader post held today. Set only on current-Congress members (see `pipeline/transform/leadership.ts`). */
+  leaderRole?: "speaker" | "majority_leader" | "minority_leader";
 }
 
 export interface PartyMeanPoint {

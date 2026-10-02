@@ -1,0 +1,27 @@
+[
+  {
+    "bioguide_id": "S001176",
+    "chamber": "house",
+    "role": "majority_leader"
+  },
+  {
+    "bioguide_id": "J000294",
+    "chamber": "house",
+    "role": "minority_leader"
+  },
+  {
+    "bioguide_id": "J000299",
+    "chamber": "house",
+    "role": "speaker"
+  },
+  {
+    "bioguide_id": "T000250",
+    "chamber": "senate",
+    "role": "majority_leader"
+  },
+  {
+    "bioguide_id": "S000148",
+    "chamber": "senate",
+    "role": "minority_leader"
+  }
+]

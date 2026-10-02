@@ -8,7 +8,8 @@ import {
 import type { ChamberMember } from "@/lib/congress-types";
 import { memberNoun } from "@/lib/chamber";
 import { hasProfilePage } from "@/lib/member-url";
-import { partyFillClass } from "@/lib/party-palette";
+import { partyColorKey, partyFillClass } from "@/lib/party-palette";
+import { pickPerGroup } from "@/lib/chart-extremes";
 import { MemberTooltip } from "./MemberTooltip";
 
 /** Profile variant keeps the numeric ticks + in-SVG caption; explorer drops
@@ -66,6 +67,28 @@ export function CompassChart({
         : undefined;
 
     const out: ScatterLabel[] = [];
+    // Explorer: name one dot per party in the legend so the dots have a face. At the latest Congress that is
+    // each party's leader (House: the Speaker and the Minority Leader; Senate: the Majority and Minority
+    // Leaders); for earlier Congresses, which carry no leadership data, it is the party's most extreme member.
+    if (explorer && !dimUnfocused) {
+      const houseShown = members.some((m) => m.chamber === "house");
+      const leaders = members.filter((m) => {
+        if (m.dim1 == null || m.dim2 == null || !m.leaderRole) return false;
+        return houseShown ? m.chamber === "house" && m.leaderRole !== "majority_leader" : m.leaderRole !== "speaker";
+      });
+      const reps =
+        leaders.length >= 2
+          ? leaders
+          : pickPerGroup(members, (m) => partyColorKey(m), (m) => (m.dim1 == null || m.dim2 == null ? null : Math.abs(m.dim1)));
+      // Leaders sit inside their party's cloud, so their names go outward into the open; an extreme member sits at the
+      // edge, so its name goes inward.
+      const outward = leaders.length >= 2;
+      for (const m of reps) {
+        const left = (m.dim1 as number) < 0;
+        const start = outward ? !left : left;
+        out.push({ x: m.dim1 as number, y: m.dim2 as number, text: m.lastName, anchor: start ? "start" : "end", dx: start ? 9 : -9, dy: 6, className: "dot-label is-legend-label" });
+      }
+    }
     if (mostLiberal?.dim1 != null && mostLiberal.dim2 != null) {
       out.push({
         x: mostLiberal.dim1,

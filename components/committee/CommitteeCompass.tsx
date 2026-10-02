@@ -11,6 +11,22 @@ import { committeeIsPlottable } from "@/lib/committee-types";
 import { committeePath } from "@/lib/committee-url";
 import { CommitteeDotTooltip } from "./CommitteeDotTooltip";
 
+/**
+ * One recognizable committee per chamber to label on the explorer compass: the House and Senate
+ * Appropriations committees and the Joint Economic Committee (same kind of committee in each chamber, so the
+ * dots compare, and familiar by name). If a chamber has no such committee, its largest plottable one stands in.
+ */
+function anchorCommittees(points: readonly CommitteeSummary[]): CommitteeSummary[] {
+  const anchorName = { house: /^appropriations/i, senate: /^appropriations/i, joint: /economic/i } as const;
+  const out: CommitteeSummary[] = [];
+  for (const chamber of ["house", "senate", "joint"] as const) {
+    const inChamber = points.filter((c) => c.chamber === chamber && c.dim1 != null && c.dim2 != null);
+    const pick = inChamber.find((c) => anchorName[chamber].test(c.shortName)) ?? [...inChamber].sort((a, b) => b.memberCount - a.memberCount)[0];
+    if (pick) out.push(pick);
+  }
+  return out;
+}
+
 const MARGIN = { top: 20, right: 64, bottom: 30, left: 58 };
 const EXPLORER_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
 
@@ -73,7 +89,14 @@ export function CommitteeCompass({
     const subject = subjectId
       ? points.find((c) => c.committeeId === subjectId)
       : null;
-    if (!subject || subject.dim1 == null || subject.dim2 == null) return [];
+    if (!subject || subject.dim1 == null || subject.dim2 == null) {
+      // Explorer: name one recognizable anchor committee per chamber in the legend (see `anchorCommittees`).
+      if (!explorer || dimUnfocused) return [];
+      return anchorCommittees(points).map((c) => {
+        const left = (c.dim1 as number) < 0;
+        return { x: c.dim1 as number, y: c.dim2 as number, text: c.chamber === "joint" ? `Joint ${c.shortName}` : `${c.shortName} (${c.chamber === "house" ? "H" : "S"})`, anchor: left ? ("start" as const) : ("end" as const), dx: left ? 10 : -10, dy: 6, className: "dot-label is-legend-label" };
+      });
+    }
     return [
       {
         x: subject.dim1,
@@ -84,7 +107,7 @@ export function CommitteeCompass({
         className: "dot-label is-focused-label",
       },
     ];
-  }, [points, subjectId]);
+  }, [points, subjectId, explorer, dimUnfocused]);
 
   return (
     <ScatterPlot<CommitteeSummary>
