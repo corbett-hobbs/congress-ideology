@@ -39,10 +39,10 @@ export function FirstPlaceCard() {
   const MR = narrow ? 34 : 14;
   const step = (W - MX - MR) / n;
   // Phones get a taller span so a name too narrow to read across can run up the span instead.
-  const labelH = narrow ? 62 : LABEL_H;
+  const labelH = narrow ? 46 : LABEL_H;
   const bracketY = labelH + 6;
   const maxH = narrow ? 120 : 150;
-  const plotTop = bracketY + TICK + 16;
+  const plotTop = bracketY + TICK + 12;
   const baseY = plotTop + maxH;
   const H = baseY + 24;
   const { ticks, top: maxTop } = niceDollarTicks(Math.max(1, ...years.map((y) => y.ranked[0]?.value ?? 0)));
@@ -119,10 +119,10 @@ export function FirstPlaceCard() {
                 const isSel = country === r.ci;
                 const dim = country >= 0 && !isSel;
                 const full = nm.length * 7.2 + 14;
-                const lab = w >= full ? nm : w >= 34 && !(narrow && nm.length <= 11) ? code : "";
+                const lab = w >= full ? nm : w >= 34 && !(narrow && nm.length <= 9) ? code : "";
                 // Too narrow to read across: turn the label up the span (the full name if it fits, else the code).
-                // Too narrow to read across: slant the full name up and to the right (the code only if the name is very long).
-                const vert = !lab && narrow && w >= 8 ? (nm.length <= 11 ? nm : code) : "";
+                // Too narrow to read across: slant the full name up and to the right (the code only if the name is long).
+                const vert = !lab && narrow && w >= 8 ? (nm.length <= 9 ? nm : code) : "";
                 const labelStyle = { fontFamily: "var(--font-serif, Georgia, serif)", fontWeight: 500, fill: "var(--ink)", opacity: dim ? 0.55 : 1 };
                 return (
                   <g key={`${r.ci}-${r.from}`}>
