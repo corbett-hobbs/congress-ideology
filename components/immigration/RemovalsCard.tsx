@@ -27,11 +27,11 @@ export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; s
       <ul className="m-0 mt-3 flex list-none flex-wrap gap-x-5 gap-y-1.5 p-0 text-[0.72rem] text-ink-muted">
         <li className="flex items-center gap-1.5">
           <span className={SWATCH} style={{ background: "var(--dem)" }} />
-          Democratic administration
+          Democratic
         </li>
         <li className="flex items-center gap-1.5">
           <span className={SWATCH} style={{ background: "var(--rep)" }} />
-          Republican administration
+          Republican
         </li>
       </ul>
 
