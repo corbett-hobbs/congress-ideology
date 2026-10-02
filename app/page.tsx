@@ -8,7 +8,6 @@ import { getExecutiveOrdersData } from "@/lib/executive-orders-data";
 import { HubEoChart } from "@/components/executive-orders/HubEoChart";
 import { HubCompass } from "@/components/HubCompass";
 import { CourtHubStrip } from "@/components/court/CourtHubStrip";
-import { SiteFooter } from "@/components/senate/SiteFooter";
 import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
@@ -178,7 +177,6 @@ The two parties are{" "}
             );
           })}
         </div>
-        <SiteFooter />
       </main>
     </>
   );

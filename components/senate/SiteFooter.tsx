@@ -3,7 +3,7 @@ interface SiteFooterProps {
 }
 
 /**
- * Site footer. Carries the Voteview citation required by docs/CREDITS.md now
+ * Source footer of the Congress ideology explorer (the home page no longer has one). Carries the Voteview citation required by docs/CREDITS.md now
  * that the data is surfaced in a page.
  */
 export function SiteFooter({ children }: SiteFooterProps) {
