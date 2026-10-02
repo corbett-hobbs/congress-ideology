@@ -10,12 +10,14 @@ import { partnerChartRows, partnerMeta, partnerScale, type PartnerChartRow } fro
 import type { TradeYearPayload } from "@/lib/trade-types";
 import { MONTH_NAMES } from "@/lib/indicator-time";
 import { MethodologyNote } from "@/components/MethodologyNote";
+import { TradeMap } from "./TradeMap";
+import { buildMapModel } from "@/lib/trade-map";
+import type { TradePageData } from "@/lib/trade-data";
 
 
 const SORTS = [
   { key: "total", label: "Total trade", hint: "Largest total first" },
   { key: "balance", label: "Balance", hint: "Largest deficit first" },
-  { key: "alpha", label: "A–Z", hint: "Alphabetical" },
 ] as const;
 
 const ROW_H = 26;
@@ -68,6 +70,7 @@ const DataTable = memo(function DataTable({ rows, year }: { rows: PartnerChartRo
  * button. Clicking a row picks that country in the filter bar.
  */
 export function TradePartnersCard({
+  map,
   payload,
   year,
   onYear,
@@ -79,6 +82,7 @@ export function TradePartnersCard({
   loading,
   error,
 }: {
+  map: TradePageData["worldMap"];
   /** The selected year's rows; while the next year loads, the previous one stays on screen. */
   payload: TradeYearPayload | null;
   year: number;
@@ -95,6 +99,9 @@ export function TradePartnersCard({
   const shown = payload?.year ?? year;
   const rows = useMemo(() => (payload ? partnerChartRows(payload.partners, sort) : []), [payload, sort]);
   const scale = useMemo(() => partnerScale(rows), [rows]);
+  const outlineKeys = useMemo(() => new Set(map.features.map((f) => f.key)), [map]);
+  const model = useMemo(() => buildMapModel(payload?.partners ?? [], outlineKeys), [payload, outlineKeys]);
+  const measure = sort.key === "balance" ? "balance" : "total";
   const swarm = useMemo<SwarmRowData<Tip>[]>(
     () =>
       rows.map((r) => {
@@ -142,14 +149,16 @@ export function TradePartnersCard({
           />
         </div>
       <p className="m-0 mt-3 text-[0.875rem] leading-[1.5] text-ink-muted">
-            Imports and exports of goods for the selected year. The line between them is the balance.
+            Imports and exports of goods for the selected year. The line between them is the balance. The map shades each partner by the same measure.
             {partial ? ` ${shown} covers January to ${through}.` : ""}
           </p>
 
       {error && rows.length > 0 && shown !== year && (
         <p role="status" className="m-0 mt-2 text-[0.8rem] text-ink-muted">{`Couldn’t load ${year}; still showing ${shown}. Pick the year again to retry.`}</p>
       )}
-      <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
+      <div className="mt-3 grid min-w-0 flex-1 grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+      <div className="flex min-w-0 flex-col">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
         <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="5" fill="var(--ink)" /></svg>Imports</span>
         <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="4.5" fill="var(--surface)" stroke="var(--ink)" strokeWidth="2" /></svg>Exports</span>
         <span className="ml-auto">Right: {sort.key === "total" ? "total trade" : "balance"}. Scale: symmetric log.</span>
@@ -190,9 +199,13 @@ export function TradePartnersCard({
         </div>
       </div>
 
+      </div>
+      <TradeMap map={map} model={model} measure={measure} shown={shown} country={country} onPickCountry={onPickCountry} loading={loading} />
+      </div>
+
       <MethodologyNote><p>
-        Census Bureau goods trade, Census basis. Sorted by {sort.key === "balance" ? "balance: the largest deficits first, then surpluses" : sort.key === "total" ? "total trade, largest first" : "name"}
-        {sort.reversed ? ", reversed" : ""}; click the active sort again to reverse it. Click a row to pick that country above. The scale is symmetric log, so small partners stay visible next to China; distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.
+        Census Bureau goods trade, Census basis. The map and the list share the year and the Total trade / Balance choice; the map is shaded on fixed bins so years compare, and you can zoom and pan it. Sorted by {sort.key === "balance" ? "balance: the largest deficits first, then surpluses" : "total trade, largest first"}
+        {sort.reversed ? ", reversed" : ""}; click the active sort again to reverse it. Click a row to pick that country above. The scale is symmetric log, so small partners stay visible next to China; distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.{model.undrawn.length > 0 ? ` Not drawn on the map: ${model.undrawn.length} small partners with no outline (${fmtMoney(model.undrawn.reduce((a, r) => a + r.exports + r.imports, 0))} of ${fmtMoney(model.totals.total)} total trade); they are in the list and the table.` : ""}
         </p></MethodologyNote>
       {rows.length > 0 && <DataTable rows={rows} year={shown} />}
     </section>
