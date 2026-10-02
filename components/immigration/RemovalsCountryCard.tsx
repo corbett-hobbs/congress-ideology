@@ -5,12 +5,10 @@ import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { ReversibleSortToggle } from "@/components/charts/SortToggle";
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
-import { filterYears, type ImmigrationPageData } from "@/lib/immigration-derive";
 import {
   coverageLabel,
   formatChange,
   rankYear,
-  selectableYears,
   sortRanked,
   type RemovalsSortKey,
 } from "@/lib/removals-country-derive";
@@ -25,32 +23,24 @@ const dateLabel = (iso: string) =>
 /**
  * "Who gets removed": ICE removals by country of citizenship for one fiscal year, as a ranked list of
  * single-color bars on one scale (the foreign-aid "Who receives the most" pattern: `StackedRows`,
- * `ReversibleSortToggle`, change vs. the prior year). The fiscal-year control is in the card. The page's
- * President filter narrows which years are selectable and jumps to that administration's latest year; it
- * never trims the list of countries. Clicking a country highlights it and dims the rest.
+ * `ReversibleSortToggle`, change vs. the prior year). There is no year control in the card: the page's pinned
+ * fiscal-year slider (or a click on a timeline bar) picks the year, and a year with no country table says so.
+ * The President filter never trims the list of countries. Clicking a country highlights it and dims the rest.
  */
 export function RemovalsCountryCard({
   payload,
-  data,
-  selection,
+  fy,
 }: {
   payload: RemovalsCountryPayload;
-  data: ImmigrationPageData;
-  selection: string;
+  /** The fiscal year the page slider is on. */
+  fy: number;
 }) {
   const coverage = coverageLabel(payload);
-  const termFys = useMemo(() => (selection === "all" ? null : new Set(filterYears(data.years, selection).map((y) => y.fy))), [data.years, selection]);
-  const options = useMemo(() => selectableYears(payload, termFys), [payload, termFys]);
-  const latest = options[options.length - 1];
-
-  // A pick belongs to the President selection it was made under; changing the selection jumps to that administration's latest year.
-  const [picked, setPicked] = useState<{ selection: string; fy: number } | null>(null);
-  const fy = picked && picked.selection === selection && options.includes(picked.fy) ? picked.fy : latest;
 
   const [sort, setSort] = useState<{ key: RemovalsSortKey; reversed: boolean }>({ key: "total", reversed: false });
   const [country, setCountry] = useState<string | null>(null);
 
-  const year = fy === undefined ? undefined : payload.years.find((y) => y.fy === fy);
+  const year = payload.years.find((y) => y.fy === fy);
   const comparable = !!year && year.rows.some((r) => r[2] !== null);
   const key: RemovalsSortKey = sort.key === "change" && !comparable ? "total" : sort.key;
   const reversed = key === sort.key ? sort.reversed : false;
@@ -71,15 +61,12 @@ export function RemovalsCountryCard({
     </span>
   );
 
-  if (!year || fy === undefined) {
-    const term = data.terms.find((t) => t.termId === selection);
-    const fys = [...(termFys ?? [])].sort((a, b) => a - b).map((f) => `FY${f}`);
+  if (!year) {
     return (
       <ChartCard title={title} lede={`ICE removals by country of citizenship, ${coverage}.`}>
         <p className="m-0 rounded-md border border-dashed border-line-strong px-4 py-8 text-center text-[0.85rem] leading-[1.6] text-ink-muted">
           ICE publishes removals by country only for {coverage}.{" "}
-          {term ? `${term.president}’s fiscal ${fys.length === 1 ? "year" : "years"} (${fys.join(", ")}) ${fys.length === 1 ? "falls" : "fall"} outside that range` : "No year is available"}, so there is no
-          country list to show. Pick another president, or All presidents.
+          FY{fy} has no country table, so there is no country list to show. Move the fiscal-year slider (or click a bar) to a covered year.
         </p>
       </ChartCard>
     );
@@ -144,19 +131,6 @@ export function RemovalsCountryCard({
             { key: "name", label: "A–Z", hint: "Alphabetical" },
           ]}
         />
-        <label className="flex items-center gap-2">
-          <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">Fiscal year</span>
-          <select
-            value={fy}
-            onChange={(e) => setPicked({ selection, fy: Number(e.target.value) })}
-            disabled={options.length < 2}
-            className="h-9 rounded-md border border-line-strong bg-surface-raised px-2 font-mono text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60 sm:h-auto sm:py-[0.38rem]"
-          >
-            {[...options].reverse().map((f) => (
-              <option key={f} value={f}>{`FY${f}`}</option>
-            ))}
-          </select>
-        </label>
       </div>
 
       <div className="mt-3 border-t border-line pt-1">

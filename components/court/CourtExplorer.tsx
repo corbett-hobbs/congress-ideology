@@ -162,7 +162,7 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
               onSelect={onToggleSelect}
             />
 
-            <dl className="mt-1 grid grid-cols-2 gap-x-6 gap-y-2 text-[0.82rem] lg:grid-cols-4">
+            <dl className="mt-1 grid grid-cols-3 gap-x-4 gap-y-2 text-[0.82rem] sm:gap-x-6">
               <Stat
                 label="Median justice"
                 value={medianJustice?.short ?? "—"}
@@ -171,11 +171,6 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
               <Stat
                 label="Most conservative"
                 value={mostConservative?.short ?? "—"}
-              />
-              <Stat
-                label="Justices seated"
-                value={String(seated.length)}
-                mono
               />
             </dl>
 
@@ -295,16 +290,14 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
 function Stat({
   label,
   value,
-  mono,
 }: {
   label: string;
   value: string;
-  mono?: boolean;
 }) {
   return (
     <div className="min-w-0">
       <dt className="text-[0.72rem] text-ink-muted">{label}</dt>
-      <dd className={`m-0 truncate font-medium ${mono ? "font-mono" : ""}`}>
+      <dd className="m-0 truncate font-medium">
         {value}
       </dd>
     </div>
