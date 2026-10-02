@@ -114,7 +114,8 @@ export function buildAidTerms(admins: readonly Administration[], years: readonly
       const fys = byTerm.get(a.term_id)!;
       const last = a.president.split(" ").pop() ?? a.president;
       const startYear = Number(a.start.slice(0, 4));
-      const endYear = a.end === null ? null : Number(a.end.slice(0, 4)) + 1;
+      // `end` is the last day in office; the term "ends" in the year the successor is inaugurated.
+      const endYear = a.end === null ? null : Number(new Date((isoDay(a.end) + 1) * 86_400_000).toISOString().slice(0, 4));
       return {
         termId: a.term_id,
         president: a.president,

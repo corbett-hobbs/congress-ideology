@@ -135,6 +135,15 @@ describe("administrations", () => {
     expect(who(2025)).toBe("Donald Trump");
     expect(who(2026)).toBe("Donald Trump");
   });
+  it("dropdown labels read like the other Presidency pages (start–end inauguration years)", () => {
+    expect(payload.terms.map((t) => t.label)).toEqual([
+      "George W. Bush (2001–2009)",
+      "Barack Obama (2009–2017)",
+      "Donald Trump (2017–2021)",
+      "Joe Biden (2021–2025)",
+      "Donald Trump (2025–present)",
+    ]);
+  });
   it("terms carry the fiscal-year windows the dropdown narrows to", () => {
     expect(payload.terms.map((t) => [t.last, t.fromFy, t.toFy])).toEqual([
       ["Bush", 2001, 2008],

@@ -47,6 +47,7 @@ const PALETTE_KEYS = [
   "adams", "antijackson", "jackson", "whig", "oth",
   "committee-house", "committee-senate",
   "topic-a", "topic-b", "topic-n",
+  "sector-ps", "sector-health", "sector-hum", "sector-econ", "sector-prog", "sector-other",
 ];
 const BG_KEYS = ["bg", "surface", "surface-raised"];
 
@@ -76,7 +77,11 @@ const FORCED_PAIRS = [
   ["topic-b", "topic-n"],
   ...["topic-a", "topic-b", "topic-n"].flatMap((k) => ["dem", "rep"].map((p) => [k, p])),
 ];
-const NEW_KEYS = ["committee-house", "committee-senate", "topic-a", "topic-b", "topic-n"];
+// Foreign-aid sector colours (components/foreign-aid): all six are drawn together on every chart,
+// so every pair must be separable. They never meet a party hue on that page, so no dem/rep pairs.
+const SECTOR_KEYS = ["sector-ps", "sector-health", "sector-hum", "sector-econ", "sector-prog", "sector-other"];
+FORCED_PAIRS.push(...SECTOR_KEYS.flatMap((a, i) => SECTOR_KEYS.slice(i + 1).map((b) => [a, b])));
+const NEW_KEYS = ["committee-house", "committee-senate", "topic-a", "topic-b", "topic-n", ...SECTOR_KEYS];
 
 // ---- CLI overrides -------------------------------------------------------
 const override = { light: {}, dark: {} };

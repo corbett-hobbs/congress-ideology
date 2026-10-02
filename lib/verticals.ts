@@ -61,6 +61,7 @@ const DEFS: readonly BranchDef[] = [
       { id: "economy", label: "Economy", status: "live" },
       { id: "trade", label: "Trade", status: "live" },
       { id: "immigration", label: "Immigration", status: "live" },
+      { id: "foreign-aid", label: "Foreign aid", status: "live" },
     ],
   },
   {

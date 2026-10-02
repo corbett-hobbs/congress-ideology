@@ -51,6 +51,15 @@
   --topic-a: #7b4f87;
   --topic-b: #3e9886;
   --topic-n: #4a4a4a;
+  /* Foreign-aid sector colours (lib/foreign-aid-derive.ts SLOT_VAR): five sectors plus a neutral
+     "All other". Nine categorical hues cannot pass the CVD gate, so four small sectors share one slot.
+     Validated by validate_palette.js (FORCED_PAIRS: all six pairwise, >= 3:1 on every surface). */
+  --sector-ps: #620dc4;
+  --sector-health: #297322;
+  --sector-hum: #948d0f;
+  --sector-econ: #0f5d82;
+  --sector-prog: #453620;
+  --sector-other: #7c7a78;
   /* Amber "note" accent — the wealth scatter's hover-card gap/off-scale
      lines (session 3). Not a party colour, so it sits outside
      validate_palette.js's co-occurrence checker; verified by hand instead —
@@ -99,6 +108,12 @@
     --topic-a: #b5a4ea;
     --topic-b: #2d8f9e;
     --topic-n: #c1c1c1;
+    --sector-ps: #c236d8;
+    --sector-health: #b1f0d1;
+    --sector-hum: #f1d431;
+    --sector-econ: #5eb4c6;
+    --sector-prog: #c29f57;
+    --sector-other: #79746d;
     --note: #e3b04a;
     --focus: #9b84c7;
   --cont-north-america: #5b95de;
@@ -139,6 +154,12 @@
   --topic-a: #b5a4ea;
   --topic-b: #2d8f9e;
   --topic-n: #c1c1c1;
+  --sector-ps: #c236d8;
+  --sector-health: #b1f0d1;
+  --sector-hum: #f1d431;
+  --sector-econ: #5eb4c6;
+  --sector-prog: #c29f57;
+  --sector-other: #79746d;
   --note: #e3b04a;
   --focus: #9b84c7;
   --cont-north-america: #5b95de;

@@ -14,7 +14,7 @@ export function ChartCard({
   children,
 }: {
   title: string;
-  lede: string;
+  lede: ReactNode;
   action?: ReactNode;
   className?: string;
   children: ReactNode;
