@@ -69,6 +69,13 @@ Enforcement raw source: ICE documents snapshotted in `pipeline/raw/ice/` with a 
 
 Trade raw source: `pipeline/raw/census-trade/{country.xlsx,gands.xlsx,country.txt,duties/<year>.json}` (`pnpm fetch:census-trade`; the API needs `CENSUS_API_KEY`, `.env.local` locally / a repo secret in Actions; not part of `fetch:all`). Duties 1993–2009: one-time `pnpm fetch:dataweb-duties` (needs `DATAWEB_TOKEN`; not in CI, not in `fetch:all`) -> `pipeline/raw/dataweb-duties/<year>.json`, read by the same transform. Weekly `.github/workflows/trade-freshness.yml` rebuilds and opens a PR only if `pipeline/output/` differs; never auto-merged. `.xlsx` is read by `transform/xlsx.ts` (no dependency). Schemas: `lib/trade-entities.ts`. Methodology: `docs/TRADE_METHODOLOGY.md`; source findings: `docs/TRADE_INVESTIGATION.md`.
 
+| **Foreign assistance track** — ForeignAssistance.gov; joined to trade by `country_key` = `countries.json` `country_code` (DATA_CONVENTIONS §11) | | | | |
+| `foreign_assistance/<fy>.json` | (recipient, fiscal year, sector category), FY2001-: nominal `disbursements_usd` (headline), `obligations_usd?`, `military_disbursements_usd`; `recipient_type` country/regional/global (all kept) | `recipient_type`+`recipient_name`+`fiscal_year`+`sector_category`, sharded by fiscal year (26 files, ~7.4 MB, largest ~0.31 MB) | `transform/foreign-aid-run.ts` (pure logic: `transform/foreign-aid.ts`) | nothing yet (no UI) |
+| `foreign_assistance_meta.json` | `data_through`, per-year `is_partial` (calendar rule), taxonomy | — | `transform/foreign-aid-run.ts` | nothing yet |
+| `foreign_assistance_report.json` | crosswalk results incl. unmapped entities, reconciliation vs Pew targets, file sizes | — | `transform/foreign-aid-run.ts` | humans |
+
+Foreign-assistance raw source: `pipeline/raw/foreign-assistance/{<fy>.json,meta.json}` (`pnpm fetch:foreign-assistance`; keyless public API; manual re-run, not in `fetch:all`, no workflow yet). Schemas: `lib/foreign-aid-entities.ts`. The transform reads `output/countries.json`, so it runs after `trade-run.ts` in `pnpm transform`. Methodology and source findings: `docs/FOREIGN_AID_METHODOLOGY.md`.
+
 Executive-orders raw source: `pipeline/raw/federal-register/executive_orders.json`
 (`pnpm fetch:executive-orders`; weekly `.github/workflows/executive-orders-freshness.yml`
 opens a PR, never auto-merged). Schemas: `lib/executive-orders-entities.ts`.

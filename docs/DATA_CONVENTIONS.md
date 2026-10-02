@@ -551,3 +551,22 @@ different by design and are never reconciled. Duties are *calculated* duties, 19
 **Validation** fails `pnpm transform`: row schemas, balance identity, no negatives, no duplicate
 keys, no gaps in the claimed ranges, country rows vs World, duties country rows vs the total.
 
+---
+
+## 11. Foreign assistance track
+
+A seventh data track: U.S. foreign assistance by recipient, year and sector (ForeignAssistance.gov). Methodology:
+`docs/FOREIGN_AID_METHODOLOGY.md`; schemas: `lib/foreign-aid-entities.ts`.
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/output/foreign_assistance/<fiscal_year>.json` | one row per (recipient, fiscal year, sector category), FY2001- | `recipient_type` + `recipient_name` + `fiscal_year` + `sector_category`; join key to trade is `country_key` = `countries.json` `country_code` | Headline `disbursements_usd` (nominal), `obligations_usd?`, `military_disbursements_usd`. Regional and global rows are kept: **filter on `recipient_type` before summing countries.** National totals are derived at build time, never stored. |
+| `pipeline/output/foreign_assistance_meta.json` | one object | — | `data_through`, first/latest fiscal year, per-year `is_partial` (a documented calendar rule: the source publishes no completeness flag), sector taxonomy. |
+| `pipeline/output/foreign_assistance_report.json` | run summary | — | Crosswalk results incl. **unmapped** entities, negative-row counts, reconciliation against the published cross-check targets, file sizes. Deterministic. |
+
+Raw: `pipeline/raw/foreign-assistance/<fy>.json` + `meta.json` (`pnpm fetch:foreign-assistance`; keyless; not in
+`fetch:all`; re-run by hand). The transform reads `output/countries.json`, so it runs after the trade transform.
+**Validation** (fails `pnpm validate` / `pnpm transform`): row schemas, snapshot row counts equal the source's own totals,
+no duplicate grain keys, fiscal years inside the served range, categories inside the source taxonomy, finite amounts,
+positive national yearly totals. Negative row-level disbursements are source-documented and kept.
+
