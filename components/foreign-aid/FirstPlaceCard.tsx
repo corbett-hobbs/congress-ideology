@@ -10,8 +10,8 @@ import { useAidState } from "./ForeignAidState";
 import { HatchDefs, SectorLegend, TD, TH, TableView, slotColor, useSectorLabel } from "./shared";
 import { administrationForTermLabel } from "./term-labels";
 
-const SPAN_Y = 4;
-const SPAN_H = 38;
+const LABEL_H = 22;
+const TICK = 5;
 const MX = 14;
 
 /**
@@ -37,8 +37,9 @@ export function FirstPlaceCard() {
   const n = years.length;
   const step = (W - 2 * MX) / n;
   // Phones get a taller span so a name too narrow to read across can run up the span instead.
-  const spanH = narrow ? 56 : SPAN_H;
-  const baseY = narrow ? 134 : 128;
+  const labelH = narrow ? 52 : LABEL_H;
+  const bracketY = labelH + 6;
+  const baseY = narrow ? 142 : 116;
   const maxH = narrow ? 52 : 62;
   const H = baseY + 24;
   const maxTop = Math.max(1, ...years.map((y) => y.ranked[0]?.value ?? 0));
@@ -110,25 +111,23 @@ export function FirstPlaceCard() {
                 const full = nm.length * 7.2 + 14;
                 const lab = w >= full ? nm : w >= 34 ? code : "";
                 // Too narrow to read across: turn the label up the span (the full name if it fits, else the code).
-                const vert = !lab && narrow && w >= 8 ? (w >= 13 && nm.length * 6.2 + 10 <= spanH ? nm : code) : "";
+                const vert = !lab && narrow && w >= 8 ? (w >= 13 && nm.length * 6.2 + 6 <= labelH ? nm : code) : "";
                 const labelStyle = { fontFamily: "var(--font-serif, Georgia, serif)", fontWeight: 500, fill: "var(--ink)", opacity: dim ? 0.55 : 1 };
                 return (
                   <g key={`${r.ci}-${r.from}`}>
-                    <rect
-                      x={x + 1}
-                      y={SPAN_Y}
-                      width={Math.max(w - 2, 1)}
-                      height={spanH}
-                      rx={5}
-                      style={{ fill: isSel ? "color-mix(in oklab, var(--accent) 14%, var(--surface))" : "var(--surface-raised)", stroke: isSel ? "var(--accent)" : "var(--line-strong)", opacity: dim ? 0.45 : 1 }}
+                    <path
+                      d={`M${x + 2} ${bracketY + TICK} V${bracketY} H${x + w - 2} V${bracketY + TICK}`}
+                      fill="none"
+                      strokeLinecap="round"
+                      style={{ stroke: isSel ? "var(--accent)" : "var(--ink-muted)", strokeWidth: isSel ? 2 : 1.3, opacity: dim ? 0.4 : 1 }}
                     />
                     {lab && (
-                      <text x={x + w / 2} y={SPAN_Y + spanH / 2 + 5} textAnchor="middle" style={{ ...labelStyle, fontSize: lab === nm ? 15 : 12 }}>
+                      <text x={x + w / 2} y={bracketY - 6} textAnchor="middle" style={{ ...labelStyle, fontSize: lab === nm ? 14 : 12, fill: isSel ? "var(--accent)" : "var(--ink)" }}>
                         {lab}
                       </text>
                     )}
                     {vert && (
-                      <text transform={`translate(${x + w / 2 + 4} ${SPAN_Y + spanH / 2}) rotate(-90)`} textAnchor="middle" style={{ ...labelStyle, fontSize: w < 13 ? 9.5 : 11.5 }}>
+                      <text transform={`translate(${x + w / 2 + 4} ${bracketY - 5}) rotate(-90)`} textAnchor="start" style={{ ...labelStyle, fontSize: w < 13 ? 9.5 : 11.5, fill: isSel ? "var(--accent)" : "var(--ink)" }}>
                         {vert}
                       </text>
                     )}
