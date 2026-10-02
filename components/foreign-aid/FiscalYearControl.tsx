@@ -64,10 +64,12 @@ export function FiscalYearControl() {
         aria-valuetext={`FY${year}, ${fiscalYearSpan(year)}${isPartial(year) ? ", partial year" : ""}`}
         className="h-6 w-0 min-w-[3rem] flex-1 accent-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       />
-      <div className="flex min-w-0 items-baseline gap-2 whitespace-nowrap">
-        <b className="font-serif text-[0.95rem] sm:text-[1.05rem] font-semibold tabular-nums text-ink">FY{year}</b>
+      <div className="flex flex-none items-center gap-2 whitespace-nowrap">
+        <div className="flex flex-col items-end leading-tight">
+          <b className="font-serif text-[0.95rem] font-semibold tabular-nums text-ink sm:text-[1.05rem]">FY{year}</b>
+          {isPartial(year) && <em className="text-[0.66rem] not-italic text-ink-muted [font-style:italic]">partial year</em>}
+        </div>
         <span className="hidden text-[0.75rem] text-ink-muted lg:inline">{fiscalYearSpan(year)}</span>
-        {isPartial(year) && <em className="rounded border border-line-strong px-1.5 text-[0.7rem] not-italic text-ink-muted">partial</em>}
       </div>
     </div>
   );
