@@ -89,7 +89,7 @@ export function RankedCard({ style }: { style?: React.CSSProperties }) {
         ]}
       />
       </div>
-      <div className="relative mt-2 min-h-[7.5rem] flex-1">
+      <div className="relative mt-2 h-[28rem] md:h-auto md:min-h-[7.5rem] md:flex-1">
         <div className="absolute inset-0 overflow-auto pr-0.5">
           <StackedRows rows={rows} scaleMax={scaleMax} onRowClick={(id) => toggleCountry(Number(id))} ariaLabel="Recipient countries, ranked" emptyText="No disbursements recorded." />
         </div>
