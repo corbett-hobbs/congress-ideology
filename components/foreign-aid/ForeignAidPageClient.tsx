@@ -6,6 +6,7 @@ import type { AidPayload } from "@/lib/foreign-aid-types";
 import { ForeignAidFilterBar } from "./ForeignAidFilterBar";
 import { AidStateProvider } from "./ForeignAidState";
 import { SelectionReadout } from "./Placeholders";
+import { SpendingCard } from "./SpendingCard";
 
 const dateLabel = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
@@ -28,9 +29,7 @@ export function ForeignAidPageClient({ payload }: { payload: AidPayload }) {
           </p>
         </PageHeader>
 
-        <ChartCard title="How much the U.S. spends" lede="Disbursements by sector, one bar per fiscal year.">
-          <SelectionReadout what="Spending chart" />
-        </ChartCard>
+        <SpendingCard />
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.5fr_1fr] md:items-stretch">
           <ChartCard title="Where it goes" lede="Each country’s disbursements in the selected fiscal year.">
