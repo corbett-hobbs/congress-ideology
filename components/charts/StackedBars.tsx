@@ -85,20 +85,16 @@ export function StackedBars<C extends StackColumn>({
   const tip = useTooltip<C>();
 
   const maxTotal = useMemo(() => Math.max(1, ...columns.map((c) => c.total)), [columns]);
-  // Peak and low of what the chart is about: each column's total, or the highlighted topic's own
-  // count (share of the year in Share mode). Share totals are all 100%, so with no topic picked
-  // there is nothing to mark. Follows the window, since `columns` is already sliced to it.
+  // Peak and low column totals, in Count mode only: Share totals are all 100%, and once a topic is
+  // picked the labels would sit on the wrong bars, so a filtered chart carries none. Follows the
+  // window, since `columns` is already sliced to it.
   const marks = useMemo(() => {
-    if (mode === "share" && !highlight) return [];
-    const val = (c: C) => (highlight ? (c.values[highlight] ?? 0) / (mode === "share" ? c.total || 1 : 1) : c.total);
-    const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: val(c) })));
-    const fmt = (v: number) => (mode === "share" ? `${Math.round(v * 100)}%` : String(v));
-    // A topic's low is usually a year with none of it (0): that is not worth a label.
-    return [peak, highlight && low?.value === 0 ? null : low].flatMap((p, k) =>
-      p ? [{ i: p.day, kind: k === 0 ? ("peak" as const) : ("low" as const), text: `${columns[p.day].label}: ${fmt(p.value as number)}` }] : [],
+    if (mode === "share" || highlight) return [];
+    const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: c.total })));
+    return [peak, low].flatMap((p, k) =>
+      p ? [{ i: p.day, kind: k === 0 ? ("peak" as const) : ("low" as const), text: `${columns[p.day].label}: ${p.value}` }] : [],
     );
   }, [columns, mode, highlight]);
-  const highlightFill = highlight ? series.find((s) => s.id === highlight)?.fill : undefined;
   const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 ? BAND_H + 6 : 0) };
 
   return (
@@ -214,7 +210,7 @@ export function StackedBars<C extends StackColumn>({
               <g pointerEvents="none" opacity={tip.state || selectedKey ? 0.25 : 1} style={{ transition: "opacity .12s" }}>
                 {marks.map((m, k) => {
                   const col = columns[m.i];
-                  const w = m.text.length * MARK_CHAR_W + (highlightFill ? 12 : 0);
+                  const w = m.text.length * MARK_CHAR_W;
                   const clampX = (x: number) => Math.min(Math.max(x, w / 2 + 2), innerWidth - w / 2 - 2);
                   const cx0 = clampX(xOf(m.i) + step / 2);
                   const first = marks[0];
@@ -229,7 +225,6 @@ export function StackedBars<C extends StackColumn>({
                   const topY = mode === "share" ? y(1) : y(col.total);
                   return (
                     <text key={m.kind} x={cx} y={topY - 6} textAnchor={anchor} className="fill-ink text-[11px] font-medium" style={MARK_HALO}>
-                      {highlightFill && <tspan style={{ fill: highlightFill }}>● </tspan>}
                       {m.text}
                     </text>
                   );
