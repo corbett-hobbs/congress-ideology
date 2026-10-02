@@ -1,5 +1,6 @@
 "use client";
 
+import { HowToRead } from "@/components/HowToRead";
 import { useMemo, useState } from "react";
 import { stateName } from "@/lib/states";
 import type { ChamberView } from "@/lib/chamber";
@@ -85,12 +86,9 @@ export function WealthPageClient({ members }: { members: WealthMember[] }) {
             have fallen behind, and how much a member&apos;s finances have
             changed since they took office.
           </p>
-          <details className="mt-3 text-[0.92rem] leading-[1.65] text-ink-muted">
-            <summary className="cursor-pointer font-medium text-ink">
-              How to read this
-            </summary>
+          <HowToRead>
             <HowToReadNotes />
-          </details>
+          </HowToRead>
         </PageHeader>
 
         <NetWorthScatterCard

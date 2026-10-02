@@ -1,5 +1,6 @@
 "use client";
 
+import { HowToRead } from "@/components/HowToRead";
 import { useMemo, useState } from "react";
 import { EconomyStateProvider, activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
 import { dateOfDay, dayOf, MONTH_NAMES } from "@/lib/indicator-time";
@@ -107,6 +108,15 @@ function EconomyPage({
             under each chart shows who was president, and the gray columns mark recessions. These are conditions during
             each term, not a score of what any one official caused.
           </p>
+          <HowToRead>
+            <p>
+              The bands show who held office, not who controlled the number. The Federal Reserve sets short-term interest
+              rates on its own, and recessions, oil prices and laws passed years earlier all move these figures. Congress
+              control bands show the party holding each chamber’s majority, with the Senate’s mid-Congress changes (2001,
+              2002 and 2021) shown on their dates. Values are the latest revised numbers as of {longDate(payload.fetchedAt)};
+              jobs and income figures are routinely revised after first release.
+            </p>
+          </HowToRead>
         </PageHeader>
 
         <EconomyCard
@@ -149,23 +159,15 @@ function EconomyPage({
           ))}
         </div>
 
-        <section className="rounded-[10px] border border-line bg-surface p-5 sm:px-6">
-          <h2 className="m-0 font-serif text-[1.25rem] font-medium">About these numbers</h2>
-          <p className="m-0 mt-2.5 text-[0.875rem] leading-[1.6]">
-            The bands show who held office, not who controlled the number. The Federal Reserve sets short-term interest
-            rates on its own, and recessions, oil prices and laws passed years earlier all move these figures. Congress
-            control bands show the party holding each chamber’s majority, with the Senate’s mid-Congress changes (2001,
-            2002 and 2021) shown on their dates. Values are the latest revised numbers as of {longDate(payload.fetchedAt)};
-            jobs and income figures are routinely revised after first release.
-          </p>
-          <p className="m-0 mt-2.5 text-[0.8rem] leading-[1.6] text-ink-muted">
-            Sources: U.S. Bureau of Labor Statistics, U.S. Energy Information Administration, U.S. Census Bureau, U.S.
+        <div className="flex flex-col gap-2.5 text-[0.8rem] leading-[1.6] text-ink-muted">
+          <p className="m-0">
+            Source: U.S. Bureau of Labor Statistics, U.S. Energy Information Administration, U.S. Census Bureau, U.S.
             Office of Management and Budget and the National Bureau of Economic Research, via Federal Reserve Bank of St.
             Louis, FRED®. Mortgage rates: {mortgageAttribution}. Chamber majorities: U.S. Senate and U.S. House
             historians’ party-division tables.
           </p>
-          <p className="m-0 mt-2.5 text-[0.8rem] leading-[1.6] text-ink-muted">{fredNotice}</p>
-        </section>
+          <p className="m-0">{fredNotice}</p>
+        </div>
       </main>
     </>
   );
