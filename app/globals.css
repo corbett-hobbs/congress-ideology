@@ -178,6 +178,10 @@ body {
   display: block;
   touch-action: none;
 }
+/* A chart inside a scrolling list, or one that only needs taps, must let a finger scroll the page or the list. */
+.touch-scroll .chart-svg {
+  touch-action: pan-y;
+}
 
 .grid-line {
   stroke: var(--line);

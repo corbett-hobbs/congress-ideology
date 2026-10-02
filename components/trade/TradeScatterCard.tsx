@@ -205,7 +205,7 @@ export function TradeScatterCard({
         <p className="m-0 mt-2 text-[0.8rem] text-ink-muted">{`${selectedRow.name} isn’t plotted: it is missing months of duties data in ${selectedRow.months[0] < windows.months ? "the baseline" : "the latest"} window.`}</p>
       )}
 
-      <div ref={wrapRef} className="relative mt-3">
+      <div ref={wrapRef} className="relative mt-3 touch-scroll">
         <ChartFrame width={W} height={H} margin={margin} ariaLabel={aria} onPointerLeave={() => tip.hide()}>
           {() => (
             <>
@@ -293,9 +293,12 @@ export function TradeScatterCard({
         </div>
       )}
 
-      <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">
+      <details className="mt-3">
+        <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">See methodology</summary>
+        <p className="m-0 mt-1.5 text-[0.75rem] leading-[1.45] text-ink-muted">
         Calculated duties divided by imports for consumption, both from Census import data, over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}, so the season matches. Countries missing any month in either window are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles at the top edge are pinned outliers, with their true values in the tooltip. Bilateral figures can be distorted when goods are re-routed through other countries, so treat any one dot with care. Click a dot to pick that country above.
-      </p>
+        </p>
+      </details>
       <DataTable rows={rows} windows={windows} />
     </section>
   );

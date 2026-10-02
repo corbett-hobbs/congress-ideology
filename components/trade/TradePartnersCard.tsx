@@ -9,8 +9,6 @@ import { partnerChartRows, partnerMeta, partnerScale, type PartnerChartRow } fro
 import type { TradeYearPayload } from "@/lib/trade-types";
 import { MONTH_NAMES } from "@/lib/indicator-time";
 
-/** Rows visible before the list scrolls. */
-const VISIBLE_ROWS = 10;
 
 const SORTS = [
   { key: "balance", label: "Balance", hint: "Largest deficit first" },
@@ -118,7 +116,7 @@ export function TradePartnersCard({
   const through = MONTH_NAMES[Number(lastPeriod.slice(5)) - 1];
 
   return (
-    <section className="min-w-0 rounded-[10px] border border-line bg-surface p-5 sm:p-6">
+    <section className="flex h-full min-w-0 flex-col rounded-[10px] border border-line bg-surface p-5 sm:p-6">
       <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">Who the U.S. trades with, {shown}{partial ? " so far" : ""}</h2>
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
           <label className="flex items-center gap-2">
@@ -155,38 +153,48 @@ export function TradePartnersCard({
         <span className="ml-auto">Right: balance. Scale: symmetric log.</span>
       </div>
 
-      <div className={`mt-2 overflow-y-auto ${loading ? "opacity-60" : ""}`} style={{ maxHeight: MARGIN.top + VISIBLE_ROWS * ROW_H + MARGIN.bottom }} aria-busy={loading} tabIndex={0} aria-label="Partner list, scrollable">
-        {rows.length > 0 ? (
-          <SwarmRows<Tip>
-            rows={swarm}
-            ariaLabel={`U.S. goods imports and exports by partner, ${shown}, ${rows.length} partners, with the balance for each`}
-            margin={MARGIN}
-            rowHeight={ROW_H}
-            domain={[0, scale.max]}
-            ticks={scale.ticks}
-            formatTick={scale.format}
-            makeScale={scale.make}
-            renderTooltip={({ row, year: y }) => (
-              <div className="flex min-w-[9rem] flex-col gap-0.5 text-[0.78rem]">
-                <div className="font-medium">{row.name}, {y}</div>
-                <div>Imports <span className="font-mono">{fmtMoney(row.imports)}</span></div>
-                <div>Exports <span className="font-mono">{fmtMoney(row.exports)}</span></div>
-                <div>Balance <span className="font-mono">{fmtMoney(row.balance, { signed: true })}</span></div>
-                {row.rate !== null && <div className="opacity-75">Calculated duties {pct(row.rate)} of imports</div>}
+      {/* The list fills whatever height the row gives the card (the scatter card beside it sets that on desktop); on narrow screens it is a fixed 26rem. Absolute inner box so the long list never stretches the card. */}
+      <div className={`relative mt-2 min-h-[26rem] flex-1 ${loading ? "opacity-60" : ""}`} aria-busy={loading}>
+        <div
+          className="absolute inset-0 overflow-y-auto overscroll-contain touch-scroll"
+          tabIndex={0}
+          aria-label="Partner list, scrollable"
+        >
+            {rows.length > 0 ? (
+              <SwarmRows<Tip>
+                rows={swarm}
+                ariaLabel={`U.S. goods imports and exports by partner, ${shown}, ${rows.length} partners, with the balance for each`}
+                margin={MARGIN}
+                rowHeight={ROW_H}
+                domain={[0, scale.max]}
+                ticks={scale.ticks}
+                formatTick={scale.format}
+                makeScale={scale.make}
+                renderTooltip={({ row, year: y }) => (
+                  <div className="flex min-w-[9rem] flex-col gap-0.5 text-[0.78rem]">
+                    <div className="font-medium">{row.name}, {y}</div>
+                    <div>Imports <span className="font-mono">{fmtMoney(row.imports)}</span></div>
+                    <div>Exports <span className="font-mono">{fmtMoney(row.exports)}</span></div>
+                    <div>Balance <span className="font-mono">{fmtMoney(row.balance, { signed: true })}</span></div>
+                    {row.rate !== null && <div className="opacity-75">Calculated duties {pct(row.rate)} of imports</div>}
+                  </div>
+                )}
+              />
+            ) : (
+              <div role="status" className="flex h-[200px] items-center justify-center rounded-md border border-dashed border-line text-[0.85rem] text-ink-muted">
+                {error ? `Couldn’t load ${year}. Pick the year again to retry.` : `Loading ${year}…`}
               </div>
             )}
-          />
-        ) : (
-          <div role="status" className="flex h-[200px] items-center justify-center rounded-md border border-dashed border-line text-[0.85rem] text-ink-muted">
-            {error ? `Couldn’t load ${year}. Pick the year again to retry.` : `Loading ${year}…`}
-          </div>
-        )}
+        </div>
       </div>
 
-      <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">
+      <details className="mt-3">
+        <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">See methodology</summary>
+        <p className="m-0 mt-1.5 text-[0.75rem] leading-[1.45] text-ink-muted">
         Census Bureau goods trade, Census basis. Sorted by {sort.key === "balance" ? "balance: the largest deficits first, then surpluses" : sort.key === "total" ? "total trade, largest first" : "name"}
         {sort.reversed ? ", reversed" : ""}; click the active sort again to reverse it. Click a row to pick that country above. The scale is symmetric log, so small partners stay visible next to China; distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.
-      </p>
+        </p>
+      </details>
       {rows.length > 0 && <DataTable rows={rows} year={shown} />}
     </section>
   );
