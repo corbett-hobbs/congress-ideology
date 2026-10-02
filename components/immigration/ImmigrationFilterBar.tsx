@@ -37,7 +37,7 @@ export function ImmigrationFilterBar({
             aria-label="President"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="h-11 w-[7.5rem] min-w-0 rounded-md border border-line-strong bg-surface-raised pl-[0.4rem] pr-0 text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-auto sm:w-[15rem] sm:py-[0.42rem]"
+            className="h-11 w-[7.75rem] min-w-0 rounded-md border border-line-strong bg-surface-raised pl-[0.4rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-auto sm:w-[15rem] sm:py-[0.42rem]"
           >
             <option value="all">All presidents</option>
             {termsNewestFirst(terms).map((t) => (
