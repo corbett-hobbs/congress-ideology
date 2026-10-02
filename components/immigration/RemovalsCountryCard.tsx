@@ -1,5 +1,6 @@
 "use client";
 
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { ReversibleSortToggle } from "@/components/charts/SortToggle";
@@ -185,7 +186,7 @@ export function RemovalsCountryCard({
       </MethodologyNote>
 
       <details className="mt-3 text-[0.8rem] text-ink-muted">
-        <summary className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">View as table</summary>
+        <summary className={TABLE_TOGGLE}>View as table</summary>
         <div className="mt-2 max-h-[24rem] overflow-auto">
           <table className="w-full min-w-[26rem] border-collapse text-left">
             <caption className="sr-only">{`ICE removals by country of citizenship, FY${fy}`}</caption>

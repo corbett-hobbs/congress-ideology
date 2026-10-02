@@ -1,5 +1,6 @@
 "use client";
 
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { RETURNS_COUNTED_FROM, filterYears, showsPendingSlot, type ImmigrationPageData } from "@/lib/immigration-derive";
 import { RemovalsChart } from "./RemovalsChart";
@@ -34,7 +35,7 @@ export function RemovalsCard({ data, selection }: { data: ImmigrationPageData; s
       </MethodologyNote>
 
       <details className="mt-3 text-[0.8rem] text-ink-muted">
-        <summary className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
+        <summary className={TABLE_TOGGLE}>
           View as table
         </summary>
         <div className="mt-2 overflow-x-auto">

@@ -1,5 +1,6 @@
 "use client";
 
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { memo, useMemo, useState } from "react";
 import { ReversibleSortToggle } from "@/components/charts/SortToggle";
 import { SwarmRows, type SwarmRowData } from "@/components/charts/SwarmRows";
@@ -30,7 +31,7 @@ const pct = (r: number) => `${(r * 100).toFixed(r < 0.1 ? 1 : 0)}%`;
 const DataTable = memo(function DataTable({ rows, year }: { rows: PartnerChartRow[]; year: number }) {
   return (
     <details className="mt-3">
-      <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">View as table</summary>
+      <summary className={TABLE_TOGGLE}>View as table</summary>
       <p className="m-0 mt-1.5 text-[0.75rem] text-ink-muted">Partner, imports, exports, balance and calculated duty rate for {year}, for screen readers and copying.</p>
       <div className="mt-2 max-h-72 overflow-auto">
         <table className="w-full border-collapse text-left text-[0.75rem] tabular-nums">

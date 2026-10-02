@@ -1,5 +1,6 @@
 "use client";
 
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import type { ReactNode } from "react";
 import { SECTOR_LABEL, SLOT_COUNT, SLOT_NAME, SLOT_VAR, slotOfSector } from "@/lib/foreign-aid-derive";
 import { useAidState } from "./ForeignAidState";
@@ -60,7 +61,7 @@ export function SectorLegend({ partial = false, children }: { partial?: boolean;
 export function TableView({ caption, children }: { caption: string; children: ReactNode }) {
   return (
     <details className="mt-3 text-[0.8rem] text-ink-muted">
-      <summary className="cursor-pointer text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">Table view</summary>
+      <summary className={TABLE_TOGGLE}>View as table</summary>
       <div className="mt-2 max-h-60 overflow-auto rounded-md border border-line">
         <table className="w-full min-w-[30rem] border-collapse text-right">
           <caption className="sr-only">{caption}</caption>

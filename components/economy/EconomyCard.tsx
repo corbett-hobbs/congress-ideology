@@ -1,3 +1,4 @@
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { memo, type ReactNode } from "react";
 import { fiscalBars, quarterlyPoints, yearRows } from "@/lib/economy-series";
 import type { EconomyData } from "@/lib/indicator-payload";
@@ -29,7 +30,7 @@ const DataTable = memo(function DataTable({ data, spec }: { data: EconomyData; s
   const fmt = (v: number) => spec.head(v);
   return (
     <details className="mt-3">
-      <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">View the data as a table</summary>
+      <summary className={TABLE_TOGGLE}>View as table</summary>
       <div className="mt-2 max-h-72 overflow-auto">
         <table className="w-full border-collapse text-left text-[0.75rem] tabular-nums">
           <caption className="sr-only">{`${spec.title}, ${spec.unit}${spec.kind === "debt" ? ", held by the public" : ""}`}</caption>

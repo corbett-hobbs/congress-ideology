@@ -1,5 +1,6 @@
 "use client";
 
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { scaleLinear } from "d3-scale";
@@ -589,7 +590,7 @@ function LegendSwatch({ className, label }: { className: string; label: string }
 function WealthScatterTable({ cohort }: { cohort: WealthMember[] }) {
   return (
     <details className="mt-3">
-      <summary className="cursor-pointer text-[0.75rem] font-medium text-accent">
+      <summary className={TABLE_TOGGLE}>
         View as table
       </summary>
       <div className="mt-2 max-h-80 overflow-y-auto rounded-md border border-line">

@@ -1,5 +1,6 @@
 "use client";
 
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { PillGroup } from "@/components/charts/PillGroup";
@@ -387,7 +388,7 @@ function YearList({
 function TableFallback({ years }: { years: readonly EoYear[] }) {
   return (
     <details className="mt-3">
-      <summary className="cursor-pointer text-[0.75rem] font-medium text-accent">View as table</summary>
+      <summary className={TABLE_TOGGLE}>View as table</summary>
       <div className="mt-2 max-h-80 overflow-auto rounded-md border border-line">
         <table className="w-full border-collapse text-[0.78rem]">
           <thead className="sticky top-0 bg-surface-raised">

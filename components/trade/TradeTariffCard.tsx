@@ -1,5 +1,6 @@
 "use client";
 
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { memo, useMemo } from "react";
 import { MONTH_ABBR } from "@/lib/indicator-time";
 import { fmtDollars, fmtPercent, monthStartDay, rateReadingAtDay, rateScale, ratePercentSeries, termAtDay, termLabel } from "@/lib/trade-chart";
@@ -31,7 +32,7 @@ const Swatch = ({ color, border }: { color: string; border?: boolean }) => (
 const EventsTable = memo(function EventsTable({ flags, lastReviewed }: { flags: readonly TariffFlag[]; lastReviewed: string }) {
   return (
     <details className="mt-3">
-      <summary className="cursor-pointer text-[0.75rem] text-ink-muted hover:text-ink">View the tariff actions as a table</summary>
+      <summary className={TABLE_TOGGLE}>View as table</summary>
       <p className="m-0 mt-1.5 text-[0.75rem] text-ink-muted">Effective date, action, authority, status and description, for screen readers and copying. Last reviewed {dateText(lastReviewed)}.</p>
       <div className="mt-2 max-h-72 overflow-auto">
         <table className="w-full border-collapse text-left text-[0.75rem]">

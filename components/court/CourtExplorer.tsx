@@ -1,5 +1,6 @@
 "use client";
 
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { justicePath } from "@/lib/justice-url";
@@ -324,7 +325,7 @@ function TableShell({
 }) {
   return (
     <details className="mt-3">
-      <summary className="cursor-pointer text-[0.75rem] font-medium text-accent">
+      <summary className={TABLE_TOGGLE}>
         {summary}
       </summary>
       <div className="mt-2 max-h-80 overflow-y-auto rounded-md border border-line">
