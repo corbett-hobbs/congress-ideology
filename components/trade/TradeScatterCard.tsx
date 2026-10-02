@@ -273,8 +273,8 @@ export function TradeScatterCard({
                 <g className="fill-ink-faint font-mono text-[10px] uppercase" pointerEvents="none" style={{ letterSpacing: "0.06em" }}>
                   <text x={4} y={ph + 30}>← Lower tariff rate</text>
                   <text x={pw - 4} y={ph + 30} textAnchor="end">Higher tariff rate →</text>
-                  <text x={6} y={12}>More imports ↑</text>
-                  <text x={6} y={ph - 6}>Fewer imports ↓</text>
+                  <text x={64} y={12}>More imports ↑</text>
+                  <text x={64} y={ph - 6}>Fewer imports ↓</text>
                 </g>
               )}
               <clipPath id={clipId}><rect x={-6} y={-8} width={pw + 12} height={ph + 16} /></clipPath>

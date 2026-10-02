@@ -97,7 +97,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
   // Square plot: one side length for both axes, centred in the card. Mobile
   // trades axis titles for short captions, so it needs less margin.
   const margin = compact
-    ? { top: 26, right: 14, bottom: 34, left: 12 }
+    ? { top: 34, right: 14, bottom: 34, left: 12 }
     : { top: 16, right: 20, bottom: 46, left: 22 };
   const side = Math.max(
     180,
@@ -429,7 +429,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
                   <text className="axis-caption" x={side / 2} y={side + 32} textAnchor="middle">
                     Starting net worth →
                   </text>
-                  <text className="axis-caption" x={-margin.left + 6} y={-12} textAnchor="start">
+                  <text className="axis-caption" x={-margin.left + 6} y={-20} textAnchor="start">
                     ↑ Current net worth
                   </text>
                 </>
