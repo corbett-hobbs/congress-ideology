@@ -32,7 +32,7 @@ import { MethodologyNote } from "@/components/MethodologyNote";
 const FALLBACK_W = 1080;
 /** Below this chart width the layout drops long titles and labels (a half-width card on a laptop stays above it). */
 const COMPACT_W = 440;
-const LABEL_COUNT = 6;
+const LABEL_COUNT = 5;
 const MAX_ZOOM = 12;
 const contFill = (code: string) => `var(--cont-${continentOf(code)})`;
 
@@ -96,11 +96,14 @@ export function TradeScatterCard({
   windows,
   country,
   onPickCountry,
+  topCodes,
 }: {
   rows: ScatterRow[];
   windows: ScatterWindows;
   country: string | null;
   onPickCountry: (code: string | null) => void;
+  /** Partner codes by total trade, biggest first; the first few that are plotted get a name label. */
+  topCodes: readonly string[];
 }) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const [query, setQuery] = useState("");
@@ -110,9 +113,9 @@ export function TradeScatterCard({
   const compact = W < COMPACT_W;
   // Tap behaviour follows the device, not the width: a narrow card on a laptop still hovers.
   const tapMode = !useMediaQuery("(hover: hover)");
-  const margin = compact ? { top: 22, right: 14, bottom: 52, left: 52 } : { top: 22, right: 24, bottom: 56, left: 70 };
+  const margin = compact ? { top: 22, right: 14, bottom: 52, left: 20 } : { top: 22, right: 24, bottom: 56, left: 22 };
   const pw = W - margin.left - margin.right;
-  const ph = compact ? 340 : 440;
+  const ph = compact ? 340 : W >= 900 ? 520 : 440;
   const H = ph + margin.top + margin.bottom;
 
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -163,14 +166,23 @@ export function TradeScatterCard({
     return xs.length ? xs[Math.floor((xs.length - 1) / 2)] : null;
   }, [dots]);
 
-  // Labels for the biggest partners (by baseline imports), dropped where they would collide.
+  // The five biggest partners by total trade get a name beside their dot. A label that would run off
+  // the right edge flips to the dot's left; one that still collides with a kept label is dropped.
   const labels = useMemo(() => {
     if (compact) return [];
-    const biggest = [...dots].sort((a, b) => b.row.baseImports - a.row.baseImports).slice(0, LABEL_COUNT);
-    const boxes = biggest.map((c) => ({ id: c.row.code, x: x(c.d.x) + 8, y: y(c.d.yPct) - 6, width: c.row.name.length * 6.4 + 4, height: 13 }));
-    const kept = new Set(placeLabels(boxes, pw, ph).map((b) => b.id));
-    return biggest.filter((c) => kept.has(c.row.code)).map((c) => ({ code: c.row.code, name: c.row.name, x: x(c.d.x) + 8, y: y(c.d.yPct) + 4 }));
-  }, [dots, compact, x, y, pw, ph]);
+    const byCode = new Map(dots.map((d) => [d.row.code, d]));
+    const biggest = topCodes.flatMap((c) => (byCode.has(c) ? [byCode.get(c)!] : [])).slice(0, LABEL_COUNT);
+    const placed = biggest.map((c) => {
+      const width = c.row.name.length * 7.4 + 6;
+      const flip = x(c.d.x) + 8 + width > pw;
+      const left = flip ? x(c.d.x) - 8 - width : x(c.d.x) + 8;
+      return { c, flip, box: { id: c.row.code, x: left, y: y(c.d.yPct) - 7, width, height: 15 } };
+    });
+    const kept = new Set(placeLabels(placed.map((p) => p.box), pw, ph).map((b) => b.id));
+    return placed
+      .filter((p) => kept.has(p.c.row.code))
+      .map((p) => ({ code: p.c.row.code, name: p.c.row.name, x: p.flip ? p.box.x + p.box.width : p.box.x, y: p.box.y + 12, flip: p.flip }));
+  }, [dots, compact, topCodes, x, y, pw, ph]);
 
   const found = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -295,7 +307,7 @@ export function TradeScatterCard({
                 return <circle key={c.row.code} cx={cx} cy={cy} r={sel ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} fill={fill} {...common} />;
               })}
               {labels.map((l) => (
-                <text key={l.code} x={l.x} y={l.y} className="dot-label" style={{ paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 3 }}>{l.name}</text>
+                <text key={l.code} x={l.x} y={l.y} textAnchor={l.flip ? "end" : "start"} className="dot-label" style={{ fill: "var(--ink)", fontSize: 13, paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 4 }}>{l.name}</text>
               ))}
               </g>
             </>

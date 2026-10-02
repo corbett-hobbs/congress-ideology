@@ -20,7 +20,7 @@ import {
 
 const FALLBACK_W = 1100;
 const H = 340;
-const MARGIN = { top: 14, right: 14, bottom: 30, left: 38 };
+const MARGIN = { top: 14, right: 14, bottom: 30, left: 10 };
 const partyVar = (j: CourtJustice) => (j.party === "D" ? "var(--dem)" : "var(--rep)");
 
 /**

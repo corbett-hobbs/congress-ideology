@@ -27,7 +27,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
   const width = measured || 960;
   const narrow = width < NARROW_W;
   const height = narrow ? 250 : 320;
-  const ml = narrow ? 42 : 50;
+  const ml = 10; // y labels sit inside the plot
   const mr = 6;
   const mt = 28;
   const mb = AXIS_H + BAND_H + 6;

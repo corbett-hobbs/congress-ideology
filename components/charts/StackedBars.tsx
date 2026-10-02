@@ -50,7 +50,7 @@ interface Props<C extends StackColumn> {
 }
 
 const NARROW_W = 560;
-const MARGIN = { top: 10, right: 6, left: 44 };
+const MARGIN = { top: 22, right: 6, left: 10 };
 const BAND_H = 22;
 const AXIS_H = 34;
 const DIM = 0.2;
@@ -119,8 +119,9 @@ export function StackedBars<C extends StackColumn>({
               {yAxisLabel && (
                 <text
                   className="axis-caption"
-                  transform={`translate(${-margin.left + 10},${innerHeight / 2}) rotate(-90)`}
-                  textAnchor="middle"
+                  x={0}
+                  y={-8}
+                  textAnchor="start"
                 >
                   {yAxisLabel}
                 </text>

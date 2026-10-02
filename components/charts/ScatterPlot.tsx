@@ -214,7 +214,7 @@ export function ScatterPlot<T>({
               {yAxisCaption && (
                 <text
                   className="axis-caption"
-                  transform={`translate(${-42},${innerHeight / 2}) rotate(-90)`}
+                  transform={`translate(${-(mergedMargin.left - 12)},${innerHeight / 2}) rotate(-90)`}
                   textAnchor="middle"
                 >
                   {yAxisCaption}

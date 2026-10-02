@@ -44,6 +44,7 @@ const party = (p: "D" | "R") => (p === "D" ? "var(--dem)" : "var(--rep)");
 const MUTED = "var(--ink-muted)";
 const EST_CHAR_W = 6.4;
 /** Halo so annotation text stays legible where it crosses a line or recession band. */
+const YHALO = { stroke: "var(--surface)", strokeWidth: 3, strokeLinejoin: "round", paintOrder: "stroke" } as const;
 const HALO = { stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" } as const;
 
 interface Props {
@@ -66,7 +67,7 @@ const ROW_H = 12;
 
 /** Pure layout for one chart at one measured width. Shared by the static layer and the crosshair overlay. */
 function geometry(W: number, hero: boolean, spec: ChartSpec, view: readonly [number, number], showCong: boolean) {
-  const ml = hero ? 60 : 44;
+  const ml = 8; // y labels sit inside the plot
   const mr = 12;
   const mt = hero ? 22 : 8;
   const H = hero ? (W < 600 ? 170 : 200) : 150;
@@ -131,7 +132,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
             {spec.ticks.map((v) => (
               <g key={v}>
                 <line x1={ml} x2={ml + pw} y1={Y(v)} y2={Y(v)} className={v === 0 && lo < 0 ? "zero-line" : "grid-line"} />
-                <text x={ml - 7} y={Y(v) + 3.5} textAnchor="end" className="fill-ink-muted font-mono text-[11px]">
+                <text x={ml + 4} y={Y(v) - 4} textAnchor="start" className="fill-ink-muted font-mono text-[11px]" style={YHALO}>
                   {spec.tick(v)}
                 </text>
               </g>
@@ -228,9 +229,6 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
             ))}
 
             {/* President band (always on) */}
-            <text x={ml - 7} y={bandY + 12.5} textAnchor="end" className="fill-ink-muted text-[11px]" opacity={showCong ? 1 : 0}>
-              {hero ? "President" : "Pres."}
-            </text>
             {data.terms.map((t) => {
               if (!visibleSpan(t.s, t.e)) return null;
               const [x0, x1] = clipped(t.s, t.e);
@@ -262,7 +260,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
                 return (
                   <g key={ch}>
                     <title>{ch === "house" ? "House majority" : "Senate majority"}</title>
-                    <text x={ml - 7} y={y + 9.5} textAnchor="end" className="fill-ink-muted text-[11px]">
+                    <text x={ml + 4} y={y + 9.5} textAnchor="start" className="text-[10px] font-semibold" fill="#ffffff" pointerEvents="none">
                       {ch === "house" ? "House" : "Senate"}
                     </text>
                     {data.control[ch].map((c) => {
@@ -271,7 +269,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
                       return (
                         <g key={c.s}>
                           <rect x={x0} y={y} width={Math.max(0.5, x1 - x0 - 0.5)} height={ROW_H} fill={party(c.party)} />
-                          {x1 - x0 >= 16 && (
+                          {x1 - x0 >= 16 && (x0 + x1) / 2 - ml >= 46 && (
                             <text x={(x0 + x1) / 2} y={y + 9} textAnchor="middle" className="text-[9px] font-semibold" fill="#ffffff">
                               {c.party}
                             </text>

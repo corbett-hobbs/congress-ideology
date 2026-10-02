@@ -6,8 +6,10 @@ import { dateOfDay, dayOf, MONTH_NAMES } from "@/lib/indicator-time";
 import { termAtDay, termLabel } from "@/lib/trade-chart";
 import type { TradePageData } from "@/lib/trade-data";
 import type { TradeCountryPayload, TradeYearPayload } from "@/lib/trade-types";
+import { topByTotal } from "@/lib/trade-map";
 import { TradeBalanceCard } from "./TradeBalanceCard";
 import { TradeFilterBar } from "./TradeFilterBar";
+import { TradeMapCard } from "./TradeMapCard";
 import { TradePartnersCard } from "./TradePartnersCard";
 import { TradeScatterCard } from "./TradeScatterCard";
 import { TradeTariffCard } from "./TradeTariffCard";
@@ -24,7 +26,7 @@ export function TradePageClient({ data }: { data: TradePageData }) {
 function TradePage({ data }: { data: TradePageData }) {
   const v = useTradeValues();
   const { setRange, clearPin, setCountry, setShowCong, setYear } = useTradeActions();
-  const { era, national, countries, firstYear, lastYear, initialYear, scatter, tariffFlags, tariffLastReviewed } = data;
+  const { era, national, countries, firstYear, lastYear, initialYear, scatter, tariffFlags, tariffLastReviewed, worldMap } = data;
   const [loaded, setLoaded] = useState<Record<string, TradeCountryPayload>>({});
   const [failed, setFailed] = useState<string | null>(null);
   const inflight = useRef<AbortController | null>(null);
@@ -76,6 +78,9 @@ function TradePage({ data }: { data: TradePageData }) {
   const [lastShown, setLastShown] = useState<TradeYearPayload>(initialYear);
   const yearPayload = years[v.year] ?? null;
   if (yearPayload && yearPayload !== lastShown) setLastShown(yearPayload);
+
+  // The scatter labels the five biggest partners by total trade in the latest year.
+  const topCodes = useMemo(() => topByTotal(initialYear.partners, 12), [initialYear]);
 
   const countryRef = v.country ? countries.find((c) => c.code === v.country) ?? null : null;
   const payload = v.country ? loaded[v.country] : undefined;
@@ -147,7 +152,7 @@ function TradePage({ data }: { data: TradePageData }) {
           error={loadState === "error"}
         />
 
-        {/* Side by side on desktop, stacked below it. */}
+        {/* Partners and map side by side on desktop, stacked below it. */}
         <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
           <TradePartnersCard
             payload={yearPayload ?? lastShown}
@@ -161,8 +166,19 @@ function TradePage({ data }: { data: TradePageData }) {
             loading={!yearPayload && yearFailed !== v.year}
             error={!yearPayload && yearFailed === v.year}
           />
-          <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} />
+          <TradeMapCard
+            map={worldMap}
+            payload={yearPayload ?? lastShown}
+            year={v.year}
+            lastPeriod={national.lastPeriod}
+            country={v.country}
+            onPickCountry={setCountry}
+            loading={!yearPayload && yearFailed !== v.year}
+          />
         </div>
+
+        {/* Full width: the scatter needs the room for its labels. */}
+        <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} topCodes={topCodes} />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: U.S. Census Bureau (trade values and calculated duties, 2010 on); U.S. International Trade Commission

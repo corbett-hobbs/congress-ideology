@@ -98,7 +98,7 @@ export function JusticeOverTimeChart({
     top: 10,
     right: Math.min(Math.ceil(maxLabel) + 14, narrow ? 76 : 100),
     bottom: 28,
-    left: 38,
+    left: 10,
   };
 
   const hi = (p: PeerTrace) => mode === "neighbors" && p.isNeighbor;

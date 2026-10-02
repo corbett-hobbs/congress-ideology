@@ -90,7 +90,6 @@ export function PresidentAndCongress({ era, view, X, left, bandY, houseY, senate
   const lastYear = dateOfDay(era.span - 1).year;
   return (
     <>
-      <text x={left - 7} y={bandY + 12.5} textAnchor="end" className="fill-ink-muted text-[11px]" opacity={showCong ? 1 : 0}>Pres.</text>
       {era.terms.map((t) => {
         if (!visible(view, t.s, t.e)) return null;
         const [x0, x1] = clip({ view, X }, t.s, t.e);
@@ -125,14 +124,14 @@ export function PresidentAndCongress({ era, view, X, left, bandY, houseY, senate
           return (
             <g key={ch}>
               <title>{ch === "house" ? "House majority" : "Senate majority"}</title>
-              <text x={left - 7} y={y + 9.5} textAnchor="end" className="fill-ink-muted text-[11px]">{ch === "house" ? "House" : "Senate"}</text>
+              <text x={left + 4} y={y + 9.5} textAnchor="start" className="text-[10px] font-semibold" fill="#ffffff" pointerEvents="none">{ch === "house" ? "House" : "Senate"}</text>
               {era.control[ch].map((c) => {
                 if (!visible(view, c.s, c.e)) return null;
                 const [x0, x1] = clip({ view, X }, c.s, c.e);
                 return (
                   <g key={c.s}>
                     <rect x={x0} y={y} width={Math.max(0.5, x1 - x0 - 0.5)} height={ROW_H} fill={partyColor(c.party)} />
-                    {x1 - x0 >= 16 && <text x={(x0 + x1) / 2} y={y + 9} textAnchor="middle" className="text-[9px] font-semibold" fill="#ffffff">{c.party}</text>}
+                    {x1 - x0 >= 16 && (x0 + x1) / 2 - left >= 46 && <text x={(x0 + x1) / 2} y={y + 9} textAnchor="middle" className="text-[9px] font-semibold" fill="#ffffff">{c.party}</text>}
                   </g>
                 );
               })}
