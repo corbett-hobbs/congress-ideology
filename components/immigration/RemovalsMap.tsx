@@ -19,9 +19,9 @@ export interface MapRow {
 }
 
 type Region = "americas" | "world";
-/** Base viewBoxes in the world map's 1000 x 446 units. The default frames the Western Hemisphere (Alaska to Tierra del Fuego, plus the Atlantic edge). */
+/** Base viewBoxes in the world map's 1000 x 446 units. The default frames Latin America (Mexico to Tierra del Fuego), where almost all of the removals go. */
 const VIEW: Record<Region, [number, number, number, number]> = {
-  americas: [55, 0, 465, 440],
+  americas: [160, 138, 270, 302],
   world: [0, 0, 1000, 446],
 };
 const LAND = "color-mix(in oklab, var(--ink) 7%, var(--surface))";
@@ -38,7 +38,7 @@ const n = (v: number) => v.toLocaleString("en-US");
 
 /**
  * The country list as a choropleth: ICE removals by country of citizenship for the selected fiscal
- * year, shaded on fixed bins. Defaults to the Western Hemisphere (where most removals go), with a
+ * year, shaded on fixed bins. Defaults to Latin America (Mexico to Tierra del Fuego, where most removals go), with a
  * World toggle; zoom and pan like the other maps. Click a country to pick it (the rest dim).
  */
 export function RemovalsMap({
@@ -102,7 +102,7 @@ export function RemovalsMap({
             zoom.reset();
           }}
           options={[
-            { value: "americas", label: "Americas" },
+            { value: "americas", label: "Latin America" },
             { value: "world", label: "World" },
           ]}
         />
