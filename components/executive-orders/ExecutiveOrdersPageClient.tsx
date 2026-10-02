@@ -432,14 +432,13 @@ function OrderRows({ items, showPresident, admins }: { items: EoYear["items"]; s
   return (
     <ol tabIndex={0} aria-label="Executive orders, scrollable" className="touch-scroll relative m-0 max-h-[32rem] list-none overflow-y-auto overscroll-contain p-0">
       {items.map((i) => (
-        <li key={i.n} className="grid grid-cols-[3.9rem_1fr] gap-x-3 gap-y-1 border-b border-line px-5 py-2.5 last:border-0 sm:grid-cols-[4.4rem_1fr_auto]">
-          <span className="pt-[0.1rem] font-mono text-[0.72rem] text-ink-faint">EO {i.n}</span>
+        <li key={i.n} className="grid grid-cols-1 gap-x-3 gap-y-1 border-b border-line px-5 py-2.5 last:border-0 sm:grid-cols-[1fr_auto]">
           <div className="min-w-0">
             <a
               href={`https://www.federalregister.gov/d/${i.doc}`}
               className="text-[0.88rem] leading-snug text-ink hover:text-accent hover:underline"
             >
-              {i.title}
+              <span className="font-mono text-[0.78rem] text-ink-faint">EO {i.n}:</span> {i.title}
               <span className="sr-only"> (Federal Register)</span>
             </a>
             <div className="mt-0.5 text-[0.72rem] text-ink-faint">
@@ -447,7 +446,7 @@ function OrderRows({ items, showPresident, admins }: { items: EoYear["items"]; s
               {showPresident ? ` · ${admins.get(i.termId)?.president ?? ""}` : ""}
             </div>
           </div>
-          <span className="col-start-2 flex items-center gap-1.5 text-[0.74rem] text-ink-muted sm:col-start-3 sm:justify-end">
+          <span className="flex items-center gap-1.5 text-[0.74rem] text-ink-muted sm:justify-end">
             <TopicSwatch topic={i.topic} size={10} />
             {EO_TOPIC_LABELS[i.topic]}
           </span>
