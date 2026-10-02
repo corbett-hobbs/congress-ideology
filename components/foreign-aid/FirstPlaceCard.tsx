@@ -35,9 +35,11 @@ export function FirstPlaceCard() {
   const W = measured || 960;
   const narrow = W < 520;
   const n = years.length;
-  const step = (W - 2 * MX) / n;
+  // Phones keep extra room on the right so the last run's slanted name stays inside the chart.
+  const MR = narrow ? 34 : MX;
+  const step = (W - MX - MR) / n;
   // Phones get a taller span so a name too narrow to read across can run up the span instead.
-  const labelH = narrow ? 52 : LABEL_H;
+  const labelH = narrow ? 62 : LABEL_H;
   const bracketY = labelH + 6;
   const baseY = narrow ? 142 : 116;
   const maxH = narrow ? 52 : 62;
@@ -109,9 +111,10 @@ export function FirstPlaceCard() {
                 const isSel = country === r.ci;
                 const dim = country >= 0 && !isSel;
                 const full = nm.length * 7.2 + 14;
-                const lab = w >= full ? nm : w >= 34 ? code : "";
+                const lab = w >= full ? nm : w >= 34 && !(narrow && nm.length <= 11) ? code : "";
                 // Too narrow to read across: turn the label up the span (the full name if it fits, else the code).
-                const vert = !lab && narrow && w >= 8 ? (w >= 13 && nm.length * 6.2 + 6 <= labelH ? nm : code) : "";
+                // Too narrow to read across: slant the full name up and to the right (the code only if the name is very long).
+                const vert = !lab && narrow && w >= 8 ? (nm.length <= 11 ? nm : code) : "";
                 const labelStyle = { fontFamily: "var(--font-serif, Georgia, serif)", fontWeight: 500, fill: "var(--ink)", opacity: dim ? 0.55 : 1 };
                 return (
                   <g key={`${r.ci}-${r.from}`}>
@@ -127,7 +130,7 @@ export function FirstPlaceCard() {
                       </text>
                     )}
                     {vert && (
-                      <text transform={`translate(${x + w / 2 + 4} ${bracketY - 5}) rotate(-90)`} textAnchor="start" style={{ ...labelStyle, fontSize: w < 13 ? 9.5 : 11.5, fill: isSel ? "var(--accent)" : "var(--ink)" }}>
+                      <text transform={`translate(${x + w / 2 - 2} ${bracketY - 5}) rotate(-60)`} textAnchor="start" style={{ ...labelStyle, fontSize: 11, fill: isSel ? "var(--accent)" : "var(--ink)" }}>
                         {vert}
                       </text>
                     )}
@@ -155,7 +158,7 @@ export function FirstPlaceCard() {
                   </g>
                 );
               })}
-              <line x1={MX} x2={W - MX} y1={baseY} y2={baseY} style={{ stroke: "var(--line-strong)" }} />
+              <line x1={MX} x2={W - MR} y1={baseY} y2={baseY} style={{ stroke: "var(--line-strong)" }} />
               {years.map((y, i) =>
                 n <= 10 || y.fy % 5 === 0 || i === 0 ? (
                   <text key={y.fy} className="axis-tick-label" x={MX + i * step + step / 2} y={baseY + 15} textAnchor="middle" style={y.fy === year ? { fill: "var(--ink)", fontWeight: 600 } : undefined}>
@@ -169,7 +172,7 @@ export function FirstPlaceCard() {
                   const h = (peak.ranked[0].value / maxTop) * maxH;
                   const lab = formatAidMoney(peak.ranked[0].value);
                   const tw = lab.length * 6.4;
-                  const cx = Math.min(Math.max(MX + i * step + step / 2, MX + tw / 2), W - MX - tw / 2);
+                  const cx = Math.min(Math.max(MX + i * step + step / 2, MX + tw / 2), W - MR - tw / 2);
                   return (
                     <text className="axis-tick-label" x={cx} y={baseY - h - 5} textAnchor="middle">
                       {lab}

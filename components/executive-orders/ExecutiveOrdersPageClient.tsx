@@ -204,11 +204,14 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
 
           <MethodologyNote>
             <p>
-              Terms under the axis:{" "}
-              {data.administrations
-                .map((a) => `${a.president} (${a.start.slice(0, 4)}–${a.end ? a.end.slice(0, 4) : "present"})`)
-                .join(", ")}
-              .
+              Orders are counted in the year they were
+              signed, not published. Each order has one primary topic, so a year&apos;s columns add up to its true total.
+              Topic assignment is classifier-assisted: a language model read each order&apos;s title and issuing agencies,
+              and orders that only amend or revoke another order take that order&apos;s topic. A random sample of 100
+              assignments was checked by a person and all were confirmed, but the rest have not been individually
+              reviewed, and a topic is a judgment call, so a count shows how many orders touched a
+              subject, not how significant any of them were. In a transition year the orders signed before and after
+              Inauguration Day count toward the outgoing and incoming president respectively.
             </p>
           </MethodologyNote>
 
@@ -217,8 +220,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
 
         <YearList year={selectedYear} years={data.years} range={[from, to]} president={president} onClearPresident={() => setRange(null)} topic={topic} admins={adminById} onClearTopic={() => setTopic(null)} throughDate={data.throughDate} />
 
-        <footer className="flex flex-col gap-2 border-t border-line pt-6 text-[0.76rem] leading-[1.6] text-ink-faint">
-          <p className="m-0">
+        <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
             Source:{" "}
             <a
               href="https://www.federalregister.gov/presidential-documents/executive-orders"
@@ -228,20 +230,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
             </a>{" "}
             (federalregister.gov API), executive orders signed {first} to present. Each order links to its
             Federal Register page.
-          </p>
-          <MethodologyNote className="mt-0">
-          <p>
-            Orders are counted in the year they were
-            signed, not published. Each order has one primary topic, so a year&apos;s columns add up to its true total.
-            Topic assignment is classifier-assisted: a language model read each order&apos;s title and issuing agencies,
-            and orders that only amend or revoke another order take that order&apos;s topic. A random sample of 100
-            assignments was checked by a person and all were confirmed, but the rest have not been individually
-            reviewed, and a topic is a judgment call, so a count shows how many orders touched a
-            subject, not how significant any of them were. In a transition year the orders signed before and after
-            Inauguration Day count toward the outgoing and incoming president respectively.
-          </p>
-          </MethodologyNote>
-        </footer>
+        </p>
       </main>
     </>
   );
@@ -432,9 +421,14 @@ function TableFallback({ years }: { years: readonly EoYear[] }) {
   );
 }
 
+/**
+ * The order list is a fixed-height box that scrolls inside the card (every width): a long list can't
+ * stretch the page, and `overscroll-contain` keeps a finger drag at the list's end from chaining into
+ * the page. The page scrolls normally anywhere outside the box.
+ */
 function OrderRows({ items, showPresident, admins }: { items: EoYear["items"]; showPresident: boolean; admins: Map<string, EoAdmin> }) {
   return (
-    <ol className="m-0 max-h-[32rem] list-none overflow-y-auto p-0">
+    <ol tabIndex={0} aria-label="Executive orders, scrollable" className="touch-scroll relative m-0 max-h-[32rem] list-none overflow-y-auto overscroll-contain p-0">
       {items.map((i) => (
         <li key={i.n} className="grid grid-cols-[3.9rem_1fr] gap-x-3 gap-y-1 border-b border-line px-5 py-2.5 last:border-0 sm:grid-cols-[4.4rem_1fr_auto]">
           <span className="pt-[0.1rem] font-mono text-[0.72rem] text-ink-faint">EO {i.n}</span>

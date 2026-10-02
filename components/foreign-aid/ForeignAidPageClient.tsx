@@ -8,7 +8,6 @@ import { AidStateProvider } from "./ForeignAidState";
 import { FirstPlaceCard } from "./FirstPlaceCard";
 import { MapAndRanked } from "./MapAndRanked";
 import { SpendingCard } from "./SpendingCard";
-import { MethodologyNote } from "@/components/MethodologyNote";
 
 const dateLabel = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
@@ -37,8 +36,7 @@ export function ForeignAidPageClient({ payload, map }: { payload: AidPayload; ma
 
         <FirstPlaceCard />
 
-        <MethodologyNote className="mt-0">
-        <p>
+        <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: ForeignAssistance.gov, disbursements in nominal dollars, data through {dateLabel(payload.dataThrough)}. A fiscal year runs October 1 to
           September 30, and each year is colored by the administration in office for most of it.
           {partial.length > 0 &&
@@ -49,7 +47,6 @@ export function ForeignAidPageClient({ payload, map }: { payload: AidPayload; ma
           programs are listed beneath it. Sudan (former) is drawn on today’s Sudan and South Sudan, and West Bank and Gaza on the Palestine outline.
           Entities with no modern outline, such as Czechoslovakia (former), are counted in totals but not drawn.
         </p>
-        </MethodologyNote>
       </main>
     </AidStateProvider>
   );

@@ -144,7 +144,7 @@ function ScrollRow({ label, children }: { label: string; children: ReactNode }) 
         ref={ref}
         aria-label={label}
         onScroll={measure}
-        className="flex h-12 items-center gap-1 overflow-x-auto border-t border-line bg-surface-raised px-4 py-0.5 md:h-auto md:gap-1.5 md:border-t-0 md:bg-transparent md:p-0"
+        className="flex h-12 items-center gap-1 overflow-x-auto border-t border-line bg-surface-raised px-4 py-0.5 md:h-auto md:gap-1.5 md:border-t-0 md:bg-transparent md:p-1"
       >
         {children}
       </nav>
