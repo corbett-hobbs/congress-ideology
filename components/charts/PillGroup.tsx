@@ -13,7 +13,7 @@ export function PillGroup<T extends string>({
   ariaLabel,
   labelledBy,
 }: {
-  options: readonly { value: T; label: string }[];
+  options: readonly { value: T; label: string; /** Greyed and inert; `title` says why. */ disabled?: boolean; title?: string }[];
   value: T;
   onChange: (v: T) => void;
   ariaLabel?: string;
@@ -32,11 +32,13 @@ export function PillGroup<T extends string>({
           type="button"
           onClick={() => onChange(o.value)}
           aria-pressed={value === o.value}
+          disabled={o.disabled}
+          title={o.title}
           className={`px-2 py-[0.35rem] transition-colors sm:px-[0.85rem] ${
             value === o.value
               ? "bg-accent text-accent-ink"
               : "bg-surface-raised text-ink-muted hover:text-ink"
-          }`}
+          } ${o.disabled ? "cursor-not-allowed opacity-40 hover:text-ink-muted" : ""}`}
         >
           {o.label}
         </button>

@@ -2,16 +2,18 @@
 
 import { ChartCard } from "@/components/charts/ChartCard";
 import { PageHeader } from "@/components/PageHeader";
+import type { WorldMapFile } from "@/lib/foreign-aid-entities";
 import type { AidPayload } from "@/lib/foreign-aid-types";
 import { ForeignAidFilterBar } from "./ForeignAidFilterBar";
 import { AidStateProvider } from "./ForeignAidState";
 import { SelectionReadout } from "./Placeholders";
+import { MapAndRanked } from "./MapAndRanked";
 import { SpendingCard } from "./SpendingCard";
 
 const dateLabel = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
-export function ForeignAidPageClient({ payload }: { payload: AidPayload }) {
+export function ForeignAidPageClient({ payload, map }: { payload: AidPayload; map: WorldMapFile }) {
   const first = payload.years[0];
   const last = payload.years[payload.years.length - 1];
   const partial = payload.partialYears.map((y) => `FY${y}`);
@@ -31,14 +33,7 @@ export function ForeignAidPageClient({ payload }: { payload: AidPayload }) {
 
         <SpendingCard />
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.5fr_1fr] md:items-stretch">
-          <ChartCard title="Where it goes" lede="Each country’s disbursements in the selected fiscal year.">
-            <SelectionReadout what="Map" />
-          </ChartCard>
-          <ChartCard title="Who receives the most" lede="Every recipient country in the selected fiscal year.">
-            <SelectionReadout what="Ranked countries" />
-          </ChartCard>
-        </div>
+        <MapAndRanked map={map} />
 
         <ChartCard title="Who’s been No. 1" lede="The largest recipient country in each fiscal year.">
           <SelectionReadout what="No. 1 strip" />

@@ -2,7 +2,7 @@ import "server-only";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { administration } from "./executive-orders-entities";
-import { aidMeta, aidRow } from "./foreign-aid-entities";
+import { aidMeta, aidRow, worldMapFile, type WorldMapFile } from "./foreign-aid-entities";
 import { buildAidPayload } from "./foreign-aid-derive";
 import type { AidPayload } from "./foreign-aid-types";
 
@@ -25,4 +25,12 @@ export function getAidPayload(): AidPayload {
     (read("administrations.json") as unknown[]).map((r) => administration.parse(r)),
   );
   return cache;
+}
+
+let mapCache: WorldMapFile | null = null;
+
+/** The simplified world outlines (pipeline/transform/world-map.ts), validated at the boundary. */
+export function getWorldMap(): WorldMapFile {
+  if (!mapCache) mapCache = worldMapFile.parse(read("world_map.json"));
+  return mapCache;
 }

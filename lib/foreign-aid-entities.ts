@@ -58,3 +58,24 @@ export const aidMeta = z
 export type AidMeta = z.infer<typeof aidMeta>;
 
 export class AidDataError extends Error {}
+
+/** `pipeline/output/world_map.json` (pipeline/transform/world-map.ts): simplified Natural Earth outlines keyed by `country_key`. */
+export const worldMapFile = z
+  .object({
+    source: z.string(),
+    width: z.number().int().positive(),
+    height: z.number().int().positive(),
+    features: z.array(z.object({ key: z.string().min(1), name: z.string(), d: z.string().min(1) }).strict()).min(1),
+    recipients: z.array(
+      z
+        .object({
+          name: z.string().min(1),
+          paths: z.array(z.string()).min(1),
+          marker: z.object({ x: z.number(), y: z.number() }).strict().nullable(),
+        })
+        .strict(),
+    ),
+    undrawn: z.array(z.string()),
+  })
+  .strict();
+export type WorldMapFile = z.infer<typeof worldMapFile>;

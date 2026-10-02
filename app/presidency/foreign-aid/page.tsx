@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ForeignAidPageClient } from "@/components/foreign-aid/ForeignAidPageClient";
-import { getAidPayload } from "@/lib/foreign-aid-data";
+import { getAidPayload, getWorldMap } from "@/lib/foreign-aid-data";
 import { site } from "@/lib/site";
 
 /** /presidency/foreign-aid — U.S. foreign assistance disbursements by fiscal year, country and sector. */
@@ -17,5 +17,5 @@ export const metadata: Metadata = {
 };
 
 export default function ForeignAidPage() {
-  return <ForeignAidPageClient payload={getAidPayload()} />;
+  return <ForeignAidPageClient payload={getAidPayload()} map={getWorldMap()} />;
 }

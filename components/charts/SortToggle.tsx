@@ -119,7 +119,7 @@ export function ReversibleSortToggle<K extends string>({
   onSelect,
   ariaLabel,
 }: {
-  options: readonly { key: K; label: string; /** Shown as the button's title: what the default order is. */ hint?: string }[];
+  options: readonly { key: K; label: string; /** Shown as the button's title: what the default order is. */ hint?: string; /** Greyed and inert; `hint` should then say why. */ disabled?: boolean }[];
   active: K;
   reversed: boolean;
   onSelect: (key: K) => void;
@@ -135,10 +135,11 @@ export function ReversibleSortToggle<K extends string>({
             type="button"
             onClick={() => onSelect(o.key)}
             aria-pressed={on}
+            disabled={o.disabled}
             title={on ? `${o.hint ? `${o.hint}. ` : ""}Click again to reverse the order` : o.hint}
             className={`flex items-center gap-1 px-2 py-[0.35rem] transition-colors sm:px-[0.85rem] ${
               on ? "bg-accent text-accent-ink" : "bg-surface-raised text-ink-muted hover:text-ink"
-            }`}
+            } ${o.disabled ? "cursor-not-allowed opacity-40 hover:text-ink-muted" : ""}`}
           >
             {o.label}
             {on && (
