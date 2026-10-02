@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useMemo, type ReactNode, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { memo, useEffect, useMemo, useState, type ReactNode, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
@@ -40,7 +40,7 @@ interface Props {
   showCong: boolean;
   view: readonly [number, number];
   ariaLabel: string;
-  /** Drawn directly under the chart, above the numbered key on narrow screens. */
+  /** Drawn directly under the chart. */
   legend?: ReactNode;
 }
 
@@ -79,7 +79,7 @@ function useFlagInputs(flags: readonly TariffFlag[]): FlagInput[] {
 interface StaticProps extends Props {
   W: number;
   flagInputs: readonly FlagInput[];
-  onFlag: (ids: string[], e: ReactPointerEvent) => void;
+  onFlag: (ids: string[], e: ReactPointerEvent | ReactMouseEvent, numbered: boolean, click?: boolean) => void;
   onFlagLeave: () => void;
 }
 
@@ -149,14 +149,18 @@ const StaticLayer = memo(function StaticLayer({ main, reference, scale, era, sho
         return (
           <g
             key={p.ids.join("+")}
-            className="cursor-default"
-            onPointerEnter={(e) => onFlag(p.ids, e)}
+            data-flag-hit
+            className={p.number !== null ? "cursor-pointer" : "cursor-default"}
+            onPointerEnter={(e) => e.pointerType === "mouse" && onFlag(p.ids, e, p.number !== null)}
             onPointerMove={(e) => {
               e.stopPropagation();
-              onFlag(p.ids, e);
+              if (e.pointerType === "mouse") onFlag(p.ids, e, p.number !== null);
             }}
             onPointerLeave={onFlagLeave}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (p.number !== null) onFlag(p.ids, e, true, true);
+            }}
           >
             <line x1={p.x} x2={p.x} y1={labelY + 3} y2={axisY} stroke="var(--accent)" strokeWidth={p.priority === 1 ? 1.4 : 1} strokeDasharray={p.priority === 1 ? undefined : "3 3"} opacity={p.priority === 1 ? 0.9 : 0.65} />
             {p.number !== null ? (
@@ -207,6 +211,32 @@ export function TradeTariffChart(props: Props) {
   const { moveHover, leaveHover, pinDay } = useTradeActions();
   const tip = useTooltip<number>();
   const flagTip = useTooltip<string[]>();
+  // A numbered flag opened by tap or click stays up until the next tap elsewhere, Esc, or scroll.
+  const [pinned, setPinned] = useState(false);
+  const unpin = () => {
+    setPinned(false);
+    flagTip.hide();
+  };
+  const { hide: hideFlagTip } = flagTip;
+  useEffect(() => {
+    if (!pinned) return;
+    const close = () => {
+      setPinned(false);
+      hideFlagTip();
+    };
+    const onDown = (e: PointerEvent) => {
+      if (!(e.target instanceof Element) || !e.target.closest("[data-flag-hit]")) close();
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("scroll", close, { passive: true, capture: true });
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("scroll", close, true);
+    };
+  }, [pinned, hideFlagTip]);
   const byId = useMemo(() => new Map(flags.map((f) => [f.id, f])), [flags]);
 
   const dayAt = (e: ReactPointerEvent<SVGSVGElement> | ReactMouseEvent<SVGSVGElement>): number | null => {
@@ -237,14 +267,16 @@ export function TradeTariffChart(props: Props) {
             tip.hide();
           } else {
             moveHover(d);
-            tip.show(d, e);
-            flagTip.hide();
+            if (!pinned) {
+              tip.show(d, e);
+              flagTip.hide();
+            }
           }
         }}
         onPointerLeave={() => {
           leaveHover();
           tip.hide();
-          flagTip.hide();
+          if (!pinned) flagTip.hide();
         }}
         onClick={(e) => {
           const d = dayAt(e);
@@ -253,24 +285,20 @@ export function TradeTariffChart(props: Props) {
       >
         {() => (
           <>
-            <StaticLayer {...props} W={W} flagInputs={flagInputs} onFlag={(ids, e) => { tip.hide(); flagTip.show(ids, e); }} onFlagLeave={flagTip.hide} />
+            <StaticLayer {...props} W={W} flagInputs={flagInputs} onFlag={(ids, e, _numbered, click) => {
+              tip.hide();
+              if (click) {
+                if (pinned && flagTip.state?.data.join() === ids.join()) return unpin();
+                setPinned(true);
+              } else if (pinned) return;
+              flagTip.show(ids, e);
+            }} onFlagLeave={() => !pinned && flagTip.hide()} />
             <Overlay W={W} main={main} scale={scale} view={view} showCong={showCong} flagInputs={flagInputs} era={era} />
           </>
         )}
       </ChartFrame>
 
       {legend}
-
-      {g.compact && g.placed.length > 0 && (
-        <ol className="m-0 mt-3 list-none space-y-1 p-0 text-[0.75rem] leading-snug text-ink-muted">
-          {g.placed.map((p) => (
-            <li key={p.ids.join("+")} className="flex items-start gap-2">
-              <span className="mt-px inline-flex size-4 flex-none items-center justify-center rounded-full bg-accent text-[0.6rem] font-semibold text-accent-ink">{p.number}</span>
-              <span>{p.text}</span>
-            </li>
-          ))}
-        </ol>
-      )}
 
       <Tooltip state={tip.state}>
         {(day) => {
