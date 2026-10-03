@@ -83,14 +83,11 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
   const visible = terms.map((t) => ({ t, s: Math.max(t.fromFy, range[0]), e: Math.min(t.toFy, range[1]) })).filter((o) => o.s <= o.e);
   // Peak and low fiscal year of the drawn totals, labelled above their bars (the same idea as the
   // line charts and the executive-orders bars). Complete years only: a partial year is always low.
-  // A filtered chart (one country or one sector) carries no labels.
-  const marks =
-    country < 0 && sector < 0
-      ? (() => {
-          const { peak, low } = findExtremes(rows.map((r, i) => ({ day: i, value: isPartial(r.fy) ? null : r.drawn })));
-          return [peak, low].flatMap((p) => (p && p.day !== si ? [{ i: p.day, text: `FY${rows[p.day].fy}: ${formatAidMoney(rows[p.day].drawn)}` }] : []));
-        })()
-      : [];
+  // `rows` already carry the Country and Sector filters, so the labels are recalculated for what is drawn.
+  const marks = (() => {
+    const { peak, low } = findExtremes(rows.map((r, i) => ({ day: i, value: isPartial(r.fy) || r.drawn <= 0 ? null : r.drawn })));
+    return [peak, low].flatMap((p) => (p && p.day !== si ? [{ i: p.day, text: `FY${rows[p.day].fy}: ${formatAidMoney(rows[p.day].drawn)}` }] : []));
+  })();
   const chipLabel = `FY${year}${isPartial(year) ? " · partial" : ""}`;
   const chipW = chipLabel.length * 6.6;
 

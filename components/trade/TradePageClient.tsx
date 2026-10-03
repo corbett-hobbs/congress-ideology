@@ -78,8 +78,8 @@ function TradePage({ data }: { data: TradePageData }) {
   const yearPayload = years[v.year] ?? null;
   if (yearPayload && yearPayload !== lastShown) setLastShown(yearPayload);
 
-  // The scatter labels the five biggest partners by total trade in the latest year.
-  const topCodes = useMemo(() => topByTotal(initialYear.partners, 12), [initialYear]);
+  // The scatter labels the biggest partners by total trade in the latest year; it takes the first few that survive its continent filter, so the whole ranking goes down.
+  const topCodes = useMemo(() => topByTotal(initialYear.partners, initialYear.partners.length), [initialYear]);
 
   const countryRef = v.country ? countries.find((c) => c.code === v.country) ?? null : null;
   const payload = v.country ? loaded[v.country] : undefined;
