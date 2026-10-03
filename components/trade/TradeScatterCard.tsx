@@ -33,6 +33,8 @@ const FALLBACK_W = 1080;
 /** Below this chart width the layout drops long titles and labels (a half-width card on a laptop stays above it). */
 const COMPACT_W = 440;
 const LABEL_COUNT = 5;
+/** Phones: fewer, smaller labels. */
+const COMPACT_LABEL_COUNT = 3;
 const MAX_ZOOM = 12;
 const contFill = (code: string) => `var(--cont-${continentOf(code)})`;
 
@@ -171,11 +173,10 @@ export function TradeScatterCard({
   // The five biggest partners by total trade get a name beside their dot. A label that would run off
   // the right edge flips to the dot's left; one that still collides with a kept label is dropped.
   const labels = useMemo(() => {
-    if (compact) return [];
     const byCode = new Map(dots.map((d) => [d.row.code, d]));
-    const biggest = topCodes.flatMap((c) => (byCode.has(c) ? [byCode.get(c)!] : [])).slice(0, LABEL_COUNT);
+    const biggest = topCodes.flatMap((c) => (byCode.has(c) ? [byCode.get(c)!] : [])).slice(0, compact ? COMPACT_LABEL_COUNT : LABEL_COUNT);
     const placed = biggest.map((c) => {
-      const width = c.row.name.length * 7.4 + 6;
+      const width = c.row.name.length * (compact ? 6.4 : 7.4) + 6;
       const flip = x(c.d.x) + 8 + width > pw;
       const left = flip ? x(c.d.x) - 8 - width : x(c.d.x) + 8;
       return { c, flip, box: { id: c.row.code, x: left, y: y(c.d.yPct) - 7, width, height: 15 } };
@@ -309,7 +310,7 @@ export function TradeScatterCard({
                 return <circle key={c.row.code} cx={cx} cy={cy} r={sel ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} fill={fill} {...common} />;
               })}
               {labels.map((l) => (
-                <text key={l.code} x={l.x} y={l.y} textAnchor={l.flip ? "end" : "start"} className="dot-label" style={{ fill: "var(--ink)", fontSize: 13, paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 4 }}>{l.name}</text>
+                <text key={l.code} x={l.x} y={l.y} textAnchor={l.flip ? "end" : "start"} className="dot-label" style={{ fill: "var(--ink)", fontSize: compact ? 11 : 13, paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 4 }}>{l.name}</text>
               ))}
               </g>
             </>
