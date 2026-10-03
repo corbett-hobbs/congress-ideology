@@ -135,7 +135,7 @@ export function SwarmRows<TP>({
                   scale={x}
                   orientation="bottom"
                   ticks={ticks}
-                  offset={-14}
+                  offset={-20}
                   gridExtent={-(plotH + 20)}
                   zeroAt={0}
                   format={formatTick}
