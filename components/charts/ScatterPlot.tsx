@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, type ReactNode } from "react";
+import { useId, useMemo, useRef, type ReactNode } from "react";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame, DEFAULT_MARGIN, type Margin } from "./ChartFrame";
 import { Axis } from "./Axis";
-import { Tooltip, useTooltip } from "./Tooltip";
+import { Tooltip, usePinnedTooltip, useTooltip } from "./Tooltip";
 import { useZoomPan, viewDomains } from "./use-zoom-pan";
 import { ZoomControls } from "./ZoomControls";
 
@@ -124,23 +124,8 @@ export function ScatterPlot<T>({
 }: ScatterPlotProps<T>) {
   const tip = useTooltip<T>();
   // A click on a dot pins its card (it no longer navigates); the card is then the link: clicking it calls `onSelect`.
-  const pin = useTooltip<T>();
+  const pin = usePinnedTooltip<T>();
   const pinned = pin.state != null;
-  useEffect(() => {
-    if (!pinned) return;
-    const away = (e: PointerEvent) => {
-      const el = e.target as Element | null;
-      if (el?.closest("[data-pinned-tooltip]") || el?.closest(".dot")) return;
-      pin.hide();
-    };
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && pin.hide();
-    document.addEventListener("pointerdown", away);
-    document.addEventListener("keydown", esc);
-    return () => {
-      document.removeEventListener("pointerdown", away);
-      document.removeEventListener("keydown", esc);
-    };
-  }, [pinned, pin]);
   const svgRef = useRef<SVGSVGElement>(null);
   const extent = domain[1];
   const mergedMargin: Margin = { ...DEFAULT_MARGIN, ...margin };

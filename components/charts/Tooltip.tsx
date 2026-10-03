@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 interface TooltipState<T> {
@@ -30,6 +30,33 @@ export function useTooltip<T>() {
   const hide = useCallback(() => setState(null), []);
 
   return { state, show, move, hide };
+}
+
+/**
+ * The pinned card of a scatter dot: `show` pins it at the click, `hide` unpins. It dismisses itself on a press anywhere
+ * that is not the card or a dot (`.dot`), and on Esc. Pair it with `<Tooltip onActivate>`; the scatter rule is that a
+ * click on a dot pins its card and the card is the link or action, never the dot.
+ */
+export function usePinnedTooltip<T>() {
+  const pin = useTooltip<T>();
+  const pinned = pin.state != null;
+  const { hide } = pin;
+  useEffect(() => {
+    if (!pinned) return;
+    const away = (e: PointerEvent) => {
+      const el = e.target as Element | null;
+      if (el?.closest("[data-pinned-tooltip]") || el?.closest(".dot")) return;
+      hide();
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && hide();
+    document.addEventListener("pointerdown", away);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("pointerdown", away);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [pinned, hide]);
+  return pin;
 }
 
 interface TooltipProps<T> {
