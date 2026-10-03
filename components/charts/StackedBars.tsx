@@ -85,16 +85,31 @@ export function StackedBars<C extends StackColumn>({
   const tip = useTooltip<C>();
 
   const maxTotal = useMemo(() => Math.max(1, ...columns.map((c) => c.total)), [columns]);
-  // Peak and low column totals, in Count mode only: Share totals are all 100%, and once a topic is
-  // picked the labels would sit on the wrong bars, so a filtered chart carries none. Follows the
-  // window, since `columns` is already sliced to it.
+  // Peak and low, recalculated for what is on screen: every column's total, or, with a topic picked,
+  // that topic's own count (its share of the year in Share mode) over the window. `top` is where the
+  // label sits, in y-domain units: the top of the bar, or of the topic's segment when filtered.
+  // Share totals are all 100%, so with no topic picked there is nothing to mark.
+  // `columns` is already windowed.
   const marks = useMemo(() => {
-    if (mode === "share" || highlight) return [];
-    const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: c.total })));
+    if (mode === "share" && !highlight) return [];
+    const denomOf = (c: C) => (mode === "share" ? c.total || 1 : 1);
+    const val = (c: C) => (highlight ? (c.values[highlight] ?? 0) / denomOf(c) : c.total);
+    const topOf = (c: C) => {
+      if (!highlight) return mode === "share" ? 1 : c.total;
+      let acc = 0;
+      for (const s of series) {
+        acc += c.values[s.id] ?? 0;
+        if (s.id === highlight) break;
+      }
+      return acc / denomOf(c);
+    };
+    const fmt = (v: number) => (mode === "share" ? `${Math.round(v * 100)}%` : String(v));
+    // A topic with no orders in a year has no bar to label: its low is the smallest year that has some.
+    const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: highlight && val(c) === 0 ? null : val(c) })));
     return [peak, low].flatMap((p, k) =>
-      p ? [{ i: p.day, kind: k === 0 ? ("peak" as const) : ("low" as const), text: `${columns[p.day].label}: ${p.value}` }] : [],
+      p ? [{ i: p.day, kind: k === 0 ? ("peak" as const) : ("low" as const), text: `${columns[p.day].label}: ${fmt(p.value as number)}`, top: topOf(columns[p.day]) }] : [],
     );
-  }, [columns, mode, highlight]);
+  }, [columns, series, mode, highlight]);
   const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 ? BAND_H + 6 : 0) };
 
   return (
@@ -209,20 +224,18 @@ export function StackedBars<C extends StackColumn>({
               {/* Peak and low, labelled above their bars; they fade while a column is hovered or picked. */}
               <g pointerEvents="none" opacity={tip.state || selectedKey ? 0.25 : 1} style={{ transition: "opacity .12s" }}>
                 {marks.map((m, k) => {
-                  const col = columns[m.i];
                   const w = m.text.length * MARK_CHAR_W;
                   const clampX = (x: number) => Math.min(Math.max(x, w / 2 + 2), innerWidth - w / 2 - 2);
                   const cx0 = clampX(xOf(m.i) + step / 2);
                   const first = marks[0];
                   const peakCx = clampX(xOf(first.i) + step / 2);
                   // The low label slides to the far side of its own bar when it would land on the peak's (close in both x and height).
-                  const peakTop = mode === "share" ? y(1) : y(columns[first.i].total);
-                  const clash = k === 1 && Math.abs(cx0 - peakCx) < w && Math.abs((mode === "share" ? y(1) : y(col.total)) - peakTop) < 14;
+                  const peakTop = y(first.top);
+                  const clash = k === 1 && Math.abs(cx0 - peakCx) < w && Math.abs(y(m.top) - peakTop) < 14;
                   const anchor = clash ? (m.i < first.i ? "end" : "start") : "middle";
                   const cx = clash ? xOf(m.i) + step / 2 + (anchor === "end" ? 6 : -6) : cx0;
                   if (clash && (anchor === "end" ? cx > peakCx - w / 2 - 4 : cx < peakCx + w / 2 + 4)) return null;
-                  // Count mode sits above the bar; Share mode (every bar full height) above the plot's top edge.
-                  const topY = mode === "share" ? y(1) : y(col.total);
+                  const topY = y(m.top);
                   return (
                     <text key={m.kind} x={cx} y={topY - 6} textAnchor={anchor} className="fill-ink text-[11px] font-medium" style={MARK_HALO}>
                       {m.text}

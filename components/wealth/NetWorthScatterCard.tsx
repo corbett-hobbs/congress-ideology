@@ -15,7 +15,7 @@ import { chamberLabel, type ChamberView } from "@/lib/chamber";
 import { stateName } from "@/lib/states";
 import { median, wealthCohort, type WealthMember } from "@/lib/wealth-derive";
 import {
-  NET_WORTH_CAP,
+  scatterCap,
   clampNetWorth,
   firstNetWorth,
   isClipped,
@@ -36,12 +36,11 @@ import {
   WealthMemberTooltip,
 } from "./WealthMemberTooltip";
 
-const T_MAX = signedLog(NET_WORTH_CAP);
 const TICKS_DESKTOP = [
-  -20_000_000, -5_000_000, -1_000_000, -100_000, 0, 100_000, 1_000_000, 5_000_000,
-  20_000_000,
+  -20_000_000, -5_000_000, -1_000_000, 0, 1_000_000, 5_000_000,
+  20_000_000, 100_000_000, 500_000_000, 1_000_000_000, 2_000_000_000,
 ];
-const TICKS_COMPACT = [-20_000_000, -1_000_000, 0, 1_000_000, 20_000_000];
+const TICKS_COMPACT = [-20_000_000, -1_000_000, 0, 1_000_000, 20_000_000, 1_000_000_000];
 const MAX_SIDE = 560;
 const FALLBACK_W = 1080;
 /** Below this card width the chart drops the standout labels and long axis
@@ -84,6 +83,10 @@ interface Props {
 
 export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props) {
   const cohort = useMemo(() => wealthCohort(chamberMembers), [chamberMembers]);
+  // The axes run out to the cohort's largest net worth (a round step, never below $20M), so the top movers are
+  // plotted where they are instead of pinned to an edge.
+  const cap = useMemo(() => scatterCap(Math.max(0, ...cohort.flatMap((m) => [Math.abs(firstNetWorth(m)), Math.abs(latestNetWorth(m))]))), [cohort]);
+  const T_MAX = signedLog(cap);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
@@ -141,8 +144,8 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
   /** Plot-area px of a member's dot under an arbitrary view. */
   function pointUnder(member: WealthMember, v: ZoomView): { cx: number; cy: number } {
     const d = viewDomains(v, T_MAX);
-    const tx = signedLog(clampNetWorth(firstNetWorth(member)));
-    const ty = signedLog(clampNetWorth(latestNetWorth(member)));
+    const tx = signedLog(clampNetWorth(firstNetWorth(member), cap));
+    const ty = signedLog(clampNetWorth(latestNetWorth(member), cap));
     return {
       cx: ((tx - d.x[0]) / (d.x[1] - d.x[0])) * side,
       cy: side - ((ty - d.y[0]) / (d.y[1] - d.y[0])) * side,
@@ -166,9 +169,9 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         member,
         // Rounded: avoids a float-precision SSR/client hydration mismatch on
         // the same logical value (sub-pixel, invisible either way).
-        cx: Math.round(x(signedLog(clampNetWorth(firstNetWorth(member)))) * 100) / 100,
-        cy: Math.round(y(signedLog(clampNetWorth(latestNetWorth(member)))) * 100) / 100,
-        clipped: isClipped(member),
+        cx: Math.round(x(signedLog(clampNetWorth(firstNetWorth(member), cap))) * 100) / 100,
+        cy: Math.round(y(signedLog(clampNetWorth(latestNetWorth(member), cap))) * 100) / 100,
+        clipped: isClipped(member, cap),
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cohort, side, zoom.view],
@@ -236,8 +239,8 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     const slack = T_MAX - T_MAX / k;
     const clamp = (v: number) => Math.min(slack, Math.max(-slack, v));
     return {
-      cx: clamp(signedLog(clampNetWorth(firstNetWorth(member)))),
-      cy: clamp(signedLog(clampNetWorth(latestNetWorth(member)))),
+      cx: clamp(signedLog(clampNetWorth(firstNetWorth(member), cap))),
+      cy: clamp(signedLog(clampNetWorth(latestNetWorth(member), cap))),
     };
   }
 
@@ -262,8 +265,8 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     let at = pointUnder(member, zoom.view);
     if (!onPlot(at)) {
       zoom.centerOn(
-        signedLog(clampNetWorth(firstNetWorth(member))),
-        signedLog(clampNetWorth(latestNetWorth(member))),
+        signedLog(clampNetWorth(firstNetWorth(member), cap)),
+        signedLog(clampNetWorth(latestNetWorth(member), cap)),
       );
       at = pointUnder(member, {
         ...zoom.view,
@@ -274,15 +277,15 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
   }
 
   const chamberNoun = wealthCountNoun(view);
-  const capLabel = formatCompactUSD(NET_WORTH_CAP);
-  const ariaSummary = `Scatter plot of net worth at each member's first usable filing (horizontal axis) against net worth at their latest usable filing (vertical axis), for ${cohort.length} ${chamberNoun} with 2 or more years of data. Both axes use the same signed-log scale, capped at plus or minus ${NET_WORTH_CAP / 1_000_000} million dollars; members beyond the cap are drawn as diamonds at the edge. The diagonal is no change: points above it grew, points below it shrank. Median change ${
+  const capLabel = formatCompactUSD(cap);
+  const ariaSummary = `Scatter plot of net worth at each member's first usable filing (horizontal axis) against net worth at their latest usable filing (vertical axis), for ${cohort.length} ${chamberNoun} with 2 or more years of data. Both axes use the same signed-log scale, running out to plus or minus ${capLabel}, which holds every member. The diagonal is no change: points above it grew, points below it shrank. Median change ${
     medianChange != null ? formatSignedCompactUSD(medianChange) : "unavailable"
   }.`;
 
   // Zoomed, each axis has its own window (panning is independent per axis).
-  const fixedTicks = compact ? TICKS_COMPACT : TICKS_DESKTOP;
-  const xTickT = (zoomed ? zoomTicks(visible.x, side) : fixedTicks).map(signedLog);
-  const yTickT = (zoomed ? zoomTicks(visible.y, side) : fixedTicks).map(signedLog);
+  const fixedTicks = (compact ? TICKS_COMPACT : TICKS_DESKTOP).filter((t) => Math.abs(t) <= cap);
+  const xTickT = (zoomed ? zoomTicks(visible.x, side, undefined, cap) : fixedTicks).map(signedLog);
+  const yTickT = (zoomed ? zoomTicks(visible.y, side, undefined, cap) : fixedTicks).map(signedLog);
 
   const stats = [
     { value: `${growPct}%`, label: "grew" },
@@ -541,7 +544,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
           className=""
           style={{ left: left + 6, top: margin.top + 6 }}
         />
-        <Tooltip state={tip.state}>{(m) => <WealthMemberTooltip member={m} />}</Tooltip>
+        <Tooltip state={tip.state}>{(m) => <WealthMemberTooltip member={m} cap={cap} />}</Tooltip>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[0.72rem] text-ink-muted">
@@ -553,19 +556,12 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
           </svg>
           No change
         </span>
-        <span className="flex items-center gap-1.5">
-          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className="flex-none">
-            <polygon points="6,0.5 11.5,6 6,11.5 0.5,6" fill="var(--ink-faint)" />
-          </svg>
-          Beyond ±{capLabel}, drawn at the edge
-        </span>
       </div>
 
       <p className="mt-3 text-[0.72rem] leading-relaxed text-ink-faint">
         Years are the year each report covers, not the year it was filed. Both axes use the
-        same signed-log scale, capped at ±{capLabel} so a handful of very large estimates
-        don’t compress everyone else near zero; points beyond the cap are drawn as diamonds
-        at the edge, with the true value in the label and hover card. Zoom with the +/− buttons,
+        same signed-log scale, running out to ±{capLabel}, enough to hold the largest estimate in this group, so the top movers
+        are plotted where they are (the spread near zero is tighter as a result: zoom in on it). Zoom with the +/− buttons,
         Ctrl/⌘ + scroll or a pinch, and drag to pan. Pick a state to highlight its members. Pick a member in the search to see their filings; members
         with missing early years get a note there. Estimates for members reporting an
         open-ended “Over $50,000,000” band are approximate and marked with a +.
