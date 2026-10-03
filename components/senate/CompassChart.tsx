@@ -147,6 +147,7 @@ export function CompassChart({
       onHover={onHover}
       onSelect={onSelect}
       isSelectable={(m) => hasProfilePage(m)}
+      selectHint="Open profile →"
       renderTooltip={(m) => <MemberTooltip member={m} />}
       labels={labels}
       zoomable

@@ -8,7 +8,7 @@ import { ChartFrame } from "@/components/charts/ChartFrame";
 import { useZoomPan, viewDomains } from "@/components/charts/use-zoom-pan";
 import { ZoomControls } from "@/components/charts/ZoomControls";
 import { CONTINENTS, continentOf } from "@/lib/trade-continents";
-import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import { Tooltip, usePinnedTooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { MONTH_NAMES } from "@/lib/indicator-time";
@@ -113,6 +113,8 @@ export function TradeScatterCard({
   /** Legend filter: one continent, or null for all. */
   const [continent, setContinent] = useState<string | null>(null);
   const tip = useTooltip<Dot>();
+  // Scatter rule: a click on a dot pins its card, and the card is the action (here: pick the country above).
+  const pin = usePinnedTooltip<Dot>();
   const W = measured || FALLBACK_W;
   const compact = W < COMPACT_W;
   // Tap behaviour follows the device, not the width: a narrow card on a laptop still hovers.
@@ -291,7 +293,12 @@ export function TradeScatterCard({
                   onPointerEnter: tapMode ? undefined : (e: React.PointerEvent) => tip.show(c, e),
                   onPointerMove: tapMode ? undefined : tip.move,
                   onPointerLeave: tapMode ? undefined : tip.hide,
-                  onClick: () => (tapMode ? setTapped(c.row.code) : onPickCountry(sel ? null : c.row.code)),
+                  onClick: (e: React.MouseEvent) => {
+                    if (tapMode) return setTapped(c.row.code);
+                    tip.hide();
+                    if (pin.state?.data.row.code === c.row.code) pin.hide();
+                    else pin.show(c, e);
+                  },
                   style: { cursor: "pointer" } as const,
                 };
                 if (c.d.pinned) {
@@ -325,7 +332,25 @@ export function TradeScatterCard({
           className=""
           style={{ right: margin.right + 6, top: margin.top + 6 }}
         />
-        <Tooltip state={tip.state}>
+        <Tooltip state={pin.state ? null : tip.state}>
+          {({ row, d }) => (
+            <div className="flex min-w-[10rem] flex-col gap-0.5 text-[0.78rem]">
+              <div className="font-medium">{row.name}</div>
+              <div>Duty rate <span className="font-mono">{pctRate(row.baseRate)} → {pctRate(row.latestRate)}</span></div>
+              <div>Change <span className="font-mono">{fmtPp(row.rateChangePp as number)}</span></div>
+              <div>Imports <span className="font-mono">{fmtPct((row.importsChange as number) * 100)}</span>{d.pinned ? <span className="opacity-75"> (pinned to the edge)</span> : null}</div>
+              <div className="opacity-75">{fmtMoney(row.baseImports / 1e6)} → {fmtMoney(row.latestImports / 1e6)} imports for consumption</div>
+            </div>
+          )}
+        </Tooltip>
+        <Tooltip
+          state={pin.state}
+          onActivate={(dot) => {
+            onPickCountry(dot.row.code === country ? null : dot.row.code);
+            pin.hide();
+          }}
+          activateHint="Show in the charts above →"
+        >
           {({ row, d }) => (
             <div className="flex min-w-[10rem] flex-col gap-0.5 text-[0.78rem]">
               <div className="font-medium">{row.name}</div>

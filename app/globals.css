@@ -456,6 +456,21 @@ body {
   max-width: 15rem;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
+/* A tooltip pinned to a dot: it takes the pointer so the whole card can be clicked through to the profile. */
+.chart-tooltip.is-pinned {
+  pointer-events: auto;
+  cursor: pointer;
+  outline-offset: 2px;
+}
+.chart-tooltip.is-pinned:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28), 0 0 0 2px var(--accent);
+}
+.chart-tooltip .tt-hint {
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
 .chart-tooltip .tt-mono {
   font-family: var(--font-mono);
   font-size: 0.72rem;

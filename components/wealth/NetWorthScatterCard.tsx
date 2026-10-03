@@ -1,8 +1,9 @@
 "use client";
 
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { useZoomPan, viewDomains, type ZoomView } from "@/components/charts/use-zoom-pan";
@@ -10,7 +11,7 @@ import { ZoomControls } from "@/components/charts/ZoomControls";
 import { Axis } from "@/components/charts/Axis";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
-import { hasProfilePage, memberPath } from "@/lib/member-url";
+import { memberPath } from "@/lib/member-url";
 import { chamberLabel, type ChamberView } from "@/lib/chamber";
 import { stateName } from "@/lib/states";
 import { median, wealthCohort, type WealthMember } from "@/lib/wealth-derive";
@@ -94,6 +95,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
   const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
   const svgRef = useRef<SVGSVGElement>(null);
   const tip = useTooltip<WealthMember>();
+  const router = useRouter();
 
   const W = measuredW || FALLBACK_W;
   const compact = W < COMPACT_W;
@@ -265,6 +267,15 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     tip.hide();
   }
 
+  // Esc unpins the card.
+  useEffect(() => {
+    if (!selectedId) return;
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && clearSelection();
+    document.addEventListener("keydown", esc);
+    return () => document.removeEventListener("keydown", esc);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
+
   // Selection, not navigation: rings the dot and opens its hover card in place.
   function selectMember(member: WealthMember) {
     setQuery("");
@@ -421,6 +432,9 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
             setHoverId(null);
             if (!selectedId) tip.hide();
           }}
+          onClick={(e) => {
+            if (selectedId && !(e.target as Element).closest(".dot")) clearSelection();
+          }}
         >
           {() => (
             <>
@@ -491,7 +505,6 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
                   const r = ringed ? 7 : matches ? 5.6 : dimmed ? 3.6 : 4.4;
                   const cls = `dot ${d.member.caucus === "Democrat" ? "fill-dem" : "fill-rep"}${ringed ? " is-highlighted" : ""}`;
                   const opacity = dimmed ? 0.28 : 1;
-                  const linkable = hasProfilePage({ isCurrent: true });
                   const label = `${d.member.name} (${partyLetter(d.member)}), ${memberTitleLine(d.member)}: ${formatPointUSD(d.member.points[0])} to ${formatPointUSD(d.member.points[d.member.points.length - 1])}`;
                   const shape = d.clipped ? (
                     <polygon
@@ -502,10 +515,11 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
                   ) : (
                     <circle cx={d.cx} cy={d.cy} r={r} opacity={opacity} className={cls} />
                   );
+                  // A click pins the dot's card (it no longer navigates): the card is the link to the profile.
                   const handlers = {
                     onPointerEnter: () => {
                       setHoverId(id);
-                      tip.show(d.member, svgPoint(d.cx, d.cy));
+                      if (!selectedId) tip.show(d.member, svgPoint(d.cx, d.cy));
                     },
                     onPointerLeave: () => {
                       setHoverId(null);
@@ -514,19 +528,17 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
                         if (sel && onPlot(sel)) tip.show(sel.member, svgPoint(sel.cx, sel.cy));
                       } else if (!selectedId) tip.hide();
                     },
+                    onClick: () => (selectedId === id ? clearSelection() : selectMember(d.member)),
+                    onKeyDown: (e: React.KeyboardEvent) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        if (selectedId === id) clearSelection();
+                        else selectMember(d.member);
+                      }
+                    },
                   };
-                  return linkable ? (
-                    <Link
-                      key={id}
-                      href={memberPath(d.member)}
-                      aria-label={label}
-                      tabIndex={-1}
-                      {...handlers}
-                    >
-                      {shape}
-                    </Link>
-                  ) : (
-                    <g key={id} role="img" aria-label={label} {...handlers}>
+                  return (
+                    <g key={id} role="button" tabIndex={0} aria-label={label} aria-pressed={id === selectedId} style={{ cursor: "pointer", outline: "none" }} {...handlers}>
                       {shape}
                     </g>
                   );
@@ -559,7 +571,13 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
           className=""
           style={{ left: left + 6, top: margin.top + 6 }}
         />
-        <Tooltip state={tip.state}>{(m) => <WealthMemberTooltip member={m} cap={cap} />}</Tooltip>
+        <Tooltip
+          state={tip.state}
+          onActivate={tip.state && tip.state.data.bioguideId === selectedId ? (m) => router.push(memberPath(m)) : undefined}
+          activateHint="Open profile →"
+        >
+          {(m) => <WealthMemberTooltip member={m} cap={cap} />}
+        </Tooltip>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[0.72rem] text-ink-muted">

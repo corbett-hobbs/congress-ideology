@@ -4,7 +4,7 @@ import { useId, useMemo, useRef, type ReactNode } from "react";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame, DEFAULT_MARGIN, type Margin } from "./ChartFrame";
 import { Axis } from "./Axis";
-import { Tooltip, useTooltip } from "./Tooltip";
+import { Tooltip, usePinnedTooltip, useTooltip } from "./Tooltip";
 import { useZoomPan, viewDomains } from "./use-zoom-pan";
 import { ZoomControls } from "./ZoomControls";
 
@@ -76,6 +76,8 @@ interface ScatterPlotProps<T> {
 
   onHover?: (d: T | null) => void;
   onSelect?: (d: T) => void;
+  /** Words on the pinned card's action line, e.g. "Open profile →". */
+  selectHint?: string;
   /** Gate click-to-select per datum (default: selectable whenever onSelect is set). */
   isSelectable?: (d: T) => boolean;
   renderTooltip: (d: T) => ReactNode;
@@ -114,12 +116,16 @@ export function ScatterPlot<T>({
   onHover,
   onSelect,
   isSelectable,
+  selectHint = "Open page →",
   renderTooltip,
   labels,
   backdrop,
   zoomable = false,
 }: ScatterPlotProps<T>) {
   const tip = useTooltip<T>();
+  // A click on a dot pins its card (it no longer navigates); the card is then the link: clicking it calls `onSelect`.
+  const pin = usePinnedTooltip<T>();
+  const pinned = pin.state != null;
   const svgRef = useRef<SVGSVGElement>(null);
   const extent = domain[1];
   const mergedMargin: Margin = { ...DEFAULT_MARGIN, ...margin };
@@ -261,7 +267,16 @@ export function ScatterPlot<T>({
                         onHover?.(null);
                         tip.hide();
                       }}
-                      onClick={selectable ? () => onSelect!(d) : undefined}
+                      onClick={
+                        selectable
+                          ? (e) => {
+                              const same = pin.state?.data === d;
+                              tip.hide();
+                              if (same) pin.hide();
+                              else pin.show(d, e);
+                            }
+                          : undefined
+                      }
                       style={selectable ? { cursor: "pointer" } : undefined}
                     />
                   );
@@ -310,7 +325,10 @@ export function ScatterPlot<T>({
       ) : (
         chart
       )}
-      <Tooltip state={tip.state}>{(d) => renderTooltip(d)}</Tooltip>
+      <Tooltip state={pinned ? null : tip.state}>{(d) => renderTooltip(d)}</Tooltip>
+      <Tooltip state={pin.state} onActivate={onSelect ? (d) => onSelect(d) : undefined} activateHint={selectHint}>
+        {(d) => renderTooltip(d)}
+      </Tooltip>
     </>
   );
 }
