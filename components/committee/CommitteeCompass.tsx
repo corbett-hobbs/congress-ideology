@@ -135,6 +135,7 @@ export function CommitteeCompass({
       dimUnfocused={dimUnfocused}
       onHover={onHover}
       onSelect={(c) => router.push(committeePath(c))}
+      selectHint="Open committee →"
       renderTooltip={(c) => <CommitteeDotTooltip committee={c} />}
       labels={labels}
       backdrop={backdropPoints}
