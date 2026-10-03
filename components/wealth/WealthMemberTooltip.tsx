@@ -23,14 +23,14 @@ export function formatPointUSD(point: WealthYearPoint): string {
 /** The scatter's hover/search card — one cohort member's before/after
  *  summary, plus amber notes for a data gap and/or a clipped point. Values
  *  are always the true (unclamped) dollars. */
-export function WealthMemberTooltip({ member }: { member: WealthMember }) {
+export function WealthMemberTooltip({ member, cap = NET_WORTH_CAP }: { member: WealthMember; cap?: number }) {
   const first = member.points[0];
   const last = member.points[member.points.length - 1];
   const years = yearsOfData(member);
   const rate = annualizedRate(member);
   const change = netWorthChange(member);
   const gapped = hasDataGap(member);
-  const clipped = isClipped(member);
+  const clipped = isClipped(member, cap);
 
   return (
     <div>
@@ -58,7 +58,7 @@ export function WealthMemberTooltip({ member }: { member: WealthMember }) {
       )}
       {clipped && (
         <p className="mt-1 text-note">
-          One or both values are beyond ±{formatCompactUSD(NET_WORTH_CAP)} and shown at the
+          One or both values are beyond ±{formatCompactUSD(cap)} and shown at the
           chart edge.
         </p>
       )}

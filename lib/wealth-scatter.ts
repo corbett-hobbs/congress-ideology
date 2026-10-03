@@ -15,9 +15,17 @@ export function yearsOfData(member: WealthMember): number {
   return last.year - first.year;
 }
 
-/** Net worth is capped at ±this on both axes; beyond it a dot is drawn as a
- *  diamond at the edge. */
+/** The smallest axis extent (±this on both axes). The chart grows past it to fit the cohort
+ *  (see `scatterCap`); a dot is only ever clipped to a diamond at the edge if a caller passes a
+ *  smaller cap than the data. */
 export const NET_WORTH_CAP = 20_000_000;
+const CAP_STEPS = [20_000_000, 50_000_000, 100_000_000, 250_000_000, 500_000_000, 1_000_000_000, 2_000_000_000, 5_000_000_000];
+
+/** The axis extent for a cohort: the smallest round step that holds its largest |net worth|, so the
+ *  biggest movers are drawn where they are, not pinned to an edge. Never below `NET_WORTH_CAP`. */
+export function scatterCap(maxAbs: number): number {
+  return CAP_STEPS.find((c) => c >= maxAbs) ?? Math.ceil(maxAbs / 1e9) * 1e9;
+}
 /** The `asinh` knee: values much smaller than this stay near-linear, so the
  *  region around $0 isn't over-stretched. */
 const SIGNED_LOG_KNEE = 100_000;
@@ -45,6 +53,7 @@ export function zoomTicks(
   range: readonly [number, number],
   sizePx: number,
   minGapPx = 46,
+  cap = NET_WORTH_CAP,
 ): number[] {
   const [t0, t1] = range;
   const span = t1 - t0;
@@ -53,9 +62,9 @@ export function zoomTicks(
 
   const candidates: number[] = [0];
   for (const lead of [1, 5, 2, 3, 4, 6, 8]) {
-    for (let p = 2; p <= 7; p++) {
+    for (let p = 2; p <= 10; p++) {
       const v = lead * 10 ** p;
-      if (v > NET_WORTH_CAP) continue;
+      if (v > cap) continue;
       candidates.push(v, -v);
     }
   }
@@ -69,12 +78,12 @@ export function zoomTicks(
   return kept.map((k) => k.v).sort((a, b) => a - b);
 }
 
-export function clampNetWorth(value: number): number {
-  return Math.max(-NET_WORTH_CAP, Math.min(NET_WORTH_CAP, value));
+export function clampNetWorth(value: number, cap = NET_WORTH_CAP): number {
+  return Math.max(-cap, Math.min(cap, value));
 }
 
-export function isBeyondCap(value: number): boolean {
-  return Math.abs(value) > NET_WORTH_CAP;
+export function isBeyondCap(value: number, cap = NET_WORTH_CAP): boolean {
+  return Math.abs(value) > cap;
 }
 
 /** Cohort members always have >= 2 usable points. */
@@ -89,8 +98,8 @@ export function netWorthChange(member: WealthMember): number {
   return latestNetWorth(member) - firstNetWorth(member);
 }
 /** Clipped on either coordinate. */
-export function isClipped(member: WealthMember): boolean {
-  return isBeyondCap(firstNetWorth(member)) || isBeyondCap(latestNetWorth(member));
+export function isClipped(member: WealthMember, cap = NET_WORTH_CAP): boolean {
+  return isBeyondCap(firstNetWorth(member), cap) || isBeyondCap(latestNetWorth(member), cap);
 }
 
 export interface StandoutEntry {
