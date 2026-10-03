@@ -192,26 +192,41 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
     return [...dots].sort((a, b) => rank(a) - rank(b));
   }, [dots, selectedId, hoverId, stateFilter]);
 
+  // Labels: the richest and poorest member (by latest net worth), plus, on wider screens, the biggest dollar
+  // gainers and losers. All of them are re-picked from the members actually in play: the chamber's cohort, or
+  // just the picked state's members when a state is highlighted.
   const standoutLabels = useMemo(() => {
-    if (compact) return [];
-    const { top, bottom } = pickStandouts(cohort, 3);
-    const entries = [...top, ...bottom]
-      .map((e) => ({ entry: e, dot: dotById.get(e.member.bioguideId) }))
-      .filter(
-        (v): v is { entry: (typeof top)[number]; dot: Dot } =>
-          v.dot != null && onPlot(v.dot),
-      );
+    const pool = stateFilter ? cohort.filter((m) => m.state === stateFilter) : cohort;
+    if (pool.length === 0) return [];
+    const byWorth = [...pool].sort(
+      (a, b) => latestNetWorth(b) - latestNetWorth(a) || a.bioguideId.localeCompare(b.bioguideId),
+    );
+    const richest = byWorth[0];
+    const poorest = byWorth.length > 1 ? byWorth[byWorth.length - 1] : null;
+    const items: { member: WealthMember; text: string }[] = [];
+    const seen = new Set<string>();
+    const add = (member: WealthMember, text: string) => {
+      if (seen.has(member.bioguideId)) return;
+      seen.add(member.bioguideId);
+      items.push({ member, text });
+    };
+    const tag = (m: WealthMember) => `${lastNameOf(m.name)} (${partyLetter(m)})`;
+    add(richest, `Richest: ${tag(richest)} ${formatCompactUSD(latestNetWorth(richest))}`);
+    if (poorest) add(poorest, `Poorest: ${tag(poorest)} ${formatCompactUSD(latestNetWorth(poorest))}`);
+    if (!compact) {
+      const { top, bottom } = pickStandouts(pool, 3);
+      for (const e of [...top, ...bottom]) add(e.member, `${tag(e.member)} ${formatSignedCompactUSD(e.change)}`);
+    }
+    const entries = items
+      .map((it) => ({ ...it, dot: dotById.get(it.member.bioguideId) }))
+      .filter((v): v is { member: WealthMember; text: string; dot: Dot } => v.dot != null && onPlot(v.dot));
     const placed = placeStandoutLabels(
       entries.map((v) => v.dot),
       side,
     );
-    return entries.map((v, i) => ({
-      key: v.entry.member.bioguideId,
-      ...placed[i],
-      text: `${lastNameOf(v.entry.member.name)} (${partyLetter(v.entry.member)}) ${formatSignedCompactUSD(v.entry.change)}`,
-    }));
+    return entries.map((v, i) => ({ key: v.member.bioguideId, ...placed[i], text: v.text }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cohort, dotById, side, compact]);
+  }, [cohort, stateFilter, dotById, side, compact]);
 
   const searchResults = useMemo(() => {
     const q = query.trim().toLowerCase();
