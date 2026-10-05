@@ -2,27 +2,27 @@
   "display_start": "1991-01-21",
   "counts": {
     "GASREGW": 1879,
-    "MORTGAGE30US": 2896,
-    "PAYEMS": 1052,
-    "UNRATE": 943,
+    "MORTGAGE30US": 2897,
+    "PAYEMS": 1053,
+    "UNRATE": 944,
     "CPIAUCSL": 955,
     "MEHOINUSA672N": 42,
     "FYFSGDA188S": 97,
     "FYGFGDQ188S": 225,
     "GFDEGDQ188S": 241,
-    "USREC": 2061
+    "USREC": 2062
   },
   "last_observation": {
     "GASREGW": "2026-09-28",
-    "MORTGAGE30US": "2026-09-24",
-    "PAYEMS": "2026-08-01",
-    "UNRATE": "2026-08-01",
+    "MORTGAGE30US": "2026-10-01",
+    "PAYEMS": "2026-09-01",
+    "UNRATE": "2026-09-01",
     "CPIAUCSL": "2026-08-01",
     "MEHOINUSA672N": "2025-01-01",
     "FYFSGDA188S": "2025-01-01",
     "FYGFGDQ188S": "2026-01-01",
     "GFDEGDQ188S": "2026-01-01",
-    "USREC": "2026-08-01"
+    "USREC": "2026-09-01"
   },
   "skipped_missing_values": {
     "GASREGW": [
