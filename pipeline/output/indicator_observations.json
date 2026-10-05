@@ -4774,6 +4774,7 @@
 {"series_id":"MORTGAGE30US","date":"2026-09-10","value":6.76},
 {"series_id":"MORTGAGE30US","date":"2026-09-17","value":6.95},
 {"series_id":"MORTGAGE30US","date":"2026-09-24","value":7.03},
+{"series_id":"MORTGAGE30US","date":"2026-10-01","value":7.28},
 {"series_id":"PAYEMS","date":"1939-01-01","value":29923},
 {"series_id":"PAYEMS","date":"1939-02-01","value":30100},
 {"series_id":"PAYEMS","date":"1939-03-01","value":30280},
@@ -5824,8 +5825,9 @@
 {"series_id":"PAYEMS","date":"2026-04-01","value":158798},
 {"series_id":"PAYEMS","date":"2026-05-01","value":158861},
 {"series_id":"PAYEMS","date":"2026-06-01","value":158892},
-{"series_id":"PAYEMS","date":"2026-07-01","value":158913},
-{"series_id":"PAYEMS","date":"2026-08-01","value":159075},
+{"series_id":"PAYEMS","date":"2026-07-01","value":158882},
+{"series_id":"PAYEMS","date":"2026-08-01","value":159015},
+{"series_id":"PAYEMS","date":"2026-09-01","value":159044},
 {"series_id":"UNRATE","date":"1948-01-01","value":3.4},
 {"series_id":"UNRATE","date":"1948-02-01","value":3.8},
 {"series_id":"UNRATE","date":"1948-03-01","value":4},
@@ -6769,6 +6771,7 @@
 {"series_id":"UNRATE","date":"2026-06-01","value":4.2},
 {"series_id":"UNRATE","date":"2026-07-01","value":4.1},
 {"series_id":"UNRATE","date":"2026-08-01","value":4.1},
+{"series_id":"UNRATE","date":"2026-09-01","value":4.2},
 {"series_id":"CPIAUCSL","date":"1947-01-01","value":21.48},
 {"series_id":"CPIAUCSL","date":"1947-02-01","value":21.62},
 {"series_id":"CPIAUCSL","date":"1947-03-01","value":22},
@@ -10389,5 +10392,6 @@
 {"series_id":"USREC","date":"2026-05-01","value":0},
 {"series_id":"USREC","date":"2026-06-01","value":0},
 {"series_id":"USREC","date":"2026-07-01","value":0},
-{"series_id":"USREC","date":"2026-08-01","value":0}
+{"series_id":"USREC","date":"2026-08-01","value":0},
+{"series_id":"USREC","date":"2026-09-01","value":0}
 ]

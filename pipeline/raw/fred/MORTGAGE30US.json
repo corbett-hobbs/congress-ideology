@@ -1,5 +1,5 @@
 {
-  "head": {"fetched_at":"2026-10-01T04:52:37.469Z","series":{"id":"MORTGAGE30US","title":"30-Year Fixed Rate Mortgage Average in the United States","units":"Percent","frequency":"Weekly, Ending Thursday","seasonal_adjustment":"Not Seasonally Adjusted","observation_start":"1971-04-02","observation_end":"2026-09-24","last_updated":"2026-09-24 11:02:26-05","notes":"On November 17, 2022, Freddie Mac changed the methodology of the Primary Mortgage Market Survey® (PMMS®). The weekly mortgage rate is now based on applications submitted to Freddie Mac from lenders across the country. For more information regarding Freddie Mac’s enhancement, see their research note (https://www.freddiemac.com/research/insight/20221103-freddie-macs-newly-enhanced-mortgage-rate-survey). Data are provided “as is” by Freddie Mac®, with no warranties of any kind, express or implied, including but not limited to warranties of accuracy or implied warranties of merchantability or fitness for a particular purpose. Use of the data is at the user’s sole risk. In no event will Freddie Mac be liable for any damages arising out of or related to the data, including but not limited to direct, indirect, incidental, special, consequential, or punitive damages, whether under a contract, tort, or any other theory of liability, even if Freddie Mac is aware of the possibility of such damages. Copyright, 2016, Freddie Mac. Reprinted with permission."}},
+  "head": {"fetched_at":"2026-10-05T19:44:22.496Z","series":{"id":"MORTGAGE30US","title":"30-Year Fixed Rate Mortgage Average in the United States","units":"Percent","frequency":"Weekly, Ending Thursday","seasonal_adjustment":"Not Seasonally Adjusted","observation_start":"1971-04-02","observation_end":"2026-10-01","last_updated":"2026-10-01 11:09:29-05","notes":"On November 17, 2022, Freddie Mac changed the methodology of the Primary Mortgage Market Survey® (PMMS®). The weekly mortgage rate is now based on applications submitted to Freddie Mac from lenders across the country. For more information regarding Freddie Mac’s enhancement, see their research note (https://www.freddiemac.com/research/insight/20221103-freddie-macs-newly-enhanced-mortgage-rate-survey). Data are provided “as is” by Freddie Mac®, with no warranties of any kind, express or implied, including but not limited to warranties of accuracy or implied warranties of merchantability or fitness for a particular purpose. Use of the data is at the user’s sole risk. In no event will Freddie Mac be liable for any damages arising out of or related to the data, including but not limited to direct, indirect, incidental, special, consequential, or punitive damages, whether under a contract, tort, or any other theory of liability, even if Freddie Mac is aware of the possibility of such damages. Copyright, 2016, Freddie Mac. Reprinted with permission."}},
   "observations": [
     ["1971-04-02","7.33"],
     ["1971-04-09","7.31"],
@@ -2896,6 +2896,7 @@
     ["2026-09-03","6.71"],
     ["2026-09-10","6.76"],
     ["2026-09-17","6.95"],
-    ["2026-09-24","7.03"]
+    ["2026-09-24","7.03"],
+    ["2026-10-01","7.28"]
   ]
 }
