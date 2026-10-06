@@ -1,0 +1,87 @@
+{
+  "display_start": "1991-01-21",
+  "counts": {
+    "PNPRPUS": 644,
+    "PAPRPUS": 644,
+    "PAIMPUS": 644,
+    "PAEXPUS": 644,
+    "PANIPUS": 644,
+    "PATCPUS": 644,
+    "COIMPUS": 644,
+    "COEXPUS": 615,
+    "WCSSTUS1": 2296,
+    "NGPRPUS": 642,
+    "N9133US2": 355,
+    "CLETPUS": 642,
+    "NGETPUS": 642,
+    "NUETPUS": 642,
+    "HVETPUS": 642,
+    "WYETPUS": 522,
+    "SOETPUS": 510,
+    "PAETPUS": 642,
+    "ELETPUS": 642,
+    "ELEC_SMALL_SOLAR": 151
+  },
+  "last_observation": {
+    "PNPRPUS": "2026-08-01",
+    "PAPRPUS": "2026-08-01",
+    "PAIMPUS": "2026-08-01",
+    "PAEXPUS": "2026-08-01",
+    "PANIPUS": "2026-08-01",
+    "PATCPUS": "2026-08-01",
+    "COIMPUS": "2026-08-01",
+    "COEXPUS": "2026-08-01",
+    "WCSSTUS1": "2026-09-25",
+    "NGPRPUS": "2026-06-01",
+    "N9133US2": "2026-07-01",
+    "CLETPUS": "2026-06-01",
+    "NGETPUS": "2026-06-01",
+    "NUETPUS": "2026-06-01",
+    "HVETPUS": "2026-06-01",
+    "WYETPUS": "2026-06-01",
+    "SOETPUS": "2026-06-01",
+    "PAETPUS": "2026-06-01",
+    "ELETPUS": "2026-06-01",
+    "ELEC_SMALL_SOLAR": "2026-07-01"
+  },
+  "preliminary_observations": {
+    "PNPRPUS": 12,
+    "PAPRPUS": 12,
+    "PAIMPUS": 12,
+    "PAEXPUS": 12,
+    "PANIPUS": 12,
+    "PATCPUS": 12,
+    "COIMPUS": 12,
+    "COEXPUS": 12,
+    "WCSSTUS1": 0,
+    "NGPRPUS": 12,
+    "N9133US2": 12,
+    "CLETPUS": 18,
+    "NGETPUS": 18,
+    "NUETPUS": 18,
+    "HVETPUS": 18,
+    "WYETPUS": 18,
+    "SOETPUS": 18,
+    "PAETPUS": 18,
+    "ELETPUS": 18,
+    "ELEC_SMALL_SOLAR": 19
+  },
+  "skipped_missing_values": {
+    "COEXPUS": {
+      "count": 29,
+      "first": "1973-01-01",
+      "last": "1976-09-01"
+    },
+    "WYETPUS": {
+      "count": 120,
+      "first": "1973-01-01",
+      "last": "1982-12-01"
+    },
+    "SOETPUS": {
+      "count": 132,
+      "first": "1973-01-01",
+      "last": "1983-12-01"
+    }
+  },
+  "observations_file_bytes": 1064609
+}

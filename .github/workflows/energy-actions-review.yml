@@ -1,0 +1,49 @@
+name: Energy actions review
+
+# The energy policy-actions timeline is hand-curated (docs/ENERGY_ACTIONS_CURATION.md): nothing
+# fetches it, so nothing notices when it goes stale. Weekly, check `last_reviewed`; if it is older
+# than ENERGY_ACTIONS_STALE_DAYS (lib/energy-actions-entities.ts) open ONE GitHub issue asking a
+# human to review and bump the date. An issue, not a red build: the flags are historical. Never
+# blocks a deploy and never edits data.
+
+on:
+  schedule:
+    - cron: "47 13 * * 1" # Mondays 13:47 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Is the review stale?
+        id: stale
+        continue-on-error: true
+        run: pnpm exec tsx pipeline/validate/energy-actions-staleness.ts
+
+      - name: Open an issue (once)
+        if: steps.stale.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create energy-actions-review --color BFD4F2 --description "Energy timeline needs a review" 2>/dev/null || true
+          existing="$(gh issue list --state open --label energy-actions-review --json number --jq 'length')"
+          if [ "$existing" = "0" ]; then
+            gh issue create \
+              --title "Review the energy policy-actions timeline" \
+              --label energy-actions-review \
+              --body "pipeline/output/energy_actions.json has not been reviewed within the limit. Check for new SPR actions, LNG and pipeline decisions, treaty actions and energy laws, update pipeline/reference/energy-actions.json, and bump last_reviewed. See docs/ENERGY_ACTIONS_CURATION.md."
+          else
+            echo "An open review issue already exists."
+          fi

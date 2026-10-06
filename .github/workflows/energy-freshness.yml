@@ -1,0 +1,107 @@
+name: Energy freshness
+
+# Automate the check, gate the acceptance on a human.
+#
+# Weekly: re-fetch the EIA energy series and compare against the committed snapshots in
+# pipeline/raw/eia/. EIA revises recent months, so a naive git diff is noisy. The materiality rule
+# (pipeline/fetch/energy-diff.ts, documented in docs/ENERGY_METHODOLOGY.md):
+#   - a new period, a removed one, or a missing<->value flip always counts;
+#   - a revision to a FINAL observation always counts (final values should not move);
+#   - a revision to a PRELIMINARY observation counts only above that series' `revision_tolerance`
+#     (about 1%, lib/energy-entities.ts);
+#   - every revision, material or not, is listed (largest first) in the PR body.
+# If nothing is material no PR opens and the working tree is discarded, so sub-tolerance revisions
+# accumulate until the next material change carries them in. Never auto-merged.
+#
+# Requires the repo secret EIA_API_KEY, and
+#   Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests"
+#
+# Note: the PR branch is pushed with GITHUB_TOKEN, so it does NOT trigger the CI workflow. Run
+# `pnpm pipeline:check` locally before merging.
+
+on:
+  schedule:
+    - cron: "17 12 * * 2" # Tuesdays 12:17 UTC (EIA posts weekly petroleum data on Wednesdays; monthly releases land at month end)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: energy-freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Snapshot the committed raw data
+        run: cp -r pipeline/raw/eia "$RUNNER_TEMP/eia-prev"
+
+      - name: Re-fetch EIA series
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+        run: pnpm fetch:eia
+
+      - name: Apply the materiality rule
+        id: diff
+        run: pnpm exec tsx pipeline/fetch/energy-diff.ts "$RUNNER_TEMP/eia-prev" pipeline/raw/eia "$RUNNER_TEMP/eia-summary.md"
+
+      - name: Rebuild and validate
+        id: build
+        if: steps.diff.outputs.material == 'true'
+        run: |
+          set +e
+          pnpm exec tsx pipeline/transform/energy-run.ts > transform.log 2>&1
+          code=$?
+          cat transform.log
+          echo "transform_ok=$([ "$code" -eq 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          {
+            echo "summary<<EOF"
+            cat "$RUNNER_TEMP/eia-summary.md"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Open pull request
+        if: steps.diff.outputs.material == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: |
+            pipeline/raw/eia
+            pipeline/output/energy_series.json
+            pipeline/output/energy_observations.json
+            pipeline/output/energy_report.json
+          branch: data/energy-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): refresh energy series"
+          title: "Energy series refresh"
+          labels: data-refresh
+          body: |
+            The weekly EIA check found a material change (new periods, a change to a final value, or a revision to a preliminary value above a series' tolerance).
+
+            **Transform + coverage validation succeeded:** `${{ steps.build.outputs.transform_ok }}`
+
+            **What changed** (all revisions are listed, largest first; the tolerance only decides whether this PR opens):
+
+            ${{ steps.build.outputs.summary }}
+
+            **Before merging**
+
+            - A revision to a final value is EIA restating history. Confirm nothing here is a series redefinition (the transform fails on a units change).
+            - `pnpm validate && pnpm transform` must pass, including the display-window coverage assertion.
+
+            Not auto-merged by design.

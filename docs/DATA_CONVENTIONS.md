@@ -582,3 +582,21 @@ History (1950-2007) lives beside it: `pipeline/output/troops_history.json` (one 
 comparability notes) and `troops_history_report.json` (gate results). Raw: `pipeline/raw/troopdata/` (`pnpm fetch:troopdata`, pinned commit, GPL-3.0 LICENSE.md
 committed) and `pipeline/reference/dmdc-309a-sep.csv`. See `docs/TROOPS_METHODOLOGY.md` "History".
 
+## 13. Energy track
+
+An eighth data track: U.S. energy time series from the EIA (petroleum, the Strategic Petroleum Reserve, natural gas, electricity), plus a
+hand-curated policy-actions timeline. Methodology: `docs/ENERGY_METHODOLOGY.md`; curation: `docs/ENERGY_ACTIONS_CURATION.md`; pre-flight
+findings: `docs/ENERGY_PREFLIGHT.md`; schemas: `lib/energy-entities.ts`, `lib/energy-actions-entities.ts`. Joins to presidents and Congress through
+**dates** (section 8), never `bioguide_id`.
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/output/energy_series.json` | one row per series (20) | `series_id` | Title, units, frequency, group, attribution `tier`, status rule, first/last observation, caveats. |
+| `pipeline/output/energy_observations.json` | one row per (series, date), full history, source units | `series_id` + `date` | Monthly dates are the first of the month; weekly are week-ending. Each row has `status` `final`/`preliminary`. Missing values have no row. ~1.04 MB, one flat file. |
+| `pipeline/output/energy_report.json` | run summary | — | Counts, last observations, preliminary counts, skipped missing markers. Deterministic. |
+| `pipeline/output/energy_actions.json` | one row per curated action | `action_id` (`<date>-<slug>`) | From `pipeline/reference/energy-actions.json`; file-level `last_reviewed`; optional `links.eo_numbers` into `executive_orders.json`. |
+
+Raw: `pipeline/raw/eia/<SERIES_ID>.json` (`pnpm fetch:eia`; needs `EIA_API_KEY` in `.env.local` / a repo secret; not in `fetch:all`). **Validation** (fails
+`pnpm validate` / `pnpm transform`): row schemas, snapshot row counts equal the API's own total (it truncates at 5,000 rows without a warning), units unchanged,
+known missing markers only, `(series_id, date)` unique, display-window coverage, flags reference real series and EOs and carry a primary source.
+

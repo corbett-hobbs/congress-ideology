@@ -337,6 +337,38 @@ await step("output/indicator_series.json + indicator_observations.json", async (
   return `${series.length} series, ${obs.length} observations ok; (series_id, date) unique`;
 });
 
+// --- Energy track ------------------------------------------------------------
+// Raw EIA snapshots (schema, units unchanged, row count = the API's own total, known missing
+// markers only), then the same whole-output checks `transform` runs, then our committed output.
+await step("eia/*.json", async () => {
+  const { buildEnergy, validateEnergy } = await import("../transform/energy");
+  const { readRawEnergy } = await import("../transform/energy-run");
+  const built = buildEnergy(await readRawEnergy());
+  const s = validateEnergy(built.series, built.observations);
+  return `${built.series.length} series, ${built.observations.length} observations ok; coverage ok from the display window start; last observations ${JSON.stringify(s.lastObservation)}`;
+});
+
+await step("output/energy_series.json + energy_observations.json", async () => {
+  const { energyObservation, energySeries } = await import("../../lib/energy-entities");
+  const { validateEnergy } = await import("../transform/energy");
+  const serFile = "pipeline/output/energy_series.json";
+  const obsFile = "pipeline/output/energy_observations.json";
+  const series = validateAll(
+    serFile,
+    JSON.parse(await readFile(serFile, "utf8")) as unknown[],
+    energySeries,
+    (row, i) => `record ${i} (${(row as { series_id?: string }).series_id ?? "?"})`,
+  );
+  const obs = validateAll(
+    obsFile,
+    JSON.parse(await readFile(obsFile, "utf8")) as unknown[],
+    energyObservation,
+    (row, i) => `record ${i} (${(row as { series_id?: string }).series_id ?? "?"} ${(row as { date?: string }).date ?? "?"})`,
+  );
+  validateEnergy(series, obs);
+  return `${series.length} series, ${obs.length} observations ok; (series_id, date) unique`;
+});
+
 // --- Foreign assistance track ------------------------------------------------
 // Raw ForeignAssistance.gov snapshots (schema, file name = fiscal year, snapshot is the whole
 // fetch: row counts equal the source's own totals), then our committed output.

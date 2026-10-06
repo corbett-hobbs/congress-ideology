@@ -1,0 +1,23 @@
+{
+  "rows": 23,
+  "first_date": "2015-11-06",
+  "last_date": "2026-03-11",
+  "priority_1": 9,
+  "priority_1_cap": 10,
+  "by_authority_type": {
+    "agency": 2,
+    "congressional": 3,
+    "executive": 18
+  },
+  "by_area": {
+    "climate_agreement": 5,
+    "crude_exports": 1,
+    "electricity": 3,
+    "general": 4,
+    "lng": 2,
+    "pipeline": 4,
+    "spr": 4
+  },
+  "last_reviewed": "2026-10-06",
+  "stale_after_days": 30
+}
