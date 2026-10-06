@@ -55,7 +55,7 @@ function EconomyPage({
   const pinned = useMemo(() => (values.pin === null ? null : readAll(data, values.pin)), [data, values.pin]);
   const status =
     day === null
-      ? "Hover a chart to compare a date. Click to pin it."
+      ? "Hover over a chart to compare a date. Click to pin it."
       : `${describeDay(data, day)}${values.hover === null ? ", pinned" : ""}`;
   // Announced only when a date is pinned, never on every mouse move.
   const announcement =

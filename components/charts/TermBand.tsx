@@ -129,7 +129,11 @@ export function TermBand({
           const [l, r] = edge(t);
           const w = ((r - l) / 100) * innerW;
           const c = t.party === "R" ? "--rep" : "--dem";
-          const inWin = t.to >= value[0] && t.from <= value[1];
+          // A term that only touches the window at a shared inauguration year (Obama ends 2017 as Trump starts) is outside it.
+          const sharedStart = k > 0 && terms[k - 1].to === t.from;
+          const sharedEnd = k < terms.length - 1 && terms[k + 1].from === t.to;
+          const grazes = value[1] > value[0] && ((t.to === value[0] && sharedEnd) || (t.from === value[1] && sharedStart));
+          const inWin = t.to >= value[0] && t.from <= value[1] && !grazes;
           const picked = (drag ? k >= lo && k <= hi : false) || selected.includes(k);
           const text = [t.last, `${t.last.slice(0, 4)}.`, t.initials, t.initials.slice(-1)].find((x) => x.length * 6.2 + (x.length > 1 ? 4 : 1) <= w) ?? "";
           return (

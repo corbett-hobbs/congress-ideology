@@ -257,7 +257,7 @@ let status;
 if (dd != null) {
 const pr = D.P.find(p => dd >= p.s && dd < p.e) || D.P[D.P.length - 1];
 status = MN[when.getUTCMonth()] + ' ' + when.getUTCFullYear() + ', ' + pr.n + ' (' + pr.p + ')' + (st.hov == null ? ', pinned' : '');
-} else status = 'Hover a chart to compare a date. Click to pin it.';
+} else status = 'Hover over a chart to compare a date. Click to pin it.';
 out.statusText = status;
 return out;
 }
