@@ -83,7 +83,6 @@
   --branch-navy: #27408b;
   --branch-marine: #9a5b2e;
   --branch-air-space: #2f9ab8;
-  --branch-coast-guard: #c9921f;
   color-scheme: light;
 }
 
@@ -141,7 +140,6 @@
   --branch-navy: #6f8fe0;
   --branch-marine: #cf8a52;
   --branch-air-space: #5fc2dc;
-  --branch-coast-guard: #e0b04a;
     color-scheme: dark;
   }
 }
@@ -199,7 +197,6 @@
   --branch-navy: #6f8fe0;
   --branch-marine: #cf8a52;
   --branch-air-space: #5fc2dc;
-  --branch-coast-guard: #e0b04a;
   color-scheme: dark;
 }
 

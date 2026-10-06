@@ -12,7 +12,6 @@ export const MEASURES = [
   { id: "navy", label: "Navy" },
   { id: "marine_corps", label: "Marine Corps" },
   { id: "air_space_force", label: "Air & Space Force" },
-  { id: "coast_guard", label: "Coast Guard" },
 ] as const;
 export type MeasureId = (typeof MEASURES)[number]["id"];
 
@@ -30,16 +29,14 @@ export type TroopsSource = "dmdc_location" | "dmdc_309a" | "troopdata";
 export interface TroopsPeriod {
   /** `YYYY-MM`: quarter end for the location tables; `YYYY-09` / `YYYY-06` for the history snapshots. */
   period: string;
-  /** Where the figures come from: DMDC's location tables (Sep 2008-), DMDC's 309A tables (Sep 1996, 1998-2005), or troopdata (the rest of 1950-2007). */
+  /** Where the figures come from: DMDC's location tables (Sep 2008-), DMDC's 309A tables (Sep 1996, 1998-2005), or troopdata (the rest of 1953-2007). */
   source: TroopsSource;
-  /** June 30 for 1950-1956, September 30 afterwards, or the quarter end for a location table. */
+  /** June 30 for 1953-1956, September 30 afterwards, or the quarter end for a location table. */
   snapshot: "june" | "september" | "quarter";
   /** Sep 2006 and Sep 2007: DMDC publishes no table, troopdata's figures are compiled and press-based. */
   estimate: boolean;
   /** The table carries afloat and unassigned personnel (the 309A tables and the location tables do; troopdata does not). */
   afloatIncluded: boolean;
-  /** The table has a Coast Guard column (the location tables only). */
-  coastGuard: boolean;
   /** "Mar 2026" */
   label: string;
   /** Absolute quarter number, `year * 4 + (month / 3 - 1)`: the chart's time axis. */
@@ -62,7 +59,7 @@ export interface TroopsPeriod {
  * and is `partial`.
  */
 export interface TroopsYear {
-  /** The year of the snapshot (the September 30 table; June 30 for 1950-56). For 1977 on this is also the federal fiscal year. */
+  /** The year of the snapshot (the September 30 table; June 30 for 1953-56). For 1977 on this is also the federal fiscal year. */
   fy: number;
   /** Index into `periods` of the snapshot this year shows. */
   period: number;
@@ -77,7 +74,7 @@ export interface TroopsContingency {
   operation: "OIF" | "OEF";
   /** Index into `places` (Iraq or Afghanistan). */
   place: number;
-  /** `[total, army, navy, marine corps, air force]`, indexed like `MEASURES` (Coast Guard has none). */
+  /** `[total, army, navy, marine corps, air force]`, indexed like `MEASURES`. */
   v: [number, number, number, number, number];
   basis: "active_duty" | "includes_reserve_guard";
   rounded: boolean;
@@ -97,8 +94,8 @@ export interface TroopsTerm {
   label: string;
 }
 
-/** `[placeIdx, periodIdx, state, total, army, navy, marineCorps, airAndSpaceForce, coastGuard]`; state 0 value, 1 suppressed, 2 null (Army N/A). */
-export type TroopsRowTuple = [number, number, 0 | 1 | 2, number | null, number | null, number | null, number | null, number | null, number | null];
+/** `[placeIdx, periodIdx, state, total, army, navy, marineCorps, airAndSpaceForce]`; state 0 value, 1 suppressed, 2 null (Army N/A). */
+export type TroopsRowTuple = [number, number, 0 | 1 | 2, number | null, number | null, number | null, number | null, number | null];
 
 export interface TroopsPayload {
   places: TroopsPlace[];

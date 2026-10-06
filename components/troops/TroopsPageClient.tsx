@@ -27,9 +27,9 @@ export function TroopsPageClient({ payload, map }: { payload: TroopsPayload; map
           </p>
           <HowToRead>
             <p>
-              <b className="font-semibold text-ink">Each bar is one year’s table</b>: the September 30 report (June 30 for 1950–56). The figures come from three sources that count a little differently: DMDC’s location tables from 2008, DMDC’s
-              own country tables for 1996 and 1998–2005, and a research compilation of DMDC reports for the rest of 1950–2007. Only the DMDC tables include personnel afloat or unassigned, so a jump where the source changes is not a change
-              in troops, and no percent change is shown across one. 1951–52 are left out (only imputed). September 2006 and 2007 are estimates, shown in lighter bars.
+              <b className="font-semibold text-ink">Each bar is one year’s table</b>: the September 30 report (June 30 for 1953–56). The figures come from three sources that count a little differently: DMDC’s location tables from 2008, DMDC’s
+              own country tables for 1996 and 1998–2005, and a research compilation of DMDC reports for the rest of 1953–2007. Only the DMDC tables include personnel afloat or unassigned, so a jump where the source changes is not a change
+              in troops, and no percent change is shown across one. September 2006 and 2007 are estimates, shown in lighter bars.
             </p>
             <p>
               <b className="font-semibold text-ink">The series changes meaning after 2017.</b> Through the September 2017 table the counts include personnel deployed in support of contingency operations; from the December 2017
@@ -53,9 +53,9 @@ export function TroopsPageClient({ payload, map }: { payload: TroopsPayload; map
         <MapCard map={map} />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
-          Source: U.S. Department of Defense, Defense Manpower Data Center (DMDC): location tables (September 30 tables from 2008, data through {dateLabel(payload.dataThrough)}) and 309A country tables (1996 and 1998–2005), public domain. 1950–2007
+          Source: U.S. Department of Defense, Defense Manpower Data Center (DMDC): location tables (September 30 tables from 2008, data through {dateLabel(payload.dataThrough)}) and 309A country tables (1996 and 1998–2005), public domain. 1953–2007
           otherwise from the troopdata compilation (Allen, Flynn and Martinez Machain 2022, <i>Conflict Management and Peace Science</i> 39(3); Kane 2005, Heritage Foundation), GPL-3.0. Space Force is counted with the Air Force (“Air &amp; Space Force”)
-          so the branch is comparable across September 2023. Coast Guard personnel are in “All branches” from 2008 only. Each year is colored by the president in office on its snapshot date.
+          so the branch is comparable across September 2023. Each year is colored by the president in office on its snapshot date.
         </p>
       </main>
     </TroopsStateProvider>

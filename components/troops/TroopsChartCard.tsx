@@ -51,7 +51,7 @@ export function TroopsChartCard() {
         {anyUnavailable && (
           <span className="inline-flex items-center gap-1.5">
             <i className="inline-block h-[11px] w-[11px] rounded-[2px] border border-dashed border-ink-faint" />
-            {measure === 5 ? "No Coast Guard column" : "Army did not report"}
+            Army did not report
           </span>
         )}
         {anyGhost && (
@@ -70,21 +70,21 @@ export function TroopsChartCard() {
       <MethodologyNote>
         <p>
           Band under the axis: the president in office on the snapshot date (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic). Each bar is one year’s table:
-          DMDC’s September 30 report (June 30 for 1950–56, the only snapshot those years have). From 1977 that is also the federal fiscal year; before it the fiscal year ended June 30, so the axis says “year”. Each bar is the
+          DMDC’s September 30 report (June 30 for 1953–56, the only snapshot those years have). From 1977 that is also the federal fiscal year; before it the fiscal year ended June 30, so the axis says “year”. Each bar is the
           active-duty personnel placed at a foreign host, plus the “afloat and unassigned” rows where the source has them; U.S. territories (Guam, Puerto Rico, American Samoa, the Northern Mariana Islands, the U.S. Virgin
           Islands) are left out. From 2008 the bars add up the country rows, so a few years differ from DMDC’s printed overseas total by a documented amount (at most 612 people).
         </p>
         <p>
-          <b className="font-semibold text-ink">Sources.</b> 2008 on: DMDC’s location tables. 1996 and 1998–2005: DMDC’s own 309A country tables, with afloat and unassigned personnel and four branches. Everything else from 1950 to 2007
+          <b className="font-semibold text-ink">Sources.</b> 2008 on: DMDC’s location tables. 1996 and 1998–2005: DMDC’s own 309A country tables, with afloat and unassigned personnel and four branches. Everything else from 1953 to 2007
           is the troopdata compilation of DMDC reports (Allen, Flynn and Martinez Machain 2022), which has no afloat or unassigned rows, so its bars run lower by that amount and the source change at 1996 and 2008 is not a change in
-          troops; 1997 and 2006–07 are also troopdata. No percent change is shown between bars from different sources. 1951 and 1952 are left out because the compilation only imputes them. Sep 2006 and 2007 are estimates (DMDC
+          troops; 1997 and 2006–07 are also troopdata. No percent change is shown between bars from different sources. Sep 2006 and 2007 are estimates (DMDC
           published no table): lighter bars. The latest year is partial (hatched): the newest quarter published so far.
         </p>
         <p>
           <b className="font-semibold text-ink">Iraq, Kuwait and Afghanistan, 2003–2005,</b> are not reported in DMDC’s country tables (printed as zero beside a pointer to a separate table, and the 2003–04 foreign total is labelled “Less
           OIF”), so they add nothing to those bars. The dashed boxes above the bars are DMDC’s separate totals for forces in and around Iraq (183,002 active duty in 2003; 170,647 in 2004 and 192,600 in 2005 including deployed Reserve and
           National Guard) and Afghanistan (19,500 in 2005, same basis, rounded). They are on a different basis from the bars, may overlap country rows, and are in no total. A count that is blank in the 2008+ tables (Afghanistan, Iraq and
-          Syria, 2018 to 2021) is likewise not reported, not zero. Coast Guard is in the 2008+ tables only. Tap or hover the numbered markers for each change.
+          Syria, 2018 to 2021) is likewise not reported, not zero. Tap or hover the numbered markers for each change.
         </p>
       </MethodologyNote>
       <TableView caption="Active-duty personnel abroad by region and year">

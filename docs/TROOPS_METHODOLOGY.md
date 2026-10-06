@@ -69,21 +69,21 @@ every call above.
 The page is `/presidency/national-security` (registered as a Presidency section). `lib/troops-data.ts` (server-only, Zod at
 the boundary) -> `lib/troops-derive.ts` (pure, tested over the real files) -> `components/troops/`. Choices recorded so they
 are not re-litigated: the chart stacks by region and the Branch filter swaps the measure (All branches, Army, Navy, Marine
-Corps, Air & Space Force, Coast Guard); Air & Space Force is Air Force + Space Force so it is comparable across Sep 2023; bars
+Corps, Air & Space Force; Coast Guard is not a filter, its small count stays inside DMDC's printed totals); Air & Space Force is Air Force + Space Force so it is comparable across Sep 2023; bars
 are Σ rows over hosts and afloat (territories out), so a few years differ from the printed total by a documented gap; **bars are
-years, 1950-2026**: each shows that year's DMDC snapshot, the Sep 30 table (June 30 for 1950-56, the only snapshot those
-years have), and the year in progress shows its latest quarter hatched as partial (2026 = Mar 2026). From 1977 a Sep 30 year is also the federal
+years, 1953-2026**: each shows that year's DMDC snapshot, the Sep 30 table (June 30 for 1953-56, the only snapshot those
+years have; the pipeline's lone June 1950 snapshot is not shown, the page starts with Eisenhower), and the year in progress shows its latest quarter hatched as partial (2026 = Mar 2026). From 1977 a Sep 30 year is also the federal
 fiscal year; before it the fiscal year ended June 30, so the page says "year", not "FY". Each year is coloured by the president in office on the
 snapshot date (`termOnDate`; `lib/troops-presidents.ts` adds Truman through Bush 41 to the administrations table, page-local). The quarterly
 tables stay in the pipeline data but the page does not draw them. The three Army-N/A quarters (Dec 2022, Mar 2023, Jun 2023) are not September
 tables, so every year on the page has an Army figure; the "Army did not report" columns and marker exist in the code but do not fire today.
-Because the Coast Guard column exists only in the 2008+ tables, the Coast Guard filter has no figure before 2008 (dashed empty bars).
+The page has no Coast Guard filter, legend or segment; "All branches" and the abroad totals are DMDC's own Total column, which includes the few Coast Guard personnel the 2008+ tables list.
 No percent change is shown between bars from different sources (DMDC location / DMDC 309A / troopdata), across the 2017/2018 break (the Dec 2017
 table is the first permanent-assignment one, so it falls in 2018), across a gap year, for the partial year, or for an Army-N/A year. The President
 filter narrows the years, the Country filter shows that place's own series and only highlights on the map and list.
 
 **History on the same chart (S2 integrated).** `troops_history.json` is merged into the one payload (`buildTroopsPayload(location, meta, admins,
-history)`); a place in both sources must agree on class and ISO3 or the build fails. The chart is on a true year axis (1951-52 empty). Numbered
+history)`); a place in both sources must agree on class and ISO3 or the build fails. The chart is on a true year axis (1953-2026; 1951-52 and 1950 are not drawn). Numbered
 markers (tap to pin) explain the source and afloat coverage before 2008, the 2003-05 Iraq/Afghanistan gap, the 2006-07 estimates and the 2018
 definition change. **The 2003-05 OIF/OEF totals are drawn on the chart** as dashed boxes above those bars (`RegionStack.ghost`; the axis includes
 them), listed first in the ranked list as "n/r" with the in/around figure marked †, and shown in the chart and map tooltips, always labelled as a

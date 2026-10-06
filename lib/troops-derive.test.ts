@@ -42,8 +42,10 @@ describe("regions", () => {
 });
 
 describe("payload", () => {
-  it("has one bar per year: June 1950 and 1953-56, then the Sep 30 table each year to 2025, and the partial 2026", () => {
-    expect(payload.years.map((y) => y.fy)).toEqual([1950, ...Array.from({ length: 74 }, (_, i) => 1953 + i)]);
+  it("has one bar per year: June 1953-56 (the page starts at Eisenhower), then the Sep 30 table each year to 2025, and the partial 2026", () => {
+    expect(payload.years.map((y) => y.fy)).toEqual(Array.from({ length: 74 }, (_, i) => 1953 + i));
+    expect(payload.years.some((y) => y.fy === 1950)).toBe(false);
+    expect(payload.rows.some((t) => payload.periods[t[1]].period.startsWith("1950"))).toBe(false);
     for (const y of payload.years.slice(0, -1)) {
       const p = payload.periods[y.period];
       expect(y.partial).toBe(false);
@@ -78,7 +80,6 @@ describe("payload", () => {
   });
   it("assigns the president in office on the snapshot date, Truman to Trump", () => {
     const last = (fy: number) => payload.terms[payload.years[yidx(fy)].term].last;
-    expect(last(1950)).toBe("Truman");
     expect(last(1953)).toBe("Eisenhower"); // June 30, 1953
     expect(last(1963)).toBe("Kennedy"); // Sep 30, 1963 (Johnson from Nov 22)
     expect(last(1964)).toBe("Johnson");
@@ -92,7 +93,7 @@ describe("payload", () => {
     expect(last(2021)).toBe("Biden");
     expect(last(2025)).toBe("Trump");
     expect(payload.terms.map((t) => t.president)).toEqual([
-      "Harry S. Truman", "Dwight D. Eisenhower", "John F. Kennedy", "Lyndon B. Johnson", "Richard Nixon", "Gerald Ford", "Jimmy Carter", "Ronald Reagan", "George H. W. Bush", "Bill Clinton", "George W. Bush", "Barack Obama", "Donald Trump", "Joe Biden", "Donald Trump",
+      "Dwight D. Eisenhower", "John F. Kennedy", "Lyndon B. Johnson", "Richard Nixon", "Gerald Ford", "Jimmy Carter", "Ronald Reagan", "George H. W. Bush", "Bill Clinton", "George W. Bush", "Barack Obama", "Donald Trump", "Joe Biden", "Donald Trump",
     ]);
     expect(payload.terms.at(-1)?.label).toBe("Donald Trump (2025–present)");
   });
@@ -155,11 +156,6 @@ describe("stacks and views", () => {
     expect(total(2)).toBeGreaterThan(10000);
     expect(periodView(data, 0, i).ranked).toEqual([]);
   });
-  it("has no Coast Guard figure before 2008", () => {
-    expect(unavailable(data, 5, payload.years[yidx(2005)].period)).toBe(true);
-    expect(unavailable(data, 5, payload.years[yidx(2010)].period)).toBe(false);
-    expect(stackByRegion(data, 5, yidx(2005), yidx(2005))[0]).toMatchObject({ unavailable: true, total: 0, ghost: 0 });
-  });
   it("keeps suppressed hosts out of the ranking and lists them", () => {
     const v = periodView(data, 0, pi("2019-06"));
     expect(v.suppressed.map((p) => payload.places[p].name).sort()).toEqual(["Afghanistan", "Iraq", "Syria"]);
@@ -182,13 +178,12 @@ describe("stacks and views", () => {
     expect(a).toBeGreaterThan(1000);
     expect(Math.abs(b - a) / a).toBeLessThan(0.25);
   });
-  it("refuses a percent change across a break, a source change, a gap year or the partial year", () => {
+  it("refuses a percent change across a break, a source change or the partial year", () => {
     expect(changeVsPrior(data, 0, yidx(2018))).toBeNull(); // Dec 2017 break
     expect(changeVsPrior(data, 0, yidx(2026))).toBeNull(); // partial
     expect(changeVsPrior(data, 0, yidx(2019))).not.toBeNull();
     expect(changeVsPrior(data, 0, yidx(2017))).not.toBeNull();
     expect(changeVsPrior(data, 0, 0)).toBeNull();
-    expect(changeVsPrior(data, 0, yidx(1953))).toBeNull(); // 1950 -> 1953: not adjacent
     expect(changeVsPrior(data, 0, yidx(1996))).toBeNull(); // troopdata -> DMDC 309A (afloat starts)
     expect(changeVsPrior(data, 0, yidx(1997))).toBeNull(); // and back
     expect(changeVsPrior(data, 0, yidx(2006))).toBeNull(); // DMDC -> troopdata estimate
@@ -205,7 +200,6 @@ describe("contingency annotation (DMDC's in/around Iraq and Afghanistan totals)"
     expect(at(2004)[0]).toMatchObject({ value: 170647, basis: "includes_reserve_guard", rounded: false });
     expect(at(2005).map((c) => [payload.places[c.place].name, c.value])).toEqual([["Iraq", 192600], ["Afghanistan", 19500]]);
     expect(at(2005, 1).map((c) => c.value)).toEqual([132400, 15000]); // Army
-    expect(at(2005, 5)).toEqual([]); // Coast Guard has none
     expect(at(2005, 0, place("Afghanistan")).map((c) => c.value)).toEqual([19500]);
     expect(at(2005, 0, place("Germany"))).toEqual([]);
     expect(at(2002)).toEqual([]);

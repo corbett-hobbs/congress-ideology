@@ -20,7 +20,7 @@ const BAND_H = 20;
 const MARKER_NOTES = {
   sources: {
     title: "Before 2008: three sources, and afloat counted in some",
-    body: "1996 and 1998–2005 are DMDC’s own 309A tables, which include afloat and unassigned personnel (from about 6,000 to 100,000 people). The rest of 1950–2007 comes from the troopdata compilation of DMDC reports, which has no afloat or unassigned rows, so those bars run lower by that amount, and a jump where the source changes is not a change in troops. 1951–52 are left out (the compilation only imputes them). No percent change is shown between bars from different sources.",
+    body: "1996 and 1998–2005 are DMDC’s own 309A tables, which include afloat and unassigned personnel (from about 6,000 to 100,000 people). The rest of 1953–2007 comes from the troopdata compilation of DMDC reports, which has no afloat or unassigned rows, so those bars run lower by that amount, and a jump where the source changes is not a change in troops. No percent change is shown between bars from different sources.",
   },
   oif: {
     title: "2003–2005: Iraq, Kuwait and Afghanistan are not reported",
@@ -42,8 +42,8 @@ const MARKER_NOTES = {
 type MarkerId = keyof typeof MARKER_NOTES;
 
 /**
- * Stacked bars by region, one per year (each year's Sep 30 table; June 30 for 1950-56; the year in progress shows its
- * latest quarter, hatched), on a true year axis (1951-52 are empty slots), with a presidential-term band under the axis
+ * Stacked bars by region, one per year (each year's Sep 30 table; June 30 for 1953-56; the year in progress shows its
+ * latest quarter, hatched), on a true year axis (any gap year is an empty slot), with a presidential-term band under the axis
  * like the other Presidency pages. Reads the shared state: the window (President), the branch, and the Country filter
  * (that place's own troops). Click or drag picks the year; arrow keys move it when the chart has focus. Numbered markers
  * (tap to pin) explain what changes: the source and afloat coverage before 2008, the 2003-05 Iraq/Afghanistan gap (whose
@@ -124,7 +124,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
     setYear(Math.abs(d) === 999 ? (d < 0 ? range[0] : range[1]) : yi + d);
   };
 
-  // Presidential terms by the president in office on each slot's snapshot date, so the band is continuous across the 1951-52 gap.
+  // Presidential terms by the president in office on each slot's snapshot date, so the band is continuous across any gap year.
   const slotDate = (fy: number) => (fy <= 1956 ? `${fy}-06-30` : `${fy}-09-30`);
   const runs: { term: number; s: number; e: number }[] = [];
   for (let sl = 0; sl < nSlots; sl++) {
@@ -337,11 +337,6 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                 No troops recorded for these filters in {range[0] === range[1] ? years[range[0]].fy : `${years[range[0]].fy}–${years[range[1]].fy}`}.
               </text>
             )}
-            {anyUnavailable && measure === 5 && max <= 0 && (
-              <text x={innerW / 2} y={innerH / 2} textAnchor="middle" style={{ fill: "var(--ink-muted)", fontSize: 13 }}>
-                DMDC’s tables before 2008 have no Coast Guard column.
-              </text>
-            )}
           </>
         )}
       </ChartFrame>
@@ -403,7 +398,7 @@ function ChartTip({ yi, stack, measure }: { yi: number; stack: RegionStack | und
         {measure > 0 ? ` · ${measureLabel(measure)}` : ""}
       </div>
       {stack?.unavailable ? (
-        <div>{measure === 5 ? "DMDC’s tables before 2008 have no Coast Guard column." : `Army did not report, so there is no ${measure === 0 ? "all-branch" : "Army"} figure.`}</div>
+        <div>{`Army did not report, so there is no ${measure === 0 ? "all-branch" : "Army"} figure.`}</div>
       ) : (
         <>
           {rowsOut.map(([v, k]) => (
