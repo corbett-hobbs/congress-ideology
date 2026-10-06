@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { administration } from "./executive-orders-entities";
 import { REGION_IDS, regionOf } from "./troops-regions";
 import { HISTORICAL_ADMINISTRATIONS } from "./troops-presidents";
-import { buildTroopsPayload, changeVsPrior, contingencyAt, decodeTroops, formatCountAxis, niceCountTicks, periodView, quarterEnd, quarterOf, stackByRegion, termOnDate, unavailable } from "./troops-derive";
+import { buildTroopsPayload, changeVsPrior, contingencyAt, topHostRuns, topHostsByYear, decodeTroops, formatCountAxis, niceCountTicks, periodView, quarterEnd, quarterOf, stackByRegion, termOnDate, unavailable } from "./troops-derive";
 import { historyMeta, historyRow, troopsMeta, troopsRow } from "./troops-entities";
 
 const read = (f: string) => JSON.parse(readFileSync(`pipeline/output/${f}`, "utf8")) as unknown;
@@ -214,6 +214,50 @@ describe("contingency annotation (DMDC's in/around Iraq and Afghanistan totals)"
       expect(r.state).toBe(1);
     }
     expect(periodView(data, 0, payload.years[yidx(2004)].period).contingency).toHaveLength(1);
+  });
+});
+
+describe("who's hosted the most", () => {
+  const all = topHostsByYear(data, 0, 0, payload.years.length - 1);
+  const name = (yr: number) => payload.places[all[yidx(yr)].top[0].place].name;
+  it("names the largest host each year", () => {
+    expect(all).toHaveLength(payload.years.length);
+    expect(name(1953)).toBe("South Korea");
+    expect(name(1957)).toBe("Germany");
+    expect(name(1968)).toBe("Vietnam");
+    expect(name(2003)).toBe("Germany"); // Iraq is not reported in the country rows
+    expect(name(2008)).toBe("Iraq");
+    expect(name(2012)).toBe("Afghanistan");
+    expect(name(2019)).toBe("Japan");
+    expect(name(2025)).toBe("Japan");
+    expect(all[yidx(2025)].top).toHaveLength(3);
+    expect(all[yidx(2025)].hostTotal).toBeGreaterThan(all[yidx(2025)].top[0].value);
+  });
+  it("never ranks afloat/unassigned, territories or not-reported hosts", () => {
+    for (const y of all) for (const t of y.top) expect(payload.places[t.place].cls).toBe("host");
+    expect(all[yidx(2019)].top.some((t) => payload.places[t.place].name === "Iraq")).toBe(false);
+  });
+  it("groups consecutive years with the same No. 1 into runs that cover every year", () => {
+    const runs = topHostRuns(all);
+    expect(runs[0].from).toBe(0);
+    expect(runs.at(-1)!.to).toBe(all.length - 1);
+    for (let i = 1; i < runs.length; i++) expect(runs[i].from).toBe(runs[i - 1].to + 1);
+    const germany = runs.filter((r) => payload.places[r.place].name === "Germany");
+    expect(germany.length).toBeGreaterThanOrEqual(2);
+  });
+  it("has no branch split for the 2006-07 estimates, so the whole figure is the unsplit remainder", () => {
+    const iraq = all[yidx(2006)].top[0];
+    expect(payload.places[iraq.place].name).toBe("Iraq");
+    expect(iraq.branches).toEqual([0, 0, 0, 0]);
+    expect(iraq.rest).toBe(iraq.value);
+    const de = all[yidx(2025)].top[0];
+    expect(de.rest / de.value).toBeLessThan(0.02); // a Coast Guard-sized remainder at most
+    expect(topHostsByYear(data, 1, yidx(2006), yidx(2006))[0].top.some((t) => t.rest > 0)).toBe(false); // a single branch has no remainder
+  });
+  it("follows the branch filter", () => {
+    const navy = topHostsByYear(data, 2, yidx(2025), yidx(2025))[0];
+    expect(payload.places[navy.top[0].place].name).toBe("Japan");
+    expect(navy.top[0].value).toBeLessThan(all[yidx(2025)].top[0].value);
   });
 });
 

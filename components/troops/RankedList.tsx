@@ -3,7 +3,7 @@
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
 import { BRANCH_NAMES, formatCount, formatCountCompact, type PeriodView } from "@/lib/troops-derive";
 import { useTroopsState } from "./TroopsState";
-import { BranchLegend, branchColor } from "./shared";
+import { BranchLegend, NO_SPLIT, branchColor, showRest } from "./shared";
 
 /**
  * The ranked host list inside the map card: every host with troops in the selected quarter, each with a bar on one
@@ -29,7 +29,7 @@ export function RankedList({ view }: { view: PeriodView }) {
       label: places[r.place].name,
       segments:
         measure === 0
-          ? r.branches.map((v, k) => ({ value: v, color: branchColor(k), title: `${BRANCH_NAMES[k]}: ${formatCount(v)}` }))
+          ? [...r.branches.map((v, k) => ({ value: v, color: branchColor(k), title: `${BRANCH_NAMES[k]}: ${formatCount(v)}` })), ...(showRest(r.rest, r.value) ? [{ value: r.rest, color: NO_SPLIT, title: "No branch split published" }] : [])]
           : [{ value: r.value, color: branchColor(measure - 1) }],
       total: formatCount(r.value),
       selected: r.place === country,
@@ -51,6 +51,9 @@ export function RankedList({ view }: { view: PeriodView }) {
         </div>
       </div>
       {measure === 0 && !view.unavailable ? <BranchLegend /> : null}
+      {measure === 0 && view.ranked.some((r) => showRest(r.rest, r.value)) && (
+        <p className="m-0 mt-2 text-[0.72rem] leading-[1.5] text-ink-muted">Grey bars have no branch split: the 2006–07 estimates give a total only.</p>
+      )}
       {view.contingency.length > 0 && (
         <p className="m-0 mt-2 text-[0.72rem] leading-[1.5] text-ink-muted">† DMDC’s separate total for forces in and around the country (a different basis; not in any bar or total).</p>
       )}

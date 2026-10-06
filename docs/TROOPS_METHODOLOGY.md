@@ -89,7 +89,7 @@ definition change. **The 2003-05 OIF/OEF totals are drawn on the chart** as dash
 them), listed first in the ranked list as "n/r" with the in/around figure marked †, and shown in the chart and map tooltips, always labelled as a
 different basis (2003 active duty; 2004-05 including deployed Reserve/Guard; 2005 rounded) and never added to a bar or total. With a Country filter
 only that country's box shows; with a branch filter, that branch's share. Estimate years (2006-07) are drawn lighter with a dashed outline.
-Not built: a "No. 1 strip" and a Military-share style second measure.
+A third card, "Who's hosted the most" (`TroopsFirstPlaceCard`, the foreign-aid "Who's been No. 1" pattern), shows the largest host each year as run-length spans over bars split by branch; the branch filter picks the No. 1 within that branch, Country highlights the years that country led. Hosts only (never afloat, territories or not-reported rows), so in 2003-05 Germany leads while Iraq is not reported. The 2006-07 estimates have no branch split and draw as a grey "no branch split published" bar. Not built: a Military-share style second measure.
 
 ## History, 1950-2007 (S2)
 

@@ -266,6 +266,8 @@ export interface RankedPlace {
   value: number;
   /** Per-branch split (army, navy, marine corps, air & space force) for the stacked bar. */
   branches: number[];
+  /** The part of `value` no branch column accounts for: the whole figure when the source gives no branch split (Sep 2006-07 estimates), else a rounding-sized remainder (0 for a single branch). */
+  rest: number;
   rank: number;
 }
 
@@ -303,7 +305,10 @@ export function periodView(data: TroopsData, m: number, pi: number): PeriodView 
       if (v === null) continue;
       if (pl.cls === "afloat") afloat += v;
       else if (pl.cls === "territory") territories.push({ place: r.place, value: v });
-      else if (v > 0) ranked.push({ place: r.place, value: v, branches: [1, 2, 3, 4].map((k) => r.v[k] ?? 0) });
+      else if (v > 0) {
+        const branches = [1, 2, 3, 4].map((k) => r.v[k] ?? 0);
+        ranked.push({ place: r.place, value: v, branches, rest: m === 0 ? Math.max(0, v - branches.reduce((a, b) => a + b, 0)) : 0 });
+      }
     }
   } else {
     for (const r of rows) if (r.state === 1 && places[r.place].cls === "host") suppressed.push(r.place);
@@ -313,6 +318,38 @@ export function periodView(data: TroopsData, m: number, pi: number): PeriodView 
   const hostTotal = ranked.reduce((s, r) => s + r.value, 0);
   const territoryTotal = territories.reduce((s, t) => s + t.value, 0);
   return { ranked: ranked.map((r, i) => ({ ...r, rank: i + 1 })), suppressed, afloat, territories, territoryTotal, hostTotal, abroad: hostTotal + afloat, unavailable: un, contingency: contingencyAt(data, m, pi) };
+}
+
+export interface TopHostYear {
+  /** Index into `years`. */
+  yi: number;
+  /** The three largest hosts for the branch measure (afloat/unassigned and territories are not hosts). */
+  top: RankedPlace[];
+  /** Σ of every host's figure that year: the denominator for a host's share. */
+  hostTotal: number;
+  unavailable: boolean;
+}
+
+/** The largest host(s) in each year of `[ya, yb]` for branch measure `m`. */
+export function topHostsByYear(data: TroopsData, m: number, ya: number, yb: number): TopHostYear[] {
+  const out: TopHostYear[] = [];
+  for (let yi = ya; yi <= yb; yi++) {
+    const v = periodView(data, m, data.payload.years[yi].period);
+    out.push({ yi, top: v.ranked.slice(0, 3), hostTotal: v.hostTotal, unavailable: v.unavailable });
+  }
+  return out;
+}
+
+/** Consecutive years with the same No. 1 host, as `{ place, from, to }` over indices into `years` (place -1: no host that year). */
+export function topHostRuns(years: readonly TopHostYear[]): { place: number; from: number; to: number }[] {
+  const runs: { place: number; from: number; to: number }[] = [];
+  years.forEach((y, i) => {
+    const place = y.top[0]?.place ?? -1;
+    const last = runs[runs.length - 1];
+    if (last && last.place === place) last.to = i;
+    else runs.push({ place, from: i, to: i });
+  });
+  return runs;
 }
 
 /**

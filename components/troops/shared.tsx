@@ -6,6 +6,10 @@ import { REGIONS } from "@/lib/troops-regions";
 import { BRANCH_NAMES, BRANCH_VARS } from "@/lib/troops-derive";
 
 export const branchColor = (k: number) => `var(${BRANCH_VARS[k]})`;
+/** The part of a figure with no branch split (the 2006-07 estimates): a neutral grey, never one of the branch colours. */
+export const NO_SPLIT = "color-mix(in oklab, var(--ink) 25%, transparent)";
+/** Show the no-split segment only when it is a visible share of the figure (not a rounding remainder). */
+export const showRest = (rest: number, value: number) => value > 0 && rest / value > 0.02;
 
 /** The table-view fallback every chart gets: native <details> around a scrollable table. */
 export function TableView({ caption, children }: { caption: string; children: ReactNode }) {

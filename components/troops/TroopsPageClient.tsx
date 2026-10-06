@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
 import type { TroopsPayload } from "@/lib/troops-types";
 import { MapCard } from "./MapCard";
+import { TroopsFirstPlaceCard } from "./TroopsFirstPlaceCard";
 import { TroopsChartCard } from "./TroopsChartCard";
 import { TroopsFilterBar } from "./TroopsFilterBar";
 import { TroopsStateProvider } from "./TroopsState";
@@ -51,6 +52,8 @@ export function TroopsPageClient({ payload, map }: { payload: TroopsPayload; map
         <TroopsChartCard />
 
         <MapCard map={map} />
+
+        <TroopsFirstPlaceCard />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: U.S. Department of Defense, Defense Manpower Data Center (DMDC): location tables (September 30 tables from 2008, data through {dateLabel(payload.dataThrough)}) and 309A country tables (1996 and 1998–2005), public domain. 1953–2007
