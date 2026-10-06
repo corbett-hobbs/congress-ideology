@@ -118,7 +118,7 @@ export function SiteSectionNav() {
 }
 
 /**
- * The section pills. Below `md` the row scrolls sideways, so a fade and chevron on the right edge say
+ * The section pills. The row scrolls sideways when it doesn't fit (phones, and desktop widths where the tabs crowd it), so a fade and chevron on the right edge say
  * there is more while anything is cut off, and the active pill is scrolled into view on load.
  */
 function ScrollRow({ label, children }: { label: string; children: ReactNode }) {
@@ -151,7 +151,7 @@ function ScrollRow({ label, children }: { label: string; children: ReactNode }) 
       {more && (
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 flex w-12 items-center justify-end bg-gradient-to-l from-surface-raised from-40% to-transparent pr-2 font-mono text-[1.1rem] text-ink-muted md:hidden"
+          className="pointer-events-none absolute inset-y-0 right-0 flex w-12 items-center justify-end bg-gradient-to-l from-surface-raised from-40% to-transparent pr-2 font-mono text-[1.1rem] text-ink-muted md:from-surface"
         >
           ›
         </span>
