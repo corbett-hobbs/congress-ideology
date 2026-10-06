@@ -1,0 +1,5 @@
+year,operation,place,iso3,total,army,navy,marine_corps,air_force,basis,rounded,dmdc_label
+2003,OIF,Iraq,IRQ,183002,152815,10070,6545,13572,active_duty,false,"Total (In/around Iraq as of September 30, 2003)"
+2004,OIF,Iraq,IRQ,170647,101932,15988,35216,17511,includes_reserve_guard,false,"Total (In/around Iraq as of September 30, 2004) - Includes Reserve/National Guard"
+2005,OIF,Iraq,IRQ,192600,132400,14500,25900,19800,includes_reserve_guard,true,"Total (in around Iraq as of September 30, 2005) - Includes deployed Reserve/National Guard"
+2005,OEF,Afghanistan,AFG,19500,15000,200,1100,3200,includes_reserve_guard,true,"Total (in/around Afghanistan as of September 30, 2005) - Includes Deployed Reserve/National Guard"

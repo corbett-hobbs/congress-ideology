@@ -1,12 +1,13 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { regionOf } from "../../lib/troops-regions";
 import { TroopsDataError, type HistoryRow } from "../../lib/troops-entities";
-import { ALIASES, DMDC_YEARS, ESTIMATE_YEARS, IMPUTED_YEARS, RECONCILE_EXCEPTIONS, buildHistory, type HistoryBuild, type ReferenceRow, type TroopdataRow } from "./troops-history";
-import { readReference, readTroopdata } from "./troops-history-run";
+import { ALIASES, DMDC_YEARS, ESTIMATE_YEARS, IMPUTED_YEARS, RECONCILE_EXCEPTIONS, buildHistory, type ContingencyRow, type HistoryBuild, type ReferenceRow, type TroopdataRow } from "./troops-history";
+import { readContingency, readReference, readTroopdata } from "./troops-history-run";
 
 // Real committed inputs (raw/troopdata + reference/dmdc-309a-sep.csv), not fixtures.
 let td: TroopdataRow[];
 let ref: ReferenceRow[];
+let cont: ContingencyRow[];
 let commit: string;
 let built: HistoryBuild;
 
@@ -15,7 +16,8 @@ beforeAll(async () => {
   td = t.rows;
   commit = t.commit;
   ref = await readReference();
-  built = buildHistory(td, ref, commit);
+  cont = await readContingency();
+  built = buildHistory(td, ref, cont, commit);
 });
 
 const row = (year: number, name: string): HistoryRow | undefined => built.rows.find((r) => r.year === year && r.name === name);
@@ -130,6 +132,37 @@ describe("not reported is not zero; estimates are flagged", () => {
   });
 });
 
+describe("contingency annotation: DMDC's in/around Iraq and Afghanistan totals", () => {
+  it("carries the OIF and OEF figures beside the unavailable country rows, not in them", () => {
+    const c = built.meta.contingency;
+    expect(c.map((x) => [x.year, x.operation, x.name, x.total])).toEqual([
+      [2003, "OIF", "Iraq", 183002],
+      [2004, "OIF", "Iraq", 170647],
+      [2005, "OIF", "Iraq", 192600],
+      [2005, "OEF", "Afghanistan", 19500],
+    ]);
+    for (const x of c) {
+      expect(x.army + x.navy + x.marine_corps + x.air_force).toBe(x.total);
+      expect(row(x.year, x.name)).toMatchObject({ state: "suppressed", total: null });
+    }
+    expect(yearMeta(2003).flags).toContain("contingency_annotation");
+    expect(yearMeta(2002).flags).not.toContain("contingency_annotation");
+  });
+  it("labels the basis: 2003 is active duty, 2004-05 include deployed Reserve/National Guard, 2005 is rounded", () => {
+    const by = (y: number, n: string) => built.meta.contingency.find((x) => x.year === y && x.name === n)!;
+    expect(by(2003, "Iraq")).toMatchObject({ basis: "active_duty", rounded: false });
+    expect(by(2004, "Iraq")).toMatchObject({ basis: "includes_reserve_guard", rounded: false });
+    expect(by(2005, "Iraq")).toMatchObject({ basis: "includes_reserve_guard", rounded: true });
+  });
+  it("is not added to any abroad total", () => {
+    expect(yearMeta(2003).abroad_total).toBe(built.rows.filter((r) => r.year === 2003 && r.class !== "territory").reduce((s, r) => s + (r.total ?? 0), 0));
+  });
+  it("fails if a figure's branches do not add up, or it would sit on a reported row", () => {
+    expect(() => buildHistory(td, ref, cont.map((c, i) => (i === 0 ? { ...c, army: c.army + 1 } : c)), commit)).toThrow(/branches add to/);
+    expect(() => buildHistory(td, ref, cont.map((c, i) => (i === 0 ? { ...c, place: "Germany", iso3: "DEU" } : c)), commit)).toThrow(/double count/);
+  });
+});
+
 describe("territories, classes and regions", () => {
   it("emits the five G2 territories as class territory and never as hosts", () => {
     const terr = new Set(built.rows.filter((r) => r.class === "territory").map((r) => r.name));
@@ -150,32 +183,32 @@ describe("territories, classes and regions", () => {
 
 describe("determinism", () => {
   it("builds byte-identical output twice", () => {
-    expect(JSON.stringify(buildHistory(td, ref, commit))).toBe(JSON.stringify(built));
+    expect(JSON.stringify(buildHistory(td, ref, cont, commit))).toBe(JSON.stringify(built));
   });
 });
 
 describe("negative tests: the gates fail loudly", () => {
   const bump = (year: number, pred: (r: ReferenceRow) => boolean, by: number) => ref.map((r) => (r.year === year && pred(r) ? { ...r, total: r.total + by } : r));
   it("fails on a broken printed foreign total", () => {
-    expect(() => buildHistory(td, bump(2001, (r) => /^Total - Foreign Countries/.test(r.name), 7), commit)).toThrow(/Σ foreign rows .* − printed foreign total 254795 = -7/);
+    expect(() => buildHistory(td, bump(2001, (r) => /^Total - Foreign Countries/.test(r.name), 7), cont, commit)).toThrow(/Σ foreign rows .* − printed foreign total 254795 = -7/);
   });
   it("fails on an unmapped DMDC country that carries troops", () => {
     const bad = ref.map((r) => (r.year === 2002 && r.name === "Japan" ? { ...r, name: "Atlantis" } : r));
-    expect(() => buildHistory(td, bad, commit)).toThrow(/unmapped name "Atlantis"/);
+    expect(() => buildHistory(td, bad, cont, commit)).toThrow(/unmapped name "Atlantis"/);
   });
   it("fails on an unmapped troopdata country that carries troops", () => {
     const bad = td.map((r) => (r.year === 1980 && r.month === "September" && r.countryname === "Japan" ? { ...r, countryname: "Atlantis" } : r));
-    expect(() => buildHistory(bad, ref, commit)).toThrow(/unmapped troopdata name "Atlantis"/);
+    expect(() => buildHistory(bad, ref, cont, commit)).toThrow(/unmapped troopdata name "Atlantis"/);
   });
   it("fails when troopdata and DMDC disagree on a large host", () => {
     const bad = td.map((r) => (r.year === 2002 && r.month === "September" && r.countryname === "Germany" ? { ...r, troops_ad: 1 } : r));
-    expect(() => buildHistory(bad, ref, commit)).toThrow(/2002: Germany DMDC 68701 vs troopdata 1/);
+    expect(() => buildHistory(bad, ref, cont, commit)).toThrow(/2002: Germany DMDC 68701 vs troopdata 1/);
   });
   it("fails if an imputed row shows up in a year that should be reported", () => {
     const bad = td.map((r, i) => (r.year === 1960 && r.month === "September" && i % 2 === 0 ? { ...r, source: "Stepwise Imputation" } : r));
-    expect(() => buildHistory(bad, ref, commit)).toThrow(/unexpected imputed rows/);
+    expect(() => buildHistory(bad, ref, cont, commit)).toThrow(/unexpected imputed rows/);
   });
   it("fails if a DMDC year is missing from the reference", () => {
-    expect(() => buildHistory(td, ref.filter((r) => r.year !== 2000), commit)).toThrow(TroopsDataError);
+    expect(() => buildHistory(td, ref.filter((r) => r.year !== 2000), cont, commit)).toThrow(TroopsDataError);
   });
 });

@@ -11,7 +11,7 @@
   "comparability": [
     "Sep 1996 and Sep 1998-2005 are DMDC's own 309A tables (active duty). Their foreign total includes afloat and undistributed personnel, as the 2008+ location tables' UNKNOWN row does; the rows here are class afloat_unassigned.",
     "1950-1995, Sep 1997 and Sep 2006-07 come from troopdata, which has no afloat or undistributed rows: its abroad_total is lower than a DMDC-style total by that amount (tens of thousands of people in the 1990s-2000s), so do not draw one unbroken line across 1995/1996 or 2007/2008 without saying so.",
-    "The DMDC 2003-04 tables exclude personnel deployed to Operation Iraqi Freedom from the country rows (printed 'Less OIF'); Iraq, Kuwait and Afghanistan are not reported (never 0) in 2003, 2004 and 2005. 2001-02 Afghanistan is likewise unavailable where the table says so.",
+    "The DMDC 2003-04 tables exclude personnel deployed to Operation Iraqi Freedom from the country rows (printed 'Less OIF'); Iraq, Kuwait and Afghanistan are not reported (never 0) in 2003, 2004 and 2005. 2001-02 Afghanistan is likewise unavailable where the table says so. The abroad totals for 2003-05 therefore omit the forces in and around Iraq (183,002 active duty in 2003; 170,647 in 2004 and 192,600 in 2005 including deployed Reserve/National Guard) and Afghanistan (19,500 in 2005, same basis): DMDC's separate OIF/OEF totals are carried in `contingency` as annotations on a different basis, never added to a total.",
     "Before 2008 the counts include personnel deployed to contingencies, as the 2008-Sep 2017 location tables do; the Dec 2017 permanent-assignment break is after this series ends.",
     "troopdata's 'United States' row is the continental U.S. only and is not emitted. Territories (Guam, Puerto Rico, U.S. Virgin Islands, American Samoa, Northern Mariana Islands) are class territory, as in the location series.",
     "Branch columns are Army, Navy, Marine Corps and Air Force; the 309A tables have no Coast Guard or Space Force."
@@ -49,6 +49,64 @@
     2003,
     2004,
     2005
+  ],
+  "contingency": [
+    {
+      "year": 2003,
+      "operation": "OIF",
+      "name": "Iraq",
+      "iso3": "IRQ",
+      "total": 183002,
+      "army": 152815,
+      "navy": 10070,
+      "marine_corps": 6545,
+      "air_force": 13572,
+      "basis": "active_duty",
+      "rounded": false,
+      "dmdc_label": "Total (In/around Iraq as of September 30, 2003)"
+    },
+    {
+      "year": 2004,
+      "operation": "OIF",
+      "name": "Iraq",
+      "iso3": "IRQ",
+      "total": 170647,
+      "army": 101932,
+      "navy": 15988,
+      "marine_corps": 35216,
+      "air_force": 17511,
+      "basis": "includes_reserve_guard",
+      "rounded": false,
+      "dmdc_label": "Total (In/around Iraq as of September 30, 2004) - Includes Reserve/National Guard"
+    },
+    {
+      "year": 2005,
+      "operation": "OIF",
+      "name": "Iraq",
+      "iso3": "IRQ",
+      "total": 192600,
+      "army": 132400,
+      "navy": 14500,
+      "marine_corps": 25900,
+      "air_force": 19800,
+      "basis": "includes_reserve_guard",
+      "rounded": true,
+      "dmdc_label": "Total (in around Iraq as of September 30, 2005) - Includes deployed Reserve/National Guard"
+    },
+    {
+      "year": 2005,
+      "operation": "OEF",
+      "name": "Afghanistan",
+      "iso3": "AFG",
+      "total": 19500,
+      "army": 15000,
+      "navy": 200,
+      "marine_corps": 1100,
+      "air_force": 3200,
+      "basis": "includes_reserve_guard",
+      "rounded": true,
+      "dmdc_label": "Total (in/around Afghanistan as of September 30, 2005) - Includes Deployed Reserve/National Guard"
+    }
   ],
   "troopdata_commit": "338bbda879932ac86cb5ef7f83845254f2c94070",
   "years": [
@@ -854,7 +912,8 @@
       ],
       "flags": [
         "contingency_hosts_not_reported",
-        "printed_total_excludes_oif_deployed"
+        "printed_total_excludes_oif_deployed",
+        "contingency_annotation"
       ]
     },
     {
@@ -874,7 +933,8 @@
       ],
       "flags": [
         "contingency_hosts_not_reported",
-        "printed_total_excludes_oif_deployed"
+        "printed_total_excludes_oif_deployed",
+        "contingency_annotation"
       ]
     },
     {
@@ -893,7 +953,8 @@
         "Kuwait"
       ],
       "flags": [
-        "contingency_hosts_not_reported"
+        "contingency_hosts_not_reported",
+        "contingency_annotation"
       ]
     },
     {

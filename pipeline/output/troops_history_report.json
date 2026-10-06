@@ -92,6 +92,12 @@
       }
     ]
   },
+  "contingency": [
+    "2003 Iraq 183002 (active_duty)",
+    "2004 Iraq 170647 (includes_reserve_guard)",
+    "2005 Iraq 192600 (includes_reserve_guard)",
+    "2005 Afghanistan 19500 (includes_reserve_guard)"
+  ],
   "notes": {
     "troopdata_unmapped_zero": [],
     "reconcile": [

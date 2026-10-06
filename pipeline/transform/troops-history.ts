@@ -2,9 +2,11 @@ import aliasJson from "./troops-history-aliases.json";
 import {
   TroopsDataError,
   historyAliasTable,
+  historyContingency,
   historyMeta,
   historyRow,
   type HistoryAliasEntry,
+  type HistoryContingency,
   type HistoryMeta,
   type HistoryRow,
   type HistoryYearMeta,
@@ -35,6 +37,20 @@ export interface TroopdataRow {
   navy_ad: number | null;
   air_force_ad: number | null;
   marine_corps_ad: number | null;
+}
+export interface ContingencyRow {
+  year: number;
+  operation: string;
+  place: string;
+  iso3: string;
+  total: number;
+  army: number;
+  navy: number;
+  marine_corps: number;
+  air_force: number;
+  basis: string;
+  rounded: boolean;
+  dmdc_label: string;
 }
 export interface ReferenceRow {
   year: number;
@@ -78,7 +94,7 @@ export interface HistoryBuild {
 
 const snapshotOf = (year: number): "june" | "september" => (year <= 1956 ? "june" : "september");
 
-export function buildHistory(troopdata: readonly TroopdataRow[], reference: readonly ReferenceRow[], troopdataCommit: string): HistoryBuild {
+export function buildHistory(troopdata: readonly TroopdataRow[], reference: readonly ReferenceRow[], contingencyRows: readonly ContingencyRow[], troopdataCommit: string): HistoryBuild {
   const errors: string[] = [];
   const fail = (m: string) => errors.push(m);
   const rows: HistoryRow[] = [];
@@ -342,6 +358,25 @@ export function buildHistory(troopdata: readonly TroopdataRow[], reference: read
     if (r.year < 2006 && r.quality !== "reported") fail(`${r.year}: ${r.name} is wrongly flagged ${r.quality}`);
   }
 
+  // The contingency annotations: each one sits on a host row the table prints as unavailable (so it fills a hole, never a
+  // double count), and its branches add up to its total.
+  const contingency: HistoryContingency[] = contingencyRows.map((c) => {
+    const parsed = historyContingency.safeParse({ year: c.year, operation: c.operation, name: c.place, iso3: c.iso3, total: c.total, army: c.army, navy: c.navy, marine_corps: c.marine_corps, air_force: c.air_force, basis: c.basis, rounded: c.rounded, dmdc_label: c.dmdc_label });
+    if (!parsed.success) {
+      fail(`contingency ${c.year} ${c.place}: ${parsed.error.issues.map((i) => i.message).join("; ")}`);
+      return null as unknown as HistoryContingency;
+    }
+    const v = parsed.data;
+    if (v.army + v.navy + v.marine_corps + v.air_force !== v.total) fail(`contingency ${v.year} ${v.name}: branches add to ${v.army + v.navy + v.marine_corps + v.air_force}, total is ${v.total}`);
+    const host = rows.find((r) => r.year === v.year && r.name === v.name);
+    if (!host || host.state !== "suppressed") fail(`contingency ${v.year} ${v.name}: the country row is not a suppressed (unavailable) row, so this would double count`);
+    return v;
+  });
+  for (const y of years) {
+    const has = contingency.some((c) => c && c.year === y.year);
+    if (has) y.flags.push("contingency_annotation");
+  }
+
   if (errors.length) throw new TroopsDataError(`troops history gates failed:\n  - ${errors.join("\n  - ")}`);
 
   rows.sort((a, b) => a.year - b.year || a.name.localeCompare(b.name));
@@ -362,7 +397,7 @@ export function buildHistory(troopdata: readonly TroopdataRow[], reference: read
     comparability: [
       "Sep 1996 and Sep 1998-2005 are DMDC's own 309A tables (active duty). Their foreign total includes afloat and undistributed personnel, as the 2008+ location tables' UNKNOWN row does; the rows here are class afloat_unassigned.",
       "1950-1995, Sep 1997 and Sep 2006-07 come from troopdata, which has no afloat or undistributed rows: its abroad_total is lower than a DMDC-style total by that amount (tens of thousands of people in the 1990s-2000s), so do not draw one unbroken line across 1995/1996 or 2007/2008 without saying so.",
-      "The DMDC 2003-04 tables exclude personnel deployed to Operation Iraqi Freedom from the country rows (printed 'Less OIF'); Iraq, Kuwait and Afghanistan are not reported (never 0) in 2003, 2004 and 2005. 2001-02 Afghanistan is likewise unavailable where the table says so.",
+      "The DMDC 2003-04 tables exclude personnel deployed to Operation Iraqi Freedom from the country rows (printed 'Less OIF'); Iraq, Kuwait and Afghanistan are not reported (never 0) in 2003, 2004 and 2005. 2001-02 Afghanistan is likewise unavailable where the table says so. The abroad totals for 2003-05 therefore omit the forces in and around Iraq (183,002 active duty in 2003; 170,647 in 2004 and 192,600 in 2005 including deployed Reserve/National Guard) and Afghanistan (19,500 in 2005, same basis): DMDC's separate OIF/OEF totals are carried in `contingency` as annotations on a different basis, never added to a total.",
       "Before 2008 the counts include personnel deployed to contingencies, as the 2008-Sep 2017 location tables do; the Dec 2017 permanent-assignment break is after this series ends.",
       "troopdata's 'United States' row is the continental U.S. only and is not emitted. Territories (Guam, Puerto Rico, U.S. Virgin Islands, American Samoa, Northern Mariana Islands) are class territory, as in the location series.",
       "Branch columns are Army, Navy, Marine Corps and Air Force; the 309A tables have no Coast Guard or Space Force.",
@@ -376,6 +411,7 @@ export function buildHistory(troopdata: readonly TroopdataRow[], reference: read
       { year: 2006, note: "No DMDC table for Sep 2006 or Sep 2007: troopdata's rows are used and every row is flagged estimate (Iraq 141,100 and 170,000, Kuwait 44,400 and 48,500 are press-based)." },
     ],
     dmdc_years: [...DMDC_YEARS],
+    contingency,
     troopdata_commit: troopdataCommit,
     years,
   });

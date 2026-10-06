@@ -5,6 +5,10 @@
 //
 // Needs `pdftotext` (poppler) on PATH; not part of CI or `pnpm transform`. The PDFs are U.S. DoD publications from
 // the DMDC page (M01.zip, M05.zip, groupName=... historical reports); they are not committed, only this extract is.
+//
+// `dmdc-309a-contingency.csv` is NOT produced by this script. Those four rows (Iraq 2003-05, Afghanistan 2005: the "Total (In/around
+// Iraq ...)" OIF/OEF deployment lines under the 309A table) are transcribed by hand from the same PDFs because their layout
+// differs by year (2005 puts the numbers on the line after the label). The transform checks that each row's branches add up to its total.
 // Each row is `year,seq,name,total,army,navy,marine_corps,air_force` (active duty, in table order, so repeated labels such
 // as "Afloat" stay distinguishable by `seq`). Coast Guard is not in these tables (it is DHS, not DoD).
 import { execFileSync } from "node:child_process";

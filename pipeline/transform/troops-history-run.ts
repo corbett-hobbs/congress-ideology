@@ -3,7 +3,7 @@ import { parse as parseCsv } from "csv-parse/sync";
 import { z } from "zod";
 import { TROOPDATA_MANIFEST_PATH, parseTroopdataManifest, troopdataRawPath } from "../fetch/troopdata-lib";
 import { TroopsDataError } from "../../lib/troops-entities";
-import { buildHistory, type ReferenceRow, type TroopdataRow } from "./troops-history";
+import { buildHistory, type ContingencyRow, type ReferenceRow, type TroopdataRow } from "./troops-history";
 
 /**
  * Troops-abroad history transform (1950-2007): raw/troopdata/* + reference/dmdc-309a-sep.csv ->
@@ -12,6 +12,7 @@ import { buildHistory, type ReferenceRow, type TroopdataRow } from "./troops-his
  */
 const OUT = "pipeline/output";
 const REFERENCE = "pipeline/reference/dmdc-309a-sep.csv";
+const CONTINGENCY = "pipeline/reference/dmdc-309a-contingency.csv";
 
 const oneRowPerLine = (rows: readonly unknown[]) => (rows.length === 0 ? "[]\n" : `[\n${rows.map((r) => JSON.stringify(r)).join(",\n")}\n]\n`);
 const num = (v: string): number | null => (v === "" || v === "NA" ? null : Number(v));
@@ -43,10 +44,15 @@ export async function readReference(): Promise<ReferenceRow[]> {
   return raw.map((r) => ({ year: Number(r.year), seq: Number(r.seq), name: r.name, total: Number(r.total), army: Number(r.army), navy: Number(r.navy), marine_corps: Number(r.marine_corps), air_force: Number(r.air_force) }));
 }
 
+export async function readContingency(): Promise<ContingencyRow[]> {
+  const raw = parseCsv(await readFile(CONTINGENCY, "utf8"), { columns: true, skip_empty_lines: true }) as Record<string, string>[];
+  return raw.map((r) => ({ year: Number(r.year), operation: r.operation, place: r.place, iso3: r.iso3, total: Number(r.total), army: Number(r.army), navy: Number(r.navy), marine_corps: Number(r.marine_corps), air_force: Number(r.air_force), basis: r.basis, rounded: r.rounded === "true", dmdc_label: r.dmdc_label }));
+}
+
 async function main() {
   console.log("transform:troops-history");
   const td = await readTroopdata();
-  const built = buildHistory(td.rows, await readReference(), td.commit);
+  const built = buildHistory(td.rows, await readReference(), await readContingency(), td.commit);
 
   await mkdir(OUT, { recursive: true });
   await writeFile(`${OUT}/troops_history.json`, oneRowPerLine(built.rows));
@@ -66,6 +72,7 @@ async function main() {
       dmdc_foreign_total_exact: ym.filter((y) => y.dmdc_foreign_total !== null).length,
       troopdata_reconciliation: built.notes.reconcile,
     },
+    contingency: built.meta.contingency.map((c) => `${c.year} ${c.name} ${c.total} (${c.basis})`),
     notes: built.notes,
     file_sizes_bytes: { "troops_history.json": (await stat(`${OUT}/troops_history.json`)).size },
   };

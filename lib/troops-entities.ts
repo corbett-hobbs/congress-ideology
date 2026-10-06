@@ -179,6 +179,31 @@ export const historyYearMeta = z
   })
   .strict();
 
+/**
+ * DMDC's separate "in/around Iraq" (OIF) and "in/around Afghanistan" (OEF) deployment totals under the 309A table, for the
+ * years the country rows print those hosts as unavailable. An annotation, not a row: it is a different basis (see `basis`),
+ * may overlap country rows (forces deployed from Germany are also in Germany), and is never added to an abroad total.
+ */
+export const historyContingency = z
+  .object({
+    year: z.number().int().min(2003).max(2005),
+    operation: z.enum(["OIF", "OEF"]),
+    name: z.string().min(1),
+    iso3: z.string().regex(/^[A-Z]{3}$/),
+    total: z.number().int().positive(),
+    army: z.number().int().nonnegative(),
+    navy: z.number().int().nonnegative(),
+    marine_corps: z.number().int().nonnegative(),
+    air_force: z.number().int().nonnegative(),
+    /** `active_duty`: Sep 2003 (the active-duty table). `includes_reserve_guard`: 2004 and 2005 add deployed Reserve/National Guard, so not comparable with the 2003 figure or the country rows. */
+    basis: z.enum(["active_duty", "includes_reserve_guard"]),
+    /** DMDC prints the 2005 deployments as "not complete - rounded strengths". */
+    rounded: z.boolean(),
+    dmdc_label: z.string().min(1),
+  })
+  .strict();
+export type HistoryContingency = z.infer<typeof historyContingency>;
+
 export const historyMeta = z
   .object({
     source: z.string(),
@@ -190,6 +215,8 @@ export const historyMeta = z
     gaps: z.array(z.object({ years: z.array(z.number().int()), reason: z.string() }).strict()),
     substitutions: z.array(z.object({ year: z.number().int(), note: z.string() }).strict()),
     dmdc_years: z.array(z.number().int()),
+    /** Iraq/Afghanistan deployment totals DMDC prints beside the unavailable country rows; annotation only. */
+    contingency: z.array(historyContingency),
     troopdata_commit: z.string(),
     years: z.array(historyYearMeta),
   })
