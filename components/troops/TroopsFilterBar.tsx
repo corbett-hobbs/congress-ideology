@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { RangeReset } from "@/components/charts/RangeReset";
-import { TermBand, windowNames, type BandTerm } from "@/components/charts/TermBand";
+import { TermBand, type BandTerm } from "@/components/charts/TermBand";
 import { RangeSelector } from "@/components/charts/RangeSelector";
 import { CountryCombobox } from "@/components/trade/CountryCombobox";
 import { MEASURES } from "@/lib/troops-types";
@@ -26,12 +26,9 @@ export function TroopsFilterBar() {
   const refs = useMemo<TradeCountryRef[]>(() => hosts.map((h) => ({ code: h.p.name, name: h.p.name, firstYear: null, lastYear: null })), [hosts]);
   const indexOf = useMemo(() => new Map(hosts.map((h) => [h.p.name, h.i])), [hosts]);
   const bandTerms = useMemo<BandTerm[]>(
-    () => terms.filter((t) => t.to >= t.from).map((t) => ({ id: t.termId, label: t.label, last: t.last, party: t.party, from: t.from, to: t.to })),
+    () => terms.filter((t) => t.to >= t.from).map((t) => ({ id: t.termId, label: t.label, last: t.last, initials: t.president.split(" ").map((w) => w[0]).join(""), party: t.party, from: t.from, to: t.to })),
     [terms],
   );
-  // The two Bushes share a last name, so they get initials (as on the Court page).
-  const short = (t: BandTerm) => (t.last === "Bush" ? (t.label.includes("H. W.") ? "G.H.W. Bush" : "G.W. Bush") : t.last);
-  const names = windowNames(bandTerms, range, 0, years.length - 1, short);
   const full = range[0] === 0 && range[1] === years.length - 1;
   return (
     <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 shadow-[0_2px_6px_rgba(26,34,51,0.08)] backdrop-blur sm:shadow-none">
@@ -67,7 +64,6 @@ export function TroopsFilterBar() {
               format={(i) => String(years[i].fy)}
               ariaLabel="Years shown"
               className="min-w-0 flex-1"
-              note={names}
               action={<RangeReset show={!full} onReset={() => setRange([0, years.length - 1])} className="mt-0.5 font-sans leading-none" />}
               below={<TermBand terms={bandTerms} min={0} max={years.length - 1} value={range} onChange={setRange} />}
             />

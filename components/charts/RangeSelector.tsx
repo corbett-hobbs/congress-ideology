@@ -18,9 +18,7 @@ interface Props {
   className?: string;
   /** Optional strip drawn under the track, inset like the track so it lines up with the handles' travel (the term band). */
   below?: ReactNode;
-  /** Small line above the readout, e.g. the presidents a window covers; only passed when it is exact. */
-  note?: string;
-  /** Rendered under the note (the Reset link), inside the readout column so it never narrows the track. */
+  /** Rendered under the years (the Reset link), inside the readout column so it never narrows the track. */
   action?: ReactNode;
 }
 
@@ -31,7 +29,7 @@ interface Props {
  * every time-axis page uses the same control and owns one `[from, to]` state.
  * Native range inputs give keyboard and touch drag for free.
  */
-export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1, format, ariaLabel, className = "", below, note, action }: Props) {
+export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1, format, ariaLabel, className = "", below, action }: Props) {
   const [from, to] = value;
   const range = Math.max(1, max - min);
   const left = ((from - min) / range) * 100;
@@ -75,11 +73,6 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
         <span className={`text-[0.95rem] font-semibold ${below ? "leading-6" : ""}`}>
           {from === to ? format(from) : `${format(from)}–${format(to)}`}
         </span>
-        {note && (
-          <span title={note} className="-mt-0.5 max-w-full truncate font-sans text-[0.68rem] font-normal leading-[1.1] text-ink-muted">
-            {note}
-          </span>
-        )}
         {action}
       </span>
     </div>

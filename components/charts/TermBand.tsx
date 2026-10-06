@@ -9,6 +9,8 @@ export interface BandTerm {
   label: string;
   /** Last name, shown when it fits; a four-letter form is tried next. */
   last: string;
+  /** Initials, e.g. "BO", used when the last name and its four-letter form don't fit the segment. */
+  initials: string;
   party: "D" | "R";
   /** First and last index the term covers on the slider's axis (inclusive). */
   from: number;
@@ -17,9 +19,12 @@ export interface BandTerm {
 
 /**
  * The presidential-term band under a `RangeSelector` track (its `below` slot). Each segment is the same light party
- * tint as the chart bands (rule 10b). Tap a term to snap the window to it (tap the lone selected term again to go back
- * to everything); press on one term and drag across others to select the run; from the keyboard, Enter or Space snaps
- * and Shift+Enter or Shift+Space extends the window to include the term. Terms the window doesn't touch fade.
+ * tint as the chart bands (rule 10b), labelled with the last name, else a four-letter form, else initials, else the last
+ * initial. Terms *add up*: tapping an unselected term adds it to the window (including any terms between, since the
+ * window is one continuous run); tapping a selected term at either end of the run drops it, and tapping the only
+ * selected term clears the filter. A selected term in the middle can't be dropped without leaving a gap, so it does
+ * nothing. Press on one term and drag across others to add the whole run; Enter or Space toggles from the keyboard.
+ * Terms the window doesn't touch fade.
  */
 export function TermBand({
   terms,
@@ -44,11 +49,18 @@ export function TermBand({
   const dragRef = useRef<{ a: number; b: number } | null>(null);
 
   const full = value[0] === min && value[1] === max;
-  const snap = (a: number, b: number) => {
-    const from = Math.min(terms[a].from, terms[b].from);
-    const to = Math.max(terms[a].to, terms[b].to);
-    // Tapping the only selected term again clears the filter.
-    onChange(a === b && value[0] === from && value[1] === to ? [min, max] : [from, to]);
+  // Terms the window covers whole; none while it is the full range (nothing is "selected" then).
+  const selected = full ? [] : terms.map((t, k) => (t.from >= value[0] && t.to <= value[1] ? k : -1)).filter((k) => k >= 0);
+  const addRun = (a: number, b: number) => {
+    const lo = Math.min(terms[a].from, terms[b].from);
+    const hi = Math.max(terms[a].to, terms[b].to);
+    onChange(full ? [lo, hi] : [Math.min(lo, value[0]), Math.max(hi, value[1])]);
+  };
+  const toggle = (k: number) => {
+    if (!selected.includes(k)) return addRun(k, k);
+    if (selected.length === 1) return onChange([min, max]);
+    if (k === selected[0]) onChange([terms[selected[1]].from, value[1]]);
+    else if (k === selected[selected.length - 1]) onChange([value[0], terms[selected[selected.length - 2]].to]);
   };
   const termAt = (clientX: number) => {
     const box = wrapRef.current?.getBoundingClientRect();
@@ -81,16 +93,14 @@ export function TermBand({
     const d = dragRef.current;
     dragRef.current = null;
     setDrag(null);
-    if (d) snap(d.a, d.b);
+    if (!d) return;
+    if (d.a === d.b) toggle(d.a);
+    else addRun(Math.min(d.a, d.b), Math.max(d.a, d.b));
   };
   const key = (e: KeyboardEvent<HTMLButtonElement>, k: number) => {
     if (e.key !== "Enter" && e.key !== " ") return;
     e.preventDefault();
-    if (e.shiftKey) {
-      const from = Math.min(value[0], terms[k].from);
-      const to = Math.max(value[1], terms[k].to);
-      onChange([from, to]);
-    } else snap(k, k);
+    toggle(k);
   };
 
   const lo = drag ? Math.min(drag.a, drag.b) : -1;
@@ -100,7 +110,7 @@ export function TermBand({
     <div
       ref={wrapRef}
       role="group"
-      aria-label="Presidential terms: choose one, or drag across several"
+      aria-label="Presidential terms: tap to add or remove, or drag across several"
       className="relative mt-0.5 h-[1.45rem] touch-none select-none"
       onPointerDown={down}
       onPointerMove={move}
@@ -113,15 +123,15 @@ export function TermBand({
           const w = ((r - l) / 100) * innerW;
           const c = t.party === "R" ? "--rep" : "--dem";
           const inWin = t.to >= value[0] && t.from <= value[1];
-          const picked = drag ? k >= lo && k <= hi : inWin && !full;
-          const text = [t.last, `${t.last.slice(0, 4)}.`].find((x) => x.length * 6.2 + 4 <= w) ?? "";
+          const picked = (drag ? k >= lo && k <= hi : false) || selected.includes(k);
+          const text = [t.last, `${t.last.slice(0, 4)}.`, t.initials, t.initials.slice(-1)].find((x) => x.length * 6.2 + (x.length > 1 ? 4 : 1) <= w) ?? "";
           return (
             <button
               key={t.id}
               type="button"
               title={t.label}
               aria-label={t.label}
-              aria-pressed={t.from >= value[0] && t.to <= value[1] && !full}
+              aria-pressed={selected.includes(k)}
               onKeyDown={(e) => key(e, k)}
               onClick={(e) => e.preventDefault()}
               className="absolute inset-y-0 cursor-pointer overflow-hidden rounded-[2px] p-0 text-left focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
@@ -144,16 +154,3 @@ export function TermBand({
   );
 }
 
-/**
- * Names for the readout: only when the window is exactly whole terms (first handle on a term's first year, last on a
- * term's last), never for the full range or a hand-dragged window that would claim part of a term it only half covers.
- * One or two terms list their names; three or more give "first – last" (the window is always a continuous run, so the dash means everything between).
- */
-export function windowNames(terms: readonly BandTerm[], value: readonly [number, number], min: number, max: number, name: (t: BandTerm) => string): string | undefined {
-  if (value[0] === min && value[1] === max) return undefined;
-  if (!terms.some((t) => t.from === value[0]) || !terms.some((t) => t.to === value[1])) return undefined;
-  const inside = terms.filter((t) => t.from >= value[0] && t.to <= value[1]);
-  if (inside.length === 0) return undefined;
-  const n = inside.map(name);
-  return n.length <= 2 ? n.join(", ") : `${n[0]} – ${n[n.length - 1]}`;
-}
