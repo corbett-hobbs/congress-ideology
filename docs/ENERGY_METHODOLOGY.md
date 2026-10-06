@@ -77,7 +77,7 @@ Review tail onto a Petroleum Supply Monthly history. Observed vintage gaps betwe
 ## Revisions and the weekly job
 
 `.github/workflows/energy-freshness.yml` (Tuesdays; needs the repo secret `EIA_API_KEY`) re-fetches, applies the rule in
-`pipeline/fetch/energy-diff.ts`, and opens a PR only when it trips; never auto-merged:
+`pipeline/fetch/energy-diff.ts`, and opens a PR only when it trips; auto-merged only after the CI gate passes:
 
 - a new period, a removed one, or a missing<->value flip always counts;
 - a revision to a **final** observation always counts, however small;

@@ -1,13 +1,13 @@
 name: Trade freshness
 
-# Automate the check, gate the acceptance on a human.
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
 #
 # Weekly: re-fetch the Census trade sources (country.xlsx, gands.xlsx, Schedule C,
 # and the calculated-duties API), rebuild pipeline/output/, and open a PR only when the
 # rebuilt output differs from what is committed. Census re-issues its spreadsheets with
 # new bytes even when no number changed, so the comparison is on the OUTPUT, not the
 # raw files. A validation failure (pipeline/transform/trade.ts) fails the job loudly
-# instead of opening a PR. Never auto-merged.
+# instead of opening a PR. Auto-merged only after the full CI gate passes (.github/actions/gate-and-merge).
 #
 # Requires the repo secret CENSUS_API_KEY, and
 #   Settings > Actions > General > "Allow GitHub Actions to create and
@@ -67,6 +67,7 @@ jobs:
           fi
 
       - name: Open pull request
+        id: cpr
         if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -97,4 +98,16 @@ jobs:
             - A new Census country code fails the build until it is added deliberately (`pipeline/transform/trade.ts`, `trade-iso.ts`).
             - Run `pnpm pipeline:check` locally.
 
-            Not auto-merged by design.
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}

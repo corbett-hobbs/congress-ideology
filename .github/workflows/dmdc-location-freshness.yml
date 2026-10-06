@@ -1,12 +1,12 @@
 name: DMDC troop-location freshness
 
-# Automate the check, gate the acceptance on a human.
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
 #
 # Weekly: read the DMDC report page's JSON (`pnpm fetch:dmdc-location --check`, which fetches
 # no files) and compare its location-report periods with pipeline/raw/dmdc-location/manifest.json.
 # Only when a period is new: download, rebuild pipeline/output/, and open a PR if the output
 # differs. A gate failure in the transform (As-of mismatch, an overseas total that does not
-# reconcile, an unmapped country) fails the job loudly instead of opening a PR. Never auto-merged.
+# reconcile, an unmapped country) fails the job loudly instead of opening a PR. Auto-merged only after the full CI gate passes (.github/actions/gate-and-merge).
 #
 # DMDC publishes about 5-10 weeks after quarter end, sometimes late (Sep and Dec 2024 arrived
 # together nine months on), so most weeks this does nothing. Needs no secrets; the repo setting
@@ -71,6 +71,7 @@ jobs:
           fi
 
       - name: Open pull request
+        id: cpr
         if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -99,4 +100,16 @@ jobs:
             - A new quarter whose overseas rows do not sum to the printed total fails the build until the exception is documented in `docs/TROOPS_METHODOLOGY.md` and `OVERSEAS_EXCEPTIONS`.
             - Run `pnpm pipeline:check` locally.
 
-            Not auto-merged by design.
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}

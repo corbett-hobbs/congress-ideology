@@ -1,12 +1,12 @@
 name: Foreign assistance freshness
 
-# Automate the check, gate the acceptance on a human.
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
 #
 # Weekly: read the "Data last updated on" date that ForeignAssistance.gov publishes and compare it
 # with pipeline/raw/foreign-assistance/meta.json (`pnpm fetch:foreign-assistance --check`, which
 # fetches no data). Only when the site has moved: re-fetch, rebuild pipeline/output/, and open a PR
 # if the output differs. A validation or reconciliation failure fails the job loudly instead of
-# opening a PR. Never auto-merged.
+# opening a PR. Auto-merged only after the full CI gate passes (.github/actions/gate-and-merge).
 #
 # Needs no secrets; the repo setting
 #   Settings > Actions > General > "Allow GitHub Actions to create and
@@ -69,6 +69,7 @@ jobs:
           fi
 
       - name: Open pull request
+        id: cpr
         if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -96,4 +97,16 @@ jobs:
             - A country the crosswalk does not know fails the build until it is mapped deliberately.
             - Run `pnpm pipeline:check` locally.
 
-            Not auto-merged by design.
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}

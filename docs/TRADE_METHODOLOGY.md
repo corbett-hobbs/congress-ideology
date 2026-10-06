@@ -177,4 +177,4 @@ file's last month is the newest month the API returned. The two can differ.
 
 Census restates history (annual revisions each June). Raw snapshots are replaced on refresh
 and the weekly job (`trade-freshness.yml`) opens a PR when the rebuilt output differs;
-never auto-merged. Values are the latest revised as of the fetch (`fetched_at` in the duties raw files).
+auto-merged only after the CI gate passes. Values are the latest revised as of the fetch (`fetched_at` in the duties raw files).

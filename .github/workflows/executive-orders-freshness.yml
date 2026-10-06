@@ -1,10 +1,10 @@
 name: Executive orders freshness
 
-# Automate the check, gate the acceptance on a human.
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
 #
 # Weekly: re-fetch executive orders (1994-present) from the Federal Register
 # API and diff against pipeline/raw/federal-register/. On a meaningful diff,
-# open a pull request. Never auto-merged.
+# open a pull request. Auto-merged only after the full CI gate passes (.github/actions/gate-and-merge).
 #
 # New orders have no topic yet and CI never classifies. So after the fetch this
 # job (1) lets amending/revoking orders inherit their parent's topic
@@ -81,6 +81,7 @@ jobs:
           exit 0
 
       - name: Open pull request
+        id: cpr
         if: steps.detect.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -117,4 +118,16 @@ jobs:
               failure means the Federal Register itself changed — verify against federalregister.gov.
             - Check any `needs_review` orders in the new rows.
 
-            Not auto-merged by design.
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}

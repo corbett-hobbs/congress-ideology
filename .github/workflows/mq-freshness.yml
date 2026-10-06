@@ -1,6 +1,6 @@
 name: Martin-Quinn data freshness
 
-# Automate the check, gate the acceptance on a human.
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
 #
 # Monthly (MQ publishes about once a year): probe mqscores.wustl.edu for a
 # release newer than the newest folder in pipeline/raw/mq/, and if one exists
@@ -74,6 +74,7 @@ jobs:
           fi
 
       - name: Open pull request
+        id: cpr
         if: steps.detect.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -99,4 +100,16 @@ jobs:
               Court had mid-term turnover.
             - Update the release label in `docs/CREDITS.md`.
 
-            Not auto-merged by design.
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}

@@ -1,6 +1,6 @@
 name: Energy freshness
 
-# Automate the check, gate the acceptance on a human.
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
 #
 # Weekly: re-fetch the EIA energy series and compare against the committed snapshots in
 # pipeline/raw/eia/. EIA revises recent months, so a naive git diff is noisy. The materiality rule
@@ -11,7 +11,7 @@ name: Energy freshness
 #     (about 1%, lib/energy-entities.ts);
 #   - every revision, material or not, is listed (largest first) in the PR body.
 # If nothing is material no PR opens and the working tree is discarded, so sub-tolerance revisions
-# accumulate until the next material change carries them in. Never auto-merged.
+# accumulate until the next material change carries them in. Auto-merged only after the full CI gate passes (.github/actions/gate-and-merge).
 #
 # Requires the repo secret EIA_API_KEY, and
 #   Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests"
@@ -76,6 +76,7 @@ jobs:
           exit 0
 
       - name: Open pull request
+        id: cpr
         if: steps.diff.outputs.material == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -104,4 +105,16 @@ jobs:
             - A revision to a final value is EIA restating history. Confirm nothing here is a series redefinition (the transform fails on a units change).
             - `pnpm validate && pnpm transform` must pass, including the display-window coverage assertion.
 
-            Not auto-merged by design.
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}

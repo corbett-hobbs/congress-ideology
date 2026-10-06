@@ -1,0 +1,74 @@
+name: Gate and merge a data refresh
+description: >
+  Used by the *-freshness workflows after peter-evans/create-pull-request. Checks out the PR commit,
+  rebuilds pipeline/output from the committed raw data (committing any regenerated output to the PR
+  branch), runs everything CI runs, and squash-merges the PR only if all of it passes. If anything
+  fails the step fails (the run goes red and emails you) and the PR stays open for a human.
+
+# Why this exists: a PR pushed with GITHUB_TOKEN does not trigger the CI workflow, so a plain
+# `gh pr merge --auto` would merge with no tests. The gate runs the same commands as ci.yml here.
+# Needs the caller's job to have already run checkout, pnpm/action-setup, setup-node and
+# `pnpm install`, and `contents: write` + `pull-requests: write` permissions.
+
+inputs:
+  pr-number:
+    description: Pull request number (steps.<id>.outputs.pull-request-number)
+    required: true
+  branch:
+    description: PR head branch (steps.<id>.outputs.pull-request-branch)
+    required: true
+  head-sha:
+    description: PR head commit (steps.<id>.outputs.pull-request-head-sha)
+    required: true
+  token:
+    description: Token with contents and pull-requests write (github.token)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Check out the PR commit
+      shell: bash
+      env:
+        BRANCH: ${{ inputs.branch }}
+        HEAD_SHA: ${{ inputs.head-sha }}
+      run: git checkout -B "$BRANCH" "$HEAD_SHA"
+
+    - name: Validate and rebuild outputs from the raw data
+      shell: bash
+      run: |
+        pnpm validate
+        pnpm transform
+
+    - name: Commit regenerated outputs to the PR branch (if any)
+      shell: bash
+      env:
+        BRANCH: ${{ inputs.branch }}
+      run: |
+        if [ -n "$(git status --porcelain -- pipeline/output)" ]; then
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pipeline/output
+          git commit -m "chore(pipeline): rebuild outputs from the refreshed raw data"
+          git push origin "HEAD:refs/heads/$BRANCH"
+        else
+          echo "pipeline/output already matches the raw data."
+        fi
+
+    - name: Run the CI checks
+      shell: bash
+      env:
+        NEXT_TELEMETRY_DISABLED: "1"
+      run: |
+        pnpm typecheck
+        pnpm lint
+        pnpm test
+        pnpm pipeline:check
+        pnpm build
+
+    - name: Merge
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        PR: ${{ inputs.pr-number }}
+      run: gh pr merge "$PR" --squash --delete-branch

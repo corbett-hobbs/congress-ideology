@@ -181,7 +181,7 @@ in the report, not gated.
 ## Refresh procedure
 
 1. `pnpm fetch:dmdc-location` (the weekly workflow `.github/workflows/dmdc-location-freshness.yml` runs `--check` and
-   opens a PR only when a period is new; never auto-merged).
+   opens a PR only when a period is new; auto-merged only after the CI gate passes).
 2. `pnpm exec tsx pipeline/transform/troops-location-run.ts`. A new label with troops, or a total that does not
    reconcile, fails here: add the alias or document the exception (table above and `OVERSEAS_EXCEPTIONS`) on purpose.
 3. `pnpm pipeline:check`, then review `troops_location_report.json`.

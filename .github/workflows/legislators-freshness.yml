@@ -1,12 +1,12 @@
 name: Legislators freshness
 
-# Automate the check, gate the acceptance on a human.
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
 #
 # Daily: re-fetch the unitedstates/congress-legislators files (current and historical legislators,
 # current committees and their rosters). Members leave office through deaths, resignations and
 # party switches, and committee rosters move, whenever the maintainers commit. If any file differs
 # from the snapshot in pipeline/raw/congress-legislators/, rebuild pipeline/output/ and open a PR
-# with both. One PR per upstream change; never auto-merged. The files are small, so the diff of
+# with both. One PR per upstream change; auto-merged only after the CI gate passes (.github/actions/gate-and-merge). The files are small, so the diff of
 # the downloaded bytes is the change check (no stored ETag or SHA to go stale).
 #
 # A validation failure (an unmapped bioguide id, a malformed roster) fails the job loudly
@@ -78,6 +78,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Open pull request
+        id: cpr
         if: steps.detect.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -103,4 +104,16 @@ jobs:
             - A new member has no photo or Wikipedia summary yet; `pnpm fetch:photos` and `pnpm fetch:wikipedia` fill them in, or the weekly Wikipedia job will.
             - Run `pnpm pipeline:check` locally.
 
-            Not auto-merged by design.
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}

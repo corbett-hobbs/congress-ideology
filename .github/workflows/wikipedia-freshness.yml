@@ -1,12 +1,12 @@
 name: Wikipedia bios freshness
 
-# Automate the check, gate the acceptance on a human.
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
 #
 # Weekly: re-fetch every current member's Wikipedia lead and, if the trimmed
 # result differs from pipeline/output/wikipedia_summaries.json, open a pull
-# request. Never auto-merged — a human reviews the diff (it includes each
-# record's `revision`, so vandalism is easy to check in the article history)
-# and merges. A record only changes when the SHOWN text changes; edits
+# request. Auto-merged only after the full CI gate passes (.github/actions/gate-and-merge); if
+# it fails the PR stays open for review. Each record's `revision` is in the diff, so
+# vandalism can still be checked in the article history afterward. A record only changes when the SHOWN text changes; edits
 # elsewhere in an article produce no diff.
 #
 # Requires repo setting:
@@ -62,6 +62,7 @@ jobs:
           fi
 
       - name: Open pull request
+        id: cpr
         if: steps.detect.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -83,4 +84,16 @@ jobs:
             - Check any record with `needs_review: true`.
             - Locally: `pnpm validate`.
 
-            Not auto-merged by design.
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}
