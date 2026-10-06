@@ -421,7 +421,7 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
         and rate.
       </p>
 
-      <div ref={wrapRef} className="relative mt-3">
+      <div ref={wrapRef} className="relative mt-3 -mx-3 sm:mx-0">
         <ChartFrame
           width={W}
           height={H}

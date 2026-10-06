@@ -152,7 +152,7 @@ export function RemovalsChart({
       const next = e.relatedTarget;
       if (next instanceof Node && !wrap.current?.contains(next)) close();
     }}>
-      <div ref={ref}>
+      <div ref={ref} className="-mx-3 sm:mx-0">
         <ChartFrame
           width={W}
           height={SVG_H}

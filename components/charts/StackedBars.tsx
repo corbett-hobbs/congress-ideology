@@ -114,7 +114,7 @@ export function StackedBars<C extends StackColumn>({
   const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 ? BAND_H + 6 : 0) };
 
   return (
-    <div ref={wrapRef} className="relative">
+    <div ref={wrapRef} className="relative -mx-3 sm:mx-0">
       <ChartFrame
         width={width}
         height={height}

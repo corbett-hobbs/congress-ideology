@@ -261,7 +261,7 @@ export function TradeScatterCard({
         <p className="m-0 mt-2 text-[0.8rem] text-ink-muted">{`${selectedRow.name} isn’t plotted: it is missing months of duties data in ${selectedRow.months[0] < windows.months ? "the baseline" : "the latest"} window.`}</p>
       )}
 
-      <div ref={wrapRef} className="relative mt-3 touch-scroll">
+      <div ref={wrapRef} className="relative mt-3 -mx-3 sm:mx-0 touch-scroll">
         <ChartFrame width={W} height={H} margin={margin} ariaLabel={aria} svgRef={svgRef} svgProps={zoom.svgProps} onPointerLeave={() => tip.hide()}>
           {() => (
             <>

@@ -359,7 +359,7 @@ export function EconomyChart({ data, spec, hero = false, showCong, view, reading
   };
 
   return (
-    <div ref={wrapRef}>
+    <div ref={wrapRef} className="-mx-3 sm:mx-0">
       <ChartFrame
         width={W}
         height={g.height}

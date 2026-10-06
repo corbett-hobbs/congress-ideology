@@ -51,7 +51,7 @@ export function TrendChart({
   const yearTicks = W < 480 ? [1789, 1909, 2025] : YEAR_TICKS;
 
   return (
-    <div ref={wrapRef}>
+    <div ref={wrapRef} className="-mx-3 sm:mx-0">
       <ChartFrame
         width={W}
         height={H}

@@ -271,7 +271,7 @@ export function TradeTariffChart(props: Props) {
   };
 
   return (
-    <div ref={wrapRef}>
+    <div ref={wrapRef} className="-mx-3 sm:mx-0">
       <ChartFrame
         width={W}
         height={g.height}

@@ -96,7 +96,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
   return (
     <div
       ref={wrapRef}
-      className="relative touch-scroll outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      className="relative -mx-3 sm:mx-0 touch-scroll outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       tabIndex={0}
       onKeyDown={onKey}
       role="group"

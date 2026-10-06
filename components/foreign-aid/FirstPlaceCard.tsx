@@ -85,7 +85,7 @@ export function FirstPlaceCard() {
 
   return (
     <ChartCard title="Who’s been No. 1" lede={lede}>
-      <div ref={wrapRef} className="touch-scroll relative">
+      <div ref={wrapRef} className="touch-scroll relative -mx-3 sm:mx-0">
         <ChartFrame
           width={W}
           height={H}
