@@ -60,8 +60,8 @@ export function EconomyFilterBar({
             action={<RangeReset show={!isFull} onReset={() => onRange(null)} className="mt-0.5 font-sans leading-none" />}
             className="w-full sm:w-auto sm:min-w-[220px] sm:flex-1"
           />
-          <div className="order-last flex min-w-0 items-center gap-2.5 sm:order-first">
-            <span className="text-[0.8rem] leading-snug text-ink sm:w-[17rem] sm:truncate">{status}</span>
+          <div className="order-first flex min-w-0 items-center gap-2.5">
+            <span className="text-[0.8rem] leading-snug text-ink sm:w-[22rem]">{status}</span>
             {canClear && (
               <button
                 type="button"
