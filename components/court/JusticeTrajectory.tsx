@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { useId, useMemo, useState } from "react";
 import { scaleLinear } from "d3-scale";
 import { area, line } from "d3-shape";
@@ -20,7 +21,7 @@ import {
 
 const FALLBACK_W = 1100;
 const H = 340;
-const MARGIN = { top: 14, right: 14, bottom: 30, left: 10 };
+const MARGIN = { top: 14, right: 14, bottom: 30, left: Y_GUTTER };
 const partyVar = (j: CourtJustice) => (j.party === "D" ? "var(--dem)" : "var(--rep)");
 
 /**

@@ -1,5 +1,6 @@
 "use client";
 
+import { yGutter } from "@/lib/chart-bars";
 import { memo, useEffect, useMemo, useState, type ReactNode, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
@@ -16,7 +17,6 @@ import type { Monthly, TariffFlag } from "@/lib/trade-types";
 import { BAND_H, PresidentAndCongress, RecessionLabels, RecessionShading, ROW_H, YearAxis, type Era } from "./EraLayers";
 import { activeDay, useTradeActions, useTradeValues } from "./TradeState";
 
-const YHALO = { stroke: "var(--surface)", strokeWidth: 3, strokeLinejoin: "round", paintOrder: "stroke" } as const;
 
 export const AUTHORITY_LABEL: Record<string, string> = {
   section_232: "Section 232",
@@ -54,7 +54,7 @@ const dateText = (iso: string) => {
 };
 
 function layout(W: number, view: readonly [number, number], scale: Scale, showCong: boolean, flagInputs: readonly FlagInput[], era: Era) {
-  const ml = 8; // y labels sit inside the plot
+  const ml = yGutter(scale.ticks.map(fmtPercentTick)); // y labels sit in a gutter left of the plot
   const mr = 12;
   const pw = W - ml - mr;
   const X = (day: number) => ml + ((day - view[0]) / (view[1] - view[0])) * pw;
@@ -124,7 +124,7 @@ const StaticLayer = memo(function StaticLayer({ main, reference, scale, era, sho
       {scale.ticks.map((v) => (
         <g key={v}>
           <line x1={ml} x2={ml + pw} y1={Y(v)} y2={Y(v)} className={v === 0 ? "zero-line" : "grid-line"} />
-          <text x={ml + 4} y={Y(v) - 4} textAnchor="start" className="fill-ink-muted font-mono text-[11px]" style={YHALO}>{fmtPercentTick(v)}</text>
+          <text x={ml - 6} y={Y(v) + 3.5} textAnchor="end" className="fill-ink-muted font-mono text-[11px]">{fmtPercentTick(v)}</text>
         </g>
       ))}
       {breakVisible && (

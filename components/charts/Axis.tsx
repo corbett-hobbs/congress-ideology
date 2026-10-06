@@ -22,10 +22,11 @@ interface AxisProps {
 
 const defaultFormat = (v: number) => String(v);
 
-/** Left-axis labels sit inside the plot, just above their gridline, so the plot can use the full width; the halo keeps them legible over dots and lines. */
-const INSIDE_HALO = { paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 3, strokeLinejoin: "round" } as const;
 
 /**
+ * Left-axis labels sit in a gutter to the left of the plot (right-aligned at `offset - 6`, centred on their gridline), so
+ * bars and lines never run under them; the chart's left margin must be at least `yGutter(labels)` (lib/chart-bars).
+ *
  * Renders tick marks / gridlines and labels for a linear scale. One
  * implementation, used by every chart — the prototype hand-rolled tick
  * placement separately in the trend and delegation charts.
@@ -65,7 +66,7 @@ export function Axis({
 
         const label = horizontal
           ? { x: p, y: offset + 16, anchor: "middle" as const }
-          : { x: offset + 4, y: p - 4, anchor: "start" as const };
+          : { x: offset - 6, y: p + 3.5, anchor: "end" as const };
 
         return (
           <g key={v}>
@@ -73,7 +74,6 @@ export function Axis({
             {labels && (
               <text
                 className="axis-tick-label"
-                style={horizontal ? undefined : INSIDE_HALO}
                 x={label.x}
                 y={label.y}
                 textAnchor={label.anchor}

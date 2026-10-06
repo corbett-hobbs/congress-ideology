@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { useMemo } from "react";
 import { scaleLinear } from "d3-scale";
 import { area, line } from "d3-shape";
@@ -98,7 +99,7 @@ export function JusticeOverTimeChart({
     top: 10,
     right: Math.min(Math.ceil(maxLabel) + 14, narrow ? 76 : 100),
     bottom: 28,
-    left: 10,
+    left: Y_GUTTER,
   };
 
   const hi = (p: PeerTrace) => mode === "neighbors" && p.isNeighbor;

@@ -262,11 +262,12 @@ describe("who's hosted the most", () => {
 });
 
 describe("axis helpers", () => {
-  it("spaces year labels about 34px apart", () => {
-    expect(yearLabelEvery(40)).toBe(1);
-    expect(yearLabelEvery(20)).toBe(2);
-    expect(yearLabelEvery(12)).toBe(5);
-    expect(yearLabelEvery(4)).toBe(10);
+  it("spaces year labels about 46px apart", () => {
+    expect(yearLabelEvery(50)).toBe(1);
+    expect(yearLabelEvery(24)).toBe(2);
+    expect(yearLabelEvery(10)).toBe(5);
+    expect(yearLabelEvery(5)).toBe(10);
+    expect(yearLabelEvery(4)).toBe(20);
     expect(yearLabelEvery(1.5)).toBe(20);
   });
   it("builds round ticks that hold the maximum", () => {

@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -102,8 +103,8 @@ export function NetWorthScatterCard({ view, chamberMembers, stateFilter }: Props
   // Square plot: one side length for both axes, centred in the card. Mobile
   // trades axis titles for short captions, so it needs less margin.
   const margin = compact
-    ? { top: 34, right: 14, bottom: 34, left: 12 }
-    : { top: 16, right: 20, bottom: 46, left: 22 };
+    ? { top: 34, right: 14, bottom: 34, left: Y_GUTTER + 4 }
+    : { top: 16, right: 20, bottom: 46, left: Y_GUTTER + 20 };
   const side = Math.max(
     180,
     Math.min(MAX_SIDE, W - margin.left - margin.right),

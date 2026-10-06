@@ -1,5 +1,6 @@
 "use client";
 
+import { yGutter } from "@/lib/chart-bars";
 import { memo, useMemo, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
@@ -44,7 +45,6 @@ const party = (p: "D" | "R") => (p === "D" ? "var(--dem)" : "var(--rep)");
 const MUTED = "var(--ink-muted)";
 const EST_CHAR_W = 6.4;
 /** Halo so annotation text stays legible where it crosses a line or recession band. */
-const YHALO = { stroke: "var(--surface)", strokeWidth: 3, strokeLinejoin: "round", paintOrder: "stroke" } as const;
 const HALO = { stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" } as const;
 
 interface Props {
@@ -67,7 +67,7 @@ const ROW_H = 12;
 
 /** Pure layout for one chart at one measured width. Shared by the static layer and the crosshair overlay. */
 function geometry(W: number, hero: boolean, spec: ChartSpec, view: readonly [number, number], showCong: boolean) {
-  const ml = 8; // y labels sit inside the plot
+  const ml = yGutter(spec.ticks.map(spec.tick)); // y labels sit in a gutter left of the plot
   const mr = 12;
   const mt = hero ? 22 : 8;
   const H = hero ? (W < 600 ? 170 : 200) : 150;
@@ -132,7 +132,7 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
             {spec.ticks.map((v) => (
               <g key={v}>
                 <line x1={ml} x2={ml + pw} y1={Y(v)} y2={Y(v)} className={v === 0 && lo < 0 ? "zero-line" : "grid-line"} />
-                <text x={ml + 4} y={Y(v) - 4} textAnchor="start" className="fill-ink-muted font-mono text-[11px]" style={YHALO}>
+                <text x={ml - 6} y={Y(v) + 3.5} textAnchor="end" className="fill-ink-muted font-mono text-[11px]">
                   {spec.tick(v)}
                 </text>
               </g>

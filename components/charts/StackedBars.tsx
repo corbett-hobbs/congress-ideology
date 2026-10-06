@@ -7,7 +7,7 @@ import { Axis } from "./Axis";
 import { Tooltip, useTooltip } from "./Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
-import { SEGMENT_LABEL_STYLE, segmentLabelFits, yLabelInset } from "@/lib/chart-bars";
+import { SEGMENT_LABEL_STYLE, Y_GUTTER, segmentLabelFits } from "@/lib/chart-bars";
 
 export interface StackSeries {
   id: string;
@@ -52,7 +52,7 @@ interface Props<C extends StackColumn> {
 }
 
 const NARROW_W = 560;
-const MARGIN = { top: 34, right: 6, left: 10 };
+const MARGIN = { top: 34, right: 6, left: Y_GUTTER };
 const BAND_H = 22;
 const AXIS_H = 34;
 const DIM = 0.2;
@@ -129,20 +129,11 @@ export function StackedBars<C extends StackColumn>({
             .nice(mode === "share" ? 4 : 5);
           const yTicks = mode === "share" ? [0, 0.25, 0.5, 0.75, 1] : y.ticks(5);
           const yFormat = (v: number) => (mode === "share" ? `${Math.round(v * 100)}%` : String(v));
-          // Push the first bar right if a tall one would sit on top of a y-axis label.
-          const step0 = innerWidth / columns.length;
-          const inset = yLabelInset({
-            ticks: yTicks,
-            format: yFormat,
-            tops: columns.map((c) => (mode === "share" ? 1 : c.total)),
-            step: step0,
-            barW: Math.max(2, step0 * 0.78),
-          });
-          const step = (innerWidth - inset) / columns.length;
+          const step = innerWidth / columns.length;
           const barW = Math.max(2, step * 0.78);
           // Label as many columns as fit: a zoomed-in window gets every year, the full span every few.
           const every = Math.max(1, Math.ceil((narrow ? 30 : 44) / step));
-          const xOf = (i: number) => inset + i * step;
+          const xOf = (i: number) => i * step;
 
           return (
             <>

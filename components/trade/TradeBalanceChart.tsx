@@ -1,5 +1,6 @@
 "use client";
 
+import { yGutter } from "@/lib/chart-bars";
 import { memo, useMemo, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
@@ -13,7 +14,6 @@ import { fmtMoney, fmtTick, monthMidDay, plotted, readingAtDay, termAtDay, termL
 import { activeDay, useTradeActions, useTradeValues } from "./TradeState";
 import { BAND_H, PresidentAndCongress, RecessionLabels, RecessionShading, ROW_H, YearAxis, type Era } from "./EraLayers";
 
-const YHALO = { stroke: "var(--surface)", strokeWidth: 3, strokeLinejoin: "round", paintOrder: "stroke" } as const;
 
 export type { Era };
 
@@ -30,7 +30,7 @@ interface Props {
 
 
 function geometry(W: number, view: readonly [number, number], scale: Scale, showCong: boolean) {
-  const ml = 8; // y labels sit inside the plot
+  const ml = yGutter(scale.ticks.map(fmtTick)); // y labels sit in a gutter left of the plot
   const mr = 12;
   const mt = 14;
   const H = W < 600 ? 190 : 230;
@@ -76,7 +76,7 @@ const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, sho
       {scale.ticks.map((v) => (
         <g key={v}>
           <line x1={ml} x2={ml + pw} y1={Y(v)} y2={Y(v)} className={v === 0 && scale.lo < 0 ? "zero-line" : "grid-line"} />
-          <text x={ml + 4} y={Y(v) - 4} textAnchor="start" className="fill-ink-muted font-mono text-[11px]" style={YHALO}>
+          <text x={ml - 6} y={Y(v) + 3.5} textAnchor="end" className="fill-ink-muted font-mono text-[11px]">
             {fmtTick(v)}
           </text>
         </g>

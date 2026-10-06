@@ -7,7 +7,7 @@ import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
-import { SEGMENT_LABEL_STYLE, segmentLabelFits, yLabelInset } from "@/lib/chart-bars";
+import { SEGMENT_LABEL_STYLE, segmentLabelFits, yGutter } from "@/lib/chart-bars";
 import { administrationForTermLabel } from "./term-labels";
 import { SLOT_NAME, fiscalYearSpan, formatAidAxis, formatAidMoney, niceDollarTicks, type SpendingYear } from "@/lib/foreign-aid-derive";
 import { useAidState } from "./ForeignAidState";
@@ -29,26 +29,17 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
   const width = measured || 960;
   const narrow = width < NARROW_W;
   const height = narrow ? 250 : 320;
-  const ml = 10; // y labels sit inside the plot
   const mr = 6;
   const mt = 28;
   const mb = AXIS_H + BAND_H + 6;
+  const max = Math.max(0, ...rows.map((r) => r.drawn));
+  const { ticks, top } = niceDollarTicks(max);
+  const ml = yGutter(ticks.map(formatAidAxis)); // y labels sit in a gutter left of the plot
   const innerW = width - ml - mr;
   const innerH = height - mt - mb;
   const n = rows.length;
-  const max = Math.max(0, ...rows.map((r) => r.drawn));
-  const { ticks, top } = niceDollarTicks(max);
-  // Push the first bar right if a tall one would sit on top of a y-axis label.
-  const step0 = innerW / n;
-  const inset = yLabelInset({
-    ticks,
-    format: formatAidAxis,
-    tops: rows.map((r) => r.drawn),
-    step: step0,
-    barW: Math.min(Math.max(2, step0 * 0.72), 64),
-  });
-  const step = (innerW - inset) / n;
-  const xOf = (i: number) => inset + i * step;
+  const step = innerW / n;
+  const xOf = (i: number) => i * step;
   const hatchId = useId().replace(/:/g, "");
   const tip = useTooltip<SpendingYear>();
   const [hover, setHover] = useState(-1);
@@ -61,7 +52,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
 
   const indexAt = (e: { clientX: number }) => {
     const r = svgRef.current!.getBoundingClientRect();
-    return Math.min(n - 1, Math.max(0, Math.floor((e.clientX - r.left - ml - inset) / step)));
+    return Math.min(n - 1, Math.max(0, Math.floor((e.clientX - r.left - ml) / step)));
   };
   const onDown = (e: PointerEvent<SVGSVGElement>) => {
     down.current = true;
@@ -172,7 +163,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
                 const cx = Math.min(Math.max(xOf(m.i) + step / 2, w / 2 + 2), innerW - w / 2 - 2);
                 // Sit above the tallest bar the label spans, so a clamped label never lands on a neighbour.
                 let tall = rows[m.i].drawn;
-                for (let j = Math.max(0, Math.floor((cx - w / 2 - inset) / step)); j <= Math.min(n - 1, Math.floor((cx + w / 2 - inset) / step)); j++) tall = Math.max(tall, rows[j].drawn);
+                for (let j = Math.max(0, Math.floor((cx - w / 2) / step)); j <= Math.min(n - 1, Math.floor((cx + w / 2) / step)); j++) tall = Math.max(tall, rows[j].drawn);
                 return (
                   <text key={m.i} x={cx} y={y(tall) - 6} textAnchor="middle" className="fill-ink text-[11px] font-medium" style={{ stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" }}>
                     {m.text}
@@ -191,7 +182,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
             <g transform={`translate(0,${innerH + AXIS_H + 2})`}>
               {visible.map(({ t, s, e }) => {
                 const x = s === range[0] ? 0 : xOf(s - range[0]);
-                const w = (e - s + 1) * step + (s === range[0] ? inset : 0);
+                const w = (e - s + 1) * step;
                 const c = t.party === "R" ? "--rep" : "--dem";
                 return (
                   <g key={t.termId}>
@@ -206,7 +197,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
                 for (let k = visible.length - 1; k >= 0; k--) {
                   const { t, s, e } = visible[k];
                   const x = s === range[0] ? 0 : xOf(s - range[0]);
-                  const w = (e - s + 1) * step + (s === range[0] ? inset : 0);
+                  const w = (e - s + 1) * step;
                   const tw = t.last.length * 6.4;
                   let tx = Math.min(x + w / 2 - tw / 2, nextStart - 3 - tw, x + w - tw - 1);
                   tx = Math.max(tx, x + 1);

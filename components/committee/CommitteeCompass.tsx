@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -27,7 +28,7 @@ function anchorCommittees(points: readonly CommitteeSummary[]): CommitteeSummary
   return out;
 }
 
-const MARGIN = { top: 20, right: 64, bottom: 30, left: 24 };
+const MARGIN = { top: 20, right: 64, bottom: 30, left: Y_GUTTER + 20 };
 const EXPLORER_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
 
 interface CommitteeCompassProps {

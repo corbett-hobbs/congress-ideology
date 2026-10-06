@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { useMemo } from "react";
 import {
   ScatterPlot,
@@ -14,7 +15,7 @@ import { MemberTooltip } from "./MemberTooltip";
 
 /** Profile variant keeps the numeric ticks + in-SVG caption; explorer drops
  *  both (the card draws word-based axis labels around the plot). */
-const MARGIN = { top: 20, right: 64, bottom: 30, left: 24 };
+const MARGIN = { top: 20, right: 64, bottom: 30, left: Y_GUTTER + 20 };
 const EXPLORER_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
 
 interface CompassChartProps {

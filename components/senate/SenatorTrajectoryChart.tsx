@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
@@ -14,7 +15,7 @@ import { congressStartYear, GROUP_LABEL, GROUP_VAR } from "./format";
 const W = 620;
 const H = 240;
 // No wide right gutter — the lines run to the edge and the legend sits below.
-const MARGIN = { top: 20, right: 16, bottom: 26, left: 10 };
+const MARGIN = { top: 20, right: 16, bottom: 26, left: Y_GUTTER };
 /** Minimum vertical span so a genuinely stable senator isn't over-magnified. */
 const MIN_Y_SPAN = 0.5;
 const clamp = (v: number) => Math.max(-1, Math.min(1, v));

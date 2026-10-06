@@ -6,7 +6,7 @@ import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { findExtremes } from "@/lib/chart-extremes";
-import { SEGMENT_LABEL_STYLE, segmentLabelFits, yLabelInset } from "@/lib/chart-bars";
+import { SEGMENT_LABEL_STYLE, segmentLabelFits, yGutter } from "@/lib/chart-bars";
 import { useElementWidth } from "@/lib/use-element-width";
 import { REGIONS } from "@/lib/troops-regions";
 import { contingencyAt, formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, termOnDate, yearLabelEvery, type RegionStack } from "@/lib/troops-derive";
@@ -56,31 +56,19 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   const width = measured || 960;
   const narrow = width < NARROW_W;
   const height = narrow ? 250 : 320;
-  const ml = 10;
   const mr = 6;
   const mt = 42;
   const mb = AXIS_H + BAND_H + 6;
+  const max = Math.max(0, ...stacks.map((s) => s.total + s.ghost));
+  const { ticks, top } = niceCountTicks(max);
+  const ml = yGutter(ticks.map(formatCountAxis)); // y labels sit in a gutter left of the plot
   const innerW = width - ml - mr;
   const innerH = height - mt - mb;
   const fy0 = years[range[0]].fy;
   const nSlots = years[range[1]].fy - fy0 + 1;
-  const max = Math.max(0, ...stacks.map((s) => s.total + s.ghost));
-  const { ticks, top } = niceCountTicks(max);
-  // Push the first bar right if a tall one would sit on top of a y-axis label (shared rule, lib/chart-bars).
-  const step0 = innerW / nSlots;
-  const inset = yLabelInset({
-    ticks,
-    format: formatCountAxis,
-    tops: Array.from({ length: nSlots }, (_, sl) => {
-      const s = stacks.find((x) => years[x.yi].fy === fy0 + sl);
-      return s ? s.total + s.ghost : 0;
-    }),
-    step: step0,
-    barW: Math.min(Math.max(2, step0 * 0.72), 64),
-  });
-  const step = (innerW - inset) / nSlots;
+  const step = innerW / nSlots;
   const bw = Math.min(Math.max(2, step * 0.72), 64);
-  const xOf = (i: number) => inset + (years[i].fy - fy0) * step;
+  const xOf = (i: number) => (years[i].fy - fy0) * step;
   const hatchId = useId().replace(/:/g, "");
   const tip = useTooltip<number>();
   const [hover, setHover] = useState(-1);
@@ -91,7 +79,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   const byYi = new Map(stacks.map((s) => [s.yi, s]));
   const indexAt = (e: { clientX: number }) => {
     const r = svgRef.current!.getBoundingClientRect();
-    const slot = (e.clientX - r.left - ml - inset) / step - 0.5;
+    const slot = (e.clientX - r.left - ml) / step - 0.5;
     let best = range[0];
     for (let i = range[0]; i <= range[1]; i++) if (Math.abs(years[i].fy - fy0 - slot) < Math.abs(years[best].fy - fy0 - slot)) best = i;
     return best;
@@ -293,8 +281,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
               {runs.map(({ term, s: a, e }) => {
                 const t = terms[term];
                 const c = t.party === "R" ? "--rep" : "--dem";
-                const x = a === 0 ? 0 : inset + a * step;
-                const w = (e - a + 1) * step + (a === 0 ? inset : 0);
+                const x = a * step;
+                const w = (e - a + 1) * step;
                 return (
                   <g key={`${term}-${a}`}>
                     <rect x={x + 0.5} y={0} width={Math.max(0, w - 1)} height={BAND_H} rx={2} style={{ fill: `color-mix(in oklab, var(${c}) 20%, var(--surface))` }} />
@@ -308,8 +296,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                 for (let k = runs.length - 1; k >= 0; k--) {
                   const { term, s: a, e } = runs[k];
                   const t = terms[term];
-                  const x = a === 0 ? 0 : inset + a * step;
-                  const w = (e - a + 1) * step + (a === 0 ? inset : 0);
+                  const x = a * step;
+                  const w = (e - a + 1) * step;
                   // Full last name, else a four-letter abbreviation: a label that does not fit is shortened, never dropped.
                   for (const text of [t.last, `${t.last.slice(0, 4)}.`]) {
                     const tw = text.length * 6.4;

@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { scaleLinear } from "d3-scale";
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Axis } from "@/components/charts/Axis";
@@ -67,7 +68,7 @@ export function RemovalsChart({
   const [ref, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || FALLBACK_W;
   const compact = W < 520;
-  const left = 10; // y labels sit inside the plot
+  const left = Y_GUTTER; // y labels sit in a gutter left of the plot
   const right = 8;
   const plotW = W - left - right;
   const slots = years.length + (pending ? 1 : 0);

@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "@/components/charts/ChartFrame";
@@ -15,7 +16,7 @@ import { formatCompactUSD, formatOpenEndedUSD } from "@/lib/format-money";
 const W = 640;
 const DEFAULT_H = 280;
 const MIN_H = 220;
-const MARGIN = { top: 20, right: 16, bottom: 38, left: 10 };
+const MARGIN = { top: 20, right: 16, bottom: 38, left: Y_GUTTER };
 /** Minimum dollar span so a flat/near-flat series isn't over-magnified. */
 const MIN_Y_SPAN = 200_000;
 /** Pixels of top-of-chart fade applied whenever an open-ended band is in

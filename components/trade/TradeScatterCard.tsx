@@ -1,5 +1,6 @@
 "use client";
 
+import { Y_GUTTER } from "@/lib/chart-bars";
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { memo, useId, useMemo, useRef, useState } from "react";
 import { scaleLinear, scaleSymlog } from "d3-scale";
@@ -119,7 +120,7 @@ export function TradeScatterCard({
   const compact = W < COMPACT_W;
   // Tap behaviour follows the device, not the width: a narrow card on a laptop still hovers.
   const tapMode = !useMediaQuery("(hover: hover)");
-  const margin = compact ? { top: 22, right: 14, bottom: 52, left: 20 } : { top: 22, right: 24, bottom: 56, left: 22 };
+  const margin = compact ? { top: 22, right: 14, bottom: 52, left: Y_GUTTER + 20 } : { top: 22, right: 24, bottom: 56, left: Y_GUTTER + 22 };
   const pw = W - margin.left - margin.right;
   const ph = compact ? 340 : W >= 900 ? 520 : 440;
   const H = ph + margin.top + margin.bottom;
