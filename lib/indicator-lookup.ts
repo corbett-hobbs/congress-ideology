@@ -63,6 +63,14 @@ export function readWeekly(a: readonly [number, number][], day: number | null): 
   return some(a[i][1], a[i][0], `week of ${fmtDay(a[i][0])}`);
 }
 
+/** Regular gasoline, with diesel at the same date as the second value (null before diesel begins in 1994). */
+export function readGas(gas: readonly [number, number][], diesel: readonly [number, number][], day: number | null): Reading {
+  const r = readWeekly(gas, day);
+  if (r.value === null) return r;
+  const dr = readWeekly(diesel, day);
+  return { ...r, value2: dr.value };
+}
+
 function lastNonNull(a: readonly (number | null)[]): number {
   let m = a.length - 1;
   while (m > 0 && a[m] === null) m--;
@@ -123,7 +131,7 @@ export type EconomyKey = "mis" | "gas" | "infl" | "jobs" | "un" | "mort" | "inc"
 export function readAll(d: EconomyData, day: number | null): Record<EconomyKey, Reading> {
   return {
     mis: readMisery(d.un, d.infl, day),
-    gas: readWeekly(d.gas, day),
+    gas: readGas(d.gas, d.diesel, day),
     infl: readMonthly(d.infl, day, "not collected"),
     jobs: readMonthly(d.jobs, day, "no data"),
     un: readMonthly(d.un, day, "not collected"),

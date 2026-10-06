@@ -271,3 +271,17 @@ Mar 2026 (`https://dwp.dmdc.osd.mil/dwp/app/dod-data-reports/workforce-reports`)
 Snapshots in `pipeline/raw/dmdc-location/`; methodology `docs/TROOPS_METHODOLOGY.md`. The page must say the series
 changes meaning in Dec 2017 (permanent assignment only) and that Afghanistan, Iraq and Syria are "not reported", not zero,
 Dec 2017 to Sep 2021.
+
+---
+
+## troopdata and DMDC historical tables — troops abroad before 2008
+
+Troops abroad for 1950-2007 come from two sources. The **troopdata** quarter-format country file (`pipeline/raw/troopdata/`, pinned to a
+commit, GPL-3.0 with its `LICENSE.md` beside the data): Allen, Flynn and Martinez Machain (2022), "Global U.S. military deployment data:
+1950-2020," *Conflict Management and Peace Science* 39(3): 351-370, and Kane (2005), "Global U.S. troop deployment, 1950-2003," Heritage
+Foundation technical report (the original compilation from DMDC). Package: https://github.com/meflynn/troopdata. The **DMDC 309A tables**
+(Sep 1996, Sep 1998-2005; "Active Duty Military Personnel Strengths by Regional Area and by Country", Worldwide Manpower Distribution by
+Geographical Area) are U.S. Department of Defense publications, public domain, extracted into `pipeline/reference/dmdc-309a-sep.csv`.
+Methodology: `docs/TROOPS_METHODOLOGY.md` ("History"). The page must say 2006-07 are estimates and that earlier years are not like-for-like
+with DMDC's 2008+ tables (no afloat/unassigned rows before 1996).
+

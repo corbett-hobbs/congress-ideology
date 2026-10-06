@@ -180,7 +180,8 @@ export function validateIndicators(
       problems.push(`${s.series_id}: first/last observation on the series row disagree with the observations file`);
     }
     lastObservation[s.series_id] = s.last_observation;
-    for (const p of checkCoverage(dates, s.frequency)) problems.push(`${s.series_id}: ${p}`);
+    const late = CATALOG.find((c) => c.series_id === s.series_id)?.late_start;
+    for (const p of checkCoverage(dates, s.frequency, late ? s.first_observation : INDICATORS_DISPLAY_START)) problems.push(`${s.series_id}: ${p}`);
   }
   if (problems.length > 0) {
     throw new IndicatorDataError(`indicator validation failed:\n  ${problems.join("\n  ")}`);

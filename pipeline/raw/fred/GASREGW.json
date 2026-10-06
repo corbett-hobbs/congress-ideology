@@ -1,5 +1,5 @@
 {
-  "head": {"fetched_at":"2026-10-01T04:52:36.206Z","series":{"id":"GASREGW","title":"US Regular All Formulations Gas Price","units":"Dollars per Gallon","frequency":"Weekly, Ending Monday","seasonal_adjustment":"Not Seasonally Adjusted","observation_start":"1990-08-20","observation_end":"2026-09-28","last_updated":"2026-09-29 09:03:44-05","notes":"Weighted average based on sampling of approximately 900 retail outlets, 8:00AM Monday. The price represents self-service unless only full-service is available and includes all taxes. See (http://www.eia.doe.gov/oil_gas/petroleum/data_publications/wrgp/mogas_home_page.html) for further definitions. Regular Gasoline has an antiknock index (average of the research octane rating and the motor octane number) greater than or equal to 85 and less than 88. Octane requirements may vary by altitude."}},
+  "head": {"fetched_at":"2026-10-06T16:33:43.764Z","series":{"id":"GASREGW","title":"US Regular All Formulations Gas Price","units":"Dollars per Gallon","frequency":"Weekly, Ending Monday","seasonal_adjustment":"Not Seasonally Adjusted","observation_start":"1990-08-20","observation_end":"2026-10-05","last_updated":"2026-10-06 09:03:37-05","notes":"Weighted average based on sampling of approximately 900 retail outlets, 8:00AM Monday. The price represents self-service unless only full-service is available and includes all taxes. See (http://www.eia.doe.gov/oil_gas/petroleum/data_publications/wrgp/mogas_home_page.html) for further definitions. Regular Gasoline has an antiknock index (average of the research octane rating and the motor octane number) greater than or equal to 85 and less than 88. Octane requirements may vary by altitude."}},
   "observations": [
     ["1990-08-20","1.191"],
     ["1990-08-27","1.245"],
@@ -1885,6 +1885,7 @@
     ["2026-09-07","4.157"],
     ["2026-09-14","4.319"],
     ["2026-09-21","4.478"],
-    ["2026-09-28","4.465"]
+    ["2026-09-28","4.465"],
+    ["2026-10-05","4.354"]
   ]
 }

@@ -21,6 +21,7 @@ observation; counts exclude `.` rows):
 | Series | FRED ID | Freq. | First | Last | Obs. | Units / notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | Regular gas price | `GASREGW` | weekly (Mon) | 1990-08-20 | 2026-09-28 | 1,879 | $/gal, NSA. EIA. 6 missing weeks 1990-12-10..1991-01-14. |
+| Diesel price | `GASDESW` | weekly (Mon) | 1994-03-28 | 2026-10-05 | 1,699 | $/gal, NSA. EIA, all types. Begins after the display window, so coverage is checked from its own first week (`late_start`). |
 | 30-year mortgage rate | `MORTGAGE30US` | weekly (Thu) | 1971-04-02 | 2026-09-24 | 2,896 | %. Freddie Mac; methodology break 2022-11-17. **Copyrighted.** |
 | Nonfarm payrolls | `PAYEMS` | monthly | 1939-01-01 | 2026-08-01 | 1,052 | Thousands of persons, SA. A level. |
 | Unemployment rate | `UNRATE` | monthly | 1948-01-01 | 2026-08-01 | 943 | %, SA. 2025-10 missing. |

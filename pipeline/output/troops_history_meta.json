@@ -1,0 +1,934 @@
+{
+  "source": "Allen, Flynn and Martinez Machain (2022), troopdata (quarter-format file; compiled from DMDC by Kane 2005), and U.S. Department of Defense, DMDC, Worldwide Manpower Distribution by Geographical Area: Active Duty Military Personnel Strengths by Regional Area and by Country (309A), Sep 30 tables",
+  "credits": [
+    "troopdata: Allen, Flynn and Martinez Machain (2022), Conflict Management and Peace Science 39(3): 351-370. GPL-3.0; LICENSE.md is committed beside the raw file.",
+    "Kane (2005), Global U.S. Troop Deployment, 1950-2003, Heritage Foundation technical report (the original compilation from DMDC).",
+    "DMDC 309A tables: U.S. Department of Defense publications, public domain."
+  ],
+  "first_year": 1950,
+  "last_year": 2007,
+  "handoff": "From Sep 2008 the series is troops_location.json (DMDC location tables). Sep 2008 is the first year there; this file ends at Sep 2007.",
+  "comparability": [
+    "Sep 1996 and Sep 1998-2005 are DMDC's own 309A tables (active duty). Their foreign total includes afloat and undistributed personnel, as the 2008+ location tables' UNKNOWN row does; the rows here are class afloat_unassigned.",
+    "1950-1995, Sep 1997 and Sep 2006-07 come from troopdata, which has no afloat or undistributed rows: its abroad_total is lower than a DMDC-style total by that amount (tens of thousands of people in the 1990s-2000s), so do not draw one unbroken line across 1995/1996 or 2007/2008 without saying so.",
+    "The DMDC 2003-04 tables exclude personnel deployed to Operation Iraqi Freedom from the country rows (printed 'Less OIF'); Iraq, Kuwait and Afghanistan are not reported (never 0) in 2003, 2004 and 2005. 2001-02 Afghanistan is likewise unavailable where the table says so.",
+    "Before 2008 the counts include personnel deployed to contingencies, as the 2008-Sep 2017 location tables do; the Dec 2017 permanent-assignment break is after this series ends.",
+    "troopdata's 'United States' row is the continental U.S. only and is not emitted. Territories (Guam, Puerto Rico, U.S. Virgin Islands, American Samoa, Northern Mariana Islands) are class territory, as in the location series.",
+    "Branch columns are Army, Navy, Marine Corps and Air Force; the 309A tables have no Coast Guard or Space Force."
+  ],
+  "gaps": [
+    {
+      "years": [
+        1951,
+        1952
+      ],
+      "reason": "troopdata fills 1951-52 by stepwise imputation, not from a report; left out rather than shipped as data. The series has June 1950 and then June 1953."
+    }
+  ],
+  "substitutions": [
+    {
+      "year": 1997,
+      "note": "DMDC has no Sep 1997 table online (M05 starts Dec 1997); troopdata's Sep 1997 rows are used, flagged no_dmdc_table_online."
+    },
+    {
+      "year": 1995,
+      "note": "DMDC's Sep 1995 309A is an .xls the reference extract does not read; troopdata's Sep 1995 rows (the same DMDC report) are used."
+    },
+    {
+      "year": 2006,
+      "note": "No DMDC table for Sep 2006 or Sep 2007: troopdata's rows are used and every row is flagged estimate (Iraq 141,100 and 170,000, Kuwait 44,400 and 48,500 are press-based)."
+    }
+  ],
+  "dmdc_years": [
+    1996,
+    1998,
+    1999,
+    2000,
+    2001,
+    2002,
+    2003,
+    2004,
+    2005
+  ],
+  "troopdata_commit": "338bbda879932ac86cb5ef7f83845254f2c94070",
+  "years": [
+    {
+      "year": 1950,
+      "snapshot": "june",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 161,
+      "abroad_total": 270903,
+      "afloat_unassigned_total": null,
+      "territory_total": 17197,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "june_snapshot"
+      ]
+    },
+    {
+      "year": 1953,
+      "snapshot": "june",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 159,
+      "abroad_total": 1079008,
+      "afloat_unassigned_total": null,
+      "territory_total": 17222,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "june_snapshot",
+        "unstamped_source: Belize"
+      ]
+    },
+    {
+      "year": 1954,
+      "snapshot": "june",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 160,
+      "abroad_total": 919799,
+      "afloat_unassigned_total": null,
+      "territory_total": 15849,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "june_snapshot",
+        "unstamped_source: Belize, South Vietnam"
+      ]
+    },
+    {
+      "year": 1955,
+      "snapshot": "june",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 163,
+      "abroad_total": 740438,
+      "afloat_unassigned_total": null,
+      "territory_total": 11859,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "june_snapshot",
+        "unstamped_source: Belize, Djibouti, South Vietnam"
+      ]
+    },
+    {
+      "year": 1956,
+      "snapshot": "june",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 159,
+      "abroad_total": 688576,
+      "afloat_unassigned_total": null,
+      "territory_total": 12516,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "june_snapshot",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1957,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 95,
+      "abroad_total": 730234,
+      "afloat_unassigned_total": null,
+      "territory_total": 15869,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1958,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 95,
+      "abroad_total": 612302,
+      "afloat_unassigned_total": null,
+      "territory_total": 11560,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1959,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 95,
+      "abroad_total": 581102,
+      "afloat_unassigned_total": null,
+      "territory_total": 11018,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1960,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 98,
+      "abroad_total": 557254,
+      "afloat_unassigned_total": null,
+      "territory_total": 8789,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1961,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 107,
+      "abroad_total": 592872,
+      "afloat_unassigned_total": null,
+      "territory_total": 8760,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1962,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 106,
+      "abroad_total": 661929,
+      "afloat_unassigned_total": null,
+      "territory_total": 8355,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1963,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 111,
+      "abroad_total": 623761,
+      "afloat_unassigned_total": null,
+      "territory_total": 9174,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1964,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 112,
+      "abroad_total": 594569,
+      "afloat_unassigned_total": null,
+      "territory_total": 7953,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1965,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 113,
+      "abroad_total": 704100,
+      "afloat_unassigned_total": null,
+      "territory_total": 9538,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1966,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 114,
+      "abroad_total": 883646,
+      "afloat_unassigned_total": null,
+      "territory_total": 12120,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1967,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 112,
+      "abroad_total": 1030229,
+      "afloat_unassigned_total": null,
+      "territory_total": 16865,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1968,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 103,
+      "abroad_total": 1043973,
+      "afloat_unassigned_total": null,
+      "territory_total": 15312,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1969,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 102,
+      "abroad_total": 1039575,
+      "afloat_unassigned_total": null,
+      "territory_total": 12353,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1970,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 101,
+      "abroad_total": 870344,
+      "afloat_unassigned_total": null,
+      "territory_total": 11518,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1971,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 102,
+      "abroad_total": 669771,
+      "afloat_unassigned_total": null,
+      "territory_total": 10094,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1972,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 100,
+      "abroad_total": 522003,
+      "afloat_unassigned_total": null,
+      "territory_total": 10654,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1973,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 99,
+      "abroad_total": 440809,
+      "afloat_unassigned_total": null,
+      "territory_total": 14282,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1974,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 102,
+      "abroad_total": 469246,
+      "afloat_unassigned_total": null,
+      "territory_total": 11807,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "unstamped_source: South Vietnam"
+      ]
+    },
+    {
+      "year": 1975,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 101,
+      "abroad_total": 455507,
+      "afloat_unassigned_total": null,
+      "territory_total": 11956,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1976,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 98,
+      "abroad_total": 396900,
+      "afloat_unassigned_total": null,
+      "territory_total": 9086,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1977,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 112,
+      "abroad_total": 403447,
+      "afloat_unassigned_total": null,
+      "territory_total": 8798,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1978,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 116,
+      "abroad_total": 417407,
+      "afloat_unassigned_total": null,
+      "territory_total": 8396,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1979,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 118,
+      "abroad_total": 417973,
+      "afloat_unassigned_total": null,
+      "territory_total": 8768,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1980,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 117,
+      "abroad_total": 426570,
+      "afloat_unassigned_total": null,
+      "territory_total": 9071,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1981,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 120,
+      "abroad_total": 430569,
+      "afloat_unassigned_total": null,
+      "territory_total": 8793,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1982,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 122,
+      "abroad_total": 447344,
+      "afloat_unassigned_total": null,
+      "territory_total": 8981,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1983,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 124,
+      "abroad_total": 450267,
+      "afloat_unassigned_total": null,
+      "territory_total": 9207,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1984,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 122,
+      "abroad_total": 449047,
+      "afloat_unassigned_total": null,
+      "territory_total": 9188,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1985,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 127,
+      "abroad_total": 445708,
+      "afloat_unassigned_total": null,
+      "territory_total": 9227,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1986,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 135,
+      "abroad_total": 453519,
+      "afloat_unassigned_total": null,
+      "territory_total": 8997,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1987,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 137,
+      "abroad_total": 455933,
+      "afloat_unassigned_total": null,
+      "territory_total": 8001,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1988,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 139,
+      "abroad_total": 458439,
+      "afloat_unassigned_total": null,
+      "territory_total": 8533,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1989,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 138,
+      "abroad_total": 452930,
+      "afloat_unassigned_total": null,
+      "territory_total": 8131,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1990,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 132,
+      "abroad_total": 446827,
+      "afloat_unassigned_total": null,
+      "territory_total": 7039,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1991,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 135,
+      "abroad_total": 393450,
+      "afloat_unassigned_total": null,
+      "territory_total": 7148,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1992,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 136,
+      "abroad_total": 295379,
+      "afloat_unassigned_total": null,
+      "territory_total": 7847,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1993,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 138,
+      "abroad_total": 256939,
+      "afloat_unassigned_total": null,
+      "territory_total": 7428,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1994,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 141,
+      "abroad_total": 250091,
+      "afloat_unassigned_total": null,
+      "territory_total": 6323,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1995,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 148,
+      "abroad_total": 207973,
+      "afloat_unassigned_total": null,
+      "territory_total": 5513,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows"
+      ]
+    },
+    {
+      "year": 1996,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 148,
+      "abroad_total": 240731,
+      "afloat_unassigned_total": 28230,
+      "territory_total": 7960,
+      "dmdc_foreign_total": 240421,
+      "suppressed": [],
+      "flags": []
+    },
+    {
+      "year": 1997,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "reported",
+      "hosts": 136,
+      "abroad_total": 207662,
+      "afloat_unassigned_total": null,
+      "territory_total": 4515,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "no_dmdc_table_online"
+      ]
+    },
+    {
+      "year": 1998,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 139,
+      "abroad_total": 260091,
+      "afloat_unassigned_total": 49130,
+      "territory_total": 5910,
+      "dmdc_foreign_total": 259871,
+      "suppressed": [],
+      "flags": []
+    },
+    {
+      "year": 1999,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 141,
+      "abroad_total": 253010,
+      "afloat_unassigned_total": 46761,
+      "territory_total": 6244,
+      "dmdc_foreign_total": 252763,
+      "suppressed": [],
+      "flags": []
+    },
+    {
+      "year": 2000,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 142,
+      "abroad_total": 258071,
+      "afloat_unassigned_total": 48734,
+      "territory_total": 6166,
+      "dmdc_foreign_total": 257817,
+      "suppressed": [],
+      "flags": []
+    },
+    {
+      "year": 2001,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 150,
+      "abroad_total": 254846,
+      "afloat_unassigned_total": 46531,
+      "territory_total": 6124,
+      "dmdc_foreign_total": 254788,
+      "suppressed": [],
+      "flags": []
+    },
+    {
+      "year": 2002,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 142,
+      "abroad_total": 230529,
+      "afloat_unassigned_total": 36431,
+      "territory_total": 5746,
+      "dmdc_foreign_total": 230484,
+      "suppressed": [
+        "Afghanistan"
+      ],
+      "flags": [
+        "contingency_hosts_not_reported"
+      ]
+    },
+    {
+      "year": 2003,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 137,
+      "abroad_total": 252803,
+      "afloat_unassigned_total": 47491,
+      "territory_total": 4860,
+      "dmdc_foreign_total": 252764,
+      "suppressed": [
+        "Afghanistan",
+        "Iraq",
+        "Kuwait"
+      ],
+      "flags": [
+        "contingency_hosts_not_reported",
+        "printed_total_excludes_oif_deployed"
+      ]
+    },
+    {
+      "year": 2004,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 143,
+      "abroad_total": 287828,
+      "afloat_unassigned_total": 91012,
+      "territory_total": 3526,
+      "dmdc_foreign_total": 287802,
+      "suppressed": [
+        "Afghanistan",
+        "Iraq",
+        "Kuwait"
+      ],
+      "flags": [
+        "contingency_hosts_not_reported",
+        "printed_total_excludes_oif_deployed"
+      ]
+    },
+    {
+      "year": 2005,
+      "snapshot": "september",
+      "source": "dmdc_309a",
+      "quality": "reported",
+      "hosts": 149,
+      "abroad_total": 291018,
+      "afloat_unassigned_total": 117156,
+      "territory_total": 3244,
+      "dmdc_foreign_total": 290997,
+      "suppressed": [
+        "Afghanistan",
+        "Iraq",
+        "Kuwait"
+      ],
+      "flags": [
+        "contingency_hosts_not_reported"
+      ]
+    },
+    {
+      "year": 2006,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "estimate",
+      "hosts": 146,
+      "abroad_total": 369938,
+      "afloat_unassigned_total": null,
+      "territory_total": 2874,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "estimate_year_not_published_by_dmdc",
+        "unstamped_source: China"
+      ]
+    },
+    {
+      "year": 2007,
+      "snapshot": "september",
+      "source": "troopdata",
+      "quality": "estimate",
+      "hosts": 147,
+      "abroad_total": 395371,
+      "afloat_unassigned_total": null,
+      "territory_total": 2842,
+      "dmdc_foreign_total": null,
+      "suppressed": [],
+      "flags": [
+        "no_afloat_or_undistributed_rows",
+        "estimate_year_not_published_by_dmdc",
+        "unstamped_source: China"
+      ]
+    }
+  ]
+}

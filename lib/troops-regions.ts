@@ -22,11 +22,11 @@ export const REGION_IDS = REGIONS.map((r) => r.id) as RegionId[];
 const split = (s: string) => s.trim().split(/\s+/);
 
 const BY_REGION: Record<Exclude<RegionId, "afloat_unassigned">, string[]> = {
-  europe: split(`ALB ARM AUT AZE BLR BEL BIH BGR HRV CYP CZE DNK EST FIN FRA GEO DEU GIB GRC GRL GGY HUN ISL IRL ITA XKX LVA LIE LTU LUX MLT MDA MNE NLD MKD NOR POL PRT ROU RUS SRB SVK SVN ESP SJM SWE CHE TUR UKR GBR SUN VAT`),
+  europe: split(`ALB ARM AUT AZE BLR BEL BIH BGR HRV CYP CZE DNK EST FIN FRA GEO DEU GIB GRC GRL GGY HUN ISL IRL ITA XKX LVA LIE LTU LUX MLT MDA MNE NLD MKD NOR POL PRT ROU RUS SRB SVK SVN ESP SJM SWE CHE TUR UKR GBR SUN VAT YUG CSK`),
   east_asia_pacific: split(`ATA AUS BRN KHM CHN FJI HKG IDN JPN KIR LAO MAC MYS MHL FSM MNG MMR NZL NIU PLW PNG PHL WSM SGP SLB KOR PRK TWN THA TLS TON VNM UMI`),
-  middle_east_south_central_asia: split(`AFG BHR BGD EGY IND IOT IRN IRQ ISR JOR KAZ KWT KGZ LBN LKA MDV NPL OMN PAK QAT SAU SYR TJK TKM ARE UZB YEM`),
-  africa: split(`DZA AGO BEN BWA BFA BDI CPV CMR CAF TCD COM COD COG CIV DJI GNQ ERI SWZ ETH GAB GMB GHA GIN KEN LSO LBR LBY MDG MWI MLI MRT MUS MAR MOZ NAM NER NGA RWA SEN SYC SLE SOM ZAF SSD SDN TZA TGO TUN UGA ZMB ZWE`),
-  western_hemisphere: split(`ATG ARG ABW BHS BRB BLZ BMU BOL BRA VGB CAN CHL COL CRI CUB CUW DMA DOM ECU SLV GTM GUY HTI HND JAM MTQ MEX NIC PAN PRY PER KNA LCA SPM SXM SUR TTO URY VEN ANT BLM`),
+  middle_east_south_central_asia: split(`AFG BHR BGD EGY IND IOT IRN IRQ ISR JOR KAZ KWT KGZ LBN LKA MDV NPL OMN PAK QAT SAU SYR TJK TKM ARE UZB YEM BTN`),
+  africa: split(`DZA AGO BEN BWA BFA BDI CPV CMR CAF TCD COM COD COG CIV DJI GNQ ERI SWZ ETH GAB GMB GHA GIN KEN LSO LBR LBY MDG MWI MLI MRT MUS MAR MOZ NAM NER NGA RWA SEN SYC SLE SOM ZAF SSD SDN TZA TGO TUN UGA ZMB ZWE ESH SHN STP GNB`),
+  western_hemisphere: split(`ATG ARG ABW BHS BRB BLZ BMU BOL BRA VGB CAN CHL COL CRI CUB CUW DMA DOM ECU SLV GTM GUY HTI HND JAM MTQ MEX NIC PAN PRY PER KNA LCA SPM SXM SUR TTO URY VEN ANT BLM GRD TCA`),
 };
 
 /** Places DMDC prints without an ISO3, assigned by name (canonical alias names). */
@@ -38,6 +38,21 @@ const BY_NAME: Record<string, RegionId> = {
   "Coral Sea Islands": "east_asia_pacific",
   "Spratly Islands": "east_asia_pacific",
   "Trucial States": "middle_east_south_central_asia",
+  // Pre-2008 places (docs/TROOPS_METHODOLOGY.md "History").
+  "East Germany": "europe",
+  Azores: "europe",
+  "British West Indies": "western_hemisphere",
+  "Easter Island": "western_hemisphere",
+  Kashmir: "middle_east_south_central_asia",
+  "Line Islands": "east_asia_pacific",
+  Sarawak: "east_asia_pacific",
+  "South Yemen": "middle_east_south_central_asia",
+  Zanzibar: "africa",
+  "Ascension Island": "africa",
+  "Trust Territory of the Pacific Islands": "east_asia_pacific",
+  "Midway Islands": "east_asia_pacific",
+  "Johnston Atoll": "east_asia_pacific",
+  Eniwetok: "east_asia_pacific",
 };
 
 const BY_ISO = new Map<string, RegionId>();

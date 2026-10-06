@@ -130,3 +130,73 @@ export const aliasEntry = z
   .strict();
 export type AliasEntry = z.infer<typeof aliasEntry>;
 export const aliasTable = z.array(aliasEntry);
+
+// --- History (1950-2007): troopdata + DMDC 309A -----------------------------------------------------------------------
+
+export const HISTORY_SOURCES = ["troopdata", "dmdc_309a"] as const;
+/** `june` only for 1950-1956 (the earliest years have no September snapshot); `september` from 1957. */
+export const HISTORY_SNAPSHOTS = ["june", "september"] as const;
+/** `estimate`: Sep 2006 and Sep 2007, which DMDC does not publish (compiled/press-based in troopdata). */
+export const HISTORY_QUALITIES = ["reported", "estimate"] as const;
+
+export const historyRow = z
+  .object({
+    year: z.number().int().min(1950).max(2007),
+    snapshot: z.enum(HISTORY_SNAPSHOTS),
+    name: z.string().min(1),
+    source_name: z.string().min(1),
+    class: z.enum(ROW_CLASSES),
+    iso3: z.string().regex(/^[A-Z]{3}$/).nullable(),
+    /** `suppressed` = the source marks the figure unavailable or elsewhere (Iraq/Kuwait/Afghanistan 2003-05), never 0. */
+    state: z.enum(["value", "suppressed"]),
+    army: count,
+    navy: count,
+    marine_corps: count,
+    air_force: count,
+    total: count,
+    source: z.enum(HISTORY_SOURCES),
+    quality: z.enum(HISTORY_QUALITIES),
+  })
+  .strict();
+export type HistoryRow = z.infer<typeof historyRow>;
+
+export const historyYearMeta = z
+  .object({
+    year: z.number().int(),
+    snapshot: z.enum(HISTORY_SNAPSHOTS),
+    source: z.enum(HISTORY_SOURCES),
+    quality: z.enum(HISTORY_QUALITIES),
+    hosts: z.number().int().nonnegative(),
+    /** Σ host rows + afloat/unassigned (DMDC years only); territories out. */
+    abroad_total: z.number().int().nonnegative(),
+    /** Null for troopdata-only years: troopdata carries no afloat/undistributed rows. */
+    afloat_unassigned_total: z.number().int().nonnegative().nullable(),
+    territory_total: z.number().int().nonnegative().nullable(),
+    /** DMDC years: the printed "Total - Foreign Countries". */
+    dmdc_foreign_total: z.number().int().nullable(),
+    suppressed: z.array(z.string()),
+    flags: z.array(z.string()),
+  })
+  .strict();
+
+export const historyMeta = z
+  .object({
+    source: z.string(),
+    credits: z.array(z.string()),
+    first_year: z.number().int(),
+    last_year: z.number().int(),
+    handoff: z.string(),
+    comparability: z.array(z.string()),
+    gaps: z.array(z.object({ years: z.array(z.number().int()), reason: z.string() }).strict()),
+    substitutions: z.array(z.object({ year: z.number().int(), note: z.string() }).strict()),
+    dmdc_years: z.array(z.number().int()),
+    troopdata_commit: z.string(),
+    years: z.array(historyYearMeta),
+  })
+  .strict();
+export type HistoryMeta = z.infer<typeof historyMeta>;
+export type HistoryYearMeta = z.infer<typeof historyYearMeta>;
+
+export const historyAliasEntry = aliasEntry.extend({ system: z.enum(HISTORY_SOURCES) }).strict();
+export type HistoryAliasEntry = z.infer<typeof historyAliasEntry>;
+export const historyAliasTable = z.array(historyAliasEntry);

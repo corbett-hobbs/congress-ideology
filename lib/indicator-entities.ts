@@ -102,6 +102,8 @@ export interface CatalogEntry {
    * New observations always count. See `docs/INDICATORS_METHODOLOGY.md`.
    */
   revision_tolerance: number;
+  /** True when the series legitimately begins after the display window starts (coverage is then checked from its own first observation). */
+  late_start?: boolean;
 }
 
 /** The FRED notice the API terms require wherever this data is shown. */
@@ -123,6 +125,20 @@ export const CATALOG: readonly CatalogEntry[] = [
       "Nominal dollars, not adjusted for inflation.",
     ],
     revision_tolerance: 0.01,
+  },
+  {
+    series_id: "GASDESW",
+    frequency: "weekly",
+    fred_frequency_prefix: "Weekly",
+    source_agency: "U.S. Energy Information Administration",
+    attribution: `U.S. Energy Information Administration, via ${FRED}`,
+    suggested_rollup: "level",
+    caveats: [
+      "Weekly, dated by the Monday of the survey. The series begins 1994-03-28, so the diesel line starts later than the gasoline line.",
+      "All types of diesel (ultra-low sulfur and earlier grades). Nominal dollars, not adjusted for inflation.",
+    ],
+    revision_tolerance: 0.01,
+    late_start: true,
   },
   {
     series_id: "MORTGAGE30US",

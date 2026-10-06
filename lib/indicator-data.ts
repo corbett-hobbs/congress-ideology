@@ -103,6 +103,7 @@ export function getEconomyPayload(): EconomyPayload {
   return {
     span,
     gas: weeklyTuples(get("GASREGW"), 3),
+    diesel: weeklyTuples(get("GASDESW"), 3),
     mort: weeklyTuples(get("MORTGAGE30US"), 2),
     jobs: monthlySeries(getJobsAdded(), 0),
     un: monthlySeries(get("UNRATE"), 1),

@@ -1,0 +1,30 @@
+{
+  "repo": "meflynn/troopdata",
+  "commit": "338bbda879932ac86cb5ef7f83845254f2c94070",
+  "files": [
+    {
+      "path": "data-raw/troopdata-rebuild-country-year-quarter-format.csv",
+      "file": "country-year-quarter-format.csv",
+      "url": "https://raw.githubusercontent.com/meflynn/troopdata/338bbda879932ac86cb5ef7f83845254f2c94070/data-raw/troopdata-rebuild-country-year-quarter-format.csv",
+      "size": 3881344,
+      "sha256": "51a26edc1ed34003144720d276a3d99ccc93f968040c09740d2dd1daac6bf6c3",
+      "fetched_at": "2026-10-06T16:28:21.229Z"
+    },
+    {
+      "path": "LICENSE.md",
+      "file": "LICENSE.md",
+      "url": "https://raw.githubusercontent.com/meflynn/troopdata/338bbda879932ac86cb5ef7f83845254f2c94070/LICENSE.md",
+      "size": 34904,
+      "sha256": "585e25ef8f5946a52bf2aed68d5becfc38be94a8663aa01c1b31d88aa57f1de3",
+      "fetched_at": "2026-10-06T16:28:21.441Z"
+    },
+    {
+      "path": "DESCRIPTION",
+      "file": "DESCRIPTION",
+      "url": "https://raw.githubusercontent.com/meflynn/troopdata/338bbda879932ac86cb5ef7f83845254f2c94070/DESCRIPTION",
+      "size": 1267,
+      "sha256": "04646ce5c0275380b672ce5570a3216863e5622e622689154db7298de64de705",
+      "fetched_at": "2026-10-06T16:28:21.624Z"
+    }
+  ]
+}

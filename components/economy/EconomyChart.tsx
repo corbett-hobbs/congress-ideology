@@ -173,6 +173,9 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
 
               {(spec.kind === "line" || spec.kind === "income" || spec.kind === "debt") && (
                 <>
+                  {spec.key === "gas" && (
+                    <path d={lineGen(weeklyPoints(data.diesel)) ?? ""} fill="none" stroke="var(--ink-faint)" strokeWidth={2} strokeDasharray="4 3" strokeLinejoin="round" />
+                  )}
                   {spec.kind === "debt" && (
                     <path d={lineGen(quarterlyPoints(data.tot)) ?? ""} fill="none" stroke="var(--ink-faint)" strokeWidth={2} strokeDasharray="4 3" strokeLinejoin="round" />
                   )}
@@ -398,7 +401,7 @@ export function EconomyChart({ data, spec, hero = false, showCong, view, reading
           <div className="flex min-w-[8rem] flex-col gap-0.5 text-[0.78rem]">
             <div className="opacity-75">{r.caption}</div>
             <div className="font-mono text-[0.95rem] font-medium">{r.value === null ? "\u2014" : spec.head(r.value)}</div>
-            {r.value2 !== null && <div className="opacity-75">{`Total ${spec.head(r.value2)}`}</div>}
+            {r.value2 !== null && <div className="opacity-75">{`${spec.label2 ?? "Total"} ${spec.head(r.value2)}`}</div>}
           </div>
           );
         }}

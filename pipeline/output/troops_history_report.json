@@ -1,0 +1,157 @@
+{
+  "coverage": {
+    "first_year": 1950,
+    "last_year": 2007,
+    "years": 56,
+    "dmdc_years": [
+      1996,
+      1998,
+      1999,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005
+    ],
+    "troopdata_years": 47
+  },
+  "rows": {
+    "total": 7189,
+    "by_class": {
+      "host": 7055,
+      "territory": 125,
+      "afloat_unassigned": 9
+    },
+    "by_source": {
+      "troopdata": 5852,
+      "dmdc_309a": 1337
+    },
+    "by_quality": {
+      "reported": 6890,
+      "estimate": 299
+    },
+    "suppressed": 10
+  },
+  "gates": {
+    "dmdc_foreign_total_exact": 9,
+    "troopdata_reconciliation": [
+      {
+        "year": 1996,
+        "checked": 18,
+        "exact": 18,
+        "documented_exceptions": 0
+      },
+      {
+        "year": 1998,
+        "checked": 17,
+        "exact": 17,
+        "documented_exceptions": 0
+      },
+      {
+        "year": 1999,
+        "checked": 17,
+        "exact": 16,
+        "documented_exceptions": 1
+      },
+      {
+        "year": 2000,
+        "checked": 14,
+        "exact": 13,
+        "documented_exceptions": 1
+      },
+      {
+        "year": 2001,
+        "checked": 15,
+        "exact": 14,
+        "documented_exceptions": 1
+      },
+      {
+        "year": 2002,
+        "checked": 12,
+        "exact": 11,
+        "documented_exceptions": 1
+      },
+      {
+        "year": 2003,
+        "checked": 0,
+        "exact": 0,
+        "documented_exceptions": 0
+      },
+      {
+        "year": 2004,
+        "checked": 0,
+        "exact": 0,
+        "documented_exceptions": 0
+      },
+      {
+        "year": 2005,
+        "checked": 11,
+        "exact": 10,
+        "documented_exceptions": 1
+      }
+    ]
+  },
+  "notes": {
+    "troopdata_unmapped_zero": [],
+    "reconcile": [
+      {
+        "year": 1996,
+        "checked": 18,
+        "exact": 18,
+        "documented_exceptions": 0
+      },
+      {
+        "year": 1998,
+        "checked": 17,
+        "exact": 17,
+        "documented_exceptions": 0
+      },
+      {
+        "year": 1999,
+        "checked": 17,
+        "exact": 16,
+        "documented_exceptions": 1
+      },
+      {
+        "year": 2000,
+        "checked": 14,
+        "exact": 13,
+        "documented_exceptions": 1
+      },
+      {
+        "year": 2001,
+        "checked": 15,
+        "exact": 14,
+        "documented_exceptions": 1
+      },
+      {
+        "year": 2002,
+        "checked": 12,
+        "exact": 11,
+        "documented_exceptions": 1
+      },
+      {
+        "year": 2003,
+        "checked": 0,
+        "exact": 0,
+        "documented_exceptions": 0
+      },
+      {
+        "year": 2004,
+        "checked": 0,
+        "exact": 0,
+        "documented_exceptions": 0
+      },
+      {
+        "year": 2005,
+        "checked": 11,
+        "exact": 10,
+        "documented_exceptions": 1
+      }
+    ]
+  },
+  "file_sizes_bytes": {
+    "troops_history.json": 1653231
+  }
+}

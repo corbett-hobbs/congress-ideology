@@ -577,3 +577,8 @@ An eighth data track: active-duty personnel by place of duty (DMDC location repo
 
 Raw: `pipeline/raw/dmdc-location/<YYYY-MM>.xlsx` + `manifest.json` (`pnpm fetch:dmdc-location`; keyless; not in `pnpm pipeline`).
 
+History (1950-2007) lives beside it: `pipeline/output/troops_history.json` (one row per `(year, name)`, `snapshot` june/september, `source` troopdata/dmdc_309a,
+`quality` reported/estimate, same `class`/`iso3`/`state` vocabulary), `troops_history_meta.json` (per-year source, abroad total, flags, gaps, substitutions,
+comparability notes) and `troops_history_report.json` (gate results). Raw: `pipeline/raw/troopdata/` (`pnpm fetch:troopdata`, pinned commit, GPL-3.0 LICENSE.md
+committed) and `pipeline/reference/dmdc-309a-sep.csv`. See `docs/TROOPS_METHODOLOGY.md` "History".
+

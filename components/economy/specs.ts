@@ -14,6 +14,8 @@ export interface ChartSpec {
   aria: string;
   /** Unit label for the table fallback. */
   unit: string;
+  /** Name of the second series (shown in the tooltip and readout) when the chart has one. */
+  label2?: string;
 }
 
 const MINUS = "−";
@@ -40,13 +42,14 @@ export const SPECS: Record<EconomyKey, ChartSpec> = {
   gas: {
     key: "gas",
     title: "Gas price",
-    desc: "Regular gasoline, national weekly average, dollars per gallon. Not adjusted for inflation.",
+    desc: "Regular gasoline and diesel, national weekly average retail price, dollars per gallon. Not adjusted for inflation. Diesel data begins in 1994.",
+    label2: "Diesel",
     kind: "line",
     domain: [0.5, 5.5],
     ticks: [1, 2, 3, 4, 5],
     tick: (v) => `$${v}`,
     head: (v) => `$${fx(v, 2)}`,
-    aria: "Line chart of the weekly US regular gas price per gallon since 1991",
+    aria: "Line chart of the weekly US regular gas price and diesel price per gallon since 1991",
     unit: "$ per gallon",
   },
   infl: {
@@ -126,6 +129,7 @@ export const SPECS: Record<EconomyKey, ChartSpec> = {
     title: "Federal debt",
     desc: "Debt as a share of GDP, quarterly. The headline measure is debt held by the public.",
     kind: "debt",
+    label2: "Total",
     domain: [20, 140],
     ticks: [40, 80, 120],
     tick: (v) => `${v}%`,

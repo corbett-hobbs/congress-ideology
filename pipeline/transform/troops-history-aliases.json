@@ -1,0 +1,2732 @@
+[
+ {
+  "system": "dmdc_309a",
+  "source": "Afghanistan (See Deployment Section)",
+  "name": "Afghanistan",
+  "class": "host",
+  "iso3": "AFG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Afghanistan (in/around not available)",
+  "name": "Afghanistan",
+  "class": "host",
+  "iso3": "AFG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Afghanistan (not available)",
+  "name": "Afghanistan",
+  "class": "host",
+  "iso3": "AFG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Albania",
+  "name": "Albania",
+  "class": "host",
+  "iso3": "ALB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Algeria",
+  "name": "Algeria",
+  "class": "host",
+  "iso3": "DZA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Angola",
+  "name": "Angola",
+  "class": "host",
+  "iso3": "AGO"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Antarctica",
+  "name": "Antarctica",
+  "class": "host",
+  "iso3": "ATA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Antigua",
+  "name": "Antigua and Barbuda",
+  "class": "host",
+  "iso3": "ATG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Argentina",
+  "name": "Argentina",
+  "class": "host",
+  "iso3": "ARG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Armenia",
+  "name": "Armenia",
+  "class": "host",
+  "iso3": "ARM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Australia",
+  "name": "Australia",
+  "class": "host",
+  "iso3": "AUS"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Austria",
+  "name": "Austria",
+  "class": "host",
+  "iso3": "AUT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Azerbaijan",
+  "name": "Azerbaijan",
+  "class": "host",
+  "iso3": "AZE"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Bahamas, The",
+  "name": "The Bahamas",
+  "class": "host",
+  "iso3": "BHS"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Bahrain",
+  "name": "Bahrain",
+  "class": "host",
+  "iso3": "BHR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Bangladesh",
+  "name": "Bangladesh",
+  "class": "host",
+  "iso3": "BGD"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Barbados",
+  "name": "Barbados",
+  "class": "host",
+  "iso3": "BRB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Belarus",
+  "name": "Belarus",
+  "class": "host",
+  "iso3": "BLR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Belgium",
+  "name": "Belgium",
+  "class": "host",
+  "iso3": "BEL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Belize",
+  "name": "Belize",
+  "class": "host",
+  "iso3": "BLZ"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Bolivia",
+  "name": "Bolivia",
+  "class": "host",
+  "iso3": "BOL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Bosnia and Herzegovina",
+  "name": "Bosnia and Herzegovina",
+  "class": "host",
+  "iso3": "BIH"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Botswana",
+  "name": "Botswana",
+  "class": "host",
+  "iso3": "BWA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Brazil",
+  "name": "Brazil",
+  "class": "host",
+  "iso3": "BRA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Bulgaria",
+  "name": "Bulgaria",
+  "class": "host",
+  "iso3": "BGR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Burma",
+  "name": "Myanmar",
+  "class": "host",
+  "iso3": "MMR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Burundi",
+  "name": "Burundi",
+  "class": "host",
+  "iso3": "BDI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Cambodia",
+  "name": "Cambodia",
+  "class": "host",
+  "iso3": "KHM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Cameroon",
+  "name": "Cameroon",
+  "class": "host",
+  "iso3": "CMR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Canada",
+  "name": "Canada",
+  "class": "host",
+  "iso3": "CAN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Chad",
+  "name": "Chad",
+  "class": "host",
+  "iso3": "TCD"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Chile",
+  "name": "Chile",
+  "class": "host",
+  "iso3": "CHL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "China",
+  "name": "China",
+  "class": "host",
+  "iso3": "CHN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "China (Includes Hong Kong)",
+  "name": "China",
+  "class": "host",
+  "iso3": "CHN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Colombia",
+  "name": "Colombia",
+  "class": "host",
+  "iso3": "COL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Congo",
+  "name": "Republic of the Congo",
+  "class": "host",
+  "iso3": "COG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Congo (Brazzaville)",
+  "name": "Republic of the Congo",
+  "class": "host",
+  "iso3": "COG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Congo (Kinshasa)",
+  "name": "Democratic Republic of the Congo",
+  "class": "host",
+  "iso3": "COD"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Costa Rica",
+  "name": "Costa Rica",
+  "class": "host",
+  "iso3": "CRI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Cote D'Ivoire",
+  "name": "Côte d'Ivoire",
+  "class": "host",
+  "iso3": "CIV"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Croatia",
+  "name": "Croatia",
+  "class": "host",
+  "iso3": "HRV"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Cuba (Guantanamo)",
+  "name": "Cuba",
+  "class": "host",
+  "iso3": "CUB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Cyprus",
+  "name": "Cyprus",
+  "class": "host",
+  "iso3": "CYP"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Czech Republic",
+  "name": "Czechia",
+  "class": "host",
+  "iso3": "CZE"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Denmark",
+  "name": "Denmark",
+  "class": "host",
+  "iso3": "DNK"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Diego Garcia",
+  "name": "British Indian Ocean Territory",
+  "class": "host",
+  "iso3": "IOT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Djibouti",
+  "name": "Djibouti",
+  "class": "host",
+  "iso3": "DJI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Dominican Republic",
+  "name": "Dominican Republic",
+  "class": "host",
+  "iso3": "DOM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Ecuador",
+  "name": "Ecuador",
+  "class": "host",
+  "iso3": "ECU"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Egypt",
+  "name": "Egypt",
+  "class": "host",
+  "iso3": "EGY"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "El Salvador",
+  "name": "El Salvador",
+  "class": "host",
+  "iso3": "SLV"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Eritrea",
+  "name": "Eritrea",
+  "class": "host",
+  "iso3": "ERI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Estonia",
+  "name": "Estonia",
+  "class": "host",
+  "iso3": "EST"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Ethiopia",
+  "name": "Ethiopia",
+  "class": "host",
+  "iso3": "ETH"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Federated States of Micronesia",
+  "name": "Micronesia",
+  "class": "host",
+  "iso3": "FSM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Fiji",
+  "name": "Fiji",
+  "class": "host",
+  "iso3": "FJI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Finland",
+  "name": "Finland",
+  "class": "host",
+  "iso3": "FIN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "France",
+  "name": "France",
+  "class": "host",
+  "iso3": "FRA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Gabon",
+  "name": "Gabon",
+  "class": "host",
+  "iso3": "GAB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Georgia",
+  "name": "Georgia",
+  "class": "host",
+  "iso3": "GEO"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Germany",
+  "name": "Germany",
+  "class": "host",
+  "iso3": "DEU"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Ghana",
+  "name": "Ghana",
+  "class": "host",
+  "iso3": "GHA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Gibraltar",
+  "name": "Gibraltar",
+  "class": "host",
+  "iso3": "GIB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Greece",
+  "name": "Greece",
+  "class": "host",
+  "iso3": "GRC"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Greenland",
+  "name": "Greenland",
+  "class": "host",
+  "iso3": "GRL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Grenada",
+  "name": "Grenada",
+  "class": "host",
+  "iso3": "GRD"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Guam",
+  "name": "Guam",
+  "class": "territory",
+  "iso3": "GUM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Guatemala",
+  "name": "Guatemala",
+  "class": "host",
+  "iso3": "GTM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Guinea",
+  "name": "Guinea",
+  "class": "host",
+  "iso3": "GIN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Guyana",
+  "name": "Guyana",
+  "class": "host",
+  "iso3": "GUY"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Haiti",
+  "name": "Haiti",
+  "class": "host",
+  "iso3": "HTI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Honduras",
+  "name": "Honduras",
+  "class": "host",
+  "iso3": "HND"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Hong Kong",
+  "name": "Hong Kong",
+  "class": "host",
+  "iso3": "HKG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Hungary",
+  "name": "Hungary",
+  "class": "host",
+  "iso3": "HUN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Iceland",
+  "name": "Iceland",
+  "class": "host",
+  "iso3": "ISL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "India",
+  "name": "India",
+  "class": "host",
+  "iso3": "IND"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Indonesia",
+  "name": "Indonesia",
+  "class": "host",
+  "iso3": "IDN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Indonesia (Includes Timor)",
+  "name": "Indonesia",
+  "class": "host",
+  "iso3": "IDN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Iran",
+  "name": "Iran",
+  "class": "host",
+  "iso3": "IRN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Iraq",
+  "name": "Iraq",
+  "class": "host",
+  "iso3": "IRQ"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Iraq (See Deployment Section)",
+  "name": "Iraq",
+  "class": "host",
+  "iso3": "IRQ"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Iraq (See OIF Table)",
+  "name": "Iraq",
+  "class": "host",
+  "iso3": "IRQ"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Ireland",
+  "name": "Ireland",
+  "class": "host",
+  "iso3": "IRL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Israel",
+  "name": "Israel",
+  "class": "host",
+  "iso3": "ISR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Italy",
+  "name": "Italy",
+  "class": "host",
+  "iso3": "ITA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Jamaica",
+  "name": "Jamaica",
+  "class": "host",
+  "iso3": "JAM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Japan",
+  "name": "Japan",
+  "class": "host",
+  "iso3": "JPN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Johnston Atoll",
+  "name": "Johnston Atoll",
+  "class": "host",
+  "iso3": "UMI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Jordan",
+  "name": "Jordan",
+  "class": "host",
+  "iso3": "JOR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Kazakhstan",
+  "name": "Kazakhstan",
+  "class": "host",
+  "iso3": "KAZ"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Kenya",
+  "name": "Kenya",
+  "class": "host",
+  "iso3": "KEN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Korea, Democratic Peoples Republic of",
+  "name": "North Korea",
+  "class": "host",
+  "iso3": "PRK"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Korea, Republic of",
+  "name": "South Korea",
+  "class": "host",
+  "iso3": "KOR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Kuwait",
+  "name": "Kuwait",
+  "class": "host",
+  "iso3": "KWT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Kuwait (See Deployment Section)",
+  "name": "Kuwait",
+  "class": "host",
+  "iso3": "KWT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Kuwait (See OIF Table)",
+  "name": "Kuwait",
+  "class": "host",
+  "iso3": "KWT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Kyrgyzstan",
+  "name": "Kyrgyzstan",
+  "class": "host",
+  "iso3": "KGZ"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Laos",
+  "name": "Laos",
+  "class": "host",
+  "iso3": "LAO"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Latvia",
+  "name": "Latvia",
+  "class": "host",
+  "iso3": "LVA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Lebanon",
+  "name": "Lebanon",
+  "class": "host",
+  "iso3": "LBN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Liberia",
+  "name": "Liberia",
+  "class": "host",
+  "iso3": "LBR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Lithuania",
+  "name": "Lithuania",
+  "class": "host",
+  "iso3": "LTU"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Luxembourg",
+  "name": "Luxembourg",
+  "class": "host",
+  "iso3": "LUX"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Macedonia, Former Yugoslav Republic of",
+  "name": "North Macedonia",
+  "class": "host",
+  "iso3": "MKD"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Macedonia, The Former Yugoslav Republic of",
+  "name": "North Macedonia",
+  "class": "host",
+  "iso3": "MKD"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Madagascar",
+  "name": "Madagascar",
+  "class": "host",
+  "iso3": "MDG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Malawi",
+  "name": "Malawi",
+  "class": "host",
+  "iso3": "MWI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Malaysia",
+  "name": "Malaysia",
+  "class": "host",
+  "iso3": "MYS"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Mali",
+  "name": "Mali",
+  "class": "host",
+  "iso3": "MLI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Malta",
+  "name": "Malta",
+  "class": "host",
+  "iso3": "MLT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Marshall Islands",
+  "name": "Marshall Islands",
+  "class": "host",
+  "iso3": "MHL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Mexico",
+  "name": "Mexico",
+  "class": "host",
+  "iso3": "MEX"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Midway Islands",
+  "name": "Midway Islands",
+  "class": "host",
+  "iso3": "UMI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Moldova",
+  "name": "Moldova",
+  "class": "host",
+  "iso3": "MDA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Mongolia",
+  "name": "Mongolia",
+  "class": "host",
+  "iso3": "MNG"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Morocco",
+  "name": "Morocco",
+  "class": "host",
+  "iso3": "MAR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Mozambique",
+  "name": "Mozambique",
+  "class": "host",
+  "iso3": "MOZ"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Nepal",
+  "name": "Nepal",
+  "class": "host",
+  "iso3": "NPL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Netherlands",
+  "name": "Netherlands",
+  "class": "host",
+  "iso3": "NLD"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Netherlands Antilles",
+  "name": "Netherlands Antilles",
+  "class": "host",
+  "iso3": "ANT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "New Zealand",
+  "name": "New Zealand",
+  "class": "host",
+  "iso3": "NZL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Nicaragua",
+  "name": "Nicaragua",
+  "class": "host",
+  "iso3": "NIC"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Niger",
+  "name": "Niger",
+  "class": "host",
+  "iso3": "NER"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Nigeria",
+  "name": "Nigeria",
+  "class": "host",
+  "iso3": "NGA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Norway",
+  "name": "Norway",
+  "class": "host",
+  "iso3": "NOR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Oman",
+  "name": "Oman",
+  "class": "host",
+  "iso3": "OMN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Pakistan",
+  "name": "Pakistan",
+  "class": "host",
+  "iso3": "PAK"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Palau",
+  "name": "Palau",
+  "class": "host",
+  "iso3": "PLW"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Panama",
+  "name": "Panama",
+  "class": "host",
+  "iso3": "PAN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Paraguay",
+  "name": "Paraguay",
+  "class": "host",
+  "iso3": "PRY"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Peru",
+  "name": "Peru",
+  "class": "host",
+  "iso3": "PER"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Philippines",
+  "name": "Philippines",
+  "class": "host",
+  "iso3": "PHL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Poland",
+  "name": "Poland",
+  "class": "host",
+  "iso3": "POL"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Portugal",
+  "name": "Portugal",
+  "class": "host",
+  "iso3": "PRT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Puerto Rico",
+  "name": "Puerto Rico",
+  "class": "territory",
+  "iso3": "PRI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Qatar",
+  "name": "Qatar",
+  "class": "host",
+  "iso3": "QAT"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Romania",
+  "name": "Romania",
+  "class": "host",
+  "iso3": "ROU"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Russia",
+  "name": "Russia",
+  "class": "host",
+  "iso3": "RUS"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Rwanda",
+  "name": "Rwanda",
+  "class": "host",
+  "iso3": "RWA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Saudi Arabia",
+  "name": "Saudi Arabia",
+  "class": "host",
+  "iso3": "SAU"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Senegal",
+  "name": "Senegal",
+  "class": "host",
+  "iso3": "SEN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Serbia",
+  "name": "Serbia",
+  "class": "host",
+  "iso3": "SRB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Serbia (includes Kosovo)",
+  "name": "Serbia",
+  "class": "host",
+  "iso3": "SRB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Sierra Leone",
+  "name": "Sierra Leone",
+  "class": "host",
+  "iso3": "SLE"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Singapore",
+  "name": "Singapore",
+  "class": "host",
+  "iso3": "SGP"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Slovakia",
+  "name": "Slovakia",
+  "class": "host",
+  "iso3": "SVK"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Slovenia",
+  "name": "Slovenia",
+  "class": "host",
+  "iso3": "SVN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Somalia",
+  "name": "Somalia",
+  "class": "host",
+  "iso3": "SOM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "South Africa",
+  "name": "South Africa",
+  "class": "host",
+  "iso3": "ZAF"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Spain",
+  "name": "Spain",
+  "class": "host",
+  "iso3": "ESP"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Sri Lanka",
+  "name": "Sri Lanka",
+  "class": "host",
+  "iso3": "LKA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "St. Helena (Includes Ascension Island)",
+  "name": "Saint Helena",
+  "class": "host",
+  "iso3": "SHN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Sudan",
+  "name": "Sudan",
+  "class": "host",
+  "iso3": "SDN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Suriname",
+  "name": "Suriname",
+  "class": "host",
+  "iso3": "SUR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Sweden",
+  "name": "Sweden",
+  "class": "host",
+  "iso3": "SWE"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Switzerland",
+  "name": "Switzerland",
+  "class": "host",
+  "iso3": "CHE"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Syria",
+  "name": "Syria",
+  "class": "host",
+  "iso3": "SYR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Tajikistan",
+  "name": "Tajikistan",
+  "class": "host",
+  "iso3": "TJK"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Tanzania, United Republic of",
+  "name": "Tanzania",
+  "class": "host",
+  "iso3": "TZA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Thailand",
+  "name": "Thailand",
+  "class": "host",
+  "iso3": "THA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Togo",
+  "name": "Togo",
+  "class": "host",
+  "iso3": "TGO"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Trinidad and Tobago",
+  "name": "Trinidad and Tobago",
+  "class": "host",
+  "iso3": "TTO"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Trust Territory of the Pacific Islands",
+  "name": "Trust Territory of the Pacific Islands",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Tunisia",
+  "name": "Tunisia",
+  "class": "host",
+  "iso3": "TUN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Turkey",
+  "name": "Turkey",
+  "class": "host",
+  "iso3": "TUR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Turkmenistan",
+  "name": "Turkmenistan",
+  "class": "host",
+  "iso3": "TKM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "U. S. Virgin Islands",
+  "name": "U.S. Virgin Islands",
+  "class": "territory",
+  "iso3": "VIR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Uganda",
+  "name": "Uganda",
+  "class": "host",
+  "iso3": "UGA"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Ukraine",
+  "name": "Ukraine",
+  "class": "host",
+  "iso3": "UKR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "United Arab Emirates",
+  "name": "United Arab Emirates",
+  "class": "host",
+  "iso3": "ARE"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "United Kingdom",
+  "name": "United Kingdom",
+  "class": "host",
+  "iso3": "GBR"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Uruguay",
+  "name": "Uruguay",
+  "class": "host",
+  "iso3": "URY"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Uzbekistan",
+  "name": "Uzbekistan",
+  "class": "host",
+  "iso3": "UZB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Venezuela",
+  "name": "Venezuela",
+  "class": "host",
+  "iso3": "VEN"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Vietnam",
+  "name": "Vietnam",
+  "class": "host",
+  "iso3": "VNM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Wake Island",
+  "name": "Wake Island",
+  "class": "host",
+  "iso3": "UMI"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Western Sahara",
+  "name": "Western Sahara",
+  "class": "host",
+  "iso3": "ESH"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Yemen",
+  "name": "Yemen",
+  "class": "host",
+  "iso3": "YEM"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Zaire",
+  "name": "Democratic Republic of the Congo",
+  "class": "host",
+  "iso3": "COD"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Zambia",
+  "name": "Zambia",
+  "class": "host",
+  "iso3": "ZMB"
+ },
+ {
+  "system": "dmdc_309a",
+  "source": "Zimbabwe",
+  "name": "Zimbabwe",
+  "class": "host",
+  "iso3": "ZWE"
+ },
+ {
+  "system": "troopdata",
+  "source": "Afghanistan",
+  "name": "Afghanistan",
+  "class": "host",
+  "iso3": "AFG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Albania",
+  "name": "Albania",
+  "class": "host",
+  "iso3": "ALB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Algeria",
+  "name": "Algeria",
+  "class": "host",
+  "iso3": "DZA"
+ },
+ {
+  "system": "troopdata",
+  "source": "American Samoa",
+  "name": "American Samoa",
+  "class": "territory",
+  "iso3": "ASM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Angola",
+  "name": "Angola",
+  "class": "host",
+  "iso3": "AGO"
+ },
+ {
+  "system": "troopdata",
+  "source": "Antarctica",
+  "name": "Antarctica",
+  "class": "host",
+  "iso3": "ATA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Antigua",
+  "name": "Antigua and Barbuda",
+  "class": "host",
+  "iso3": "ATG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Argentina",
+  "name": "Argentina",
+  "class": "host",
+  "iso3": "ARG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Armenia",
+  "name": "Armenia",
+  "class": "host",
+  "iso3": "ARM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Aruba",
+  "name": "Aruba",
+  "class": "host",
+  "iso3": "ABW"
+ },
+ {
+  "system": "troopdata",
+  "source": "Ascension Island",
+  "name": "Ascension Island",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Australia",
+  "name": "Australia",
+  "class": "host",
+  "iso3": "AUS"
+ },
+ {
+  "system": "troopdata",
+  "source": "Austria",
+  "name": "Austria",
+  "class": "host",
+  "iso3": "AUT"
+ },
+ {
+  "system": "troopdata",
+  "source": "Azerbaijan",
+  "name": "Azerbaijan",
+  "class": "host",
+  "iso3": "AZE"
+ },
+ {
+  "system": "troopdata",
+  "source": "Azores",
+  "name": "Azores",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Bahamas",
+  "name": "The Bahamas",
+  "class": "host",
+  "iso3": "BHS"
+ },
+ {
+  "system": "troopdata",
+  "source": "Bahrain",
+  "name": "Bahrain",
+  "class": "host",
+  "iso3": "BHR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Bangladesh",
+  "name": "Bangladesh",
+  "class": "host",
+  "iso3": "BGD"
+ },
+ {
+  "system": "troopdata",
+  "source": "Barbados",
+  "name": "Barbados",
+  "class": "host",
+  "iso3": "BRB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Belarus",
+  "name": "Belarus",
+  "class": "host",
+  "iso3": "BLR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Belgium",
+  "name": "Belgium",
+  "class": "host",
+  "iso3": "BEL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Belize",
+  "name": "Belize",
+  "class": "host",
+  "iso3": "BLZ"
+ },
+ {
+  "system": "troopdata",
+  "source": "Benin",
+  "name": "Benin",
+  "class": "host",
+  "iso3": "BEN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Bermuda",
+  "name": "Bermuda",
+  "class": "host",
+  "iso3": "BMU"
+ },
+ {
+  "system": "troopdata",
+  "source": "Bhutan",
+  "name": "Bhutan",
+  "class": "host",
+  "iso3": "BTN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Bolivia",
+  "name": "Bolivia",
+  "class": "host",
+  "iso3": "BOL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Bosnia and Herzegovina",
+  "name": "Bosnia and Herzegovina",
+  "class": "host",
+  "iso3": "BIH"
+ },
+ {
+  "system": "troopdata",
+  "source": "Botswana",
+  "name": "Botswana",
+  "class": "host",
+  "iso3": "BWA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Brazil",
+  "name": "Brazil",
+  "class": "host",
+  "iso3": "BRA"
+ },
+ {
+  "system": "troopdata",
+  "source": "British Virgin Islands",
+  "name": "British Virgin Islands",
+  "class": "host",
+  "iso3": "VGB"
+ },
+ {
+  "system": "troopdata",
+  "source": "British West Indies",
+  "name": "British West Indies",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Brunei",
+  "name": "Brunei",
+  "class": "host",
+  "iso3": "BRN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Bulgaria",
+  "name": "Bulgaria",
+  "class": "host",
+  "iso3": "BGR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Burkina Faso",
+  "name": "Burkina Faso",
+  "class": "host",
+  "iso3": "BFA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Burundi",
+  "name": "Burundi",
+  "class": "host",
+  "iso3": "BDI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Cabo Verde",
+  "name": "Cabo Verde",
+  "class": "host",
+  "iso3": "CPV"
+ },
+ {
+  "system": "troopdata",
+  "source": "Cambodia",
+  "name": "Cambodia",
+  "class": "host",
+  "iso3": "KHM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Cameroon",
+  "name": "Cameroon",
+  "class": "host",
+  "iso3": "CMR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Canada",
+  "name": "Canada",
+  "class": "host",
+  "iso3": "CAN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Central African Republic",
+  "name": "Central African Republic",
+  "class": "host",
+  "iso3": "CAF"
+ },
+ {
+  "system": "troopdata",
+  "source": "Chad",
+  "name": "Chad",
+  "class": "host",
+  "iso3": "TCD"
+ },
+ {
+  "system": "troopdata",
+  "source": "Chile",
+  "name": "Chile",
+  "class": "host",
+  "iso3": "CHL"
+ },
+ {
+  "system": "troopdata",
+  "source": "China",
+  "name": "China",
+  "class": "host",
+  "iso3": "CHN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Colombia",
+  "name": "Colombia",
+  "class": "host",
+  "iso3": "COL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Comoros",
+  "name": "Comoros",
+  "class": "host",
+  "iso3": "COM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Congo",
+  "name": "Republic of the Congo",
+  "class": "host",
+  "iso3": "COG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Costa Rica",
+  "name": "Costa Rica",
+  "class": "host",
+  "iso3": "CRI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Croatia",
+  "name": "Croatia",
+  "class": "host",
+  "iso3": "HRV"
+ },
+ {
+  "system": "troopdata",
+  "source": "Cuba",
+  "name": "Cuba",
+  "class": "host",
+  "iso3": "CUB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Cyprus",
+  "name": "Cyprus",
+  "class": "host",
+  "iso3": "CYP"
+ },
+ {
+  "system": "troopdata",
+  "source": "Czech Republic",
+  "name": "Czechia",
+  "class": "host",
+  "iso3": "CZE"
+ },
+ {
+  "system": "troopdata",
+  "source": "Czechoslovakia",
+  "name": "Czechoslovakia",
+  "class": "host",
+  "iso3": "CSK"
+ },
+ {
+  "system": "troopdata",
+  "source": "Democratic Republic of the Congo",
+  "name": "Democratic Republic of the Congo",
+  "class": "host",
+  "iso3": "COD"
+ },
+ {
+  "system": "troopdata",
+  "source": "Denmark",
+  "name": "Denmark",
+  "class": "host",
+  "iso3": "DNK"
+ },
+ {
+  "system": "troopdata",
+  "source": "Diego Garcia",
+  "name": "British Indian Ocean Territory",
+  "class": "host",
+  "iso3": "IOT"
+ },
+ {
+  "system": "troopdata",
+  "source": "Djibouti",
+  "name": "Djibouti",
+  "class": "host",
+  "iso3": "DJI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Dominican Republic",
+  "name": "Dominican Republic",
+  "class": "host",
+  "iso3": "DOM"
+ },
+ {
+  "system": "troopdata",
+  "source": "East Timor",
+  "name": "Timor-Leste",
+  "class": "host",
+  "iso3": "TLS"
+ },
+ {
+  "system": "troopdata",
+  "source": "Easter Island",
+  "name": "Easter Island",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Ecuador",
+  "name": "Ecuador",
+  "class": "host",
+  "iso3": "ECU"
+ },
+ {
+  "system": "troopdata",
+  "source": "Egypt",
+  "name": "Egypt",
+  "class": "host",
+  "iso3": "EGY"
+ },
+ {
+  "system": "troopdata",
+  "source": "El Salvador",
+  "name": "El Salvador",
+  "class": "host",
+  "iso3": "SLV"
+ },
+ {
+  "system": "troopdata",
+  "source": "Eniwetok (J.T.F. 7)",
+  "name": "Eniwetok",
+  "class": "host",
+  "iso3": "MHL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Equatorial Guinea",
+  "name": "Equatorial Guinea",
+  "class": "host",
+  "iso3": "GNQ"
+ },
+ {
+  "system": "troopdata",
+  "source": "Eritrea",
+  "name": "Eritrea",
+  "class": "host",
+  "iso3": "ERI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Estonia",
+  "name": "Estonia",
+  "class": "host",
+  "iso3": "EST"
+ },
+ {
+  "system": "troopdata",
+  "source": "Eswatini",
+  "name": "Eswatini",
+  "class": "host",
+  "iso3": "SWZ"
+ },
+ {
+  "system": "troopdata",
+  "source": "Ethiopia",
+  "name": "Ethiopia",
+  "class": "host",
+  "iso3": "ETH"
+ },
+ {
+  "system": "troopdata",
+  "source": "Fiji",
+  "name": "Fiji",
+  "class": "host",
+  "iso3": "FJI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Finland",
+  "name": "Finland",
+  "class": "host",
+  "iso3": "FIN"
+ },
+ {
+  "system": "troopdata",
+  "source": "France",
+  "name": "France",
+  "class": "host",
+  "iso3": "FRA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Gabon",
+  "name": "Gabon",
+  "class": "host",
+  "iso3": "GAB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Gambia",
+  "name": "The Gambia",
+  "class": "host",
+  "iso3": "GMB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Georgia",
+  "name": "Georgia",
+  "class": "host",
+  "iso3": "GEO"
+ },
+ {
+  "system": "troopdata",
+  "source": "German Democratic Republic",
+  "name": "East Germany",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Germany",
+  "name": "Germany",
+  "class": "host",
+  "iso3": "DEU"
+ },
+ {
+  "system": "troopdata",
+  "source": "Ghana",
+  "name": "Ghana",
+  "class": "host",
+  "iso3": "GHA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Gibraltar",
+  "name": "Gibraltar",
+  "class": "host",
+  "iso3": "GIB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Greece",
+  "name": "Greece",
+  "class": "host",
+  "iso3": "GRC"
+ },
+ {
+  "system": "troopdata",
+  "source": "Greenland",
+  "name": "Greenland",
+  "class": "host",
+  "iso3": "GRL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Guam",
+  "name": "Guam",
+  "class": "territory",
+  "iso3": "GUM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Guatemala",
+  "name": "Guatemala",
+  "class": "host",
+  "iso3": "GTM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Guinea",
+  "name": "Guinea",
+  "class": "host",
+  "iso3": "GIN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Guinea-Bissau",
+  "name": "Guinea-Bissau",
+  "class": "host",
+  "iso3": "GNB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Guyana",
+  "name": "Guyana",
+  "class": "host",
+  "iso3": "GUY"
+ },
+ {
+  "system": "troopdata",
+  "source": "Haiti",
+  "name": "Haiti",
+  "class": "host",
+  "iso3": "HTI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Honduras",
+  "name": "Honduras",
+  "class": "host",
+  "iso3": "HND"
+ },
+ {
+  "system": "troopdata",
+  "source": "Hong Kong",
+  "name": "Hong Kong",
+  "class": "host",
+  "iso3": "HKG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Hungary",
+  "name": "Hungary",
+  "class": "host",
+  "iso3": "HUN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Iceland",
+  "name": "Iceland",
+  "class": "host",
+  "iso3": "ISL"
+ },
+ {
+  "system": "troopdata",
+  "source": "India",
+  "name": "India",
+  "class": "host",
+  "iso3": "IND"
+ },
+ {
+  "system": "troopdata",
+  "source": "Indonesia",
+  "name": "Indonesia",
+  "class": "host",
+  "iso3": "IDN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Iran",
+  "name": "Iran",
+  "class": "host",
+  "iso3": "IRN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Iraq",
+  "name": "Iraq",
+  "class": "host",
+  "iso3": "IRQ"
+ },
+ {
+  "system": "troopdata",
+  "source": "Ireland",
+  "name": "Ireland",
+  "class": "host",
+  "iso3": "IRL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Israel",
+  "name": "Israel",
+  "class": "host",
+  "iso3": "ISR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Italy",
+  "name": "Italy",
+  "class": "host",
+  "iso3": "ITA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Ivory Coast",
+  "name": "Côte d'Ivoire",
+  "class": "host",
+  "iso3": "CIV"
+ },
+ {
+  "system": "troopdata",
+  "source": "Jamaica",
+  "name": "Jamaica",
+  "class": "host",
+  "iso3": "JAM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Japan",
+  "name": "Japan",
+  "class": "host",
+  "iso3": "JPN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Johnston Island",
+  "name": "Johnston Atoll",
+  "class": "host",
+  "iso3": "UMI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Jordan",
+  "name": "Jordan",
+  "class": "host",
+  "iso3": "JOR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Kashmir",
+  "name": "Kashmir",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Kazakhstan",
+  "name": "Kazakhstan",
+  "class": "host",
+  "iso3": "KAZ"
+ },
+ {
+  "system": "troopdata",
+  "source": "Kenya",
+  "name": "Kenya",
+  "class": "host",
+  "iso3": "KEN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Kuwait",
+  "name": "Kuwait",
+  "class": "host",
+  "iso3": "KWT"
+ },
+ {
+  "system": "troopdata",
+  "source": "Kyrgyzstan",
+  "name": "Kyrgyzstan",
+  "class": "host",
+  "iso3": "KGZ"
+ },
+ {
+  "system": "troopdata",
+  "source": "Laos",
+  "name": "Laos",
+  "class": "host",
+  "iso3": "LAO"
+ },
+ {
+  "system": "troopdata",
+  "source": "Latvia",
+  "name": "Latvia",
+  "class": "host",
+  "iso3": "LVA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Lebanon",
+  "name": "Lebanon",
+  "class": "host",
+  "iso3": "LBN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Lesotho",
+  "name": "Lesotho",
+  "class": "host",
+  "iso3": "LSO"
+ },
+ {
+  "system": "troopdata",
+  "source": "Liberia",
+  "name": "Liberia",
+  "class": "host",
+  "iso3": "LBR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Libya",
+  "name": "Libya",
+  "class": "host",
+  "iso3": "LBY"
+ },
+ {
+  "system": "troopdata",
+  "source": "Line Islands",
+  "name": "Line Islands",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Lithuania",
+  "name": "Lithuania",
+  "class": "host",
+  "iso3": "LTU"
+ },
+ {
+  "system": "troopdata",
+  "source": "Luxembourg",
+  "name": "Luxembourg",
+  "class": "host",
+  "iso3": "LUX"
+ },
+ {
+  "system": "troopdata",
+  "source": "Macedonia",
+  "name": "North Macedonia",
+  "class": "host",
+  "iso3": "MKD"
+ },
+ {
+  "system": "troopdata",
+  "source": "Madagascar",
+  "name": "Madagascar",
+  "class": "host",
+  "iso3": "MDG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Malawi",
+  "name": "Malawi",
+  "class": "host",
+  "iso3": "MWI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Malaysia",
+  "name": "Malaysia",
+  "class": "host",
+  "iso3": "MYS"
+ },
+ {
+  "system": "troopdata",
+  "source": "Maldives",
+  "name": "Maldives",
+  "class": "host",
+  "iso3": "MDV"
+ },
+ {
+  "system": "troopdata",
+  "source": "Mali",
+  "name": "Mali",
+  "class": "host",
+  "iso3": "MLI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Malta",
+  "name": "Malta",
+  "class": "host",
+  "iso3": "MLT"
+ },
+ {
+  "system": "troopdata",
+  "source": "Marshall Islands",
+  "name": "Marshall Islands",
+  "class": "host",
+  "iso3": "MHL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Mauritania",
+  "name": "Mauritania",
+  "class": "host",
+  "iso3": "MRT"
+ },
+ {
+  "system": "troopdata",
+  "source": "Mauritius",
+  "name": "Mauritius",
+  "class": "host",
+  "iso3": "MUS"
+ },
+ {
+  "system": "troopdata",
+  "source": "Mexico",
+  "name": "Mexico",
+  "class": "host",
+  "iso3": "MEX"
+ },
+ {
+  "system": "troopdata",
+  "source": "Micronesia",
+  "name": "Micronesia",
+  "class": "host",
+  "iso3": "FSM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Midway Islands",
+  "name": "Midway Islands",
+  "class": "host",
+  "iso3": "UMI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Moldova",
+  "name": "Moldova",
+  "class": "host",
+  "iso3": "MDA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Mongolia",
+  "name": "Mongolia",
+  "class": "host",
+  "iso3": "MNG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Montenegro",
+  "name": "Montenegro",
+  "class": "host",
+  "iso3": "MNE"
+ },
+ {
+  "system": "troopdata",
+  "source": "Morocco",
+  "name": "Morocco",
+  "class": "host",
+  "iso3": "MAR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Mozambique",
+  "name": "Mozambique",
+  "class": "host",
+  "iso3": "MOZ"
+ },
+ {
+  "system": "troopdata",
+  "source": "Myanmar",
+  "name": "Myanmar",
+  "class": "host",
+  "iso3": "MMR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Namibia",
+  "name": "Namibia",
+  "class": "host",
+  "iso3": "NAM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Nepal",
+  "name": "Nepal",
+  "class": "host",
+  "iso3": "NPL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Netherlands",
+  "name": "Netherlands",
+  "class": "host",
+  "iso3": "NLD"
+ },
+ {
+  "system": "troopdata",
+  "source": "Netherlands Antilles",
+  "name": "Netherlands Antilles",
+  "class": "host",
+  "iso3": "ANT"
+ },
+ {
+  "system": "troopdata",
+  "source": "New Zealand",
+  "name": "New Zealand",
+  "class": "host",
+  "iso3": "NZL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Nicaragua",
+  "name": "Nicaragua",
+  "class": "host",
+  "iso3": "NIC"
+ },
+ {
+  "system": "troopdata",
+  "source": "Niger",
+  "name": "Niger",
+  "class": "host",
+  "iso3": "NER"
+ },
+ {
+  "system": "troopdata",
+  "source": "Nigeria",
+  "name": "Nigeria",
+  "class": "host",
+  "iso3": "NGA"
+ },
+ {
+  "system": "troopdata",
+  "source": "North Korea",
+  "name": "North Korea",
+  "class": "host",
+  "iso3": "PRK"
+ },
+ {
+  "system": "troopdata",
+  "source": "Northern Mariana Islands",
+  "name": "Northern Mariana Islands",
+  "class": "territory",
+  "iso3": "MNP"
+ },
+ {
+  "system": "troopdata",
+  "source": "Norway",
+  "name": "Norway",
+  "class": "host",
+  "iso3": "NOR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Oman",
+  "name": "Oman",
+  "class": "host",
+  "iso3": "OMN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Pakistan",
+  "name": "Pakistan",
+  "class": "host",
+  "iso3": "PAK"
+ },
+ {
+  "system": "troopdata",
+  "source": "Panama",
+  "name": "Panama",
+  "class": "host",
+  "iso3": "PAN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Papua New Guinea",
+  "name": "Papua New Guinea",
+  "class": "host",
+  "iso3": "PNG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Paraguay",
+  "name": "Paraguay",
+  "class": "host",
+  "iso3": "PRY"
+ },
+ {
+  "system": "troopdata",
+  "source": "Peru",
+  "name": "Peru",
+  "class": "host",
+  "iso3": "PER"
+ },
+ {
+  "system": "troopdata",
+  "source": "Philippines",
+  "name": "Philippines",
+  "class": "host",
+  "iso3": "PHL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Poland",
+  "name": "Poland",
+  "class": "host",
+  "iso3": "POL"
+ },
+ {
+  "system": "troopdata",
+  "source": "Portugal",
+  "name": "Portugal",
+  "class": "host",
+  "iso3": "PRT"
+ },
+ {
+  "system": "troopdata",
+  "source": "Qatar",
+  "name": "Qatar",
+  "class": "host",
+  "iso3": "QAT"
+ },
+ {
+  "system": "troopdata",
+  "source": "Romania",
+  "name": "Romania",
+  "class": "host",
+  "iso3": "ROU"
+ },
+ {
+  "system": "troopdata",
+  "source": "Russia",
+  "name": "Russia",
+  "class": "host",
+  "iso3": "RUS"
+ },
+ {
+  "system": "troopdata",
+  "source": "Rwanda",
+  "name": "Rwanda",
+  "class": "host",
+  "iso3": "RWA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Sarawak",
+  "name": "Sarawak",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Saudi Arabia",
+  "name": "Saudi Arabia",
+  "class": "host",
+  "iso3": "SAU"
+ },
+ {
+  "system": "troopdata",
+  "source": "Senegal",
+  "name": "Senegal",
+  "class": "host",
+  "iso3": "SEN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Serbia",
+  "name": "Serbia",
+  "class": "host",
+  "iso3": "SRB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Seychelles",
+  "name": "Seychelles",
+  "class": "host",
+  "iso3": "SYC"
+ },
+ {
+  "system": "troopdata",
+  "source": "Sierra Leone",
+  "name": "Sierra Leone",
+  "class": "host",
+  "iso3": "SLE"
+ },
+ {
+  "system": "troopdata",
+  "source": "Singapore",
+  "name": "Singapore",
+  "class": "host",
+  "iso3": "SGP"
+ },
+ {
+  "system": "troopdata",
+  "source": "Slovakia",
+  "name": "Slovakia",
+  "class": "host",
+  "iso3": "SVK"
+ },
+ {
+  "system": "troopdata",
+  "source": "Slovenia",
+  "name": "Slovenia",
+  "class": "host",
+  "iso3": "SVN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Solomon Islands",
+  "name": "Solomon Islands",
+  "class": "host",
+  "iso3": "SLB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Somalia",
+  "name": "Somalia",
+  "class": "host",
+  "iso3": "SOM"
+ },
+ {
+  "system": "troopdata",
+  "source": "South Africa",
+  "name": "South Africa",
+  "class": "host",
+  "iso3": "ZAF"
+ },
+ {
+  "system": "troopdata",
+  "source": "South Korea",
+  "name": "South Korea",
+  "class": "host",
+  "iso3": "KOR"
+ },
+ {
+  "system": "troopdata",
+  "source": "South Vietnam",
+  "name": "Vietnam",
+  "class": "host",
+  "iso3": "VNM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Spain",
+  "name": "Spain",
+  "class": "host",
+  "iso3": "ESP"
+ },
+ {
+  "system": "troopdata",
+  "source": "Sri Lanka",
+  "name": "Sri Lanka",
+  "class": "host",
+  "iso3": "LKA"
+ },
+ {
+  "system": "troopdata",
+  "source": "St. Helena",
+  "name": "Saint Helena",
+  "class": "host",
+  "iso3": "SHN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Sudan",
+  "name": "Sudan",
+  "class": "host",
+  "iso3": "SDN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Suriname",
+  "name": "Suriname",
+  "class": "host",
+  "iso3": "SUR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Sweden",
+  "name": "Sweden",
+  "class": "host",
+  "iso3": "SWE"
+ },
+ {
+  "system": "troopdata",
+  "source": "Switzerland",
+  "name": "Switzerland",
+  "class": "host",
+  "iso3": "CHE"
+ },
+ {
+  "system": "troopdata",
+  "source": "Syria",
+  "name": "Syria",
+  "class": "host",
+  "iso3": "SYR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Taiwan",
+  "name": "Taiwan",
+  "class": "host",
+  "iso3": "TWN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Tajikistan",
+  "name": "Tajikistan",
+  "class": "host",
+  "iso3": "TJK"
+ },
+ {
+  "system": "troopdata",
+  "source": "Tanzania",
+  "name": "Tanzania",
+  "class": "host",
+  "iso3": "TZA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Thailand",
+  "name": "Thailand",
+  "class": "host",
+  "iso3": "THA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Togo",
+  "name": "Togo",
+  "class": "host",
+  "iso3": "TGO"
+ },
+ {
+  "system": "troopdata",
+  "source": "Trinidad and Tobago",
+  "name": "Trinidad and Tobago",
+  "class": "host",
+  "iso3": "TTO"
+ },
+ {
+  "system": "troopdata",
+  "source": "Tunisia",
+  "name": "Tunisia",
+  "class": "host",
+  "iso3": "TUN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Turkey",
+  "name": "Turkey",
+  "class": "host",
+  "iso3": "TUR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Turkmenistan",
+  "name": "Turkmenistan",
+  "class": "host",
+  "iso3": "TKM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Turks and Caicos Islands",
+  "name": "Turks and Caicos Islands",
+  "class": "host",
+  "iso3": "TCA"
+ },
+ {
+  "system": "troopdata",
+  "source": "US Virgin Islands",
+  "name": "U.S. Virgin Islands",
+  "class": "territory",
+  "iso3": "VIR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Uganda",
+  "name": "Uganda",
+  "class": "host",
+  "iso3": "UGA"
+ },
+ {
+  "system": "troopdata",
+  "source": "Ukraine",
+  "name": "Ukraine",
+  "class": "host",
+  "iso3": "UKR"
+ },
+ {
+  "system": "troopdata",
+  "source": "United Arab Emirates",
+  "name": "United Arab Emirates",
+  "class": "host",
+  "iso3": "ARE"
+ },
+ {
+  "system": "troopdata",
+  "source": "United Kingdom",
+  "name": "United Kingdom",
+  "class": "host",
+  "iso3": "GBR"
+ },
+ {
+  "system": "troopdata",
+  "source": "Uruguay",
+  "name": "Uruguay",
+  "class": "host",
+  "iso3": "URY"
+ },
+ {
+  "system": "troopdata",
+  "source": "Uzbekistan",
+  "name": "Uzbekistan",
+  "class": "host",
+  "iso3": "UZB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Vatican City",
+  "name": "Vatican City",
+  "class": "host",
+  "iso3": "VAT"
+ },
+ {
+  "system": "troopdata",
+  "source": "Venezuela",
+  "name": "Venezuela",
+  "class": "host",
+  "iso3": "VEN"
+ },
+ {
+  "system": "troopdata",
+  "source": "Vietnam",
+  "name": "Vietnam",
+  "class": "host",
+  "iso3": "VNM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Wake Island",
+  "name": "Wake Island",
+  "class": "host",
+  "iso3": "UMI"
+ },
+ {
+  "system": "troopdata",
+  "source": "Western Sahara",
+  "name": "Western Sahara",
+  "class": "host",
+  "iso3": "ESH"
+ },
+ {
+  "system": "troopdata",
+  "source": "Yemen",
+  "name": "Yemen",
+  "class": "host",
+  "iso3": "YEM"
+ },
+ {
+  "system": "troopdata",
+  "source": "Yemen People's Republic",
+  "name": "South Yemen",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Yugoslavia",
+  "name": "Yugoslavia",
+  "class": "host",
+  "iso3": "YUG"
+ },
+ {
+  "system": "troopdata",
+  "source": "Zambia",
+  "name": "Zambia",
+  "class": "host",
+  "iso3": "ZMB"
+ },
+ {
+  "system": "troopdata",
+  "source": "Zanzibar",
+  "name": "Zanzibar",
+  "class": "host",
+  "iso3": null
+ },
+ {
+  "system": "troopdata",
+  "source": "Zimbabwe",
+  "name": "Zimbabwe",
+  "class": "host",
+  "iso3": "ZWE"
+ }
+]

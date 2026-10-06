@@ -28,6 +28,8 @@ export type Annual = [year: number, value: number][];
 export interface EconomyPayload {
   span: number;
   gas: Weekly;
+  /** Retail diesel; starts 1994-03-28, so it begins later than `gas`. */
+  diesel: Weekly;
   mort: Weekly;
   jobs: (number | null)[];
   un: (number | null)[];

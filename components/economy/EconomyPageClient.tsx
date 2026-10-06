@@ -75,6 +75,7 @@ function EconomyPage({
   const common = { data, showCong, view };
 
   const notes: Partial<Record<keyof typeof SPECS, string>> = {
+    gas: "Diesel is the dashed line and begins in March 1994, when the EIA series starts. Both are nominal, so a dollar in 1991 buys more than one today.",
     infl: "The October 2025 gap is real: prices weren’t collected that month, so that year-over-year figure doesn’t exist.",
     jobs: "Axis capped at ±1M a month so ordinary months stay readable; months beyond it run to the edge with a triangle, and the largest gain and loss are labeled with their true values.",
     un: "No survey was collected in October 2025, so the line has a one-month gap.",
@@ -142,7 +143,18 @@ function EconomyPage({
               desc={k === "inc" ? incomeDesc : SPECS[k].desc}
               footnote={notes[k]}
               legend={
-                k === "debt" ? (
+                k === "gas" ? (
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] text-ink-muted">
+                    <span className="inline-flex items-center gap-1.5">
+                      <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>
+                      Regular gasoline
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="2" strokeDasharray="4 3" /></svg>
+                      Diesel (from 1994)
+                    </span>
+                  </div>
+                ) : k === "debt" ? (
                   <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] text-ink-muted">
                     <span className="inline-flex items-center gap-1.5">
                       <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>

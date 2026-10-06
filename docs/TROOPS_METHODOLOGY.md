@@ -81,6 +81,54 @@ table is the first permanent-assignment one, so it falls in FY2018), for the par
 shows that place's own series and only highlights on the map and list. Not built: a "No. 1 strip", a Military-share style
 second measure, and the pre-2008 history (S2).
 
+## History, 1950-2007 (S2)
+
+`pipeline/output/troops_history.json` (+ `_meta`, `_report`) continues the series backward to June 1950 and ends at Sep 2007;
+Sep 2008 onward is `troops_location.json`. Schemas: `lib/troops-entities.ts` (`historyRow`, `historyMeta`). No page reads it yet.
+
+**Two sources, each where it is better.**
+- **DMDC's own 309A tables** ("Active Duty Military Personnel Strengths by Regional Area and by Country"), Sep 30 of 1996 and
+  1998-2005: extracted from the DMDC `M01.zip`/`M05.zip` PDFs by `pipeline/reference/extract-309a.mjs` (needs `pdftotext`; run by hand;
+  the PDFs are not committed, the extract `pipeline/reference/dmdc-309a-sep.csv` is). Public domain, with the four branch columns, the
+  afloat and undistributed rows, and 2003-04.
+- **troopdata's quarter-format file** (`pipeline/raw/troopdata/`, pinned to a commit, `pnpm fetch:troopdata`, GPL-3.0 with its
+  `LICENSE.md` beside it; cited in `docs/CREDITS.md`): June 1950 and June 1953-56, Sep 1957-1995, Sep 1997 and Sep 2006-07. Never the
+  country-year file (inflated). Where both sources cover a year, troopdata is a gate, not a source.
+
+**What the series is, and is not.**
+- One row per (year, place), same classes as the location series: `host`, `territory` (Guam, Puerto Rico, U.S. Virgin Islands, American
+  Samoa, Northern Mariana Islands), `afloat_unassigned`. Branches are Army, Navy, Marine Corps, Air Force (no Coast Guard or Space Force in
+  these tables). `snapshot` is `june` for 1950-56 and `september` after.
+- **Not comparable across 1995/1996 or 2007/2008 without saying so.** DMDC years carry an afloat/unassigned row (regional Afloat +
+  Undistributed, 6k to 100k people: the same idea as the 2008+ `UNKNOWN` row); troopdata years have none, so their `abroad_total` is lower by
+  that amount. Each year's meta says which source it is and whether `afloat_unassigned_total` exists.
+- **1951-52 are left out**: troopdata fills them by stepwise imputation, not from a report.
+- **Sep 2006 and Sep 2007 are flagged `estimate`** (all rows). DMDC publishes no table for them; troopdata's figures are compiled and
+  press-based (Iraq 141,100 and 170,000; Kuwait 44,400 and 48,500).
+- **Iraq, Kuwait and Afghanistan are `suppressed` (not reported, never 0) in 2003, 2004 and 2005**: DMDC prints them "(See OIF Table)",
+  "(See Deployment Section)" or "(not available)" with a 0, and the 2003-04 printed foreign total is "Less OIF". troopdata has no Sep 2003
+  or Sep 2004 figure for any large host (Germany is 0 with no source) and a Kuwait press estimate of 47,000 that is not used.
+- **Unstamped rows.** troopdata prints some positive figures with source `NA`: South Vietnam every year 1957-74 (537,377 in 1968),
+  and a few others. They are kept and listed in the year's `flags` (`unstamped_source: ...`); a 0 with source `NA` is an absent host and
+  is not emitted. troopdata's `United States` row is continental U.S. only and is not emitted. Sep 1995 DMDC is an `.xls` the extract
+  does not read (troopdata's Sep 1995 rows, the same report, are used) and Sep 1997 has no DMDC table online (flagged).
+- Names go through `pipeline/transform/troops-history-aliases.json` (per source system). South Vietnam and Vietnam are both `Vietnam`
+  (they never overlap in a year), Zaire is the DR Congo, Yugoslavia/Czechoslovakia/USSR/East Germany stay their own names.
+
+**Gates (the transform fails, listing every failure).**
+1. Each DMDC year's rows add up: Σ host rows + regional afloat + Undistributed = the printed `Total - Foreign Countries`, and Σ region
+   totals + Undistributed agrees (exact in all nine years).
+2. troopdata equals DMDC exactly for every host DMDC puts at 1,000 or more (99 of 104 hosts across the seven overlapping years; the other five are the Serbia rows below), the one
+   documented exception being Serbia (DMDC "Serbia (includes Kosovo)": 6,410 in 1999 and 5,427, 5,679, 2,804, 1,801 in 2000-02 and 2005);
+   troopdata's Yugoslavia row is blank those years. In 2003 and 2004 the gate asserts troopdata is empty for those hosts.
+3. No unmapped name carries a troop (either source); no row wrongly flagged `reported`/`estimate`; only 1951-52 may be imputed.
+4. The year set is exactly June 1950, June 1953-56, Sep 1957-2007; Iraq/Kuwait/Afghanistan are suppressed 2003-05.
+5. Re-parse determinism (tested).
+
+**Refresh.** The history is static. To change it: edit `TROOPDATA_COMMIT` in `pipeline/fetch/troopdata-lib.ts`, `pnpm fetch:troopdata`,
+`pnpm exec tsx pipeline/transform/troops-history-run.ts`, review the diff. To rebuild the DMDC extract, download `M01.zip` and `M05.zip`
+from the DMDC page JSON (`groupName` of the historical reports), unzip, and run `node pipeline/reference/extract-309a.mjs <dir>`.
+
 ## Parsing
 
 Headers are found by text: the cell reading `ACTIVE DUTY` locates the active-duty columns (up to the next group header)

@@ -12,6 +12,9 @@ function Readout({ spec, reading, hero }: { spec: ChartSpec; reading: Reading; h
       <div className={`font-mono font-medium leading-tight text-ink ${hero ? "text-[1.6rem]" : "text-[1.25rem]"}`}>
         {reading.value === null ? "—" : spec.head(reading.value)}
       </div>
+      {spec.key === "gas" && reading.value2 !== null && (
+        <div className="mt-0.5 font-mono text-[0.8rem] text-ink-muted">{`${spec.label2} ${spec.head(reading.value2)}`}</div>
+      )}
       <div className="mt-0.5 text-[0.75rem] text-ink-muted">{reading.caption}</div>
     </div>
   );
