@@ -180,7 +180,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   return (
     <div
       ref={wrapRef}
-      className="relative touch-scroll outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      className="relative -mx-3 touch-scroll outline-none sm:mx-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       tabIndex={0}
       onKeyDown={onKey}
       role="group"

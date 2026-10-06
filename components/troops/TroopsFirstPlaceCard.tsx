@@ -101,7 +101,7 @@ export function TroopsFirstPlaceCard() {
 
   return (
     <ChartCard title="Who’s hosted the most" lede={lede}>
-      <div ref={wrapRef} className="touch-scroll relative">
+      <div ref={wrapRef} className="touch-scroll relative -mx-3 sm:mx-0">
         <ChartFrame
           width={W}
           height={H}
