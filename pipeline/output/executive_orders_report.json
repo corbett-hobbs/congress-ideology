@@ -1,11 +1,11 @@
 {
   "counts": {
-    "executive_orders": 1541,
+    "executive_orders": 1544,
     "administrations": 6
   },
   "signing_range": [
     "1994-01-15",
-    "2026-09-18"
+    "2026-09-29"
   ],
   "dropped_not_an_eo": [
     "95-23442 (1995-09-18) Continuation of Emergency With Respect to UNITA"
@@ -35,8 +35,8 @@
     "total_2025": 238
   },
   "topic_method": {
-    "model": 1418,
+    "model": 1421,
     "parent-inherit": 123
   },
-  "needs_review": 69
+  "needs_review": 72
 }
