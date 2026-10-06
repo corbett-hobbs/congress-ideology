@@ -266,7 +266,7 @@ Reused primitives, no forks: `charts/RangeSelector` + `charts/TermBand` pinned b
 
 ---
 
-## 11. Decisions I need to make
+## 11. Decisions (settled 2026-10-06: the project owner accepted every recommendation below)
 
 1. **One page or two?** Recommend **one**, `/presidency/energy` (section 10).
 2. **Headline petroleum definition.** Recommend **total petroleum** for the balance chart (field production incl. NGL, imports, exports, supplied) with crude-only exports as a secondary line, and the label "thousand barrels per day, total petroleum (crude plus products)".
@@ -280,6 +280,10 @@ Reused primitives, no forks: `charts/RangeSelector` + `charts/TermBand` pinned b
 10. **Attribution line.** Recommend the plain Source line (no mandatory notice); EIA asks only for acknowledgment with date.
 11. **Actions secret.** Add `EIA_API_KEY` as a repo secret before the workflow lands.
 12. **Window start.** Recommend reusing `INDICATORS_DISPLAY_START` (1991-01-21); the SPR Desert Storm sale (Jan 1991) sits at the left edge and should be labelled, not clipped silently.
+
+---
+
+**Carry-over to the build session:** items 10 and 13 (Paris dates), 15 (2022-03-31 date) and months for rows 2-3 must be verified against primary pages before they become flags; the PSM-to-final lag must be checked before the petroleum "last 12 months preliminary" rule is hard-coded. Nothing here has been built.
 
 ---
 
