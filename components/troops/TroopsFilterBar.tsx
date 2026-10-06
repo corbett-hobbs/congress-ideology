@@ -68,12 +68,9 @@ export function TroopsFilterBar() {
               ariaLabel="Years shown"
               className="min-w-0 flex-1"
               note={names}
+              action={<RangeReset show={!full} onReset={() => setRange([0, years.length - 1])} className="mt-0.5 font-sans leading-none" />}
               below={<TermBand terms={bandTerms} min={0} max={years.length - 1} value={range} onChange={setRange} />}
             />
-            {/* Fixed-width slot, so Reset appearing never narrows the track under the handles. */}
-            <span className="flex w-[2.6rem] flex-none justify-end">
-              <RangeReset show={!full} onReset={() => setRange([0, years.length - 1])} />
-            </span>
           </div>
         </div>
       </div>
