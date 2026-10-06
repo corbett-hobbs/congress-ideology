@@ -5,7 +5,6 @@ import type { EconomyTerm } from "@/lib/economy-presidents";
 import { dateOfDay, dayOf } from "@/lib/indicator-time";
 import { recessionLabel } from "@/lib/indicator-payload";
 import { termYearRange } from "@/lib/year-range";
-import { useTradeActions } from "./TradeState";
 
 /**
  * The time-axis layers every trade chart shares: recession shading, the year axis,
@@ -85,8 +84,7 @@ const termText = (t: EconomyTerm, width: number): string | null =>
   [t.last, t.label].filter((s, i, a) => a.indexOf(s) === i).reverse().find((s) => s.length * EST_CHAR_W + 8 <= width) ?? null;
 
 /** The president band (click a term to show only its years) and, optionally, the chamber-majority rows. */
-export function PresidentAndCongress({ era, view, X, left, bandY, houseY, senateY, showCong }: View & { era: Era; left: number; bandY: number; houseY: number; senateY: number; showCong: boolean }) {
-  const { toggleRange } = useTradeActions();
+export function PresidentAndCongress({ era, view, X, left, bandY, houseY, senateY, showCong, toggleRange }: View & { era: Era; left: number; bandY: number; houseY: number; senateY: number; showCong: boolean; toggleRange: (next: [number, number], full: [number, number]) => void }) {
   const lastYear = dateOfDay(era.span - 1).year;
   return (
     <>

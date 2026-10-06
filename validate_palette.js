@@ -47,6 +47,7 @@ const PALETTE_KEYS = [
   "adams", "antijackson", "jackson", "whig", "oth",
   "committee-house", "committee-senate", "committee-joint",
   "sector-ps", "sector-health", "sector-hum", "sector-econ", "sector-prog", "sector-other",
+  "fuel-coal", "fuel-gas", "fuel-nuclear", "fuel-hydro", "fuel-wind", "fuel-solar", "fuel-other",
 ];
 const BG_KEYS = ["bg", "surface", "surface-raised"];
 
@@ -77,7 +78,10 @@ const FORCED_PAIRS = [
 // so every pair must be separable. They never meet a party hue on that page, so no dem/rep pairs.
 const SECTOR_KEYS = ["sector-ps", "sector-health", "sector-hum", "sector-econ", "sector-prog", "sector-other"];
 FORCED_PAIRS.push(...SECTOR_KEYS.flatMap((a, i) => SECTOR_KEYS.slice(i + 1).map((b) => [a, b])));
-const NEW_KEYS = ["committee-house", "committee-senate", "committee-joint", ...SECTOR_KEYS];
+// Electricity fuel colours (components/energy): all seven are stacked on one chart, so every pair must be separable.
+const FUEL_KEYS = ["fuel-coal", "fuel-gas", "fuel-nuclear", "fuel-hydro", "fuel-wind", "fuel-solar", "fuel-other"];
+FORCED_PAIRS.push(...FUEL_KEYS.flatMap((a, i) => FUEL_KEYS.slice(i + 1).map((b) => [a, b])));
+const NEW_KEYS = ["committee-house", "committee-senate", "committee-joint", ...SECTOR_KEYS, ...FUEL_KEYS];
 
 // ---- CLI overrides -------------------------------------------------------
 const override = { light: {}, dark: {} };

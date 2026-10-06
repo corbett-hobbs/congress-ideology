@@ -53,6 +53,7 @@ interface StaticProps extends Props {
 
 /** Everything that doesn't change with the hovered date; memoized so a hover frame doesn't rebuild the paths. */
 const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, showCong, view, W }: StaticProps) {
+  const { toggleRange } = useTradeActions();
   const g = geometry(W, view, scale, showCong);
   const { ml, mt, H, pw, axisY, bandY, houseY, senateY, X, Y } = g;
   const { main, second } = plotted(series, measure);
@@ -88,7 +89,7 @@ const StaticLayer = memo(function StaticLayer({ series, measure, scale, era, sho
       </g>
 
       <YearAxis view={view} X={X} left={ml} plotW={pw} axisY={axisY} />
-      <PresidentAndCongress era={era} view={view} X={X} left={ml} bandY={bandY} houseY={houseY} senateY={senateY} showCong={showCong} />
+      <PresidentAndCongress era={era} view={view} X={X} left={ml} bandY={bandY} houseY={houseY} senateY={senateY} showCong={showCong} toggleRange={toggleRange} />
       <RecessionLabels era={era} view={view} X={X} y={mt - 3} />
     </>
   );

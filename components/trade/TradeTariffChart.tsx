@@ -88,6 +88,7 @@ interface StaticProps extends Props {
 }
 
 const StaticLayer = memo(function StaticLayer({ main, reference, scale, era, showCong, view, W, flagInputs, onFlag, onFlagLeave }: StaticProps) {
+  const { toggleRange } = useTradeActions();
   const [vs, ve] = view;
   const g = layout(W, view, scale, showCong, flagInputs, era);
   const { ml, pw, mt, H, axisY, bandY, houseY, senateY, X, Y, placed } = g;
@@ -144,7 +145,7 @@ const StaticLayer = memo(function StaticLayer({ main, reference, scale, era, sho
       </g>
 
       <YearAxis view={view} X={X} left={ml} plotW={pw} axisY={axisY} />
-      <PresidentAndCongress era={era} view={view} X={X} left={ml} bandY={bandY} houseY={houseY} senateY={senateY} showCong={showCong} />
+      <PresidentAndCongress era={era} view={view} X={X} left={ml} bandY={bandY} houseY={houseY} senateY={senateY} showCong={showCong} toggleRange={toggleRange} />
       <RecessionLabels era={era} view={view} X={X} y={mt - 3} />
 
       {/* Event flags: a dashed line down the plot, its label in a lane above. */}
