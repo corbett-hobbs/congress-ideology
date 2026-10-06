@@ -79,7 +79,7 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
       </div>
       {below}
       </div>
-      <span className="flex flex-none sm:hidden">{action}</span>
+      <span className="flex flex-none empty:hidden sm:hidden">{action}</span>
       {/* From `sm`: one line to the right of the track, Reset under it. */}
       <span className={`hidden w-[5.25rem] flex-none flex-col items-end whitespace-nowrap font-mono tabular-nums text-ink sm:flex ${below ? "sm:min-h-6 sm:justify-start" : ""}`}>
         <span className={`text-[0.95rem] font-semibold ${below ? "leading-6" : ""}`}>{from === to ? format(from) : `${format(from)}–${format(to)}`}</span>
