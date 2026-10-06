@@ -12,7 +12,8 @@ import { ElectricityCard } from "./ElectricityCard";
 import { EnergyFilterBar } from "./EnergyFilterBar";
 import { activeDay, EnergyStateProvider, useEnergyActions, useEnergyValues } from "./EnergyState";
 import { LngCard } from "./LngCard";
-import { OilCard } from "./OilCard";
+import { OilTradeCard } from "./OilTradeCard";
+import { SupplyDemandCard } from "./SupplyDemandCard";
 import { SprCard } from "./SprCard";
 
 export function EnergyPageClient({ payload }: { payload: EnergyPayload }) {
@@ -51,7 +52,7 @@ function EnergyPage({ payload }: { payload: EnergyPayload }) {
         </div>
         <PageHeader title="How Has U.S. Energy Changed?">
           <p>
-            The Strategic Petroleum Reserve, where oil comes from and where it goes, where electricity comes from, and liquefied natural gas exports, since 1991. The colored bar under each
+            The Strategic Petroleum Reserve, supply and demand for oil, oil imports and exports, where electricity comes from, and liquefied natural gas exports, since 1991. The colored bar under each
             chart shows who was president, the gray columns mark recessions, and the marked dates are executive, congressional and agency actions. These are conditions during each term, not a score of what any one official caused.
           </p>
           <HowToRead>
@@ -69,7 +70,8 @@ function EnergyPage({ payload }: { payload: EnergyPayload }) {
         </PageHeader>
 
         <SprCard payload={payload} view={view} />
-        <OilCard payload={payload} view={view} />
+        <SupplyDemandCard payload={payload} view={view} />
+        <OilTradeCard payload={payload} view={view} />
         <ElectricityCard payload={payload} view={view} />
         <LngCard payload={payload} view={view} />
 
