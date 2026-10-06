@@ -33,8 +33,6 @@ export interface TroopsPeriod {
   /** Absolute quarter number, `year * 4 + (month / 3 - 1)`: the chart's time axis. */
   quarter: number;
   asOf: string;
-  /** Index into `terms`. */
-  term: number;
   /** Army (and so every Total column) was N/A: no all-branch or Army figure exists. */
   armyNotReported: boolean;
   /** `includes_deployed` through Sep 2017; `permanently_assigned` from Dec 2017. */
@@ -46,6 +44,20 @@ export interface TroopsPeriod {
   spaceForce: "none" | "merged_into_air_force" | "separate";
 }
 
+/**
+ * One bar of the page: a federal fiscal year (Oct 1 to Sep 30, labelled by the year it ends, like the other
+ * Presidency pages), shown as DMDC's Sep 30 table. The year still in progress shows its latest quarter instead
+ * and is `partial`.
+ */
+export interface TroopsYear {
+  fy: number;
+  /** Index into `periods` of the snapshot this year shows. */
+  period: number;
+  partial: boolean;
+  /** Index into `terms`: the administration in office for most of the fiscal year. */
+  term: number;
+}
+
 export interface TroopsTerm {
   termId: string;
   president: string;
@@ -53,7 +65,7 @@ export interface TroopsTerm {
   party: "D" | "R";
   start: string;
   end: string | null;
-  /** First and last period index assigned to this administration (by quarter-end date). */
+  /** First and last index into `years` assigned to this administration. */
   from: number;
   to: number;
   /** "Barack Obama (2009–2017)" */
@@ -66,13 +78,14 @@ export type TroopsRowTuple = [number, number, 0 | 1 | 2, number | null, number |
 export interface TroopsPayload {
   places: TroopsPlace[];
   periods: TroopsPeriod[];
+  years: TroopsYear[];
   terms: TroopsTerm[];
   rows: TroopsRowTuple[];
-  /** Index of the latest period: the page's default. */
-  defaultPeriod: number;
+  /** Index into `years` of the latest year: the page's default. */
+  defaultYear: number;
   dataThrough: string;
-  /** The Dec 2017 period index (first with permanent assignment only). */
-  breakPeriod: number;
-  /** Period indices with Army N/A. */
-  armyGap: number[];
+  /** Index into `years` of the first fiscal year (FY2018) whose snapshot counts permanent assignment only. */
+  breakYear: number;
+  /** Indices into `years` whose snapshot has no Army figure (none today: the three Army-N/A quarters are not September). */
+  armyGapYears: number[];
 }

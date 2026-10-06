@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { administration } from "./executive-orders-entities";
 import { REGION_IDS, regionOf } from "./troops-regions";
-import { changeVsPrior, buildTroopsPayload, decodeTroops, formatCountAxis, niceCountTicks, periodView, quarterEnd, quarterOf, stackByRegion, termAtQuarter, unavailable } from "./troops-derive";
+import { changeVsPrior, buildTroopsPayload, decodeTroops, formatCountAxis, niceCountTicks, periodView, quarterEnd, quarterOf, stackByRegion, termForFiscalYear, unavailable } from "./troops-derive";
 import { troopsMeta, troopsRow } from "./troops-entities";
 
 const read = (f: string) => JSON.parse(readFileSync(`pipeline/output/${f}`, "utf8")) as unknown;
@@ -12,6 +12,7 @@ const admins = (read("administrations.json") as unknown[]).map((r) => administra
 const payload = buildTroopsPayload(rows, meta, admins);
 const data = decodeTroops(payload);
 const pi = (p: string) => payload.periods.findIndex((x) => x.period === p);
+const yidx = (fy: number) => payload.years.findIndex((y) => y.fy === fy);
 const place = (n: string) => payload.places.findIndex((x) => x.name === n);
 
 describe("regions", () => {
@@ -37,35 +38,52 @@ describe("regions", () => {
 });
 
 describe("payload", () => {
-  it("covers all periods with a term each, and carries the break and the Army gap", () => {
-    expect(payload.periods).toHaveLength(56);
-    expect(payload.periods[payload.defaultPeriod].period).toBe("2026-03");
-    expect(payload.periods[payload.breakPeriod].period).toBe("2017-12");
-    expect(payload.armyGap.map((i) => payload.periods[i].period)).toEqual(["2022-12", "2023-03", "2023-06"]);
-    expect(payload.terms.map((t) => t.last)).toEqual(["Bush", "Obama", "Trump", "Biden", "Trump"]);
-    expect(payload.terms[0]).toMatchObject({ from: 0, to: 0 });
-    expect(payload.terms.at(-1)?.label).toBe("Donald Trump (2025–present)");
+  it("has one fiscal-year bar per year, FY2008-FY2026, each on its Sep 30 table except the partial latest", () => {
+    expect(payload.years.map((y) => y.fy)).toEqual(Array.from({ length: 19 }, (_, i) => 2008 + i));
+    for (const y of payload.years.slice(0, -1)) {
+      expect(y.partial).toBe(false);
+      expect(payload.periods[y.period].period).toBe(`${y.fy}-09`);
+    }
+    const last = payload.years.at(-1)!;
+    expect(last).toMatchObject({ fy: 2026, partial: true });
+    expect(payload.periods[last.period].period).toBe("2026-03");
+    expect(payload.defaultYear).toBe(18);
   });
-  it("assigns a president by quarter-end date", () => {
-    expect(payload.terms[payload.periods[pi("2017-03")].term].last).toBe("Trump");
-    expect(payload.terms[payload.periods[pi("2020-12")].term].last).toBe("Trump");
-    expect(payload.terms[payload.periods[pi("2021-03")].term].last).toBe("Biden");
-    expect(payload.terms[payload.periods[pi("2025-03")].term].termId).toBe("2025-01-20");
+  it("carries the break at FY2018 and no Army gap among the years (the N/A quarters are not September)", () => {
+    expect(payload.years[payload.breakYear].fy).toBe(2018);
+    expect(payload.armyGapYears).toEqual([]);
+    expect(payload.periods.filter((p) => p.armyNotReported).map((p) => p.period)).toEqual(["2022-12", "2023-03", "2023-06"]);
+    expect(unavailable(data, 0, payload.years[yidx(2023)].period)).toBe(false);
+  });
+  it("assigns a president to each fiscal year by most days in office", () => {
+    const last = (fy: number) => payload.terms[payload.years[yidx(fy)].term].last;
+    expect(last(2008)).toBe("Bush");
+    expect(last(2009)).toBe("Obama"); // Oct 2008 to Jan 19, 2009 is 111 days of Bush; the other 254 are Obama's
+    expect(last(2016)).toBe("Obama");
+    expect(last(2017)).toBe("Trump"); // 111 days of Obama, 254 of Trump
+    expect(last(2020)).toBe("Trump");
+    expect(last(2021)).toBe("Biden");
+    expect(last(2024)).toBe("Biden");
+    expect(last(2025)).toBe("Trump");
+    expect(last(2026)).toBe("Trump");
+    expect(payload.terms.map((t) => t.last)).toEqual(["Bush", "Obama", "Trump", "Biden", "Trump"]);
+    expect(payload.terms.at(-1)?.label).toBe("Donald Trump (2025–present)");
+    expect(termForFiscalYear(admins, 2013)).toBe(2);
   });
   it("converts quarters", () => {
     expect(quarterOf("2026-03")).toBe(2026 * 4);
     expect(quarterEnd(quarterOf("2024-03"))).toBe("2024-03-31");
     expect(quarterEnd(quarterOf("2020-12"))).toBe("2020-12-31");
-    expect(termAtQuarter(payload.terms, quarterOf("2021-03"))).toBe(3);
   });
 });
 
 describe("stacks and views", () => {
   it("sums hosts and afloat by region, and equals Σ rows minus territories (printed total ± documented gap)", () => {
     const m = 0;
-    for (const p of payload.periods.filter((x) => !x.armyNotReported)) {
-      const i = pi(p.period);
-      const s = stackByRegion(data, m, i, i)[0];
+    for (const y of payload.years) {
+      const p = payload.periods[y.period];
+      const i = y.period;
+      const s = stackByRegion(data, m, payload.years.indexOf(y), payload.years.indexOf(y))[0];
       const v = periodView(data, m, i);
       expect(s.total).toBe(v.abroad);
       const printedOverseas = meta.periods[i].printed.overseas_total.total!;
@@ -81,11 +99,11 @@ describe("stacks and views", () => {
   });
   it("marks All branches and Army unavailable in the Army N/A quarters, but not the other branches", () => {
     const i = pi("2023-03");
+    const total = (m: number) => payload.rows.filter((r) => r[1] === i).reduce((a, r) => a + (payload.places[r[0]].region && r[2] !== 1 ? (r[3 + m] ?? 0) : 0), 0);
     expect(unavailable(data, 0, i)).toBe(true);
     expect(unavailable(data, 1, i)).toBe(true);
     expect(unavailable(data, 2, i)).toBe(false);
-    expect(stackByRegion(data, 0, i, i)[0]).toMatchObject({ unavailable: true, total: 0 });
-    expect(stackByRegion(data, 2, i, i)[0].total).toBeGreaterThan(10000); // Navy overseas
+    expect(total(2)).toBeGreaterThan(10000); // Navy overseas is still reported
     expect(periodView(data, 0, i).ranked).toEqual([]);
   });
   it("keeps suppressed hosts out of the ranking and lists them", () => {
@@ -96,23 +114,25 @@ describe("stacks and views", () => {
   });
   it("filters a time series to one country", () => {
     const jp = place("Japan");
-    const s = stackByRegion(data, 0, pi("2025-12"), pi("2025-12"), jp)[0];
-    expect(s.total).toBe(54288);
-    expect(s.regions[REGION_IDS.indexOf("east_asia_pacific")]).toBe(54288);
-    expect(stackByRegion(data, 0, pi("2025-12"), pi("2025-12"), place("Germany"))[0].total).toBe(36436);
+    const y = yidx(2025);
+    const s = stackByRegion(data, 0, y, y, jp)[0];
+    expect(s.total).toBe(payload.rows.find((r) => r[0] === jp && r[1] === payload.years[y].period)![3]);
+    expect(s.regions[REGION_IDS.indexOf("east_asia_pacific")]).toBe(s.total);
+    expect(s.total).toBeGreaterThan(50000);
+    expect(stackByRegion(data, 0, y, y, place("Germany"))[0].regions[REGION_IDS.indexOf("europe")]).toBeGreaterThan(30000);
   });
   it("merges Space Force into Air & Space Force so the branch is comparable across Sep 2023", () => {
     const jp = place("Japan");
-    const a = stackByRegion(data, 4, pi("2023-06"), pi("2023-06"), jp)[0].total;
-    const b = stackByRegion(data, 4, pi("2023-09"), pi("2023-09"), jp)[0].total;
+    const a = stackByRegion(data, 4, yidx(2023) - 1, yidx(2023) - 1, jp)[0].total; // FY2022
+    const b = stackByRegion(data, 4, yidx(2023), yidx(2023), jp)[0].total; // FY2023: Space Force now has its own column
     expect(a).toBeGreaterThan(1000);
     expect(Math.abs(b - a) / a).toBeLessThan(0.25);
   });
-  it("refuses a percent change across the Dec 2017 break or an unavailable quarter", () => {
-    expect(changeVsPrior(data, 0, pi("2017-12"))).toBeNull();
-    expect(changeVsPrior(data, 0, pi("2023-09"))).toBeNull();
-    expect(changeVsPrior(data, 0, pi("2023-12"))).not.toBeNull();
-    expect(changeVsPrior(data, 0, pi("2018-03"))).not.toBeNull();
+  it("refuses a percent change across the FY2017/FY2018 break or for the partial year", () => {
+    expect(changeVsPrior(data, 0, yidx(2018))).toBeNull();
+    expect(changeVsPrior(data, 0, yidx(2026))).toBeNull();
+    expect(changeVsPrior(data, 0, yidx(2019))).not.toBeNull();
+    expect(changeVsPrior(data, 0, yidx(2017))).not.toBeNull();
     expect(changeVsPrior(data, 0, 0)).toBeNull();
   });
 });

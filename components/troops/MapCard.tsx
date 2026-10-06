@@ -35,8 +35,8 @@ const MAX_ZOOM = 8;
  * get a marker. Territories, afloat and unassigned, and hosts with no outline are stated under the map.
  */
 export function MapCard({ map }: { map: WorldMapFile }) {
-  const { data, pi, country, toggleCountry, measure } = useTroopsState();
-  const { places, periods } = data.payload;
+  const { data, yi, pi, country, toggleCountry, measure } = useTroopsState();
+  const { places, periods, years } = data.payload;
   const tip = useTooltip<Hit>();
   const svgRef = useRef<SVGSVGElement>(null);
   const zoom = useZoomPan({ svgRef, extent: 1, maxK: MAX_ZOOM, getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null, onViewChange: tip.hide });
@@ -45,6 +45,8 @@ export function MapCard({ map }: { map: WorldMapFile }) {
 
   const view = useMemo(() => periodView(data, measure, pi), [data, measure, pi]);
   const p = periods[pi];
+  const year = years[yi];
+  const when = year.partial ? `FY${year.fy} (partial, through ${p.label})` : `FY${year.fy} (Sep 30, ${year.fy})`;
   const base = measure === 0 ? "var(--accent)" : branchColor(measure - 1);
 
   const byIso = useMemo(() => {
@@ -108,11 +110,11 @@ export function MapCard({ map }: { map: WorldMapFile }) {
       lede={
         view.unavailable ? (
           <>
-            {p.label} · the Army did not report this quarter, so the map and list need a single branch from the Branch filter
+            {when} · the Army did not report, so the map and list need a single branch from the Branch filter
           </>
         ) : (
           <>
-            {p.label} · <b className="font-semibold text-ink">{formatCount(view.hostTotal)}</b> in {nHosts} countries
+            {when} · <b className="font-semibold text-ink">{formatCount(view.hostTotal)}</b> in {nHosts} countries
             {view.afloat > 0 && `, plus ${formatCount(view.afloat)} afloat or unassigned`}
             {measure > 0 && ` · ${measureLabel(measure)} only`}
             {measure === 0 && " · bars show each country’s branch mix"}
@@ -134,7 +136,7 @@ export function MapCard({ map }: { map: WorldMapFile }) {
               ref={svgRef}
               viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
               role="img"
-              aria-label={`World map of active-duty personnel by host country, ${p.label}. The ranked list and table view carry the same figures.`}
+              aria-label={`World map of active-duty personnel by host country, ${when}. The ranked list and table view carry the same figures.`}
               className="block h-auto w-full"
               style={{ touchAction: zoom.zoomed ? "none" : "pan-y", cursor: zoom.zoomed ? "grab" : undefined }}
               {...zoom.svgProps}
@@ -239,11 +241,11 @@ export function MapCard({ map }: { map: WorldMapFile }) {
           ) : (
             <>Afghanistan has no row at all from Sep 2023, and Iraq and Syria have none from Dec 2023; before Sep 2021 they print blank. An absent or blank row is not a zero.</>
           )}{" "}
-          Counts are active-duty personnel assigned to the place; from Dec 2017 that excludes deployed forces, so the quarters before and after are not like-for-like.
+          Counts are active-duty personnel assigned to the place; from Dec 2017 that excludes deployed forces, so the years before and after are not like-for-like.
         </p>
       </MethodologyNote>
 
-      <TableView caption={`Active-duty personnel by host country, ${p.label}`}>
+      <TableView caption={`Active-duty personnel by host country, ${when}`}>
         <thead>
           <tr>
             <th className={TH}>Country</th>
@@ -276,14 +278,14 @@ export function MapCard({ map }: { map: WorldMapFile }) {
 }
 
 function MapTip({ hit }: { hit: Hit }) {
-  const { data, pi, measure } = useTroopsState();
-  const p = data.payload.periods[pi];
+  const { data, yi, measure } = useTroopsState();
+  const fy = data.payload.years[yi].fy;
   const region = hit.place != null ? data.payload.places[hit.place].region : null;
   return (
     <div>
       <div style={{ fontWeight: 600 }}>{hit.title}</div>
       <div className="tt-mono">
-        {p.label}
+        FY{fy}
         {region ? ` · ${regionLabel(region)}` : ""}
       </div>
       {hit.suppressed ? (

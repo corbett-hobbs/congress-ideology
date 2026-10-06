@@ -11,25 +11,27 @@ import { RegionLegend, TD, TH, TableView } from "./shared";
 
 /** "How many troops are stationed abroad": the stacked-bar time series and everything that explains it. */
 export function TroopsChartCard() {
-  const { data, pi, range, country, measure } = useTroopsState();
-  const { periods, places, breakPeriod } = data.payload;
+  const { data, yi, range, country, measure } = useTroopsState();
+  const { periods, years, places, breakYear } = data.payload;
   const stacks = useMemo(() => stackByRegion(data, measure, range[0], range[1], country), [data, measure, range, country]);
-  const cur = stacks.find((s) => s.pi === pi);
-  const change = changeVsPrior(data, measure, pi, country);
+  const cur = stacks.find((s) => s.yi === yi);
+  const change = changeVsPrior(data, measure, yi, country);
   const showing = [country >= 0 ? places[country].name : null, measure > 0 ? measureLabel(measure) : null].filter(Boolean);
   const anyUnavailable = stacks.some((s) => s.unavailable);
   const only = country >= 0 ? places[country].region : null;
-  const p = periods[pi];
+  const year = years[yi];
+  const p = periods[year.period];
+  const when = year.partial ? `FY${year.fy} (partial, through ${p.label})` : `FY${year.fy} (Sep 30, ${year.fy})`;
 
   const lede = cur?.unavailable ? (
     <>
-      {p.label} · the Army did not report this quarter, so there is no {measure === 0 ? "all-branch" : "Army"} figure · active-duty personnel by place of duty
+      {when} · the Army did not report, so there is no {measure === 0 ? "all-branch" : "Army"} figure · active-duty personnel by place of duty
     </>
   ) : (
     <>
-      {p.label} · <b className="font-semibold text-ink">{formatCount(cur?.total ?? 0)}</b> {country >= 0 ? `in ${places[country].name}` : "abroad"}
-      {change && ` · ${change.pct > 0 ? "+" : change.pct < 0 ? "−" : ""}${Math.abs(Math.round(change.pct * 1000) / 10)}% vs. ${periods[change.prev].label}`}
-      {!change && pi === breakPeriod && " · a new definition starts here, so no change is shown"}
+      {when} · <b className="font-semibold text-ink">{formatCount(cur?.total ?? 0)}</b> {country >= 0 ? `in ${places[country].name}` : "abroad"}
+      {change && ` · ${change.pct > 0 ? "+" : change.pct < 0 ? "−" : ""}${Math.abs(Math.round(change.pct * 1000) / 10)}% vs. FY${years[change.prev].fy}`}
+      {!change && yi === breakYear && " · a new definition starts here, so no change is shown"}
       {" · active-duty personnel by place of duty"}
     </>
   );
@@ -51,19 +53,21 @@ export function TroopsChartCard() {
       </RegionLegend>
       <MethodologyNote>
         <p>
-          Band under the axis: administration in office on the quarter’s last day (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic). Each bar is the active-duty
-          personnel DMDC places at a foreign host, plus the “afloat and unassigned” rows; U.S. territories (Guam, Puerto Rico, American Samoa, the Northern Mariana Islands, the U.S. Virgin Islands) are left out.
-          Bars add up the country rows, so a few quarters differ from DMDC’s printed overseas total by a documented amount (at most 612 people).
+          Band under the axis: administration in office for most of the fiscal year (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic). A fiscal year runs October 1 to
+          September 30, and each bar is DMDC’s September 30 table, the one table it has published every year since 2008. Each bar is the active-duty personnel DMDC places at a foreign host, plus the “afloat and unassigned” rows; U.S.
+          territories (Guam, Puerto Rico, American Samoa, the Northern Mariana Islands, the U.S. Virgin Islands) are left out. Bars add up the country rows, so a few years differ from DMDC’s printed overseas total by a documented
+          amount (at most 612 people).
         </p>
         <p>
-          DMDC published one table a year (September) for 2008 to 2012, so those years have a single bar. A count that is blank in the source (Afghanistan, Iraq and Syria, Dec 2017 to Sep 2021) is not reported, not
-          zero, and adds nothing to its bar. Tap or hover the numbered markers for what changes at Dec 2017 and in the three Army-N/A quarters.
+          The latest year is partial (hatched): it shows the newest quarter DMDC has published, not a September table. Quarterly tables exist from 2013 and are in the pipeline data; the page shows the September one. A count that is blank in the
+          source (Afghanistan, Iraq and Syria, FY2018 to FY2021) is not reported, not zero, and adds nothing to its bar. The Army did not report in the Dec 2022, Mar 2023 and Jun 2023 quarters, which do not fall on a September table, so
+          every fiscal year here has an Army figure. Tap or hover the numbered marker for what changes at FY2018.
         </p>
       </MethodologyNote>
-      <TableView caption="Active-duty personnel abroad by region and quarter">
+      <TableView caption="Active-duty personnel abroad by region and fiscal year">
         <thead>
           <tr>
-            <th className={TH}>Quarter</th>
+            <th className={TH}>Fiscal year</th>
             <th className={TH}>Total</th>
             {REGIONS.map((r) => (
               <th key={r.id} className={TH}>
@@ -74,8 +78,11 @@ export function TroopsChartCard() {
         </thead>
         <tbody>
           {stacks.map((s) => (
-            <tr key={s.pi}>
-              <td className={TD}>{periods[s.pi].label}</td>
+            <tr key={s.yi}>
+              <td className={TD}>
+                FY{years[s.yi].fy}
+                {years[s.yi].partial ? " (partial)" : ""}
+              </td>
               <td className={TD}>{s.unavailable ? "n/a" : formatCount(s.total)}</td>
               {s.regions.map((v, k) => (
                 <td key={k} className={TD}>

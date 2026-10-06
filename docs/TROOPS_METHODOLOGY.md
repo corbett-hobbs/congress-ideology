@@ -70,9 +70,14 @@ The page is `/presidency/national-security` (registered as a Presidency section)
 the boundary) -> `lib/troops-derive.ts` (pure, tested over the real files) -> `components/troops/`. Choices recorded so they
 are not re-litigated: the chart stacks by region and the Branch filter swaps the measure (All branches, Army, Navy, Marine
 Corps, Air & Space Force, Coast Guard); Air & Space Force is Air Force + Space Force so it is comparable across Sep 2023; bars
-are Σ rows over hosts and afloat (territories out), so a few quarters differ from the printed total by a documented gap; the
-time axis is true quarters, so the annual 2008-2012 tables are single bars with empty quarters between; no percent change is
-shown across the Dec 2017 break or against an Army-N/A quarter; the President filter narrows the quarters, the Country filter
+are Σ rows over hosts and afloat (territories out), so a few years differ from the printed total by a documented gap; **bars are
+federal fiscal years** (Oct 1 to Sep 30, labelled by the year they end, like the other Presidency pages), each showing DMDC's
+Sep 30 table, the one table published every year since 2008, and the year in progress shows its latest quarter hatched as
+partial (FY2026 = Mar 2026); each year is coloured by the president in office for most of it (`termForFiscalYear`); the
+quarterly tables stay in the pipeline data but the page does not draw them. The three Army-N/A quarters (Dec 2022, Mar 2023,
+Jun 2023) are not September tables, so every fiscal year on the page has an Army figure; the "Army did not report" columns and
+marker 2 exist in the code but do not fire today. No percent change is shown across the FY2017/FY2018 break (the Dec 2017
+table is the first permanent-assignment one, so it falls in FY2018), for the partial year, or for an Army-N/A year; the President filter narrows the years, the Country filter
 shows that place's own series and only highlights on the map and list. Not built: a "No. 1 strip", a Military-share style
 second measure, and the pre-2008 history (S2).
 

@@ -39,7 +39,7 @@ export function RankedList({ view }: { view: PeriodView }) {
             scaleMax={scaleMax}
             onRowClick={(id) => toggleCountry(Number(id))}
             ariaLabel="Host countries, ranked"
-            emptyText={view.unavailable ? "The Army did not report this quarter." : "No troops recorded."}
+            emptyText={view.unavailable ? "The Army did not report." : "No troops recorded."}
           />
         </div>
       </div>
