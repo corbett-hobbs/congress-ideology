@@ -151,8 +151,8 @@ the decision and the unresolved permission question.
 
 ## The economy page (`/presidency/economy`)
 
-- **Shared axis:** whole days since 1991-01-01; the axis ends on September 30 of
-  the fiscal year containing the newest weekly observation.
+- **Shared axis:** whole days since 1991-01-01; the axis ends on the newest
+  weekly observation, capped at September 30 of its fiscal year.
 - **Date → reading rules** (`lib/indicator-lookup.ts`): weekly = last observation
   on or before the date within 14 days; monthly = the exact month (missing →
   "not collected", past the end → "not yet released"); income = calendar year,

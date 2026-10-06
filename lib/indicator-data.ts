@@ -88,14 +88,15 @@ export function getInflation(): DerivedPoint[] {
 /**
  * The economy page's client payload: every series inside the display window,
  * compacted (see `lib/indicator-payload.ts`), plus recession spans, presidential
- * terms and chamber control on the shared day axis. The axis ends on September
- * 30 of the fiscal year containing the newest weekly observation.
+ * terms and chamber control on the shared day axis. The axis ends on the newest
+ * weekly observation (capped at September 30 of its fiscal year).
  */
 export function getEconomyPayload(): EconomyPayload {
   const { series, byId } = load();
   const get = (id: string) => windowPoints(byId.get(id) ?? [], seriesOf(id).frequency);
   const newest = [...get("GASREGW"), ...get("MORTGAGE30US")].reduce((m, p) => (p.date > m ? p.date : m), "");
-  const span = dayOf(fiscalYearOfDay(dayOfIso(newest)), 8, 30) + 1;
+  // Ends at the newest weekly observation, but never past September 30 of its fiscal year.
+  const span = Math.min(dayOf(fiscalYearOfDay(dayOfIso(newest)), 8, 30), dayOfIso(newest)) + 1;
   const admins = readRows("administrations.json", (r) => administration.parse(r));
   const control = congressControlFile.parse(
     JSON.parse(readFileSync(join(process.cwd(), "pipeline", "reference", "congress-control.json"), "utf8")),
