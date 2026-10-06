@@ -60,7 +60,7 @@ async function ask(row: Row, examples: string): Promise<Verdict | null> {
   const body = {
     model: MODEL,
     max_tokens: 200,
-    system: `You classify U.S. executive orders into one primary topic.\n\n${DEFINITIONS}\n\nLabelled examples (title -> topic):\n${examples}`,
+    system: `You classify U.S. executive orders into one primary topic. Always answer by calling the record_topic tool.\n\n${DEFINITIONS}\n\nLabelled examples (title -> topic):\n${examples}`,
     tools: [
       {
         name: "record_topic",
@@ -75,7 +75,7 @@ async function ask(row: Row, examples: string): Promise<Verdict | null> {
         },
       },
     ],
-    tool_choice: { type: "tool", name: "record_topic" },
+    tool_choice: { type: "auto" },
     messages: [
       {
         role: "user",
