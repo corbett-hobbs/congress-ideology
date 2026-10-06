@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 interface Props {
   /** Full extent the handles can span (inclusive). */
   min: number;
@@ -14,6 +16,10 @@ interface Props {
   format: (v: number) => string;
   ariaLabel: string;
   className?: string;
+  /** Optional strip drawn under the track, inset like the track so it lines up with the handles' travel (the term band). */
+  below?: ReactNode;
+  /** Small line above the readout, e.g. the presidents a window covers; only passed when it is exact. */
+  note?: string;
 }
 
 /**
@@ -23,17 +29,18 @@ interface Props {
  * every time-axis page uses the same control and owns one `[from, to]` state.
  * Native range inputs give keyboard and touch drag for free.
  */
-export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1, format, ariaLabel, className = "" }: Props) {
+export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1, format, ariaLabel, className = "", below, note }: Props) {
   const [from, to] = value;
   const range = Math.max(1, max - min);
   const left = ((from - min) / range) * 100;
   const right = ((to - min) / range) * 100;
 
   return (
-    <div role="group" aria-label={ariaLabel} className={`flex min-w-0 items-center gap-3 ${className}`}>
+    <div role="group" aria-label={ariaLabel} className={`flex min-w-0 gap-3 ${below ? "items-start" : "items-center"} ${className}`}>
+      <div className="min-w-0 flex-1">
       {/* The inputs span the full width; a native thumb's centre only travels the inner width minus one thumb (22px),
           so the visible track is inset by half a thumb to end exactly where the handles do. */}
-      <div className="range-dual relative h-6 min-w-0 flex-1">
+      <div className="range-dual relative h-6 min-w-0">
         <div aria-hidden className="absolute inset-x-[11px] top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-line">
           <div aria-hidden className="absolute inset-y-0 rounded-full bg-accent" style={{ left: `${left}%`, right: `${100 - right}%` }} />
         </div>
@@ -60,8 +67,13 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
           onChange={(e) => onChange([from, Math.max(+e.target.value, from + minSpan)])}
         />
       </div>
-      <span className="flex-none whitespace-nowrap font-mono text-[0.95rem] font-semibold tabular-nums text-ink">
-        {from === to ? format(from) : `${format(from)}–${format(to)}`}
+      {below}
+      </div>
+      <span className={`flex min-w-0 flex-none flex-col items-end whitespace-nowrap font-mono tabular-nums text-ink ${below ? "min-h-6 w-[5.5rem]" : ""}`}>
+        {note && <span className="max-w-full truncate font-sans text-[0.68rem] font-normal leading-[1.1] text-ink-muted">{note}</span>}
+        <span className={`text-[0.95rem] font-semibold ${note ? "leading-[1.15]" : below ? "leading-6" : ""}`}>
+          {from === to ? format(from) : `${format(from)}–${format(to)}`}
+        </span>
       </span>
     </div>
   );

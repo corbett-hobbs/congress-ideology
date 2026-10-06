@@ -23,7 +23,7 @@ export function TroopsPageClient({ payload, map }: { payload: TroopsPayload; map
         <PageHeader eyebrow="Presidency · National security" title="Where Are U.S. Troops Stationed Abroad?">
           <p>
             The Defense Department publishes where its active-duty personnel are assigned to duty, country by country. This page follows those counts year by year from {first.fy} through {last.fy}: how many are stationed abroad,
-            in which regions, and which countries host the most. Pick a year with the slider, or click or drag along the chart, and the map and the host rankings move with it. The filters narrow everything to one president’s
+            in which regions, and which countries host the most. Drag the slider’s handles to choose which years the chart shows, then pick a year from the map’s menu, or click or drag along the chart, and the map and the host rankings move with it. The filters narrow everything to one president’s
             years, one country or one military branch.
           </p>
           <HowToRead>
