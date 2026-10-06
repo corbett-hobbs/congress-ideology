@@ -1,0 +1,463 @@
+{
+  "source": {
+    "data_through": "2026-03-31",
+    "periods": 56,
+    "first_period": "2008-09",
+    "latest_period": "2026-03"
+  },
+  "rows": {
+    "total": 9723,
+    "by_class": {
+      "host": 9387,
+      "territory": 280,
+      "afloat_unassigned": 56
+    },
+    "by_state": {
+      "value": 9139,
+      "suppressed": 51,
+      "null": 533
+    }
+  },
+  "gates": {
+    "overseas_total": {
+      "exact": 45,
+      "documented_exception": 8,
+      "untestable": 3
+    },
+    "per_period": [
+      {
+        "period": "2008-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2009-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2010-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2011-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2012-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2013-09",
+        "gate": "documented_exception",
+        "gap": 8,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2013-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2014-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2014-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2014-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2014-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2015-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2015-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2015-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2015-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2016-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2016-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2016-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2016-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2017-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": -3062
+      },
+      {
+        "period": "2017-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2017-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2017-12",
+        "gate": "documented_exception",
+        "gap": 612,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2018-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2018-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2018-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2018-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2019-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2019-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2019-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2019-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2020-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2020-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2020-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2020-12",
+        "gate": "documented_exception",
+        "gap": -534,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2021-03",
+        "gate": "documented_exception",
+        "gap": -495,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2021-06",
+        "gate": "documented_exception",
+        "gap": -427,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2021-09",
+        "gate": "documented_exception",
+        "gap": -189,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2021-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2022-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2022-06",
+        "gate": "documented_exception",
+        "gap": -329,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2022-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2022-12",
+        "gate": "untestable",
+        "gap": null,
+        "us_gap": null,
+        "grand_gap": null
+      },
+      {
+        "period": "2023-03",
+        "gate": "untestable",
+        "gap": null,
+        "us_gap": null,
+        "grand_gap": null
+      },
+      {
+        "period": "2023-06",
+        "gate": "untestable",
+        "gap": null,
+        "us_gap": null,
+        "grand_gap": null
+      },
+      {
+        "period": "2023-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2023-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2024-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2024-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2024-09",
+        "gate": "documented_exception",
+        "gap": -11,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2024-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2025-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2025-06",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2025-09",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2025-12",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      },
+      {
+        "period": "2026-03",
+        "gate": "exact",
+        "gap": 0,
+        "us_gap": 0,
+        "grand_gap": 0
+      }
+    ]
+  },
+  "latest_period": {
+    "period": "2026-03",
+    "abroad_total": 166573,
+    "territory_total": 7855,
+    "overseas_total": 174428
+  },
+  "notes": {
+    "unmapped_zero_troop": [],
+    "branch_gaps_when_total_unreadable": [
+      {
+        "period": "2022-12",
+        "gaps": {
+          "navy": 0,
+          "marine_corps": 0,
+          "air_force": 0,
+          "coast_guard": 0
+        }
+      },
+      {
+        "period": "2023-03",
+        "gaps": {
+          "navy": 0,
+          "marine_corps": 0,
+          "air_force": 0,
+          "coast_guard": 0
+        }
+      },
+      {
+        "period": "2023-06",
+        "gaps": {
+          "navy": 0,
+          "marine_corps": -2,
+          "air_force": -1,
+          "coast_guard": 0
+        }
+      }
+    ]
+  },
+  "file_sizes_bytes": {
+    "troops_location.json": 2015548
+  }
+}

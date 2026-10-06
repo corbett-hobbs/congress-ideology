@@ -260,3 +260,14 @@ The world map is drawn from Natural Earth 1:50m Admin 0 – Countries (`ne_50m_a
 `nvkelso/natural-earth-vector` mirror, snapshot in `pipeline/raw/natural-earth/`). Natural Earth is in the public
 domain; no credit is required, and this is given as a courtesy ("Made with Natural Earth"). It is projected,
 simplified and keyed to our country codes by `pipeline/transform/world-map.ts` (never hand-edited).
+
+---
+
+## Defense Manpower Data Center — troops abroad
+
+Active-duty personnel by place of duty come from the U.S. Department of Defense, Defense Manpower Data Center (DMDC),
+*Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly)*, the location report, Sep 2008 to
+Mar 2026 (`https://dwp.dmdc.osd.mil/dwp/app/dod-data-reports/workforce-reports`). U.S. government data, public domain.
+Snapshots in `pipeline/raw/dmdc-location/`; methodology `docs/TROOPS_METHODOLOGY.md`. The page must say the series
+changes meaning in Dec 2017 (permanent assignment only) and that Afghanistan, Iraq and Syria are "not reported", not zero,
+Dec 2017 to Sep 2021.

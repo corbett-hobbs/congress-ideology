@@ -45,6 +45,8 @@ next-env.d.ts
 #   Only fetch scratch files are ignored.
 pipeline/**/*.tmp
 pipeline/**/*.download
+# throwaway source downloads and extraction scratch (e.g. pre-flight inventories)
+pipeline/raw/_scratch/
 
 # editor / agent tooling
 .claude/

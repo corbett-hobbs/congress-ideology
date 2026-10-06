@@ -1,0 +1,564 @@
+{
+  "files": [
+    {
+      "period": "2008-09",
+      "fileName": "DMDC_Website_Location_Report_0809.xlsx",
+      "fileId": "80650",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:28:52.0",
+      "size": 49306,
+      "sha256": "fc922b77a6d9ce2430439796ea9db28ea35b55e3c6215b40903830487fcc5e5a",
+      "fetched_at": "2026-10-06T14:58:43.728Z"
+    },
+    {
+      "period": "2009-09",
+      "fileName": "DMDC_Website_Location_Report_0909.xlsx",
+      "fileId": "80649",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:28:33.0",
+      "size": 51717,
+      "sha256": "9f5ddf2f1a5187e7979b22c737112e7d8956497216596f1fdb9da8e4d92730c2",
+      "fetched_at": "2026-10-06T14:58:44.266Z"
+    },
+    {
+      "period": "2010-09",
+      "fileName": "DMDC_Website_Location_Report_1009.xlsx",
+      "fileId": "80648",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:28:11.0",
+      "size": 51507,
+      "sha256": "2a0b77ae98a49482ca25b40bebecc8881babf8013d36cd73b5eefd85b84ca83c",
+      "fetched_at": "2026-10-06T14:58:44.838Z"
+    },
+    {
+      "period": "2011-09",
+      "fileName": "DMDC_Website_Location_Report_1109.xlsx",
+      "fileId": "80647",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:27:55.0",
+      "size": 51720,
+      "sha256": "663b8cae11cebf8161c636cbbb2ded2c442a634c7a5450720bf50afa05aa11fa",
+      "fetched_at": "2026-10-06T14:58:45.364Z"
+    },
+    {
+      "period": "2012-09",
+      "fileName": "DMDC_Website_Location_Report_1209.xlsx",
+      "fileId": "80646",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:25:54.0",
+      "size": 52178,
+      "sha256": "d2e910df3179f9feb52e5c256e85a006d89e00e8b80809144f77ffb5be53e0cd",
+      "fetched_at": "2026-10-06T14:58:45.919Z"
+    },
+    {
+      "period": "2013-09",
+      "fileName": "DMDC_Website_Location_Report_1309.xlsx",
+      "fileId": "80645",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:24:02.0",
+      "size": 52215,
+      "sha256": "436a9a3b18055127330f620172fa3c6e15e84d6d8d3862375623accdece04608",
+      "fetched_at": "2026-10-06T14:58:46.412Z"
+    },
+    {
+      "period": "2013-12",
+      "fileName": "DMDC_Website_Location_Report_1312.xlsx",
+      "fileId": "80644",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:23:41.0",
+      "size": 52289,
+      "sha256": "8ba8825a4f1cba9bd5206dfccf3c2a9e169b823f17968906a82943f5a592e88e",
+      "fetched_at": "2026-10-06T14:58:46.972Z"
+    },
+    {
+      "period": "2014-03",
+      "fileName": "DMDC_Website_Location_Report_1403.xlsx",
+      "fileId": "80643",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:23:25.0",
+      "size": 52086,
+      "sha256": "f282065fa56bc3670282c99cc61a16fe1506adb792c1c925068fcafaf12f3023",
+      "fetched_at": "2026-10-06T14:58:47.477Z"
+    },
+    {
+      "period": "2014-06",
+      "fileName": "DMDC_Website_Location_Report_1406.xlsx",
+      "fileId": "80642",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:22:57.0",
+      "size": 52144,
+      "sha256": "533023454168f5642f74b3a9ee25d6be07ac5c233ce98d5418b8fdbe462afc7e",
+      "fetched_at": "2026-10-06T14:58:48.045Z"
+    },
+    {
+      "period": "2014-09",
+      "fileName": "DMDC_Website_Location_Report_1409.xlsx",
+      "fileId": "80641",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:22:43.0",
+      "size": 52287,
+      "sha256": "d5ad1f799f7991e3bb33786ab6dd2ea5f71c066d9f44beccc5f70aaca3a2a611",
+      "fetched_at": "2026-10-06T14:58:48.583Z"
+    },
+    {
+      "period": "2014-12",
+      "fileName": "DMDC_Website_Location_Report_1412.xlsx",
+      "fileId": "80640",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:21:50.0",
+      "size": 52335,
+      "sha256": "b6e33fb0a9cd21d0778d8d6156abaf7b3300c861c60cfe9d8eb4db0dddc78416",
+      "fetched_at": "2026-10-06T14:58:49.093Z"
+    },
+    {
+      "period": "2015-03",
+      "fileName": "DMDC_Website_Location_Report_1503.xlsx",
+      "fileId": "80639",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:21:29.0",
+      "size": 52279,
+      "sha256": "b37044413da62e7103262721975651c723ea44d4650a5be9277141a4a6fd0304",
+      "fetched_at": "2026-10-06T14:58:49.629Z"
+    },
+    {
+      "period": "2015-06",
+      "fileName": "DMDC_Website_Location_Report_1506.xlsx",
+      "fileId": "80638",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:21:11.0",
+      "size": 52240,
+      "sha256": "8f30c85f82414d852d7ed82c10d49d0b5ea71dabc79b10325694e02c68e86c15",
+      "fetched_at": "2026-10-06T14:58:50.175Z"
+    },
+    {
+      "period": "2015-09",
+      "fileName": "DMDC_Website_Location_Report_1509.xlsx",
+      "fileId": "80637",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:18:48.0",
+      "size": 52189,
+      "sha256": "aa2d6c31858033fb97ea631f9f617b28ee45a5009028c1d63a6dd7574ea3e983",
+      "fetched_at": "2026-10-06T14:58:50.704Z"
+    },
+    {
+      "period": "2015-12",
+      "fileName": "DMDC_Website_Location_Report_1512.xlsx",
+      "fileId": "80636",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:18:30.0",
+      "size": 50939,
+      "sha256": "731e197835675f03e92f8d51aa41b9aafc4de2d699e408534df2c0270dc0acbf",
+      "fetched_at": "2026-10-06T14:58:51.260Z"
+    },
+    {
+      "period": "2016-03",
+      "fileName": "DMDC_Website_Location_Report_1603.xlsx",
+      "fileId": "80635",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:17:57.0",
+      "size": 51835,
+      "sha256": "6054a22ccc93e952f3c91443362bdf425fb3617f059e3b4382969ab427d7898a",
+      "fetched_at": "2026-10-06T14:58:51.794Z"
+    },
+    {
+      "period": "2016-06",
+      "fileName": "DMDC_Website_Location_Report_1606.xlsx",
+      "fileId": "80634",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 09:17:43.0",
+      "size": 50189,
+      "sha256": "17bf3fa61586f88ee3abb58a3b262e85f7d05f6444f6b7f8dad385fc7d864883",
+      "fetched_at": "2026-10-06T14:58:52.334Z"
+    },
+    {
+      "period": "2016-09",
+      "fileName": "DMDC_Website_Location_Report_1609.xlsx",
+      "fileId": "84066",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-07-11 16:02:44.0",
+      "size": 52548,
+      "sha256": "d344512a890b383b40d0e6f3f6148ed48e682934e697049b639064d80fe27f90",
+      "fetched_at": "2026-10-06T14:58:52.885Z"
+    },
+    {
+      "period": "2016-12",
+      "fileName": "DMDC_Website_Location_Report_1612.xlsx",
+      "fileId": "80631",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 08:59:45.0",
+      "size": 52220,
+      "sha256": "7d0f3cd90fba427b201fe574470273f0dee52cbec8ea2c752d10524eb252f126",
+      "fetched_at": "2026-10-06T14:58:53.390Z"
+    },
+    {
+      "period": "2017-03",
+      "fileName": "DMDC_Website_Location_Report_1703.xlsx",
+      "fileId": "80630",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 08:58:17.0",
+      "size": 52348,
+      "sha256": "13de8b4cbdf03f0fe9c7e683b4562b10a15fb62fa1400b52430adce9342b2775",
+      "fetched_at": "2026-10-06T14:58:53.891Z"
+    },
+    {
+      "period": "2017-06",
+      "fileName": "DMDC_Website_Location_Report_1706.xlsx",
+      "fileId": "80629",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-10 08:57:53.0",
+      "size": 52371,
+      "sha256": "62a681588b4553a7e838b1cf969470977786a48622cefeb7aa18ee642746f5fe",
+      "fetched_at": "2026-10-06T14:58:54.470Z"
+    },
+    {
+      "period": "2017-09",
+      "fileName": "DMDC_Website_Location_Report_1709_old.xlsx",
+      "fileId": "97282",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2019-12-12 15:47:24.0",
+      "size": 50520,
+      "sha256": "9004e7f50e5041b507cf6359e12b5732e0aaf861ecacebaf2748544cbf23f697",
+      "fetched_at": "2026-10-06T14:58:54.924Z"
+    },
+    {
+      "period": "2017-12",
+      "fileName": "DMDC_Website_Location_Report_1712.xlsx",
+      "fileId": "80558",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-04-09 09:02:46.0",
+      "size": 50530,
+      "sha256": "1741347e7816167109ed2f91fc723fa490322e99d970d7c01860710a3282b75c",
+      "fetched_at": "2026-10-06T14:58:55.476Z"
+    },
+    {
+      "period": "2018-03",
+      "fileName": "DMDC_Website_Location_Report_1803.xlsx",
+      "fileId": "82422",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-05-25 15:01:14.0",
+      "size": 49887,
+      "sha256": "cf1512b2c9316d8057c323b1ee4e4d655f8ef9096fdfd83fdd0129c739b5f240",
+      "fetched_at": "2026-10-06T14:58:55.948Z"
+    },
+    {
+      "period": "2018-06",
+      "fileName": "DMDC_Website_Location_Report_1806.xlsx",
+      "fileId": "85433",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2018-08-31 16:07:11.0",
+      "size": 49842,
+      "sha256": "186133dae194cc9e2197a1c05842dbbf45a74d5ab7be692393cda614d68b3bd9",
+      "fetched_at": "2026-10-06T14:58:56.505Z"
+    },
+    {
+      "period": "2018-09",
+      "fileName": "DMDC_Website_Location_Report_1809.xlsx",
+      "fileId": "93648",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2019-08-01 15:14:07.0",
+      "size": 49885,
+      "sha256": "c5e5c4c0f0a7d8fc1af5506fc498b1c05b0caf8474a02754769d3905b5eda08e",
+      "fetched_at": "2026-10-06T14:58:57.021Z"
+    },
+    {
+      "period": "2018-12",
+      "fileName": "DMDC_Website_Location_Report_1812.xlsx",
+      "fileId": "93649",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2019-08-01 15:14:48.0",
+      "size": 49978,
+      "sha256": "457c8f76715703843ee3fb82f3400d113e4e1ad2ff8e06e4760ffbcf0962c8ca",
+      "fetched_at": "2026-10-06T14:58:57.562Z"
+    },
+    {
+      "period": "2019-03",
+      "fileName": "DMDC_Website_Location_Report_1903.xlsx",
+      "fileId": "93650",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2019-08-01 15:14:56.0",
+      "size": 50083,
+      "sha256": "9a1e0231fd49683296c125cc9088a1d67d2695ceaaee5771309bd5cfc01dd480",
+      "fetched_at": "2026-10-06T14:58:58.092Z"
+    },
+    {
+      "period": "2019-06",
+      "fileName": "DMDC_Website_Location_Report_1906.xlsx",
+      "fileId": "94275",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2019-08-23 17:08:49.0",
+      "size": 50056,
+      "sha256": "9e5adafb2f04379de946124d313e6690c419c775a6a2877b703684c854c946fa",
+      "fetched_at": "2026-10-06T14:58:58.640Z"
+    },
+    {
+      "period": "2019-09",
+      "fileName": "DMDC_Website_Location_Report_1909.xlsx",
+      "fileId": "96265",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2019-11-08 06:27:18.0",
+      "size": 50254,
+      "sha256": "9f576a3212eb7f4b573a40a8654df57cb4ee8193392cf37cec7846e54640d8b1",
+      "fetched_at": "2026-10-06T14:58:59.135Z"
+    },
+    {
+      "period": "2019-12",
+      "fileName": "DMDC_Website_Location_Report_1912.xlsx",
+      "fileId": "98889",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2020-02-14 08:50:11.0",
+      "size": 50843,
+      "sha256": "aa76f9a143c3c98bad0d8c902da6dbe784a9c2e2e97a38cd8f6487a239da1591",
+      "fetched_at": "2026-10-06T14:58:59.710Z"
+    },
+    {
+      "period": "2020-03",
+      "fileName": "DMDC_Website_Location_Report_2003.xlsx",
+      "fileId": "100904",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2020-05-08 11:43:44.0",
+      "size": 50752,
+      "sha256": "4c8f993bb52e7793de5dbe5240de3691fc54fa90076118b2e39b4d5cbc80e55f",
+      "fetched_at": "2026-10-06T14:59:00.199Z"
+    },
+    {
+      "period": "2020-06",
+      "fileName": "DMDC_Website_Location_Report_2006.xlsx",
+      "fileId": "103341",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2020-08-07 09:01:36.0",
+      "size": 50818,
+      "sha256": "f12d2be06400a5c0a2134167a0ee830314d5cf9c949adc98d02a2420b3cc3ee6",
+      "fetched_at": "2026-10-06T14:59:00.733Z"
+    },
+    {
+      "period": "2020-09",
+      "fileName": "DMDC_Website_Location_Report_2009.xlsx",
+      "fileId": "105773",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2020-11-06 17:22:30.0",
+      "size": 50720,
+      "sha256": "06ec0eae463aa41d55383fa8706142977e3a5ef1affa9028b495f9f0c8350cf5",
+      "fetched_at": "2026-10-06T14:59:01.255Z"
+    },
+    {
+      "period": "2020-12",
+      "fileName": "DMDC_Website_Location_Report_2012.xlsx",
+      "fileId": "107990",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2021-02-06 08:34:09.0",
+      "size": 52386,
+      "sha256": "6c8296f3aeef7a54c158d3baddf28d3b53f583c967208b793dfaf0453ab53944",
+      "fetched_at": "2026-10-06T14:59:01.816Z"
+    },
+    {
+      "period": "2021-03",
+      "fileName": "DMDC_Website_Location_Report_2103.xlsx",
+      "fileId": "109993",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2021-05-06 20:14:29.0",
+      "size": 52416,
+      "sha256": "632b73103662b90c6b3e73adc80033bd10ed53819e50a1b70c98032f3c18a80a",
+      "fetched_at": "2026-10-06T14:59:02.322Z"
+    },
+    {
+      "period": "2021-06",
+      "fileName": "DMDC_Website_Location_Report_2106.xlsx",
+      "fileId": "111750",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2021-08-08 05:20:53.0",
+      "size": 52501,
+      "sha256": "4422ec9d295726d889ed1e9f87c5a111d4df0ecec5d43aebd01061b3920c7ee7",
+      "fetched_at": "2026-10-06T14:59:02.865Z"
+    },
+    {
+      "period": "2021-09",
+      "fileName": "DMDC_Website_Location_Report_2109.xlsx",
+      "fileId": "113543",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2021-11-17 18:35:49.0",
+      "size": 53671,
+      "sha256": "6391189270bd9439de9ab786174ac09ee02615ea379330cdc7165dc565ad2ebc",
+      "fetched_at": "2026-10-06T14:59:03.387Z"
+    },
+    {
+      "period": "2021-12",
+      "fileName": "DMDC_Website_Location_Report_2112.xlsx",
+      "fileId": "115840",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2022-03-31 18:40:53.0",
+      "size": 59710,
+      "sha256": "da54c5270a48de8b0544b89c5b85fb81279082e03ca436b55440b3aeab671a95",
+      "fetched_at": "2026-10-06T14:59:03.926Z"
+    },
+    {
+      "period": "2022-03",
+      "fileName": "DMDC_Website_Location_Report_2203.xlsx",
+      "fileId": "117084",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2022-06-10 03:58:06.0",
+      "size": 60025,
+      "sha256": "cd5d794879f8693bda67630ad038fe3337e46963a5f91c8e291e4c46980d32df",
+      "fetched_at": "2026-10-06T14:59:04.439Z"
+    },
+    {
+      "period": "2022-06",
+      "fileName": "DMDC_Website_Location_Report_2206.xlsx",
+      "fileId": "119321",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2022-10-24 23:29:32.0",
+      "size": 59956,
+      "sha256": "e58a8bc1dedecdf108ab97034c4d5dd68b823f6ea1ccc87e1c0636b6399a54a9",
+      "fetched_at": "2026-10-06T14:59:05.006Z"
+    },
+    {
+      "period": "2022-09",
+      "fileName": "DMDC_Website_Location_Report_2209.xlsx",
+      "fileId": "120269",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2022-12-23 19:37:51.0",
+      "size": 59714,
+      "sha256": "0f5a84bd389d752e16c238bc8cf1dd9bb3dee1f3f63db1fb9f605b0a51555b0c",
+      "fetched_at": "2026-10-06T14:59:05.503Z"
+    },
+    {
+      "period": "2022-12",
+      "fileName": "DMDC_Website_Location_Report_2212.xlsx",
+      "fileId": "121403",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2023-03-03 01:22:32.0",
+      "size": 59319,
+      "sha256": "d74120ad256bdba025513c7633aa5d65194bad94775cc7f11ad158e8cc98b392",
+      "fetched_at": "2026-10-06T14:59:06.015Z"
+    },
+    {
+      "period": "2023-03",
+      "fileName": "DMDC_Website_Location_Report_2303.xlsx",
+      "fileId": "124239",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2023-08-13 18:10:47.0",
+      "size": 59484,
+      "sha256": "8c57a7921fff4524dbdc54f51b73653495edcacb07fa40f5a633ea9cf829a127",
+      "fetched_at": "2026-10-06T14:59:06.487Z"
+    },
+    {
+      "period": "2023-06",
+      "fileName": "DMDC_Website_Location_Report_2306.xlsx",
+      "fileId": "124240",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2023-08-13 18:11:21.0",
+      "size": 59403,
+      "sha256": "e00d58c9023e8e0c9872907894c5d84ec6ddc25908e223421a4304d34938ed7d",
+      "fetched_at": "2026-10-06T14:59:07.108Z"
+    },
+    {
+      "period": "2023-09",
+      "fileName": "DMDC_Website_Location_Report_2309.xlsx",
+      "fileId": "126040",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2023-11-15 17:00:56.0",
+      "size": 61807,
+      "sha256": "68488a2aef4f2c8a6f9a4bc4676880ddd7bbf05b7c84d131ace5c394b35d58bb",
+      "fetched_at": "2026-10-06T14:59:07.613Z"
+    },
+    {
+      "period": "2023-12",
+      "fileName": "DMDC_Website_Location_Report_2312.xlsx",
+      "fileId": "127322",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2024-02-08 16:08:05.0",
+      "size": 61573,
+      "sha256": "9c0309b602311b798a8da1dc15a51d1e4454420faa65ece803970c15e4077420",
+      "fetched_at": "2026-10-06T14:59:08.143Z"
+    },
+    {
+      "period": "2024-03",
+      "fileName": "DMDC_Website_Location_Report_2403.xlsx",
+      "fileId": "129163",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2024-05-09 21:28:17.0",
+      "size": 61500,
+      "sha256": "b1a51f89091945bc58a630ede7e87c1f4d7a3c2718c4c064d0d8f73d99d604a5",
+      "fetched_at": "2026-10-06T14:59:08.681Z"
+    },
+    {
+      "period": "2024-06",
+      "fileName": "DMDC_Website_Location_Report_2406.xlsx",
+      "fileId": "130926",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2024-08-14 02:57:49.0",
+      "size": 61945,
+      "sha256": "b7859e31c28e45749f01abe27816fbad6f9e2cf95b0fbf9f2b44fab1edf2746e",
+      "fetched_at": "2026-10-06T14:59:09.256Z"
+    },
+    {
+      "period": "2024-09",
+      "fileName": "DMDC_Website_Location_Report_2409.xlsx",
+      "fileId": "136978",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2025-06-26 14:06:55.0",
+      "size": 52381,
+      "sha256": "86a1f215b8faf0faf42ecc47dfd66e6377f53bee0abd38ce08bf4a742350027c",
+      "fetched_at": "2026-10-06T14:59:09.761Z"
+    },
+    {
+      "period": "2024-12",
+      "fileName": "DMDC_Website_Location_Report_2412.xlsx",
+      "fileId": "136979",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2025-06-26 14:07:38.0",
+      "size": 53109,
+      "sha256": "879bfa43f6bcbe607098d39ce465d977c67f1f8e56d96fb80b9277fc6625b496",
+      "fetched_at": "2026-10-06T14:59:10.307Z"
+    },
+    {
+      "period": "2025-03",
+      "fileName": "DMDC_Website_Location_Report_2503.xlsx",
+      "fileId": "136372",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2025-05-28 01:14:49.0",
+      "size": 53500,
+      "sha256": "dc3b5d193eaf4d3c95583e7262e22e782855e6d259021f8f918b8edefe54331d",
+      "fetched_at": "2026-10-06T14:59:10.807Z"
+    },
+    {
+      "period": "2025-06",
+      "fileName": "DMDC_Website_Location_Report_2506.xlsx",
+      "fileId": "138689",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2025-08-26 17:27:11.0",
+      "size": 53535,
+      "sha256": "17a2b0e0f42c2779aac70a3be22604219f4e3b2f30bf3cf4f68562d9f412f3bb",
+      "fetched_at": "2026-10-06T14:59:11.387Z"
+    },
+    {
+      "period": "2025-09",
+      "fileName": "DMDC_Website_Location_Report_2509.xlsx",
+      "fileId": "140442",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2025-12-10 17:51:12.0",
+      "size": 53598,
+      "sha256": "d676e62f061f6951227b2431559e5b2ba6c49ce7292f043fb638176b68a20659",
+      "fetched_at": "2026-10-06T14:59:11.900Z"
+    },
+    {
+      "period": "2025-12",
+      "fileName": "DMDC_Website_Location_Report_2512.xlsx",
+      "fileId": "141635",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2026-02-16 16:09:04.0",
+      "size": 53839,
+      "sha256": "53dc980c55b8c187a5782877e5902ff141029886e72868cac6477f547301989a",
+      "fetched_at": "2026-10-06T14:59:12.441Z"
+    },
+    {
+      "period": "2026-03",
+      "fileName": "DMDC_Website_Location_Report_2603.xlsx",
+      "fileId": "142879",
+      "groupName": "milRegionCountry",
+      "uploadDate": "2026-05-07 20:39:02.0",
+      "size": 53655,
+      "sha256": "b7ebfa97b683282ec43459ce5c405e37432bd40f16c4b7d6098a07dbe5e89fa4",
+      "fetched_at": "2026-10-06T14:59:12.953Z"
+    }
+  ]
+}

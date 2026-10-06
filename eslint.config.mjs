@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Local session scratch (gitignored).
     ".scratch/**",
+    "pipeline/raw/_scratch/**",
   ]),
 ]);
 

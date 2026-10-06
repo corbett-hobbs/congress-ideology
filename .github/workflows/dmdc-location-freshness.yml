@@ -1,0 +1,102 @@
+name: DMDC troop-location freshness
+
+# Automate the check, gate the acceptance on a human.
+#
+# Weekly: read the DMDC report page's JSON (`pnpm fetch:dmdc-location --check`, which fetches
+# no files) and compare its location-report periods with pipeline/raw/dmdc-location/manifest.json.
+# Only when a period is new: download, rebuild pipeline/output/, and open a PR if the output
+# differs. A gate failure in the transform (As-of mismatch, an overseas total that does not
+# reconcile, an unmapped country) fails the job loudly instead of opening a PR. Never auto-merged.
+#
+# DMDC publishes about 5-10 weeks after quarter end, sometimes late (Sep and Dec 2024 arrived
+# together nine months on), so most weeks this does nothing. Needs no secrets; the repo setting
+#   Settings > Actions > General > "Allow GitHub Actions to create and
+#   approve pull requests"  (off by default)
+#
+# Note: the PR branch is pushed with GITHUB_TOKEN, so it does NOT trigger the
+# CI workflow. Run `pnpm pipeline:check` locally before merging.
+
+on:
+  schedule:
+    - cron: "43 12 * * 3" # Wednesdays 12:43 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dmdc-location-freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Has DMDC published a new period?
+        id: check
+        run: pnpm fetch:dmdc-location --check
+
+      - name: Download and rebuild
+        if: steps.check.outputs.stale == 'true'
+        run: |
+          pnpm fetch:dmdc-location
+          pnpm exec tsx pipeline/transform/troops-location-run.ts
+
+      - name: Did the output change?
+        id: diff
+        if: steps.check.outputs.stale == 'true'
+        run: |
+          if [ -n "$(git status --porcelain -- pipeline/output pipeline/raw/dmdc-location)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "summary<<EOF"
+              git status --short -- pipeline/raw/dmdc-location | tail -n 10
+              git diff --stat -- pipeline/output | tail -n 15
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: |
+            pipeline/raw/dmdc-location
+            pipeline/output/troops_location.json
+            pipeline/output/troops_location_meta.json
+            pipeline/output/troops_location_report.json
+          branch: data/dmdc-location-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): refresh DMDC troop-location data"
+          title: "DMDC troop-location refresh"
+          labels: data-refresh
+          body: |
+            DMDC's location report page lists new period(s): **${{ steps.check.outputs.new_periods }}** (latest **${{ steps.check.outputs.latest }}**). The transform passed every gate (a failure would have failed the job instead of opening this PR).
+
+            **Changes**
+
+            ${{ steps.diff.outputs.summary }}
+
+            **Before merging**
+
+            - Check `troops_location_report.json` (overseas gate per period, unmapped names).
+            - A new country label that carries troops fails the build until it is added to `pipeline/transform/troops-location-aliases.json` deliberately.
+            - A new quarter whose overseas rows do not sum to the printed total fails the build until the exception is documented in `docs/TROOPS_METHODOLOGY.md` and `OVERSEAS_EXCEPTIONS`.
+            - Run `pnpm pipeline:check` locally.
+
+            Not auto-merged by design.

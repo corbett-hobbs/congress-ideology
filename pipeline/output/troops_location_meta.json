@@ -1,0 +1,2888 @@
+{
+  "source": "U.S. Department of Defense, Defense Manpower Data Center (DMDC), Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly): location report, active-duty columns only",
+  "source_url": "https://dwp.dmdc.osd.mil/dwp/app/dod-data-reports/workforce-reports",
+  "periods_covered": [
+    "2008-09",
+    "2009-09",
+    "2010-09",
+    "2011-09",
+    "2012-09",
+    "2013-09",
+    "2013-12",
+    "2014-03",
+    "2014-06",
+    "2014-09",
+    "2014-12",
+    "2015-03",
+    "2015-06",
+    "2015-09",
+    "2015-12",
+    "2016-03",
+    "2016-06",
+    "2016-09",
+    "2016-12",
+    "2017-03",
+    "2017-06",
+    "2017-09",
+    "2017-12",
+    "2018-03",
+    "2018-06",
+    "2018-09",
+    "2018-12",
+    "2019-03",
+    "2019-06",
+    "2019-09",
+    "2019-12",
+    "2020-03",
+    "2020-06",
+    "2020-09",
+    "2020-12",
+    "2021-03",
+    "2021-06",
+    "2021-09",
+    "2021-12",
+    "2022-03",
+    "2022-06",
+    "2022-09",
+    "2022-12",
+    "2023-03",
+    "2023-06",
+    "2023-09",
+    "2023-12",
+    "2024-03",
+    "2024-06",
+    "2024-09",
+    "2024-12",
+    "2025-03",
+    "2025-06",
+    "2025-09",
+    "2025-12",
+    "2026-03"
+  ],
+  "first_period": "2008-09",
+  "latest_period": "2026-03",
+  "data_through": "2026-03-31",
+  "break": {
+    "first_period_after": "2017-12",
+    "before": "Sep 2008–Sep 2017: counts include personnel deployed in support of contingency operations (the source lists the CTS Deployment File).",
+    "after": "Dec 2017 onward: permanently assigned personnel only; temporary duty and contingency deployments are not included. Overseas active duty fell 215,249 → 161,927 between Sep and Dec 2017 while the U.S. total rose, a reallocation, not a withdrawal. Series are not like-for-like across this break.",
+    "evidence": "Dec 2017 table footnote: does not include personnel on temporary duty; Sep 2017 sources list the CTS Deployment File and Dec 2017 does not.",
+    "contingency_hosts_not_reported": [
+      "Afghanistan",
+      "Iraq",
+      "Syria"
+    ],
+    "not_reported_periods": [
+      "2017-12",
+      "2018-03",
+      "2018-06",
+      "2018-09",
+      "2018-12",
+      "2019-03",
+      "2019-06",
+      "2019-09",
+      "2019-12",
+      "2020-03",
+      "2020-06",
+      "2020-09",
+      "2020-12",
+      "2021-03",
+      "2021-06",
+      "2021-09"
+    ]
+  },
+  "removal": {
+    "hosts": [
+      {
+        "name": "Afghanistan",
+        "last_row_period": "2023-06",
+        "first_period_without_rows": "2023-09"
+      },
+      {
+        "name": "Iraq",
+        "last_row_period": "2023-09",
+        "first_period_without_rows": "2023-12"
+      },
+      {
+        "name": "Syria",
+        "last_row_period": "2023-09",
+        "first_period_without_rows": "2023-12"
+      }
+    ],
+    "note": "Afghanistan has no row from Sep 2023; Iraq and Syria print 0 in Sep 2023 and have no row from Dec 2023. An absent row is not a zero."
+  },
+  "space_force": {
+    "merged_periods": [
+      "2021-12",
+      "2022-03",
+      "2022-06",
+      "2022-09",
+      "2022-12",
+      "2023-03",
+      "2023-06"
+    ],
+    "separate_from": "2023-09",
+    "note": "Space Force is folded into the Air Force column (header AIR FORCE/SPACE FORCE) Dec 2021–Jun 2023 and has its own column from Sep 2023. Not split; air_force is not comparable across Sep 2023 and space_force is null before it."
+  },
+  "army_not_reported_periods": [
+    "2022-12",
+    "2023-03",
+    "2023-06"
+  ],
+  "territories": [
+    "AMERICAN SAMOA",
+    "GUAM",
+    "NORTHERN MARIANA ISLANDS",
+    "PUERTO RICO",
+    "VIRGIN ISLANDS, U.S."
+  ],
+  "exceptions": [
+    {
+      "period": "2013-09",
+      "gate": "overseas",
+      "gap": 8,
+      "reason": "ZIMBABWE is printed twice (8 troops each); the printed total counts one."
+    },
+    {
+      "period": "2017-12",
+      "gate": "overseas",
+      "gap": 612,
+      "reason": "Rows exceed the printed total; not explained by the file (branch columns differ by up to -998 Army / +1,191 Navy)."
+    },
+    {
+      "period": "2020-12",
+      "gate": "overseas",
+      "gap": -534,
+      "reason": "Printed total exceeds the rows: blank starred rows are still counted in it (almost all Marine Corps)."
+    },
+    {
+      "period": "2021-03",
+      "gate": "overseas",
+      "gap": -495,
+      "reason": "Printed total exceeds the rows: blank starred rows are still counted in it (almost all Marine Corps)."
+    },
+    {
+      "period": "2021-06",
+      "gate": "overseas",
+      "gap": -427,
+      "reason": "Printed total exceeds the rows: blank starred rows are still counted in it (almost all Marine Corps)."
+    },
+    {
+      "period": "2021-09",
+      "gate": "overseas",
+      "gap": -189,
+      "reason": "Printed total exceeds the rows: blank starred rows are still counted in it (almost all Marine Corps)."
+    },
+    {
+      "period": "2022-06",
+      "gate": "overseas",
+      "gap": -329,
+      "reason": "Rows' TOTAL column differs from their branch sum for many hosts; the branch columns reconcile."
+    },
+    {
+      "period": "2024-09",
+      "gate": "overseas",
+      "gap": -11,
+      "reason": "Printed total exceeds the rows (Army -3, Marine Corps -8); unexplained by the file."
+    },
+    {
+      "period": "2017-03",
+      "gate": "grand",
+      "gap": -3062,
+      "reason": "Printed GRAND TOTAL (1,315,609) is a stale copy of Dec 2016's, not U.S. + overseas."
+    }
+  ],
+  "derived": {
+    "abroad_definition": "abroad_total = printed OVERSEAS TOTAL − Σ territory rows (American Samoa, Guam, Northern Mariana Islands, Puerto Rico, U.S. Virgin Islands). Includes afloat_unassigned rows.",
+    "abroad_omitted_periods": [
+      "2022-12",
+      "2023-03",
+      "2023-06"
+    ],
+    "abroad_omitted_reason": "Army reported N/A in Dec 2022, Mar 2023 and Jun 2023, so the printed totals are N/A and no like-for-like abroad figure exists."
+  },
+  "periods": [
+    {
+      "period": "2008-09",
+      "as_of": "2008-09-30",
+      "file": "2008-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 361823,
+          "navy": 260824,
+          "marine_corps": 148325,
+          "air_force": 247261,
+          "coast_guard": 40354,
+          "total": 1058587
+        },
+        "overseas_total": {
+          "army": 177852,
+          "navy": 65860,
+          "marine_corps": 50090,
+          "air_force": 75639,
+          "coast_guard": 1008,
+          "total": 370449
+        },
+        "grand_total": {
+          "army": 539675,
+          "navy": 326684,
+          "marine_corps": 198415,
+          "air_force": 322900,
+          "coast_guard": 41362,
+          "total": 1429036
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6247,
+      "afloat_unassigned_total": 29510,
+      "abroad_total": 364202,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2009-09",
+      "as_of": "2009-09-30",
+      "file": "2009-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 374482,
+          "navy": 263860,
+          "marine_corps": 163804,
+          "air_force": 251479,
+          "coast_guard": 41376,
+          "total": 1095001
+        },
+        "overseas_total": {
+          "army": 174534,
+          "navy": 60380,
+          "marine_corps": 39271,
+          "air_force": 77368,
+          "coast_guard": 1050,
+          "total": 352603
+        },
+        "grand_total": {
+          "army": 549016,
+          "navy": 324240,
+          "marine_corps": 203075,
+          "air_force": 328847,
+          "coast_guard": 42426,
+          "total": 1447604
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6326,
+      "afloat_unassigned_total": 23026,
+      "abroad_total": 346277,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2010-09",
+      "as_of": "2010-09-30",
+      "file": "2010-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 400526,
+          "navy": 267684,
+          "marine_corps": 158329,
+          "air_force": 252528,
+          "coast_guard": 40274,
+          "total": 1119341
+        },
+        "overseas_total": {
+          "army": 161454,
+          "navy": 55455,
+          "marine_corps": 44284,
+          "air_force": 77114,
+          "coast_guard": 1053,
+          "total": 339360
+        },
+        "grand_total": {
+          "army": 561980,
+          "navy": 323139,
+          "marine_corps": 202613,
+          "air_force": 329642,
+          "coast_guard": 41327,
+          "total": 1458701
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6120,
+      "afloat_unassigned_total": 22753,
+      "abroad_total": 333240,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2011-09",
+      "as_of": "2011-09-30",
+      "file": "2011-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 402640,
+          "navy": 262399,
+          "marine_corps": 159634,
+          "air_force": 251190,
+          "coast_guard": 40929,
+          "total": 1116792
+        },
+        "overseas_total": {
+          "army": 158797,
+          "navy": 57742,
+          "marine_corps": 41393,
+          "air_force": 77631,
+          "coast_guard": 1082,
+          "total": 336645
+        },
+        "grand_total": {
+          "army": 561437,
+          "navy": 320141,
+          "marine_corps": 201027,
+          "air_force": 328821,
+          "coast_guard": 42011,
+          "total": 1453437
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6187,
+      "afloat_unassigned_total": 21673,
+      "abroad_total": 330458,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2012-09",
+      "as_of": "2012-09-30",
+      "file": "2012-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 435836,
+          "navy": 257884,
+          "marine_corps": 164252,
+          "air_force": 258548,
+          "coast_guard": 40735,
+          "total": 1157255
+        },
+        "overseas_total": {
+          "army": 110221,
+          "navy": 56456,
+          "marine_corps": 34568,
+          "air_force": 70264,
+          "coast_guard": 1114,
+          "total": 272623
+        },
+        "grand_total": {
+          "army": 546057,
+          "navy": 314340,
+          "marine_corps": 198820,
+          "air_force": 328812,
+          "coast_guard": 41849,
+          "total": 1429878
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6238,
+      "afloat_unassigned_total": 18709,
+      "abroad_total": 266385,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2013-09",
+      "as_of": "2013-09-30",
+      "file": "2013-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 430013,
+          "navy": 272173,
+          "marine_corps": 157724,
+          "air_force": 259810,
+          "coast_guard": 39292,
+          "total": 1159012
+        },
+        "overseas_total": {
+          "army": 98057,
+          "navy": 47665,
+          "marine_corps": 38124,
+          "air_force": 66763,
+          "coast_guard": 1128,
+          "total": 251737
+        },
+        "grand_total": {
+          "army": 528070,
+          "navy": 319838,
+          "marine_corps": 195848,
+          "air_force": 326573,
+          "coast_guard": 40420,
+          "total": 1410749
+        }
+      },
+      "overseas_gap": 8,
+      "overseas_gate": "documented_exception",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [
+        {
+          "source_name": "ZIMBABWE",
+          "total": 8
+        }
+      ],
+      "suppressed_rows": [],
+      "territory_total": 6176,
+      "afloat_unassigned_total": 13655,
+      "abroad_total": 245561,
+      "flags": [
+        "includes_deployed_forces",
+        "duplicate_row_dropped",
+        "overseas_total_exception"
+      ]
+    },
+    {
+      "period": "2013-12",
+      "as_of": "2013-12-31",
+      "file": "2013-12.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 429650,
+          "navy": 271165,
+          "marine_corps": 161021,
+          "air_force": 259680,
+          "coast_guard": 38639,
+          "total": 1160155
+        },
+        "overseas_total": {
+          "army": 89387,
+          "navy": 47522,
+          "marine_corps": 32794,
+          "air_force": 66066,
+          "coast_guard": 1165,
+          "total": 236934
+        },
+        "grand_total": {
+          "army": 519037,
+          "navy": 318687,
+          "marine_corps": 193815,
+          "air_force": 325746,
+          "coast_guard": 39804,
+          "total": 1397089
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6275,
+      "afloat_unassigned_total": 11207,
+      "abroad_total": 230659,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2014-03",
+      "as_of": "2014-03-31",
+      "file": "2014-03.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 425544,
+          "navy": 270522,
+          "marine_corps": 156741,
+          "air_force": 259235,
+          "coast_guard": 38572,
+          "total": 1150614
+        },
+        "overseas_total": {
+          "army": 90344,
+          "navy": 48598,
+          "marine_corps": 36046,
+          "air_force": 67024,
+          "coast_guard": 1117,
+          "total": 243129
+        },
+        "grand_total": {
+          "army": 515888,
+          "navy": 319120,
+          "marine_corps": 192787,
+          "air_force": 326259,
+          "coast_guard": 39689,
+          "total": 1393743
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6620,
+      "afloat_unassigned_total": 14159,
+      "abroad_total": 236509,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2014-06",
+      "as_of": "2014-06-30",
+      "file": "2014-06.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 421160,
+          "navy": 273502,
+          "marine_corps": 154629,
+          "air_force": 259844,
+          "coast_guard": 38658,
+          "total": 1147793
+        },
+        "overseas_total": {
+          "army": 89898,
+          "navy": 46972,
+          "marine_corps": 36205,
+          "air_force": 64977,
+          "coast_guard": 1198,
+          "total": 239250
+        },
+        "grand_total": {
+          "army": 511058,
+          "navy": 320474,
+          "marine_corps": 190834,
+          "air_force": 324821,
+          "coast_guard": 39856,
+          "total": 1387043
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6798,
+      "afloat_unassigned_total": 14944,
+      "abroad_total": 232452,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2014-09",
+      "as_of": "2014-09-30",
+      "file": "2014-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 422404,
+          "navy": 271449,
+          "marine_corps": 151644,
+          "air_force": 249095,
+          "coast_guard": 38346,
+          "total": 1132938
+        },
+        "overseas_total": {
+          "army": 81927,
+          "navy": 50150,
+          "marine_corps": 36247,
+          "air_force": 63358,
+          "coast_guard": 1108,
+          "total": 232790
+        },
+        "grand_total": {
+          "army": 504331,
+          "navy": 321599,
+          "marine_corps": 187891,
+          "air_force": 312453,
+          "coast_guard": 39454,
+          "total": 1365728
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7037,
+      "afloat_unassigned_total": 18351,
+      "abroad_total": 225753,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2014-12",
+      "as_of": "2014-12-31",
+      "file": "2014-12.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 421168,
+          "navy": 272286,
+          "marine_corps": 153083,
+          "air_force": 245220,
+          "coast_guard": 38074,
+          "total": 1129831
+        },
+        "overseas_total": {
+          "army": 73613,
+          "navy": 48199,
+          "marine_corps": 31908,
+          "air_force": 64120,
+          "coast_guard": 1196,
+          "total": 219036
+        },
+        "grand_total": {
+          "army": 494781,
+          "navy": 320485,
+          "marine_corps": 184991,
+          "air_force": 309340,
+          "coast_guard": 39270,
+          "total": 1348867
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6730,
+      "afloat_unassigned_total": 16868,
+      "abroad_total": 212306,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2015-03",
+      "as_of": "2015-03-31",
+      "file": "2015-03.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 417655,
+          "navy": 272949,
+          "marine_corps": 152881,
+          "air_force": 242808,
+          "coast_guard": 38291,
+          "total": 1124584
+        },
+        "overseas_total": {
+          "army": 74256,
+          "navy": 48366,
+          "marine_corps": 31807,
+          "air_force": 64570,
+          "coast_guard": 1133,
+          "total": 220132
+        },
+        "grand_total": {
+          "army": 491911,
+          "navy": 321315,
+          "marine_corps": 184688,
+          "air_force": 307378,
+          "coast_guard": 39424,
+          "total": 1344716
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6737,
+      "afloat_unassigned_total": 18198,
+      "abroad_total": 213395,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2015-06",
+      "as_of": "2015-06-30",
+      "file": "2015-06.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 414094,
+          "navy": 275618,
+          "marine_corps": 150391,
+          "air_force": 244453,
+          "coast_guard": 38286,
+          "total": 1122842
+        },
+        "overseas_total": {
+          "army": 73045,
+          "navy": 47560,
+          "marine_corps": 34196,
+          "air_force": 63584,
+          "coast_guard": 1256,
+          "total": 219641
+        },
+        "grand_total": {
+          "army": 487139,
+          "navy": 323178,
+          "marine_corps": 184587,
+          "air_force": 308037,
+          "coast_guard": 39542,
+          "total": 1342483
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6894,
+      "afloat_unassigned_total": 21171,
+      "abroad_total": 212747,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2015-09",
+      "as_of": "2015-09-30",
+      "file": "2015-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 417337,
+          "navy": 278123,
+          "marine_corps": 150408,
+          "air_force": 243711,
+          "coast_guard": 37887,
+          "total": 1127466
+        },
+        "overseas_total": {
+          "army": 70029,
+          "navy": 45211,
+          "marine_corps": 33009,
+          "air_force": 63615,
+          "coast_guard": 1203,
+          "total": 213067
+        },
+        "grand_total": {
+          "army": 487366,
+          "navy": 323334,
+          "marine_corps": 183417,
+          "air_force": 307326,
+          "coast_guard": 39090,
+          "total": 1340533
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7297,
+      "afloat_unassigned_total": 13992,
+      "abroad_total": 205770,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2015-12",
+      "as_of": "2015-12-31",
+      "file": "2015-12.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 407917,
+          "navy": 260189,
+          "marine_corps": 159084,
+          "air_force": 244172,
+          "coast_guard": 37783,
+          "total": 1109145
+        },
+        "overseas_total": {
+          "army": 70381,
+          "navy": 63526,
+          "marine_corps": 24113,
+          "air_force": 62829,
+          "coast_guard": 1020,
+          "total": 221869
+        },
+        "grand_total": {
+          "army": 478298,
+          "navy": 323715,
+          "marine_corps": 183197,
+          "air_force": 307001,
+          "coast_guard": 38803,
+          "total": 1331014
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6137,
+      "afloat_unassigned_total": 12176,
+      "abroad_total": 215732,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2016-03",
+      "as_of": "2016-03-31",
+      "file": "2016-03.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 405736,
+          "navy": 285834,
+          "marine_corps": 149175,
+          "air_force": 246749,
+          "coast_guard": 38002,
+          "total": 1125496
+        },
+        "overseas_total": {
+          "army": 69541,
+          "navy": 39065,
+          "marine_corps": 34708,
+          "air_force": 61863,
+          "coast_guard": 1040,
+          "total": 206217
+        },
+        "grand_total": {
+          "army": 475277,
+          "navy": 324899,
+          "marine_corps": 183883,
+          "air_force": 308612,
+          "coast_guard": 39042,
+          "total": 1331713
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 4704,
+      "afloat_unassigned_total": 22862,
+      "abroad_total": 201513,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2016-06",
+      "as_of": "2016-06-30",
+      "file": "2016-06.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 402539,
+          "navy": 291882,
+          "marine_corps": 149773,
+          "air_force": 249558,
+          "coast_guard": 38375,
+          "total": 1132127
+        },
+        "overseas_total": {
+          "army": 67745,
+          "navy": 34191,
+          "marine_corps": 33597,
+          "air_force": 61970,
+          "coast_guard": 1030,
+          "total": 198533
+        },
+        "grand_total": {
+          "army": 470284,
+          "navy": 326073,
+          "marine_corps": 183370,
+          "air_force": 311528,
+          "coast_guard": 39405,
+          "total": 1330660
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 4726,
+      "afloat_unassigned_total": 16417,
+      "abroad_total": 193807,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2016-09",
+      "as_of": "2016-09-30",
+      "file": "2016-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 403902,
+          "navy": 282609,
+          "marine_corps": 151988,
+          "air_force": 252538,
+          "coast_guard": 38600,
+          "total": 1129637
+        },
+        "overseas_total": {
+          "army": 67370,
+          "navy": 37492,
+          "marine_corps": 31513,
+          "air_force": 61185,
+          "coast_guard": 997,
+          "total": 198557
+        },
+        "grand_total": {
+          "army": 471272,
+          "navy": 320101,
+          "marine_corps": 183501,
+          "air_force": 313723,
+          "coast_guard": 39597,
+          "total": 1328194
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 4126,
+      "afloat_unassigned_total": 28017,
+      "abroad_total": 194431,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2016-12",
+      "as_of": "2016-12-31",
+      "file": "2016-12.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 394236,
+          "navy": 283499,
+          "marine_corps": 149992,
+          "air_force": 249738,
+          "coast_guard": 38659,
+          "total": 1116124
+        },
+        "overseas_total": {
+          "army": 66372,
+          "navy": 35286,
+          "marine_corps": 33428,
+          "air_force": 63366,
+          "coast_guard": 1033,
+          "total": 199485
+        },
+        "grand_total": {
+          "army": 460608,
+          "navy": 318785,
+          "marine_corps": 183420,
+          "air_force": 313104,
+          "coast_guard": 39692,
+          "total": 1315609
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 3984,
+      "afloat_unassigned_total": 28352,
+      "abroad_total": 195501,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2017-03",
+      "as_of": "2017-03-31",
+      "file": "2017-03.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 394144,
+          "navy": 278077,
+          "marine_corps": 151908,
+          "air_force": 253250,
+          "coast_guard": 39150,
+          "total": 1116529
+        },
+        "overseas_total": {
+          "army": 66864,
+          "navy": 39917,
+          "marine_corps": 31958,
+          "air_force": 62371,
+          "coast_guard": 1032,
+          "total": 202142
+        },
+        "grand_total": {
+          "army": 460608,
+          "navy": 318785,
+          "marine_corps": 183420,
+          "air_force": 313104,
+          "coast_guard": 39692,
+          "total": 1315609
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": -3062,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 4435,
+      "afloat_unassigned_total": 31388,
+      "abroad_total": 197707,
+      "flags": [
+        "includes_deployed_forces",
+        "grand_total_exception"
+      ]
+    },
+    {
+      "period": "2017-06",
+      "as_of": "2017-06-30",
+      "file": "2017-06.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 397282,
+          "navy": 285400,
+          "marine_corps": 148824,
+          "air_force": 254738,
+          "coast_guard": 39560,
+          "total": 1125804
+        },
+        "overseas_total": {
+          "army": 66676,
+          "navy": 34051,
+          "marine_corps": 35706,
+          "air_force": 63551,
+          "coast_guard": 1048,
+          "total": 201032
+        },
+        "grand_total": {
+          "army": 463958,
+          "navy": 319451,
+          "marine_corps": 184530,
+          "air_force": 318289,
+          "coast_guard": 40608,
+          "total": 1326836
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 4493,
+      "afloat_unassigned_total": 23690,
+      "abroad_total": 196539,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2017-09",
+      "as_of": "2017-09-30",
+      "file": "2017-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "includes_deployed",
+      "printed": {
+        "united_states_total": {
+          "army": 400876,
+          "navy": 280161,
+          "marine_corps": 148123,
+          "air_force": 251250,
+          "coast_guard": 39463,
+          "total": 1119873
+        },
+        "overseas_total": {
+          "army": 71173,
+          "navy": 39331,
+          "marine_corps": 36278,
+          "air_force": 67330,
+          "coast_guard": 1137,
+          "total": 215249
+        },
+        "grand_total": {
+          "army": 472049,
+          "navy": 319492,
+          "marine_corps": 184401,
+          "air_force": 318580,
+          "coast_guard": 40600,
+          "total": 1335122
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 4774,
+      "afloat_unassigned_total": 17301,
+      "abroad_total": 210475,
+      "flags": [
+        "includes_deployed_forces"
+      ]
+    },
+    {
+      "period": "2017-12",
+      "as_of": "2017-12-31",
+      "file": "2017-12.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 418491,
+          "navy": 290270,
+          "marine_corps": 153615,
+          "air_force": 265296,
+          "coast_guard": 39597,
+          "total": 1167269
+        },
+        "overseas_total": {
+          "army": 47309,
+          "navy": 29598,
+          "marine_corps": 31143,
+          "air_force": 52640,
+          "coast_guard": 1237,
+          "total": 161927
+        },
+        "grand_total": {
+          "army": 465800,
+          "navy": 319868,
+          "marine_corps": 184758,
+          "air_force": 317936,
+          "coast_guard": 40834,
+          "total": 1329196
+        }
+      },
+      "overseas_gap": 612,
+      "overseas_gate": "documented_exception",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 5451,
+      "afloat_unassigned_total": 6052,
+      "abroad_total": 156476,
+      "flags": [
+        "series_break_permanent_assignment_only",
+        "suppressed_rows",
+        "overseas_total_exception"
+      ]
+    },
+    {
+      "period": "2018-03",
+      "as_of": "2018-03-31",
+      "file": "2018-03.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 416667,
+          "navy": 285141,
+          "marine_corps": 153107,
+          "air_force": 266167,
+          "coast_guard": 39960,
+          "total": 1161042
+        },
+        "overseas_total": {
+          "army": 47791,
+          "navy": 36119,
+          "marine_corps": 31833,
+          "air_force": 52843,
+          "coast_guard": 1204,
+          "total": 169790
+        },
+        "grand_total": {
+          "army": 464458,
+          "navy": 321260,
+          "marine_corps": 184940,
+          "air_force": 319010,
+          "coast_guard": 41164,
+          "total": 1330832
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 5620,
+      "afloat_unassigned_total": 6292,
+      "abroad_total": 164170,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2018-06",
+      "as_of": "2018-06-30",
+      "file": "2018-06.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 415854,
+          "navy": 286980,
+          "marine_corps": 154973,
+          "air_force": 267631,
+          "coast_guard": 40343,
+          "total": 1165781
+        },
+        "overseas_total": {
+          "army": 49408,
+          "navy": 36761,
+          "marine_corps": 30246,
+          "air_force": 53281,
+          "coast_guard": 1058,
+          "total": 170754
+        },
+        "grand_total": {
+          "army": 465262,
+          "navy": 323741,
+          "marine_corps": 185219,
+          "air_force": 320912,
+          "coast_guard": 41401,
+          "total": 1336535
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6241,
+      "afloat_unassigned_total": 5461,
+      "abroad_total": 164513,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2018-09",
+      "as_of": "2018-09-30",
+      "file": "2018-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 422646,
+          "navy": 288356,
+          "marine_corps": 153084,
+          "air_force": 268362,
+          "coast_guard": 39919,
+          "total": 1172367
+        },
+        "overseas_total": {
+          "army": 48958,
+          "navy": 37039,
+          "marine_corps": 32331,
+          "air_force": 53256,
+          "coast_guard": 1213,
+          "total": 172797
+        },
+        "grand_total": {
+          "army": 471604,
+          "navy": 325395,
+          "marine_corps": 185415,
+          "air_force": 321618,
+          "coast_guard": 41132,
+          "total": 1345164
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6365,
+      "afloat_unassigned_total": 6110,
+      "abroad_total": 166432,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2018-12",
+      "as_of": "2018-12-31",
+      "file": "2018-12.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 413221,
+          "navy": 289853,
+          "marine_corps": 154890,
+          "air_force": 268201,
+          "coast_guard": 39838,
+          "total": 1166003
+        },
+        "overseas_total": {
+          "army": 49515,
+          "navy": 37724,
+          "marine_corps": 30940,
+          "air_force": 53184,
+          "coast_guard": 1309,
+          "total": 172672
+        },
+        "grand_total": {
+          "army": 462736,
+          "navy": 327577,
+          "marine_corps": 185830,
+          "air_force": 321385,
+          "coast_guard": 41147,
+          "total": 1338675
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6410,
+      "afloat_unassigned_total": 5790,
+      "abroad_total": 166262,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2019-03",
+      "as_of": "2019-03-31",
+      "file": "2019-03.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 416497,
+          "navy": 290254,
+          "marine_corps": 154909,
+          "air_force": 270328,
+          "coast_guard": 39961,
+          "total": 1171949
+        },
+        "overseas_total": {
+          "army": 48938,
+          "navy": 37825,
+          "marine_corps": 31584,
+          "air_force": 53440,
+          "coast_guard": 1243,
+          "total": 173030
+        },
+        "grand_total": {
+          "army": 465435,
+          "navy": 328079,
+          "marine_corps": 186493,
+          "air_force": 323768,
+          "coast_guard": 41204,
+          "total": 1344979
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6493,
+      "afloat_unassigned_total": 6147,
+      "abroad_total": 166537,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2019-06",
+      "as_of": "2019-06-30",
+      "file": "2019-06.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 419793,
+          "navy": 293051,
+          "marine_corps": 152203,
+          "air_force": 272759,
+          "coast_guard": 39925,
+          "total": 1177731
+        },
+        "overseas_total": {
+          "army": 48990,
+          "navy": 37898,
+          "marine_corps": 34611,
+          "air_force": 54280,
+          "coast_guard": 1325,
+          "total": 177104
+        },
+        "grand_total": {
+          "army": 468783,
+          "navy": 330949,
+          "marine_corps": 186814,
+          "air_force": 327039,
+          "coast_guard": 41250,
+          "total": 1354835
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 5801,
+      "afloat_unassigned_total": 9076,
+      "abroad_total": 171303,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2019-09",
+      "as_of": "2019-09-30",
+      "file": "2019-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 430358,
+          "navy": 295132,
+          "marine_corps": 153425,
+          "air_force": 273891,
+          "coast_guard": 39598,
+          "total": 1192404
+        },
+        "overseas_total": {
+          "army": 49053,
+          "navy": 37396,
+          "marine_corps": 32585,
+          "air_force": 53987,
+          "coast_guard": 1232,
+          "total": 174253
+        },
+        "grand_total": {
+          "army": 479411,
+          "navy": 332528,
+          "marine_corps": 186010,
+          "air_force": 327878,
+          "coast_guard": 40830,
+          "total": 1366657
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 5733,
+      "afloat_unassigned_total": 6030,
+      "abroad_total": 168520,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2019-12",
+      "as_of": "2019-12-31",
+      "file": "2019-12.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 423235,
+          "navy": 296084,
+          "marine_corps": 157505,
+          "air_force": 273676,
+          "coast_guard": 39342,
+          "total": 1189842
+        },
+        "overseas_total": {
+          "army": 49360,
+          "navy": 37670,
+          "marine_corps": 28326,
+          "air_force": 54409,
+          "coast_guard": 1316,
+          "total": 171081
+        },
+        "grand_total": {
+          "army": 472595,
+          "navy": 333754,
+          "marine_corps": 185831,
+          "air_force": 328085,
+          "coast_guard": 40658,
+          "total": 1360923
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6415,
+      "afloat_unassigned_total": 3376,
+      "abroad_total": 164666,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2020-03",
+      "as_of": "2020-03-31",
+      "file": "2020-03.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 425870,
+          "navy": 297634,
+          "marine_corps": 151533,
+          "air_force": 274431,
+          "coast_guard": 39392,
+          "total": 1188860
+        },
+        "overseas_total": {
+          "army": 48923,
+          "navy": 37005,
+          "marine_corps": 33161,
+          "air_force": 54598,
+          "coast_guard": 1269,
+          "total": 174956
+        },
+        "grand_total": {
+          "army": 474793,
+          "navy": 334639,
+          "marine_corps": 184694,
+          "air_force": 329029,
+          "coast_guard": 40661,
+          "total": 1363816
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6356,
+      "afloat_unassigned_total": 7557,
+      "abroad_total": 168600,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2020-06",
+      "as_of": "2020-06-30",
+      "file": "2020-06.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 424224,
+          "navy": 299548,
+          "marine_corps": 151985,
+          "air_force": 274951,
+          "coast_guard": 39364,
+          "total": 1190072
+        },
+        "overseas_total": {
+          "army": 48759,
+          "navy": 35847,
+          "marine_corps": 30744,
+          "air_force": 54296,
+          "coast_guard": 1379,
+          "total": 171025
+        },
+        "grand_total": {
+          "army": 472983,
+          "navy": 335395,
+          "marine_corps": 182729,
+          "air_force": 329247,
+          "coast_guard": 40743,
+          "total": 1361097
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6395,
+      "afloat_unassigned_total": 5466,
+      "abroad_total": 164630,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2020-09",
+      "as_of": "2020-09-30",
+      "file": "2020-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 432297,
+          "navy": 305955,
+          "marine_corps": 152251,
+          "air_force": 275504,
+          "coast_guard": 39246,
+          "total": 1205253
+        },
+        "overseas_total": {
+          "army": 48596,
+          "navy": 36041,
+          "marine_corps": 28707,
+          "air_force": 54110,
+          "coast_guard": 1312,
+          "total": 168766
+        },
+        "grand_total": {
+          "army": 480893,
+          "navy": 341996,
+          "marine_corps": 180958,
+          "air_force": 329614,
+          "coast_guard": 40558,
+          "total": 1374019
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6319,
+      "afloat_unassigned_total": 5172,
+      "abroad_total": 162447,
+      "flags": [
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2020-12",
+      "as_of": "2020-12-31",
+      "file": "2020-12.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 430148,
+          "navy": 305340,
+          "marine_corps": 151513,
+          "air_force": 275664,
+          "coast_guard": 38936,
+          "total": 1201601
+        },
+        "overseas_total": {
+          "army": 47748,
+          "navy": 36724,
+          "marine_corps": 29518,
+          "air_force": 54584,
+          "coast_guard": 1452,
+          "total": 170026
+        },
+        "grand_total": {
+          "army": 477896,
+          "navy": 342064,
+          "marine_corps": 181031,
+          "air_force": 330248,
+          "coast_guard": 40388,
+          "total": 1371627
+        }
+      },
+      "overseas_gap": -534,
+      "overseas_gate": "documented_exception",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6346,
+      "afloat_unassigned_total": 5294,
+      "abroad_total": 163680,
+      "flags": [
+        "suppressed_rows",
+        "overseas_total_exception"
+      ]
+    },
+    {
+      "period": "2021-03",
+      "as_of": "2021-03-31",
+      "file": "2021-03.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 431401,
+          "navy": 308034,
+          "marine_corps": 149264,
+          "air_force": 277535,
+          "coast_guard": 39120,
+          "total": 1205354
+        },
+        "overseas_total": {
+          "army": 47937,
+          "navy": 35555,
+          "marine_corps": 32297,
+          "air_force": 54796,
+          "coast_guard": 1418,
+          "total": 172003
+        },
+        "grand_total": {
+          "army": 479338,
+          "navy": 343589,
+          "marine_corps": 181561,
+          "air_force": 332331,
+          "coast_guard": 40538,
+          "total": 1377357
+        }
+      },
+      "overseas_gap": -495,
+      "overseas_gate": "documented_exception",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6294,
+      "afloat_unassigned_total": 6715,
+      "abroad_total": 165709,
+      "flags": [
+        "suppressed_rows",
+        "overseas_total_exception"
+      ]
+    },
+    {
+      "period": "2021-06",
+      "as_of": "2021-06-30",
+      "file": "2021-06.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 431751,
+          "navy": 309338,
+          "marine_corps": 150055,
+          "air_force": 276637,
+          "coast_guard": 39228,
+          "total": 1206986
+        },
+        "overseas_total": {
+          "army": 49842,
+          "navy": 35907,
+          "marine_corps": 30081,
+          "air_force": 55537,
+          "coast_guard": 1514,
+          "total": 172881
+        },
+        "grand_total": {
+          "army": 481593,
+          "navy": 345245,
+          "marine_corps": 180136,
+          "air_force": 332174,
+          "coast_guard": 40742,
+          "total": 1379867
+        }
+      },
+      "overseas_gap": -427,
+      "overseas_gate": "documented_exception",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6355,
+      "afloat_unassigned_total": 6008,
+      "abroad_total": 166526,
+      "flags": [
+        "suppressed_rows",
+        "overseas_total_exception"
+      ]
+    },
+    {
+      "period": "2021-09",
+      "as_of": "2021-09-30",
+      "file": "2021-09.xlsx",
+      "space_force": "none",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 432769,
+          "navy": 306272,
+          "marine_corps": 147847,
+          "air_force": 275298,
+          "coast_guard": 39029,
+          "total": 1201215
+        },
+        "overseas_total": {
+          "army": 49238,
+          "navy": 36951,
+          "marine_corps": 31831,
+          "air_force": 55233,
+          "coast_guard": 1458,
+          "total": 174711
+        },
+        "grand_total": {
+          "army": 482007,
+          "navy": 343223,
+          "marine_corps": 179678,
+          "air_force": 330531,
+          "coast_guard": 40487,
+          "total": 1375926
+        }
+      },
+      "overseas_gap": -189,
+      "overseas_gate": "documented_exception",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Iraq",
+        "Syria"
+      ],
+      "territory_total": 6471,
+      "afloat_unassigned_total": 5701,
+      "abroad_total": 168240,
+      "flags": [
+        "suppressed_rows",
+        "overseas_total_exception"
+      ]
+    },
+    {
+      "period": "2021-12",
+      "as_of": "2021-12-31",
+      "file": "2021-12.xlsx",
+      "space_force": "merged_into_air_force",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 424088,
+          "navy": 301693,
+          "marine_corps": 151288,
+          "air_force": 273937,
+          "coast_guard": 38632,
+          "total": 1185308
+        },
+        "overseas_total": {
+          "army": 49332,
+          "navy": 40773,
+          "marine_corps": 27242,
+          "air_force": 55295,
+          "coast_guard": 1573,
+          "total": 173886
+        },
+        "grand_total": {
+          "army": 473420,
+          "navy": 342466,
+          "marine_corps": 178530,
+          "air_force": 329232,
+          "coast_guard": 40205,
+          "total": 1359194
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6465,
+      "afloat_unassigned_total": 8107,
+      "abroad_total": 167421,
+      "flags": [
+        "space_force_merged_into_air_force"
+      ]
+    },
+    {
+      "period": "2022-03",
+      "as_of": "2022-03-31",
+      "file": "2022-03.xlsx",
+      "space_force": "merged_into_air_force",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 415967,
+          "navy": 304118,
+          "marine_corps": 146728,
+          "air_force": 273983,
+          "coast_guard": 38829,
+          "total": 1173579
+        },
+        "overseas_total": {
+          "army": 50205,
+          "navy": 36272,
+          "marine_corps": 29531,
+          "air_force": 55274,
+          "coast_guard": 1479,
+          "total": 172438
+        },
+        "grand_total": {
+          "army": 466172,
+          "navy": 340390,
+          "marine_corps": 176259,
+          "air_force": 329257,
+          "coast_guard": 40308,
+          "total": 1346017
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [
+        "Afghanistan",
+        "Syria",
+        "Yemen"
+      ],
+      "territory_total": 6482,
+      "afloat_unassigned_total": 4499,
+      "abroad_total": 165956,
+      "flags": [
+        "space_force_merged_into_air_force",
+        "suppressed_rows"
+      ]
+    },
+    {
+      "period": "2022-06",
+      "as_of": "2022-06-30",
+      "file": "2022-06.xlsx",
+      "space_force": "merged_into_air_force",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 410385,
+          "navy": 302827,
+          "marine_corps": 144789,
+          "air_force": 273713,
+          "coast_guard": 38616,
+          "total": 1170330
+        },
+        "overseas_total": {
+          "army": 50387,
+          "navy": 36759,
+          "marine_corps": 29695,
+          "air_force": 55677,
+          "coast_guard": 1482,
+          "total": 174000
+        },
+        "grand_total": {
+          "army": 460772,
+          "navy": 339586,
+          "marine_corps": 174484,
+          "air_force": 329390,
+          "coast_guard": 40098,
+          "total": 1344330
+        }
+      },
+      "overseas_gap": -329,
+      "overseas_gate": "documented_exception",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6627,
+      "afloat_unassigned_total": 5935,
+      "abroad_total": 167373,
+      "flags": [
+        "space_force_merged_into_air_force",
+        "overseas_total_exception"
+      ]
+    },
+    {
+      "period": "2022-09",
+      "as_of": "2022-09-30",
+      "file": "2022-09.xlsx",
+      "space_force": "merged_into_air_force",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 411948,
+          "navy": 303290,
+          "marine_corps": 145465,
+          "air_force": 273248,
+          "coast_guard": 38107,
+          "total": 1172058
+        },
+        "overseas_total": {
+          "army": 49298,
+          "navy": 36775,
+          "marine_corps": 29112,
+          "air_force": 55173,
+          "coast_guard": 1378,
+          "total": 171736
+        },
+        "grand_total": {
+          "army": 461246,
+          "navy": 340065,
+          "marine_corps": 174577,
+          "air_force": 328421,
+          "coast_guard": 39485,
+          "total": 1343794
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 6868,
+      "afloat_unassigned_total": 7031,
+      "abroad_total": 164868,
+      "flags": [
+        "space_force_merged_into_air_force"
+      ]
+    },
+    {
+      "period": "2022-12",
+      "as_of": "2022-12-31",
+      "file": "2022-12.xlsx",
+      "space_force": "merged_into_air_force",
+      "army_not_reported": true,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": null,
+          "navy": 296433,
+          "marine_corps": 142995,
+          "air_force": 270610,
+          "coast_guard": 37296,
+          "total": null
+        },
+        "overseas_total": {
+          "army": null,
+          "navy": 37101,
+          "marine_corps": 28538,
+          "air_force": 55197,
+          "coast_guard": 1467,
+          "total": null
+        },
+        "grand_total": {
+          "army": null,
+          "navy": 333534,
+          "marine_corps": 171533,
+          "air_force": 325807,
+          "coast_guard": 38763,
+          "total": null
+        }
+      },
+      "overseas_gap": null,
+      "overseas_gate": "untestable",
+      "us_gap": null,
+      "grand_gap": null,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": null,
+      "afloat_unassigned_total": null,
+      "abroad_total": null,
+      "flags": [
+        "space_force_merged_into_air_force",
+        "army_not_reported",
+        "overseas_gate_untestable",
+        "abroad_total_not_emitted"
+      ]
+    },
+    {
+      "period": "2023-03",
+      "as_of": "2023-03-31",
+      "file": "2023-03.xlsx",
+      "space_force": "merged_into_air_force",
+      "army_not_reported": true,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": null,
+          "navy": 292364,
+          "marine_corps": 138780,
+          "air_force": 269875,
+          "coast_guard": 37492,
+          "total": null
+        },
+        "overseas_total": {
+          "army": null,
+          "navy": 36074,
+          "marine_corps": 30435,
+          "air_force": 55601,
+          "coast_guard": 1384,
+          "total": null
+        },
+        "grand_total": {
+          "army": null,
+          "navy": 328438,
+          "marine_corps": 169215,
+          "air_force": 325476,
+          "coast_guard": 38876,
+          "total": null
+        }
+      },
+      "overseas_gap": null,
+      "overseas_gate": "untestable",
+      "us_gap": null,
+      "grand_gap": null,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": null,
+      "afloat_unassigned_total": null,
+      "abroad_total": null,
+      "flags": [
+        "space_force_merged_into_air_force",
+        "army_not_reported",
+        "overseas_gate_untestable",
+        "abroad_total_not_emitted"
+      ]
+    },
+    {
+      "period": "2023-06",
+      "as_of": "2023-06-30",
+      "file": "2023-06.xlsx",
+      "space_force": "merged_into_air_force",
+      "army_not_reported": true,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": null,
+          "navy": 293334,
+          "marine_corps": 142456,
+          "air_force": 269345,
+          "coast_guard": 37642,
+          "total": null
+        },
+        "overseas_total": {
+          "army": null,
+          "navy": 35768,
+          "marine_corps": 27065,
+          "air_force": 56046,
+          "coast_guard": 1386,
+          "total": null
+        },
+        "grand_total": {
+          "army": null,
+          "navy": 329102,
+          "marine_corps": 169521,
+          "air_force": 325391,
+          "coast_guard": 39028,
+          "total": null
+        }
+      },
+      "overseas_gap": null,
+      "overseas_gate": "untestable",
+      "us_gap": null,
+      "grand_gap": null,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": null,
+      "afloat_unassigned_total": null,
+      "abroad_total": null,
+      "flags": [
+        "space_force_merged_into_air_force",
+        "army_not_reported",
+        "overseas_gate_untestable",
+        "abroad_total_not_emitted"
+      ]
+    },
+    {
+      "period": "2023-09",
+      "as_of": "2023-09-30",
+      "file": "2023-09.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 402181,
+          "navy": 292696,
+          "marine_corps": 142784,
+          "air_force": 259741,
+          "space_force": 8452,
+          "coast_guard": 37479,
+          "total": 1143333
+        },
+        "overseas_total": {
+          "army": 46860,
+          "navy": 35238,
+          "marine_corps": 29793,
+          "air_force": 54907,
+          "space_force": 427,
+          "coast_guard": 1346,
+          "total": 168571
+        },
+        "grand_total": {
+          "army": 449041,
+          "navy": 327934,
+          "marine_corps": 172577,
+          "air_force": 314648,
+          "space_force": 8879,
+          "coast_guard": 38825,
+          "total": 1311904
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7048,
+      "afloat_unassigned_total": 6214,
+      "abroad_total": 161523,
+      "flags": []
+    },
+    {
+      "period": "2023-12",
+      "as_of": "2023-12-31",
+      "file": "2023-12.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 392807,
+          "navy": 289469,
+          "marine_corps": 139017,
+          "air_force": 258539,
+          "space_force": 8497,
+          "coast_guard": 37454,
+          "total": 1125783
+        },
+        "overseas_total": {
+          "army": 47411,
+          "navy": 35618,
+          "marine_corps": 28457,
+          "air_force": 54820,
+          "space_force": 451,
+          "coast_guard": 1409,
+          "total": 168166
+        },
+        "grand_total": {
+          "army": 440218,
+          "navy": 325087,
+          "marine_corps": 167474,
+          "air_force": 313359,
+          "space_force": 8948,
+          "coast_guard": 38863,
+          "total": 1293949
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7153,
+      "afloat_unassigned_total": 5380,
+      "abroad_total": 161013,
+      "flags": []
+    },
+    {
+      "period": "2024-03",
+      "as_of": "2024-03-31",
+      "file": "2024-03.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 391497,
+          "navy": 287190,
+          "marine_corps": 137114,
+          "air_force": 257025,
+          "space_force": 8641,
+          "coast_guard": 37965,
+          "total": 1119432
+        },
+        "overseas_total": {
+          "army": 47728,
+          "navy": 35540,
+          "marine_corps": 29146,
+          "air_force": 54859,
+          "space_force": 475,
+          "coast_guard": 1369,
+          "total": 169117
+        },
+        "grand_total": {
+          "army": 439225,
+          "navy": 322730,
+          "marine_corps": 166260,
+          "air_force": 311884,
+          "space_force": 9116,
+          "coast_guard": 39334,
+          "total": 1288549
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7314,
+      "afloat_unassigned_total": 4976,
+      "abroad_total": 161803,
+      "flags": []
+    },
+    {
+      "period": "2024-06",
+      "as_of": "2024-06-30",
+      "file": "2024-06.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 392897,
+          "navy": 286296,
+          "marine_corps": 144451,
+          "air_force": 257492,
+          "space_force": 8873,
+          "coast_guard": 38352,
+          "total": 1128361
+        },
+        "overseas_total": {
+          "army": 47230,
+          "navy": 38018,
+          "marine_corps": 23581,
+          "air_force": 55125,
+          "space_force": 498,
+          "coast_guard": 1378,
+          "total": 165830
+        },
+        "grand_total": {
+          "army": 440127,
+          "navy": 324314,
+          "marine_corps": 168032,
+          "air_force": 312617,
+          "space_force": 9371,
+          "coast_guard": 39730,
+          "total": 1294191
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7120,
+      "afloat_unassigned_total": 7612,
+      "abroad_total": 158710,
+      "flags": []
+    },
+    {
+      "period": "2024-09",
+      "as_of": "2024-09-30",
+      "file": "2024-09.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 393981,
+          "navy": 291830,
+          "marine_corps": 150380,
+          "air_force": 257209,
+          "space_force": 8888,
+          "coast_guard": 38518,
+          "total": 1140806
+        },
+        "overseas_total": {
+          "army": 51359,
+          "navy": 36106,
+          "marine_corps": 22716,
+          "air_force": 54711,
+          "space_force": 558,
+          "coast_guard": 1351,
+          "total": 166801
+        },
+        "grand_total": {
+          "army": 445340,
+          "navy": 327936,
+          "marine_corps": 173096,
+          "air_force": 311920,
+          "space_force": 9446,
+          "coast_guard": 39869,
+          "total": 1307607
+        }
+      },
+      "overseas_gap": -11,
+      "overseas_gate": "documented_exception",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7145,
+      "afloat_unassigned_total": 11423,
+      "abroad_total": 159656,
+      "flags": [
+        "overseas_total_exception"
+      ]
+    },
+    {
+      "period": "2024-12",
+      "as_of": "2024-12-31",
+      "file": "2024-12.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 393729,
+          "navy": 289534,
+          "marine_corps": 141103,
+          "air_force": 257387,
+          "space_force": 8977,
+          "coast_guard": 38572,
+          "total": 1129302
+        },
+        "overseas_total": {
+          "army": 49665,
+          "navy": 38023,
+          "marine_corps": 27424,
+          "air_force": 54619,
+          "space_force": 547,
+          "coast_guard": 1405,
+          "total": 171683
+        },
+        "grand_total": {
+          "army": 443394,
+          "navy": 327557,
+          "marine_corps": 168527,
+          "air_force": 312006,
+          "space_force": 9524,
+          "coast_guard": 39977,
+          "total": 1300985
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7401,
+      "afloat_unassigned_total": 13463,
+      "abroad_total": 164282,
+      "flags": []
+    },
+    {
+      "period": "2025-03",
+      "as_of": "2025-03-31",
+      "file": "2025-03.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 385252,
+          "navy": 292215,
+          "marine_corps": 145804,
+          "air_force": 258847,
+          "space_force": 9133,
+          "coast_guard": 39200,
+          "total": 1130451
+        },
+        "overseas_total": {
+          "army": 60223,
+          "navy": 37796,
+          "marine_corps": 22494,
+          "air_force": 54768,
+          "space_force": 538,
+          "coast_guard": 1390,
+          "total": 177209
+        },
+        "grand_total": {
+          "army": 445475,
+          "navy": 330011,
+          "marine_corps": 168298,
+          "air_force": 313615,
+          "space_force": 9671,
+          "coast_guard": 40590,
+          "total": 1307660
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7475,
+      "afloat_unassigned_total": 20138,
+      "abroad_total": 169734,
+      "flags": []
+    },
+    {
+      "period": "2025-06",
+      "as_of": "2025-06-30",
+      "file": "2025-06.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 396586,
+          "navy": 294359,
+          "marine_corps": 145970,
+          "air_force": 261810,
+          "space_force": 9338,
+          "coast_guard": 39762,
+          "total": 1147825
+        },
+        "overseas_total": {
+          "army": 51690,
+          "navy": 38343,
+          "marine_corps": 24231,
+          "air_force": 55277,
+          "space_force": 559,
+          "coast_guard": 1433,
+          "total": 171533
+        },
+        "grand_total": {
+          "army": 448276,
+          "navy": 332702,
+          "marine_corps": 170201,
+          "air_force": 317087,
+          "space_force": 9897,
+          "coast_guard": 41195,
+          "total": 1319358
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7622,
+      "afloat_unassigned_total": 9715,
+      "abroad_total": 163911,
+      "flags": []
+    },
+    {
+      "period": "2025-09",
+      "as_of": "2025-09-30",
+      "file": "2025-09.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 397806,
+          "navy": 298983,
+          "marine_corps": 149730,
+          "air_force": 260409,
+          "space_force": 9398,
+          "coast_guard": 40182,
+          "total": 1156508
+        },
+        "overseas_total": {
+          "army": 52347,
+          "navy": 37665,
+          "marine_corps": 23519,
+          "air_force": 54640,
+          "space_force": 587,
+          "coast_guard": 1422,
+          "total": 170180
+        },
+        "grand_total": {
+          "army": 450153,
+          "navy": 336648,
+          "marine_corps": 173249,
+          "air_force": 315049,
+          "space_force": 9985,
+          "coast_guard": 41604,
+          "total": 1326688
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7665,
+      "afloat_unassigned_total": 8480,
+      "abroad_total": 162515,
+      "flags": []
+    },
+    {
+      "period": "2025-12",
+      "as_of": "2025-12-31",
+      "file": "2025-12.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 393304,
+          "navy": 301340,
+          "marine_corps": 142695,
+          "air_force": 260643,
+          "space_force": 9616,
+          "coast_guard": 40274,
+          "total": 1147872
+        },
+        "overseas_total": {
+          "army": 54151,
+          "navy": 38262,
+          "marine_corps": 28154,
+          "air_force": 54674,
+          "space_force": 589,
+          "coast_guard": 1551,
+          "total": 177381
+        },
+        "grand_total": {
+          "army": 447455,
+          "navy": 339602,
+          "marine_corps": 170849,
+          "air_force": 315317,
+          "space_force": 10205,
+          "coast_guard": 41825,
+          "total": 1325253
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7792,
+      "afloat_unassigned_total": 14697,
+      "abroad_total": 169589,
+      "flags": []
+    },
+    {
+      "period": "2026-03",
+      "as_of": "2026-03-31",
+      "file": "2026-03.xlsx",
+      "space_force": "separate",
+      "army_not_reported": false,
+      "basis": "permanently_assigned",
+      "printed": {
+        "united_states_total": {
+          "army": 398085,
+          "navy": 304853,
+          "marine_corps": 146164,
+          "air_force": 261468,
+          "space_force": 9642,
+          "coast_guard": 41109,
+          "total": 1161321
+        },
+        "overseas_total": {
+          "army": 55591,
+          "navy": 38468,
+          "marine_corps": 23713,
+          "air_force": 54563,
+          "space_force": 602,
+          "coast_guard": 1491,
+          "total": 174428
+        },
+        "grand_total": {
+          "army": 453676,
+          "navy": 343321,
+          "marine_corps": 169877,
+          "air_force": 316031,
+          "space_force": 10244,
+          "coast_guard": 42600,
+          "total": 1335749
+        }
+      },
+      "overseas_gap": 0,
+      "overseas_gate": "exact",
+      "us_gap": 0,
+      "grand_gap": 0,
+      "duplicate_rows_dropped": [],
+      "suppressed_rows": [],
+      "territory_total": 7855,
+      "afloat_unassigned_total": 10655,
+      "abroad_total": 166573,
+      "flags": []
+    }
+  ]
+}

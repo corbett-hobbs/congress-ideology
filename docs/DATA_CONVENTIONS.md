@@ -564,3 +564,16 @@ Raw: `pipeline/raw/foreign-assistance/<fy>.json` + `meta.json` (`pnpm fetch:fore
 no duplicate grain keys, fiscal years inside the served range, categories inside the source taxonomy, finite amounts,
 positive national yearly totals. Negative row-level disbursements are source-documented and kept.
 
+## 12. Troops abroad track
+
+An eighth data track: active-duty personnel by place of duty (DMDC location reports, Sep 2008-). Methodology:
+`docs/TROOPS_METHODOLOGY.md`; schemas: `lib/troops-entities.ts`. Data layer only; no page yet.
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/output/troops_location.json` | one row per (period, canonical place), overseas section only | `period` + `name` | `state` is `value` / `suppressed` (blank starred row, **not 0**) / `null` (Army N/A). `class` is `host` / `territory` / `afloat_unassigned`: **filter on `class` before summing hosts.** `iso3` joins to `countries.json` `country_code` where the place is a real country. |
+| `pipeline/output/troops_location_meta.json` | one object | n/a | Periods covered, data-through, the Dec 2017 break, the Afghanistan/Iraq/Syria removal, Space Force merge, exception table, per-period printed totals, gaps, flags and derived `abroad_total`. |
+| `pipeline/output/troops_location_report.json` | run summary | n/a | Gate counts per period, row counts, unmapped fallbacks, file size. Deterministic. |
+
+Raw: `pipeline/raw/dmdc-location/<YYYY-MM>.xlsx` + `manifest.json` (`pnpm fetch:dmdc-location`; keyless; not in `pnpm pipeline`).
+
