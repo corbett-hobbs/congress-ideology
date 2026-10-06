@@ -133,7 +133,7 @@ export function TradePartnersCard({
             <select
               value={year}
               onChange={(e) => onYear(Number(e.target.value))}
-              className="h-11 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-auto"
+              className="rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               {Array.from({ length: lastYear - firstYear + 1 }, (_, i) => lastYear - i).map((y) => (
                 <option key={y} value={y}>{y}</option>

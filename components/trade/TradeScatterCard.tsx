@@ -220,7 +220,7 @@ export function TradeScatterCard({
               } else if (e.key === "Escape") setQuery("");
             }}
             placeholder="Find a country…"
-            className="w-full rounded-md border border-line-strong bg-surface-raised px-3 py-1.5 text-[0.85rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            className="w-full rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           />
           {query.trim() && (
             <div className="absolute z-30 mt-1 w-full rounded-md border border-line-strong bg-surface shadow-lg">

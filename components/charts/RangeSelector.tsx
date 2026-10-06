@@ -27,7 +27,8 @@ interface Props {
  * the single-handle sliders in the Congress and Court toolbars (same row
  * shape: a flexible track, then a mono readout). Controlled and unit-free, so
  * every time-axis page uses the same control and owns one `[from, to]` state.
- * Native range inputs give keyboard and touch drag for free.
+ * Native range inputs give keyboard and touch drag for free. With a term band (`below`), phones put the readout on a line
+ * above the track (years left, Reset right) so the track runs the full width; from `sm` the readout sits to its right.
  */
 export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1, format, ariaLabel, className = "", below, action }: Props) {
   const [from, to] = value;
@@ -36,7 +37,7 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
   const right = ((to - min) / range) * 100;
 
   return (
-    <div role="group" aria-label={ariaLabel} className={`flex min-w-0 gap-2 ${below ? "items-start" : "items-center"} ${className}`}>
+    <div role="group" aria-label={ariaLabel} className={`flex min-w-0 gap-2 ${below ? "flex-col gap-0.5 sm:flex-row sm:items-start sm:gap-2" : "items-center"} ${className}`}>
       <div className="min-w-0 flex-1">
       {/* The inputs span the full width; a native thumb's centre only travels the inner width minus one thumb (22px),
           so the visible track is inset by half a thumb to end exactly where the handles do. */}
@@ -69,7 +70,7 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
       </div>
       {below}
       </div>
-      <span className={`flex min-w-0 flex-none flex-col items-end whitespace-nowrap font-mono tabular-nums text-ink ${below ? "min-h-6 w-[5.25rem]" : ""}`}>
+      <span className={`flex min-w-0 flex-none flex-col items-end whitespace-nowrap font-mono tabular-nums text-ink ${below ? "order-first w-full flex-row items-baseline justify-between sm:order-none sm:min-h-6 sm:w-[5.25rem] sm:flex-col sm:items-end sm:justify-start" : ""}`}>
         <span className={`text-[0.95rem] font-semibold ${below ? "leading-6" : ""}`}>
           {from === to ? format(from) : `${format(from)}–${format(to)}`}
         </span>

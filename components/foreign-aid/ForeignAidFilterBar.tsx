@@ -45,12 +45,9 @@ export function ForeignAidFilterBar() {
               className="w-full sm:w-[9rem]"
             />
           </div>
-          {/* Phones: Sector (content width, no label: "All sectors" says it) and the year slider share one row,
-              as in the Congress explorer toolbar. From `sm` this wrapper is display:contents. */}
-          <div className="flex min-w-0 items-end gap-3 sm:contents">
-          <label className="flex flex-none items-center gap-0.5 sm:flex-row sm:gap-2">
-            <span className={`${LABEL} hidden sm:inline`}>Sector</span>
-            <select value={sector} onChange={(e) => setSector(Number(e.target.value))} aria-label="Sector" className={`${SELECT} h-10 w-auto max-w-[9rem] sm:h-auto sm:w-[10rem] sm:max-w-none`}>
+          <label className="flex min-w-0 flex-col gap-0.5 sm:flex-none sm:flex-row sm:items-center sm:gap-2">
+            <span className={LABEL}>Sector</span>
+            <select value={sector} onChange={(e) => setSector(Number(e.target.value))} aria-label="Sector" className={`${SELECT} w-full sm:w-[10rem]`}>
               <option value={-1}>All sectors</option>
               {sectors.map((s, i) => (
                 <option key={s} value={i}>
@@ -59,7 +56,6 @@ export function ForeignAidFilterBar() {
               ))}
             </select>
           </label>
-          </div>
           <RangeSelector
             min={first}
             max={last}

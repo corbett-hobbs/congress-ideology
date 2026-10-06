@@ -151,7 +151,7 @@ export function TermBand({
                 width: `calc(${r - l}% - 1px)`,
                 background: `color-mix(in oklab, var(${c}) ${picked ? 34 : 20}%, var(--surface))`,
                 borderTop: `2.5px solid var(${c})`,
-                opacity: full || inWin || drag ? 1 : 0.4,
+                opacity: full || inWin ? 1 : 0.4,
               }}
             >
               <span aria-hidden className="block px-px pt-px text-center text-[0.62rem] leading-[1.1] text-ink">

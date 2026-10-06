@@ -46,7 +46,7 @@ export function TroopsFilterBar() {
           <div className="flex min-w-0 items-end gap-3 sm:contents">
             <label className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-none sm:flex-row sm:items-center sm:gap-2">
               <span className={`${LABEL} sm:hidden lg:inline`}>Branch</span>
-              <select value={measure} onChange={(e) => setMeasure(Number(e.target.value))} aria-label="Branch" className={`${SELECT} h-11 w-full max-w-none sm:h-auto sm:w-[9.25rem] sm:max-w-none`}>
+              <select value={measure} onChange={(e) => setMeasure(Number(e.target.value))} aria-label="Branch" className={`${SELECT} w-full max-w-none sm:w-[9.25rem] sm:max-w-none`}>
                 {MEASURES.map((m, i) => (
                   <option key={m.id} value={i}>
                     {m.label}
