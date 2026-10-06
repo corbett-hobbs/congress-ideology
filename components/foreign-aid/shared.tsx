@@ -1,5 +1,6 @@
 "use client";
 
+import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import type { ReactNode } from "react";
 import { SECTOR_LABEL, SLOT_COUNT, SLOT_NAME, SLOT_VAR, slotOfSector } from "@/lib/foreign-aid-derive";
@@ -36,17 +37,17 @@ export function SectorLegend({ partial = false, children }: { partial?: boolean;
   const others = data.ns - (SLOT_COUNT - 1);
   const slots = sector >= 0 ? [slotOfSector(sector)] : Array.from({ length: SLOT_COUNT }, (_, k) => k);
   return (
-    <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.75rem] text-ink-muted">
+    <div className={`mt-2.5 ${LEGEND_ROW}`}>
       {slots.map((k) => (
-        <span key={k} className="inline-flex items-center gap-1.5" title={k === SLOT_COUNT - 1 && sector < 0 ? "Multi-sector; democracy, human rights, and governance; education and social services; environment" : undefined}>
-          <i className="inline-block h-[11px] w-[11px] rounded-[2px]" style={{ background: slotColor(k) }} />
-          {sector >= 0 ? label : k === SLOT_COUNT - 1 ? `All other (${others} sectors)` : SLOT_NAME[k]}
+        <span key={k} className={LEGEND_ITEM} title={k === SLOT_COUNT - 1 && sector < 0 ? "Multi-sector; democracy, human rights, and governance; education and social services; environment" : undefined}>
+          <i className="inline-block h-[10px] w-[10px] rounded-[2px]" style={{ background: slotColor(k) }} />
+          {sector >= 0 ? label : k === SLOT_COUNT - 1 ? `Other (${others} sectors)` : SLOT_NAME[k]}
         </span>
       ))}
       {partial && (
-        <span className="inline-flex items-center gap-1.5">
+        <span className={LEGEND_ITEM}>
           <i
-            className="inline-block h-[11px] w-[11px] rounded-[2px] border border-line-strong"
+            className="inline-block h-[10px] w-[10px] rounded-[2px] border border-line-strong"
             style={{ background: "repeating-linear-gradient(45deg, var(--ink-muted) 0 2px, transparent 2px 5px)" }}
           />
           Partial year

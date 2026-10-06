@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
+import { LEGEND_ITEM } from "@/components/charts/legend";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { REGIONS } from "@/lib/troops-regions";
 import { changeVsPrior, contingencyAt, formatCount, measureLabel, stackByRegion } from "@/lib/troops-derive";
@@ -49,20 +50,20 @@ export function TroopsChartCard() {
       <TroopsChart stacks={stacks} />
       <RegionLegend only={only}>
         {anyUnavailable && (
-          <span className="inline-flex items-center gap-1.5">
-            <i className="inline-block h-[11px] w-[11px] rounded-[2px] border border-dashed border-ink-faint" />
+          <span className={LEGEND_ITEM}>
+            <i className="inline-block h-[10px] w-[10px] rounded-[2px] border border-dashed border-ink-faint" />
             Army did not report
           </span>
         )}
         {anyGhost && (
-          <span className="inline-flex items-center gap-1.5">
-            <i className="inline-block h-[11px] w-[11px] rounded-[2px] border border-dashed border-ink" style={{ background: "color-mix(in oklab, var(--ink) 7%, transparent)" }} />
-            In/around Iraq and Afghanistan (DMDC, separate table; not in the bars)
+          <span className={LEGEND_ITEM}>
+            <i className="inline-block h-[10px] w-[10px] rounded-[2px] border border-dashed border-ink" style={{ background: "color-mix(in oklab, var(--ink) 7%, transparent)" }} />
+            In/around Iraq & Afghanistan (DMDC; not in bars)
           </span>
         )}
         {anyEstimate && (
-          <span className="inline-flex items-center gap-1.5">
-            <i className="inline-block h-[11px] w-[11px] rounded-[2px] border border-dashed border-ink-muted" style={{ background: "color-mix(in oklab, var(--ink) 25%, transparent)" }} />
+          <span className={LEGEND_ITEM}>
+            <i className="inline-block h-[10px] w-[10px] rounded-[2px] border border-dashed border-ink-muted" style={{ background: "color-mix(in oklab, var(--ink) 25%, transparent)" }} />
             Estimate (lighter bars)
           </span>
         )}

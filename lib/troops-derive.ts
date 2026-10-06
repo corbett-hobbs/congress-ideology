@@ -386,6 +386,9 @@ export function niceCountTicks(max: number): { ticks: number[]; top: number } {
   return { ticks, top };
 }
 
+/** Label every `n`th calendar year on a year axis so 4-digit labels keep about 34px apart at bar spacing `step`. */
+export const yearLabelEvery = (step: number) => [1, 2, 5, 10, 20].find((n) => step * n >= 34) ?? 20;
+
 export const formatCount = (n: number) => Math.round(n).toLocaleString("en-US");
 export const formatCountAxis = (v: number) => (v >= 1_000_000 ? `${+(v / 1_000_000).toFixed(1)}M` : v >= 1000 ? `${+(v / 1000).toFixed(1)}k` : String(v));
 export const formatCountCompact = (v: number) => (v >= 1_000_000 ? `${+(v / 1_000_000).toFixed(2)}M` : v >= 10000 ? `${Math.round(v / 1000)}k` : v >= 1000 ? `${+(v / 1000).toFixed(1)}k` : String(Math.round(v)));

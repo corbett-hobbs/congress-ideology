@@ -1,11 +1,12 @@
 "use client";
 
 import { useId, useMemo, useRef, useState, type PointerEvent } from "react";
+import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
-import { BRANCH_NAMES, formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, topHostRuns, topHostsByYear, type TopHostYear } from "@/lib/troops-derive";
+import { BRANCH_NAMES, formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, topHostRuns, topHostsByYear, yearLabelEvery, type TopHostYear } from "@/lib/troops-derive";
 import { useTroopsState } from "./TroopsState";
 import { BranchLegend, NO_SPLIT, TD, TH, TableView, Swatch, branchColor, showRest } from "./shared";
 
@@ -36,7 +37,19 @@ export function TroopsFirstPlaceCard() {
   const MX = narrow ? 36 : 44;
   const MR = narrow ? 34 : 14;
   const step = (W - MX - MR) / n;
-  const labelH = narrow ? 46 : LABEL_H;
+  // A host's label is its name when it fits across the span, else its code, else the name (or code, if long) slanted up and
+  // to the right at any width: a label that does not fit is never dropped (ARCHITECTURE_MAP rule 10).
+  const labelFor = (r: { place: number; from: number; to: number }) => {
+    const pl = places[r.place];
+    const nm = pl.name;
+    const code = (pl.iso3 ?? nm.slice(0, 3)).toUpperCase();
+    const w = (r.to - r.from + 1) * step;
+    if (w >= nm.length * 7.2 + 14) return { flat: nm, slant: "" };
+    if (w >= 34 && !(narrow && nm.length <= 9)) return { flat: code, slant: "" };
+    return { flat: "", slant: nm.length <= 9 ? nm : code };
+  };
+  const anySlanted = runs.some((r) => r.place >= 0 && labelFor(r).slant);
+  const labelH = anySlanted ? 46 : LABEL_H;
   const bracketY = labelH + 6;
   const maxH = narrow ? 120 : 150;
   const plotTop = bracketY + TICK + 12;
@@ -127,13 +140,9 @@ export function TroopsFirstPlaceCard() {
                 const w = (r.to - r.from + 1) * step;
                 const pl = places[r.place];
                 const nm = pl.name;
-                const code = (pl.iso3 ?? nm.slice(0, 3)).toUpperCase();
                 const isSel = country === r.place;
                 const dim = country >= 0 && !isSel;
-                const full = nm.length * 7.2 + 14;
-                const lab = w >= full ? nm : w >= 34 && !(narrow && nm.length <= 9) ? code : "";
-                // Too narrow to read across: slant the full name up and to the right (the code if the name is long).
-                const vert = !lab && narrow && w >= 8 ? (nm.length <= 9 ? nm : code) : "";
+                const { flat: lab, slant: vert } = labelFor(r);
                 const labelStyle = { fontFamily: "var(--font-serif, Georgia, serif)", fontWeight: 500, fill: "var(--ink)", opacity: dim ? 0.55 : 1 };
                 return (
                   <g key={`${r.place}-${r.from}`}>
@@ -181,7 +190,7 @@ export function TroopsFirstPlaceCard() {
               <line x1={MX} x2={W - MR} y1={baseY} y2={baseY} style={{ stroke: "var(--line-strong)" }} />
               {years.map((y, i) => {
                 const fy = allYears[y.yi].fy;
-                const show = n <= 10 || (step >= 30 ? true : step >= 15 ? fy % 2 === 0 : fy % 5 === 0) || y.yi === yi;
+                const show = fy % yearLabelEvery(step) === 0;
                 return show ? (
                   <text key={y.yi} className="axis-tick-label" x={MX + i * step + step / 2} y={baseY + 15} textAnchor="middle" style={y.yi === yi ? { fill: "var(--ink)", fontWeight: 600 } : undefined}>
                     {fy}
@@ -208,21 +217,21 @@ export function TroopsFirstPlaceCard() {
       </div>
       {measure === 0 ? <BranchLegend /> : null}
       {(anyPartial || anyEstimate || anyNoSplit) && (
-        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.75rem] text-ink-muted">
+        <div className={`mt-2 ${LEGEND_ROW}`}>
           {anyPartial && (
-            <span className="inline-flex items-center gap-1.5">
-              <i className="inline-block h-[11px] w-[11px] rounded-[2px] border border-line-strong" style={{ background: "repeating-linear-gradient(45deg, var(--ink-muted) 0 2px, transparent 2px 5px)" }} />
+            <span className={LEGEND_ITEM}>
+              <i className="inline-block h-[10px] w-[10px] rounded-[2px] border border-line-strong" style={{ background: "repeating-linear-gradient(45deg, var(--ink-muted) 0 2px, transparent 2px 5px)" }} />
               Partial year
             </span>
           )}
           {anyNoSplit && (
-            <span className="inline-flex items-center gap-1.5">
+            <span className={LEGEND_ITEM}>
               <Swatch color={NO_SPLIT} />
               No branch split published
             </span>
           )}
           {anyEstimate && (
-            <span className="inline-flex items-center gap-1.5">
+            <span className={LEGEND_ITEM}>
               <Swatch color="color-mix(in oklab, var(--ink) 25%, transparent)" />
               Estimate (lighter bars)
             </span>

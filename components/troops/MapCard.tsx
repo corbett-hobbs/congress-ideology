@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, type PointerEvent } from "react";
+import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MapCallouts } from "@/components/charts/MapCallouts";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
@@ -194,25 +195,25 @@ export function MapCard({ map }: { map: WorldMapFile }) {
           <Tooltip state={tip.state}>{(h) => <MapTip hit={h} />}</Tooltip>
 
           {!view.unavailable && (
-          <div className="mt-2 flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[0.75rem] text-ink-muted">
-            <span className="inline-flex items-center gap-1.5">
+          <div className={`mt-2 ${LEGEND_ROW}`}>
+            <span className={LEGEND_ITEM}>
               <i className="inline-block h-2.5 w-[22px] rounded-[2px] border border-line" style={{ background: LAND }} />
               None reported
             </span>
             {MAP_BINS.labels.map((l, i) => (
-              <span key={l} className="inline-flex items-center gap-1.5">
+              <span key={l} className={LEGEND_ITEM}>
                 <i className="inline-block h-2.5 w-[22px] rounded-[2px] border border-line" style={{ background: mix(base, MAP_BINS.mix[i]) }} />
                 {l}
               </span>
             ))}
             {view.suppressed.length > 0 && (
-              <span className="inline-flex items-center gap-1.5">
+              <span className={LEGEND_ITEM}>
                 <i className="inline-block h-2.5 w-[22px] rounded-[2px] border border-line" style={{ background: NOT_REPORTED }} />
-                Blank in source (not reported)
+                Not reported
               </span>
             )}
             {markers.length > 0 && (
-              <span className="inline-flex items-center gap-1.5">
+              <span className={LEGEND_ITEM}>
                 <svg width="12" height="12" aria-hidden>
                   <circle cx="6" cy="6" r="4" fill="none" stroke="var(--ink-muted)" strokeWidth="1.2" />
                 </svg>

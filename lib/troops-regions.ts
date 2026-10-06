@@ -10,11 +10,14 @@
 export const REGIONS = [
   { id: "europe", label: "Europe", color: "var(--cont-europe)" },
   { id: "east_asia_pacific", label: "East Asia & Pacific", color: "var(--cont-oceania)" },
-  { id: "middle_east_south_central_asia", label: "Middle East & South/Central Asia", color: "var(--cont-asia)" },
+  { id: "middle_east_south_central_asia", label: "Middle East & South/Central Asia", short: "Middle East & S./Central Asia", color: "var(--cont-asia)" },
   { id: "africa", label: "Africa", color: "var(--cont-africa)" },
   { id: "western_hemisphere", label: "Western Hemisphere", color: "var(--cont-south-america)" },
   { id: "afloat_unassigned", label: "Afloat & unassigned", color: "var(--cont-other)" },
 ] as const;
+
+/** Legend text: `short` when a region has one. */
+export const regionLegendLabel = (r: { label: string; short?: string }) => r.short ?? r.label;
 
 export type RegionId = (typeof REGIONS)[number]["id"];
 export const REGION_IDS = REGIONS.map((r) => r.id) as RegionId[];

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { administration } from "./executive-orders-entities";
 import { REGION_IDS, regionOf } from "./troops-regions";
 import { HISTORICAL_ADMINISTRATIONS } from "./troops-presidents";
-import { buildTroopsPayload, changeVsPrior, contingencyAt, topHostRuns, topHostsByYear, decodeTroops, formatCountAxis, niceCountTicks, periodView, quarterEnd, quarterOf, stackByRegion, termOnDate, unavailable } from "./troops-derive";
+import { buildTroopsPayload, changeVsPrior, contingencyAt, topHostRuns, topHostsByYear, decodeTroops, formatCountAxis, yearLabelEvery, niceCountTicks, periodView, quarterEnd, quarterOf, stackByRegion, termOnDate, unavailable } from "./troops-derive";
 import { historyMeta, historyRow, troopsMeta, troopsRow } from "./troops-entities";
 
 const read = (f: string) => JSON.parse(readFileSync(`pipeline/output/${f}`, "utf8")) as unknown;
@@ -262,6 +262,13 @@ describe("who's hosted the most", () => {
 });
 
 describe("axis helpers", () => {
+  it("spaces year labels about 34px apart", () => {
+    expect(yearLabelEvery(40)).toBe(1);
+    expect(yearLabelEvery(20)).toBe(2);
+    expect(yearLabelEvery(12)).toBe(5);
+    expect(yearLabelEvery(4)).toBe(10);
+    expect(yearLabelEvery(1.5)).toBe(20);
+  });
   it("builds round ticks that hold the maximum", () => {
     const { ticks, top } = niceCountTicks(1079005);
     expect(top).toBeGreaterThanOrEqual(1079005);

@@ -9,7 +9,7 @@ import { findExtremes } from "@/lib/chart-extremes";
 import { SEGMENT_LABEL_STYLE, segmentLabelFits, yLabelInset } from "@/lib/chart-bars";
 import { useElementWidth } from "@/lib/use-element-width";
 import { REGIONS } from "@/lib/troops-regions";
-import { contingencyAt, formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, termOnDate, type RegionStack } from "@/lib/troops-derive";
+import { contingencyAt, formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, termOnDate, yearLabelEvery, type RegionStack } from "@/lib/troops-derive";
 import { MEASURES } from "@/lib/troops-types";
 import { useTroopsState } from "./TroopsState";
 
@@ -186,7 +186,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
 
   const anyUnavailable = stacks.some((s) => s.unavailable);
   const countryName = country >= 0 ? places[country].name : null;
-  const labelAt = (fy: number) => (step >= 30 ? true : step >= 15 ? fy % 2 === 0 : fy % 5 === 0);
+  const every = yearLabelEvery(step);
+  const labelAt = (fy: number) => fy % every === 0;
 
   return (
     <div
@@ -281,7 +282,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
               })}
             </g>
             {stacks.map((s) =>
-              labelAt(years[s.yi].fy) || s.yi === yi ? (
+              labelAt(years[s.yi].fy) ? (
                 <text key={s.yi} className="axis-tick-label" x={xOf(s.yi) + step / 2} y={innerH + 14} textAnchor="middle" style={s.yi === yi ? { fill: "var(--ink)", fontWeight: 600 } : undefined}>
                   {years[s.yi].fy}
                 </text>
