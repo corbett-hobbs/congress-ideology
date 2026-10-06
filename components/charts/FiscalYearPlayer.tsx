@@ -17,6 +17,8 @@ export function FiscalYearPlayer({
   valueText,
   note,
   span,
+  label,
+  playLabel = "Play through fiscal years",
 }: {
   year: number;
   range: readonly [number, number];
@@ -28,6 +30,9 @@ export function FiscalYearPlayer({
   note?: string;
   /** Wide screens: the date span beside the year, e.g. "Oct 2023 – Sep 2024". */
   span?: string;
+  /** The big label beside the slider. Defaults to `FY<year>`; pages that step through quarters pass their own. */
+  label?: string;
+  playLabel?: string;
 }) {
   const [playing, setPlaying] = useState(false);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -62,7 +67,7 @@ export function FiscalYearPlayer({
       <button
         type="button"
         onClick={() => (playing ? stop() : start())}
-        aria-label={playing ? "Pause" : "Play through fiscal years"}
+        aria-label={playing ? "Pause" : playLabel}
         className="grid size-8 flex-none place-items-center rounded-full border border-line-strong bg-surface-raised text-ink hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       >
         <svg viewBox="0 0 14 14" className="h-3.5 w-3.5 fill-current" aria-hidden>
@@ -82,7 +87,7 @@ export function FiscalYearPlayer({
       />
       <div className="flex flex-none items-center gap-2 whitespace-nowrap">
         <div className="flex flex-col items-end leading-tight">
-          <b className="font-serif text-[0.95rem] font-semibold tabular-nums text-ink sm:text-[1.05rem]">FY{year}</b>
+          <b className="font-serif text-[0.95rem] font-semibold tabular-nums text-ink sm:text-[1.05rem]">{label ?? `FY${year}`}</b>
           {note && <em className="text-[0.66rem] not-italic text-ink-muted [font-style:italic]">{note}</em>}
         </div>
         {span && <span className="hidden text-[0.75rem] text-ink-muted lg:inline">{span}</span>}

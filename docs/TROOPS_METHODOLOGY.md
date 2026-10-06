@@ -57,6 +57,25 @@ in `lib/verticals.ts`.
 - Grain: `troops_location.json` has one row per period x canonical place, overseas section only (9,723 rows). U.S. state
   rows are parsed and gated, and their printed totals are in meta, but not emitted.
 
+## Regions and the page
+
+`lib/troops-regions.ts` is a fixed map keyed by ISO3 (name fallback for the few places with no code), six regions: Europe,
+East Asia & Pacific, Middle East & South/Central Asia, Africa, Western Hemisphere, and Afloat & unassigned. Settled with Corby:
+Turkey, Greenland, Cyprus and the Caucasus are Europe; Morocco, Algeria, Tunisia and Libya are Africa (not the Middle East),
+as is Djibouti; Egypt is Middle East & South/Central Asia (the Sinai force, CENTCOM); Diego Garcia (IOT) and Central Asia
+are Middle East & South/Central Asia. Territories have no region. A host with no region fails the payload build; a test pins
+every call above.
+
+The page is `/presidency/national-security` (registered as a Presidency section). `lib/troops-data.ts` (server-only, Zod at
+the boundary) -> `lib/troops-derive.ts` (pure, tested over the real files) -> `components/troops/`. Choices recorded so they
+are not re-litigated: the chart stacks by region and the Branch filter swaps the measure (All branches, Army, Navy, Marine
+Corps, Air & Space Force, Coast Guard); Air & Space Force is Air Force + Space Force so it is comparable across Sep 2023; bars
+are Σ rows over hosts and afloat (territories out), so a few quarters differ from the printed total by a documented gap; the
+time axis is true quarters, so the annual 2008-2012 tables are single bars with empty quarters between; no percent change is
+shown across the Dec 2017 break or against an Army-N/A quarter; the President filter narrows the quarters, the Country filter
+shows that place's own series and only highlights on the map and list. Not built: a "No. 1 strip", a Military-share style
+second measure, and the pre-2008 history (S2).
+
 ## Parsing
 
 Headers are found by text: the cell reading `ACTIVE DUTY` locates the active-duty columns (up to the next group header)

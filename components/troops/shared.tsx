@@ -1,0 +1,60 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
+import { REGIONS } from "@/lib/troops-regions";
+import { BRANCH_NAMES, BRANCH_VARS } from "@/lib/troops-derive";
+
+export const branchColor = (k: number) => `var(${BRANCH_VARS[k]})`;
+
+/** The table-view fallback every chart gets: native <details> around a scrollable table. */
+export function TableView({ caption, children }: { caption: string; children: ReactNode }) {
+  return (
+    <details className="mt-3 text-[0.8rem] text-ink-muted">
+      <summary className={TABLE_TOGGLE}>View as table</summary>
+      <div className="mt-2 max-h-60 overflow-auto rounded-md border border-line">
+        <table className="w-full min-w-[30rem] border-collapse text-right">
+          <caption className="sr-only">{caption}</caption>
+          {children}
+        </table>
+      </div>
+    </details>
+  );
+}
+
+export const TH = "sticky top-0 border-b border-line-strong bg-surface-raised px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.05em] text-ink-faint first:text-left";
+export const TD = "border-b border-line px-2.5 py-1 font-mono text-ink first:text-left";
+
+export function Swatch({ color }: { color: string }) {
+  return <i className="inline-block h-[11px] w-[11px] rounded-[2px]" style={{ background: color }} />;
+}
+
+/** Legend for the region stack: all six regions, or just the one a Country filter leaves. */
+export function RegionLegend({ only, children }: { only?: string | null; children?: ReactNode }) {
+  const shown = only ? REGIONS.filter((r) => r.id === only) : REGIONS;
+  return (
+    <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.75rem] text-ink-muted">
+      {shown.map((r) => (
+        <span key={r.id} className="inline-flex items-center gap-1.5">
+          <Swatch color={r.color} />
+          {r.label}
+        </span>
+      ))}
+      {children}
+    </div>
+  );
+}
+
+/** Legend for the branch split on the ranked list. */
+export function BranchLegend() {
+  return (
+    <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.75rem] text-ink-muted">
+      {BRANCH_NAMES.map((n, k) => (
+        <span key={n} className="inline-flex items-center gap-1.5">
+          <Swatch color={branchColor(k)} />
+          {n}
+        </span>
+      ))}
+    </div>
+  );
+}

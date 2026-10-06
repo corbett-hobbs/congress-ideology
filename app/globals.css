@@ -79,6 +79,11 @@
   --cont-africa: #b8902a;
   --cont-oceania: #1f9aa8;
   --cont-other: #83817d;
+  --branch-army: #5f7f3a;
+  --branch-navy: #27408b;
+  --branch-marine: #9a5b2e;
+  --branch-air-space: #2f9ab8;
+  --branch-coast-guard: #c9921f;
   color-scheme: light;
 }
 
@@ -132,6 +137,11 @@
   --cont-africa: #d9b350;
   --cont-oceania: #45bccb;
   --cont-other: #a5a39c;
+  --branch-army: #8fb360;
+  --branch-navy: #6f8fe0;
+  --branch-marine: #cf8a52;
+  --branch-air-space: #5fc2dc;
+  --branch-coast-guard: #e0b04a;
     color-scheme: dark;
   }
 }
@@ -185,6 +195,11 @@
   --cont-africa: #d9b350;
   --cont-oceania: #45bccb;
   --cont-other: #a5a39c;
+  --branch-army: #8fb360;
+  --branch-navy: #6f8fe0;
+  --branch-marine: #cf8a52;
+  --branch-air-space: #5fc2dc;
+  --branch-coast-guard: #e0b04a;
   color-scheme: dark;
 }
 
