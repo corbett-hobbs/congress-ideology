@@ -27,7 +27,7 @@ interface Props {
  * the single-handle sliders in the Congress and Court toolbars (same row
  * shape: a flexible track, then a mono readout). Controlled and unit-free, so
  * every time-axis page uses the same control and owns one `[from, to]` state.
- * Native range inputs give keyboard and touch drag for free. The readout is always left of the track. Phones stack the years (from, a short dash, to) with Reset to the track's right; from `sm` it is one line ("1991–2026") with Reset under it.
+ * Native range inputs give keyboard and touch drag for free. Phones put the years stacked (from, a short dash, to) left of the track with Reset to its right; from `sm` the readout is one line ("1991–2026") right of the track with Reset under it.
  */
 export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1, format, ariaLabel, className = "", below, action }: Props) {
   const [from, to] = value;
@@ -80,8 +80,8 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
       {below}
       </div>
       <span className="flex flex-none sm:hidden">{action}</span>
-      {/* From `sm`: one line, years then Reset under them, still left of the track. */}
-      <span className={`order-first hidden w-[5.25rem] flex-none flex-col items-start whitespace-nowrap font-mono tabular-nums text-ink sm:flex ${below ? "sm:min-h-6 sm:justify-start" : ""}`}>
+      {/* From `sm`: one line to the right of the track, Reset under it. */}
+      <span className={`hidden w-[5.25rem] flex-none flex-col items-end whitespace-nowrap font-mono tabular-nums text-ink sm:flex ${below ? "sm:min-h-6 sm:justify-start" : ""}`}>
         <span className={`text-[0.95rem] font-semibold ${below ? "leading-6" : ""}`}>{from === to ? format(from) : `${format(from)}–${format(to)}`}</span>
         {action}
       </span>
