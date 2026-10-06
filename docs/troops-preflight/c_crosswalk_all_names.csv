@@ -1,0 +1,622 @@
+source,name,peak_ad,country_code,in_countries_json,has_outline,has_marker
+DMDC,AFGHANISTAN,82177,AFG,True,True,False
+DMDC,ALBANIA,14,ALB,True,True,False
+DMDC,ALGERIA,18,DZA,True,True,False
+DMDC,AMERICAN SAMOA,1061,ASM,False,False,False
+DMDC,ANTIGUA AND BARBUDA,3,ATG,True,True,True
+DMDC,ARGENTINA,32,ARG,True,True,False
+DMDC,ARMENIA,14,ARM,True,True,False
+DMDC,AUSTRALIA,2858,AUS,True,True,False
+DMDC,AUSTRIA,30,AUT,True,True,False
+DMDC,AZERBAIJAN,18,AZE,True,True,False
+DMDC,"BAHAMAS, THE",75,BHS,True,True,True
+DMDC,BAHRAIN,8610,BHR,True,True,True
+DMDC,BANGLADESH,40,BGD,True,True,False
+DMDC,BARBADOS,14,BRB,True,True,True
+DMDC,BELGIUM,1269,BEL,True,True,False
+DMDC,BELIZE,69,BLZ,True,True,False
+DMDC,BOLIVIA,16,BOL,True,True,False
+DMDC,BOSNIA AND HERZEGOVINA,425,BIH,True,True,False
+DMDC,BOTSWANA,18,BWA,True,True,False
+DMDC,BRAZIL,66,BRA,True,True,False
+DMDC,BRITISH ATLANTIC OCEAN TERRITORY,5,,False,False,False
+DMDC,BRITISH INDIAN OCEAN TERRITORY,542,IOT,True,True,True
+DMDC,BULGARIA,160,BGR,True,True,False
+DMDC,BURKINA FASO,43,BFA,True,True,False
+DMDC,BURMA,15,MMR,True,True,False
+DMDC,BURUNDI,28,BDI,True,True,False
+DMDC,CAMBODIA,27,KHM,True,True,False
+DMDC,CAMEROON,41,CMR,True,True,False
+DMDC,CANADA,162,CAN,True,True,False
+DMDC,CHAD,31,TCD,True,True,False
+DMDC,CHILE,42,CHL,True,True,False
+DMDC,CHINA,80,CHN,True,True,False
+DMDC,COLOMBIA,88,COL,True,True,False
+DMDC,CONGO (BRAZZAVILLE),16,COG,True,True,False
+DMDC,CONGO (KINSHASA),19,COG,True,True,False
+DMDC,COSTA RICA,16,CRI,True,True,False
+DMDC,COTE DIVOIRE,16,CIV,True,True,False
+DMDC,CROATIA,15,HRV,True,True,False
+DMDC,CUBA,1667,CUB,True,True,False
+DMDC,CYPRUS,25,CYP,True,True,True
+DMDC,CZECH REPUBLIC,20,CZE,True,True,False
+DMDC,DENMARK,19,DNK,True,True,False
+DMDC,DJIBOUTI,3132,DJI,True,True,False
+DMDC,DOMINICAN REPUBLIC,38,DOM,True,True,False
+DMDC,ECUADOR,34,ECU,True,True,False
+DMDC,EGYPT,708,EGY,True,True,False
+DMDC,EL SALVADOR,617,SLV,True,True,False
+DMDC,ESTONIA,69,EST,True,True,False
+DMDC,ETHIOPIA,98,ETH,True,True,False
+DMDC,FIJI,5,FJI,True,True,True
+DMDC,FINLAND,200,FIN,True,True,False
+DMDC,FRANCE,85,FRA,True,True,False
+DMDC,GABON,13,GAB,True,True,False
+DMDC,GEORGIA,84,GEO,True,True,False
+DMDC,GERMANY,45654,DEU,True,True,False
+DMDC,GHANA,74,GHA,True,True,False
+DMDC,GIBRALTAR,5,GIB,True,False,False
+DMDC,GREECE,448,GRC,True,True,False
+DMDC,GREENLAND,168,GRL,True,True,False
+DMDC,GUAM,7137,GUM,False,False,False
+DMDC,GUATEMALA,131,GTM,True,True,False
+DMDC,GUINEA,13,GIN,True,True,False
+DMDC,GUYANA,12,GUY,True,True,False
+DMDC,HAITI,54,HTI,True,True,False
+DMDC,HONDURAS,660,HND,True,True,False
+DMDC,HONG KONG,33,HKG,True,True,True
+DMDC,HUNGARY,215,HUN,True,True,False
+DMDC,ICELAND,20,ISL,True,True,False
+DMDC,INDIA,66,IND,True,True,False
+DMDC,INDONESIA,40,IDN,True,True,False
+DMDC,IRAN,2,IRN,True,True,False
+DMDC,IRAQ,110793,IRQ,True,True,False
+DMDC,IRELAND,13,IRL,True,True,False
+DMDC,ISRAEL,348,ISR,True,True,False
+DMDC,ITALY,12991,ITA,True,True,False
+DMDC,JAMAICA,15,JAM,True,True,True
+DMDC,JAPAN,71567,JPN,True,True,False
+DMDC,JORDAN,2016,JOR,True,True,False
+DMDC,KAZAKHSTAN,311,KAZ,True,True,False
+DMDC,KENYA,208,KEN,True,True,False
+DMDC,"KOREA, SOUTH",30252,KOR,True,True,False
+DMDC,KOSOVO,514,XKX,True,True,True
+DMDC,KUWAIT,42291,KWT,True,True,True
+DMDC,KYRGYZSTAN,10194,KGZ,True,True,False
+DMDC,LAOS,16,LAO,True,True,False
+DMDC,LATVIA,19,LVA,True,True,False
+DMDC,LEBANON,135,LBN,True,True,True
+DMDC,LIBERIA,123,LBR,True,True,False
+DMDC,LITHUANIA,236,LTU,True,True,False
+DMDC,LUXEMBOURG,9,LUX,True,True,True
+DMDC,MACEDONIA,15,MKD,True,True,False
+DMDC,MADAGASCAR,20,MDG,True,True,False
+DMDC,MALAYSIA,183,MYS,True,True,False
+DMDC,MALI,26,MLI,True,True,False
+DMDC,MALTA,14,MLT,True,True,True
+DMDC,MARSHALL ISLANDS,20,MHL,True,True,True
+DMDC,MAURITANIA,26,MRT,True,True,False
+DMDC,MEXICO,93,MEX,True,True,False
+DMDC,MOLDOVA,13,MDA,True,True,False
+DMDC,MONGOLIA,15,MNG,True,True,False
+DMDC,MONTENEGRO,84,MNE,True,True,True
+DMDC,MONTENEGRO (1992 - 2001),0,MNE,True,True,True
+DMDC,MOROCCO,46,MAR,True,True,False
+DMDC,MOZAMBIQUE,15,MOZ,True,True,False
+DMDC,NEPAL,15,NPL,True,True,False
+DMDC,NETHERLANDS,577,NLD,True,True,False
+DMDC,NETHERLANDS ANTILLES (1991 - 2010),14,ANT,True,False,False
+DMDC,NEW ZEALAND,17,NZL,True,True,False
+DMDC,NICARAGUA,933,NIC,True,True,False
+DMDC,NIGER,510,NER,True,True,False
+DMDC,NIGERIA,46,NGA,True,True,False
+DMDC,NORTHERN MARIANA ISLANDS,27,MNP,False,False,False
+DMDC,NORWAY,2592,NOR,True,True,False
+DMDC,OMAN,422,OMN,True,True,False
+DMDC,PAKISTAN,268,PAK,True,True,False
+DMDC,PALAU,111,PLW,True,True,True
+DMDC,PANAMA (1980 - PRESENT),42,PAN,True,True,False
+DMDC,PARAGUAY,17,PRY,True,True,False
+DMDC,PERU,65,PER,True,True,False
+DMDC,PHILIPPINES,4435,PHL,True,True,False
+DMDC,POLAND,462,POL,True,True,False
+DMDC,PORTUGAL,785,PRT,True,True,False
+DMDC,PUERTO RICO,725,PRI,False,True,False
+DMDC,QATAR,12036,QAT,True,True,True
+DMDC,ROMANIA,682,ROU,True,True,False
+DMDC,RUSSIA,52,RUS,True,True,False
+DMDC,SAUDI ARABIA,1520,SAU,True,True,False
+DMDC,SENEGAL,44,SEN,True,True,False
+DMDC,SERBIA (1992 - 2004),0,SRB,True,True,False
+DMDC,SERBIA (2006 - 2008),13,SRB,True,True,False
+DMDC,SEYCHELLES,25,SYC,True,True,True
+DMDC,SIERRA LEONE,13,SLE,True,True,False
+DMDC,SINGAPORE,274,SGP,True,True,True
+DMDC,SLOVAKIA,18,SVK,True,True,False
+DMDC,SLOVENIA,13,SVN,True,True,False
+DMDC,SOMALIA,552,SOM,True,True,False
+DMDC,SOUTH AFRICA,133,ZAF,True,True,False
+DMDC,SPAIN,3940,ESP,True,True,False
+DMDC,SRI LANKA,25,LKA,True,True,False
+DMDC,SUDAN,24,SDN,True,True,False
+DMDC,SURINAME,4,SUR,True,True,False
+DMDC,SWEDEN,246,SWE,True,True,False
+DMDC,SWITZERLAND,30,CHE,True,True,False
+DMDC,SYRIA,1547,SYR,True,True,False
+DMDC,TAIWAN,47,TWN,True,True,False
+DMDC,TAJIKISTAN,32,TJK,True,True,False
+DMDC,TANZANIA,23,TZA,True,True,False
+DMDC,THAILAND,461,THA,True,True,False
+DMDC,TUNISIA,98,TUN,True,True,False
+DMDC,TURKEY,2331,TUR,True,True,False
+DMDC,TURKMENISTAN,15,TKM,True,True,False
+DMDC,UGANDA,163,UGA,True,True,False
+DMDC,UKRAINE,44,UKR,True,True,False
+DMDC,UNION OF SOVIET SOCIALIST REPUBLICS,3,SUN,True,False,False
+DMDC,UNITED ARAB EMIRATES,4021,ARE,True,True,False
+DMDC,UNITED KINGDOM,10180,GBR,True,True,False
+DMDC,URUGUAY,19,URY,True,True,False
+DMDC,UZBEKISTAN,16,UZB,True,True,False
+DMDC,VENEZUELA,16,VEN,True,True,False
+DMDC,VIETNAM,36,VNM,True,True,False
+DMDC,"VIRGIN ISLANDS, U.S.",41,,False,False,False
+DMDC,WAKE ISLAND,6,UMI,False,False,False
+DMDC,YEMEN,280,YEM,True,True,False
+DMDC,ZAMBIA,40,ZMB,True,True,False
+DMDC,ZIMBABWE,13,ZWE,True,True,False
+DMDC,UNKNOWN,31388,,False,False,False
+DMDC,COMOROS,17,COM,True,True,True
+DMDC,ERITREA,1,ERI,True,True,False
+DMDC,"GERMANY, FEDERAL REPUBLIC OF",1,DEU,True,True,False
+DMDC,"KOREA, NORTH",1,PRK,True,True,False
+DMDC,LIBYA,128,LBY,True,True,False
+DMDC,MAURITIUS,3,MUS,True,True,True
+DMDC,RWANDA,14,RWA,True,True,False
+DMDC,SPRATLY ISLANDS,91,,False,False,False
+DMDC,TRINIDAD AND TOBAGO,11,TTO,True,True,True
+DMDC,TRUCIAL STATES,1,,False,False,False
+DMDC,TIMOR-LESTE,7,TLS,True,True,True
+DMDC,ANGOLA,16,AGO,True,True,False
+DMDC,ARUBA,1,ABW,True,True,True
+DMDC,MALAWI,11,MWI,True,True,False
+DMDC,PAPUA NEW GUINEA,19,PNG,True,True,False
+DMDC,TOGO,39,TGO,True,True,False
+DMDC,MONTENEGRO (2006 - 2008),10,MNE,True,True,True
+DMDC,SERBIA (2008 - PRESENT),18,SRB,True,True,False
+DMDC,CENTRAL AFRICAN REPUBLIC,25,CAF,True,True,False
+DMDC,SOUTH SUDAN,19,SSD,True,True,False
+DMDC,BRUNEI,14,BRN,True,True,True
+DMDC,"GAMBIA, THE",88,GMB,True,True,True
+DMDC,NAMIBIA,12,NAM,True,True,False
+DMDC,MALDIVES,4,MDV,True,True,True
+DMDC,SOLOMON ISLANDS,1,SLB,True,True,False
+DMDC,SAINT KITTS AND NEVIS,1,KNA,True,True,True
+DMDC,BENIN,20,BEN,True,True,False
+DMDC,AKROTIRI,73,,False,False,False
+DMDC,SWAZILAND,10,SWZ,True,True,True
+DMDC,BASSAS DA INDIA,7,,False,False,False
+DMDC,BELARUS,10,BLR,True,True,False
+DMDC,CORAL SEA ISLANDS,7,,False,False,False
+DMDC,DOMINICA,7,DMA,True,True,True
+DMDC,KIRIBATI,112,KIR,True,True,True
+DMDC,SVALBARD,12,,False,False,False
+DMDC,TONGA,20,TON,True,True,True
+DMDC,"VIRGIN ISLANDS, BRITISH",2,VGB,True,True,True
+DMDC,BERMUDA,1,BMU,True,True,True
+DMDC,CZECHIA,18,CZE,True,True,False
+DMDC,PANAMA,42,PAN,True,True,False
+DMDC,SERBIA,16,SRB,True,True,False
+DMDC,ASHMORE AND CARTIER ISLANDS,2,,False,False,False
+DMDC,LESOTHO,2,LSO,True,True,False
+DMDC,CURACAO,21,CUW,True,True,True
+DMDC,MARTINIQUE,53,MTQ,True,False,False
+DMDC,SINT MAARTEN,1,SXM,True,False,False
+DMDC,ANTARCTICA,1,,False,False,False
+DMDC,EQUATORIAL GUINEA,21,GNQ,True,True,False
+DMDC,GUERNSEY,1,,False,False,False
+DMDC,LIECHTENSTEIN,2,LIE,True,False,False
+DMDC,MACAU,2,MAC,True,True,True
+DMDC,NIUE,8,NIU,True,False,False
+DMDC,SAINT BARTHELEMY,10,BLM,False,False,False
+DMDC,SAINT PIERRE AND MIQUELON,8,SPM,True,False,False
+DMDC,NETHERLANDS ANTILLES,0,ANT,True,False,False
+DMDC,CABO VERDE,2,CPV,True,True,True
+DMDC,"MICRONESIA, FEDERATED STATES OF",23,FSM,True,True,True
+DMDC,ZZ-UNKNOWN,20138,,False,False,False
+DMDC,VATICAN CITY,1,VAT,True,False,False
+DMDC,IRAQ*,0,IRQ,True,True,False
+DMDC,SYRIA*,0,SYR,True,True,False
+DMDC,UNDEFINED,7031,,False,False,False
+DMDC,SAINT LUCIA,1,LCA,True,True,True
+DMDC,SAMOA,3,WSM,True,True,True
+M05,Continental United States (CONUS),951878,,False,False,False
+M05,Alaska,18169,,False,False,False
+M05,Hawaii,34322,,False,False,False
+M05,Guam,3621,GUM,False,False,False
+M05,Johnston Atoll,217,UMI,False,False,False
+M05,Puerto Rico,2796,PRI,False,True,False
+M05,Trust Territory of the Pacific Islands,30,,False,False,False
+M05,U. S. Virgin Islands,7,,False,False,False
+M05,Transients,45678,,False,False,False
+M05,Afloat,104226,,False,False,False
+M05,Albania,9,ALB,True,True,False
+M05,Austria,31,AUT,True,True,False
+M05,Belgium,1649,BEL,True,True,False
+M05,Bosnia and Herzegovina,5800,BIH,True,True,False
+M05,Bulgaria,13,BGR,True,True,False
+M05,Croatia,145,HRV,True,True,False
+M05,Cyprus,43,CYP,True,True,True
+M05,Czech Republic,16,CZE,True,True,False
+M05,Denmark,32,DNK,True,True,False
+M05,Estonia,7,EST,True,True,False
+M05,Finland,16,FIN,True,True,False
+M05,France,73,FRA,True,True,False
+M05,Germany,70998,DEU,True,True,False
+M05,Gibraltar,5,GIB,True,False,False
+M05,Greece,652,GRC,True,True,False
+M05,Greenland,153,GRL,True,True,False
+M05,Hungary,87,HUN,True,True,False
+M05,Iceland,1743,ISL,True,True,False
+M05,Ireland,9,IRL,True,True,False
+M05,Italy,11841,ITA,True,True,False
+M05,Latvia,7,LVA,True,True,False
+M05,Lithuania,8,LTU,True,True,False
+M05,Luxembourg,12,LUX,True,True,True
+M05,"Macedonia, The Former Yugoslav Republic of",1100,,False,False,False
+M05,Malta,9,MLT,True,True,True
+M05,Netherlands,676,NLD,True,True,False
+M05,Norway,95,NOR,True,True,False
+M05,Poland,21,POL,True,True,False
+M05,Portugal,1024,PRT,True,True,False
+M05,Romania,20,ROU,True,True,False
+M05,Serbia (includes Kosovo),6410,SRB,True,True,False
+M05,Slovakia,9,SVK,True,True,False
+M05,Slovenia,11,SVN,True,True,False
+M05,Spain,2127,ESP,True,True,False
+M05,Sweden,13,SWE,True,True,False
+M05,Switzerland,18,CHE,True,True,False
+M05,Turkey,2312,TUR,True,True,False
+M05,United Kingdom,11318,GBR,True,True,False
+M05,Armenia,6,ARM,True,True,False
+M05,Azerbaijan,8,AZE,True,True,False
+M05,Belarus,9,BLR,True,True,False
+M05,Georgia,42,GEO,True,True,False
+M05,Kazakhstan,11,KAZ,True,True,False
+M05,Kyrgyzstan,8,KGZ,True,True,False
+M05,Moldova,5,MDA,True,True,False
+M05,Russia,93,RUS,True,True,False
+M05,Tajikistan,1,TJK,True,True,False
+M05,Turkmenistan,7,TKM,True,True,False
+M05,Ukraine,18,UKR,True,True,False
+M05,Uzbekistan,3,UZB,True,True,False
+M05,Australia,803,AUS,True,True,False
+M05,Burma,11,MMR,True,True,False
+M05,Cambodia,5,KHM,True,True,False
+M05,China (Includes Hong Kong),67,CHN,True,True,False
+M05,Fiji,2,FJI,True,True,True
+M05,Indonesia (Includes Timor),43,IDN,True,True,False
+M05,Japan,40338,JPN,True,True,False
+M05,"Korea, Republic of",37605,,False,False,False
+M05,Laos,3,LAO,True,True,False
+M05,Malaysia,18,MYS,True,True,False
+M05,New Zealand,7,NZL,True,True,False
+M05,Philippines,84,PHL,True,True,False
+M05,Singapore,169,SGP,True,True,True
+M05,Thailand,120,THA,True,True,False
+M05,Vietnam,16,VNM,True,True,False
+M05,Algeria,10,DZA,True,True,False
+M05,Bahrain,2065,BHR,True,True,True
+M05,Bangladesh,8,BGD,True,True,False
+M05,Diego Garcia,683,IOT,True,True,True
+M05,Egypt,892,EGY,True,True,False
+M05,India,31,IND,True,True,False
+M05,Iraq,1,IRQ,True,True,False
+M05,Israel,42,ISR,True,True,False
+M05,Jordan,27,JOR,True,True,False
+M05,Kuwait,4208,KWT,True,True,True
+M05,Lebanon,4,LBN,True,True,True
+M05,Morocco,16,MAR,True,True,False
+M05,Nepal,9,NPL,True,True,False
+M05,Oman,673,OMN,True,True,False
+M05,Pakistan,35,PAK,True,True,False
+M05,Qatar,463,QAT,True,True,True
+M05,Saudi Arabia,5552,SAU,True,True,False
+M05,Sri Lanka,13,LKA,True,True,False
+M05,Syria,9,SYR,True,True,False
+M05,Tunisia,15,TUN,True,True,False
+M05,United Arab Emirates,679,ARE,True,True,False
+M05,Yemen,14,YEM,True,True,False
+M05,Angola,5,AGO,True,True,False
+M05,Botswana,9,BWA,True,True,False
+M05,Burundi,8,BDI,True,True,False
+M05,Cameroon,10,CMR,True,True,False
+M05,Chad,10,TCD,True,True,False
+M05,Congo (Kinshasa),8,COG,True,True,False
+M05,Cote D'Ivoire,26,CIV,True,True,False
+M05,Djibouti,622,DJI,True,True,False
+M05,Eritrea,1,ERI,True,True,False
+M05,Ethiopia,13,ETH,True,True,False
+M05,Gabon,1,GAB,True,True,False
+M05,Ghana,14,GHA,True,True,False
+M05,Guinea,8,GIN,True,True,False
+M05,Kenya,95,KEN,True,True,False
+M05,Liberia,11,LBR,True,True,False
+M05,Malawi,1,MWI,True,True,False
+M05,Mali,6,MLI,True,True,False
+M05,Mozambique,8,MOZ,True,True,False
+M05,Niger,7,NER,True,True,False
+M05,Nigeria,21,NGA,True,True,False
+M05,Rwanda,1,RWA,True,True,False
+M05,Senegal,42,SEN,True,True,False
+M05,Sierra Leone,3,SLE,True,True,False
+M05,Somalia,8,SOM,True,True,False
+M05,South Africa,33,ZAF,True,True,False
+M05,St. Helena (Includes Ascension Island),3,,False,False,False
+M05,"Tanzania, United Republic of",11,,False,False,False
+M05,Togo,6,TGO,True,True,False
+M05,Uganda,11,UGA,True,True,False
+M05,Zambia,9,ZMB,True,True,False
+M05,Zimbabwe,11,ZWE,True,True,False
+M05,Antigua,3,ATG,True,True,True
+M05,Argentina,28,ARG,True,True,False
+M05,"Bahamas, The",64,BHS,True,True,True
+M05,Barbados,9,BRB,True,True,True
+M05,Belize,3,BLZ,True,True,False
+M05,Bolivia,29,BOL,True,True,False
+M05,Brazil,43,BRA,True,True,False
+M05,Canada,163,CAN,True,True,False
+M05,Chile,337,CHL,True,True,False
+M05,Colombia,63,COL,True,True,False
+M05,Costa Rica,9,CRI,True,True,False
+M05,Cuba (Guantanamo),1030,CUB,True,True,False
+M05,Dominican Republic,14,DOM,True,True,False
+M05,Ecuador,32,ECU,True,True,False
+M05,El Salvador,30,SLV,True,True,False
+M05,Grenada,3,GRD,True,True,True
+M05,Guatemala,19,GTM,True,True,False
+M05,Guyana,1,GUY,True,True,False
+M05,Haiti,59,HTI,True,True,False
+M05,Honduras,513,HND,True,True,False
+M05,Jamaica,12,JAM,True,True,True
+M05,Mexico,33,MEX,True,True,False
+M05,Nicaragua,15,NIC,True,True,False
+M05,Panama,20,PAN,True,True,False
+M05,Paraguay,55,PRY,True,True,False
+M05,Peru,50,PER,True,True,False
+M05,Suriname,3,SUR,True,True,False
+M05,Trinidad and Tobago,7,TTO,True,True,True
+M05,Uruguay,13,URY,True,True,False
+M05,Venezuela,31,VEN,True,True,False
+M05,Ashore,94373,,False,False,False
+M05,Forward Deployment Pacific Theater,102688,,False,False,False
+M05,Wake Island,1,UMI,False,False,False
+M05,Mongolia,5,MNG,True,True,False
+M05,Afghanistan (See Deployment Section),0,AFG,True,True,False
+M05,Iran,1,IRN,True,True,False
+M05,Iraq (See Deployment Section),0,IRQ,True,True,False
+M05,Kuwait (See Deployment Section),0,KWT,True,True,True
+M05,Congo (Brazzaville),0,COG,True,True,False
+M05,Madagascar,2,MDG,True,True,False
+M05,Sudan,3,SDN,True,True,False
+M05,NATO Countries,97285,,False,False,False
+M05,Includes deployed Reserve/National Guard,192600,,False,False,False
+M05,Korea,300,,False,False,False
+M05,China,57,CHN,True,True,False
+M05,Indonesia,50,IDN,True,True,False
+troopdata,Abkhazia,0,,False,False,False
+troopdata,Afghanistan,82177,AFG,True,True,False
+troopdata,Albania,83,ALB,True,True,False
+troopdata,Algeria,7030,DZA,True,True,False
+troopdata,American Samoa,1061,ASM,False,False,False
+troopdata,Angola,16,AGO,True,True,False
+troopdata,Antarctica,928,,False,False,False
+troopdata,Antigua,538,ATG,True,True,True
+troopdata,Argentina,1094,ARG,True,True,False
+troopdata,Armenia,14,ARM,True,True,False
+troopdata,Aruba,5,ABW,True,True,True
+troopdata,Ascension Island,35,,False,False,False
+troopdata,Australia,2858,AUS,True,True,False
+troopdata,Austria,14650,AUT,True,True,False
+troopdata,Azerbaijan,18,AZE,True,True,False
+troopdata,Azores,2428,,False,False,False
+troopdata,Bahamas,1174,BHS,True,True,True
+troopdata,Bahrain,8610,BHR,True,True,True
+troopdata,Bangladesh,40,BGD,True,True,False
+troopdata,Barbados,122,BRB,True,True,True
+troopdata,Belarus,10,BLR,True,True,False
+troopdata,Belgium,3540,BEL,True,True,False
+troopdata,Belize,69,BLZ,True,True,False
+troopdata,Benin,20,BEN,True,True,False
+troopdata,Bermuda,5673,BMU,True,True,True
+troopdata,Bhutan,0,BTN,True,True,False
+troopdata,Bolivia,88,BOL,True,True,False
+troopdata,Bosnia and Herzegovina,15003,BIH,True,True,False
+troopdata,Botswana,18,BWA,True,True,False
+troopdata,Brazil,12716,BRA,True,True,False
+troopdata,British Virgin Islands,215,VGB,True,True,True
+troopdata,British West Indies,1710,,False,False,False
+troopdata,Brunei,14,BRN,True,True,True
+troopdata,Bulgaria,160,BGR,True,True,False
+troopdata,Burkina Faso,43,BFA,True,True,False
+troopdata,Burundi,28,BDI,True,True,False
+troopdata,Cabo Verde,2,CPV,True,True,True
+troopdata,Cambodia,95,KHM,True,True,False
+troopdata,Cameroon,41,CMR,True,True,False
+troopdata,Canada,18297,CAN,True,True,False
+troopdata,Central African Republic,25,CAF,True,True,False
+troopdata,Chad,31,TCD,True,True,False
+troopdata,Chile,1113,CHL,True,True,False
+troopdata,China,100,CHN,True,True,False
+troopdata,Colombia,224,COL,True,True,False
+troopdata,Comoros,17,COM,True,True,True
+troopdata,Congo,79,COG,True,True,False
+troopdata,Costa Rica,842,CRI,True,True,False
+troopdata,Croatia,4007,HRV,True,True,False
+troopdata,Cuba,11887,CUB,True,True,False
+troopdata,Cyprus,824,CYP,True,True,True
+troopdata,Czech Republic,20,CZE,True,True,False
+troopdata,Czechoslovakia,16,CSK,True,False,False
+troopdata,Democratic Republic of the Congo,79,COD,True,True,False
+troopdata,Denmark,2206,DNK,True,True,False
+troopdata,Diego Garcia,1791,IOT,True,True,True
+troopdata,Djibouti,3132,DJI,True,True,False
+troopdata,Dominican Republic,2296,DOM,True,True,False
+troopdata,East Timor,7,TLS,True,True,True
+troopdata,Easter Island,18,,False,False,False
+troopdata,Ecuador,367,ECU,True,True,False
+troopdata,Egypt,5846,EGY,True,True,False
+troopdata,El Salvador,617,SLV,True,True,False
+troopdata,Eniwetok (J.T.F. 7),652,,False,False,False
+troopdata,Equatorial Guinea,21,GNQ,True,True,False
+troopdata,Eritrea,1386,ERI,True,True,False
+troopdata,Estonia,69,EST,True,True,False
+troopdata,Eswatini,10,SWZ,True,True,True
+troopdata,Ethiopia,2002,ETH,True,True,False
+troopdata,Fiji,39,FJI,True,True,True
+troopdata,Finland,200,FIN,True,True,False
+troopdata,France,71531,FRA,True,True,False
+troopdata,Gabon,13,GAB,True,True,False
+troopdata,Gambia,88,GMB,True,True,True
+troopdata,Georgia,84,GEO,True,True,False
+troopdata,German Democratic Republic,58,DDR,False,False,False
+troopdata,Germany,274119,DEU,True,True,False
+troopdata,Ghana,74,GHA,True,True,False
+troopdata,Gibraltar,3593,GIB,True,False,False
+troopdata,Greece,15360,GRC,True,True,False
+troopdata,Greenland,8354,GRL,True,True,False
+troopdata,Guam,17222,GUM,False,False,False
+troopdata,Guatemala,500,GTM,True,True,False
+troopdata,Guinea,13,GIN,True,True,False
+troopdata,Guinea-Bissau,0,GNB,True,True,False
+troopdata,Guyana,149,GUY,True,True,False
+troopdata,Haiti,17495,HTI,True,True,False
+troopdata,Honduras,2623,HND,True,True,False
+troopdata,Hong Kong,5626,HKG,True,True,True
+troopdata,Hungary,6523,HUN,True,True,False
+troopdata,Iceland,5246,ISL,True,True,False
+troopdata,India,396,IND,True,True,False
+troopdata,Indonesia,86,IDN,True,True,False
+troopdata,Iran,1545,IRN,True,True,False
+troopdata,Iraq,170000,IRQ,True,True,False
+troopdata,Ireland,3491,IRL,True,True,False
+troopdata,Israel,438,ISR,True,True,False
+troopdata,Italy,27693,ITA,True,True,False
+troopdata,Ivory Coast,33,CIV,True,True,False
+troopdata,Jamaica,556,JAM,True,True,True
+troopdata,Japan,223569,JPN,True,True,False
+troopdata,Johnston Island,672,,False,False,False
+troopdata,Jordan,2016,JOR,True,True,False
+troopdata,Kashmir,1,,False,False,False
+troopdata,Kazakhstan,311,KAZ,True,True,False
+troopdata,Kenya,208,KEN,True,True,False
+troopdata,Kosovo,514,XKX,True,True,True
+troopdata,Kuwait,48500,KWT,True,True,True
+troopdata,Kyrgyzstan,10194,KGZ,True,True,False
+troopdata,Laos,287,LAO,True,True,False
+troopdata,Latvia,19,LVA,True,True,False
+troopdata,Lebanon,17739,LBN,True,True,True
+troopdata,Lesotho,2,LSO,True,True,False
+troopdata,Liberia,170,LBR,True,True,False
+troopdata,Libya,5603,LBY,True,True,False
+troopdata,Line Islands,3,,False,False,False
+troopdata,Lithuania,236,LTU,True,True,False
+troopdata,Luxembourg,22,LUX,True,True,True
+troopdata,Macedonia,1100,MKD,True,True,False
+troopdata,Madagascar,20,MDG,True,True,False
+troopdata,Malawi,11,MWI,True,True,False
+troopdata,Malaysia,812,MYS,True,True,False
+troopdata,Maldives,4,MDV,True,True,True
+troopdata,Mali,26,MLI,True,True,False
+troopdata,Malta,6761,MLT,True,True,True
+troopdata,Marshall Islands,2162,MHL,True,True,True
+troopdata,Mauritania,26,MRT,True,True,False
+troopdata,Mauritius,7,MUS,True,True,True
+troopdata,Mexico,986,MEX,True,True,False
+troopdata,Micronesia,252,FSM,True,True,True
+troopdata,Midway Islands,2838,UMI,False,False,False
+troopdata,Moldova,13,MDA,True,True,False
+troopdata,Mongolia,15,MNG,True,True,False
+troopdata,Montenegro,84,MNE,True,True,True
+troopdata,Morocco,14756,MAR,True,True,False
+troopdata,Mozambique,15,MOZ,True,True,False
+troopdata,Myanmar,34,MMR,True,True,False
+troopdata,Namibia,12,NAM,True,True,False
+troopdata,Nepal,15,NPL,True,True,False
+troopdata,Netherlands,4415,NLD,True,True,False
+troopdata,Netherlands Antilles,14,ANT,True,False,False
+troopdata,New Zealand,837,NZL,True,True,False
+troopdata,Nicaragua,933,NIC,True,True,False
+troopdata,Niger,510,NER,True,True,False
+troopdata,Nigeria,53,NGA,True,True,False
+troopdata,North Korea,24,PRK,True,True,False
+troopdata,Northern Mariana Islands,27,MNP,False,False,False
+troopdata,Norway,2592,NOR,True,True,False
+troopdata,Oman,673,OMN,True,True,False
+troopdata,Pakistan,1589,PAK,True,True,False
+troopdata,Panama,16622,PAN,True,True,False
+troopdata,Papua New Guinea,19,PNG,True,True,False
+troopdata,Paraguay,86,PRY,True,True,False
+troopdata,Peru,1165,PER,True,True,False
+troopdata,Philippines,40323,PHL,True,True,False
+troopdata,Poland,462,POL,True,True,False
+troopdata,Portugal,5935,PRT,True,True,False
+troopdata,Qatar,12036,QAT,True,True,True
+troopdata,Romania,682,ROU,True,True,False
+troopdata,Russia,377,RUS,True,True,False
+troopdata,Rwanda,14,RWA,True,True,False
+troopdata,Sao Tome and Principe,0,STP,True,True,True
+troopdata,Sarawak,1,,False,False,False
+troopdata,Saudi Arabia,30831,SAU,True,True,False
+troopdata,Senegal,275,SEN,True,True,False
+troopdata,Serbia,1397,SRB,True,True,False
+troopdata,Seychelles,20,SYC,True,True,True
+troopdata,Sierra Leone,13,SLE,True,True,False
+troopdata,Singapore,411,SGP,True,True,True
+troopdata,Slovakia,17,SVK,True,True,False
+troopdata,Slovenia,13,SVN,True,True,False
+troopdata,Solomon Islands,1,SLB,True,True,False
+troopdata,Somalia,6345,SOM,True,True,False
+troopdata,South Africa,279,ZAF,True,True,False
+troopdata,South Korea,348578,KOR,True,True,False
+troopdata,South Sudan,19,SSD,True,True,False
+troopdata,South Vietnam,537377,VNM,True,True,False
+troopdata,Spain,19384,ESP,True,True,False
+troopdata,Sri Lanka,344,LKA,True,True,False
+troopdata,St. Helena,25,,False,False,False
+troopdata,St. Kitts and Nevis,0,KNA,True,True,True
+troopdata,Sudan,45,SDN,True,True,False
+troopdata,Suriname,168,SUR,True,True,False
+troopdata,Sweden,376,SWE,True,True,False
+troopdata,Switzerland,61,CHE,True,True,False
+troopdata,Syria,1700,SYR,True,True,False
+troopdata,Taiwan,19044,TWN,True,True,False
+troopdata,Tajikistan,32,TJK,True,True,False
+troopdata,Tanzania,23,TZA,True,True,False
+troopdata,Thailand,48105,THA,True,True,False
+troopdata,Tibet,0,,False,False,False
+troopdata,Togo,39,TGO,True,True,False
+troopdata,Tonga,0,TON,True,True,True
+troopdata,Trinidad and Tobago,909,TTO,True,True,True
+troopdata,Tunisia,251,TUN,True,True,False
+troopdata,Turkey,21019,TUR,True,True,False
+troopdata,Turkmenistan,15,TKM,True,True,False
+troopdata,Turks and Caicos Islands,109,TCA,True,True,True
+troopdata,US Virgin Islands,761,VIR,False,False,False
+troopdata,Uganda,163,UGA,True,True,False
+troopdata,Ukraine,44,UKR,True,True,False
+troopdata,United Arab Emirates,4021,ARE,True,True,False
+troopdata,United Kingdom,63008,GBR,True,True,False
+troopdata,United States,2338379,USA,False,True,False
+troopdata,Uruguay,2107,URY,True,True,False
+troopdata,Uzbekistan,16,UZB,True,True,False
+troopdata,Vatican City,7,VAT,True,False,False
+troopdata,Venezuela,471,VEN,True,True,False
+troopdata,Vietnam,36,VNM,True,True,False
+troopdata,Wake Island,284,UMI,False,False,False
+troopdata,Western Sahara,4,ESH,True,True,False
+troopdata,Yemen,254,YEM,True,True,False
+troopdata,Yemen People's Republic,0,YMD,False,False,False
+troopdata,Yugoslavia,6410,YUG,True,False,False
+troopdata,Zambia,40,ZMB,True,True,False
+troopdata,Zanzibar,0,,False,False,False
+troopdata,Zimbabwe,16,ZWE,True,True,False

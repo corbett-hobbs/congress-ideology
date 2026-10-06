@@ -1,0 +1,327 @@
+section,siad_id,family,fileName,fileId,displayName,ext,bytes,uploaded
+Military Personnel,1,Active Duty Military Strength by Service (Updated Monthly),ms0_202607.pdf,143685,Strength Summary,pdf,268808,2026-09-10
+Military Personnel,1,Active Duty Military Strength by Service (Updated Monthly),ms1_202607.pdf,143684,Strength Changes (Last 12 Months),pdf,274786,2026-09-10
+Military Personnel,1,Active Duty Military Strength by Service (Updated Monthly),ms2_202607.pdf,143683,Percent Changes (Last 12 Months),pdf,274995,2026-09-10
+Military Personnel,1,Active Duty Military Strength by Service (Updated Monthly),AD_Strengths_FY2013-FY2020.xlsx,119112,Historical Reports - FY 2013 - 2020,xlsx,47848,2022-10-06
+Military Personnel,1,Active Duty Military Strength by Service (Updated Monthly),AD_Strengths_FY1994-FY2012.xlsx,71661,Historical Reports - FY 1994 - 2012,xlsx,348394,2017-07-05
+Military Personnel,1,Active Duty Military Strength by Service (Updated Monthly),AD_1954-1993.zip,42452,Historical Reports - FY 1954 - 1993  (Not DMDC Data),zip,1641706,2015-01-07
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2603.xlsx,142879,March 2026,xlsx,53655,2026-05-07
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2512.xlsx,141635,December 2025,xlsx,53839,2026-02-16
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2509.xlsx,140442,September 2025,xlsx,53598,2025-12-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2506.xlsx,138689,June 2025,xlsx,53535,2025-08-26
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2503.xlsx,136372,March 2025,xlsx,53500,2025-05-28
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2412.xlsx,136979,December 2024,xlsx,53109,2025-06-26
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2409.xlsx,136978,September 2024,xlsx,52381,2025-06-26
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2406.xlsx,130926,June 2024,xlsx,61945,2024-08-14
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2403.xlsx,129163,March 2024,xlsx,61500,2024-05-09
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2312.xlsx,127322,December 2023,xlsx,61573,2024-02-08
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2309.xlsx,126040,September 2023,xlsx,61807,2023-11-15
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2306.xlsx,124240,June 2023,xlsx,59403,2023-08-13
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2303.xlsx,124239,March 2023,xlsx,59484,2023-08-13
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2212.xlsx,121403,December 2022,xlsx,59319,2023-03-03
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2209.xlsx,120269,September 2022,xlsx,59714,2022-12-23
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2206.xlsx,119321,June 2022,xlsx,59956,2022-10-24
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2203.xlsx,117084,March 2022,xlsx,60025,2022-06-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2112.xlsx,115840,December 2021,xlsx,59710,2022-03-31
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2109.xlsx,113543,September 2021,xlsx,53671,2021-11-17
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2106.xlsx,111750,June 2021,xlsx,52501,2021-08-08
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2103.xlsx,109993,March 2021,xlsx,52416,2021-05-06
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2012.xlsx,107990,December 2020,xlsx,52386,2021-02-06
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2009.xlsx,105773,September 2020,xlsx,50720,2020-11-06
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2006.xlsx,103341,June 2020,xlsx,50818,2020-08-07
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_2003.xlsx,100904,March 2020,xlsx,50752,2020-05-08
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1912.xlsx,98889,December 2019,xlsx,50843,2020-02-14
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1909.xlsx,96265,September 2019,xlsx,50254,2019-11-08
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1906.xlsx,94275,June 2019,xlsx,50056,2019-08-23
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1903.xlsx,93650,March 2019,xlsx,50083,2019-08-01
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1812.xlsx,93649,December 2018,xlsx,49978,2019-08-01
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1809.xlsx,93648,September 2018,xlsx,49885,2019-08-01
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1806.xlsx,85433,June 2018,xlsx,49842,2018-08-31
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1803.xlsx,82422,March 2018,xlsx,49887,2018-05-25
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1712.xlsx,80558,December 2017,xlsx,50530,2018-04-09
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1709_old.xlsx,97282,September 2017,xlsx,50520,2019-12-12
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1706.xlsx,80629,June 2017,xlsx,52371,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1703.xlsx,80630,March 2017,xlsx,52348,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1612.xlsx,80631,December 2016,xlsx,52220,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1609.xlsx,84066,September 2016,xlsx,52548,2018-07-11
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1606.xlsx,80634,June 2016,xlsx,50189,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1603.xlsx,80635,March 2016,xlsx,51835,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1512.xlsx,80636,December 2015,xlsx,50939,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1509.xlsx,80637,September 2015,xlsx,52189,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1506.xlsx,80638,June 2015,xlsx,52240,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1503.xlsx,80639,March 2015,xlsx,52279,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1412.xlsx,80640,December 2014,xlsx,52335,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1409.xlsx,80641,September 2014,xlsx,52287,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1406.xlsx,80642,June 2014,xlsx,52144,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1403.xlsx,80643,March 2014,xlsx,52086,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1312.xlsx,80644,December 2013,xlsx,52289,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1309.xlsx,80645,September 2013,xlsx,52215,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1209.xlsx,80646,September 2012,xlsx,52178,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1109.xlsx,80647,September 2011,xlsx,51720,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_1009.xlsx,80648,September 2010,xlsx,51507,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_0909.xlsx,80649,September 2009,xlsx,51717,2018-04-10
+Military Personnel,2,Military and Civilian Personnel by Service/Agency by State/Country (Updated Quarterly),DMDC_Website_Location_Report_0809.xlsx,80650,September 2008,xlsx,49306,2018-04-10
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202607_total.pdf,143681,July 2026,pdf,523981,2026-09-10
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202607_female.pdf,143680,July 2026 (Women Only),pdf,426284,2026-09-10
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202606_total.pdf,143678,June 2026,pdf,523902,2026-09-10
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202606_female.pdf,143677,June 2026 (Women Only),pdf,423805,2026-09-10
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202605_total.pdf,143336,May 2026,pdf,523388,2026-07-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202605_female.pdf,143335,May 2026 (Women Only),pdf,425740,2026-07-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202604_total.pdf,143333,April 2026,pdf,523892,2026-07-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202604_female.pdf,143332,April 2026 (Women Only),pdf,423750,2026-07-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202603_total.pdf,143331,March 2026,pdf,524135,2026-07-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202603_female.pdf,143330,March 2026 (Women Only),pdf,424259,2026-07-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_202602.xlsx,143351,February 2026,xlsx,23085,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_Female_202602.xlsx,143350,February 2026 (Women Only),xlsx,27778,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_202601.xlsx,143349,January 2026,xlsx,23115,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_Female_202601.xlsx,143348,January 2026 (Women Only),xlsx,25482,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_202512.xlsx,143347,December 2025,xlsx,23124,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_Female_202512.xlsx,143346,December 2025 (Women Only),xlsx,25500,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_202511.xlsx,143345,November 2025,xlsx,23120,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_Female_202511.xlsx,143344,November 2025 (Women Only),xlsx,25494,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_202510.xlsx,143343,October 2025,xlsx,23454,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active Duty_Female_202510.xlsx,143342,October 2025 (Women Only),xlsx,25500,2026-07-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202509_total.pdf,140487,September 2025,pdf,544688,2025-12-11
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202509_female.pdf,140486,September 2025 (Women Only),pdf,442754,2025-12-11
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202508_total.pdf,139459,August 2025,pdf,545049,2025-10-01
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202508_female.pdf,139458,August 2025 (Women Only),pdf,444867,2025-10-01
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202507_total.pdf,139456,July 2025,pdf,542071,2025-10-01
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202507_female.pdf,139455,July 2025 (Women Only),pdf,444153,2025-10-01
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202506_total.pdf,138351,June 2025,pdf,542881,2025-08-14
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202506_female.pdf,138350,June 2025 (Women Only),pdf,441848,2025-08-14
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202505_total.pdf,137057,May 2025,pdf,541959,2025-06-29
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202505_female.pdf,137056,May 2025 (Women Only),pdf,441448,2025-06-29
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_202504.pdf,136511,April 2025,pdf,542590,2025-06-04
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg202504_female.pdf,136510,April 2025 (Women Only),pdf,444753,2025-06-04
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2503.pdf,135877,March 2025,pdf,542575,2025-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2503_female.pdf,135876,March 2025 (Women Only),pdf,444656,2025-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2502_ussfadd.pdf,135861,February 2025,pdf,544164,2025-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2502_female_ussfadd.pdf,135872,February 2025 (Women Only),pdf,444697,2025-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2501_ussfadd.pdf,135858,January 2025,pdf,543277,2025-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2501_female_ussfadd.pdf,135857,January 2025 (Women Only),pdf,444167,2025-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2412_ussfadd.pdf,135856,December 2024,pdf,543480,2025-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2412_female_ussfadd.pdf,135855,December 2024 (Women Only),pdf,445410,2025-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2411.pdf,134086,November 2024,pdf,541021,2025-02-21
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2411_female.pdf,134085,November 2024 (Women Only),pdf,441960,2025-02-21
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2410.pdf,134060,October 2024,pdf,541488,2025-02-20
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2410_female.pdf,134059,October 2024 (Women Only),pdf,442285,2025-02-20
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2409.pdf,132977,September 2024,pdf,541354,2024-12-23
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2409_female.pdf,132976,September 2024 (Women Only),pdf,442254,2024-12-23
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2408.pdf,132112,August 2024,pdf,542005,2024-10-28
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2408_female.pdf,132111,August 2024 (Women Only),pdf,442094,2024-10-28
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2407.pdf,132078,July 2024,pdf,539040,2024-10-24
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2407_female.pdf,132077,July 2024 (Women Only),pdf,441347,2024-10-24
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2406.pdf,130761,June 2024,pdf,539413,2024-08-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2406_female.pdf,130760,June 2024 (Women Only),pdf,441353,2024-08-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2405.pdf,130556,May 2024,pdf,538531,2024-07-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2405_female.pdf,130555,May 2024 (Women Only),pdf,440897,2024-07-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_2404.pdf,129598,April 2024,pdf,539367,2024-06-04
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2404_female.pdf,129597,April 2024 (Women Only),pdf,441320,2024-06-04
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_2403.pdf,129154,March 2024,pdf,539620,2024-05-09
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2403_female.pdf,129153,March 2024 (Women Only),pdf,441929,2024-05-09
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2402.pdf,128282,February 2024,pdf,541131,2024-04-04
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2402_female.pdf,128281,February 2024 (Women Only),pdf,441943,2024-04-04
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2401.pdf,128741,January 2024,pdf,540197,2024-04-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2401_female.pdf,128740,January 2024 (Women Only),pdf,441349,2024-04-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2312.pdf,127256,December 2023,pdf,540249,2024-02-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2312_female.pdf,127255,December 2023 (Women Only),pdf,441946,2024-02-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg_2311.pdf,128739,November 2023,pdf,541149,2024-04-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2311_female.pdf,128738,November 2023 (Women Only),pdf,441967,2024-04-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2310.pdf,126732,October 2023,pdf,541637,2023-12-27
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2310_female.pdf,126731,October 2023 (Women Only),pdf,442282,2023-12-27
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2309.pdf,126010,September 2023,pdf,541605,2023-11-14
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2309_female.pdf,126009,September 2023 (Women Only),pdf,442286,2023-11-14
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2308.pdf,125153,August 2023,pdf,542067,2023-10-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2308_female.pdf,125152,August 2023 (Women Only),pdf,442063,2023-10-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2307.pdf,124723,July 2023,pdf,539098,2023-09-09
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2307_female.pdf,124721,July 2023 (Women Only),pdf,442295,2023-09-09
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2306.pdf,124230,June 2023,pdf,547176,2023-08-11
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2306_female.pdf,124229,June 2023 (Women Only),pdf,442858,2023-08-11
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2305.pdf,123440,May 2023,pdf,546314,2023-06-26
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2305_female.pdf,123439,May 2023 (Women Only),pdf,441860,2023-06-26
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2304.pdf,123226,April 2023,pdf,547053,2023-06-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2304_female.pdf,123225,April 2023 (Women Only),pdf,442246,2023-06-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2303.pdf,122488,March 2023,pdf,547360,2023-05-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2303_female.pdf,122487,March 2023 (Women Only),pdf,442866,2023-05-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2302.pdf,122483,February 2023,pdf,548878,2023-05-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2302_female.pdf,121923,February 2023 (Women Only),pdf,442888,2023-04-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2301.pdf,121736,January 2023,pdf,548346,2023-03-23
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2301_female.pdf,121735,January 2023 (Women Only),pdf,442853,2023-03-23
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2212.pdf,121394,December 2022,pdf,545778,2023-03-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2212_female.pdf,121401,December 2022 (Women Only),pdf,442897,2023-03-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2211.pdf,121400,November 2022,pdf,546666,2023-03-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2211_female.pdf,121399,November 2022 (Women Only),pdf,561856,2023-03-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2210.pdf,120104,October 2022,pdf,541330,2022-12-14
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2210_female.pdf,120103,October 2022 (Women Only),pdf,444299,2022-12-14
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2209.pdf,119555,September 2022,pdf,540779,2022-11-08
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2209_female.pdf,119554,September 2022 (Women Only),pdf,441618,2022-11-08
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2208.pdf,119326,August 2022,pdf,541261,2022-10-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2208_female.pdf,119325,August 2022 (Women Only),pdf,441454,2022-10-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2207.pdf,118663,July 2022,pdf,538235,2022-09-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2207_female.pdf,118662,July 2022 (Women Only),pdf,440679,2022-09-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2206.pdf,118032,June 2022,pdf,538664,2022-08-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2206_female.pdf,118031,June 2022 (Women Only),pdf,440727,2022-08-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2205.pdf,117477,May 2022,pdf,537799,2022-07-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2205_female.pdf,117476,May 2022 (Women Only),pdf,440277,2022-07-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2204.pdf,117026,April 2022,pdf,538503,2022-06-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2204_female.pdf,117025,April 2022 (Women Only),pdf,440682,2022-06-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2203.pdf,116272,March 2022,pdf,538824,2022-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2203_female.pdf,116271,March 2022 (Women Only),pdf,441235,2022-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2202.pdf,115802,February 2022,pdf,540338,2022-03-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2202_female.pdf,115801,February 2022 (Women Only),pdf,441273,2022-03-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2201.pdf,115224,January 2022,pdf,539403,2022-02-28
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2201_female.pdf,115223,January 2022 (Women Only),pdf,440702,2022-02-28
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2112.pdf,114820,December 2021,pdf,539479,2022-02-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2112_female.pdf,114819,December 2021 (Women Only),pdf,441296,2022-02-03
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2111.pdf,114289,November 2021,pdf,540337,2021-12-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2111_female.pdf,114287,November 2021 (Women Only)),pdf,441306,2021-12-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2110.pdf,113782,October 2021,pdf,540818,2021-12-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2110_female.pdf,113783,October 2021 (Women Only),pdf,441641,2021-12-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2109.pdf,113540,September 2021,pdf,540809,2021-11-17
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2109_female.pdf,113539,September 2021 (Women Only),pdf,441615,2021-11-17
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2108.pdf,112794,August 2021,pdf,541236,2021-10-06
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2108_female.pdf,112795,August 2021 (Women Only),pdf,448379,2021-10-06
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2107.pdf,112134,July 2021,pdf,538345,2021-08-27
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2107_female.pdf,112131,July 2021 (Women Only),pdf,441761,2021-08-27
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2106.pdf,111670,June 2021,pdf,538525,2021-08-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2106_female.pdf,111671,June 2021 (Women Only),pdf,440698,2021-08-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2105.pdf,111669,May 2021,pdf,536561,2021-08-05
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2105_female.pdf,110949,May 2021 (Women Only),pdf,440243,2021-06-29
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2104.pdf,110383,April 2021,pdf,537279,2021-05-26
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2104_female.pdf,110382,April 2021 (Women Only),pdf,440715,2021-05-26
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2103.pdf,109840,March 2021,pdf,537529,2021-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2103_female.pdf,109807,March 2021 (Women Only),pdf,441280,2021-04-29
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2102.pdf,109814,February 2021,pdf,538992,2021-04-29
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2102_female.pdf,109366,February 2021 (Women Only),pdf,441284,2021-04-09
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2101.pdf,109813,January 2021,pdf,533861,2021-04-29
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2101_female.pdf,108622,January 2021 (Women Only),pdf,436352,2021-03-04
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2012.pdf,109812,December 2020,pdf,533959,2021-04-29
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2012_female.pdf,107569,December 2020 (Women Only),pdf,437002,2021-01-27
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2011.pdf,109837,November 2020,pdf,539063,2021-04-30
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2011_female.pdf,106918,November 2020 (Women Only),pdf,437019,2021-01-07
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2010.pdf,106267,October 2020,pdf,535329,2020-12-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),rg2010_female.pdf,106266,October 2020 (Women Only),pdf,437364,2020-12-02
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2020.xlsx,119558,FY 2020 (Excel Tabs),xlsx,55518,2022-11-08
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2019.xlsx,119557,FY 2019 (Excel Tabs),xlsx,53891,2022-11-08
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2018.xlsx,112091,FY 2018 (Excel Tabs),xlsx,53438,2021-08-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2017.xlsx,112090,FY 2017 (Excel Tabs),xlsx,55508,2021-08-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2016.xlsx,112089,FY 2016 (Excel Tabs),xlsx,60422,2021-08-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2015.xlsx,112124,FY 2015 (Excel Tabs),xlsx,57787,2021-08-27
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2014.xlsx,112088,FY 2014 (Excel Tabs),xlsx,56106,2021-08-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2013.xlsx,112087,FY 2013 (Excel Tabs),xlsx,54234,2021-08-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_FY2012.xlsx,112086,FY 2012 (Excel Tabs),xlsx,54213,2021-08-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),Rank_Grade_FY2001 - FY2011.zip,112085,FY 2001 - FY 2011 (Monthly PDFs),zip,773836,2021-08-25
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_Females_FY2012-FY2020.xlsx,119556,FY 2012 - FY 2020 (Women Only),xlsx,52402,2022-11-08
+Military Personnel,3,Active Duty Military Personnel by Service by Rank/Grade (Updated Monthly),DRS_42486_Active_Duty_Females_FY2001-FY2011.xlsx,112072,FY 2001 - FY 2011 (Women Only),xlsx,220493,2021-08-25
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202607.pdf,143682,July 2026,pdf,534310,2026-09-10
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202606.pdf,143679,June 2026,pdf,532897,2026-09-10
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202605.pdf,143337,May 2026,pdf,533961,2026-07-02
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202604.pdf,143334,April 2026,pdf,532828,2026-07-02
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202603.pdf,142833,March 2026,pdf,532981,2026-05-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202602.pdf,142741,February 2026,pdf,534239,2026-04-24
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202601.pdf,142235,January 2026,pdf,562224,2026-03-16
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202512.pdf,141783,December 2025,pdf,562246,2026-02-20
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202511.pdf,141454,November 2025,pdf,563078,2026-02-06
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202510.pdf,140627,October 2025,pdf,565272,2025-12-18
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202509.pdf,140488,September 2025,pdf,563536,2025-12-11
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202508.pdf,139461,August 2025,pdf,563889,2025-10-01
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202507.pdf,139457,July 2025,pdf,560696,2025-10-01
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202506.pdf,138352,June 2025,pdf,561409,2025-08-14
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202505.pdf,137058,May 2025,pdf,559045,2025-06-29
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),selres_202504.pdf,136512,April 2025,pdf,561362,2025-06-04
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202503.pdf,135878,March 2025,pdf,561138,2025-04-30
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202502.pdf,135471,February 2025,pdf,559815,2025-04-16
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202501.pdf,134644,January 2025,pdf,557514,2025-03-11
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202412.pdf,134336,December 2024,pdf,559427,2025-02-27
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202411.pdf,134087,November 2024,pdf,560284,2025-02-21
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202410.pdf,134061,October 2024,pdf,560750,2025-02-20
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202409.pdf,132972,September 2024,pdf,560128,2024-12-23
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202408.pdf,132995,August 2024,pdf,560617,2024-12-26
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202407.pdf,132970,July 2024,pdf,557656,2024-12-23
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202406.pdf,130762,June 2024,pdf,558025,2024-08-07
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202405.pdf,130557,May 2024,pdf,557153,2024-07-25
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202404.pdf,129599,April 2024,pdf,557902,2024-06-04
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202403.pdf,129155,March 2024,pdf,558170,2024-05-09
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202402.pdf,128286,February 2024,pdf,559696,2024-04-04
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202401.pdf,127686,January 2024,pdf,558769,2024-03-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202312.pdf,127212,December 2023,pdf,558810,2024-02-01
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202311.pdf,126735,November 2023,pdf,559708,2023-12-27
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202310.pdf,126697,October 2023,pdf,560138,2023-12-26
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202309.pdf,126011,September 2023,pdf,560144,2023-11-14
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202308.pdf,125154,August 2023,pdf,560603,2023-10-02
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202307.pdf,124724,July 2023,pdf,557644,2023-09-09
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202306.pdf,124231,June 2023,pdf,560492,2023-08-11
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202305.pdf,124716,May 2023,pdf,559143,2023-09-09
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202304.pdf,124715,April 2023,pdf,559938,2023-09-09
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202303.pdf,122489,March 2023,pdf,560209,2023-05-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202302.pdf,121925,February 2023,pdf,561714,2023-04-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202301.pdf,121919,January 2023,pdf,561235,2023-04-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202212.pdf,121397,December 2022,pdf,560985,2023-03-03
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202211.pdf,121390,November 2022,pdf,561856,2023-03-03
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202210.pdf,120105,October 2022,pdf,560246,2022-12-14
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202209.pdf,119553,September 2022,pdf,560214,2022-11-08
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202208.pdf,119111,August 2022,pdf,560697,2022-10-06
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202207.pdf,118664,July 2022,pdf,557733,2022-09-07
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202206.pdf,118033,June 2022,pdf,557997,2022-08-03
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202205.pdf,117478,May 2022,pdf,557129,2022-07-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202204.pdf,117027,April 2022,pdf,557881,2022-06-07
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202203.pdf,116273,March 2022,pdf,557977,2022-04-30
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202202.pdf,115918,February 2022,pdf,559280,2022-04-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202201.pdf,115225,January 2022,pdf,558123,2022-02-28
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202112.pdf,114821,December 2021,pdf,558411,2022-02-03
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202111.pdf,114288,November 2021,pdf,559466,2021-12-30
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202110.pdf,113784,October 2021,pdf,560138,2021-12-02
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202109.pdf,113541,September 2021,pdf,560175,2021-11-17
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202108.pdf,112799,August 2021,pdf,560640,2021-10-06
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202107.pdf,112133,July 2021,pdf,555854,2021-08-27
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202106.pdf,111674,June 2021,pdf,557832,2021-08-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202105.pdf,111673,May 2021,pdf,556775,2021-08-05
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202104.pdf,110381,April 2020,pdf,557554,2021-05-26
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202103.pdf,109806,March 2021,pdf,557876,2021-04-29
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202102.pdf,109365,February 2021,pdf,558227,2021-04-09
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202101.pdf,108623,January 2021,pdf,552781,2021-03-04
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202012.pdf,107571,December 2020,pdf,554182,2021-01-27
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202011.pdf,109838,November 2020,pdf,559396,2021-04-30
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_202010.pdf,106265,October 2020,pdf,555521,2020-12-02
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2020.xlsx,119114,FY 2020 (Excel Tabs),xlsx,76055,2022-10-06
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2019.xlsx,119113,FY 2019 (Excel Tabs),xlsx,75468,2022-10-06
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2018.xlsx,109849,FY 2018 (Excel Tabs),xlsx,65400,2021-04-30
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2017.xlsx,97807,FY 2017 (Excel Tabs),xlsx,82314,2020-01-10
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2016.xlsx,112125,FY 2016 (Excel Tabs),xlsx,63446,2021-08-27
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2015.xlsx,65568,FY 2015 (Excel Tabs),xlsx,74858,2017-01-25
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2014.xlsx,65569,FY 2014 (Excel Tabs),xlsx,68462,2017-01-25
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2013.xlsx,65571,FY 2013 (Excel Tabs),xlsx,65756,2017-01-25
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY2012.xlsx,65572,FY 2012 (Excel Tabs),xlsx,66521,2017-01-25
+Military Personnel,21,Selected Reserve Personnel by Reserve Component and Rank/Grade (Updated Monthly),DRS_42486_SelRes_FY01_FY2011.zip,65611,FY 2001 - FY 2011 (Excel Tabs),zip,600297,2017-01-26
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_educational_discipline_code_table.docx,124851,Education Discipline Code Table,docx,187174,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_incentive_program_type_code_table.docx,124852,Incentive Program Type Code Table,docx,22987,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_language_code_table.docx,124868,Language Code Table,docx,97829,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_major_bodies_of_water_code_table.docx,124853,Major Body of Water Code Table,docx,28714,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_MGIB-SR_basic_benefit_eligibility_status_code_table.docx,124854,MGIB-SR Basic Benefit Eligibility Status Code Table,docx,22685,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_MGIB-SR_kicker_incentive_eligibility_status_code_table.docx,125585,MGIB-SR Kicker Incentive Eligibility Status,docx,23165,2023-10-23
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_MGIB-AD_enrollment_basis_code_table.docx,124855,MGIB-AD Enrollment Basis Code Table,docx,18610,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_MGIB-AD_kicker_incentive_rate_code_table.docx,124856,MGIB-AD Kicker Incentive Rate Code Table,docx,24747,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_military_award_code_table_v2.docx,124858,Military Award Code Table,docx,24989,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_officer_career_category_code_table_v2.docx,125584,Officer Career Category Code,docx,25733,2023-10-23
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_pcs_time_on_station_exceptions_code_table.docx,124859,PCS Time on Station Exceptions Code Table,docx,19765,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_post-911_GIBill_enlistment_incentive_kicker_rate_code_table.docx,125583,Post-911 GI Bill Enlistment Incentive Kicker Rate,docx,20597,2023-10-23
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_post-911_GI_Bill_affiliation_incentive_kicker_rate_code_table.docx,125582,GI Bill Affiliation Incentive Kicker Rate,docx,17736,2023-10-23
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_post-911_GIBill_reenlistment_incentive_kicker_rate_code_table.docx,125581,Post-911 GI Bill Reenlistment Incentive Kicker Rate,docx,17056,2023-10-23
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_postal_region_state_code_table.docx,124863,Postal Region State Code Table,docx,22783,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_race_code_table.docx,124864,Race Code Table,docx,19441,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_Religious_Affiliation_Codes_table.docx,143666,Religious Affiliation Code Table,docx,36553,2026-09-04
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_standard_occupational _code_table.docx,125580,Standard Occupation Code Table,docx,113191,2023-10-23
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_strength_accounting_code_table_V2.docx,124866,Strength Accounting Code Table,docx,21963,2023-09-15
+Military Personnel,27,Uniformed Services Human Resource Information System Tables,ushris_uniformed_service_rank_code_table_v2.docx,124867,Uniformed Service Rank Code Table,docx,29664,2023-09-15
+Civilian Personnel,5,DoD Employment by Organization and Function,historical.zip,24285,Historical Reports - FY 1996 - 2011,zip,22344809,2013-03-18
+Civilian Personnel,6,DoD Civilian Strength (FY 1950 -  FY 2001),trends.pdf,24281,Graph,pdf,11897,2013-03-18
+Civilian Personnel,6,DoD Civilian Strength (FY 1950 -  FY 2001),tab1.xls,24280,Table,xls,1521152,2013-03-18
+Civilian Personnel,7,DoD Civilian Employment Strength - Component Detail (FY 1977 - FY 2001),M04FIG1.pdf,24282,Graph,pdf,8197,2013-03-18
+Civilian Personnel,7,DoD Civilian Employment Strength - Component Detail (FY 1977 - FY 2001),m04fig1.xls,24283,Table,xls,1505280,2013-03-18
+Civilian Personnel,8,DoD Civilian Manpower Statistics (M04 Report),Manpower_FY_1997-1999.zip,24284,Historical Reports - FY 1997 - 1999,zip,1370787,2013-03-18
+Historical Publications,9,Atlas/Data Abstract for the US and Selected Areas (L03),L03.zip,134883,Historical Reports - FY 1994-2009,zip,8691162,2025-03-20
+Historical Publications,10,Selected Manpower Statistics (M01),M01.zip,24274,Historical Reports - FY 1995-2005,zip,6705587,2013-03-18
+Historical Publications,11,Distribution of Personnel by State and by Selected Locations (M02),M02.zip,24275,Historical Reports - FY 1994 - 2009,zip,4048765,2013-03-18
+Historical Publications,12,Civilian Manpower Statistics (M04),M04.zip,24276,Historical Reports - Dec 1997 -Sep 1999,zip,1370463,2013-03-18
+Historical Publications,13,Worldwide Manpower Distribution by Geographical Area (M05),M05.zip,24278,Historical Reports - Dec 1997 - Sep 2005,zip,13009035,2013-03-18
+Historical Publications,14,Worldwide U.S. Active Duty Military Personnel Casualties,M07.zip,24279,Historical Reports - Dec 1997 - Sep 1998,zip,2192696,2013-03-18
