@@ -9,7 +9,7 @@ import { findExtremes } from "@/lib/chart-extremes";
 import { SEGMENT_LABEL_STYLE, segmentLabelFits, yLabelInset } from "@/lib/chart-bars";
 import { useElementWidth } from "@/lib/use-element-width";
 import { REGIONS } from "@/lib/troops-regions";
-import { formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, type RegionStack } from "@/lib/troops-derive";
+import { contingencyAt, formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, termOnDate, type RegionStack } from "@/lib/troops-derive";
 import { MEASURES } from "@/lib/troops-types";
 import { useTroopsState } from "./TroopsState";
 
@@ -18,9 +18,21 @@ const AXIS_H = 18;
 const BAND_H = 20;
 
 const MARKER_NOTES = {
+  sources: {
+    title: "Before 2008: three sources, and afloat counted in some",
+    body: "1996 and 1998–2005 are DMDC’s own 309A tables, which include afloat and unassigned personnel (from about 6,000 to 100,000 people). The rest of 1950–2007 comes from the troopdata compilation of DMDC reports, which has no afloat or unassigned rows, so those bars run lower by that amount, and a jump where the source changes is not a change in troops. 1951–52 are left out (the compilation only imputes them). No percent change is shown between bars from different sources.",
+  },
+  oif: {
+    title: "2003–2005: Iraq, Kuwait and Afghanistan are not reported",
+    body: "DMDC’s country tables print these as zero with a pointer to a separate deployment table, so they are shown as not reported, not zero. The dashed boxes above the bars are DMDC’s separate totals for forces in and around Iraq: 183,002 active duty in 2003, and 170,647 (2004) and 192,600 (2005) including deployed Reserve and National Guard, plus 19,500 in Afghanistan in 2005 (rounded). They are a different basis, can overlap country rows (forces deployed from Germany are also counted in Germany), and are in no bar or total.",
+  },
+  estimate: {
+    title: "2006 and 2007: estimates",
+    body: "DMDC published no country table for September 2006 or 2007. The compilation fills them from other reports and press figures (Iraq 141,100 and 170,000; Kuwait 44,400 and 48,500), so every 2006–07 figure is shown as an estimate, in a lighter bar.",
+  },
   break: {
-    title: "FY2018 on: what is counted changes",
-    body: "Through the Sep 2017 table (FY2017) these counts include personnel deployed in support of contingency operations. From the Dec 2017 table on, DMDC counts only personnel permanently assigned to a location, so FY2018 and later are on a different basis. Overseas active duty fell by about 53,000 between Sep and Dec 2017 while the U.S. total rose: a reallocation, not a withdrawal. Afghanistan, Iraq and Syria print as blank, not zero, until Sep 2021. Compare across this line with care.",
+    title: "2018 on: what is counted changes",
+    body: "Through the Sep 2017 table these counts include personnel deployed in support of contingency operations. From the Dec 2017 table on, DMDC counts only personnel permanently assigned to a location, so 2018 and later are on a different basis. Overseas active duty fell by about 53,000 between Sep and Dec 2017 while the U.S. total rose: a reallocation, not a withdrawal. Afghanistan, Iraq and Syria print as blank, not zero, until Sep 2021. Compare across this line with care.",
   },
   army: {
     title: "The Army did not report",
@@ -30,39 +42,45 @@ const MARKER_NOTES = {
 type MarkerId = keyof typeof MARKER_NOTES;
 
 /**
- * Stacked bars by region, one per fiscal year (each year's Sep 30 table; the year in progress shows its latest
- * quarter, hatched), with a presidential-term band under the axis like the other Presidency pages. Reads the shared
- * state: the window (President), the branch, and the Country filter (that place's own troops). Click or drag picks
- * the year; arrow keys move it when the chart has focus. A numbered marker (tap to pin) flags the Dec 2017 break.
+ * Stacked bars by region, one per year (each year's Sep 30 table; June 30 for 1950-56; the year in progress shows its
+ * latest quarter, hatched), on a true year axis (1951-52 are empty slots), with a presidential-term band under the axis
+ * like the other Presidency pages. Reads the shared state: the window (President), the branch, and the Country filter
+ * (that place's own troops). Click or drag picks the year; arrow keys move it when the chart has focus. Numbered markers
+ * (tap to pin) explain what changes: the source and afloat coverage before 2008, the 2003-05 Iraq/Afghanistan gap (whose
+ * DMDC deployment totals are drawn as dashed boxes above those bars), the 2006-07 estimates, and the 2018 definition change.
  */
 export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   const { data, yi, range, setYear, country, measure } = useTroopsState();
-  const { years, terms, places, breakYear } = data.payload;
+  const { periods, years, terms, places, breakYear } = data.payload;
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const width = measured || 960;
   const narrow = width < NARROW_W;
   const height = narrow ? 250 : 320;
   const ml = 10;
   const mr = 6;
-  const mt = 30;
+  const mt = 42;
   const mb = AXIS_H + BAND_H + 6;
   const innerW = width - ml - mr;
   const innerH = height - mt - mb;
-  const n = range[1] - range[0] + 1;
-  const max = Math.max(0, ...stacks.map((s) => s.total));
+  const fy0 = years[range[0]].fy;
+  const nSlots = years[range[1]].fy - fy0 + 1;
+  const max = Math.max(0, ...stacks.map((s) => s.total + s.ghost));
   const { ticks, top } = niceCountTicks(max);
-  // Push the first bar right if a tall one would sit on top of a y-axis label.
-  const step0 = innerW / n;
+  // Push the first bar right if a tall one would sit on top of a y-axis label (shared rule, lib/chart-bars).
+  const step0 = innerW / nSlots;
   const inset = yLabelInset({
     ticks,
     format: formatCountAxis,
-    tops: Array.from({ length: n }, (_, i) => stacks.find((s) => s.yi === range[0] + i)?.total ?? 0),
+    tops: Array.from({ length: nSlots }, (_, sl) => {
+      const s = stacks.find((x) => years[x.yi].fy === fy0 + sl);
+      return s ? s.total + s.ghost : 0;
+    }),
     step: step0,
     barW: Math.min(Math.max(2, step0 * 0.72), 64),
   });
-  const step = (innerW - inset) / n;
+  const step = (innerW - inset) / nSlots;
   const bw = Math.min(Math.max(2, step * 0.72), 64);
-  const xOf = (i: number) => inset + (i - range[0]) * step;
+  const xOf = (i: number) => inset + (years[i].fy - fy0) * step;
   const hatchId = useId().replace(/:/g, "");
   const tip = useTooltip<number>();
   const [hover, setHover] = useState(-1);
@@ -73,7 +91,10 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   const byYi = new Map(stacks.map((s) => [s.yi, s]));
   const indexAt = (e: { clientX: number }) => {
     const r = svgRef.current!.getBoundingClientRect();
-    return range[0] + Math.min(n - 1, Math.max(0, Math.floor((e.clientX - r.left - ml - inset) / step)));
+    const slot = (e.clientX - r.left - ml - inset) / step - 0.5;
+    let best = range[0];
+    for (let i = range[0]; i <= range[1]; i++) if (Math.abs(years[i].fy - fy0 - slot) < Math.abs(years[best].fy - fy0 - slot)) best = i;
+    return best;
   };
   const onDown = (e: PointerEvent<SVGSVGElement>) => {
     down.current = true;
@@ -103,24 +124,45 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
     setYear(Math.abs(d) === 999 ? (d < 0 ? range[0] : range[1]) : yi + d);
   };
 
-  const visible = terms.map((t) => ({ t, s: Math.max(t.from, range[0]), e: Math.min(t.to, range[1]) })).filter((o) => o.s <= o.e);
+  // Presidential terms by the president in office on each slot's snapshot date, so the band is continuous across the 1951-52 gap.
+  const slotDate = (fy: number) => (fy <= 1956 ? `${fy}-06-30` : `${fy}-09-30`);
+  const runs: { term: number; s: number; e: number }[] = [];
+  for (let sl = 0; sl < nSlots; sl++) {
+    const t = termOnDate(terms, slotDate(fy0 + sl));
+    if (t < 0) continue;
+    const last = runs[runs.length - 1];
+    if (last && last.term === t && last.e === sl - 1) last.e = sl;
+    else runs.push({ term: t, s: sl, e: sl });
+  }
 
-  // Peak and low of the drawn stacks (recomputed for the window, branch and country shown). Complete years only:
-  // a partial year is always low.
+  // Peak and low of the drawn stacks (recomputed for the window, branch and country shown). Complete years only.
   const marks = (() => {
     const { peak, low } = findExtremes(stacks.map((s) => ({ day: s.yi, value: s.unavailable || s.total <= 0 || years[s.yi].partial ? null : s.total })));
-    return [peak, low].flatMap((p) => (p && p.day !== yi ? [{ i: p.day, text: `FY${years[p.day].fy}: ${formatCountCompact(byYi.get(p.day)!.total)}` }] : []));
+    return [peak, low].flatMap((p) => (p && p.day !== yi ? [{ i: p.day, text: `${years[p.day].fy}: ${formatCountCompact(byYi.get(p.day)!.total)}` }] : []));
   })();
   const sel = years[yi];
-  const chipLabel = `FY${sel.fy}${sel.partial ? " · partial" : ""}`;
+  const chipLabel = `${sel.fy}${sel.partial ? " · partial" : periods[sel.period].estimate ? " · estimate" : ""}`;
   const chipW = chipLabel.length * 6.6;
 
-  // Numbered markers.
+  // Numbered markers, left to right.
+  const inWin = (fy: number) => fy >= fy0 && fy <= years[range[1]].fy;
+  const yearIdx = (fy: number) => years.findIndex((yy) => yy.fy === fy);
+  const center = (a: number, b: number) => {
+    const ia = years.findIndex((yy) => yy.fy >= Math.max(a, fy0));
+    const ib = years.findLastIndex((yy) => yy.fy <= Math.min(b, years[range[1]].fy));
+    return ia >= 0 && ib >= ia ? (xOf(ia) + xOf(ib) + step) / 2 : null;
+  };
   const markers: { id: MarkerId; n: number; x: number }[] = [];
+  const firstPre2008 = years.findIndex((yy, i) => i >= range[0] && i <= range[1] && yy.fy <= 2007);
+  if (firstPre2008 >= 0) markers.push({ id: "sources", n: 0, x: inWin(1996) ? xOf(yearIdx(1996)) + step / 2 : xOf(firstPre2008) + step / 2 });
+  const oifX = stacks.some((s) => s.ghost > 0) ? center(2003, 2005) : null;
+  if (oifX !== null) markers.push({ id: "oif", n: 0, x: oifX });
+  const estX = center(2006, 2007);
+  if (estX !== null) markers.push({ id: "estimate", n: 0, x: estX });
   if (breakYear > range[0] && breakYear <= range[1]) markers.push({ id: "break", n: 0, x: xOf(breakYear) });
   const gap = data.payload.armyGapYears.filter((i) => i >= range[0] && i <= range[1]);
   if (gap.length) markers.push({ id: "army", n: 0, x: (xOf(gap[0]) + xOf(gap[gap.length - 1]) + step) / 2 });
-  markers.forEach((m, k) => (m.n = k + 1));
+  markers.sort((a, b) => a.x - b.x).forEach((m, k) => (m.n = k + 1));
 
   const [hoverMarker, setHoverMarker] = useState<MarkerId | null>(null);
   const [pinned, setPinned] = useState<MarkerId | null>(null);
@@ -144,7 +186,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
 
   const anyUnavailable = stacks.some((s) => s.unavailable);
   const countryName = country >= 0 ? places[country].name : null;
-  const labelEvery = step >= 30 ? 1 : step >= 15 ? 2 : 5;
+  const labelAt = (fy: number) => (step >= 30 ? true : step >= 15 ? fy % 2 === 0 : fy % 5 === 0);
 
   return (
     <div
@@ -153,13 +195,13 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
       tabIndex={0}
       onKeyDown={onKey}
       role="group"
-      aria-label="Troops chart. Left and right arrow keys change the fiscal year."
+      aria-label="Troops chart. Left and right arrow keys change the year."
     >
       <ChartFrame
         width={width}
         height={height}
         margin={{ top: mt, right: mr, bottom: mb, left: ml }}
-        ariaLabel={`Stacked bars of active-duty personnel stationed abroad by region, FY${years[range[0]].fy} to FY${years[range[1]].fy}, ${MEASURES[measure].label}${countryName ? `, ${countryName} only` : ""}`}
+        ariaLabel={`Stacked bars of active-duty personnel stationed abroad by region, ${years[range[0]].fy} to ${years[range[1]].fy}, ${MEASURES[measure].label}${countryName ? `, ${countryName} only` : ""}`}
         svgRef={svgRef}
         onPointerLeave={onLeave}
         svgProps={{ onPointerDown: onDown, onPointerMove: onMove, onPointerUp: onUp, onPointerCancel: onUp, style: { cursor: "crosshair", touchAction: "pan-y" } }}
@@ -184,19 +226,22 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
               if (s.unavailable) {
                 return <rect key={s.yi} x={x} y={4} width={bw} height={innerH - 4} rx={2} style={{ fill: "none", stroke: "var(--ink-faint)", strokeDasharray: "3 3" }} />;
               }
+              const estimate = periods[s.pi].estimate;
               let acc = 0;
               return (
                 <g key={s.yi}>
-                  {s.regions.map((v, k) => {
-                    if (v <= 0) return null;
-                    const y1 = y(acc + v);
-                    const h = y(acc) - y1;
-                    acc += v;
-                    return <rect key={k} x={x} y={y1} width={bw} height={Math.max(h, 0)} style={{ fill: REGIONS[k].color }} />;
-                  })}
-                  {years[s.yi].partial && acc > 0 && (
+                  <g opacity={estimate ? 0.55 : 1}>
+                    {s.regions.map((v, k) => {
+                      if (v <= 0) return null;
+                      const y1 = y(acc + v);
+                      const h = y(acc) - y1;
+                      acc += v;
+                      return <rect key={k} x={x} y={y1} width={bw} height={Math.max(h, 0)} style={{ fill: REGIONS[k].color }} />;
+                    })}
+                  </g>
+                  {(years[s.yi].partial || estimate) && acc > 0 && (
                     <>
-                      <rect x={x} y={y(acc)} width={bw} height={y(0) - y(acc)} fill={`url(#${hatchId})`} />
+                      {years[s.yi].partial && <rect x={x} y={y(acc)} width={bw} height={y(0) - y(acc)} fill={`url(#${hatchId})`} />}
                       <rect x={x} y={y(acc)} width={bw} height={y(0) - y(acc)} style={{ fill: "none", stroke: "var(--ink-muted)", strokeDasharray: "3 2" }} />
                     </>
                   )}
@@ -216,6 +261,9 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                       ) : null;
                     });
                   })()}
+                  {s.ghost > 0 && (
+                    <rect x={x} y={y(s.total + s.ghost)} width={bw} height={Math.max(0, y(s.total) - y(s.total + s.ghost))} rx={1} style={{ fill: "color-mix(in oklab, var(--ink) 7%, transparent)", stroke: "var(--ink)", strokeDasharray: "3 2", strokeWidth: 1 }} />
+                  )}
                 </g>
               );
             })}
@@ -223,8 +271,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
               {marks.map((m) => {
                 const w = m.text.length * 6.3;
                 const cx = Math.min(Math.max(xOf(m.i) + step / 2, w / 2 + 2), innerW - w / 2 - 2);
-                let tall = byYi.get(m.i)!.total;
-                for (const s of stacks) if (Math.abs(xOf(s.yi) + step / 2 - cx) <= w / 2 + bw / 2) tall = Math.max(tall, s.total);
+                let tall = byYi.get(m.i)!.total + byYi.get(m.i)!.ghost;
+                for (const s of stacks) if (Math.abs(xOf(s.yi) + step / 2 - cx) <= w / 2 + bw / 2) tall = Math.max(tall, s.total + s.ghost);
                 return (
                   <text key={m.i} x={cx} y={y(tall) - 6} textAnchor="middle" className="fill-ink text-[11px] font-medium" style={{ stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" }}>
                     {m.text}
@@ -232,21 +280,22 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                 );
               })}
             </g>
-            {stacks.map((s, i) =>
-              i % labelEvery === 0 || s.yi === yi ? (
+            {stacks.map((s) =>
+              labelAt(years[s.yi].fy) || s.yi === yi ? (
                 <text key={s.yi} className="axis-tick-label" x={xOf(s.yi) + step / 2} y={innerH + 14} textAnchor="middle" style={s.yi === yi ? { fill: "var(--ink)", fontWeight: 600 } : undefined}>
                   {years[s.yi].fy}
                 </text>
               ) : null,
             )}
-            {/* Presidential terms: the administration in office for most of each fiscal year. Labels placed right to left so they never collide. */}
+            {/* Presidential terms: the president in office on the snapshot date. Labels placed right to left so they never collide. */}
             <g transform={`translate(0,${innerH + AXIS_H + 2})`}>
-              {visible.map(({ t, s, e }) => {
-                const x = s === range[0] ? 0 : xOf(s);
-                const w = (e - s + 1) * step + (s === range[0] ? inset : 0);
+              {runs.map(({ term, s: a, e }) => {
+                const t = terms[term];
                 const c = t.party === "R" ? "--rep" : "--dem";
+                const x = a === 0 ? 0 : inset + a * step;
+                const w = (e - a + 1) * step + (a === 0 ? inset : 0);
                 return (
-                  <g key={t.termId}>
+                  <g key={`${term}-${a}`}>
                     <rect x={x + 0.5} y={0} width={Math.max(0, w - 1)} height={BAND_H} rx={2} style={{ fill: `color-mix(in oklab, var(${c}) 20%, var(--surface))` }} />
                     <rect x={x + 0.5} y={0} width={Math.max(0, w - 1)} height={2.5} style={{ fill: `var(${c})` }} />
                   </g>
@@ -255,32 +304,42 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
               {(() => {
                 let nextStart = innerW + mr;
                 const out = [];
-                for (let k = visible.length - 1; k >= 0; k--) {
-                  const { t, s, e } = visible[k];
-                  const x = s === range[0] ? 0 : xOf(s);
-                  const w = (e - s + 1) * step + (s === range[0] ? inset : 0);
-                  const tw = t.last.length * 6.4;
-                  let tx = Math.min(x + w / 2 - tw / 2, nextStart - 3 - tw, x + w - tw - 1);
-                  tx = Math.max(tx, x + 1);
-                  if ((tx + tw > nextStart - 2 && k < visible.length - 1) || tw > w + 14) continue;
-                  nextStart = tx;
-                  out.push(
-                    <text key={t.termId} x={tx} y={BAND_H - 5} style={{ fontSize: 11, fill: "var(--ink)" }}>
-                      {t.last}
-                    </text>,
-                  );
+                for (let k = runs.length - 1; k >= 0; k--) {
+                  const { term, s: a, e } = runs[k];
+                  const t = terms[term];
+                  const x = a === 0 ? 0 : inset + a * step;
+                  const w = (e - a + 1) * step + (a === 0 ? inset : 0);
+                  // Full last name, else a four-letter abbreviation: a label that does not fit is shortened, never dropped.
+                  for (const text of [t.last, `${t.last.slice(0, 4)}.`]) {
+                    const tw = text.length * 6.4;
+                    let tx = Math.min(x + w / 2 - tw / 2, nextStart - 3 - tw, x + w - tw - 1);
+                    tx = Math.max(tx, x + 1);
+                    if ((tx + tw > nextStart - 2 && k < runs.length - 1) || tw > w + 4) continue;
+                    nextStart = tx;
+                    out.push(
+                      <text key={`${term}-${a}`} x={tx} y={BAND_H - 5} style={{ fontSize: 11, fill: "var(--ink)" }}>
+                        {text}
+                      </text>,
+                    );
+                    break;
+                  }
                 }
                 return out;
               })()}
             </g>
             {yi >= range[0] && yi <= range[1] && (
-              <text className="axis-tick-label" x={Math.min(Math.max(xOf(yi) + step / 2, chipW / 2), innerW - chipW / 2)} y={-14} textAnchor="middle" style={{ fill: "var(--ink)", fontWeight: 600 }}>
+              <text className="axis-tick-label" x={Math.min(Math.max(xOf(yi) + step / 2, chipW / 2), innerW - chipW / 2)} y={-8} textAnchor="middle" style={{ fill: "var(--ink)", fontWeight: 600 }}>
                 {chipLabel}
               </text>
             )}
             {max <= 0 && !anyUnavailable && (
               <text x={innerW / 2} y={innerH / 2} textAnchor="middle" style={{ fill: "var(--ink-muted)", fontSize: 13 }}>
-                No troops recorded for these filters in {range[0] === range[1] ? `FY${years[range[0]].fy}` : `FY${years[range[0]].fy}–${years[range[1]].fy}`}.
+                No troops recorded for these filters in {range[0] === range[1] ? years[range[0]].fy : `${years[range[0]].fy}–${years[range[1]].fy}`}.
+              </text>
+            )}
+            {anyUnavailable && measure === 5 && max <= 0 && (
+              <text x={innerW / 2} y={innerH / 2} textAnchor="middle" style={{ fill: "var(--ink-muted)", fontSize: 13 }}>
+                DMDC’s tables before 2008 have no Coast Guard column.
               </text>
             )}
           </>
@@ -320,6 +379,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   );
 }
 
+const SOURCE_TEXT = { dmdc_location: "DMDC location table", dmdc_309a: "DMDC 309A table", troopdata: "troopdata compilation of DMDC reports" } as const;
+
 function ChartTip({ yi, stack, measure }: { yi: number; stack: RegionStack | undefined; measure: number }) {
   const { data, country } = useTroopsState();
   const { periods, years, terms, places } = data.payload;
@@ -327,21 +388,22 @@ function ChartTip({ yi, stack, measure }: { yi: number; stack: RegionStack | und
   const p = periods[year.period];
   const term = terms[year.term]?.last;
   const rowsOut = stack ? stack.regions.map((v, k) => [v, k] as const).filter(([v]) => v > 0).sort((a, b) => b[0] - a[0]) : [];
+  const ghost = contingencyAt(data, measure, year.period, country);
+  const snap = year.partial ? `partial year · through ${p.label}` : p.snapshot === "june" ? `June 30, ${year.fy}` : `Sep 30, ${year.fy}`;
   return (
     <div>
       <div style={{ fontWeight: 600 }}>
-        FY{year.fy}
+        {year.fy}
         {term ? ` · ${term}` : ""}
       </div>
       <div className="tt-mono" style={{ marginBottom: 4 }}>
-        {year.partial ? `partial year · through ${p.label}` : `Sep 30, ${year.fy}`}
-        {" · "}
-        {p.basis === "includes_deployed" ? "includes deployed forces" : "permanently assigned only"}
+        {snap} · {SOURCE_TEXT[p.source]}
+        {p.estimate ? " · estimate" : ""}
         {country >= 0 ? ` · ${places[country].name}` : ""}
         {measure > 0 ? ` · ${measureLabel(measure)}` : ""}
       </div>
       {stack?.unavailable ? (
-        <div>Army did not report, so there is no {measure === 0 ? "all-branch" : "Army"} figure.</div>
+        <div>{measure === 5 ? "DMDC’s tables before 2008 have no Coast Guard column." : `Army did not report, so there is no ${measure === 0 ? "all-branch" : "Army"} figure.`}</div>
       ) : (
         <>
           {rowsOut.map(([v, k]) => (
@@ -357,6 +419,23 @@ function ChartTip({ yi, stack, measure }: { yi: number; stack: RegionStack | und
             <span>Abroad</span>
             <span className="tt-mono">{formatCount(stack?.total ?? 0)}</span>
           </div>
+          {!p.afloatIncluded && country < 0 && measure === 0 && (
+            <div className="tt-mono" style={{ marginTop: 4, opacity: 0.85 }}>
+              No afloat or unassigned rows in this source
+            </div>
+          )}
+          {ghost.map((g) => (
+            <div key={g.operation} style={{ marginTop: 4, opacity: 0.9 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 14 }}>
+                <span>Not in the bar: in/around {places[g.place].name}</span>
+                <span className="tt-mono">{formatCount(g.value)}</span>
+              </div>
+              <div className="tt-mono" style={{ opacity: 0.85 }}>
+                DMDC {g.operation} total · {g.basis === "active_duty" ? "active duty" : "includes Reserve/Guard"}
+                {g.rounded ? " · rounded" : ""}
+              </div>
+            </div>
+          ))}
           {p.suppressed.length > 0 && country < 0 && (
             <div className="tt-mono" style={{ marginTop: 4, opacity: 0.85 }}>
               Not reported (blank in source): {p.suppressed.join(", ")}

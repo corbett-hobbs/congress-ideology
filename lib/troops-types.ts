@@ -25,9 +25,21 @@ export interface TroopsPlace {
   region: RegionId | null;
 }
 
+export type TroopsSource = "dmdc_location" | "dmdc_309a" | "troopdata";
+
 export interface TroopsPeriod {
-  /** `YYYY-MM` quarter end. */
+  /** `YYYY-MM`: quarter end for the location tables; `YYYY-09` / `YYYY-06` for the history snapshots. */
   period: string;
+  /** Where the figures come from: DMDC's location tables (Sep 2008-), DMDC's 309A tables (Sep 1996, 1998-2005), or troopdata (the rest of 1950-2007). */
+  source: TroopsSource;
+  /** June 30 for 1950-1956, September 30 afterwards, or the quarter end for a location table. */
+  snapshot: "june" | "september" | "quarter";
+  /** Sep 2006 and Sep 2007: DMDC publishes no table, troopdata's figures are compiled and press-based. */
+  estimate: boolean;
+  /** The table carries afloat and unassigned personnel (the 309A tables and the location tables do; troopdata does not). */
+  afloatIncluded: boolean;
+  /** The table has a Coast Guard column (the location tables only). */
+  coastGuard: boolean;
   /** "Mar 2026" */
   label: string;
   /** Absolute quarter number, `year * 4 + (month / 3 - 1)`: the chart's time axis. */
@@ -50,12 +62,25 @@ export interface TroopsPeriod {
  * and is `partial`.
  */
 export interface TroopsYear {
+  /** The year of the snapshot (the September 30 table; June 30 for 1950-56). For 1977 on this is also the federal fiscal year. */
   fy: number;
   /** Index into `periods` of the snapshot this year shows. */
   period: number;
   partial: boolean;
-  /** Index into `terms`: the administration in office for most of the fiscal year. */
+  /** Index into `terms`: the administration in office on the snapshot date. */
   term: number;
+}
+
+export interface TroopsContingency {
+  /** Index into `periods` (the snapshot it annotates). */
+  period: number;
+  operation: "OIF" | "OEF";
+  /** Index into `places` (Iraq or Afghanistan). */
+  place: number;
+  /** `[total, army, navy, marine corps, air force]`, indexed like `MEASURES` (Coast Guard has none). */
+  v: [number, number, number, number, number];
+  basis: "active_duty" | "includes_reserve_guard";
+  rounded: boolean;
 }
 
 export interface TroopsTerm {
@@ -84,8 +109,10 @@ export interface TroopsPayload {
   /** Index into `years` of the latest year: the page's default. */
   defaultYear: number;
   dataThrough: string;
-  /** Index into `years` of the first fiscal year (FY2018) whose snapshot counts permanent assignment only. */
+  /** Index into `years` of the first year (2018) whose snapshot counts permanent assignment only. */
   breakYear: number;
+  /** DMDC's separate "in/around" Iraq and Afghanistan totals for 2003-05, drawn on the chart beside the unavailable country rows; never added to a total. */
+  contingency: TroopsContingency[];
   /** Indices into `years` whose snapshot has no Army figure (none today: the three Army-N/A quarters are not September). */
   armyGapYears: number[];
 }

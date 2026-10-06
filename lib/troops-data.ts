@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { administration } from "./executive-orders-entities";
 import { worldMapFile, type WorldMapFile } from "./foreign-aid-entities";
 import { buildTroopsPayload } from "./troops-derive";
-import { troopsMeta, troopsRow } from "./troops-entities";
+import { historyMeta, historyRow, troopsMeta, troopsRow } from "./troops-entities";
 import type { TroopsPayload } from "./troops-types";
 
 /**
@@ -23,6 +23,7 @@ export function getTroopsPayload(): TroopsPayload {
     (read("troops_location.json") as unknown[]).map((r) => troopsRow.parse(r)),
     troopsMeta.parse(read("troops_location_meta.json")),
     (read("administrations.json") as unknown[]).map((r) => administration.parse(r)),
+    { rows: (read("troops_history.json") as unknown[]).map((r) => historyRow.parse(r)), meta: historyMeta.parse(read("troops_history_meta.json")) },
   );
   return cache;
 }

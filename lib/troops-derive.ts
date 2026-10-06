@@ -1,7 +1,8 @@
 import type { Administration } from "./executive-orders-entities";
 import { regionOf, REGION_IDS, type RegionId } from "./troops-regions";
-import type { TroopsMeta, TroopsRow } from "./troops-entities";
-import { MEASURES, type TroopsPayload, type TroopsPeriod, type TroopsPlace, type TroopsRowTuple, type TroopsTerm, type TroopsYear } from "./troops-types";
+import type { HistoryMeta, HistoryRow, TroopsMeta, TroopsRow } from "./troops-entities";
+import { HISTORICAL_ADMINISTRATIONS } from "./troops-presidents";
+import { MEASURES, type TroopsContingency, type TroopsPayload, type TroopsPeriod, type TroopsPlace, type TroopsRowTuple, type TroopsTerm, type TroopsYear } from "./troops-types";
 
 /**
  * Pure shaping for /presidency/national-security: the pipeline's rows + meta + the administrations table become one
@@ -24,47 +25,79 @@ export function quarterEnd(q: number): string {
 
 export class TroopsPayloadError extends Error {}
 
-const DAY = 86400000;
-const day = (iso: string) => Date.parse(`${iso}T00:00:00Z`) / DAY;
-
-/** Index (into `admins`) of the administration in office for most of fiscal year `fy` (Oct 1 to Sep 30); -1 if none. */
-export function termForFiscalYear(admins: readonly { start: string; end: string | null }[], fy: number): number {
-  const a = day(`${fy - 1}-10-01`);
-  const b = day(`${fy}-09-30`);
-  let best = -1;
-  let bestDays = 0;
-  admins.forEach((t, i) => {
-    const days = Math.min(b, t.end === null ? Infinity : day(t.end)) - Math.max(a, day(t.start)) + 1;
-    if (days > bestDays) {
-      bestDays = days;
-      best = i;
-    }
-  });
-  return best;
+/** Index (into `admins`) of the administration in office on `date` (ISO); -1 if none. */
+export function termOnDate(admins: readonly { start: string; end: string | null }[], date: string): number {
+  return admins.findIndex((t) => date >= t.start && (t.end === null || date <= t.end));
 }
 
-export function buildTroopsPayload(rows: readonly TroopsRow[], meta: TroopsMeta, admins: readonly Administration[]): TroopsPayload {
+export interface HistoryInput {
+  rows: readonly HistoryRow[];
+  meta: HistoryMeta;
+}
+
+/**
+ * Location rows (Sep 2008-) + history rows (1950-2007) + presidents -> one payload. Every snapshot is a `period`; each
+ * year picks its September 30 snapshot (June 30 for 1950-56; the latest quarter for the year in progress, `partial`).
+ * A place that appears in both sources must agree on class and ISO3 (the names come from one canonical table family).
+ */
+export function buildTroopsPayload(rows: readonly TroopsRow[], meta: TroopsMeta, admins: readonly Administration[], history: HistoryInput): TroopsPayload {
   const periods: TroopsPeriod[] = [];
   const places: TroopsPlace[] = [];
   const placeIdx = new Map<string, number>();
-  for (const r of rows) {
-    if (placeIdx.has(r.name)) continue;
+  const allAdmins = [...HISTORICAL_ADMINISTRATIONS, ...admins].filter((a, i, l) => l.findIndex((b) => b.term_id === a.term_id) === i).sort((a, b) => a.start.localeCompare(b.start));
+  const note = (r: { name: string; class: "host" | "territory" | "afloat_unassigned"; iso3: string | null }) => {
     const cls = r.class === "afloat_unassigned" ? "afloat" : r.class;
+    const have = placeIdx.get(r.name);
+    if (have !== undefined) {
+      const p = places[have];
+      if (p.cls !== cls || p.iso3 !== r.iso3) throw new TroopsPayloadError(`${r.name} differs between sources: ${p.cls}/${p.iso3} vs ${cls}/${r.iso3}`);
+      return;
+    }
     const region = regionOf(r);
     if (cls !== "territory" && region === null) throw new TroopsPayloadError(`no region for ${r.name} (${r.iso3 ?? "no ISO3"})`);
     placeIdx.set(r.name, places.length);
     places.push({ name: r.name, iso3: r.iso3, cls, region });
-  }
+  };
+  for (const r of history.rows) note(r);
+  for (const r of rows) note(r);
   places.sort((a, b) => a.name.localeCompare(b.name));
   placeIdx.clear();
   places.forEach((p, i) => placeIdx.set(p.name, i));
 
-  const used = admins.filter((a) => meta.periods.some((p) => p.as_of >= a.start && (a.end === null || p.as_of <= a.end)));
   const suppressedBy = new Map<string, string[]>();
-  for (const r of rows) if (r.state === "suppressed") (suppressedBy.get(r.period) ?? suppressedBy.set(r.period, []).get(r.period)!).push(r.name);
+  const add = (key: string, name: string) => (suppressedBy.get(key) ?? suppressedBy.set(key, []).get(key)!).push(name);
+  for (const r of history.rows) if (r.state === "suppressed") add(`h${r.year}`, r.name);
+  for (const r of rows) if (r.state === "suppressed") add(r.period, r.name);
+
+  // History snapshots first (chronological), then the location quarters.
+  const histYears = history.meta.years;
+  for (const y of histYears) {
+    const month = y.snapshot === "june" ? "06" : "09";
+    periods.push({
+      period: `${y.year}-${month}`,
+      source: y.source === "dmdc_309a" ? "dmdc_309a" : "troopdata",
+      snapshot: y.snapshot,
+      estimate: y.quality === "estimate",
+      afloatIncluded: y.afloat_unassigned_total !== null,
+      coastGuard: false,
+      label: periodLabel(`${y.year}-${month}`),
+      quarter: quarterOf(`${y.year}-${month}`),
+      asOf: y.snapshot === "june" ? `${y.year}-06-30` : `${y.year}-09-30`,
+      armyNotReported: false,
+      basis: "includes_deployed",
+      suppressed: suppressedBy.get(`h${y.year}`) ?? [],
+      overseasGap: null,
+      spaceForce: "none",
+    });
+  }
   for (const p of meta.periods) {
     periods.push({
       period: p.period,
+      source: "dmdc_location",
+      snapshot: "quarter",
+      estimate: false,
+      afloatIncluded: true,
+      coastGuard: true,
       label: periodLabel(p.period),
       quarter: quarterOf(p.period),
       asOf: p.as_of,
@@ -75,23 +108,26 @@ export function buildTroopsPayload(rows: readonly TroopsRow[], meta: TroopsMeta,
       spaceForce: p.space_force,
     });
   }
+  const nHist = histYears.length;
   const periodIdx = new Map(periods.map((p, i) => [p.period, i]));
+  const histIdx = new Map(histYears.map((y, i) => [y.year, i]));
 
-  // Fiscal years: Sep 30 is the one table DMDC published every year; the year in progress shows its latest quarter.
-  const fyOf = (period: string) => Number(period.slice(0, 4)) + (Number(period.slice(5, 7)) > 9 ? 1 : 0);
+  // One bar per year: the Sep 30 table (June 30 for 1950-56); the latest year may only have an earlier quarter.
+  const yearOf = (i: number) => (i < nHist ? histYears[i].year : Number(periods[i].period.slice(0, 4)) + (Number(periods[i].period.slice(5, 7)) > 9 ? 1 : 0));
   const years: TroopsYear[] = [];
-  for (const fy of [...new Set(periods.map((p) => fyOf(p.period)))].sort((a, b) => a - b)) {
-    const inYear = periods.map((p, i) => ({ p, i })).filter((x) => fyOf(x.p.period) === fy);
-    const sep = inYear.find((x) => x.p.period.endsWith("-09"));
+  const lastYear = yearOf(periods.length - 1);
+  for (const fy of [...new Set(periods.map((_, i) => yearOf(i)))].sort((a, b) => a - b)) {
+    const inYear = periods.map((_, i) => i).filter((i) => yearOf(i) === fy);
+    const sep = inYear.find((i) => periods[i].period.endsWith("-09") || periods[i].snapshot === "june");
     const pick = sep ?? inYear[inYear.length - 1];
-    years.push({ fy, period: pick.i, partial: !sep, term: termForFiscalYear(used, fy) });
+    years.push({ fy, period: pick, partial: !sep && fy === lastYear, term: termOnDate(allAdmins, periods[pick].asOf) });
   }
-  if (years.some((y) => y.term < 0)) throw new TroopsPayloadError("a fiscal year has no administration");
+  if (years.some((y) => y.term < 0)) throw new TroopsPayloadError("a year has no administration");
   const usedTerms = [...new Set(years.map((y) => y.term))];
   const remap = new Map(usedTerms.map((t, i) => [t, i]));
   for (const y of years) y.term = remap.get(y.term)!;
   const terms: TroopsTerm[] = usedTerms.map((ti, i) => {
-    const a = used[ti];
+    const a = allAdmins[ti];
     const idx = years.map((y, yi) => (y.term === i ? yi : -1)).filter((x) => x >= 0);
     return {
       termId: a.term_id,
@@ -106,11 +142,25 @@ export function buildTroopsPayload(rows: readonly TroopsRow[], meta: TroopsMeta,
     };
   });
 
-  const tuples: TroopsRowTuple[] = rows.map((r) => {
+  const tuples: TroopsRowTuple[] = [];
+  for (const r of history.rows) {
+    tuples.push([placeIdx.get(r.name)!, histIdx.get(r.year)!, r.state === "value" ? 0 : 1, r.total, r.army, r.navy, r.marine_corps, r.air_force, null]);
+  }
+  for (const r of rows) {
     const afsf = r.air_force === null ? null : r.air_force + (r.space_force ?? 0);
-    return [placeIdx.get(r.name)!, periodIdx.get(r.period)!, r.state === "value" ? 0 : r.state === "suppressed" ? 1 : 2, r.total, r.army, r.navy, r.marine_corps, afsf, r.coast_guard];
-  });
+    tuples.push([placeIdx.get(r.name)!, periodIdx.get(r.period)!, r.state === "value" ? 0 : r.state === "suppressed" ? 1 : 2, r.total, r.army, r.navy, r.marine_corps, afsf, r.coast_guard]);
+  }
   tuples.sort((a, b) => a[1] - b[1] || a[0] - b[0]);
+
+  const contingency: TroopsContingency[] = history.meta.contingency.map((c) => ({
+    period: histIdx.get(c.year)!,
+    operation: c.operation,
+    place: placeIdx.get(c.name)!,
+    v: [c.total, c.army, c.navy, c.marine_corps, c.air_force],
+    basis: c.basis,
+    rounded: c.rounded,
+  }));
+  if (contingency.some((c) => c.place === undefined || c.period === undefined)) throw new TroopsPayloadError("a contingency annotation points at an unknown place or year");
 
   return {
     places,
@@ -121,6 +171,7 @@ export function buildTroopsPayload(rows: readonly TroopsRow[], meta: TroopsMeta,
     defaultYear: years.length - 1,
     dataThrough: meta.data_through,
     breakYear: years.findIndex((y) => periods[y.period].period >= meta.break.first_period_after),
+    contingency,
     armyGapYears: years.map((y, i) => (periods[y.period].armyNotReported ? i : -1)).filter((i) => i >= 0),
   };
 }
@@ -145,8 +196,35 @@ export function decodeTroops(payload: TroopsPayload): TroopsData {
   return { payload, byPeriod };
 }
 
-/** True when a branch figure does not exist for the period (Army, and so All branches, were N/A). */
-export const unavailable = (data: TroopsData, m: number, pi: number) => data.payload.periods[pi].armyNotReported && (m === 0 || m === 1);
+/**
+ * True when a branch figure does not exist for the period: Army (and so All branches) were N/A in three 2022-23
+ * quarters, and the pre-2008 tables have no Coast Guard column.
+ */
+export const unavailable = (data: TroopsData, m: number, pi: number) => {
+  const p = data.payload.periods[pi];
+  return (p.armyNotReported && (m === 0 || m === 1)) || (m === 5 && !p.coastGuard);
+};
+
+export interface ContingencyNote {
+  operation: "OIF" | "OEF";
+  place: number;
+  /** The figure for the selected branch (All branches = DMDC's total). */
+  value: number;
+  total: number;
+  basis: "active_duty" | "includes_reserve_guard";
+  rounded: boolean;
+}
+
+/**
+ * DMDC's separate in/around Iraq and Afghanistan totals for period `pi` (2003-05 only), for branch measure `m`
+ * (Coast Guard has none). `country >= 0` keeps only that place. Annotations, never added to a total.
+ */
+export function contingencyAt(data: TroopsData, m: number, pi: number, country = -1): ContingencyNote[] {
+  if (m > 4) return [];
+  return data.payload.contingency
+    .filter((c) => c.period === pi && (country < 0 || c.place === country))
+    .map((c) => ({ operation: c.operation, place: c.place, value: c.v[m], total: c.v[0], basis: c.basis, rounded: c.rounded }));
+}
 
 export interface RegionStack {
   /** Index into `years`. */
@@ -156,11 +234,13 @@ export interface RegionStack {
   /** Σ over hosts and afloat/unassigned, by region (suppressed rows count 0), in `REGION_IDS` order. */
   regions: number[];
   total: number;
-  /** No figure exists (Army N/A for All branches / Army). */
+  /** No figure exists (Army N/A for All branches / Army; no Coast Guard before 2008). */
   unavailable: boolean;
+  /** DMDC's in/around Iraq (and Afghanistan) deployment total for this year and branch, drawn above the bar as an annotation; 0 when none. */
+  ghost: number;
 }
 
-/** One stack per fiscal year in `[ya, yb]` for branch measure `m`; `country >= 0` keeps only that place. */
+/** One stack per year in `[ya, yb]` for branch measure `m`; `country >= 0` keeps only that place. */
 export function stackByRegion(data: TroopsData, m: number, ya: number, yb: number, country = -1): RegionStack[] {
   const out: RegionStack[] = [];
   for (let yi = ya; yi <= yb; yi++) {
@@ -174,7 +254,7 @@ export function stackByRegion(data: TroopsData, m: number, ya: number, yb: numbe
         if (r.state !== 1 && r.v[m] !== null) regions[REGION_IDS.indexOf(pl.region)] += r.v[m]!;
       }
     }
-    out.push({ yi, pi, regions, total: regions.reduce((a, b) => a + b, 0), unavailable: un });
+    out.push({ yi, pi, regions, total: regions.reduce((a, b) => a + b, 0), unavailable: un, ghost: contingencyAt(data, m, pi, country).reduce((a, c) => a + c.value, 0) });
   }
   return out;
 }
@@ -198,6 +278,8 @@ export interface PeriodView {
   /** hosts + afloat: the "abroad" figure the bars use (Σ rows). */
   abroad: number;
   unavailable: boolean;
+  /** In/around Iraq and Afghanistan totals DMDC prints beside the not-reported rows (2003-05). */
+  contingency: ContingencyNote[];
 }
 
 export function periodView(data: TroopsData, m: number, pi: number): PeriodView {
@@ -228,23 +310,28 @@ export function periodView(data: TroopsData, m: number, pi: number): PeriodView 
   territories.sort((a, b) => b.value - a.value);
   const hostTotal = ranked.reduce((s, r) => s + r.value, 0);
   const territoryTotal = territories.reduce((s, t) => s + t.value, 0);
-  return { ranked: ranked.map((r, i) => ({ ...r, rank: i + 1 })), suppressed, afloat, territories, territoryTotal, hostTotal, abroad: hostTotal + afloat, unavailable: un };
+  return { ranked: ranked.map((r, i) => ({ ...r, rank: i + 1 })), suppressed, afloat, territories, territoryTotal, hostTotal, abroad: hostTotal + afloat, unavailable: un, contingency: contingencyAt(data, m, pi) };
 }
 
 /**
- * Change vs the previous fiscal year, only when it is like-for-like: both years have a figure and sit on the same
- * side of the Dec 2017 break. Null otherwise (the page says why instead of showing a misleading percentage).
+ * Change vs the previous bar, only when it is like-for-like: adjacent years (a 1951-52 gap has none), both with a figure,
+ * from the same source (DMDC location, DMDC 309A, or troopdata: they differ on afloat and on 2003-05 contingency forces),
+ * and on the same side of the Dec 2017 break. Null otherwise (the page says so instead of showing a misleading percentage).
  */
 export function changeVsPrior(data: TroopsData, m: number, yi: number, country = -1): { prev: number; pct: number } | null {
   const prev = yi - 1;
   if (prev < 0) return null;
-  const { breakYear, years } = data.payload;
+  const { breakYear, years, periods } = data.payload;
+  if (years[yi].fy - years[prev].fy !== 1) return null;
   if (prev < breakYear && yi >= breakYear) return null;
   if (years[yi].partial || years[prev].partial) return null;
+  const a = periods[years[yi].period];
+  const b = periods[years[prev].period];
+  if (a.source !== b.source || a.snapshot !== b.snapshot) return null;
   if (unavailable(data, m, years[yi].period) || unavailable(data, m, years[prev].period)) return null;
-  const a = stackByRegion(data, m, yi, yi, country)[0].total;
-  const b = stackByRegion(data, m, prev, prev, country)[0].total;
-  return b > 0 ? { prev, pct: a / b - 1 } : null;
+  const x = stackByRegion(data, m, yi, yi, country)[0].total;
+  const y = stackByRegion(data, m, prev, prev, country)[0].total;
+  return y > 0 ? { prev, pct: x / y - 1 } : null;
 }
 
 // --- axis and number formatting ----------------------------------------------------------------------------------
@@ -261,8 +348,8 @@ export function niceCountTicks(max: number): { ticks: number[]; top: number } {
 }
 
 export const formatCount = (n: number) => Math.round(n).toLocaleString("en-US");
-export const formatCountAxis = (v: number) => (v >= 1000 ? `${+(v / 1000).toFixed(1)}k` : String(v));
-export const formatCountCompact = (v: number) => (v >= 10000 ? `${Math.round(v / 1000)}k` : v >= 1000 ? `${+(v / 1000).toFixed(1)}k` : String(Math.round(v)));
+export const formatCountAxis = (v: number) => (v >= 1_000_000 ? `${+(v / 1_000_000).toFixed(1)}M` : v >= 1000 ? `${+(v / 1000).toFixed(1)}k` : String(v));
+export const formatCountCompact = (v: number) => (v >= 1_000_000 ? `${+(v / 1_000_000).toFixed(2)}M` : v >= 10000 ? `${Math.round(v / 1000)}k` : v >= 1000 ? `${+(v / 1000).toFixed(1)}k` : String(Math.round(v)));
 
 /** Fixed absolute bins for the map, so periods stay comparable while scrubbing. */
 export const MAP_BINS = {

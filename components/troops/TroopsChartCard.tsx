@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { REGIONS } from "@/lib/troops-regions";
-import { changeVsPrior, formatCount, measureLabel, stackByRegion } from "@/lib/troops-derive";
+import { changeVsPrior, contingencyAt, formatCount, measureLabel, stackByRegion } from "@/lib/troops-derive";
 import { useTroopsState } from "./TroopsState";
 import { TroopsChart } from "./TroopsChart";
 import { RegionLegend, TD, TH, TableView } from "./shared";
@@ -12,16 +12,19 @@ import { RegionLegend, TD, TH, TableView } from "./shared";
 /** "How many troops are stationed abroad": the stacked-bar time series and everything that explains it. */
 export function TroopsChartCard() {
   const { data, yi, range, country, measure } = useTroopsState();
-  const { periods, years, places, breakYear } = data.payload;
+  const { periods, years, places } = data.payload;
   const stacks = useMemo(() => stackByRegion(data, measure, range[0], range[1], country), [data, measure, range, country]);
   const cur = stacks.find((s) => s.yi === yi);
   const change = changeVsPrior(data, measure, yi, country);
   const showing = [country >= 0 ? places[country].name : null, measure > 0 ? measureLabel(measure) : null].filter(Boolean);
   const anyUnavailable = stacks.some((s) => s.unavailable);
   const only = country >= 0 ? places[country].region : null;
+  const anyGhost = stacks.some((x) => x.ghost > 0);
+  const anyEstimate = stacks.some((x) => periods[x.pi].estimate && !x.unavailable);
   const year = years[yi];
   const p = periods[year.period];
-  const when = year.partial ? `FY${year.fy} (partial, through ${p.label})` : `FY${year.fy} (Sep 30, ${year.fy})`;
+  const ghost = contingencyAt(data, measure, year.period, country);
+  const when = year.partial ? `${year.fy} (partial, through ${p.label})` : `${year.fy} (${p.snapshot === "june" ? "June" : "Sep"} 30)`;
 
   const lede = cur?.unavailable ? (
     <>
@@ -30,9 +33,10 @@ export function TroopsChartCard() {
   ) : (
     <>
       {when} · <b className="font-semibold text-ink">{formatCount(cur?.total ?? 0)}</b> {country >= 0 ? `in ${places[country].name}` : "abroad"}
-      {change && ` · ${change.pct > 0 ? "+" : change.pct < 0 ? "−" : ""}${Math.abs(Math.round(change.pct * 1000) / 10)}% vs. FY${years[change.prev].fy}`}
-      {!change && yi === breakYear && " · a new definition starts here, so no change is shown"}
+      {change && ` · ${change.pct > 0 ? "+" : change.pct < 0 ? "−" : ""}${Math.abs(Math.round(change.pct * 1000) / 10)}% vs. ${years[change.prev].fy}`}
+      {!change && yi > 0 && !year.partial && !cur?.unavailable && " · no change shown: a different source or definition from the previous bar"}
       {" · active-duty personnel by place of duty"}
+      {ghost.length > 0 && ` · not counted: ${formatCount(ghost.reduce((a, g) => a + g.value, 0))} in/around ${ghost.map((g) => places[g.place].name).join(" and ")} (DMDC’s separate table, dashed box)`}
     </>
   );
 
@@ -47,28 +51,48 @@ export function TroopsChartCard() {
         {anyUnavailable && (
           <span className="inline-flex items-center gap-1.5">
             <i className="inline-block h-[11px] w-[11px] rounded-[2px] border border-dashed border-ink-faint" />
-            Army did not report
+            {measure === 5 ? "No Coast Guard column" : "Army did not report"}
+          </span>
+        )}
+        {anyGhost && (
+          <span className="inline-flex items-center gap-1.5">
+            <i className="inline-block h-[11px] w-[11px] rounded-[2px] border border-dashed border-ink" style={{ background: "color-mix(in oklab, var(--ink) 7%, transparent)" }} />
+            In/around Iraq and Afghanistan (DMDC, separate table; not in the bars)
+          </span>
+        )}
+        {anyEstimate && (
+          <span className="inline-flex items-center gap-1.5">
+            <i className="inline-block h-[11px] w-[11px] rounded-[2px] border border-dashed border-ink-muted" style={{ background: "color-mix(in oklab, var(--ink) 25%, transparent)" }} />
+            Estimate (lighter bars)
           </span>
         )}
       </RegionLegend>
       <MethodologyNote>
         <p>
-          Band under the axis: administration in office for most of the fiscal year (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic). A fiscal year runs October 1 to
-          September 30, and each bar is DMDC’s September 30 table, the one table it has published every year since 2008. Each bar is the active-duty personnel DMDC places at a foreign host, plus the “afloat and unassigned” rows; U.S.
-          territories (Guam, Puerto Rico, American Samoa, the Northern Mariana Islands, the U.S. Virgin Islands) are left out. Bars add up the country rows, so a few years differ from DMDC’s printed overseas total by a documented
-          amount (at most 612 people).
+          Band under the axis: the president in office on the snapshot date (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic). Each bar is one year’s table:
+          DMDC’s September 30 report (June 30 for 1950–56, the only snapshot those years have). From 1977 that is also the federal fiscal year; before it the fiscal year ended June 30, so the axis says “year”. Each bar is the
+          active-duty personnel placed at a foreign host, plus the “afloat and unassigned” rows where the source has them; U.S. territories (Guam, Puerto Rico, American Samoa, the Northern Mariana Islands, the U.S. Virgin
+          Islands) are left out. From 2008 the bars add up the country rows, so a few years differ from DMDC’s printed overseas total by a documented amount (at most 612 people).
         </p>
         <p>
-          The latest year is partial (hatched): it shows the newest quarter DMDC has published, not a September table. Quarterly tables exist from 2013 and are in the pipeline data; the page shows the September one. A count that is blank in the
-          source (Afghanistan, Iraq and Syria, FY2018 to FY2021) is not reported, not zero, and adds nothing to its bar. The Army did not report in the Dec 2022, Mar 2023 and Jun 2023 quarters, which do not fall on a September table, so
-          every fiscal year here has an Army figure. Tap or hover the numbered marker for what changes at FY2018.
+          <b className="font-semibold text-ink">Sources.</b> 2008 on: DMDC’s location tables. 1996 and 1998–2005: DMDC’s own 309A country tables, with afloat and unassigned personnel and four branches. Everything else from 1950 to 2007
+          is the troopdata compilation of DMDC reports (Allen, Flynn and Martinez Machain 2022), which has no afloat or unassigned rows, so its bars run lower by that amount and the source change at 1996 and 2008 is not a change in
+          troops; 1997 and 2006–07 are also troopdata. No percent change is shown between bars from different sources. 1951 and 1952 are left out because the compilation only imputes them. Sep 2006 and 2007 are estimates (DMDC
+          published no table): lighter bars. The latest year is partial (hatched): the newest quarter published so far.
+        </p>
+        <p>
+          <b className="font-semibold text-ink">Iraq, Kuwait and Afghanistan, 2003–2005,</b> are not reported in DMDC’s country tables (printed as zero beside a pointer to a separate table, and the 2003–04 foreign total is labelled “Less
+          OIF”), so they add nothing to those bars. The dashed boxes above the bars are DMDC’s separate totals for forces in and around Iraq (183,002 active duty in 2003; 170,647 in 2004 and 192,600 in 2005 including deployed Reserve and
+          National Guard) and Afghanistan (19,500 in 2005, same basis, rounded). They are on a different basis from the bars, may overlap country rows, and are in no total. A count that is blank in the 2008+ tables (Afghanistan, Iraq and
+          Syria, 2018 to 2021) is likewise not reported, not zero. Coast Guard is in the 2008+ tables only. Tap or hover the numbered markers for each change.
         </p>
       </MethodologyNote>
-      <TableView caption="Active-duty personnel abroad by region and fiscal year">
+      <TableView caption="Active-duty personnel abroad by region and year">
         <thead>
           <tr>
-            <th className={TH}>Fiscal year</th>
+            <th className={TH}>Year</th>
             <th className={TH}>Total</th>
+            <th className={TH}>In/around Iraq &amp; Afghanistan (not in total)</th>
             {REGIONS.map((r) => (
               <th key={r.id} className={TH}>
                 {r.label}
@@ -80,10 +104,11 @@ export function TroopsChartCard() {
           {stacks.map((s) => (
             <tr key={s.yi}>
               <td className={TD}>
-                FY{years[s.yi].fy}
-                {years[s.yi].partial ? " (partial)" : ""}
+                {years[s.yi].fy}
+                {years[s.yi].partial ? " (partial)" : periods[s.pi].estimate ? " (estimate)" : ""}
               </td>
               <td className={TD}>{s.unavailable ? "n/a" : formatCount(s.total)}</td>
+              <td className={TD}>{s.ghost > 0 ? formatCount(s.ghost) : "–"}</td>
               {s.regions.map((v, k) => (
                 <td key={k} className={TD}>
                   {s.unavailable ? "n/a" : formatCount(v)}

@@ -1,7 +1,7 @@
 "use client";
 
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
-import { BRANCH_NAMES, formatCount, type PeriodView } from "@/lib/troops-derive";
+import { BRANCH_NAMES, formatCount, formatCountCompact, type PeriodView } from "@/lib/troops-derive";
 import { useTroopsState } from "./TroopsState";
 import { BranchLegend, branchColor } from "./shared";
 
@@ -15,7 +15,14 @@ export function RankedList({ view }: { view: PeriodView }) {
   const { data, country, toggleCountry, measure } = useTroopsState();
   const places = data.payload.places;
   const scaleMax = Math.max(1, ...view.ranked.map((r) => r.value));
+  const suppressedRow = (p: number): StackedRowData => {
+    const c = view.contingency.find((x) => x.place === p);
+    return { id: String(p), label: places[p].name, segments: [], total: "n/r", delta: c ? `${formatCountCompact(c.value)}†` : undefined, selected: p === country, dimmed: country >= 0 && p !== country };
+  };
+  const withNote = view.suppressed.filter((p) => view.contingency.some((c) => c.place === p));
   const rows: StackedRowData[] = [
+    // Not-reported hosts that DMDC gives a separate in/around total for (Iraq, Afghanistan 2003-05) lead the list: they are the biggest.
+    ...withNote.map(suppressedRow),
     ...view.ranked.map((r) => ({
       id: String(r.place),
       rank: r.rank,
@@ -28,7 +35,7 @@ export function RankedList({ view }: { view: PeriodView }) {
       selected: r.place === country,
       dimmed: country >= 0 && r.place !== country,
     })),
-    ...view.suppressed.map((p) => ({ id: String(p), label: places[p].name, segments: [], total: "n/r", selected: p === country, dimmed: country >= 0 && p !== country })),
+    ...view.suppressed.filter((p) => !withNote.includes(p)).map(suppressedRow),
   ];
   return (
     <div className="flex min-h-0 min-w-0 flex-col">
@@ -44,6 +51,9 @@ export function RankedList({ view }: { view: PeriodView }) {
         </div>
       </div>
       {measure === 0 && !view.unavailable ? <BranchLegend /> : null}
+      {view.contingency.length > 0 && (
+        <p className="m-0 mt-2 text-[0.72rem] leading-[1.5] text-ink-muted">† DMDC’s separate total for forces in and around the country (a different basis; not in any bar or total).</p>
+      )}
     </div>
   );
 }

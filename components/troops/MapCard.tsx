@@ -8,7 +8,7 @@ import { useZoomPan } from "@/components/charts/use-zoom-pan";
 import { ZoomControls } from "@/components/charts/ZoomControls";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
-import { BRANCH_NAMES, MAP_BINS, formatCount, measureLabel, periodView } from "@/lib/troops-derive";
+import { BRANCH_NAMES, MAP_BINS, formatCount, measureLabel, periodView, type ContingencyNote } from "@/lib/troops-derive";
 import { regionLabel } from "@/lib/troops-regions";
 import { useTroopsState } from "./TroopsState";
 import { RankedList } from "./RankedList";
@@ -21,6 +21,8 @@ interface Hit {
   /** Source printed this host blank (not reported). */
   suppressed: boolean;
   branches: number[] | null;
+  /** DMDC's separate in/around total beside a not-reported row (2003-05). */
+  contingency?: ContingencyNote;
 }
 
 const LAND = "color-mix(in oklab, var(--ink) 7%, var(--surface))";
@@ -46,7 +48,7 @@ export function MapCard({ map }: { map: WorldMapFile }) {
   const view = useMemo(() => periodView(data, measure, pi), [data, measure, pi]);
   const p = periods[pi];
   const year = years[yi];
-  const when = year.partial ? `FY${year.fy} (partial, through ${p.label})` : `FY${year.fy} (Sep 30, ${year.fy})`;
+  const when = year.partial ? `${year.fy} (partial, through ${p.label})` : `${year.fy} (${p.snapshot === "june" ? "June" : "Sep"} 30${p.estimate ? ", estimate" : ""})`;
   const base = measure === 0 ? "var(--accent)" : branchColor(measure - 1);
 
   const byIso = useMemo(() => {
@@ -57,7 +59,7 @@ export function MapCard({ map }: { map: WorldMapFile }) {
     }
     for (const sp of view.suppressed) {
       const pl = places[sp];
-      if (pl.iso3) m.set(pl.iso3, { title: pl.name, place: sp, value: null, suppressed: true, branches: null });
+      if (pl.iso3) m.set(pl.iso3, { title: pl.name, place: sp, value: null, suppressed: true, branches: null, contingency: view.contingency.find((c) => c.place === sp) });
     }
     return m;
   }, [view, places]);
@@ -235,13 +237,15 @@ export function MapCard({ map }: { map: WorldMapFile }) {
         <p>
           {view.suppressed.length > 0 ? (
             <>
-              {view.suppressed.map((s) => places[s].name).join(", ")} {view.suppressed.length > 1 ? "print" : "prints"} blank in this quarter’s table (listed “n/r”): not reported, not zero. Afghanistan has no row at all from Sep 2023, and Iraq and
-              Syria have none from Dec 2023; an absent row is not a zero either.
+              {view.suppressed.map((x) => places[x].name).join(", ")} {view.suppressed.length > 1 ? "print" : "prints"} blank or unavailable in this table (listed “n/r”): not reported, not zero.
+              {view.contingency.length > 0 &&
+                ` The † figures are DMDC’s separate totals for forces in and around ${view.contingency.map((c) => places[c.place].name).join(" and ")}, on a different basis (${view.contingency.some((c) => c.basis === "includes_reserve_guard") ? "including deployed Reserve and National Guard" : "active duty"}); they are not in any figure above.`}
             </>
           ) : (
-            <>Afghanistan has no row at all from Sep 2023, and Iraq and Syria have none from Dec 2023; before Sep 2021 they print blank. An absent or blank row is not a zero.</>
+            <>An absent or blank row is not a zero: Afghanistan has no row at all from 2023 and Iraq and Syria none from 2024 in the DMDC tables, and several hosts print blank before.</>
           )}{" "}
-          Counts are active-duty personnel assigned to the place; from Dec 2017 that excludes deployed forces, so the years before and after are not like-for-like.
+          Counts are active-duty personnel assigned to the place. Through 2017 they include deployed forces, so the years before and after 2018 are not like-for-like, and the table’s source changes at 1996 and 2008 (see the chart’s notes).
+          {!p.afloatIncluded && " This year’s source has no afloat or unassigned rows."}
         </p>
       </MethodologyNote>
 
@@ -285,11 +289,25 @@ function MapTip({ hit }: { hit: Hit }) {
     <div>
       <div style={{ fontWeight: 600 }}>{hit.title}</div>
       <div className="tt-mono">
-        FY{fy}
+        {fy}
         {region ? ` · ${regionLabel(region)}` : ""}
       </div>
       {hit.suppressed ? (
-        <div className="tt-mono" style={{ marginTop: 4 }}>Blank in source (not reported, not zero)</div>
+        <>
+          <div className="tt-mono" style={{ marginTop: 4 }}>Blank in source (not reported, not zero)</div>
+          {hit.contingency && (
+            <div style={{ marginTop: 4 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 14, fontWeight: 600 }}>
+                <span>In/around {hit.title} (DMDC {hit.contingency.operation})</span>
+                <span className="tt-mono">{formatCount(hit.contingency.value)}</span>
+              </div>
+              <div className="tt-mono" style={{ opacity: 0.85 }}>
+                separate total · {hit.contingency.basis === "active_duty" ? "active duty" : "includes Reserve/Guard"}
+                {hit.contingency.rounded ? " · rounded" : ""}
+              </div>
+            </div>
+          )}
+        </>
       ) : hit.value === null ? (
         <div className="tt-mono" style={{ marginTop: 4 }}>No troops reported</div>
       ) : (

@@ -13,7 +13,7 @@ const LABEL = "font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-fai
 
 /**
  * The pinned filter bar for /presidency/national-security, directly under the site navigation: President (narrows
- * the periods shown), Country (the trade page's combobox, hosts only), Branch, and the quarter slider. Phones:
+ * the periods shown), Country (the trade page's combobox, hosts only), Branch, and the year slider. Phones:
  * President and Country share a row; Branch and the slider share the next.
  */
 export function TroopsFilterBar() {
@@ -60,11 +60,14 @@ export function TroopsFilterBar() {
               </select>
             </label>
             <FiscalYearPlayer
-              year={year.fy}
-              range={[years[range[0]].fy, years[range[1]].fy]}
-              onYear={(fy) => setYear(fy - years[0].fy)}
-              valueText={`FY${year.fy}, ${period.label} table${year.partial ? ", partial year" : ""}`}
-              note={year.partial ? "partial year" : undefined}
+              year={yi}
+              range={range}
+              onYear={setYear}
+              ariaLabel="Year"
+              playLabel="Play through the years"
+              label={String(year.fy)}
+              valueText={`${year.fy}, ${period.label} table${year.partial ? ", partial year" : ""}${period.estimate ? ", estimate" : ""}`}
+              note={year.partial ? "partial year" : period.estimate ? "estimate" : period.snapshot === "june" ? "June 30" : undefined}
             />
           </div>
         </div>
