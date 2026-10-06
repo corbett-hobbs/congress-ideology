@@ -111,8 +111,6 @@ function TradePage({ data }: { data: TradePageData }) {
         firstYear={firstYear}
         lastYear={lastYear}
         onRange={setRange}
-        showCong={v.showCong}
-        onShowCong={setShowCong}
         canClear={v.pin !== null}
         onClear={clearPin}
       />
@@ -125,9 +123,19 @@ function TradePage({ data }: { data: TradePageData }) {
             Who the country buys from and sells to, what tariffs were in force, and what changed when the courts,
             Congress and the White House pulled different levers. Trade values come from the Census Bureau. Calculated
             duties on imports come from the Census Bureau from 2010 and from the U.S. International Trade Commission
-            for 1993 to 2009. Pick a president or a country above and every chart follows.
+            for 1993 to 2009. Drag the years slider (or tap a president under it) or pick a country above and every chart follows.
           </p>
         </PageHeader>
+
+        <label className="-mb-2 flex w-fit cursor-pointer items-center gap-2 text-[0.8rem] text-ink">
+          <input
+            type="checkbox"
+            checked={v.showCong}
+            onChange={(e) => setShowCong(e.target.checked)}
+            className="m-0 accent-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          />
+          Show Congress control under the charts
+        </label>
 
         <TradeBalanceCard
           series={series}

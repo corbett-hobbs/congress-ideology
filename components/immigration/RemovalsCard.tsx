@@ -2,13 +2,14 @@
 
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { ChartCard } from "@/components/charts/ChartCard";
-import { RETURNS_COUNTED_FROM, filterYears, showsPendingSlot, type ImmigrationPageData } from "@/lib/immigration-derive";
+import { RETURNS_COUNTED_FROM, type ImmigrationPageData } from "@/lib/immigration-derive";
 import { RemovalsChart } from "./RemovalsChart";
 import { MethodologyNote } from "@/components/MethodologyNote";
 
-export function RemovalsCard({ data, selection, fy, onFy }: { data: ImmigrationPageData; selection: string; fy: number; onFy: (fy: number) => void }) {
-  const years = filterYears(data.years, selection);
-  const pending = showsPendingSlot(data, selection);
+export function RemovalsCard({ data, range, fy, onFy }: { data: ImmigrationPageData; range: readonly [number, number]; fy: number; onFy: (fy: number) => void }) {
+  const years = data.years.filter((y) => y.fy >= range[0] && y.fy <= range[1]);
+  // The unlocked-year slot follows the newest year: shown whenever the window reaches it.
+  const pending = range[1] >= data.lastFy;
   const termsById = new Map(data.terms.map((t) => [t.termId, t]));
   return (
     <ChartCard

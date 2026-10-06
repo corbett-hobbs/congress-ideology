@@ -24,9 +24,7 @@ export function ForeignAidPageClient({ payload, map }: { payload: AidPayload; ma
           <p>
             ForeignAssistance.gov tracks what the U.S. government actually pays out to other countries and to global and regional
             programs. This page follows those disbursements, in nominal dollars, by fiscal year (October 1 to September 30) from FY
-            {first} through FY{last}. Pick a year with the slider, or click or drag along the spending chart, and the map, the country
-            rankings and the No. 1 strip all move with it. The filters narrow everything to one president’s years, one country or one
-            sector.
+            {first} through FY{last}. Drag the slider’s handles, or tap a president under it, to choose which years the charts show, then pick a year from the map’s menu, or click or drag along the spending chart, and the map, the country rankings and the No. 1 strip all move with it. The filters narrow everything to one country or one sector.
           </p>
         </PageHeader>
 

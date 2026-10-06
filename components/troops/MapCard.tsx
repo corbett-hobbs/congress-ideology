@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
+import { useMemo, useRef, type PointerEvent } from "react";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MapCallouts } from "@/components/charts/MapCallouts";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useZoomPan } from "@/components/charts/use-zoom-pan";
+import { YearPicker } from "@/components/charts/YearPicker";
 import { ZoomControls } from "@/components/charts/ZoomControls";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
@@ -38,7 +39,7 @@ const MAX_ZOOM = 8;
  * get a marker. Territories, afloat and unassigned, and hosts with no outline are stated under the map.
  */
 export function MapCard({ map }: { map: WorldMapFile }) {
-  const { data, yi, pi, country, toggleCountry, measure } = useTroopsState();
+  const { data, yi, pi, range, setYear, country, toggleCountry, measure } = useTroopsState();
   const { places, periods, years } = data.payload;
   const tip = useTooltip<Hit>();
   const svgRef = useRef<SVGSVGElement>(null);
@@ -131,7 +132,7 @@ export function MapCard({ map }: { map: WorldMapFile }) {
               {selRank ? `${places[country].name} · No. ${selRank.rank} · ${formatCount(selRank.value)}` : `${places[country].name} · ${view.suppressed.includes(country) ? "not reported" : "no troops reported"}`}
             </span>
           )}
-          <YearPicker />
+          <YearPicker value={yi} range={range} onChange={setYear} format={(i) => `${years[i].fy}${years[i].partial ? " (partial)" : ""}`} ariaLabel="Year shown on the map" />
         </div>
       }
     >
@@ -337,58 +338,3 @@ function MapTip({ hit }: { hit: Hit }) {
   );
 }
 
-/** The map's year: a dropdown over the years in the window (newest first) plus play. It sets the page's one selected year. */
-function YearPicker() {
-  const { data, yi, range, setYear } = useTroopsState();
-  const { years } = data.payload;
-  const [playing, setPlaying] = useState(false);
-  const latest = useRef({ yi, range, setYear });
-  useEffect(() => {
-    latest.current = { yi, range, setYear };
-  });
-  useEffect(() => {
-    if (!playing) return;
-    const t = setInterval(() => {
-      const { yi: cur, range: r, setYear: set } = latest.current;
-      if (cur >= r[1]) return setPlaying(false);
-      set(cur + 1);
-      if (cur + 1 >= r[1]) setPlaying(false);
-    }, 450);
-    return () => clearInterval(t);
-  }, [playing]);
-  const idx: number[] = [];
-  for (let i = range[1]; i >= range[0]; i--) idx.push(i);
-  return (
-    <div className="flex items-center gap-2">
-      <button
-        type="button"
-        onClick={() => {
-          if (!playing && yi >= range[1]) setYear(range[0]);
-          setPlaying((p) => !p);
-        }}
-        aria-label={playing ? "Pause" : "Play through the years"}
-        className="grid size-8 flex-none place-items-center rounded-full border border-line-strong bg-surface-raised text-ink hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-      >
-        <svg viewBox="0 0 14 14" className="h-3.5 w-3.5 fill-current" aria-hidden>
-          {playing ? <path d="M3 2h3v10H3zM8 2h3v10H8z" /> : <path d="M3 1.5v11l9-5.5z" />}
-        </svg>
-      </button>
-      <select
-        aria-label="Year shown on the map"
-        value={yi}
-        onChange={(e) => {
-          setPlaying(false);
-          setYear(Number(e.target.value));
-        }}
-        className="rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-      >
-        {idx.map((i) => (
-          <option key={i} value={i}>
-            {years[i].fy}
-            {years[i].partial ? " (partial)" : ""}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}

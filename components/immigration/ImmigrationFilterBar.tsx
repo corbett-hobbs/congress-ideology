@@ -1,54 +1,58 @@
 "use client";
 
-import { FiscalYearPlayer } from "@/components/charts/FiscalYearPlayer";
-import { termOptionLabel, termsNewestFirst, type IceTerm } from "@/lib/immigration-derive";
+import { useMemo } from "react";
+import { RangeReset } from "@/components/charts/RangeReset";
+import { RangeSelector } from "@/components/charts/RangeSelector";
+import { TermBand, type BandTerm } from "@/components/charts/TermBand";
+import type { IceTerm, IceYear } from "@/lib/immigration-derive";
 
 /**
- * The pinned filter bar for /presidency/immigration, directly under the site
- * navigation: a President dropdown and a fiscal-year slider with play/pause (the foreign-aid pattern).
- * Choosing a president filters the timeline to that administration's fiscal years (a time series
- * filters; it never dims) and clamps the slider to them; the slider picks the one year the country
- * list below shows, and is marked on the timeline.
+ * The pinned filter bar for /presidency/immigration, directly under the site navigation: one two-handle fiscal-year
+ * slider with the presidential-term band under its track (tap a term to add or drop it; there is no President
+ * dropdown). The slider sets the window the timeline shows (a time series filters; it never dims). The one selected
+ * year the country list shows is chosen on a timeline bar or in the country card's year menu, not here.
  */
 export function ImmigrationFilterBar({
   terms,
-  value,
-  onChange,
-  fy,
-  fyRange,
-  onFy,
+  years,
+  bounds,
+  range,
+  onRange,
 }: {
   terms: readonly IceTerm[];
-  value: string;
-  onChange: (selection: string) => void;
-  fy: number;
-  /** The fiscal years the timeline shows (the President selection's window). */
-  fyRange: readonly [number, number];
-  onFy: (fy: number) => void;
+  years: readonly IceYear[];
+  /** First and last fiscal year in the data. */
+  bounds: readonly [number, number];
+  range: readonly [number, number];
+  onRange: (r: [number, number]) => void;
 }) {
+  // A term's fiscal years are the ones assigned to it (the administration in office for most of the year), so
+  // consecutive terms never share a year.
+  const bandTerms = useMemo<BandTerm[]>(
+    () =>
+      terms.flatMap((t) => {
+        const fys = years.filter((y) => y.termId === t.termId).map((y) => y.fy);
+        return fys.length === 0
+          ? []
+          : [{ id: t.termId, label: `${t.president} (${t.startYear}–${t.endYear ?? ""})`, last: t.last, initials: t.president.split(" ").map((w) => w[0]).join(""), party: t.party, from: Math.min(...fys), to: Math.max(...fys) }];
+      }),
+    [terms, years],
+  );
+  const full = range[0] === bounds[0] && range[1] === bounds[1];
   return (
     <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 shadow-[0_2px_6px_rgba(26,34,51,0.08)] backdrop-blur sm:shadow-none">
       <div className="mx-auto w-full max-w-[1180px] px-4 pb-2 pt-2 sm:px-6 sm:py-2.5">
-        {/* Phones: the dropdown and the slider share one row (two controls per row; the label is dropped, "All presidents" says it). */}
-        <div className="flex items-center gap-2 sm:gap-x-5">
-        <label className="flex flex-none items-center gap-2">
-          <span className="hidden font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint sm:inline">President</span>
-          <select
-            aria-label="President"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="h-11 w-[7.75rem] min-w-0 rounded-md border border-line-strong bg-surface-raised pl-[0.4rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:h-auto sm:w-[15rem] sm:py-[0.42rem]"
-          >
-            <option value="all">All presidents</option>
-            {termsNewestFirst(terms).map((t) => (
-              <option key={t.termId} value={t.termId}>
-                {termOptionLabel(t)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <FiscalYearPlayer year={fy} range={fyRange} onYear={onFy} valueText={`FY${fy}, October ${fy - 1} to September ${fy}`} span={`Oct ${fy - 1} – Sep ${fy}`} />
-        </div>
+        <RangeSelector
+          min={bounds[0]}
+          max={bounds[1]}
+          value={range}
+          onChange={(r) => onRange(r)}
+          format={(v) => `FY${String(v).slice(2)}`}
+          ariaLabel="Fiscal years shown"
+          below={<TermBand terms={bandTerms} min={bounds[0]} max={bounds[1]} value={range} onChange={(r) => onRange(r)} />}
+          action={<RangeReset show={!full} onReset={() => onRange([bounds[0], bounds[1]])} className="mt-0.5 font-sans leading-none" />}
+          className="min-w-0"
+        />
       </div>
     </div>
   );

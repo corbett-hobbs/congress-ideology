@@ -6,6 +6,7 @@ import { ChartCard } from "@/components/charts/ChartCard";
 import { PillGroup } from "@/components/charts/PillGroup";
 import { RangeReset } from "@/components/charts/RangeReset";
 import { RangeSelector } from "@/components/charts/RangeSelector";
+import { TermBand, type BandTerm } from "@/components/charts/TermBand";
 import { StackedBars, type StackBand, type StackColumn, type StackSeries } from "@/components/charts/StackedBars";
 import { PageHeader } from "@/components/PageHeader";
 import {
@@ -78,9 +79,18 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
   const full: YearRange = [first, lastYear];
   const [from, to] = range ?? full;
   const termRange = (a: EoAdmin) => termYearRange(Number(a.start.slice(0, 4)), a.end ? Number(a.end.slice(0, 4)) : null, first, lastYear);
-  // The president dropdown and the year slider are two views of one window: a president is "selected" when the window is exactly their years.
+  // The window reads as a president only when it is exactly their years (YearList's "clear" chip).
   const president = data.administrations.find((a) => sameRange(termRange(a), [from, to]))?.termId ?? null;
-  const custom = !sameRange([from, to], full) && president === null;
+  const setWindow = (r: YearRange) => setRange(sameRange(r, full) ? null : r);
+  const bandTerms = useMemo<BandTerm[]>(
+    () =>
+      data.administrations.map((a) => {
+        const [tf, tt] = termRange(a);
+        return { id: a.termId, label: `${a.president}, ${a.start.slice(0, 4)}–${a.end ? a.end.slice(0, 4) : "present"}`, last: lastName(a.president), initials: a.president.split(" ").map((w) => w[0]).join(""), party: a.party === "Democratic" ? "D" : "R", from: tf, to: tt };
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data.administrations, first, lastYear],
+  );
   const visible = useMemo(() => columns.filter((c) => c.year.year >= from && c.year.year <= to), [columns, from, to]);
   const bands = useMemo(() => termBands(data.administrations, from, visible.length), [data.administrations, from, visible.length]);
   const selectedYear = data.years.find((y) => String(y.year) === selected) ?? null;
@@ -90,57 +100,33 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
     <>
       <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-[1180px] flex-col px-4 py-2.5 sm:flex-row sm:items-center sm:px-6">
-          {/* Phones: President and Topic share one line (long names truncate with an ellipsis), the slider sits below. */}
-          <div className="grid grid-cols-2 gap-3 sm:contents">
-            <label className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
-              <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">President</span>
-              <select
-                value={custom ? "custom" : (president ?? "")}
-                onChange={(e) => {
-                  const a = data.administrations.find((x) => x.termId === e.target.value);
-                  if (a) setRange(termRange(a));
-                  else if (e.target.value === "") setRange(null);
-                }}
-                className="w-full min-w-0 truncate rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-[15rem]"
-              >
-                <option value="">All presidents</option>
-                {custom && <option value="custom">Custom years</option>}
-                {[...data.administrations].reverse().map((a) => (
-                  <option key={a.termId} value={a.termId}>
-                    {`${a.president}, ${a.start.slice(0, 4)}–${a.end ? a.end.slice(0, 4) : "present"}`}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex min-w-0 flex-col gap-0.5 sm:ml-5 sm:flex-row sm:items-center sm:gap-2">
-              <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">Topic</span>
-              <select
-                value={topic ?? ""}
-                onChange={(e) => setTopic((e.target.value || null) as EoTopic | null)}
-                className="w-full min-w-0 truncate rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-[13rem]"
-              >
-                <option value="">All topics</option>
-                {EO_TOPICS.map((t) => (
-                  <option key={t} value={t}>
-                    {EO_TOPIC_LABELS[t]}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          {/* Phones: the slider (with Reset beside it) is its own line below the two dropdowns. */}
-          <div className="mt-2 flex min-w-0 items-center gap-3 sm:contents">
-            <RangeSelector
-              min={first}
-              max={lastYear}
-              value={[from, to]}
-              onChange={(r) => setRange(sameRange(r, full) ? null : r)}
-              format={String}
-              ariaLabel="Years shown"
-              className="min-w-0 flex-1 sm:ml-5 sm:min-w-[240px]"
-            />
-            <RangeReset show={!sameRange([from, to], full)} onReset={() => setRange(null)} className="sm:ml-4" />
-          </div>
+          {/* Phones: Topic alone on its row, so its label sits beside it (rule 5a); the slider and term band below. */}
+          <label className="flex min-w-0 items-center gap-2">
+            <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">Topic</span>
+            <select
+              value={topic ?? ""}
+              onChange={(e) => setTopic((e.target.value || null) as EoTopic | null)}
+              className="w-full min-w-0 truncate rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-[13rem]"
+            >
+              <option value="">All topics</option>
+              {EO_TOPICS.map((t) => (
+                <option key={t} value={t}>
+                  {EO_TOPIC_LABELS[t]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <RangeSelector
+            min={first}
+            max={lastYear}
+            value={[from, to]}
+            onChange={setWindow}
+            format={String}
+            ariaLabel="Years shown"
+            below={<TermBand terms={bandTerms} min={first} max={lastYear} value={[from, to]} onChange={setWindow} />}
+            action={<RangeReset show={!sameRange([from, to], full)} onReset={() => setRange(null)} className="mt-0.5 font-sans leading-none" />}
+            className="mt-1.5 min-w-0 flex-1 sm:ml-5 sm:mt-0 sm:min-w-[240px]"
+          />
         </div>
       </div>
       <main className="mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-16 pt-7 sm:px-6">

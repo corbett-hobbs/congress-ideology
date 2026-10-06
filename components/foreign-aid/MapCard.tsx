@@ -2,6 +2,7 @@
 
 import { forwardRef, useMemo, useRef, useState, type PointerEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
+import { YearPicker } from "@/components/charts/YearPicker";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { MapCallouts } from "@/components/charts/MapCallouts";
 import { ReversibleSortToggle } from "@/components/charts/SortToggle";
@@ -37,7 +38,7 @@ const MAX_ZOOM = 8;
  * marker. Regional and global programs and entities with no outline are stated under the map.
  */
 export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function MapCard({ map }, ref) {
-  const { data, year, sector, country, toggleCountry, isPartial } = useAidState();
+  const { data, year, range, setYear, sector, country, toggleCountry, isPartial } = useAidState();
   const [pick, setPick] = useState<Pick>({ key: "dollars", reversed: false });
   const tip = useTooltip<Hit>();
   const svgRef = useRef<SVGSVGElement>(null);
@@ -169,6 +170,7 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
               {selRank ? `${names[country].name} · No. ${selRank.rank} · ${formatAidMoney(selRank.v)}` : `${names[country].name} · no disbursements`}
             </span>
           )}
+          <YearPicker value={year} range={range} onChange={setYear} format={(v) => `FY${v}${isPartial(v) ? " (partial)" : ""}`} ariaLabel="Fiscal year shown on the map" />
           <ReversibleSortToggle<Measure>
             ariaLabel="Map measure and list order"
             active={share ? "share" : "dollars"}

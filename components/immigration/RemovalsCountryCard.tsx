@@ -3,6 +3,7 @@
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
+import { YearPicker } from "@/components/charts/YearPicker";
 import { ReversibleSortToggle } from "@/components/charts/SortToggle";
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
 import {
@@ -23,19 +24,24 @@ const dateLabel = (iso: string) =>
 /**
  * "Who gets removed": ICE removals by country of citizenship for one fiscal year, as a ranked list of
  * single-color bars on one scale (the foreign-aid "Who receives the most" pattern: `StackedRows`,
- * `ReversibleSortToggle`, change vs. the prior year). There is no year control in the card: the page's pinned
- * fiscal-year slider (or a click on a timeline bar) picks the year, and a year with no country table says so.
- * The President filter never trims the list of countries. Clicking a country highlights it and dims the rest.
+ * `ReversibleSortToggle`, change vs. the prior year). The year comes from the page's selected fiscal year: the year menu in this card
+ * (or a click on a timeline bar) picks it, and a year with no country table says so.
+ * The years-shown window never trims the list of countries. Clicking a country highlights it and dims the rest.
  */
 export function RemovalsCountryCard({
   payload,
   fy,
+  range,
+  onFy,
   worldMap,
 }: {
   payload: RemovalsCountryPayload;
   worldMap: { width: number; height: number; features: { key: string; name: string; d: string }[] };
-  /** The fiscal year the page slider is on. */
+  /** The selected fiscal year (a bar click, or this card's year menu). */
   fy: number;
+  /** The fiscal years the pinned slider's window shows; the year menu lists these. */
+  range: readonly [number, number];
+  onFy: (fy: number) => void;
 }) {
   const coverage = coverageLabel(payload);
 
@@ -53,13 +59,14 @@ export function RemovalsCountryCard({
   const list = useMemo(() => sortRanked(ranked, names, key, reversed), [ranked, names, key, reversed]);
 
   const title = "Who gets removed";
+  const picker = <YearPicker value={fy} range={range} onChange={onFy} format={(v) => `FY${v}`} ariaLabel="Fiscal year shown" />;
 
   if (!year) {
     return (
-      <ChartCard title={title} lede={`ICE removals by country of citizenship, ${coverage}.`}>
+      <ChartCard title={title} lede={`ICE removals by country of citizenship, ${coverage}.`} action={picker}>
         <p className="m-0 rounded-md border border-dashed border-line-strong px-4 py-8 text-center text-[0.85rem] leading-[1.6] text-ink-muted">
           ICE publishes removals by country only for {coverage}.{" "}
-          FY{fy} has no country table, so there is no country list to show. Move the fiscal-year slider (or click a bar) to a covered year.
+          FY{fy} has no country table, so there is no country list to show. Pick a covered year from the year menu (or click a bar).
         </p>
       </ChartCard>
     );
@@ -90,11 +97,14 @@ export function RemovalsCountryCard({
       title={title}
       lede={`ICE removals · FY${fy} · by country of citizenship · bars show removals`}
       action={
-        selectedName ? (
-          <span className="rounded-md border border-line-strong bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">
-            {selectedRow ? `${selectedName} · No. ${selectedRow.rank} · ${n(selectedRow.removals)}` : `${selectedName} · no removals in FY${fy}`}
-          </span>
-        ) : undefined
+        <div className="flex flex-wrap items-center gap-2">
+          {selectedName && (
+            <span className="rounded-md border border-line-strong bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">
+              {selectedRow ? `${selectedName} · No. ${selectedRow.rank} · ${n(selectedRow.removals)}` : `${selectedName} · no removals in FY${fy}`}
+            </span>
+          )}
+          {picker}
+        </div>
       }
     >
       <div className="grid grid-cols-1 gap-x-4 gap-y-4 md:grid-cols-[1.5fr_1fr] md:items-stretch">

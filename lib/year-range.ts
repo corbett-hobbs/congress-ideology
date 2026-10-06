@@ -1,7 +1,7 @@
 /**
  * Year-window helpers shared by the Presidency pages. A page owns one
- * `[first, last]` calendar-year window; picking a president sets it to that
- * term's years, and the president dropdown reads it back, so the window is the
+ * `[first, last]` calendar-year window; tapping a president in the term band under
+ * the slider sets it to that term's years, and the band reads it back, so the window is the
  * single source of truth (no separate "selected president" to drift from it).
  */
 export type YearRange = [number, number];
