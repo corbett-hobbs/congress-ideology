@@ -1,5 +1,6 @@
 "use client";
 
+import { initialsOf, termLabelCandidates } from "@/lib/term-label";
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { scaleLinear } from "d3-scale";
 import { Axis } from "@/components/charts/Axis";
@@ -299,8 +300,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                   const t = terms[term];
                   const x = a * step;
                   const w = (e - a + 1) * step;
-                  // Full last name, else a four-letter abbreviation: a label that does not fit is shortened, never dropped.
-                  for (const text of [t.last, `${t.last.slice(0, 4)}.`]) {
+                  // Last name, four letters, initials, last initial (lib/term-label): shortened, never dropped.
+                  for (const text of termLabelCandidates(t.last, initialsOf(t.president))) {
                     const tw = text.length * 6.4;
                     let tx = Math.min(x + w / 2 - tw / 2, nextStart - 3 - tw, x + w - tw - 1);
                     tx = Math.max(tx, x + 1);

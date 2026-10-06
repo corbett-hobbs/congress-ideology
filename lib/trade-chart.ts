@@ -113,7 +113,7 @@ export function termAtDay(terms: readonly EconomyTerm[], day: number): EconomyTe
   return terms.find((t) => day >= t.s && day < t.e) ?? terms[terms.length - 1];
 }
 
-/** "Obama 44 (D)" */
+/** "Obama (D)" */
 export const termLabel = (t: EconomyTerm) => `${t.label} (${t.party})`;
 
 // ------------------------------------------------------------ duty rate

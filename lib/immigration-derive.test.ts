@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { enforcementNote, enforcementReport, enforcementRow } from "./enforcement-entities";
 import { administration } from "./executive-orders-entities";
 import { assertEnforcementInvariants, buildImmigrationData, filterYears, showsPendingSlot, termOptionLabel, termsNewestFirst, yDomainMax } from "./immigration-derive";
-import { bandLabel, fyPosition, labelsBar, shadeSpan, slotLayout, termSegments, valueLabel, visibleMarkers, yearLabel, yearLabelMode } from "./immigration-chart";
+import { fyPosition, labelsBar, shadeSpan, slotLayout, termSegments, valueLabel, visibleMarkers, yearLabel, yearLabelMode } from "./immigration-chart";
 
 const OUT = join(process.cwd(), "pipeline", "output");
 const read = (f: string) => JSON.parse(readFileSync(join(OUT, f), "utf8"));
@@ -101,9 +101,6 @@ describe("chart geometry", () => {
     expect(yearLabelMode(25)).toBe("two");
     expect(yearLabelMode(14)).toBe("every4");
     expect([2003, 2004, 2007].map((y) => yearLabel(y, "every4"))).toEqual(["2003", null, "2007"]);
-    expect(bandLabel(171, "Donald Trump", "Trump")).toBe("Donald Trump");
-    expect(bandLabel(85, "Donald Trump", "Trump")).toBe("Trump");
-    expect(bandLabel(30, "Donald Trump", "Trump")).toBeNull();
   });
   it("term segments break on administration changes and the pending slot extends the last", () => {
     const seg = termSegments(data.years, true);

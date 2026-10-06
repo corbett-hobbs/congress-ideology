@@ -1,5 +1,6 @@
 import type { Administration } from "./executive-orders-entities";
 import { dayOfIso } from "./indicator-time";
+import { fitTermLabel, initialsOf } from "./term-label";
 
 /**
  * Presidential terms for the economy page: the administrations table the
@@ -35,8 +36,10 @@ export interface EconomyTerm {
   full: string;
   /** "Bush" */
   last: string;
-  /** "Bush 41" — the ordinal disambiguates the two Bushes and the two Trump terms. */
+  /** "Bush 41" for the two Bushes (the ordinal disambiguates them); the plain last name for everyone else. */
   label: string;
+  /** "GB", for the band when even the four-letter form doesn't fit. */
+  initials: string;
   party: "D" | "R";
   startYear: number;
   /** Year the term ends (the inauguration year of the successor), or null while in office. */
@@ -57,7 +60,8 @@ export function buildEconomyTerms(admins: readonly Administration[], span: numbe
       termId: a.term_id,
       full: a.president,
       last,
-      label: `${last} ${ord}`,
+      label: last === "Bush" ? `${last} ${ord}` : last,
+      initials: initialsOf(a.president),
       party: a.party === "Democratic" ? "D" : "R",
       startYear: Number(a.start.slice(0, 4)),
       endYear: next ? Number(next.slice(0, 4)) : null,
@@ -65,4 +69,9 @@ export function buildEconomyTerms(admins: readonly Administration[], span: numbe
       e: next === null ? span : Math.min(span, dayOfIso(next)),
     };
   });
+}
+
+/** Band text that fits `width`: the preferred names first, then last name, four letters, initials, last initial. */
+export function termBandText(t: EconomyTerm, width: number, charW: number, preferred: readonly string[] = []): string | null {
+  return fitTermLabel(width, t.last, t.initials, preferred, charW);
 }

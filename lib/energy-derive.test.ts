@@ -95,7 +95,7 @@ describe("date lookups", () => {
   it("joins dates to presidents through the shared term table", () => {
     const terms = buildEconomyTerms(admins, spanOf(built.spr));
     expect(termAtDay(terms, dayOfIso("1992-06-01"))!.last).toBe("Bush");
-    expect(termAtDay(terms, dayOfIso("2022-03-31"))!.label).toBe("Biden 46");
+    expect(termAtDay(terms, dayOfIso("2022-03-31"))!.label).toBe("Biden");
     expect(termIdOn("2026-03-11", [BUSH_41, ...admins])).toBe("2025-01-20");
   });
 });

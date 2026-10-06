@@ -26,6 +26,10 @@ export interface PanelGeom {
   top: number;
   bottom: number;
   clipId: string;
+  /** Narrow chart (phone): no room for a label gutter. */
+  compact: boolean;
+  /** Pixel x where the hatched preliminary stretch starts (or the plot's right edge when there is none). */
+  prelimX: number;
 }
 
 export interface Panel {
@@ -41,6 +45,8 @@ export interface Panel {
   render: (g: PanelGeom) => ReactNode;
   /** Peak and low of one line inside the window (rule 12). Omit where a chart has several lines or a stack. */
   extremes?: { points: readonly ExtremePoint[]; label: (value: number, month: string) => string };
+  /** Labels drawn above the marks and the hatch, outside the clip (so they may sit in the right gutter). */
+  renderLabels?: (g: PanelGeom) => ReactNode;
   /** Draw the preliminary hatch over the marks (a filled stack would hide it underneath), in the surface colour. */
   hatchOnTop?: boolean;
   /** Dots on the crosshair at a date. */
@@ -56,6 +62,8 @@ interface Props {
   prelim: { from: number; to: number } | null;
   ariaLabel: string;
   legend?: ReactNode;
+  /** Pixels reserved right of the plot for labels, on wide charts only (e.g. band names). */
+  rightGutter?: number;
   /** Tooltip content for an axis day. */
   renderTip: (day: number) => ReactNode;
 }
@@ -65,10 +73,10 @@ const COMPACT_W = 600;
 const REC_LABEL_H = 12;
 const CAPTION_CHAR_W = 6;
 
-function layout(W: number, panels: readonly Panel[], flagIn: ReturnType<typeof toFlagInputs>, view: readonly [number, number], span: number) {
+function layout(W: number, panels: readonly Panel[], flagIn: ReturnType<typeof toFlagInputs>, view: readonly [number, number], span: number, rightGutter: number) {
   const compact = W < COMPACT_W;
   const ml = yGutter(panels.flatMap((p) => p.scale.ticks.map(p.fmtTick)));
-  const mr = 12;
+  const mr = 12 + (compact ? 0 : rightGutter);
   const pw = W - ml - mr;
   const X = (day: number) => ml + ((day - view[0]) / (view[1] - view[0])) * pw;
   const placed = layoutFlags(flagIn, { X, viewStart: view[0], viewEnd: view[1], span, plotLeft: ml, plotRight: ml + pw, labels: !compact });
@@ -127,6 +135,7 @@ const StaticLayer = memo(function StaticLayer({ panels, era, view, prelim, geo, 
       ))}
       {panels.map((p, i) => {
         const Y = Ys[i];
+        const geom = (k: number): PanelGeom => ({ X, Y: Ys[k], ml, pw, top: stack.tops[k], bottom: stack.bottoms[k], clipId: `clip-${uid}-${panels[k].id}`, compact: geo.compact, prelimX: prelim ? Math.min(ml + pw, X(Math.max(vs, prelim.from))) : ml + pw });
         return (
           <g key={p.id}>
             {geo.captions[i] && stack.captionYs[i] !== null && <text x={ml} y={stack.captionYs[i] as number} className="fill-ink-muted text-[11px]">{geo.captions[i]}</text>}
@@ -144,13 +153,14 @@ const StaticLayer = memo(function StaticLayer({ panels, era, view, prelim, geo, 
                 <text x={ml - 6} y={Y(v) + 3.5} textAnchor="end" className="fill-ink-muted font-mono text-[11px]">{p.fmtTick(v)}</text>
               </g>
             ))}
-            <g clipPath={`url(#clip-${uid}-${p.id})`}>{p.render({ X, Y, ml, pw, top: stack.tops[i], bottom: stack.bottoms[i], clipId: `clip-${uid}-${p.id}` })}</g>
+            <g clipPath={`url(#clip-${uid}-${p.id})`}>{p.render(geom(i))}</g>
             {prelim && hatchX1 > hatchX0 && p.hatchOnTop && (
               <g pointerEvents="none">
                 <rect x={hatchX0} y={stack.tops[i]} width={hatchX1 - hatchX0} height={stack.bottoms[i] - stack.tops[i]} fill={`url(#${hatchId}s)`} />
                 {i === 0 && hatchX1 - hatchX0 >= 70 && (
                   <text x={(hatchX0 + hatchX1) / 2} y={stack.tops[i] + 11} textAnchor="middle" className="fill-ink text-[10px] font-medium" style={{ stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" }}>Preliminary</text>
                 )}
+            {p.renderLabels?.(geom(i))}
               </g>
             )}
           </g>
@@ -264,12 +274,12 @@ function FlagNote({ flags }: { flags: readonly EnergyFlag[] }) {
  * president band, curated action flags (numbered and tap-to-pin on narrow charts, rule 6), a hatched preliminary
  * stretch, peak/low labels and a linked crosshair. Cards supply the panels' marks and the tooltip.
  */
-export function EnergyChart({ panels, era, view, flags, prelim, ariaLabel, legend, renderTip }: Props) {
+export function EnergyChart({ panels, era, view, flags, prelim, ariaLabel, legend, rightGutter = 0, renderTip }: Props) {
   const uid = useId().replace(/:/g, "");
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || 1140;
   const flagIn = useMemo(() => toFlagInputs(flags), [flags]);
-  const geo = useMemo(() => layout(W, panels, flagIn, view, era.span), [W, panels, flagIn, view, era.span]);
+  const geo = useMemo(() => layout(W, panels, flagIn, view, era.span, rightGutter), [W, panels, flagIn, view, era.span, rightGutter]);
   const { moveHover, leaveHover, pinDay } = useEnergyActions();
   const tip = useTooltip<number>();
   const flagTip = useTooltip<string[]>();

@@ -1,5 +1,6 @@
 "use client";
 
+import { initialsOf, termLabelCandidates } from "@/lib/term-label";
 import { useId, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { scaleLinear } from "d3-scale";
 import { Axis } from "@/components/charts/Axis";
@@ -202,16 +203,20 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
                   const { t, s, e } = visible[k];
                   const x = s === range[0] ? 0 : xOf(s - range[0]);
                   const w = (e - s + 1) * step;
-                  const tw = t.last.length * 6.4;
-                  let tx = Math.min(x + w / 2 - tw / 2, nextStart - 3 - tw, x + w - tw - 1);
-                  tx = Math.max(tx, x + 1);
-                  if ((tx + tw > nextStart - 2 && k < visible.length - 1) || tw > w + 14) continue;
-                  nextStart = tx;
-                  out.push(
-                    <text key={t.termId} x={tx} y={BAND_H - 5} style={{ fontSize: 11, fill: "var(--ink)" }}>
-                      {t.last}
-                    </text>,
-                  );
+                  const cands = termLabelCandidates(t.last, initialsOf(t.president));
+                  for (const text of cands) {
+                    const tw = text.length * 6.4;
+                    let tx = Math.min(x + w / 2 - tw / 2, nextStart - 3 - tw, x + w - tw - 1);
+                    tx = Math.max(tx, x + 1);
+                    if ((tx + tw > nextStart - 2 && k < visible.length - 1) || tw > w + 14) continue;
+                    nextStart = tx;
+                    out.push(
+                      <text key={t.termId} x={tx} y={BAND_H - 5} style={{ fontSize: 11, fill: "var(--ink)" }}>
+                        {text}
+                      </text>,
+                    );
+                    break;
+                  }
                 }
                 return out;
               })()}

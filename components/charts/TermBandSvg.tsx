@@ -1,3 +1,5 @@
+import { fitTermLabel, initialsOf } from "@/lib/term-label";
+
 export interface TermSegment {
   id: string;
   /** Last name, shown when it fits; then four letters, then initials, then the last initial. */
@@ -41,8 +43,7 @@ export function TermBandSvg({ segments, x0, step, y }: { segments: readonly Term
         const x = x0 + g.s * step;
         const w = (g.e - g.s + 1) * step;
         const c = g.party === "R" ? "--rep" : "--dem";
-        const initials = g.president.split(" ").map((p) => p[0]).join("");
-        const text = [g.last, `${g.last.slice(0, 4)}.`, initials, initials.slice(-1)].find((t) => t.length * 6.4 + (t.length > 1 ? 4 : 1) <= w) ?? "";
+        const text = fitTermLabel(w, g.last, initialsOf(g.president)) ?? "";
         return (
           <g key={`${g.id}-${g.s}`}>
             <rect x={x + 0.5} y={0} width={Math.max(0, w - 1)} height={TERM_BAND_H} rx={2} style={{ fill: `color-mix(in oklab, var(${c}) 20%, var(--surface))` }} />

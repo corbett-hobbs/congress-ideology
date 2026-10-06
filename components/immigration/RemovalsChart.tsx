@@ -1,5 +1,6 @@
 "use client";
 
+import { fitTermLabel, initialsOf } from "@/lib/term-label";
 import { Y_GUTTER } from "@/lib/chart-bars";
 import { scaleLinear } from "d3-scale";
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
@@ -7,7 +8,6 @@ import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import {
   axisLabel,
-  bandLabel,
   gridValues,
   labelsBar,
   regimeLabel,
@@ -327,7 +327,7 @@ export function RemovalsChart({
               {segs.map((s) => {
                 const t = termById.get(s.termId)!;
                 const w = (s.to - s.from) * slotW;
-                const text = bandLabel(w, t.president, t.last);
+                const text = fitTermLabel(w, t.last, initialsOf(t.president));
                 return (
                   <g key={`${s.termId}-${s.from}`} aria-hidden>
                     <rect x={xSlot(s.from) + 0.5} y={BAND_Y} width={Math.max(0, w - 1)} height={BAND_H} rx={2} style={{ fill: `color-mix(in oklab, ${partyVar(s.party)} 20%, var(--surface))` }} />

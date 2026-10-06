@@ -105,11 +105,6 @@ export function termSegments(years: readonly IceYear[], pending: boolean): TermS
   return out;
 }
 
-/** Full name when it fits, the last name under 110px, nothing under 40px. */
-export function bandLabel(widthPx: number, full: string, last: string): string | null {
-  if (widthPx < 40) return null;
-  return widthPx < 110 ? last : full;
-}
 
 /** Regime strip text that fits the width, or null. */
 export function regimeLabel(widthPx: number, long: string, short: string): string | null {

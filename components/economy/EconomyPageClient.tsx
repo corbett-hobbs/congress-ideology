@@ -33,7 +33,7 @@ interface PageProps {
   mortgageAttribution: string;
 }
 
-/** "March 2009, Obama 44 (D)" for an axis day. */
+/** "March 2009, Obama (D)" for an axis day. */
 function describeDay(data: EconomyData, day: number): string {
   const { year, month } = dateOfDay(day);
   const t = data.terms.find((x) => day >= x.s && day < x.e) ?? data.terms[data.terms.length - 1];

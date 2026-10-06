@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { area, line } from "d3-shape";
+import { SEGMENT_LABEL_STYLE } from "@/lib/chart-bars";
+import { placeBandLabels } from "@/lib/energy-chart";
 import { PillGroup } from "@/components/charts/PillGroup";
 import { flagsForCard, fmtTwh, isPreliminary, monthLabel, monthOfDay, monthlyAt, termAtDay } from "@/lib/energy-derive";
 import { FUEL_KEYS, type EnergyPayload, type FuelKey } from "@/lib/energy-types";
@@ -10,14 +12,14 @@ import { EnergyChart, type Panel } from "./EnergyChart";
 import { activeDay, useEnergyValues } from "./EnergyState";
 import { CommonKey, EnergyCardShell, FlagsTable, Legend, LineKey, lastIndexOf, monthMidDay, monthPoints, MonthTable, prelimBand, scaleOver, statusText, Swatch } from "./shared";
 
-const FUELS: Record<FuelKey, { label: string; color: string }> = {
-  coal: { label: "Coal", color: "var(--fuel-coal)" },
-  gas: { label: "Natural gas", color: "var(--fuel-gas)" },
-  nuclear: { label: "Nuclear", color: "var(--fuel-nuclear)" },
-  hydro: { label: "Hydro", color: "var(--fuel-hydro)" },
-  wind: { label: "Wind", color: "var(--fuel-wind)" },
-  solar: { label: "Solar (utility-scale)", color: "var(--fuel-solar)" },
-  other: { label: "Other", color: "var(--fuel-other)" },
+const FUELS: Record<FuelKey, { label: string; short: string; color: string }> = {
+  coal: { label: "Coal", short: "Coal", color: "var(--fuel-coal)" },
+  gas: { label: "Natural gas", short: "Natural gas", color: "var(--fuel-gas)" },
+  nuclear: { label: "Nuclear", short: "Nuclear", color: "var(--fuel-nuclear)" },
+  hydro: { label: "Hydro", short: "Hydro", color: "var(--fuel-hydro)" },
+  wind: { label: "Wind", short: "Wind", color: "var(--fuel-wind)" },
+  solar: { label: "Solar (utility-scale)", short: "Solar", color: "var(--fuel-solar)" },
+  other: { label: "Other", short: "Other", color: "var(--fuel-other)" },
 };
 type Mode = "share" | "amount";
 const MODES = [
@@ -48,6 +50,21 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
     const sumAt = (i: number) => FUEL_KEYS.reduce((s, k) => s + (m[k][i] as number), 0);
     const visible = months.filter((i) => monthMidDay(i) >= view[0] && monthMidDay(i) < view[1]);
     const scale = mode === "share" ? SHARE_SCALE : niceScale(0, Math.max(0, ...visible.map(sumAt)), 4);
+    /** Each fuel's lower and upper edge per month, in the chart's units (percent, or million kWh). */
+    const stackedValues = () => {
+      const out = {} as Record<FuelKey, Map<number, { lo: number; hi: number }>>;
+      const below = new Map<number, number>(months.map((i) => [i, 0]));
+      for (const k of FUEL_KEYS) {
+        out[k] = new Map();
+        for (const i of months) {
+          const v = mode === "share" ? ((m[k][i] as number) / sumAt(i)) * 100 : (m[k][i] as number);
+          const lo = below.get(i) as number;
+          out[k].set(i, { lo, hi: lo + v });
+          below.set(i, lo + v);
+        }
+      }
+      return out;
+    };
     const smallVals = m.small.filter((_, i) => monthMidDay(i) >= view[0] && monthMidDay(i) < view[1]);
     const smallScale = scaleOver(smallVals, 3, false);
     return [
@@ -60,24 +77,46 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
         scale,
         fmtTick: mode === "share" ? (t) => (t === 0 ? "0" : `${t}%`) : fmtTwhTick,
         render: ({ X, Y }) => {
-          let below = new Map<number, number>(months.map((i) => [i, 0]));
+          const stacked = stackedValues();
           return (
             <>
               {FUEL_KEYS.map((k) => {
-                const tops = new Map<number, number>();
                 const gen = area<number>()
                   .x((i) => X(monthMidDay(i)))
-                  .y0((i) => Y(below.get(i) as number))
-                  .y1((i) => Y(tops.get(i) as number));
-                for (const i of months) {
-                  const share = mode === "share" ? ((m[k][i] as number) / sumAt(i)) * 100 : (m[k][i] as number);
-                  tops.set(i, (below.get(i) as number) + share);
-                }
-                const d = gen(months) ?? "";
-                below = tops;
-                return <path key={k} d={d} fill={FUELS[k].color} stroke="var(--surface)" strokeWidth={0.6} strokeOpacity={0.7} />;
+                  .y0((i) => Y(stacked[k].get(i)!.lo))
+                  .y1((i) => Y(stacked[k].get(i)!.hi));
+                return <path key={k} d={gen(months) ?? ""} fill={FUELS[k].color} stroke="var(--surface)" strokeWidth={0.6} strokeOpacity={0.7} />;
               })}
             </>
+          );
+        },
+        // Band names sit inside their band where it is thick enough, otherwise in the right gutter (wide charts), never under the preliminary hatch.
+        renderLabels: ({ X, Y, ml, pw, prelimX, compact }) => {
+          const stacked = stackedValues();
+          const inView = months.filter((i) => monthMidDay(i) >= view[0] && monthMidDay(i) < view[1]);
+          const placed = placeBandLabels(
+            FUEL_KEYS.map((k) => ({
+              key: k,
+              width: FUELS[k].short.length * 6.2 + 8,
+              samples: inView.map((i) => ({ x: X(monthMidDay(i)), y0: Y(stacked[k].get(i)!.lo), y1: Y(stacked[k].get(i)!.hi) })),
+            })),
+            { maxX: prelimX, gutterX: ml + pw + 8, useGutter: !compact },
+          );
+          return (
+            <g pointerEvents="none">
+              {FUEL_KEYS.map((k) => {
+                const l = placed.get(k);
+                if (!l) return null;
+                return l.inside ? (
+                  <text key={k} x={l.x} y={l.y + 4} textAnchor="middle" style={SEGMENT_LABEL_STYLE}>{FUELS[k].short}</text>
+                ) : (
+                  <g key={k}>
+                    <rect x={l.x - 6} y={l.y - 4} width={4} height={8} rx={1} fill={FUELS[k].color} />
+                    <text x={l.x} y={l.y + 4} className="fill-ink text-[11px]">{FUELS[k].short}</text>
+                  </g>
+                );
+              })}
+            </g>
           );
         },
       },
@@ -133,6 +172,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
             view={view}
             flags={flags}
             prelim={prelim}
+            rightGutter={78}
             ariaLabel="Utility-scale electricity net generation by source, monthly, as a share of the total or in terawatthours, with small-scale solar estimated on its own line below, two laws marked, presidential terms and recessions. The same data is in the table below."
             legend={
               <Legend>

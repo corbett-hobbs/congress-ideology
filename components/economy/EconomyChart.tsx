@@ -21,7 +21,7 @@ import type { EconomyData } from "@/lib/indicator-payload";
 import { recessionLabel } from "@/lib/indicator-payload";
 import { dateOfDay, dayOf, fmtMonthIndex, monthIndexOfDay } from "@/lib/indicator-time";
 import { termYearRange } from "@/lib/year-range";
-import type { EconomyTerm } from "@/lib/economy-presidents";
+import { termBandText, type EconomyTerm } from "@/lib/economy-presidents";
 import { dayFromFraction, readAll, type Reading } from "@/lib/indicator-lookup";
 import { activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
 import { JOBS_CAP, type ChartSpec } from "./specs";
@@ -57,9 +57,7 @@ interface Props {
 }
 
 function termText(t: EconomyTerm, width: number, hero: boolean): string | null {
-  const bush = t.last === "Bush";
-  const tries = [hero && bush ? t.label : t.last, t.last];
-  return tries.find((s) => s.length * EST_CHAR_W + 8 <= width) ?? null;
+  return termBandText(t, width, EST_CHAR_W, hero && t.last === "Bush" ? [t.label] : []);
 }
 
 const BAND_H = 18;

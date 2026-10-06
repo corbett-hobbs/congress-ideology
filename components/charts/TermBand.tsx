@@ -2,6 +2,7 @@
 
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { useElementWidth } from "@/lib/use-element-width";
+import { fitTermLabel } from "@/lib/term-label";
 
 export interface BandTerm {
   id: string;
@@ -135,7 +136,7 @@ export function TermBand({
           const grazes = value[1] > value[0] && ((t.to === value[0] && sharedEnd) || (t.from === value[1] && sharedStart));
           const inWin = t.to >= value[0] && t.from <= value[1] && !grazes;
           const picked = (drag ? k >= lo && k <= hi : false) || selected.includes(k);
-          const text = [t.last, `${t.last.slice(0, 4)}.`, t.initials, t.initials.slice(-1)].find((x) => x.length * 6.2 + (x.length > 1 ? 4 : 1) <= w) ?? "";
+          const text = fitTermLabel(w, t.last, t.initials) ?? "";
           return (
             <button
               key={t.id}
