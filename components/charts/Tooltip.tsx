@@ -33,6 +33,64 @@ export function useTooltip<T>() {
 }
 
 /**
+ * `useTooltip` for per-year bar charts that must work with a finger. A mouse behaves as before: the tooltip follows the
+ * pointer and `leave` hides it. A touch or pen **tap keeps the tooltip open** after the finger lifts (a browser fires
+ * pointerleave right after pointerup, which used to hide it at once) until a tap outside any `[data-sticky-tip]` chart,
+ * Esc, or a page scroll; tapping the same bar again closes it (`down` / `moved` / `up`). Dragging across bars still moves
+ * it. This is the standard bar-tap pattern (ARCHITECTURE_MAP rule 6a); the immigration chart implements the same thing.
+ */
+export function useStickyTooltip<T>() {
+  const tip = useTooltip<T>();
+  const touch = useRef(false);
+  const arm = useRef(false);
+  const { hide } = tip;
+  const open = tip.state != null;
+
+  useEffect(() => {
+    if (!open || !touch.current) return;
+    const away = (e: PointerEvent) => {
+      if (!(e.target instanceof Element) || !e.target.closest("[data-sticky-tip]")) hide();
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && hide();
+    document.addEventListener("pointerdown", away);
+    document.addEventListener("keydown", esc);
+    window.addEventListener("scroll", hide, { passive: true });
+    return () => {
+      document.removeEventListener("pointerdown", away);
+      document.removeEventListener("keydown", esc);
+      window.removeEventListener("scroll", hide);
+    };
+  }, [open, hide]);
+
+  const show = useCallback(
+    (data: T, e: PointerLike & { pointerType?: string }) => {
+      touch.current = (e.pointerType ?? "mouse") !== "mouse";
+      tip.show(data, e);
+    },
+    [tip],
+  );
+  /** Pointer left the chart: a mouse closes the tooltip; a finger leaving after a tap leaves it open. */
+  const leave = useCallback((e: { pointerType?: string }) => {
+    if ((e.pointerType ?? "mouse") === "mouse") hide();
+  }, [hide]);
+  /** Touch press: `sameAsOpen` is whether this bar already shows the tooltip (a tap on it will close it). */
+  const down = useCallback((e: { pointerType?: string }, sameAsOpen: boolean) => {
+    arm.current = (e.pointerType ?? "mouse") !== "mouse" && sameAsOpen;
+  }, []);
+  /** The finger moved to a different bar: it is a scrub, not a tap. */
+  const moved = useCallback(() => {
+    arm.current = false;
+  }, []);
+  /** Touch release: closes the tooltip if this was a tap on the bar that was already open. */
+  const up = useCallback(() => {
+    if (arm.current) hide();
+    arm.current = false;
+  }, [hide]);
+
+  return { state: tip.state, show, move: tip.move, hide, leave, down, moved, up };
+}
+
+/**
  * The pinned card of a scatter dot: `show` pins it at the click, `hide` unpins. It dismisses itself on a press anywhere
  * that is not the card or a dot (`.dot`), and on Esc. Pair it with `<Tooltip onActivate>`; the scatter rule is that a
  * click on a dot pins its card and the card is the link or action, never the dot.

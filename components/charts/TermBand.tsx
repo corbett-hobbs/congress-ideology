@@ -43,7 +43,14 @@ export function TermBand({
   const span = Math.max(1, max - min);
   // Segments run edge to edge between the handles' travel: a year owns half a step either side of its handle position.
   const pct = (i: number) => Math.min(100, Math.max(0, ((i - min) / span) * 100));
-  const edge = (t: BandTerm) => [pct(t.from - 0.5), pct(t.to + 0.5)] as const;
+  // Where a term's last year is also the next term's first (an inauguration year on a calendar-year axis), the two meet
+  // at that year's centre instead of overlapping by a step.
+  const edge = (t: BandTerm) => {
+    const k = terms.indexOf(t);
+    const sharesStart = k > 0 && terms[k - 1].to === t.from;
+    const sharesEnd = k < terms.length - 1 && terms[k + 1].from === t.to;
+    return [pct(sharesStart ? t.from : t.from - 0.5), pct(sharesEnd ? t.to : t.to + 0.5)] as const;
+  };
   const innerW = Math.max(0, width - 22);
   const [drag, setDrag] = useState<{ a: number; b: number } | null>(null);
   const dragRef = useRef<{ a: number; b: number } | null>(null);
@@ -143,7 +150,7 @@ export function TermBand({
                 opacity: full || inWin || drag ? 1 : 0.4,
               }}
             >
-              <span aria-hidden className="block px-[3px] pt-px text-[0.62rem] leading-[1.1] text-ink">
+              <span aria-hidden className="block px-px pt-px text-center text-[0.62rem] leading-[1.1] text-ink">
                 {text}
               </span>
             </button>

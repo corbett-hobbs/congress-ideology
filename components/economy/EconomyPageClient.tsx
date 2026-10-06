@@ -93,8 +93,6 @@ function EconomyPage({
         firstYear={firstYear}
         lastYear={lastYear}
         onRange={setRange}
-        showCong={showCong}
-        onShowCong={setShowCong}
         status={status}
         canClear={values.pin !== null}
         onClear={clearPin}
@@ -119,6 +117,16 @@ function EconomyPage({
             </p>
           </HowToRead>
         </PageHeader>
+
+        <label className="-mb-2 flex w-fit cursor-pointer items-center gap-2 text-[0.8rem] text-ink">
+          <input
+            type="checkbox"
+            checked={showCong}
+            onChange={(e) => setShowCong(e.target.checked)}
+            className="m-0 accent-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          />
+          Show Congress control under every chart
+        </label>
 
         <EconomyCard
           {...common}

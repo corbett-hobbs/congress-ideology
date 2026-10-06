@@ -4,7 +4,7 @@ import { useMemo, type ReactNode } from "react";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "./ChartFrame";
 import { Axis } from "./Axis";
-import { Tooltip, useTooltip } from "./Tooltip";
+import { Tooltip, useStickyTooltip } from "./Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
 import { SEGMENT_LABEL_STYLE, Y_GUTTER, segmentLabelFits } from "@/lib/chart-bars";
@@ -83,7 +83,7 @@ export function StackedBars<C extends StackColumn>({
   const width = measured || 960;
   const narrow = width < NARROW_W;
   const height = narrow ? 300 : 360;
-  const tip = useTooltip<C>();
+  const tip = useStickyTooltip<C>();
 
   const maxTotal = useMemo(() => Math.max(1, ...columns.map((c) => c.total)), [columns]);
   // Peak and low, recalculated for what is on screen: every column's total, or, with a topic picked,
@@ -114,13 +114,13 @@ export function StackedBars<C extends StackColumn>({
   const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 ? BAND_H + 6 : 0) };
 
   return (
-    <div ref={wrapRef} className="relative -mx-3 sm:mx-0">
+    <div ref={wrapRef} data-sticky-tip className="relative -mx-3 sm:mx-0">
       <ChartFrame
         width={width}
         height={height}
         margin={margin}
         ariaLabel={ariaLabel}
-        onPointerLeave={tip.hide}
+        onPointerLeave={tip.leave}
       >
         {({ innerWidth, innerHeight }) => {
           const y = scaleLinear()
@@ -227,8 +227,16 @@ export function StackedBars<C extends StackColumn>({
                       aria-label={label}
                       aria-pressed={selected}
                       className="cursor-pointer outline-none focus-visible:[stroke:var(--focus)] focus-visible:[stroke-width:2]"
-                      onPointerEnter={(e) => tip.show(col, e)}
+                      onPointerDown={(e) => {
+                        // A finger has no hover: the press itself opens the tooltip (and a press on the open bar closes it on release).
+                        if (e.pointerType === "mouse") return;
+                        tip.down(e, tip.state?.data === col);
+                        tip.show(col, e);
+                      }}
+                      onPointerEnter={(e) => e.pointerType === "mouse" && tip.show(col, e)}
                       onPointerMove={tip.move}
+                      onPointerUp={tip.up}
+                      onPointerCancel={tip.moved}
                       onClick={() => onSelect(selected ? null : col.key)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {

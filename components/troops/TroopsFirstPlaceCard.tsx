@@ -4,6 +4,7 @@ import { useId, useMemo, useRef, useState, type PointerEvent } from "react";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { TERM_BAND_H, TermBandSvg, termSegments } from "@/components/charts/TermBandSvg";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { BRANCH_NAMES, formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, topHostRuns, topHostsByYear, yearLabelEvery, type TopHostYear } from "@/lib/troops-derive";
@@ -54,10 +55,14 @@ export function TroopsFirstPlaceCard() {
   const maxH = narrow ? 120 : 150;
   const plotTop = bracketY + TICK + 12;
   const baseY = plotTop + maxH;
-  const H = baseY + 24;
+  const H = baseY + 24 + TERM_BAND_H + 4;
   const { ticks, top: maxTop } = niceCountTicks(Math.max(1, ...years.map((y) => y.top[0]?.value ?? 0)));
   const yOf = (v: number) => baseY - (v / maxTop) * maxH;
   const si = yi - range[0];
+  const segments = termSegments(n, (i) => {
+    const t = data.payload.terms[allYears[years[i].yi].term];
+    return t ? { id: t.termId, last: t.last, president: t.president, party: t.party } : null;
+  });
   const bw = Math.min(Math.max(3, step * 0.62), 40);
   const partial = (i: number) => allYears[range[0] + i].partial;
   const estimate = (i: number) => periods[allYears[range[0] + i].period].estimate;
@@ -197,6 +202,7 @@ export function TroopsFirstPlaceCard() {
                   </text>
                 ) : null;
               })}
+              <TermBandSvg segments={segments} x0={MX} step={step} y={baseY + 24} />
               {peak?.top[0] &&
                 (() => {
                   const i = peak.yi - range[0];

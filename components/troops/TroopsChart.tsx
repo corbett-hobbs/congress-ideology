@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEve
 import { scaleLinear } from "d3-scale";
 import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
-import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import { Tooltip, useStickyTooltip } from "@/components/charts/Tooltip";
 import { findExtremes } from "@/lib/chart-extremes";
 import { SEGMENT_LABEL_STYLE, segmentLabelFits, yGutter } from "@/lib/chart-bars";
 import { useElementWidth } from "@/lib/use-element-width";
@@ -70,7 +70,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   const bw = Math.min(Math.max(2, step * 0.72), 64);
   const xOf = (i: number) => (years[i].fy - fy0) * step;
   const hatchId = useId().replace(/:/g, "");
-  const tip = useTooltip<number>();
+  const tip = useStickyTooltip<number>();
   const [hover, setHover] = useState(-1);
   const down = useRef(false);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -88,22 +88,25 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
     down.current = true;
     e.currentTarget.setPointerCapture(e.pointerId);
     const i = indexAt(e);
+    tip.down(e, tip.state?.data === i);
     setYear(i);
     tip.show(i, e);
   };
   const onMove = (e: PointerEvent<SVGSVGElement>) => {
     const i = indexAt(e);
+    if (down.current && tip.state?.data !== i) tip.moved();
     if (down.current) setYear(i);
     setHover(i);
     tip.show(i, e);
   };
   const onUp = () => {
     down.current = false;
+    tip.up();
   };
-  const onLeave = () => {
+  const onLeave = (e: PointerEvent<SVGSVGElement>) => {
     down.current = false;
     setHover(-1);
-    tip.hide();
+    tip.leave(e);
   };
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
     const d = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : e.key === "Home" ? -999 : e.key === "End" ? 999 : 0;
@@ -180,6 +183,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   return (
     <div
       ref={wrapRef}
+      data-sticky-tip
       className="relative -mx-3 touch-scroll outline-none sm:mx-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       tabIndex={0}
       onKeyDown={onKey}

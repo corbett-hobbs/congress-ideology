@@ -4,7 +4,7 @@ import { useId, useRef, useState, type KeyboardEvent, type PointerEvent } from "
 import { scaleLinear } from "d3-scale";
 import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
-import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import { Tooltip, useStickyTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
 import { SEGMENT_LABEL_STYLE, segmentLabelFits, yGutter } from "@/lib/chart-bars";
@@ -41,7 +41,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
   const step = innerW / n;
   const xOf = (i: number) => i * step;
   const hatchId = useId().replace(/:/g, "");
-  const tip = useTooltip<SpendingYear>();
+  const tip = useStickyTooltip<SpendingYear>();
   const [hover, setHover] = useState(-1);
   const down = useRef(false);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -58,22 +58,25 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
     down.current = true;
     e.currentTarget.setPointerCapture(e.pointerId);
     const i = indexAt(e);
+    tip.down(e, tip.state?.data === rows[i]);
     setYear(range[0] + i);
     tip.show(rows[i], e);
   };
   const onMove = (e: PointerEvent<SVGSVGElement>) => {
     const i = indexAt(e);
+    if (down.current && tip.state?.data !== rows[i]) tip.moved();
     if (down.current) setYear(range[0] + i);
     setHover(i);
     tip.show(rows[i], e);
   };
   const onUp = () => {
     down.current = false;
+    tip.up();
   };
-  const onLeave = () => {
+  const onLeave = (e: PointerEvent<SVGSVGElement>) => {
     down.current = false;
     setHover(-1);
-    tip.hide();
+    tip.leave(e);
   };
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
     const d = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : e.key === "Home" ? -99 : e.key === "End" ? 99 : 0;
@@ -96,6 +99,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
   return (
     <div
       ref={wrapRef}
+      data-sticky-tip
       className="relative -mx-3 sm:mx-0 touch-scroll outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       tabIndex={0}
       onKeyDown={onKey}
