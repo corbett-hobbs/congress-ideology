@@ -27,7 +27,7 @@ interface Props {
  * the single-handle sliders in the Congress and Court toolbars (same row
  * shape: a flexible track, then a mono readout). Controlled and unit-free, so
  * every time-axis page uses the same control and owns one `[from, to]` state.
- * Native range inputs give keyboard and touch drag for free. On phones the years stack to the left of the track (from, a short dash, to) and Reset sits to its right; from `sm` the readout sits to the track's right with Reset under it.
+ * Native range inputs give keyboard and touch drag for free. The years stack to the left of the track (from, a short dash, to), like a filter title, and Reset sits to its right.
  */
 export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1, format, ariaLabel, className = "", below, action }: Props) {
   const [from, to] = value;
@@ -36,9 +36,9 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
   const right = ((to - min) / range) * 100;
 
   return (
-    <div role="group" aria-label={ariaLabel} className={`flex min-w-0 items-center gap-3 sm:gap-2 ${below ? "sm:items-start" : ""} ${className}`}>
-      {/* Phones: the years stack to the left of the track (from, a short dash, to) like a filter title, and Reset sits to its right. */}
-      <span className="order-first flex flex-none flex-col items-center font-mono text-[0.8rem] font-semibold leading-[1.15] tabular-nums text-ink sm:hidden">
+    <div role="group" aria-label={ariaLabel} className={`flex min-w-0 items-center gap-3 ${className}`}>
+      {/* The years stack to the left of the track (from, a short dash, to) like a filter title, and Reset sits to its right. */}
+      <span className="order-first flex flex-none flex-col items-center font-mono text-[0.8rem] font-semibold leading-[1.15] tabular-nums text-ink">
         <span>{format(from)}</span>
         {from !== to && (
           <>
@@ -79,13 +79,7 @@ export function RangeSelector({ min, max, value, onChange, minSpan = 0, step = 1
       </div>
       {below}
       </div>
-      <span className="flex flex-none sm:hidden">{action}</span>
-      <span className={`hidden min-w-0 flex-none flex-col items-end whitespace-nowrap font-mono tabular-nums text-ink sm:flex ${below ? "sm:min-h-6 sm:w-[5.25rem] sm:justify-start" : ""}`}>
-        <span className={`text-[0.95rem] font-semibold ${below ? "leading-6" : ""}`}>
-          {from === to ? format(from) : `${format(from)}–${format(to)}`}
-        </span>
-        {action}
-      </span>
+      <span className="flex flex-none">{action}</span>
     </div>
   );
 }
