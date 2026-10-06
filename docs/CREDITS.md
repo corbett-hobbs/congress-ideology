@@ -197,7 +197,7 @@ Cite the underlying agency per series (also stored in `indicator_series.json`
 
 | Series | Credit |
 | --- | --- |
-| `GASREGW` | U.S. Energy Information Administration |
+| `GASREGW`, `GASDESW` | U.S. Energy Information Administration |
 | `MORTGAGE30US` | Freddie Mac, Primary Mortgage Market Survey® — **third-party copyright**, "Reprinted with permission" per FRED's notes. FRED's terms require contacting the owner for any use beyond personal use; served here with attribution at the project owner's decision (2026-09-30). Permission from Freddie Mac has **not** been obtained or verified — revisit before launch. |
 | `PAYEMS`, `UNRATE`, `CPIAUCSL` | U.S. Bureau of Labor Statistics |
 | `MEHOINUSA672N` | U.S. Census Bureau |
