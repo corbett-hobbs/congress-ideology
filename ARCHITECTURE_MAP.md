@@ -620,3 +620,7 @@ Which primitive carries which chart:
 Reserved heights: the "Mid-term change" line and the selected-justice row always occupy their space so chart 1's card (and chart 2's stretched card) never change height with the term.
 
 Config/plumbing: `lib/verticals.ts` Court `status: 'live'`; `app/sitemap.ts` already emits every live branch, so `/supreme-court` is in it; `next.config.ts` `outputFileTracingIncludes` has `/supreme-court` and `/` keys for `./pipeline/output/court/*.json`.
+
+### Member profile: subcommittee seats
+
+`CommitteeMembershipsCard` nests a member's subcommittee seats under each parent committee row in a native `<details>` ("N subcommittees ▸"), collapsed by default. Plain text only (name, role tag, member count): no blended-position strip, since subcommittee rosters are too small for a meaningful mean. Data: `MemberCommitteeMembership.subcommittees` from `lib/committee-data.ts`.

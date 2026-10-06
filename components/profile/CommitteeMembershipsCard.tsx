@@ -31,8 +31,8 @@ function RoleTag({ role }: { role: MemberCommitteeMembership["role"] }) {
 /**
  * A member's committee assignments, at the bottom of their profile page —
  * absent entirely (not an empty state) for the small share of current
- * members with no current committee seat. Full committees only, matching the
- * committees feature's existing no-subcommittee-rows boundary.
+ * members with no current committee seat. Subcommittee seats nest under their
+ * parent committee, collapsed by default.
  */
 export function CommitteeMembershipsCard({
   profile,
@@ -50,48 +50,75 @@ export function CommitteeMembershipsCard({
     <ProfilePanel label="Committee memberships">
       <p className="mb-2 text-[0.85rem] leading-[1.6] text-ink-muted">
         {name}&rsquo;s {memberships.length}{" "}
-        {memberships.length === 1 ? "committee assignment" : "committee assignments"}{" "}
-        in the {ordinal(latestCongress)} Congress ranked by seniority. Each
-        row also shows how {name}&rsquo;s own position compares to that
+        {memberships.length === 1
+          ? "committee assignment"
+          : "committee assignments"}{" "}
+        in the {ordinal(latestCongress)} Congress ranked by seniority. Each row
+        also shows how {name}&rsquo;s own position compares to that
         committee&rsquo;s overall blend.
       </p>
 
       <div className="border-t border-line">
         {memberships.map((m) => (
-          <Link
-            key={m.committeeId}
-            href={committeePath(m)}
-            className="group -mx-1 grid grid-cols-[1fr_140px] items-center gap-4 rounded border-b border-line px-1 py-[0.7rem] hover:bg-surface-raised sm:grid-cols-[1fr_180px]"
-          >
-            <div className="min-w-0">
-              <span className="text-[0.9rem] text-ink group-hover:text-accent group-hover:underline">
-                {m.shortName}
-              </span>
-              <RoleTag role={m.role} />
-              <div className="mt-0.5 text-[0.72rem] text-ink-faint">
-                {m.memberCount} members · seniority rank {m.rank}
-              </div>
-            </div>
-            <div>
-              {currentDim1 != null && m.blendDim1 != null ? (
-                <>
-                  <AlignmentTrack
-                    points={[
-                      { value: m.blendDim1, faint: true },
-                      { value: currentDim1, color: primaryColor },
-                    ]}
-                  />
-                  <div className="mt-[0.15rem] whitespace-nowrap text-right font-mono text-[0.68rem] text-ink-faint">
-                    Δ {fmt2(Math.abs(currentDim1 - m.blendDim1))} from center
-                  </div>
-                </>
-              ) : (
-                <div className="text-right text-[0.72rem] text-ink-faint">
-                  Not enough scored members to compare
+          <div key={m.committeeId} className="-mx-1 border-b border-line px-1">
+            <Link
+              href={committeePath(m)}
+              className="group grid grid-cols-[1fr_140px] items-center gap-4 rounded py-[0.7rem] hover:bg-surface-raised sm:grid-cols-[1fr_180px]"
+            >
+              <div className="min-w-0">
+                <span className="text-[0.9rem] text-ink group-hover:text-accent group-hover:underline">
+                  {m.shortName}
+                </span>
+                <RoleTag role={m.role} />
+                <div className="mt-0.5 text-[0.72rem] text-ink-faint">
+                  {m.memberCount} members · seniority rank {m.rank}
                 </div>
-              )}
-            </div>
-          </Link>
+              </div>
+              <div>
+                {currentDim1 != null && m.blendDim1 != null ? (
+                  <>
+                    <AlignmentTrack
+                      points={[
+                        { value: m.blendDim1, faint: true },
+                        { value: currentDim1, color: primaryColor },
+                      ]}
+                    />
+                    <div className="mt-[0.15rem] whitespace-nowrap text-right font-mono text-[0.68rem] text-ink-faint">
+                      Δ {fmt2(Math.abs(currentDim1 - m.blendDim1))} from center
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-right text-[0.72rem] text-ink-faint">
+                    Not enough scored members to compare
+                  </div>
+                )}
+              </div>
+            </Link>
+            {m.subcommittees.length > 0 && (
+              <details className="group/sub pb-[0.6rem]">
+                <summary className="flex cursor-pointer list-none items-center gap-1 text-[0.72rem] text-ink-muted hover:text-accent [&::-webkit-details-marker]:hidden">
+                  <span className="inline-block transition-transform group-open/sub:rotate-90">
+                    ▸
+                  </span>
+                  {m.subcommittees.length}{" "}
+                  {m.subcommittees.length === 1
+                    ? "subcommittee"
+                    : "subcommittees"}
+                </summary>
+                <ul className="mt-1.5 ml-3 border-l border-line pl-3">
+                  {m.subcommittees.map((sc) => (
+                    <li key={sc.subcommitteeId} className="py-[0.3rem]">
+                      <span className="text-[0.82rem] text-ink">{sc.name}</span>
+                      <RoleTag role={sc.role} />
+                      <div className="text-[0.68rem] text-ink-faint">
+                        {sc.memberCount} members
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+          </div>
         ))}
       </div>
 

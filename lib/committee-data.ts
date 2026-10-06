@@ -23,6 +23,7 @@ import type {
   MemberCommitteeMembership,
   RosterLead,
   SubcommitteeProfile,
+  MemberSubcommitteeSeat,
 } from "./committee-types";
 
 /**
@@ -228,6 +229,31 @@ function buildCommitteeIndex(): CommitteeIndex {
   // key (DATA_CONVENTIONS §1). Skips the same unmatched-member rows the
   // roster loop above already warned about.
   const byMember = new Map<string, MemberCommitteeMembership[]>();
+  const subById = new Map<string, SubcommitteeProfile>();
+  for (const c of profiles) for (const s of c.subcommittees) subById.set(s.subcommitteeId, s);
+  const subSeats = new Map<string, MemberSubcommitteeSeat[]>(); // `${bioguide}|${committeeId}`
+  const parentOf = new Map(subcommittees.map((s) => [s.subcommittee_id, s.parent_committee_id]));
+  for (const seat of subcommitteeMemberships) {
+    const sub = subById.get(seat.subcommittee_id);
+    const parent = parentOf.get(seat.subcommittee_id);
+    if (!sub || !parent || !memberIndex.has(seat.bioguide_id)) continue;
+    const key = `${seat.bioguide_id}|${parent}`;
+    const arr = subSeats.get(key) ?? [];
+    arr.push({
+      subcommitteeId: sub.subcommitteeId,
+      name: sub.name,
+      role: seat.role,
+      memberCount: sub.memberCount,
+    });
+    subSeats.set(key, arr);
+  }
+  for (const arr of subSeats.values()) {
+    arr.sort((a, b) => {
+      const at = a.role === "member" ? 1 : 0;
+      const bt = b.role === "member" ? 1 : 0;
+      return at !== bt ? at - bt : a.name.localeCompare(b.name);
+    });
+  }
   for (const seat of memberships) {
     const committee = byId.get(seat.committee_id);
     if (!committee || !memberIndex.has(seat.bioguide_id)) continue;
@@ -240,6 +266,7 @@ function buildCommitteeIndex(): CommitteeIndex {
       rank: seat.rank,
       memberCount: committee.memberCount,
       blendDim1: committee.dim1,
+      subcommittees: subSeats.get(`${seat.bioguide_id}|${committee.committeeId}`) ?? [],
     });
     byMember.set(seat.bioguide_id, arr);
   }

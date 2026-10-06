@@ -119,6 +119,15 @@ export interface MemberCommitteeMembership {
   /** This committee's blended dim1 (unweighted mean); `null` if too few of
    *  its members are scored. */
   blendDim1: number | null;
+  /** The member's seats on this committee's subcommittees, role then name. */
+  subcommittees: MemberSubcommitteeSeat[];
+}
+
+export interface MemberSubcommitteeSeat {
+  subcommitteeId: string;
+  name: string;
+  role: CommitteeRole;
+  memberCount: number;
 }
 
 export interface CommitteeSearchEntry {
