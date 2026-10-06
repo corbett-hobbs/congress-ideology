@@ -7,6 +7,7 @@ import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
+import { SEGMENT_LABEL_STYLE, segmentLabelFits, yLabelInset } from "@/lib/chart-bars";
 import { administrationForTermLabel } from "./term-labels";
 import { SLOT_NAME, fiscalYearSpan, formatAidAxis, formatAidMoney, niceDollarTicks, type SpendingYear } from "@/lib/foreign-aid-derive";
 import { useAidState } from "./ForeignAidState";
@@ -35,22 +36,32 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
   const innerW = width - ml - mr;
   const innerH = height - mt - mb;
   const n = rows.length;
-  const step = innerW / n;
+  const max = Math.max(0, ...rows.map((r) => r.drawn));
+  const { ticks, top } = niceDollarTicks(max);
+  // Push the first bar right if a tall one would sit on top of a y-axis label.
+  const step0 = innerW / n;
+  const inset = yLabelInset({
+    ticks,
+    format: formatAidAxis,
+    tops: rows.map((r) => r.drawn),
+    step: step0,
+    barW: Math.min(Math.max(2, step0 * 0.72), 64),
+  });
+  const step = (innerW - inset) / n;
+  const xOf = (i: number) => inset + i * step;
   const hatchId = useId().replace(/:/g, "");
   const tip = useTooltip<SpendingYear>();
   const [hover, setHover] = useState(-1);
   const down = useRef(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const max = Math.max(0, ...rows.map((r) => r.drawn));
-  const { ticks, top } = niceDollarTicks(max);
   const y = scaleLinear().domain([0, top]).range([innerH, 0]);
   const bw = Math.min(Math.max(2, step * 0.72), 64);
   const si = year - range[0];
 
   const indexAt = (e: { clientX: number }) => {
     const r = svgRef.current!.getBoundingClientRect();
-    return Math.min(n - 1, Math.max(0, Math.floor((e.clientX - r.left - ml) / step)));
+    return Math.min(n - 1, Math.max(0, Math.floor((e.clientX - r.left - ml - inset) / step)));
   };
   const onDown = (e: PointerEvent<SVGSVGElement>) => {
     down.current = true;
@@ -113,12 +124,12 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
           <>
             <HatchDefs id={hatchId} />
             <Axis scale={y} orientation="left" ticks={ticks} offset={0} gridExtent={innerW} format={formatAidAxis} zeroAt={0} />
-            {si >= 0 && si < n && <rect x={si * step} y={-4} width={step} height={innerH + 4} rx={2} style={{ fill: "var(--surface-raised)", stroke: "var(--line-strong)" }} />}
+            {si >= 0 && si < n && <rect x={xOf(si)} y={-4} width={step} height={innerH + 4} rx={2} style={{ fill: "var(--surface-raised)", stroke: "var(--line-strong)" }} />}
             {hover >= 0 && hover < n && hover !== si && (
-              <rect x={hover * step} y={-4} width={step} height={innerH + 4} rx={2} style={{ fill: "none", stroke: "var(--line-strong)", strokeDasharray: "3 3" }} />
+              <rect x={xOf(hover)} y={-4} width={step} height={innerH + 4} rx={2} style={{ fill: "none", stroke: "var(--line-strong)", strokeDasharray: "3 3" }} />
             )}
             {rows.map((r, i) => {
-              const x = i * step + (step - bw) / 2;
+              const x = xOf(i) + (step - bw) / 2;
               let acc = 0;
               const partial = isPartial(r.fy);
               return (
@@ -136,16 +147,32 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
                       <rect x={x} y={y(acc)} width={bw} height={y(0) - y(acc)} style={{ fill: "none", stroke: "var(--ink-muted)", strokeDasharray: "3 2" }} />
                     </>
                   )}
+                  {/* Segment values, only where the segment is tall and wide enough to hold them. */}
+                  {(() => {
+                    let a = 0;
+                    return r.slots.map((v, k) => {
+                      if (v <= 0) return null;
+                      const y1 = y(a + v);
+                      const h = y(a) - y1;
+                      a += v;
+                      const t = formatAidMoney(v);
+                      return segmentLabelFits(h, bw, t) ? (
+                        <text key={k} x={x + bw / 2} y={y1 + h / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>
+                          {t}
+                        </text>
+                      ) : null;
+                    });
+                  })()}
                 </g>
               );
             })}
             <g pointerEvents="none" opacity={hover >= 0 ? 0.25 : 1} style={{ transition: "opacity .12s" }}>
               {marks.map((m) => {
                 const w = m.text.length * 6.3;
-                const cx = Math.min(Math.max(m.i * step + step / 2, w / 2 + 2), innerW - w / 2 - 2);
+                const cx = Math.min(Math.max(xOf(m.i) + step / 2, w / 2 + 2), innerW - w / 2 - 2);
                 // Sit above the tallest bar the label spans, so a clamped label never lands on a neighbour.
                 let tall = rows[m.i].drawn;
-                for (let j = Math.max(0, Math.floor((cx - w / 2) / step)); j <= Math.min(n - 1, Math.floor((cx + w / 2) / step)); j++) tall = Math.max(tall, rows[j].drawn);
+                for (let j = Math.max(0, Math.floor((cx - w / 2 - inset) / step)); j <= Math.min(n - 1, Math.floor((cx + w / 2 - inset) / step)); j++) tall = Math.max(tall, rows[j].drawn);
                 return (
                   <text key={m.i} x={cx} y={y(tall) - 6} textAnchor="middle" className="fill-ink text-[11px] font-medium" style={{ stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" }}>
                     {m.text}
@@ -155,7 +182,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
             </g>
             {rows.map((r, i) =>
               n <= 10 || r.fy % 5 === 0 || i === 0 ? (
-                <text key={r.fy} className="axis-tick-label" x={i * step + step / 2} y={innerH + 14} textAnchor="middle" style={r.fy === year ? { fill: "var(--ink)", fontWeight: 600 } : undefined}>
+                <text key={r.fy} className="axis-tick-label" x={xOf(i) + step / 2} y={innerH + 14} textAnchor="middle" style={r.fy === year ? { fill: "var(--ink)", fontWeight: 600 } : undefined}>
                   {r.fy}
                 </text>
               ) : null,
@@ -163,8 +190,8 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
             {/* Presidential terms: the administration in office for most of each fiscal year. Labels placed right to left so they never collide. */}
             <g transform={`translate(0,${innerH + AXIS_H + 2})`}>
               {visible.map(({ t, s, e }) => {
-                const x = (s - range[0]) * step;
-                const w = (e - s + 1) * step;
+                const x = s === range[0] ? 0 : xOf(s - range[0]);
+                const w = (e - s + 1) * step + (s === range[0] ? inset : 0);
                 const c = t.party === "R" ? "--rep" : "--dem";
                 return (
                   <g key={t.termId}>
@@ -178,8 +205,8 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
                 const out = [];
                 for (let k = visible.length - 1; k >= 0; k--) {
                   const { t, s, e } = visible[k];
-                  const x = (s - range[0]) * step;
-                  const w = (e - s + 1) * step;
+                  const x = s === range[0] ? 0 : xOf(s - range[0]);
+                  const w = (e - s + 1) * step + (s === range[0] ? inset : 0);
                   const tw = t.last.length * 6.4;
                   let tx = Math.min(x + w / 2 - tw / 2, nextStart - 3 - tw, x + w - tw - 1);
                   tx = Math.max(tx, x + 1);
@@ -195,7 +222,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
               })()}
             </g>
             {si >= 0 && si < n && (
-              <text className="axis-tick-label" x={Math.min(Math.max(si * step + step / 2, chipW / 2), innerW - chipW / 2)} y={-12} textAnchor="middle" style={{ fill: "var(--ink)", fontWeight: 600 }}>
+              <text className="axis-tick-label" x={Math.min(Math.max(xOf(si) + step / 2, chipW / 2), innerW - chipW / 2)} y={-12} textAnchor="middle" style={{ fill: "var(--ink)", fontWeight: 600 }}>
                 {chipLabel}
               </text>
             )}

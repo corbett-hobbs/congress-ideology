@@ -7,6 +7,7 @@ import { Axis } from "./Axis";
 import { Tooltip, useTooltip } from "./Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
+import { SEGMENT_LABEL_STYLE, segmentLabelFits, yLabelInset } from "@/lib/chart-bars";
 
 export interface StackSeries {
   id: string;
@@ -122,16 +123,26 @@ export function StackedBars<C extends StackColumn>({
         onPointerLeave={tip.hide}
       >
         {({ innerWidth, innerHeight }) => {
-          const step = innerWidth / columns.length;
-          const barW = Math.max(2, step * 0.78);
           const y = scaleLinear()
             .domain(mode === "share" ? [0, 1] : [0, maxTotal])
             .range([innerHeight, 0])
             .nice(mode === "share" ? 4 : 5);
           const yTicks = mode === "share" ? [0, 0.25, 0.5, 0.75, 1] : y.ticks(5);
+          const yFormat = (v: number) => (mode === "share" ? `${Math.round(v * 100)}%` : String(v));
+          // Push the first bar right if a tall one would sit on top of a y-axis label.
+          const step0 = innerWidth / columns.length;
+          const inset = yLabelInset({
+            ticks: yTicks,
+            format: yFormat,
+            tops: columns.map((c) => (mode === "share" ? 1 : c.total)),
+            step: step0,
+            barW: Math.max(2, step0 * 0.78),
+          });
+          const step = (innerWidth - inset) / columns.length;
+          const barW = Math.max(2, step * 0.78);
           // Label as many columns as fit: a zoomed-in window gets every year, the full span every few.
           const every = Math.max(1, Math.ceil((narrow ? 30 : 44) / step));
-          const xOf = (i: number) => i * step;
+          const xOf = (i: number) => inset + i * step;
 
           return (
             <>
@@ -141,7 +152,7 @@ export function StackedBars<C extends StackColumn>({
                 ticks={yTicks}
                 offset={0}
                 gridExtent={innerWidth}
-                format={(v) => (mode === "share" ? `${Math.round(v * 100)}%` : String(v))}
+                format={yFormat}
                 zeroAt={0}
               />
               {yAxisLabel && (
@@ -195,6 +206,24 @@ export function StackedBars<C extends StackColumn>({
                         />
                       );
                     })}
+                    {/* Segment values, only where the segment is tall and wide enough to hold them. */}
+                    {(() => {
+                      let a = 0;
+                      return series.map((s) => {
+                        const v = col.values[s.id] ?? 0;
+                        if (v === 0) return null;
+                        const y0 = y((a + v) / denom);
+                        const h = y(a / denom) - y0;
+                        a += v;
+                        const t = mode === "share" ? `${Math.round((v / denom) * 100)}%` : String(v);
+                        if (highlight && highlight !== s.id) return null;
+                        return segmentLabelFits(h, barW, t) ? (
+                          <text key={s.id} x={x + barW / 2} y={y0 + h / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>
+                            {t}
+                          </text>
+                        ) : null;
+                      });
+                    })()}
                     {/* One full-height hit target per column: hover, click, keyboard. */}
                     <rect
                       x={xOf(i)}

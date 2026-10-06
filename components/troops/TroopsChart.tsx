@@ -6,6 +6,7 @@ import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { findExtremes } from "@/lib/chart-extremes";
+import { SEGMENT_LABEL_STYLE, segmentLabelFits, yLabelInset } from "@/lib/chart-bars";
 import { useElementWidth } from "@/lib/use-element-width";
 import { REGIONS } from "@/lib/troops-regions";
 import { formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, type RegionStack } from "@/lib/troops-derive";
@@ -48,22 +49,31 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   const innerW = width - ml - mr;
   const innerH = height - mt - mb;
   const n = range[1] - range[0] + 1;
-  const step = innerW / n;
+  const max = Math.max(0, ...stacks.map((s) => s.total));
+  const { ticks, top } = niceCountTicks(max);
+  // Push the first bar right if a tall one would sit on top of a y-axis label.
+  const step0 = innerW / n;
+  const inset = yLabelInset({
+    ticks,
+    format: formatCountAxis,
+    tops: Array.from({ length: n }, (_, i) => stacks.find((s) => s.yi === range[0] + i)?.total ?? 0),
+    step: step0,
+    barW: Math.min(Math.max(2, step0 * 0.72), 64),
+  });
+  const step = (innerW - inset) / n;
   const bw = Math.min(Math.max(2, step * 0.72), 64);
-  const xOf = (i: number) => (i - range[0]) * step;
+  const xOf = (i: number) => inset + (i - range[0]) * step;
   const hatchId = useId().replace(/:/g, "");
   const tip = useTooltip<number>();
   const [hover, setHover] = useState(-1);
   const down = useRef(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const max = Math.max(0, ...stacks.map((s) => s.total));
-  const { ticks, top } = niceCountTicks(max);
   const y = scaleLinear().domain([0, top]).range([innerH, 0]);
   const byYi = new Map(stacks.map((s) => [s.yi, s]));
   const indexAt = (e: { clientX: number }) => {
     const r = svgRef.current!.getBoundingClientRect();
-    return range[0] + Math.min(n - 1, Math.max(0, Math.floor((e.clientX - r.left - ml) / step)));
+    return range[0] + Math.min(n - 1, Math.max(0, Math.floor((e.clientX - r.left - ml - inset) / step)));
   };
   const onDown = (e: PointerEvent<SVGSVGElement>) => {
     down.current = true;
@@ -190,6 +200,22 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                       <rect x={x} y={y(acc)} width={bw} height={y(0) - y(acc)} style={{ fill: "none", stroke: "var(--ink-muted)", strokeDasharray: "3 2" }} />
                     </>
                   )}
+                  {/* Segment values, only where the segment is tall and wide enough to hold them. */}
+                  {(() => {
+                    let a = 0;
+                    return s.regions.map((v, k) => {
+                      if (v <= 0) return null;
+                      const y1 = y(a + v);
+                      const h = y(a) - y1;
+                      a += v;
+                      const t = formatCountCompact(v);
+                      return segmentLabelFits(h, bw, t) ? (
+                        <text key={k} x={x + bw / 2} y={y1 + h / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>
+                          {t}
+                        </text>
+                      ) : null;
+                    });
+                  })()}
                 </g>
               );
             })}
@@ -216,8 +242,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
             {/* Presidential terms: the administration in office for most of each fiscal year. Labels placed right to left so they never collide. */}
             <g transform={`translate(0,${innerH + AXIS_H + 2})`}>
               {visible.map(({ t, s, e }) => {
-                const x = (s - range[0]) * step;
-                const w = (e - s + 1) * step;
+                const x = s === range[0] ? 0 : xOf(s);
+                const w = (e - s + 1) * step + (s === range[0] ? inset : 0);
                 const c = t.party === "R" ? "--rep" : "--dem";
                 return (
                   <g key={t.termId}>
@@ -231,8 +257,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                 const out = [];
                 for (let k = visible.length - 1; k >= 0; k--) {
                   const { t, s, e } = visible[k];
-                  const x = (s - range[0]) * step;
-                  const w = (e - s + 1) * step;
+                  const x = s === range[0] ? 0 : xOf(s);
+                  const w = (e - s + 1) * step + (s === range[0] ? inset : 0);
                   const tw = t.last.length * 6.4;
                   let tx = Math.min(x + w / 2 - tw / 2, nextStart - 3 - tw, x + w - tw - 1);
                   tx = Math.max(tx, x + 1);
