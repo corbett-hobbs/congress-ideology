@@ -23,8 +23,8 @@ const MARKER_NOTES = {
     body: "1996 and 1998–2005 are DMDC’s own 309A tables, which include afloat and unassigned personnel (from about 6,000 to 100,000 people). The rest of 1953–2007 comes from the troopdata compilation of DMDC reports, which has no afloat or unassigned rows, so those bars run lower by that amount, and a jump where the source changes is not a change in troops. No percent change is shown between bars from different sources.",
   },
   oif: {
-    title: "2003–2005: Iraq, Kuwait and Afghanistan are not reported",
-    body: "DMDC’s country tables print these as zero with a pointer to a separate deployment table, so they are shown as not reported, not zero. The dashed boxes above the bars are DMDC’s separate totals for forces in and around Iraq: 183,002 active duty in 2003, and 170,647 (2004) and 192,600 (2005) including deployed Reserve and National Guard, plus 19,500 in Afghanistan in 2005 (rounded). They are a different basis, can overlap country rows (forces deployed from Germany are also counted in Germany), and are in no bar or total.",
+    title: "2003–2005: Iraq and Afghanistan are DMDC’s in/around totals",
+    body: "Forces in and around Iraq: 183,002 active duty in 2003, and 170,647 (2004) and 192,600 (2005) including deployed Reserve and National Guard, plus 19,500 in Afghanistan in 2005 (rounded). DMDC’s country tables print these countries as zero with a pointer to that separate deployment table, so the bars use the separate totals in their place. They are a different basis from the other bars (they cover the whole theatre, including nearby countries such as Kuwait and ships), so Iraq is somewhat overstated and a few troops may also appear in a neighbouring country’s row.",
   },
   estimate: {
     title: "2006 and 2007: estimates",
@@ -59,7 +59,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   const mr = 6;
   const mt = 42;
   const mb = AXIS_H + BAND_H + 6;
-  const max = Math.max(0, ...stacks.map((s) => s.total + s.ghost));
+  const max = Math.max(0, ...stacks.map((s) => s.total));
   const { ticks, top } = niceCountTicks(max);
   const ml = yGutter(ticks.map(formatCountAxis)); // y labels sit in a gutter left of the plot
   const innerW = width - ml - mr;
@@ -143,7 +143,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
   const markers: { id: MarkerId; n: number; x: number }[] = [];
   const firstPre2008 = years.findIndex((yy, i) => i >= range[0] && i <= range[1] && yy.fy <= 2007);
   if (firstPre2008 >= 0) markers.push({ id: "sources", n: 0, x: inWin(1996) ? xOf(yearIdx(1996)) + step / 2 : xOf(firstPre2008) + step / 2 });
-  const oifX = stacks.some((s) => s.ghost > 0) ? center(2003, 2005) : null;
+  const oifX = data.payload.contingency.some((c) => stacks.some((s) => s.pi === c.period) && (country < 0 || c.place === country)) ? center(2003, 2005) : null;
   if (oifX !== null) markers.push({ id: "oif", n: 0, x: oifX });
   const estX = center(2006, 2007);
   if (estX !== null) markers.push({ id: "estimate", n: 0, x: estX });
@@ -250,9 +250,6 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                       ) : null;
                     });
                   })()}
-                  {s.ghost > 0 && (
-                    <rect x={x} y={y(s.total + s.ghost)} width={bw} height={Math.max(0, y(s.total) - y(s.total + s.ghost))} rx={1} style={{ fill: "color-mix(in oklab, var(--ink) 7%, transparent)", stroke: "var(--ink)", strokeDasharray: "3 2", strokeWidth: 1 }} />
-                  )}
                 </g>
               );
             })}
@@ -260,8 +257,8 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
               {marks.map((m) => {
                 const w = m.text.length * 6.3;
                 const cx = Math.min(Math.max(xOf(m.i) + step / 2, w / 2 + 2), innerW - w / 2 - 2);
-                let tall = byYi.get(m.i)!.total + byYi.get(m.i)!.ghost;
-                for (const s of stacks) if (Math.abs(xOf(s.yi) + step / 2 - cx) <= w / 2 + bw / 2) tall = Math.max(tall, s.total + s.ghost);
+                let tall = byYi.get(m.i)!.total;
+                for (const s of stacks) if (Math.abs(xOf(s.yi) + step / 2 - cx) <= w / 2 + bw / 2) tall = Math.max(tall, s.total);
                 return (
                   <text key={m.i} x={cx} y={y(tall) - 6} textAnchor="middle" className="fill-ink text-[11px] font-medium" style={{ stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" }}>
                     {m.text}
@@ -409,15 +406,9 @@ function ChartTip({ yi, stack, measure }: { yi: number; stack: RegionStack | und
             </div>
           )}
           {ghost.map((g) => (
-            <div key={g.operation} style={{ marginTop: 4, opacity: 0.9 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 14 }}>
-                <span>Not in the bar: in/around {places[g.place].name}</span>
-                <span className="tt-mono">{formatCount(g.value)}</span>
-              </div>
-              <div className="tt-mono" style={{ opacity: 0.85 }}>
-                DMDC {g.operation} total · {g.basis === "active_duty" ? "active duty" : "includes Reserve/Guard"}
-                {g.rounded ? " · rounded" : ""}
-              </div>
+            <div key={g.operation} className="tt-mono" style={{ marginTop: 4, opacity: 0.85 }}>
+              {places[g.place].name}: DMDC {g.operation} in/around total ({g.basis === "active_duty" ? "active duty" : "includes Reserve/Guard"}
+              {g.rounded ? ", rounded" : ""}), not a country-table count
             </div>
           ))}
           {p.suppressed.length > 0 && country < 0 && (

@@ -56,11 +56,11 @@ export function MapCard({ map }: { map: WorldMapFile }) {
     const m = new Map<string, Hit>();
     for (const r of view.ranked) {
       const pl = places[r.place];
-      if (pl.iso3) m.set(pl.iso3, { title: pl.name, place: r.place, value: r.value, suppressed: false, branches: r.branches });
+      if (pl.iso3) m.set(pl.iso3, { title: pl.name, place: r.place, value: r.value, suppressed: false, branches: r.branches, contingency: view.contingency.find((c) => c.place === r.place) });
     }
     for (const sp of view.suppressed) {
       const pl = places[sp];
-      if (pl.iso3) m.set(pl.iso3, { title: pl.name, place: sp, value: null, suppressed: true, branches: null, contingency: view.contingency.find((c) => c.place === sp) });
+      if (pl.iso3) m.set(pl.iso3, { title: pl.name, place: sp, value: null, suppressed: true, branches: null });
     }
     return m;
   }, [view, places]);
@@ -238,12 +238,15 @@ export function MapCard({ map }: { map: WorldMapFile }) {
           {view.afloat > 0 ? `; ${formatCount(view.afloat)} are afloat or unassigned (DMDC’s UNKNOWN row)` : ""}
           {noOutline.length > 0 ? `; no outline is drawn for ${noOutline.map((r) => `${places[r.place].name} ${formatCount(r.value)}`).join(", ")}` : ""}.
         </p>
+        {view.contingency.length > 0 && (
+          <p>
+            † {view.contingency.map((c) => places[c.place].name).join(" and ")}: DMDC’s separate total for forces in and around the country ({view.contingency.some((c) => c.basis === "includes_reserve_guard") ? "including deployed Reserve and National Guard" : "active duty"}) stands in for the country table, which prints zero. It covers the whole theatre, so it is on a different basis from the other countries.
+          </p>
+        )}
         <p>
           {view.suppressed.length > 0 ? (
             <>
               {view.suppressed.map((x) => places[x].name).join(", ")} {view.suppressed.length > 1 ? "print" : "prints"} blank or unavailable in this table (listed “n/r”): not reported, not zero.
-              {view.contingency.length > 0 &&
-                ` The † figures are DMDC’s separate totals for forces in and around ${view.contingency.map((c) => places[c.place].name).join(" and ")}, on a different basis (${view.contingency.some((c) => c.basis === "includes_reserve_guard") ? "including deployed Reserve and National Guard" : "active duty"}); they are not in any figure above.`}
             </>
           ) : (
             <>An absent or blank row is not a zero: Afghanistan has no row at all from 2023 and Iraq and Syria none from 2024 in the DMDC tables, and several hosts print blank before.</>
@@ -299,18 +302,6 @@ function MapTip({ hit }: { hit: Hit }) {
       {hit.suppressed ? (
         <>
           <div className="tt-mono" style={{ marginTop: 4 }}>Blank in source (not reported, not zero)</div>
-          {hit.contingency && (
-            <div style={{ marginTop: 4 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 14, fontWeight: 600 }}>
-                <span>In/around {hit.title} (DMDC {hit.contingency.operation})</span>
-                <span className="tt-mono">{formatCount(hit.contingency.value)}</span>
-              </div>
-              <div className="tt-mono" style={{ opacity: 0.85 }}>
-                separate total · {hit.contingency.basis === "active_duty" ? "active duty" : "includes Reserve/Guard"}
-                {hit.contingency.rounded ? " · rounded" : ""}
-              </div>
-            </div>
-          )}
         </>
       ) : hit.value === null ? (
         <div className="tt-mono" style={{ marginTop: 4 }}>No troops reported</div>
@@ -334,6 +325,12 @@ function MapTip({ hit }: { hit: Hit }) {
                   <span className="tt-mono">{formatCount(v)}</span>
                 </div>
               ))}
+          {hit.contingency && (
+            <div className="tt-mono" style={{ marginTop: 4, opacity: 0.85 }}>
+              † DMDC {hit.contingency.operation} in/around total ({hit.contingency.basis === "active_duty" ? "active duty" : "includes Reserve/Guard"}
+              {hit.contingency.rounded ? ", rounded" : ""}), not a country-table count
+            </div>
+          )}
         </>
       )}
     </div>

@@ -153,6 +153,16 @@ export function buildTroopsPayload(rows: readonly TroopsRow[], meta: TroopsMeta,
     const afsf = r.air_force === null ? null : r.air_force + (r.space_force ?? 0);
     tuples.push([placeIdx.get(r.name)!, periodIdx.get(r.period)!, r.state === "value" ? 0 : r.state === "suppressed" ? 1 : 2, r.total, r.army, r.navy, r.marine_corps, afsf]);
   }
+  // DMDC's "in/around Iraq/Afghanistan" totals (2003-05) fill the country's otherwise suppressed row, so they draw and
+  // rank like any host. They are not DMDC location-table counts: the contingency notes carry the caveat.
+  for (const c of history.meta.contingency) {
+    const place = placeIdx.get(c.name)!;
+    const period = histIdx.get(c.year)!;
+    const tuple: TroopsRowTuple = [place, period, 0, c.total, c.army, c.navy, c.marine_corps, c.air_force];
+    const at = tuples.findIndex((t) => t[0] === place && t[1] === period);
+    if (at >= 0) tuples[at] = tuple;
+    else tuples.push(tuple);
+  }
   tuples.sort((a, b) => a[1] - b[1] || a[0] - b[0]);
 
   const contingency: TroopsContingency[] = history.meta.contingency.map((c) => ({
@@ -219,8 +229,8 @@ export interface ContingencyNote {
 }
 
 /**
- * DMDC's separate in/around Iraq and Afghanistan totals for period `pi` (2003-05 only), for branch measure `m`
- * `country >= 0` keeps only that place. Annotations, never added to a total.
+ * DMDC's in/around Iraq and Afghanistan totals for period `pi` (2003-05 only), for branch measure `m`
+ * `country >= 0` keeps only that place. They are already in the rows (see `buildTroopsPayload`); this only supplies the caveat (basis, rounded).
  */
 export function contingencyAt(data: TroopsData, m: number, pi: number, country = -1): ContingencyNote[] {
   return data.payload.contingency
@@ -238,8 +248,6 @@ export interface RegionStack {
   total: number;
   /** No figure exists (Army N/A for All branches / Army). */
   unavailable: boolean;
-  /** DMDC's in/around Iraq (and Afghanistan) deployment total for this year and branch, drawn above the bar as an annotation; 0 when none. */
-  ghost: number;
 }
 
 /** One stack per year in `[ya, yb]` for branch measure `m`; `country >= 0` keeps only that place. */
@@ -256,7 +264,7 @@ export function stackByRegion(data: TroopsData, m: number, ya: number, yb: numbe
         if (r.state !== 1 && r.v[m] !== null) regions[REGION_IDS.indexOf(pl.region)] += r.v[m]!;
       }
     }
-    out.push({ yi, pi, regions, total: regions.reduce((a, b) => a + b, 0), unavailable: un, ghost: contingencyAt(data, m, pi, country).reduce((a, c) => a + c.value, 0) });
+    out.push({ yi, pi, regions, total: regions.reduce((a, b) => a + b, 0), unavailable: un });
   }
   return out;
 }

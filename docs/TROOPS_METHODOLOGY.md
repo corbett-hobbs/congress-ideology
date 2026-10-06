@@ -85,11 +85,12 @@ filter narrows the years, the Country filter shows that place's own series and o
 **History on the same chart (S2 integrated).** `troops_history.json` is merged into the one payload (`buildTroopsPayload(location, meta, admins,
 history)`); a place in both sources must agree on class and ISO3 or the build fails. The chart is on a true year axis (1953-2026; 1951-52 and 1950 are not drawn). Numbered
 markers (tap to pin) explain the source and afloat coverage before 2008, the 2003-05 Iraq/Afghanistan gap, the 2006-07 estimates and the 2018
-definition change. **The 2003-05 OIF/OEF totals are drawn on the chart** as dashed boxes above those bars (`RegionStack.ghost`; the axis includes
-them), listed first in the ranked list as "n/r" with the in/around figure marked †, and shown in the chart and map tooltips, always labelled as a
-different basis (2003 active duty; 2004-05 including deployed Reserve/Guard; 2005 rounded) and never added to a bar or total. With a Country filter
-only that country's box shows; with a branch filter, that branch's share. Estimate years (2006-07) are drawn lighter with a dashed outline.
-A third card, "Who's hosted the most" (`TroopsFirstPlaceCard`, the foreign-aid "Who's been No. 1" pattern), shows the largest host each year as run-length spans over bars split by branch; the branch filter picks the No. 1 within that branch, Country highlights the years that country led. Hosts only (never afloat, territories or not-reported rows), so in 2003-05 Germany leads while Iraq is not reported. The 2006-07 estimates have no branch split and draw as a grey "no branch split published" bar. Not built: a Military-share style second measure.
+definition change. **The 2003-05 OIF/OEF totals fill the Iraq and Afghanistan rows** (`buildTroopsPayload` replaces the suppressed row with the in/around figure),
+so they draw in the Middle East & S./Central Asia segment, rank like any host (marked †) and respond to the Country and branch filters. Those
+years' bars are therefore DMDC's foreign total plus these figures; the tooltips, map notes and Data notes label them as a different basis (whole
+theatre, so Iraq is somewhat overstated and some troops may also sit in a neighbouring row; 2003 active duty; 2004-05 including deployed
+Reserve/Guard; 2005 rounded). Kuwait stays not reported. Estimate years (2006-07) are drawn lighter with a dashed outline.
+A third card, "Who's hosted the most" (`TroopsFirstPlaceCard`, the foreign-aid "Who's been No. 1" pattern), shows the largest host each year as run-length spans over bars split by branch; the branch filter picks the No. 1 within that branch, Country highlights the years that country led. Hosts only (never afloat, territories or not-reported rows), so in 2003-05 Iraq leads on the in/around figures. The 2006-07 estimates have no branch split and draw as a grey "no branch split published" bar. Not built: a Military-share style second measure.
 
 ## History, 1950-2007 (S2)
 

@@ -5,7 +5,7 @@ import { ChartCard } from "@/components/charts/ChartCard";
 import { LEGEND_ITEM } from "@/components/charts/legend";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { REGIONS } from "@/lib/troops-regions";
-import { changeVsPrior, contingencyAt, formatCount, measureLabel, stackByRegion } from "@/lib/troops-derive";
+import { changeVsPrior, formatCount, measureLabel, stackByRegion } from "@/lib/troops-derive";
 import { useTroopsState } from "./TroopsState";
 import { TroopsChart } from "./TroopsChart";
 import { RegionLegend, TD, TH, TableView } from "./shared";
@@ -20,12 +20,10 @@ export function TroopsChartCard() {
   const showing = [country >= 0 ? places[country].name : null, measure > 0 ? measureLabel(measure) : null].filter(Boolean);
   const anyUnavailable = stacks.some((s) => s.unavailable);
   const only = country >= 0 ? places[country].region : null;
-  const anyGhost = stacks.some((x) => x.ghost > 0);
   const anyEstimate = stacks.some((x) => periods[x.pi].estimate && !x.unavailable);
   const year = years[yi];
   const p = periods[year.period];
-  const ghost = contingencyAt(data, measure, year.period, country);
-  const when = year.partial ? `${year.fy} (partial, through ${p.label})` : `${year.fy} (${p.snapshot === "june" ? "June" : "Sep"} 30)`;
+    const when = year.partial ? `${year.fy} (partial, through ${p.label})` : `${year.fy} (${p.snapshot === "june" ? "June" : "Sep"} 30)`;
 
   const lede = cur?.unavailable ? (
     <>
@@ -37,7 +35,6 @@ export function TroopsChartCard() {
       {change && ` · ${change.pct > 0 ? "+" : change.pct < 0 ? "−" : ""}${Math.abs(Math.round(change.pct * 1000) / 10)}% vs. ${years[change.prev].fy}`}
       {!change && yi > 0 && !year.partial && !cur?.unavailable && " · no change shown: a different source or definition from the previous bar"}
       {" · active-duty personnel by place of duty"}
-      {ghost.length > 0 && ` · not counted: ${formatCount(ghost.reduce((a, g) => a + g.value, 0))} in/around ${ghost.map((g) => places[g.place].name).join(" and ")} (DMDC’s separate table, dashed box)`}
     </>
   );
 
@@ -53,12 +50,6 @@ export function TroopsChartCard() {
           <span className={LEGEND_ITEM}>
             <i className="inline-block h-[10px] w-[10px] rounded-[2px] border border-dashed border-ink-faint" />
             Army did not report
-          </span>
-        )}
-        {anyGhost && (
-          <span className={LEGEND_ITEM}>
-            <i className="inline-block h-[10px] w-[10px] rounded-[2px] border border-dashed border-ink" style={{ background: "color-mix(in oklab, var(--ink) 7%, transparent)" }} />
-            In/around Iraq & Afghanistan (DMDC; not in bars)
           </span>
         )}
         {anyEstimate && (
@@ -82,10 +73,10 @@ export function TroopsChartCard() {
           published no table): lighter bars. The latest year is partial (hatched): the newest quarter published so far.
         </p>
         <p>
-          <b className="font-semibold text-ink">Iraq, Kuwait and Afghanistan, 2003–2005,</b> are not reported in DMDC’s country tables (printed as zero beside a pointer to a separate table, and the 2003–04 foreign total is labelled “Less
-          OIF”), so they add nothing to those bars. The dashed boxes above the bars are DMDC’s separate totals for forces in and around Iraq (183,002 active duty in 2003; 170,647 in 2004 and 192,600 in 2005 including deployed Reserve and
-          National Guard) and Afghanistan (19,500 in 2005, same basis, rounded). They are on a different basis from the bars, may overlap country rows, and are in no total. A count that is blank in the 2008+ tables (Afghanistan, Iraq and
-          Syria, 2018 to 2021) is likewise not reported, not zero. Tap or hover the numbered markers for each change.
+          <b className="font-semibold text-ink">Iraq and Afghanistan, 2003–2005,</b> are not reported in DMDC’s country tables (printed as zero beside a pointer to a separate table, and the 2003–04 foreign total is labelled “Less
+          OIF”). The bars use DMDC’s separate totals for forces in and around Iraq (183,002 active duty in 2003; 170,647 in 2004 and 192,600 in 2005 including deployed Reserve and National Guard) and Afghanistan (19,500 in 2005, same basis,
+          rounded), so those years’ bars are DMDC’s foreign total plus these figures. They are a different basis from the country counts: they cover the whole theatre, so Iraq is somewhat overstated and some troops may also appear in
+          a neighbouring country’s row. Kuwait is still not reported. A count that is blank in the 2008+ tables (Afghanistan, Iraq and Syria, 2018 to 2021) is likewise not reported, not zero. Tap or hover the numbered markers for each change.
         </p>
       </MethodologyNote>
       <TableView caption="Active-duty personnel abroad by region and year">
@@ -93,7 +84,6 @@ export function TroopsChartCard() {
           <tr>
             <th className={TH}>Year</th>
             <th className={TH}>Total</th>
-            <th className={TH}>In/around Iraq &amp; Afghanistan (not in total)</th>
             {REGIONS.map((r) => (
               <th key={r.id} className={TH}>
                 {r.label}
@@ -109,7 +99,6 @@ export function TroopsChartCard() {
                 {years[s.yi].partial ? " (partial)" : periods[s.pi].estimate ? " (estimate)" : ""}
               </td>
               <td className={TD}>{s.unavailable ? "n/a" : formatCount(s.total)}</td>
-              <td className={TD}>{s.ghost > 0 ? formatCount(s.ghost) : "–"}</td>
               {s.regions.map((v, k) => (
                 <td key={k} className={TD}>
                   {s.unavailable ? "n/a" : formatCount(v)}

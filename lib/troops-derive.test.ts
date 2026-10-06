@@ -204,15 +204,16 @@ describe("contingency annotation (DMDC's in/around Iraq and Afghanistan totals)"
     expect(at(2005, 0, place("Germany"))).toEqual([]);
     expect(at(2002)).toEqual([]);
     const s = stackByRegion(data, 0, yidx(2005), yidx(2005))[0];
-    expect(s.ghost).toBe(212100);
-    expect(s.total).toBe(periodView(data, 0, s.pi).abroad); // the bar itself does not include it
-    expect(stackByRegion(data, 0, yidx(2006), yidx(2006))[0].ghost).toBe(0);
+    expect(s.total).toBe(periodView(data, 0, s.pi).abroad);
   });
-  it("sits on rows the table prints as not reported", () => {
+  it("fills the country rows the table prints as not reported, so it draws and ranks like a host", () => {
     for (const c of payload.contingency) {
       const r = data.byPeriod[c.period].find((x) => x.place === c.place)!;
-      expect(r.state).toBe(1);
+      expect(r.state).toBe(0);
+      expect(r.v).toEqual(c.v);
     }
+    const v2005 = periodView(data, 0, payload.years[yidx(2005)].period);
+    expect(v2005.ranked.slice(0, 2).map((r) => [payload.places[r.place].name, r.value])).toEqual([["Iraq", 192600], ["Germany", expect.any(Number)]]);
     expect(periodView(data, 0, payload.years[yidx(2004)].period).contingency).toHaveLength(1);
   });
 });
@@ -225,7 +226,7 @@ describe("who's hosted the most", () => {
     expect(name(1953)).toBe("South Korea");
     expect(name(1957)).toBe("Germany");
     expect(name(1968)).toBe("Vietnam");
-    expect(name(2003)).toBe("Germany"); // Iraq is not reported in the country rows
+    expect(name(2003)).toBe("Iraq"); // DMDC's in/around Iraq total fills the row
     expect(name(2008)).toBe("Iraq");
     expect(name(2012)).toBe("Afghanistan");
     expect(name(2019)).toBe("Japan");
