@@ -400,6 +400,12 @@ validate` and CI only *read* it; a new EO with no cached topic **fails loudly**
 `pnpm classify:eos` (`pipeline/classify/executive-orders.ts`): it lets
 amending/revoking orders inherit a parent's topic, then reports the orders still
 needing one; `-- --labels FILE` records labels for those (`model`).
+The weekly freshness workflow does that last step unattended: `pnpm classify:eos:auto`
+(`pipeline/classify/executive-orders-auto.ts`) sends each remaining order's title,
+agencies and notes to the Claude API (needs the `ANTHROPIC_API_KEY` repo secret) and
+records the answer as `model`; answers below "high" confidence, or on a pointer-only
+title, are stored `needs_review`. With no key, an API error or an answer outside the
+nine topics the order stays uncached and the transform still fails loudly.
 - *Inheritance* applies only when the order's **title is just a pointer** to
   another EO ("Amendment to Executive Order 13212", or the bare "Executive Order
   N of <date>"), using the parent from the notes (or the number in the title).

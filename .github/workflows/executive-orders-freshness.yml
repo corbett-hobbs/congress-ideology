@@ -8,10 +8,12 @@ name: Executive orders freshness
 #
 # New orders have no topic yet and CI never classifies. So after the fetch this
 # job (1) lets amending/revoking orders inherit their parent's topic
-# (`pnpm classify:eos`, deterministic) and (2) re-runs the executive-orders
-# transform. Any order still without a topic makes the transform fail LOUDLY:
-# the PR is opened anyway with the list of orders to classify, and its CI stays
-# red until a human adds a topic for each to
+# (`pnpm classify:eos`, deterministic), (2) labels the rest with the Claude API
+# (`pnpm classify:eos:auto`, needs the ANTHROPIC_API_KEY repo secret; low-
+# confidence answers are stored needs_review) and (3) re-runs the executive-
+# orders transform. Any order still without a topic (no key, API failure) makes
+# the transform fail LOUDLY: the PR is opened anyway with the list of orders to
+# classify, and its CI stays red until a human adds a topic for each to
 # pipeline/classification/eo_topics.json.
 #
 # Requires repo setting:
@@ -63,18 +65,25 @@ jobs:
             git diff --stat -- pipeline/raw/federal-register
           fi
 
-      - name: Inherit parent topics, then rebuild
+      - name: Classify new orders, then rebuild
         id: build
         if: steps.detect.outputs.changed == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           set +e
           pnpm classify:eos > classify.log 2>&1
+          pnpm classify:eos:auto > auto.log 2>&1
+          pnpm classify:eos > classify.log 2>&1
           pnpm exec tsx pipeline/transform/executive-orders-run.ts > transform.log 2>&1
           code=$?
-          cat classify.log transform.log
+          cat classify.log auto.log transform.log
           {
             echo "unclassified<<EOF"
             sed -n '/still need a topic/,$p' classify.log
+            echo "EOF"
+            echo "autolabelled<<EOF"
+            grep -E '^  [0-9]{5}  ' auto.log
             echo "EOF"
             echo "transform_ok=$([ "$code" -eq 0 ] && echo true || echo false)"
           } >> "$GITHUB_OUTPUT"
@@ -101,6 +110,12 @@ jobs:
             The weekly check found changes to the Federal Register executive-orders snapshot.
 
             **Transform succeeded:** `${{ steps.build.outputs.transform_ok }}`
+
+            **Topics assigned automatically** (Claude API, `topic_method: "model"`; skim after the fact):
+
+            ```
+            ${{ steps.build.outputs.autolabelled }}
+            ```
 
             **Orders still needing a topic** (empty means none). CI never classifies and never defaults to "other":
             add each to `pipeline/classification/eo_topics.json` (`topic_method: "manual"`, or
