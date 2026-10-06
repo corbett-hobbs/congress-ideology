@@ -1539,5 +1539,8 @@
 {"eo_number":14428,"topic":"energy_environment","topic_method":"model","needs_review":false},
 {"eo_number":14429,"topic":"energy_environment","topic_method":"model","needs_review":false},
 {"eo_number":14430,"topic":"energy_environment","topic_method":"model","needs_review":false},
-{"eo_number":14431,"topic":"immigration_justice","topic_method":"model","needs_review":false}
+{"eo_number":14431,"topic":"immigration_justice","topic_method":"model","needs_review":false},
+{"eo_number":14432,"topic":"government_operations","topic_method":"model","needs_review":true},
+{"eo_number":14433,"topic":"health_education","topic_method":"model","needs_review":true},
+{"eo_number":14434,"topic":"economy_labor","topic_method":"model","needs_review":true}
 ]
