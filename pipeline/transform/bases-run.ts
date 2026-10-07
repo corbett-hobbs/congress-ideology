@@ -37,7 +37,7 @@ async function main() {
   const json = JSON.stringify(rows);
   report.bytes = json.length;
   await writeFile(`${OUT}/bases.json`, json + "\n");
-  await writeFile(`${OUT}/bases_report.json`, JSON.stringify({ ...report, gzip_bytes: gzipSync(json).length, latest_troop_period: latest }, null, 2) + "\n");
+  await writeFile(`${OUT}/bases_report.json`, JSON.stringify({ ...report, latest_troop_period: latest }, null, 2) + "\n");
   console.log(`  ${rows.length} installations in ${Object.keys(report.by_country).length} countries (${report.excluded.length} excluded, ${report.needs_review} to review); ${json.length} bytes, ${gzipSync(json).length} gzipped`);
 }
 
