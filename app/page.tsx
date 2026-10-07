@@ -110,6 +110,11 @@ export default function Hub() {
           {others.map((b) => {
             const live = b.status === "live";
             const isCongress = b.id === "congress";
+            // A card with more pages than its neighbour lays them side by
+            // side (shorter card, no dead space beside the leaner one); the
+            // leaner card keeps its rows right under its content.
+            const fewest = Math.min(...others.map((o) => o.sections.length));
+            const columns = b.sections.length > fewest ? b.sections.length : 1;
             return (
               <section
                 key={b.id}
@@ -179,7 +184,8 @@ export default function Hub() {
                   <HubSectionList
                     sections={b.sections}
                     stacked
-                    className="mt-auto"
+                    columns={columns}
+                    className={columns > 1 ? "mt-auto" : ""}
                   />
                 )}
               </section>
