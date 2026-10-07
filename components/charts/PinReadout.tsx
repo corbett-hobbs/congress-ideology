@@ -19,9 +19,9 @@ export function PinReadout({ line, pinned, onClear }: { line: PinLine | null; pi
       {line && (
         <div aria-live="off">
           {line.values.map((v) => (
-            <p key={v} className="m-0 text-[1.05rem] font-semibold leading-snug tabular-nums text-ink">{v}</p>
+            <p key={v} className="m-0 text-[0.9rem] font-medium leading-snug tabular-nums text-ink">{v}</p>
           ))}
-          <p className="m-0 mt-0.5 text-[0.85rem] leading-snug text-ink-muted">
+          <p className="m-0 mt-0.5 text-[0.78rem] leading-snug text-ink-muted">
             {line.date}
             {line.term ? ` · ${line.term}` : ""}
           </p>
