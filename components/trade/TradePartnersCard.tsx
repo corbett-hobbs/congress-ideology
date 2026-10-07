@@ -10,6 +10,8 @@ import { partnerChartRows, partnerMeta, partnerScale, type PartnerChartRow } fro
 import type { TradeYearPayload } from "@/lib/trade-types";
 import { MONTH_NAMES } from "@/lib/indicator-time";
 import { MethodologyNote } from "@/components/MethodologyNote";
+import { ChartCard } from "@/components/charts/ChartCard";
+import { YearPicker } from "@/components/charts/YearPicker";
 import { TradeMap } from "./TradeMap";
 import { buildMapModel } from "@/lib/trade-map";
 import type { TradePageData } from "@/lib/trade-data";
@@ -125,21 +127,13 @@ export function TradePartnersCard({
   const through = MONTH_NAMES[Number(lastPeriod.slice(5)) - 1];
 
   return (
-    <section className="flex h-full min-w-0 flex-col rounded-[10px] border border-line bg-surface p-5 sm:p-6">
-      <h2 className="m-0 font-serif text-[1.6rem] font-medium leading-tight">Who the U.S. trades with, {shown}{partial ? " so far" : ""}</h2>
-      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <label className="flex items-center gap-2">
-            <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint">Year</span>
-            <select
-              value={year}
-              onChange={(e) => onYear(Number(e.target.value))}
-              className="rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-            >
-              {Array.from({ length: lastYear - firstYear + 1 }, (_, i) => lastYear - i).map((y) => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
-          </label>
+    <ChartCard
+      className="h-full min-w-0"
+      title={`Who the U.S. trades with, ${shown}${partial ? " so far" : ""}`}
+      lede={<>Imports and exports of goods for the selected year. The line between them is the balance. The map shades each partner by the same measure.{partial ? ` ${shown} covers January to ${through}.` : ""}</>}
+      action={
+        <div className="flex flex-nowrap items-center gap-2">
+          <YearPicker value={year} range={[firstYear, lastYear]} onChange={onYear} format={String} ariaLabel="Year shown on the map and list" />
           <ReversibleSortToggle
             options={SORTS}
             active={sort.key}
@@ -148,23 +142,14 @@ export function TradePartnersCard({
             ariaLabel="Sort partners"
           />
         </div>
-      <p className="m-0 mt-3 text-[0.875rem] leading-[1.5] text-ink-muted">
-            Imports and exports of goods for the selected year. The line between them is the balance. The map shades each partner by the same measure.
-            {partial ? ` ${shown} covers January to ${through}.` : ""}
-          </p>
-
+      }
+    >
       {error && rows.length > 0 && shown !== year && (
         <p role="status" className="m-0 mt-2 text-[0.8rem] text-ink-muted">{`Couldn’t load ${year}; still showing ${shown}. Pick the year again to retry.`}</p>
       )}
       <div className="mt-3 grid min-w-0 flex-1 grid-cols-1 gap-x-4 gap-y-4 lg:grid-cols-[2fr_1fr]">
       <TradeMap map={map} model={model} measure={measure} shown={shown} country={country} onPickCountry={onPickCountry} loading={loading} />
       <div className="flex min-w-0 flex-col">
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
-        <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="5" fill="var(--ink)" /></svg>Imports</span>
-        <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="4.5" fill="var(--surface)" stroke="var(--ink)" strokeWidth="2" /></svg>Exports</span>
-        <span className="ml-auto">Scale: symmetric log.</span>
-      </div>
-
       {/* The list fills whatever height the row gives the card (the scatter card beside it sets that on desktop); on narrow screens it is a fixed 26rem. Absolute inner box so the long list never stretches the card. */}
       <div className={`relative mt-2 min-h-[26rem] flex-1 ${loading ? "opacity-60" : ""}`} aria-busy={loading}>
         <div
@@ -200,6 +185,11 @@ export function TradePartnersCard({
         </div>
       </div>
 
+      <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
+        <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="5" fill="var(--ink)" /></svg>Imports</span>
+        <span className="inline-flex items-center gap-1.5"><svg width="12" height="12" aria-hidden><circle cx="6" cy="6" r="4.5" fill="var(--surface)" stroke="var(--ink)" strokeWidth="2" /></svg>Exports</span>
+        <span className="ml-auto">Scale: symmetric log.</span>
+      </div>
       </div>
       </div>
 
@@ -208,6 +198,6 @@ export function TradePartnersCard({
         {sort.reversed ? ", reversed" : ""}; click the active sort again to reverse it. Click a row to pick that country above. The scale is symmetric log, so small partners stay visible next to China; distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.{model.undrawn.length > 0 ? ` Not drawn on the map: ${model.undrawn.length} small partners with no outline (${fmtMoney(model.undrawn.reduce((a, r) => a + r.exports + r.imports, 0))} of ${fmtMoney(model.totals.total)} total trade); they are in the list and the table.` : ""}
         </p></MethodologyNote>
       {rows.length > 0 && <DataTable rows={rows} year={shown} />}
-    </section>
+    </ChartCard>
   );
 }

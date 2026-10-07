@@ -81,6 +81,9 @@ function TradePage({ data }: { data: TradePageData }) {
   // The scatter labels the biggest partners by total trade in the latest year; it takes the first few that survive its continent filter, so the whole ranking goes down.
   const topCodes = useMemo(() => topByTotal(initialYear.partners, initialYear.partners.length), [initialYear]);
 
+  // Dot size on the scatter: latest-year total trade (exports + imports), $M, by partner code.
+  const totals = useMemo(() => Object.fromEntries(initialYear.partners.map((p) => [p[0], p[2] + p[3]])), [initialYear]);
+
   const countryRef = v.country ? countries.find((c) => c.code === v.country) ?? null : null;
   const payload = v.country ? loaded[v.country] : undefined;
   const loadState: "idle" | "loading" | "error" | "ok" = !v.country ? "idle" : payload ? "ok" : failed === v.country ? "error" : "loading";
@@ -175,7 +178,7 @@ function TradePage({ data }: { data: TradePageData }) {
           />
 
         {/* Full width: the scatter needs the room for its labels. */}
-        <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} topCodes={topCodes} />
+        <TradeScatterCard rows={scatter.rows} windows={scatter.windows} country={v.country} onPickCountry={setCountry} topCodes={topCodes} totals={totals} />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: U.S. Census Bureau (trade values and calculated duties, 2010 on); U.S. International Trade Commission

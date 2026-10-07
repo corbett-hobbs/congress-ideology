@@ -100,6 +100,7 @@ export function TradeScatterCard({
   country,
   onPickCountry,
   topCodes,
+  totals,
 }: {
   rows: ScatterRow[];
   windows: ScatterWindows;
@@ -107,6 +108,8 @@ export function TradeScatterCard({
   onPickCountry: (code: string | null) => void;
   /** Partner codes by total trade, biggest first; the first few that are plotted get a name label. */
   topCodes: readonly string[];
+  /** Latest-year total trade ($M) by partner code; sizes the dots. */
+  totals: Readonly<Record<string, number>>;
 }) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const [query, setQuery] = useState("");
@@ -166,6 +169,11 @@ export function TradeScatterCard({
     }),
     [rows, axes, continent],
   );
+  // Area, not radius, tracks total trade (sqrt), kept within 3-10px so the giants don't bury the small dots.
+  const radiusOf = useMemo(() => {
+    const max = Math.max(1, ...dots.map((d) => totals[d.row.code] ?? 0));
+    return (code: string) => 3 + 7 * Math.sqrt((totals[code] ?? 0) / max);
+  }, [dots, totals]);
   const plotted = dots.length;
   const higher = dots.filter((d) => (d.row.rateChangePp as number) > 0).length;
   const sortedMedian = useMemo(() => {
@@ -310,12 +318,12 @@ export function TradeScatterCard({
                   return (
                     <g key={c.row.code} {...common}>
                       <circle cx={cx} cy={cy} r={22} fill="transparent" />
-                      <circle cx={cx} cy={cy} r={sel || c.row.code === tapped ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} fill={fill} />
+                      <circle cx={cx} cy={cy} r={Math.max(radiusOf(c.row.code), sel || c.row.code === tapped ? 7 : 0)} opacity={country && !sel ? 0.55 : 0.85} className={className} fill={fill} />
                       {c.row.code === tapped && <circle cx={cx} cy={cy} r={11} fill="none" stroke="var(--ink)" strokeWidth={1.5} />}
                     </g>
                   );
                 }
-                return <circle key={c.row.code} cx={cx} cy={cy} r={sel ? 7 : 4.4} opacity={country && !sel ? 0.55 : 0.85} className={className} fill={fill} {...common} />;
+                return <circle key={c.row.code} cx={cx} cy={cy} r={Math.max(radiusOf(c.row.code), sel ? 7 : 0)} opacity={country && !sel ? 0.55 : 0.85} className={className} fill={fill} {...common} />;
               })}
               {labels.map((l) => (
                 <text key={l.code} x={l.x} y={l.y} textAnchor={l.flip ? "end" : "start"} className="dot-label" style={{ fill: "var(--ink)", fontSize: compact ? 11 : 13, paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 4 }}>{l.name}</text>
@@ -414,7 +422,7 @@ export function TradeScatterCard({
       )}
 
       <MethodologyNote><p>
-        Calculated duties divided by imports for consumption, both from Census import data, over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}, so the season matches. Countries missing any month in either window are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles at the top edge are pinned outliers, with their true values in the tooltip. Bilateral figures can be distorted when goods are re-routed through other countries, so treat any one dot with care. Click a continent in the legend to show only its countries (click it again to show all); the counts above follow. Click a dot to pick that country above.
+        Calculated duties divided by imports for consumption, both from Census import data, over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}, so the season matches. Countries missing any month in either window are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles at the top edge are pinned outliers, with their true values in the tooltip. Bilateral figures can be distorted when goods are re-routed through other countries, so treat any one dot with care. Dot area follows each country’s total trade (exports plus imports) in the latest full year of the partner chart. Click a continent in the legend to show only its countries (click it again to show all); the counts above follow. Click a dot to pick that country above.
         </p></MethodologyNote>
       <DataTable rows={rows} windows={windows} />
     </section>

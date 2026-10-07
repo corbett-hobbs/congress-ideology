@@ -95,33 +95,6 @@ export function TradeMap({
 
   return (
     <div className="flex h-full min-w-0 flex-col">
-      <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[0.75rem] text-ink-muted">
-        <span className="inline-flex items-center gap-1.5">
-          <i className="inline-block h-2.5 w-[22px] rounded-[2px] border border-line" style={{ background: LAND }} />
-          No trade
-        </span>
-        {measure === "total" ? (
-          legend.map((l, i) => (
-            <span key={l} className="inline-flex items-center gap-1.5">
-              <i className="inline-block h-2.5 w-[22px] rounded-[2px] border border-line" style={{ background: swatch(null, i) }} />
-              {l}
-            </span>
-          ))
-        ) : (
-          (["deficit", "surplus"] as const).map((side) => (
-            <span key={side} className="inline-flex items-center gap-1.5">
-              <span className="capitalize">{side}</span>
-              {legend.map((l, i) => (
-                <span key={l} className="inline-flex items-center gap-1">
-                  <i className="inline-block h-2.5 w-[18px] rounded-[2px] border border-line" style={{ background: swatch(side, i) }} />
-                  {i === 0 || i === legend.length - 1 ? l : null}
-                </span>
-              ))}
-            </span>
-          ))
-        )}
-      </div>
-
       <div className={`relative mt-2 flex flex-1 items-center ${loading ? "opacity-60" : ""}`} aria-busy={loading}>
         <div className="relative w-full">
           <svg
@@ -169,6 +142,33 @@ export function TradeMap({
           <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
         </div>
       </div>
+      <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1 mt-3 text-[0.75rem] text-ink-muted">
+        <span className="inline-flex items-center gap-1.5">
+          <i className="inline-block h-2.5 w-[22px] rounded-[2px] border border-line" style={{ background: LAND }} />
+          No trade
+        </span>
+        {measure === "total" ? (
+          legend.map((l, i) => (
+            <span key={l} className="inline-flex items-center gap-1.5">
+              <i className="inline-block h-2.5 w-[22px] rounded-[2px] border border-line" style={{ background: swatch(null, i) }} />
+              {l}
+            </span>
+          ))
+        ) : (
+          (["deficit", "surplus"] as const).map((side) => (
+            <span key={side} className="inline-flex items-center gap-1.5">
+              <span className="capitalize">{side}</span>
+              {legend.map((l, i) => (
+                <span key={l} className="inline-flex items-center gap-1">
+                  <i className="inline-block h-2.5 w-[18px] rounded-[2px] border border-line" style={{ background: swatch(side, i) }} />
+                  {i === 0 || i === legend.length - 1 ? l : null}
+                </span>
+              ))}
+            </span>
+          ))
+        )}
+      </div>
+
       <Tooltip state={tip.state}>
         {({ title, row }) => (
           <div className="flex min-w-[9rem] flex-col gap-0.5 text-[0.78rem]">

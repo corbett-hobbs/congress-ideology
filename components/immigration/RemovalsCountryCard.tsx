@@ -4,14 +4,11 @@ import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { YearPicker } from "@/components/charts/YearPicker";
-import { ReversibleSortToggle } from "@/components/charts/SortToggle";
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
 import {
   coverageLabel,
   formatChange,
   rankYear,
-  sortRanked,
-  type RemovalsSortKey,
 } from "@/lib/removals-country-derive";
 import type { RemovalsCountryPayload } from "@/lib/removals-country-types";
 import { MethodologyNote } from "@/components/MethodologyNote";
@@ -24,7 +21,7 @@ const dateLabel = (iso: string) =>
 /**
  * "Who gets removed": ICE removals by country of citizenship for one fiscal year, as a ranked list of
  * single-color bars on one scale (the foreign-aid "Who receives the most" pattern: `StackedRows`,
- * `ReversibleSortToggle`, change vs. the prior year). The year comes from the page's selected fiscal year: the year menu in this card
+ * change vs. the prior year). The year comes from the page's selected fiscal year: the year menu in this card
  * (or a click on a timeline bar) picks it, and a year with no country table says so.
  * The years-shown window never trims the list of countries. Clicking a country highlights it and dims the rest.
  */
@@ -45,18 +42,11 @@ export function RemovalsCountryCard({
 }) {
   const coverage = coverageLabel(payload);
 
-  const [sort, setSort] = useState<{ key: RemovalsSortKey; reversed: boolean }>({ key: "total", reversed: false });
   const [country, setCountry] = useState<string | null>(null);
 
   const year = payload.years.find((y) => y.fy === fy);
-  const comparable = !!year && year.rows.some((r) => r[2] !== null);
-  const key: RemovalsSortKey = sort.key === "change" && !comparable ? "total" : sort.key;
-  const reversed = key === sort.key ? sort.reversed : false;
-  const onSort = (k: RemovalsSortKey) => setSort((s) => (s.key === k && key === k ? { key: k, reversed: !s.reversed } : { key: k, reversed: false }));
-
   const names = payload.countries;
   const ranked = useMemo(() => (year ? rankYear(year) : []), [year]);
-  const list = useMemo(() => sortRanked(ranked, names, key, reversed), [ranked, names, key, reversed]);
 
   const title = "Who gets removed";
   const picker = <YearPicker value={fy} range={range} onChange={onFy} format={(v) => `FY${v}`} ariaLabel="Fiscal year shown" />;
@@ -75,7 +65,7 @@ export function RemovalsCountryCard({
   const selectedRow = country === null ? undefined : ranked.find((r) => names[r.ci].key === country);
   const selectedName = country === null ? null : (names.find((c) => c.key === country)?.name ?? country);
   const scaleMax = Math.max(1, ...ranked.map((r) => r.removals));
-  const rows: StackedRowData[] = list.map((r) => {
+  const rows: StackedRowData[] = ranked.map((r) => {
     const c = names[r.ci];
     return {
       id: c.key,
@@ -116,26 +106,7 @@ export function RemovalsCountryCard({
           fy={fy}
         />
         <div className="flex min-w-0 flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <ReversibleSortToggle
-          ariaLabel="Sort countries"
-          active={key}
-          reversed={reversed}
-          onSelect={onSort}
-          options={[
-            { key: "total", label: "Total", hint: "Largest first" },
-            {
-              key: "change",
-              label: `Change vs. ${prev}`,
-              hint: comparable ? "Biggest increase first" : `No prior year: ICE’s country tables start at FY${payload.years[0].fy}.`,
-              disabled: !comparable,
-            },
-            { key: "name", label: "A–Z", hint: "Alphabetical" },
-          ]}
-        />
-      </div>
-
-      <div className="mt-3 border-t border-line pt-1">
+      <div className="border-t border-line pt-1">
         <div
           className="max-h-[24rem] md:max-h-[27rem] overflow-y-auto overscroll-contain pr-0.5 touch-scroll"
           tabIndex={0}
