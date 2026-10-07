@@ -108,3 +108,10 @@ the Senate alone are not the problem; the House is.
    but breaks the 1933 start the slider and term band assume.
 
 Nothing else was changed. Scratch scripts were removed; no pipeline, schema, route or nav change was made.
+
+## Decision (2026-10-07)
+
+Option 2 was chosen: the roster is everyone who held a voting seat at any time in the Congress, with ages counted on the
+convening day. The one pipeline change is `birthday` on `legislators.json` (plain fact; `birth_year` stays). `terms.json` is
+unchanged and the convening dates live in `lib/demographics-entities.ts`, verified against the raw YAML by a test. Definitions and
+the president rule: `docs/DEMOGRAPHICS_METHODOLOGY.md`.
