@@ -150,9 +150,35 @@ Legacy `docket` is blank for 4,894 rows (25%), so docket joins will be weak ther
 - Case-centered file: `splitVote`, `majVotes` and `minVotes` are populated for every row. `majOpinWriter` is blank for 1,775 modern rows (19%), mostly per curiam and unsigned decisions, so "who wrote the majority" needs a fallback for those. The justice-centered `opinion` field is the place to check that.
 - Verified on *Burwell v. Hobby Lobby*: the justice-centered file gives all nine justices with vote and opinion, and the case file gives the 5–4 split. Of the 931 unique 1946+ matched landmarks, 20 (2%) have no `majOpinWriter`. The writer is stored as a justice code, so a code-to-name lookup is needed.
 
-## Item 9 — Fallback lists
+## Item 9 — Fallback lists: Wikipedia (evaluated)
 
-Not evaluated. The Justia lists are in hand and the data side works, so the fallback is only needed if the terms or Justia's reply block use. Wikipedia text is CC BY-SA, which is workable for citations and names, but I did not check coverage.
+Source: https://en.wikipedia.org/wiki/List_of_landmark_court_decisions_in_the_United_States, fetched once through the MediaWiki API with a descriptive user agent. A second page, the same list by year, was not fetched. Extractor: `extract_wikipedia.py`; the rows go through the same `join_scdb.py` and `report.py`. Output is local in `out/` (gitignored for now, though this source can be committed with attribution).
+
+**License.** Wikipedia text is CC BY-SA 4.0 (standard for the site; I did not re-read the reuse page in this session, so confirm). Citations and names are facts. Reusing the list needs attribution and a link to the page and history, and any adapted *text* would carry share-alike. We would not copy Wikipedia's descriptions.
+
+**Structure.** A legal-doctrine taxonomy, not Justia's 27 topics: 12 top-level sections and about 40 subsections (Individual rights, Criminal law, First Amendment rights, Federalism, Native American law, Separation of powers, Executive power, and so on). It mixes in lower-court and state cases.
+
+**Coverage (U.S. Supreme Court only, via `{{ussc}}` citation templates):**
+- 513 bullet entries; 475 have a U.S. citation (466 unique). The other 38 are lower-court, state, or administrative decisions with no U.S. Reports citation, so they cannot join SCDB.
+- 341 unique cases from 1946 on, against 937 from Justia. 125 earlier cases.
+- By decade (1946+ unique): 1940s 8, 1950s 18, 1960s 53, 1970s 64, 1980s 53, 1990s 37, 2000s 39, 2010s 41, 2020s 21. Thinner than Justia in the 1980s onward and in the 2020s.
+- **Overlap with Justia (1946+):** 214 cases are in both, 120 are Wikipedia-only (for example *Adarand*, *Bivens*, *Blakely v. Washington*, *Apodaca*), and 722 are Justia-only. Wikipedia is a smaller, differently curated list. It is not a subset of Justia.
+
+**Join to SCDB (same method):** of 345 topic rows from 1946 on, all but 7 unique cases match, so roughly 98%. The 7:
+- *Bostock*, *Bristol-Myers Squibb* and *Trump v. Hawaii* are in SCDB. Wikipedia has no docket, and the name+year match fails on case-name differences (for example "Bostock v. Clayton County" against "…, Georgia"), so a looser name match would fix these.
+- *Ford Motor Co.* and *Lucas v. South Carolina Coastal Council* did not match on name+year and I did not find them by hand, so I can't say why.
+- *Manual Enterprises v. Day*: Wikipedia cites 370 U.S. 348; SCDB has it at 370 U.S. 478, so Wikipedia's page number looks wrong.
+- *One, Inc. v. Olesen* (1958): not found in SCDB, a short per curiam.
+
+Wikipedia sometimes cites a case by `date=` and a named-parameter template rather than year; the extractor handles both after a fix, but entries in other formats would need review.
+
+**Direction (1946+, unique matched):** 201 liberal, 127 conservative, 6 unspecifiable (98.2% specifiable), so it leans liberal (61%) compared with Justia's 51%. That tilt is a curation effect: Wikipedia's list favors rights-expanding rulings. A "landmarks lean liberal" read of the page would be partly an artifact of who curated the list.
+
+**Per-group thickness:** by Wikipedia's own sections, Second Amendment has 4 cases, Administrative law 6, Civil procedure 3, Fourteenth Amendment 6, Separation of powers 8 (1946+ matched rows). Any topic view needs regrouping; the nine-group scheme from Justia does not map cleanly onto these sections.
+
+**Not examined:** WikiProject importance ratings (for example "Top-importance" Supreme Court cases) could give a broader, community-rated list. One quick category search returned nothing, so I did not follow it up.
+
+**Read:** Wikipedia is **usable but a weaker substitute.** It is legitimately reusable with attribution and it joins well, but it is about a third the size, differently curated, tilted liberal, and organized by doctrine instead of topic. It is thin enough that several topics would be too sparse to show alone.
 
 ## Item 10 — Design inputs
 
@@ -174,6 +200,6 @@ Not evaluated. The Justia lists are in hand and the data side works, so the fall
 
 ## Recommendation
 
-**Go, on Justia lists plus SCDB, starting at 1946, conditional on the terms question.** The data side is strong: nearly every landmark joins and nearly every case has a direction. The only unresolved gate is Justia's terms. Before anything ships: read the terms, and if they are ambiguous, send the permission request. Until then the lists stay local and gitignored. If Justia says no, fall back to Wikipedia's lists (item 9) with the same SCDB pipeline.
+**Go, on Justia lists plus SCDB, starting at 1946, conditional on the terms question.** The data side is strong: nearly every landmark joins and nearly every case has a direction. The only unresolved gate is Justia's terms. Before anything ships: read the terms, and if they are ambiguous, send the permission request. Until then the lists stay local and gitignored. If Justia says no, Wikipedia is a working but weaker fallback (item 9): about a third of the cases, doctrine-based sections, and a liberal tilt.
 
 Product notes to carry forward: plot by SCDB `dateDecision`; check how six-digit issue codes should be labelled; show the "coding follows SCDB rules" note near the chart; treat Gun Rights and LGBTQ+ as thin and consider grouping them.
