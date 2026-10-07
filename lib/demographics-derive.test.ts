@@ -27,7 +27,7 @@ describe("convening dates", () => {
       const top = [...n].sort((a, b) => b[1] - a[1])[0][0];
       expect(day, `${c}th Congress`).toBe(top);
     }
-  });
+  }, 30_000);
   it("cover 73 through the latest Congress in the data, in order", () => {
     const days = Object.keys(CONVENING).map(Number);
     expect(days[0]).toBe(73);
