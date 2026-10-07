@@ -170,7 +170,8 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
               {selRank ? `${names[country].name} · No. ${selRank.rank} · ${formatAidMoney(selRank.v)}` : `${names[country].name} · no disbursements`}
             </span>
           )}
-          <YearPicker value={year} range={range} onChange={setYear} format={(v) => `FY${v}${isPartial(v) ? " (partial)" : ""}`} ariaLabel="Fiscal year shown on the map" />
+          <div className="flex flex-nowrap items-center gap-2">
+          <YearPicker value={year} range={range} onChange={setYear} format={(v) => `FY${v}`} ariaLabel="Fiscal year shown on the map" />
           <ReversibleSortToggle<Measure>
             ariaLabel="Map measure and list order"
             active={share ? "share" : "dollars"}
@@ -186,6 +187,7 @@ export const MapCard = forwardRef<HTMLElement, { map: WorldMapFile }>(function M
               },
             ]}
           />
+          </div>
         </div>
       }
     >

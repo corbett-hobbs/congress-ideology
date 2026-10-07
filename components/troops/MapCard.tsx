@@ -132,7 +132,7 @@ export function MapCard({ map }: { map: WorldMapFile }) {
               {selRank ? `${places[country].name} · No. ${selRank.rank} · ${formatCount(selRank.value)}` : `${places[country].name} · ${view.suppressed.includes(country) ? "not reported" : "no troops reported"}`}
             </span>
           )}
-          <YearPicker value={yi} range={range} onChange={setYear} format={(i) => `${years[i].fy}${years[i].partial ? " (partial)" : ""}`} ariaLabel="Year shown on the map" />
+          <YearPicker value={yi} range={range} onChange={setYear} format={(i) => `${years[i].fy}`} ariaLabel="Year shown on the map" />
         </div>
       }
     >
