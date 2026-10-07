@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { parse } from "yaml";
 import { describe, expect, it } from "vitest";
-import { ageOn, buildDemographics, caucusGroup, conveningDate, isVotingTerm, presidentOnConvening, type DemoLegislator, type DemoTerm } from "./demographics-derive";
+import { ageOn, ageYearsOn, buildDemographics, caucusGroup, conveningDate, isVotingTerm, presidentOnConvening, type DemoLegislator, type DemoTerm } from "./demographics-derive";
 import { CONVENING, tenureBand } from "./demographics-entities";
 import { legislator, term } from "./entities";
 import { administration } from "./executive-orders-entities";
@@ -34,6 +34,13 @@ describe("convening dates", () => {
     expect(days[days.length - 1]).toBe(payload.lastCongress);
     const dates = days.map((c) => conveningDate(c));
     expect([...dates].sort()).toEqual(dates);
+  });
+});
+
+describe("ageYearsOn", () => {
+  it("is exact, so a median can land between whole years", () => {
+    expect(ageYearsOn("1950-01-03", "2025-01-03")).toBeCloseTo(75, 1);
+    expect(ageYearsOn("1950-07-03", "2025-01-03")).toBeCloseTo(74.5, 1);
   });
 });
 
@@ -85,8 +92,8 @@ describe("age, women and the roster", () => {
     expect(p.seats).toBe(4);
   });
   it("ages by caucus on the convening day, leaving out members with no birthdate", () => {
-    expect(p.age.D).toEqual({ median: 33, average: 33, n: 1 }); // born the day of the convening: a whole 33
-    expect(p.age.R).toEqual({ median: 43, average: 43, n: 1 });
+    expect(p.age.D).toEqual({ median: 33, average: 33, n: 1 }); // born the day of the convening: 33.0
+    expect(p.age.R).toEqual({ median: 43.2, average: 43.2, n: 1 });
     expect(p.ageMissing).toBe(1); // C
   });
   it("counts women by caucus group", () => {

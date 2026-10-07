@@ -24,7 +24,7 @@ definition: `docs/DEMOGRAPHICS_PREFLIGHT.md`.
 - **Voting members only.** Delegates and resident commissioners (`DC PR VI GU AS MP PI DK OL`) are left out. Alaska and Hawaii
   delegates before statehood are left out too (House rows for those states through the 85th Congress, plus Hawaii's delegate
   Burns, `B001127`, in the 86th).
-- **Age.** Whole years on the day the Congress convened, from the full birthdate (a birthday on that day counts). It is counted
+- **Age.** Exact years (days lived / 365.25) on the day the Congress convened, from the full birthdate, so medians and averages are both real decimals; shown to one decimal. (`ageOn`, whole years, is kept and tested.) It is counted
   on the convening day for every member of the roster, including one who joined later. Members with no birthdate are left out
   of the age figures and counted in `ageMissing`: 4 member-Congress rows in the 73rd-119th (three people: Rohrbough, Burkhalter,
   Hutchinson). Median and average are both precomputed (a median cannot be recovered from aggregates); one decimal, shown the same way for both (58.0, 50.5, 52.1).
