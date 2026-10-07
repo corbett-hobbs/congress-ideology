@@ -14,17 +14,21 @@ export function YearPicker({
   onChange,
   format,
   ariaLabel,
+  playRange,
 }: {
   value: number;
   range: readonly [number, number];
   onChange: (v: number) => void;
   format: (v: number) => string;
   ariaLabel: string;
+  /** Years play steps through when narrower than the dropdown's `range` (a card whose data covers only part of the window). Clamped to `range`. */
+  playRange?: readonly [number, number];
 }) {
+  const span: readonly [number, number] = playRange ? [Math.max(range[0], playRange[0]), Math.min(range[1], playRange[1])] : range;
   const [playing, setPlaying] = useState(false);
-  const latest = useRef({ value, range, onChange });
+  const latest = useRef({ value, range: span, onChange });
   useEffect(() => {
-    latest.current = { value, range, onChange };
+    latest.current = { value, range: span, onChange };
   });
   useEffect(() => {
     if (!playing) return;
@@ -43,7 +47,7 @@ export function YearPicker({
       <button
         type="button"
         onClick={() => {
-          if (!playing && value >= range[1]) onChange(range[0]);
+          if (!playing && (value >= span[1] || value < span[0])) onChange(span[0]);
           setPlaying((p) => !p);
         }}
         aria-label={playing ? "Pause" : "Play through the years"}

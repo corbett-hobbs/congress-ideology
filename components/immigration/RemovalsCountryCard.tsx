@@ -51,7 +51,7 @@ export function RemovalsCountryCard({
   const ranked = useMemo(() => (year ? rankYear(year) : []), [year]);
 
   const title = "Who gets removed";
-  const picker = <YearPicker value={fy} range={range} onChange={onFy} format={(v) => `FY${v}`} ariaLabel="Fiscal year shown" />;
+  const picker = <YearPicker value={fy} range={range} playRange={[payload.years[0].fy, payload.years[payload.years.length - 1].fy]} onChange={onFy} format={(v) => `FY${v}`} ariaLabel="Fiscal year shown" />;
   const regionToggle = (
     <PillGroup<Region>
       ariaLabel="Region shown on the map and list"
