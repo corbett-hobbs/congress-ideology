@@ -8,7 +8,7 @@ export function StatStrip({ row }: { row: DemoCongress }) {
   const tiles = [
     { label: `Median age, ${ordinal(row.congress)} Congress`, value: fmtAge(row.ageAll.median), sub: `Democrats ${fmtAge(row.age.D.median)} · Republicans ${fmtAge(row.age.R.median)}` },
     { label: "Women", value: fmtShare(women / (row.seats || 1)), sub: `${women} of ${row.seats} members` },
-    { label: "Average Congresses served", value: (row.servedSum / (row.seats || 1)).toFixed(1), sub: `${fmtShare(row.tenure[0] / (row.seats || 1))} are in their first Congress` },
+    { label: "Average time in Congress", value: `${Math.round((row.servedSum / (row.seats || 1)) * 2)} years`, sub: `${fmtShare(row.tenure[0] / (row.seats || 1))} have served up to 2 years` },
   ];
   return (
     <dl className="m-0 grid grid-cols-1 gap-3 sm:grid-cols-3">

@@ -27,7 +27,7 @@ export function TenureCard({ rows, presidents, pin, onPin }: { rows: readonly De
     term: by.get(cur.termId)?.president,
   };
   return (
-    <ChartCard title="How long have members been in Congress?" lede="Share of members in each Congress, grouped by how many Congresses they have served, counting the current one.">
+    <ChartCard title="How long have members been in Congress?" lede="Share of members in each Congress, grouped by how many years they have served, counting the current Congress.">
       <CongressReadout line={line} pinned={pin !== null && !!cur && cur.congress === pin} onClear={() => onPin(null)} />
       <StackedBars
         columns={cols}
@@ -61,7 +61,7 @@ export function TenureCard({ rows, presidents, pin, onPin }: { rows: readonly De
       </div>
       <MethodologyNote>
         <p>
-          Time in office adds up the Congresses a member served in either chamber, including gaps, back to their first, even before 1933. A first-term senator has served one Congress and will serve two more. Every bar is 100%, so there is no tallest or shortest label. The strip under the chart shows the president in office on the Congress’s first day.
+          Time in office counts the Congresses a member served in either chamber, including gaps, back to their first, even before 1933, at two years a Congress (so up to 2 years is a first Congress, 3–10 years is two to five Congresses, and so on). A first-term senator has served one Congress and will serve two more. Every bar is 100%, so there is no tallest or shortest label. The strip under the chart shows the president in office on the Congress’s first day.
         </p>
       </MethodologyNote>
       <TableView

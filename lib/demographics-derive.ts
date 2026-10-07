@@ -1,5 +1,5 @@
 import type { Chamber, ChamberView } from "./chamber";
-import { CONVENING, FIRST_DEMO_CONGRESS, LAST_TERRITORY_CONGRESS, NON_VOTING_MEMBER_CONGRESS, NON_VOTING_STATES, tenureBand } from "./demographics-entities";
+import { CAUCUS_OVERRIDE, CONVENING, FIRST_DEMO_CONGRESS, LAST_TERRITORY_CONGRESS, NON_VOTING_MEMBER_CONGRESS, NON_VOTING_STATES, tenureBand } from "./demographics-entities";
 import type { AgeStat, CaucusGroup, DemoCongress, DemoPresident, DemographicsPayload } from "./demographics-types";
 import type { Administration } from "./executive-orders-entities";
 
@@ -123,7 +123,7 @@ export function buildDemographics(legislators: readonly DemoLegislator[], terms:
         if (view !== "both" && !e.chambers.has(view)) continue;
         const p = person.get(id);
         if (!p) throw new Error(`demographics: ${id} is in terms.json but not legislators.json`);
-        const g = caucusGroup(e.caucus);
+        const g = (CAUCUS_OVERRIDE[`${id}@${c}`] as CaucusGroup | undefined) ?? caucusGroup(e.caucus);
         seats++;
         const n = servedThrough(id, c);
         tenure[tenureBand(n)]++;

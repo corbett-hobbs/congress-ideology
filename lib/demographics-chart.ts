@@ -52,7 +52,8 @@ export function bandTerms(rows: readonly DemoCongress[], presidents: readonly De
 /** "119th Congress, 2025–2026". */
 export const congressSpan = (r: DemoCongress) => `${ordinal(r.congress)} Congress, ${r.year}–${r.year + 1}`;
 
-export const fmtAge = (v: number | null) => (v === null ? "n/a" : v.toFixed(1));
+/** An age or average age with no trailing ".0": 58, 50.5, 52.1. */
+export const fmtAge = (v: number | null) => (v === null ? "n/a" : String(Number(v.toFixed(1))));
 export const pct = (n: number, d: number) => fmtShare(d ? n / d : 0);
 
 export type AgeMeasure = "median" | "average";
