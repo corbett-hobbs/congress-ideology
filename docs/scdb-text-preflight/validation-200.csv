@@ -1,0 +1,201 @@
+caseId,term,caseName,scdb_issue,pilot_method,pilot_topic,syllabus_topic,syllabus_conf_low,agree
+1946-009,1946,Unemployment Compensation Commission Of Alaska Et Al. V. Ara,labor-management disputes: working conditions,issue-rule,economy_labor,economy_labor,,yes
+1946-019,1946,"Rothensies, Collector Of Internal Revenue, V. Electric Stora","federal taxation, typically under provisions of th",issue-rule,economy_labor,economy_labor,,yes
+1946-020,1946,"Eagles, Post Commanding Officer, V. United States Ex Rel. Sa",conscientious objectors (cf. military draftee or m,issue-rule,national_security,national_security,,yes
+1946-035,1946,"Hickman, Administrator, V. Taylor Et Al., Trading As Taylor ",Freedom of Information Act and related federal or ,judgement,judicial_procedure,judicial_procedure,,yes
+1946-039,1946,"Morris V. Jones, Director Of Insurance",miscellaneous interstate relations conflict,judgement,judicial_procedure,judicial_procedure,,yes
+1946-084,1946,Bethlehem Steel Co. Et Al. V. New York State Labor Relations,federal pre-emption of state legislation or regula,judgement,economy_labor,economy_labor,,yes
+1946-111,1946,Brotherhood Of Railroad Trainmen V. Baltimore & Ohio Railroa,labor-management disputes: miscellaneous dispute,issue-rule,economy_labor,judicial_procedure,,NO
+1947-058,1947,Commissioner Of Internal Revenue V. South Texas Lumber Co.,"federal taxation, typically under provisions of th",issue-rule,economy_labor,economy_labor,,yes
+1947-075,1947,Republic Natural Gas Co. V. Oklahoma Et Al.,judicial administration: review of non-final order,judgement,energy_environment,judicial_procedure,low,NO
+1947-087,1947,"Paterno V. Lyons, Commissioner Of Correction",due process: hearing or notice (other than as pert,judgement,immigration_justice,immigration_justice,,yes
+1947-097,1947,Kreiger V. Kreiger,miscellaneous interstate relations conflict,judgement,judicial_procedure,judicial_procedure,,yes
+1947-105,1947,West V. Oklahoma Tax Commission,state or local government tax,issue-rule,economy_labor,civil_rights_civic,low,NO
+1948-014,1948,"Goesaert Et Al. V. Cleary Et Al., Members Of The Liquor Cont",sex discrimination in employment (cf. sex discrimi,issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1948-019,1948,American Federation Of Labor Et Al. V. American Sash & Door ,union or closed shop: includes agency shop litigat,issue-rule,economy_labor,economy_labor,,yes
+1948-031,1948,"Railway Express Agency, Inc. Et Al. V. New York","commercial speech, excluding attorneys",issue-rule,economy_labor,economy_labor,,yes
+1948-079,1948,"United States V. National City Lines, Inc. Et Al.",venue,issue-rule,judicial_procedure,judicial_procedure,,yes
+1948-096,1948,"Propper, Receiver, V. Clark, Attorney General, As Successor ","due process: takings clause, or other non-constitu",issue-rule,economy_labor,foreign_policy,,NO
+1949-014,1949,"Kingsland, Commissioner Of Patents, V. Dorsey","admission to a state or federal bar, disbarment, a",issue-rule,judicial_procedure,judicial_procedure,,yes
+1949-016,1949,United States V. Yellow Cab Co. Et Al.,antitrust (except in the context of mergers and un,issue-rule,economy_labor,economy_labor,,yes
+1949-030,1949,Savorgnan V. United States Et Al.,immigration and naturalization: loss of citizenshi,issue-rule,immigration_justice,immigration_justice,,yes
+1949-057,1949,Dennis V. United States,extra-legal jury influences: miscellaneous,issue-rule,immigration_justice,national_security,,NO
+1949-060,1949,"Slocum, General Chairman, Lackawanna Division No. 30, Order ",federal pre-emption of state court jurisdiction,issue-rule,judicial_procedure,economy_labor,,NO
+1949-078,1949,"National Labor Relations Board V. Mexia Textile Mills, Inc.",judicial review of administrative agency’s or admi,judgement,economy_labor,economy_labor,,yes
+1949-091,1949,"Johnson, Secretary Of Defense, Et Al. V. Eisentrager, Alias ",habeas corpus,judgement,national_security,national_security,,yes
+1950-006,1950,"United States V. Security Trust & Savings Bank, Executor, Et",priority of federal fiscal claims: over those of t,issue-rule,economy_labor,economy_labor,,yes
+1950-037,1950,"United States Ex Rel. Touhy V. Ragen, Warden, Et Al.",Freedom of Information Act and related federal or ,judgement,judicial_procedure,judicial_procedure,,yes
+1951-088,1951,Youngstown Sheet & Tube Co. Et Al. V. Sawyer,miscellaneous,judgement,economy_labor,economy_labor,low,yes
+1952-076,1952,United States V. Certain Parcels Of Land In The County Of Fa,"due process: takings clause, or other non-constitu",issue-rule,economy_labor,economy_labor,,yes
+1952-101,1952,Dalehite Et Al. V. United States,"liability, governmental: tort or contract actions ",judgement,judicial_procedure,judicial_procedure,,yes
+1952-107,1952,"Burns Et Al. V. Wilson, Secretary Of Defense, Et Al.",habeas corpus,judgement,national_security,national_security,,yes
+1953-026,1953,"Chicago, Rock Island & Pacific Railroad Co. V. Stude Et Al.",miscellaneous federalism,judgement,judicial_procedure,judicial_procedure,,yes
+1954-001,1954,In Re Disbarment Of Isserman,"admission to, or disbarment from, Bar of the U.S. ",issue-rule,judicial_procedure,judicial_procedure,,yes
+1954-011,1954,Brooks V. National Labor Relations Board,labor-management disputes: bargaining,issue-rule,economy_labor,economy_labor,,yes
+1954-023,1954,United States V. Acri Et Al.,priority of federal fiscal claims: over those of t,issue-rule,economy_labor,economy_labor,,yes
+1954-026,1954,United States V. Shubert Et Al.,antitrust (except in the context of mergers and un,issue-rule,economy_labor,economy_labor,,yes
+1954-065,1954,Granville-Smith V. Granville-Smith,miscellaneous,judgement,judicial_procedure,judicial_procedure,,yes
+1954-085,1954,Brown Et Al. V. Board Of Education Of Topeka Et Al.,"desegregation, schools",issue-rule,health_education,health_education,,yes
+1955-101,1955,Czaplicki V. The Hoegh Silvercloud Et Al.,election of remedies: legal remedies available to ,issue-rule,judicial_procedure,economy_labor,,NO
+1957-016,1957,"Youngdahl Et Al. V. Rainfair, Inc.",federal pre-emption of state court jurisdiction,issue-rule,judicial_procedure,economy_labor,,NO
+1957-140,1957,"Beilan V. Board Of Public Education, School District Of Phil",security risks: denial of benefits or dismissal of,judgement,national_security,national_security,low,yes
+1958-094,1958,"Vitarelli V. Seaton, Secretary Of The Interior, Et Al.",security risks: denial of benefits or dismissal of,judgement,national_security,national_security,low,yes
+1959-013,1959,Smith V. California,"obscenity, state (cf. comity: privacy): including ",issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1959-092,1959,"Douglas V. Green, Superintendent, Marion Correctional Instit",indigents: costs or filing fees,judgement,immigration_justice,immigration_justice,,yes
+1959-134,1959,Mccrary V. Indiana,indigents: transcript,issue-rule,judicial_procedure,immigration_justice,,NO
+1961-011,1961,St. Regis Paper Co. V. United States,Freedom of Information Act and related federal or ,judgement,economy_labor,economy_labor,,yes
+1961-072,1961,"Hanover Bank, Executor, Et Al. V. Commissioner Of Internal R","federal taxation, typically under provisions of th",issue-rule,economy_labor,economy_labor,,yes
+1963-068,1963,"Yiatchos V. Yiatchos, Executrix, Et Al.",national supremacy: marital and family relationshi,judgement,judicial_procedure,judicial_procedure,,yes
+1963-137,1963,United States V. Tateo,double jeopardy,issue-rule,immigration_justice,immigration_justice,,yes
+1964-011,1964,"Calhoon, President, Or Peters, Secretary-Treasurer Of Distri",union-union member dispute (except as pertains to ,issue-rule,economy_labor,economy_labor,,yes
+1964-014,1964,Mclaughlin Et Al. V. Florida,desegregation (other than as pertains to school de,judgement,civil_rights_civic,civil_rights_civic,,yes
+1964-099,1964,"Simons V. Miami Beach First National Bank, Executor",miscellaneous interstate relations conflict,judgement,judicial_procedure,judicial_procedure,,yes
+1964-121,1964,Griswold Et Al. V. Connecticut,"privacy (cf. libel, comity: privacy)",judgement,health_education,health_education,,yes
+1965-015,1965,"United Steelworkers Of America, Afl-Cio V. R. H. Bouligny, I",judicial administration: miscellaneous,issue-rule,judicial_procedure,judicial_procedure,,yes
+1965-028,1965,"Hazeltine Research, Inc., Et Al. V. Brenner, Commissioner Of",patents and copyrights: patent,issue-rule,economy_labor,economy_labor,,yes
+1965-118,1965,Shillitani V. United States,contempt of court or congress,issue-rule,immigration_justice,immigration_justice,,yes
+1966-035,1966,"Lassen, Commissioner, State Land Department V. Arizona Ex Re",federal-state ownership dispute (cf. Submerged Lan,judgement,judicial_procedure,energy_environment,,NO
+1966-113,1966,"Udall, Secretary Of The Interior V. Federal Power Commission",judicial review of administrative agency’s or admi,judgement,energy_environment,energy_environment,,yes
+1967-022,1967,United States V. Rands Et Ux.,"due process: takings clause, or other non-constitu",issue-rule,economy_labor,energy_environment,low,NO
+1967-035,1967,United States V. Correll Et Ux.,"federal taxation of gifts, personal, business, or ",issue-rule,economy_labor,economy_labor,,yes
+1967-143,1967,"Garrison V. Patterson, Warden",habeas corpus,issue-rule,immigration_justice,immigration_justice,,yes
+1967-152,1967,Johnson V. Florida,"due process: miscellaneous (cf. loyalty oath), the",judgement,immigration_justice,immigration_justice,,yes
+1968-045,1968,Allen Et Al. V. State Board Of Elections Et Al.,"Voting Rights Act of 1965, plus amendments",issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1968-094,1968,United States V. Louisiana Et Al. (Texas Boundary Case),Submerged Lands Act (cf. federal-state ownership d,judgement,energy_environment,energy_environment,,yes
+1969-053,1969,"Association Of Data Processing Service Organizations, Inc., ",standing to sue: personal injury,issue-rule,judicial_procedure,judicial_procedure,,yes
+1969-125,1969,Perkins V. Standard Oil Co. Of California,attorneys’ and governmental employees’ or official,judgement,judicial_procedure,judicial_procedure,,yes
+1970-086,1970,Moore Et Al. V. Charlotte-Mecklenburg Board Of Education Et ,standing to sue: adversary parties,judgement,health_education,health_education,low,yes
+1971-008,1971,Doherty V. United States,indigents: appointment of counsel (cf. right to co,issue-rule,judicial_procedure,immigration_justice,,NO
+1972-031,1972,"Hughes Tool Co. Et Al. V. Trans World Airlines, Inc.",antitrust (except in the context of mergers and un,issue-rule,economy_labor,economy_labor,,yes
+1972-049,1972,"Doe Et Al. V. Bolton, Attorney General Of Georgia, Et Al.",abortion: including contraceptives,issue-rule,health_education,health_education,,yes
+1972-127,1972,"Schneckloth, Conservation Center Superintendent V. Bustamont","search and seizure, vehicles",issue-rule,immigration_justice,immigration_justice,,yes
+1972-131,1972,United States V. State Tax Commission Of Mississippi Et Al.,national supremacy: state tax (cf. state tax),judgement,economy_labor,economy_labor,,yes
+1972-158,1972,Miller V. California,"obscenity, state (cf. comity: privacy): including ",issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1972-177,1972,United States Civil Service Commission Et Al. V. National As,"First Amendment, miscellaneous (cf. comity: First ",issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1972-186,1972,Fausner V. Commissioner Of Internal Revenue,"federal taxation of gifts, personal, business, or ",issue-rule,economy_labor,economy_labor,,yes
+1973-021,1973,"Golden State Bottling Co., Inc., Formerly Pepsi-Cola Bottlin",labor-management disputes: employee discharge,issue-rule,economy_labor,economy_labor,,yes
+1973-036,1973,Vachon V. New Hampshire,"due process: miscellaneous (cf. loyalty oath), the",judgement,immigration_justice,immigration_justice,,yes
+1973-088,1973,"Mahon, Trustee In Bankruptcy, Et Al. V. Stowers Et Al.",priority of federal fiscal claims: over those of t,issue-rule,economy_labor,economy_labor,,yes
+1973-097,1973,Gooding V. United States,search and seizure (other than as pertains to vehi,issue-rule,immigration_justice,immigration_justice,,yes
+1973-106,1973,Bradley Et Al. V. School Board Of The City Of Richmond Et Al,attorneys’ and governmental employees’ or official,judgement,health_education,health_education,,yes
+1975-001,1975,United States V. Maine Et Al.,federal-state ownership dispute (cf. Submerged Lan,judgement,energy_environment,energy_environment,,yes
+1975-078,1975,Beckwith V. United States,Miranda warnings,issue-rule,immigration_justice,immigration_justice,,yes
+1975-090,1975,United States V. Mandujano,Miranda warnings,issue-rule,immigration_justice,immigration_justice,,yes
+1975-121,1975,New Hampshire V. Maine,boundary dispute between states,issue-rule,energy_environment,judicial_procedure,low,NO
+1976-102,1976,"Ashcroft, Attorney General Of Missouri V. Mattis",standing to sue: live dispute,issue-rule,judicial_procedure,immigration_justice,,NO
+1977-078,1977,United States V. California,Submerged Lands Act (cf. federal-state ownership d,judgement,energy_environment,energy_environment,,yes
+1977-104,1977,"Quern, Director, Department Of Public Aid Of Illinois, Et Al","poverty law, statutory: welfare benefits, typicall",issue-rule,economy_labor,economy_labor,,yes
+1977-147,1977,Regents Of The University Of California V. Bakke,affirmative action,judgement,health_education,health_education,,yes
+1978-024,1978,"Colautti, Secretary Of Welfare Of Pennsylvania, Et Al. V. Fr",abortion: including contraceptives,issue-rule,health_education,health_education,,yes
+1978-026,1978,Arizona V. California Et Al.,non-real property dispute between states,judgement,energy_environment,energy_environment,,yes
+1978-048,1978,Aronson V. Quick Point Pencil Co.,federal pre-emption of state legislation or regula,judgement,economy_labor,economy_labor,,yes
+1979-010,1979,Kaiser Aetna Et Al. V. United States,"due process: takings clause, or other non-constitu",issue-rule,economy_labor,energy_environment,low,NO
+1980-015,1980,United States V. Will Et Al.,miscellaneous,judgement,judicial_procedure,judicial_procedure,,yes
+1980-092,1980,"Rodriguez V. Compass Shipping Co., Ltd., Et Al.",election of remedies: legal remedies available to ,issue-rule,judicial_procedure,economy_labor,,NO
+1980-105,1980,Minnick Et Al. V. California Department Of Corrections Et Al,affirmative action,issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1980-109,1980,Anderson Bros. Ford Et Al. V. Valencia Et Al.,federal or state consumer protection: typically un,issue-rule,economy_labor,economy_labor,,yes
+1980-136,1980,"Rostker, Director Of Selective Service V. Goldberg Et Al.",sex discrimination (excluding sex discrimination i,judgement,national_security,national_security,,yes
+1981-064,1981,Mcelroy V. United States,statutory construction of criminal laws: financial,issue-rule,immigration_justice,immigration_justice,,yes
+1982-004,1982,"Landon, District Director Of The Immigration And Naturalizat","due process: miscellaneous (cf. loyalty oath), the",judgement,immigration_justice,immigration_justice,,yes
+1982-026,1982,Community Television Of Southern California V. Gottfried Et ,federal and some few state regulation of public ut,issue-rule,economy_labor,civil_rights_civic,,NO
+1982-077,1982,Hensley Et Al. V. Eckerhart Et Al.,attorneys’ and governmental employees’ or official,issue-rule,judicial_procedure,judicial_procedure,,yes
+1982-130,1982,Immigration And Naturalization Service V. Chadha Et Al.,legislative veto,judgement,immigration_justice,immigration_justice,low,yes
+1983-169,1983,"Irving Independent School District V. Tatro Et Ux., Individu","handicapped, rights of: under Rehabilitation, Amer",judgement,health_education,health_education,,yes
+1984-089,1984,United States V. Maine Et Al. (Rhode Island And New York Bou,federal-state ownership dispute (cf. Submerged Lan,judgement,energy_environment,energy_environment,,yes
+1985-120,1985,United States V. American Bar Endowment Et Al.,"federal taxation, typically under provisions of th",issue-rule,economy_labor,economy_labor,,yes
+1985-160,1985,"Bethel School District No. 403 Et Al. V. Fraser, A Minor, Et","First Amendment, miscellaneous (cf. comity: First ",judgement,health_education,health_education,,yes
+1986-111,1986,"Commissioner Of Internal Revenue V. Asphalt Products Co., In","federal taxation, typically under provisions of th",issue-rule,economy_labor,economy_labor,,yes
+1986-130,1986,"Edwards, Governor Of Louisiana, Et Al. V. Aguillard Et Al.","parochiaid: government aid to religious schools, o",issue-rule,health_education,health_education,,yes
+1986-145,1986,"Puerto Rico V. Branstad, Governor Of Iowa, Et Al.",subconstitutional fair procedure: fugitive from ju,issue-rule,immigration_justice,immigration_justice,,yes
+1987-118,1987,City Of Lakewood V. Plain Dealer Publishing Co.,"First Amendment, miscellaneous (cf. comity: First ",issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1988-027,1988,United States V. Broce Et Al.,double jeopardy,issue-rule,immigration_justice,immigration_justice,,yes
+1988-068,1988,Mississippi Band Of Choctaw Indians V. Holyfield Et Al.,"Indians, state jurisdiction over",issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1988-078,1988,"Frank, Postmaster General Of The United States, Et Al. V. Mi",mootness (cf. standing to sue: live dispute),issue-rule,judicial_procedure,judicial_procedure,,yes
+1989-062,1989,"Department Of The Treasury, Internal Revenue Service V. Fede",labor-management disputes: bargaining,issue-rule,economy_labor,economy_labor,,yes
+1989-080,1989,North Dakota Et Al. V. United States,national supremacy: commodities,judgement,national_security,economy_labor,low,NO
+1989-133,1989,Hodgson Et Al. V. Minnesota Et Al.,abortion: including contraceptives,issue-rule,health_education,health_education,,yes
+1990-020,1990,"Mobil Oil Exploration & Producing Southeast, Inc., Et Al. V.",judicial review of administrative agency’s or admi,judgement,energy_environment,energy_environment,,yes
+1990-057,1990,Kay V. Ehrler Et Al.,attorneys’ and governmental employees’ or official,issue-rule,judicial_procedure,judicial_procedure,,yes
+1990-089,1990,"Richard L. Chapman, John M. Schoenecker And Patrick Brumm V.",statutory construction of criminal laws: narcotics,issue-rule,immigration_justice,immigration_justice,,yes
+1991-110,1991,"Robert E. Lee, Individually And As Principal Of Nathan Bisho",establishment of religion (other than as pertains ,judgement,health_education,civil_rights_civic,low,NO
+1991-113,1991,"United States V. Kirk Fordice, Governor Of Mississippi, Et A","desegregation, schools",issue-rule,health_education,health_education,,yes
+1992-024,1992,Sheldon B. Bufferd V. Commissioner Of Internal Revenue,"federal taxation, typically under provisions of th",issue-rule,economy_labor,economy_labor,,yes
+1992-035,1992,"George Voinovich, Governor Of Ohio, Et Al. V. Barney Quilter",reapportionment: other than plans governed by the ,issue-rule,civil_rights_civic,civil_rights_civic,,yes
+1992-110,1992,United States And Federal Communications Commission V. Edge ,"commercial speech, excluding attorneys",issue-rule,economy_labor,economy_labor,,yes
+1993-010,1993,State Of Oklahoma And State Of Texas V. New Mexico,non-real property dispute between states,judgement,energy_environment,energy_environment,,yes
+1994-040,1994,"Ed Plaut, Et Ux., Et Al. V. Spendthrift Farm, Inc., Et Al.",miscellaneous,judgement,judicial_procedure,judicial_procedure,,yes
+1995-003,1995,Citizens Bank Of Maryland V. David Strumpf,bankruptcy (except in the context of priority of f,issue-rule,economy_labor,economy_labor,,yes
+1995-025,1995,Sylvester Jones V. Abc-Tv Et Al.,indigents: U.S. Supreme Court docketing fee,issue-rule,judicial_procedure,judicial_procedure,,yes
+1996-019,1996,"General Motors Corporation V. Roger W. Tracy, Tax Commission",state or local government tax,issue-rule,economy_labor,economy_labor,,yes
+1996-036,1996,Commissioner Of Internal Revenue V. Estate Of Otis C. Hubert,"federal taxation of gifts, personal, business, or ",issue-rule,economy_labor,economy_labor,,yes
+1996-040,1996,United States V. David W. Lanier,statutory construction of criminal laws: assault,issue-rule,immigration_justice,immigration_justice,,yes
+1996-062,1996,"Walter Mcmillian V. Monroe County, Alabama","liability, civil rights acts (cf. liability, gover",judgement,immigration_justice,immigration_justice,,yes
+1996-083,1996,Kansas V. Leroy Hendricks,"due process: miscellaneous (cf. loyalty oath), the",judgement,immigration_justice,immigration_justice,,yes
+1996-091,1996,"Washington, Et Al. V. Harold Glucksberg Et Al.",right to die,issue-rule,health_education,health_education,,yes
+1997-015,1997,"Kenneth Lee Baker And Steven Robert Baker, By His Next Frien",miscellaneous interstate relations conflict,judgement,judicial_procedure,judicial_procedure,,yes
+1997-047,1997,Texas V. United States Et Al.,standing to sue: live dispute,issue-rule,judicial_procedure,civil_rights_civic,,NO
+1997-095,1997,"William J. Clinton, President Of The United States, Et Al. V",miscellaneous,judgement,judicial_procedure,judicial_procedure,,yes
+1998-059,1998,"Aurelia Davis, As Next Friend Of Lashonda D. V. Monroe Count",sex discrimination (excluding sex discrimination i,judgement,health_education,health_education,,yes
+1998-090,1998,College Savings Bank V. Florida Prepaid Postsecondary Educat,national supremacy: miscellaneous,judgement,economy_labor,judicial_procedure,low,NO
+1999-056,1999,"Edward Christensen, Et Al. V. Harris County, Et Al.",Fair Labor Standards Act,issue-rule,economy_labor,economy_labor,,yes
+1999-089,1999,United States Of America V. State Of Alaska,Submerged Lands Act (cf. federal-state ownership d,judgement,energy_environment,energy_environment,,yes
+2000-021,2000,Buckman Company V. Plaintiffs' Legal Committee,federal pre-emption of state legislation or regula,judgement,health_education,health_education,,yes
+2000-038,2000,"Arthur S. Lujan, Labor Commissioner Of California, Et Al. V.",due process: hearing or notice (other than as pert,judgement,economy_labor,economy_labor,,yes
+2000-053,2000,"United States V. Terry J. Hatter, Jr., Judge, United States ","federal taxation, typically under provisions of th",issue-rule,economy_labor,judicial_procedure,,NO
+2000-076,2000,United States V. Mead Corporation,judicial review of administrative agency’s or admi,judgement,trade,trade,,yes
+2001-021,2001,"Owasso Independent School District No. I-011, Aka Owasso Pub","privacy (cf. libel, comity: privacy)",judgement,health_education,health_education,,yes
+2001-040,2001,"Tahoe-Sierra Preservation Council, Inc., Et Al. V. Tahoe Reg","due process: takings clause, or other non-constitu",issue-rule,economy_labor,energy_environment,low,NO
+2001-075,2001,Be & K Construction Company V. National Labor Relations Boar,labor-management disputes: miscellaneous dispute,issue-rule,economy_labor,economy_labor,,yes
+2001-081,2001,Larry Hope V. Mark Pelzer Et Al.,"liability, civil rights acts (cf. liability, gover",judgement,immigration_justice,immigration_justice,,yes
+2002-057,2002,"Nevada Department Of Human Resources, Et Al. V. William Hibb",national supremacy: miscellaneous,judgement,economy_labor,economy_labor,,yes
+2003-090,2003,"John D. Ashcroft, Attorney General V. American Civil Liberti","obscenity, federal",issue-rule,civil_rights_civic,civil_rights_civic,,yes
+2004-006,2004,State Of Kansas V. State Of Colorado,non-real property dispute between states,judgement,energy_environment,energy_environment,,yes
+2004-022,2004,Willard Stewart V. Dutra Construction Company,election of remedies: legal remedies available to ,issue-rule,judicial_procedure,economy_labor,,NO
+2005-081,2005,"Neil Randall, Et Al. V. William H. Sorrell Et Al.",campaign spending (cf. governmental corruption):,issue-rule,civil_rights_civic,civil_rights_civic,,yes
+2005-086,2005,"Salim Ahmed Hamdan V. Donald H. Rumsfeld, Secretary Of Defen",habeas corpus,judgement,national_security,national_security,,yes
+2006-044,2006,"Jacob Winkelman, A Minor, By And Through His Parents And Leg",juveniles (cf. rights of illegitimates),judgement,health_education,health_education,,yes
+2006-051,2006,"Michael W. Sole, Secretary, Florida Department Of Environmen",attorneys’ and governmental employees’ or official,issue-rule,judicial_procedure,judicial_procedure,,yes
+2007-012,2007,"Michael J. Knight, Trustee Of The William L. Rudkin Testamen","federal taxation, typically under provisions of th",issue-rule,economy_labor,economy_labor,,yes
+2008-037,2008,Hawaii Et Al. V. Office Of Hawaiian Affairs Et Al.,miscellaneous,judgement,civil_rights_civic,civil_rights_civic,,yes
+2009-024,2009,Florida V. Kevin Dewayne Powell,Miranda warnings,issue-rule,immigration_justice,immigration_justice,,yes
+2009-058,2009,"Lawrence Joseph Jefferson V. Stephen Upton, Warden",habeas corpus,issue-rule,immigration_justice,immigration_justice,,yes
+2009-078,2009,"Rent-A-Center, West, Inc. V. Antonio Jackson",arbitration (in the context of labor-management or,issue-rule,economy_labor,judicial_procedure,,NO
+2009-088,2009,"Free Enterprise Fund And Beckstead And Watts, Llp V. Public ",executive authority vis-a-vis congress or the stat,judgement,economy_labor,economy_labor,,yes
+2009-089,2009,"Bernard L. Bilski And Rand A. Warsaw V. David J. Kappos, Und",patents and copyrights: patentability of computer ,judgement,economy_labor,economy_labor,,yes
+2009-090,2009,Christian Legal Society Chapter Of The University Of Califor,free exercise of religion,judgement,civil_rights_civic,civil_rights_civic,,yes
+2010-020,2010,"Federal Communications Commission, Et Al., Petitioners V. At",Freedom of Information Act and related federal or ,judgement,judicial_procedure,judicial_procedure,,yes
+2010-026,2010,"Glen Scott Milner, Petitioner V. Department Of The Navy",Freedom of Information Act and related federal or ,judgement,national_security,judicial_procedure,,NO
+2010-071,2010,"Borough Of Duryea, Pennsylvania, Et Al., Petitioners V. Char","First Amendment, miscellaneous (cf. comity: First ",issue-rule,civil_rights_civic,civil_rights_civic,,yes
+2010-079,2010,"Howard K. Stern, Executor Of The Estate Of Vicki Lynn Marsha",wills and trusts,judgement,judicial_procedure,judicial_procedure,,yes
+2011-002,2011,"Eric Greene, Aka Jarmaine Q. Trice V. Jon Fisher, Superinten",habeas corpus,issue-rule,immigration_justice,immigration_justice,,yes
+2011-032,2011,"Daniel Coleman, Petitioner V. Court Of Appeals Of Maryland E",national supremacy: marital and family relationshi,judgement,economy_labor,economy_labor,,yes
+2011-037,2011,"Menachem Binyamin Zivotofsky, By His Parents And Guardians, ",executive authority vis-a-vis congress or the stat,judgement,foreign_policy,foreign_policy,,yes
+2013-013,2013,Ray Haluch Gravel Co. V. Cent. Pension Fund Of Int'L Union O,judicial administration: untimely filing,issue-rule,judicial_procedure,judicial_procedure,,yes
+2013-029,2013,Brandt Trust V. United States,real property,judgement,economy_labor,economy_labor,low,yes
+2013-030,2013,"Lexmark Int'L, Inc. V. Static Control Components, Inc.,",standing to sue: live dispute,issue-rule,judicial_procedure,economy_labor,,NO
+2013-041,2013,Highmark Inc. V. Allcare Health Mgmt. Sys.,attorneys’ and governmental employees’ or official,issue-rule,judicial_procedure,economy_labor,,NO
+2014-012,2014,"Omnicare, Inc. V. Laborers Dist. Council Constr. Indus. Pens",federal or state regulation of securities,judgement,economy_labor,economy_labor,,yes
+2014-033,2014,United States V. Kwai Fun Wong,"liability, governmental: tort or contract actions ",judgement,immigration_justice,judicial_procedure,,NO
+2014-052,2014,King V. Burwell,"federal taxation, typically under provisions of th",judgement,health_education,health_education,,yes
+2015-024,2015,Gobeille V. Liberty Mutual Insurance Company,federal pre-emption of state legislation or regula,judgement,health_education,health_education,,yes
+2015-073,2015,State Of Montana V. State Of Wyoming And State Of North Dako,non-real property dispute between states,judgement,energy_environment,energy_environment,,yes
+2020-047,2020,"Carr V. Saul, Commissioner Of Social Security",judicial review of administrative agency’s or admi,judgement,economy_labor,economy_labor,,yes
+2020-074,2020,Lombardo V. St. Louis,due process: prisoners’ rights and defendants’ rig,issue-rule,immigration_justice,immigration_justice,,yes
+2021-037,2021,"Boechler, P.C. V. Commissioner Of Internal Revenue","federal taxation, typically under provisions of th",issue-rule,economy_labor,judicial_procedure,,NO
+2022-015,2022,Axon Enterprise V. Federal Trade Commission,judicial review of administrative agency’s or admi,judgement,judicial_procedure,judicial_procedure,,yes
+2022-028,2022,Ohio Adjutant GeneralâS Department V. Federal Labor Relati,labor-management disputes: jurisdictional dispute,issue-rule,economy_labor,economy_labor,,yes
+2022-031,2022,Financial Oversight And Management Bd For Puerto Rico V. Cen,incorporation of foreign territories,judgement,judicial_procedure,judicial_procedure,,yes
+2022-045,2022,Jack Daniels Properties V. Vip Products Llc,patents and copyrights: trademark,issue-rule,economy_labor,economy_labor,,yes
+2023-005,2023,"Great Lakes Insurance Se V. Raiders Retreat Realty Co., Llc",commercial transactions Identification Variables S,judgement,judicial_procedure,judicial_procedure,,yes
+2023-051,2023,Connelly V. United States,"federal taxation, typically under provisions of th",issue-rule,economy_labor,economy_labor,,yes
+2023-058,2023,Department Of State V. Muã±Oz,immigration and naturalization: miscellaneous,judgement,immigration_justice,immigration_justice,,yes
+2023-060,2023,Moyle V. United States,abortion: including contraceptives,issue-rule,health_education,health_education,,yes
+2024-006,2024,Lackey V. Stinnie,attorneys’ and governmental employees’ or official,issue-rule,judicial_procedure,judicial_procedure,,yes
+2024-010,2024,"Wisconsin Bell V. U.S., Ex Rel. Todd Heath","liability, governmental: tort or contract actions ",judgement,economy_labor,economy_labor,,yes
+2024-023,2024,Dewberry Group V. Dewberry Engineers,patents and copyrights: trademark,issue-rule,economy_labor,economy_labor,,yes
+2025-012,2025,Chiles V. Salazar,"First Amendment, miscellaneous (cf. comity: First ",judgement,civil_rights_civic,civil_rights_civic,,yes
+2025-018,2025,Learning Resources V. Trump,executive authority vis-a-vis congress or the stat,judgement,trade,trade,,yes
+2025-035,2025,Wolford V. Lopez,"miscellaneous criminal procedure (cf. due process,",issue-rule,immigration_justice,civil_rights_civic,low,NO
+2025-042,2025,United States V. Hemani,statutory construction of criminal laws: firearms,issue-rule,immigration_justice,immigration_justice,,yes
+2025-051,2025,Hikma Pharmaceuticals Usa Inc. V. Amarin Pharma,patents and copyrights: patent,judgement,health_education,health_education,,yes
+2025-054,2025,Monsanto Company V. Durnell,federal pre-emption of state court jurisdiction,issue-rule,judicial_procedure,energy_environment,low,NO
