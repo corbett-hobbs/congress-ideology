@@ -588,6 +588,18 @@ History (1950-2007) lives beside it: `pipeline/output/troops_history.json` (one 
 comparability notes) and `troops_history_report.json` (gate results). Raw: `pipeline/raw/troopdata/` (`pnpm fetch:troopdata`, pinned commit, GPL-3.0 LICENSE.md
 committed) and `pipeline/reference/dmdc-309a-sep.csv`. See `docs/TROOPS_METHODOLOGY.md` "History".
 
+### Bases (overseas installations)
+
+A location track beside the troop series, from the same pinned troopdata snapshot (`pipeline/raw/troopdata/basedata.csv`, David Vine's lists, **one
+undated snapshot, documented "through 2018"**). `pipeline/output/bases.json` is one row per site keyed on `base_id` (`<iso3>-<slug>`), never `bioguide_id`;
+fields `name, country, iso3, lat, lon, site_type` (base / lilypad / funded_site), `x, y` (projected at build time with `world_map.json`'s projection),
+`source`, `needs_review` + `review_note`. It joins the troop series **by `iso3`**, and never by date: there is no per-year presence, so it is not tied to the year
+slider and no count of bases is compared across years. No headcounts, no branch. `bases_report.json` is the human report (rows per country and type, every
+excluded row and why, ISO overrides and exceptions, countries with troops but no bases and the reverse, size). Gates (the transform fails): every `iso3` is in
+`countries.json` or the documented territory exception table; coordinates in range; no duplicate `base_id`; projected `x,y` inside the map. Territories
+(Puerto Rico, Guam, ...) are kept under their own ISO3; Antarctica and rows with no coordinates are excluded and listed. Runs after `world-map-run`
+(and so after `trade-run`). Notes: `docs/BASES_SOURCE_NOTES.md`, `docs/TROOPS_METHODOLOGY.md` "Bases".
+
 ## 13. Energy track
 
 An eighth data track: U.S. energy time series from the EIA (petroleum, the Strategic Petroleum Reserve, natural gas, electricity), plus a

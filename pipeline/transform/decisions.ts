@@ -13,6 +13,9 @@ import {
   type ScdbCaseRow,
 } from "../../lib/decisions-entities";
 import { versionLabel } from "../fetch/scdb-lib";
+import { prettyCaseName } from "./case-names";
+
+export { prettyCaseName };
 
 /**
  * Pure logic for the Decisions track (no file I/O; `decisions-run.ts` reads and writes). Unit of
@@ -89,29 +92,6 @@ export function buildCounts(cases: readonly ScdbCaseRow[], catalog: readonly Iss
   }
   const order = (id: string | null) => (id === null ? catalog.length : catalog.findIndex((a) => a.id === id));
   return [...map.values()].sort((a, b) => a.term - b.term || order(a.issue_area_id) - order(b.issue_area_id));
-}
-
-const SMALL_WORDS = new Set(["v.", "of", "the", "and", "for", "in", "on", "to", "a", "an", "at", "by", "ex", "rel.", "de", "la", "et", "al.", "al", "dba", "aka", "ux.", "etc.", "etc.,"]);
-const KEEP_UPPER = new Set(["U.S.", "U.S.A.", "D.C.", "N.Y.", "II", "III", "IV", "NAACP", "IBM", "AFL-CIO", "UAW", "CIO", "AFL", "EEOC", "FDA", "EPA", "NLRB", "FCC", "FERC", "FTC", "SEC", "IRS", "INS", "HUD", "NCAA", "AT&T", "ACLU", "PGA", "NFL", "NBA", "ERISA", "OSHA", "USDA", "TVA", "RFC", "IRS.", "LLC", "LP", "LLP", "USA", "IAM", "NY", "NJ"]);
-
-/** SCDB capitalises case names; make them readable. Imperfect for unusual acronyms (listed above) but never changes what a name says. */
-export function prettyCaseName(input: string): string {
-  // The file is latin-1, but a few newer names are UTF-8 inside it ("Women\u00e2\u0080\u0099s"): re-read those bytes as UTF-8.
-  const fixed = /[\u00c2\u00c3\u00e2]/.test(input) ? Buffer.from(input, "latin1").toString("utf8") : input;
-  const raw = fixed.includes("\ufffd") ? input : fixed;
-  const words = raw.trim().replace(/\s+/g, " ").split(" ");
-  return words
-    .map((w, i) => {
-      const upper = w.toUpperCase();
-      if (KEEP_UPPER.has(upper)) return upper;
-      const lower = w.toLowerCase();
-      const bare = lower.replace(/[,;]+$/, "");
-      if (i > 0 && SMALL_WORDS.has(bare)) return lower;
-      if (lower === "v.") return "v.";
-      if (/^[A-Z]\.?,?$/.test(w) || /^([A-Z]\.){2,}/.test(w)) return w; // initials and dotted acronyms: "J.", "U.S."
-      return lower.replace(/(^|[-/(\u2013\u2019'&])([a-z\u00e0-\u00ff])/g, (m, pre: string, c: string, off: number) => (pre === "'" || pre === "\u2019" ? (off <= 1 ? pre + c.toUpperCase() : m) : pre + c.toUpperCase())).replace(/^Mc([a-z])/, (_m, c: string) => `Mc${c.toUpperCase()}`);
-    })
-    .join(" ");
 }
 
 const isoDate = (us: string): string => {

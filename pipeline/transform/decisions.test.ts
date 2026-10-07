@@ -129,17 +129,7 @@ describe("gates", () => {
   });
 });
 
-describe("case names and rows", () => {
-  it("title-cases SCDB's capitals", async () => {
-    const { prettyCaseName } = await import("./decisions");
-    expect(prettyCaseName("UNITED STATES v. LOPEZ")).toBe("United States v. Lopez");
-    expect(prettyCaseName("SMITH, ET AL. v. U.S. DEPT. OF STATE")).toBe("Smith, et al. v. U.S. Dept. of State");
-    expect(prettyCaseName("O'BRIEN v. MCDONNELL DOUGLAS CORP.")).toBe("O'Brien v. McDonnell Douglas Corp.");
-    expect(prettyCaseName("NLRB v. AFL-CIO")).toBe("NLRB v. AFL-CIO");
-    expect(prettyCaseName("OIL STATES ENERGY SERVICES, LLC v. GREENE\u00e2\u0080\u0099S ENERGY GROUP, LLC")).toBe("Oil States Energy Services, LLC v. Greene\u2019s Energy Group, LLC");
-    expect(prettyCaseName("DEPARTMENT OF STATE v. MU\u00c3\u00b1OZ")).toBe("Department of State v. Mu\u00f1oz");
-    expect(prettyCaseName("WILLIAMS\u00e2\u0080\u0093YULEE v. FLORIDA BAR")).toBe("Williams\u2013Yulee v. Florida Bar");
-  });
+describe("case rows", () => {
   it("builds one row per case, and the gates catch a list that disagrees with the counts", async () => {
     const { buildCaseRows } = await import("./decisions");
     const sel = selectCases(parseScdb(SAMPLE));

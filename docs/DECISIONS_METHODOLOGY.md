@@ -42,7 +42,7 @@ An unknown `chief` name fails the build; add a row when a new Chief takes the ch
 ## Output
 
 - `decisions_counts.json`: one row per `(term, issue_area_id)` that has at least one case, with `n` and `d0..d4`. Counts only, never percentages. Every term 1946–last has rows. `issue_area_id` is `null` for unclassified. ~77 KB.
-- `decisions_cases.json`: one row per case in scope, oldest first (~1.6 MB): `case_id`, `term`, `date`, `name`, `cite`, `issue_area_id`, `band`, `maj`, `min`. Names are SCDB's capitals re-cased for reading (`prettyCaseName`; known acronyms kept, a few newer UTF-8 names repaired); `cite` is the U.S. Reports cite, else Supreme Court Reporter, else Lawyers' Edition, else Lexis.
+- `decisions_cases.json`: one row per case in scope, oldest first (~1.6 MB): `case_id`, `term`, `date`, `name`, `cite`, `issue_area_id`, `band`, `maj`, `min`. Names are SCDB's capitals re-cased for reading by `pipeline/transform/case-names.ts` (a word that already has lower-case letters is left as written; a curated acronym lookup of agencies, unions/organisations and company forms; dotted initials, Roman numerals and vowel-less tokens like "CSX" stay capitals unless listed as abbreviations like "Ltd"; small words lower-case; a few newer UTF-8 names repaired). To fix a name, add the acronym to `ACRONYMS` (or `ABBREVIATIONS`) there; the tests list real examples and fail if a listed acronym is ever title-cased in the data; `cite` is the U.S. Reports cite, else Supreme Court Reporter, else Lawyers' Edition, else Lexis.
 - `decisions_meta.json`: version, data-through term, exclusions, unclassified count, citation, licence, chief spans, issue-area catalog.
 - `decisions_report.json`: totals by bucket, decade and issue area, gate results (humans only).
 

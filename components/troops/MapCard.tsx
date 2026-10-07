@@ -18,6 +18,8 @@ import { BASE_R, BaseGlyph, BasesLayer } from "./BasesLayer";
 import { RankedList } from "./RankedList";
 import { TD, TH, TableView, branchColor } from "./shared";
 
+const TH_PLAIN = TH.replace("sticky top-0 ", "");
+
 /** A pinned installation card: one site, or a group merged at this zoom. */
 interface BaseHit {
   title: string;
@@ -169,6 +171,17 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
               {selRank ? `${places[country].name} · No. ${selRank.rank} · ${formatCount(selRank.value)}` : `${places[country].name} · ${view.suppressed.includes(country) ? "not reported" : "no troops reported"}`}
             </span>
           )}
+          <button
+            type="button"
+            aria-pressed={showBases}
+            onClick={() => {
+              setShowBases((v) => !v);
+              basePin.hide();
+            }}
+            className={`rounded-md border px-2 py-0.5 text-[0.75rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${showBases ? "border-line-strong bg-surface-raised text-ink" : "border-line text-ink-muted hover:text-ink"}`}
+          >
+            {showBases ? "✓ " : ""}Known installations (source through {bases.through})
+          </button>
           <YearPicker value={yi} range={range} onChange={setYear} format={(i) => `${years[i].fy}`} ariaLabel="Year shown on the map" />
         </div>
       }
@@ -241,7 +254,9 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
               if (h.place != null) toggleCountry(h.place);
               basePin.hide();
             }}
-            activateHint={basePin.state?.data.place != null ? `Show ${basePin.state.data.country} in the charts above →` : undefined}
+            activateHint={
+              basePin.state?.data.place == null ? undefined : places[country]?.iso3 === basePin.state.data.iso3 ? `Clear the ${basePin.state.data.country} filter →` : `Show ${basePin.state.data.country} in the charts above →`
+            }
           >
             {(h) => <BaseTip hit={h} through={bases.through} />}
           </Tooltip>
@@ -274,6 +289,25 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
             )}
           </div>
           )}
+          {showBases && (
+            <div className={`mt-1 ${LEGEND_ROW}`}>
+              {SITE_ORDER.map((id, t) => (
+                <span key={id} className={LEGEND_ITEM}>
+                  <svg width="12" height="12" aria-hidden>
+                    <BaseGlyph t={t} r={BASE_R * 1.1} cx={6} cy={6} />
+                  </svg>
+                  {SITE_LABEL[id]}
+                </span>
+              ))}
+              <span className={LEGEND_ITEM}>
+                <svg width="14" height="14" aria-hidden>
+                  <circle cx="7" cy="7" r="6" fill="var(--ink)" />
+                  <text x="7" y="7" textAnchor="middle" dominantBaseline="central" fontSize="8" fontWeight="700" fill="var(--surface)">3</text>
+                </svg>
+                Group of sites (zoom to split)
+              </span>
+            </div>
+          )}
         </div>
         <RankedList view={view} />
       </div>
@@ -302,6 +336,11 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
           )}{" "}
           Counts are active-duty personnel assigned to the place. Through 2017 they include deployed forces, so the years before and after 2018 are not like-for-like, and the table’s source changes at 1996 and 2008 (see the chart’s notes).
           {!p.afloatIncluded && " This year’s source has no afloat or unassigned rows."}
+        </p>
+        <p>
+          <b className="font-semibold text-ink">Known installations ({bases.sites.length} sites in {bases.countries.length} places, source through {bases.through}):</b> one fixed list of known U.S. sites abroad, not tied to the year chosen above. A dot carries no headcount, so it says nothing about how many of a country’s
+          troops are there or whether the site is open today. Classified and unacknowledged sites are missing, as is anything opened after the source ended, and the list differs from the Defense Department’s own Base Structure Report. Dots that overlap merge into a numbered group and split as you zoom.
+          The Branch filter does not apply (the source has no branch), and a selected country brightens its own sites and dims the rest. {bases.sites.filter((x) => x.review).length} sites whose coordinates look wrong are listed in the table but not drawn. Locations: David Vine’s lists of U.S. bases abroad, as compiled in the troopdata package (Flynn), GPL-3.0.
         </p>
       </MethodologyNote>
 
@@ -332,8 +371,40 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
             </tr>
           ))}
         </tbody>
+        <tbody>
+          <tr>
+            <th className={`${TH_PLAIN} text-left`}>Known installation (source through {bases.through})</th>
+            <th className={TH_PLAIN}>Country</th>
+            <th className={TH_PLAIN}>Type</th>
+            <th className={TH_PLAIN}>On the map</th>
+          </tr>
+          {bases.sites.map((b, i) => (
+            <tr key={i}>
+              <td className={TD}>{b.name}</td>
+              <td className={TD}>{bases.countries[b.c].name}</td>
+              <td className={TD}>{SITE_LABEL[SITE_ORDER[b.t]]}</td>
+              <td className={TD}>{b.review ? `no (${b.review})` : "yes"}</td>
+            </tr>
+          ))}
+        </tbody>
       </TableView>
     </ChartCard>
+  );
+}
+
+function BaseTip({ hit, through }: { hit: BaseHit; through: number }) {
+  return (
+    <div>
+      <div style={{ fontWeight: 600 }}>{hit.title}</div>
+      <div className="tt-mono">
+        {hit.country} · known installation, source through {through}
+      </div>
+      {hit.lines.map((l, i) => (
+        <div key={i} className="tt-mono" style={{ marginTop: i === 0 ? 4 : 0 }}>
+          {l}
+        </div>
+      ))}
+    </div>
   );
 }
 

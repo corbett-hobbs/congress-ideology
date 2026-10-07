@@ -5,7 +5,7 @@ import { clusterSites } from "@/lib/bases-derive";
 import { SITE_LABEL, SITE_ORDER, type BaseCluster, type BasesPayload } from "@/lib/bases-types";
 
 /** Dot radius at full view, in map units; it shrinks with the square root of the zoom like the host markers. */
-export const BASE_R = 2.6;
+export const BASE_R = 3.1;
 /** Two dots closer than this many radii merge into one group. */
 const MERGE_RADII = 2.2;
 
@@ -60,7 +60,7 @@ export function BasesLayer({
               </>
             )}
             {/* A larger invisible target so a fingertip can hit a 2-3px dot. */}
-            <circle cx={c.x} cy={c.y} r={Math.max(rc, 6 / Math.sqrt(k))} fill="transparent" />
+            <circle cx={c.x} cy={c.y} r={Math.max(rc, 12 / Math.sqrt(k))} fill="transparent" />
           </g>
         );
       })}
