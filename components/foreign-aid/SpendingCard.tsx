@@ -10,21 +10,23 @@ import { SectorLegend, TD, TH, TableView, useSectorLabel } from "./shared";
 
 /** "How much the U.S. spends": the stacked-bar time series and everything that explains it. */
 export function SpendingCard() {
-  const { data, year, range, country, sector, isPartial } = useAidState();
+  const { data, range, country, sector, isPartial } = useAidState();
   const sectorLabel = useSectorLabel();
   const rows = useMemo(() => spendingByYear(data, range[0], range[1], country, sector), [data, range, country, sector]);
   const [only, setOnly] = useState<number | null>(null);
   const shown = useMemo(() => (only === null || sector >= 0 ? rows : rows.map((r) => { const slots = r.slots.map((v, k) => (k === only ? v : 0)); return { ...r, slots, drawn: Math.max(0, slots[only]) }; })), [rows, only, sector]);
-  const cur = rows.find((r) => r.fy === year);
-  const change = changeVsPrior(data, year, country, sector);
+  // The lede is anchored to the window's last year (the slider's right handle), not to the selected bar.
+  const endYear = range[1];
+  const cur = rows.find((r) => r.fy === endYear);
+  const change = changeVsPrior(data, endYear, country, sector);
   const showing = [country >= 0 ? data.payload.countries[country].name : null, sectorLabel].filter(Boolean);
   const anyPartial = rows.some((r) => isPartial(r.fy));
 
   const lede = (
     <>
-      FY{year} · <b className="font-semibold text-ink">{formatAidMoney(cur?.total ?? 0)}</b>
-      {isPartial(year) && " · partial year"}
-      {change !== null && ` · ${change > 0 ? "+" : change < 0 ? "−" : ""}${Math.abs(Math.round(change * 100))}% vs. FY${year - 1}`} · nominal dollars
+      FY{endYear} · <b className="font-semibold text-ink">{formatAidMoney(cur?.total ?? 0)}</b>
+      {isPartial(endYear) && " · partial year"}
+      {change !== null && ` · ${change > 0 ? "+" : change < 0 ? "−" : ""}${Math.abs(Math.round(change * 100))}% vs. FY${endYear - 1}`} · nominal dollars
     </>
   );
 

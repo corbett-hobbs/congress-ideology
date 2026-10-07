@@ -92,14 +92,15 @@ export function TroopsFirstPlaceCard() {
     down.current = false;
   };
 
-  const cur = years[si];
   const peak = years.reduce<TopHostYear | null>((a, b) => (b.top[0] && (!a || !a.top[0] || topVal(b) > topVal(a)) ? b : a), null);
   const branch = measure > 0 ? ` (${measureLabel(measure)})` : "";
-  const lede = cur?.top[0] ? (
+  // The lede is anchored to the window's last year (the slider's right handle), not to the selected bar.
+  const last = years[n - 1];
+  const lede = last?.top[0] ? (
     <>
-      Largest host country each year{branch}, with bars split by branch. {allYears[yi].fy}: <b className="font-semibold text-ink">{places[cur.top[0].place].name}</b> · {formatCount(cur.top[0].value)} ·{" "}
-      {Math.round((cur.top[0].value / cur.hostTotal) * 100)}% of troops at foreign hosts
-      {allYears[yi].partial ? " (partial year)" : estimate(si) ? " (estimate)" : ""}
+      Largest host country each year{branch}, with bars split by branch. {allYears[range[1]].fy}: <b className="font-semibold text-ink">{places[last.top[0].place].name}</b> · {formatCount(last.top[0].value)} ·{" "}
+      {Math.round((last.top[0].value / last.hostTotal) * 100)}% of troops at foreign hosts
+      {allYears[range[1]].partial ? " (partial year)" : estimate(n - 1) ? " (estimate)" : ""}
     </>
   ) : (
     "Largest host country each year"

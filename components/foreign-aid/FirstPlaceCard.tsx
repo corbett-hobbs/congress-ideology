@@ -80,13 +80,14 @@ export function FirstPlaceCard() {
     down.current = false;
   };
 
-  const cur = years[si];
   const peak = years.reduce<TopYear | null>((a, b) => (b.ranked[0] && (!a || !a.ranked[0] || topVal(b) > topVal(a)) ? b : a), null);
-  const lede = cur?.ranked[0] ? (
+  // The lede is anchored to the window's last year (the slider's right handle), not to the selected bar.
+  const last = years[n - 1];
+  const lede = last?.ranked[0] ? (
     <>
-      Largest recipient country each fiscal year{sectorLabel ? ` in ${sectorLabel}` : ""}, with bars colored by its sector mix. FY{year}:{" "}
-      <b className="font-semibold text-ink">{names[cur.ranked[0].ci].name}</b> · {formatAidMoney(cur.ranked[0].value)} · {Math.round((cur.ranked[0].value / cur.countryTotal) * 100)}% of country-attributed dollars
-      {isPartial(year) ? " (partial year)" : ""}
+      Largest recipient country each fiscal year{sectorLabel ? ` in ${sectorLabel}` : ""}, with bars colored by its sector mix. FY{range[1]}:{" "}
+      <b className="font-semibold text-ink">{names[last.ranked[0].ci].name}</b> · {formatAidMoney(last.ranked[0].value)} · {Math.round((last.ranked[0].value / last.countryTotal) * 100)}% of country-attributed dollars
+      {isPartial(range[1]) ? " (partial year)" : ""}
     </>
   ) : (
     "Largest recipient country each fiscal year"
