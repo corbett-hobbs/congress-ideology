@@ -52,7 +52,7 @@ function EnergyPage({ payload }: { payload: EnergyPayload }) {
         </div>
         <PageHeader title="How Has U.S. Energy Changed?">
           <p>
-            The Strategic Petroleum Reserve, supply and demand for oil, oil imports and exports, where electricity comes from, and liquefied natural gas exports, since 1991. The colored bar under each
+            Where electricity comes from, supply and demand for oil, oil imports and exports, liquefied natural gas exports and the Strategic Petroleum Reserve, since 1991. Electricity is one part of the energy picture, not all of it; oil is the rest of the story told here. The colored bar under each
             chart shows who was president, the gray columns mark recessions, and the marked dates are executive, congressional and agency actions. These are conditions during each term, not a score of what any one official caused.
           </p>
           <HowToRead>
@@ -69,11 +69,11 @@ function EnergyPage({ payload }: { payload: EnergyPayload }) {
           </HowToRead>
         </PageHeader>
 
-        <SprCard payload={payload} view={view} />
+        <ElectricityCard payload={payload} view={view} />
         <SupplyDemandCard payload={payload} view={view} />
         <OilTradeCard payload={payload} view={view} />
-        <ElectricityCard payload={payload} view={view} />
         <LngCard payload={payload} view={view} />
+        <SprCard payload={payload} view={view} />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           {EIA_ATTRIBUTION}, Monthly Energy Review, Petroleum Supply Monthly, Electric Power Monthly and Natural Gas Monthly, retrieved {longDate(payload.fetchedAt)}. Policy actions are hand-curated from Department of
