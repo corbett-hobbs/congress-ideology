@@ -13,13 +13,13 @@ const INK = "var(--ink)";
 const SURFACE = "var(--surface)";
 
 /**
- * One mark per site type, so colour is never the only cue: major base = filled circle, small site = open ring,
- * host-nation U.S.-funded base = diamond. Same shape in the legend (`BaseGlyph`).
+ * One solid mark per site type, so colour is never the only cue: major base = dot, small site = smaller dot,
+ * host-nation U.S.-funded base = diamond. No outlines: dots overlap in dense areas. Same shape in the legend (`BaseGlyph`).
  */
 export function BaseGlyph({ t, r, cx = 0, cy = 0 }: { t: number; r: number; cx?: number; cy?: number }) {
-  if (t === 1) return <circle cx={cx} cy={cy} r={r} fill={SURFACE} stroke={INK} strokeWidth={r * 0.5} />;
-  if (t === 2) return <rect x={cx - r * 0.9} y={cy - r * 0.9} width={r * 1.8} height={r * 1.8} transform={`rotate(45 ${cx} ${cy})`} fill={INK} stroke={SURFACE} strokeWidth={r * 0.25} />;
-  return <circle cx={cx} cy={cy} r={r} fill={INK} stroke={SURFACE} strokeWidth={r * 0.25} />;
+  if (t === 1) return <circle cx={cx} cy={cy} r={r * 0.65} fill={INK} />;
+  if (t === 2) return <rect x={cx - r * 0.9} y={cy - r * 0.9} width={r * 1.8} height={r * 1.8} transform={`rotate(45 ${cx} ${cy})`} fill={INK} />;
+  return <circle cx={cx} cy={cy} r={r} fill={INK} />;
 }
 
 /**
@@ -53,7 +53,7 @@ export function BasesLayer({
               <BaseGlyph t={t} r={rc} cx={c.x} cy={c.y} />
             ) : (
               <>
-                <circle cx={c.x} cy={c.y} r={rc} fill={INK} stroke={SURFACE} strokeWidth={r * 0.3} />
+                <circle cx={c.x} cy={c.y} r={rc} fill={INK} />
                 <text x={c.x} y={c.y} textAnchor="middle" dominantBaseline="central" fontSize={rc * 1.15} fontWeight={700} fill={SURFACE} style={{ pointerEvents: "none" }}>
                   {c.members.length}
                 </text>
