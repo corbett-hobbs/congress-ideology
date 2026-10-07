@@ -36,6 +36,10 @@ export interface DecisionsPayload {
   all: Bucket[];
   /** `by[areaIndex][termIndex]`, areas in catalog order. */
   by: Bucket[][];
+  /** Counts of the areas outside `topAreas`, summed ("Other areas"): `other[termIndex]`. */
+  other: Bucket[];
+  /** Indexes (into `areas`) of the six biggest issue areas by total cases: card 1 draws each as its own series. */
+  topAreas: number[];
   chiefs: DecisionsChief[];
   /** "Version 2026 Release 01". */
   versionLabel: string;
@@ -52,3 +56,13 @@ export interface AreaSort {
   /** False = largest first (every key's default); true = reversed. */
   reversed: boolean;
 }
+
+/** Area filter values: an index into `areas`, ALL_AREAS, or OTHER_AREAS (every area outside `topAreas`). */
+export const ALL_AREAS = -1;
+export const OTHER_AREAS = -2;
+
+/**
+ * One case in the list: `[term, date (ISO), name, cite, area index or -1, dissent band 0-4, majority, minority]`.
+ * Arrays, not objects: 8,000+ of them travel to the browser.
+ */
+export type DecisionCase = [number, string, string, string, number, number, number, number];

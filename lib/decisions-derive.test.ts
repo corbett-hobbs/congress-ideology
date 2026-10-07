@@ -2,7 +2,12 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   ALL_AREAS_LABEL,
+  areaCells,
   areaRows,
+  areaSeries,
+  caseUrl,
+  filterCases,
+  inAreaFilter,
   bandShare,
   buildDecisionsPayload,
   buildStacks,
@@ -20,12 +25,17 @@ import {
   windowSum,
 } from "./decisions-derive";
 import type { DecisionCountRow, DecisionsMeta } from "./decisions-entities";
+import { ALL_AREAS, OTHER_AREAS, type DecisionCase } from "./decisions-types";
 
 const read = <T>(f: string): T => JSON.parse(readFileSync(`pipeline/output/${f}`, "utf8")) as T;
 const counts = read<DecisionCountRow[]>("decisions_counts.json");
 const meta = read<DecisionsMeta>("decisions_meta.json");
 const report = read<{ cases: number; bucket_totals: Record<string, number>; cases_by_issue_area: Record<string, number>; terms: string }>("decisions_report.json");
+const caseRows = read<{ term: number; date: string; name: string; cite: string; issue_area_id: string | null; band: number; maj: number; min: number }[]>("decisions_cases.json");
 const d = buildDecisionsPayload(counts, meta);
+const cases: DecisionCase[] = caseRows
+  .map((r): DecisionCase => [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : d.areas.findIndex((a) => a.id === r.issue_area_id), r.band, r.maj, r.min])
+  .reverse();
 const FULL: [number, number] = [d.terms[0], d.terms[d.terms.length - 1]];
 
 describe("payload", () => {
@@ -141,5 +151,55 @@ describe("small-sample test", () => {
     expect(isSmallSample(d, crim, [1960, 1980])).toBe(false);
     expect(median([5, 1, 3])).toBe(3);
     expect(median([1, 2, 3, 4])).toBe(2.5);
+  });
+});
+
+describe("Other areas and card 1's series", () => {
+  it("six biggest areas plus Other add up to All, every term and band", () => {
+    expect(d.topAreas).toHaveLength(6);
+    const series = areaSeries(d);
+    expect(series).toHaveLength(7);
+    expect(series[6]).toMatchObject({ id: "other", area: OTHER_AREAS });
+    d.terms.forEach((_, ti) => {
+      for (let k = 0; k < 5; k++) {
+        const sum = series.reduce((t, s) => t + areaCells(d, s.area)[ti][k], 0);
+        expect(sum).toBe(d.all[ti][k]);
+      }
+    });
+    // Ranked by size: criminal procedure and economic activity lead the real data.
+    expect(d.areas[d.topAreas[0]].id).toBe("criminal-procedure");
+  });
+  it("the area filter picks what the series say", () => {
+    expect(inAreaFilter(d, ALL_AREAS, -1)).toBe(true);
+    expect(inAreaFilter(d, OTHER_AREAS, -1)).toBe(true);
+    expect(inAreaFilter(d, OTHER_AREAS, d.topAreas[0])).toBe(false);
+    expect(inAreaFilter(d, 3, 3)).toBe(true);
+    expect(inAreaFilter(d, 3, 4)).toBe(false);
+  });
+});
+
+describe("case list", () => {
+  const full: [number, number] = FULL;
+  const f = (o: Partial<{ range: [number, number]; area: number; band: number | null; term: number | null }> = {}) => filterCases(d, cases, { range: full, area: ALL_AREAS, band: null, term: null, ...o });
+  it("is every case, newest first, and reconciles to the counts for any filter", () => {
+    expect(cases).toHaveLength(d.caseCount);
+    expect(f()).toHaveLength(d.caseCount);
+    expect(cases[0][1] >= cases[cases.length - 1][1]).toBe(true);
+    // Whatever the charts count, the list lists: windows, areas, bands and a single term.
+    for (const area of [ALL_AREAS, OTHER_AREAS, 0, 7]) {
+      for (const band of [null, 0, 4]) {
+        for (const range of [full, [1969, 1985] as [number, number]]) {
+          const want = windowCells(d, area, range).cells.reduce((t, b) => t + (band === null ? sumBucket(b) : b[band]), 0);
+          expect(f({ area, band, range }).length, `${area}/${band}/${range}`).toBe(want);
+        }
+      }
+    }
+    expect(f({ term: 2015 })).toHaveLength(sumBucket(d.all[2015 - 1946]));
+    expect(f({ term: 2015, band: 4 })).toHaveLength(d.all[2015 - 1946][4]);
+  });
+  it("links U.S. Reports cites to Justia and nothing else", () => {
+    expect(caseUrl("347 U.S. 483")).toBe("https://supreme.justia.com/cases/federal/us/347/483/");
+    expect(caseUrl("146 S. Ct. 2438")).toBeNull();
+    expect(caseUrl("")).toBeNull();
   });
 });

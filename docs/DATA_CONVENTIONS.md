@@ -626,10 +626,11 @@ pre-flight: `docs/SCDB_PREFLIGHT.md`; schemas: `lib/decisions-entities.ts`. Sepa
 | File | Grain | Key | Notes |
 | --- | --- | --- | --- |
 | `pipeline/output/decisions_counts.json` | one row per `(term, issue area)` with at least one orally argued case | `term` + `issue_area_id` (**not** a `bioguide_id`, not a `justice_id`) | `n` and dissent-bucket counts `d0..d4` (`min(minVotes, 4)`). `issue_area_id` null = no SCDB issue area. Counts only, never percentages (shares are derived in `lib`). |
+| `pipeline/output/decisions_cases.json` | one row per case in scope (8,251), oldest first, ~1.6 MB | `case_id` (SCDB `caseId`) | Term, ISO decision date, title-cased name, cite (U.S., else S. Ct., else L. Ed., else Lexis), `issue_area_id`, dissent `band`, `maj`/`min`. Feeds the page's case list only; a gate checks that aggregating it reproduces `decisions_counts.json` cell for cell. |
 | `pipeline/output/decisions_meta.json` | one object | — | SCDB version, data-through term, exclusions, unclassified count, citation, licence, Chief Justice spans (with appointing president and party), the issue-area catalog. |
 | `pipeline/output/decisions_report.json` | run summary | — | Totals by bucket, decade, issue area; gate results. Humans only. |
 
-**Case-grain data is not stored**, only counts: the raw SCDB CSV is committed (`pipeline/raw/scdb/`, with `manifest.json`: version, URL, sha256 of the zip and the CSV, row count; latin-1) and the app reads only the three outputs.
+The charts read only `decisions_counts.json` and the meta file; the case list reads `decisions_cases.json` (served to the browser from `/data/decisions/cases`, fetched on demand). The raw SCDB CSV is committed (`pipeline/raw/scdb/`, with `manifest.json`: version, URL, sha256 of the zip and the CSV, row count; latin-1, though a few newer case names are UTF-8 inside it and are repaired).
 The issue-area taxonomy lives behind `pipeline/reference/decision-issue-areas.json` so it can be swapped without touching the transform or the UI; Chief Justice to appointing president is `pipeline/reference/chief-justices.json`,
 verified against `court/justices.json` and the presidents tables (no second president table). Raw: `pnpm fetch:scdb` (manual refresh, not in `fetch:all`); freshness: `.github/workflows/scdb-freshness.yml` (monthly, warns when the host is down).
 Gates are build-failing (see the methodology doc).

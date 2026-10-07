@@ -6,8 +6,8 @@ import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ReversibleSortToggle } from "@/components/charts/SortToggle";
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
 import { MethodologyNote } from "@/components/MethodologyNote";
-import { areaRows, bandShare, fmtInt, fmtPct, nextAreaSort, windowSum, sumBucket } from "@/lib/decisions-derive";
-import { BAND_COLORS, BAND_LONG, BAND_SHORT, type AreaSort, type AreaSortKey } from "@/lib/decisions-types";
+import { inAreaFilter, areaRows, bandShare, fmtInt, fmtPct, nextAreaSort, windowSum, sumBucket } from "@/lib/decisions-derive";
+import { ALL_AREAS, BAND_COLORS, BAND_LONG, BAND_SHORT, type AreaSort, type AreaSortKey } from "@/lib/decisions-types";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 import { Swatch, TableView } from "./shared";
 
@@ -34,14 +34,14 @@ export function AreasCard() {
         label: r.label,
         total: fmtInt(r.total),
         selected: area === r.index,
-        dimmed: area >= 0 && r.index >= 0 && r.index !== area,
+        dimmed: area !== ALL_AREAS && r.index >= 0 && !inAreaFilter(data, area, r.index),
         segments: [0, 1, 2, 3, 4].map((k) => ({
           value: bandShare(r.bucket, k),
           color: BAND_COLORS[k],
           title: `${r.label}: ${BAND_LONG[k]}, ${fmtPct(bandShare(r.bucket, k))} (${fmtInt(r.bucket[k])} of ${fmtInt(r.total)})`,
         })),
       })),
-    [rows, area],
+    [rows, area, data],
   );
   const click = (id: string) => {
     const row = rows.find((r) => r.id === id);

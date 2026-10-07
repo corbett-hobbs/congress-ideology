@@ -35,6 +35,12 @@ export const scdbCaseRow = z.object({
   /** Blank = no issue area coded. */
   issueArea: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.number().int().min(1).nullable()),
   chief: z.string().min(1),
+  dateDecision: z.string(),
+  caseName: z.string(),
+  usCite: z.string(),
+  sctCite: z.string(),
+  ledCite: z.string(),
+  lexisCite: z.string(),
 });
 export type ScdbCaseRow = z.infer<typeof scdbCaseRow>;
 
@@ -68,6 +74,22 @@ export const decisionCountRow = z.strictObject({
   d4: int.min(0),
 });
 export type DecisionCountRow = z.infer<typeof decisionCountRow>;
+
+/** `decisions_cases.json`: one row per case in scope (the list under the charts). Names are title-cased from SCDB's capitals. */
+export const decisionCaseRow = z.strictObject({
+  case_id: z.string().min(1),
+  term: int.min(DECISIONS_FIRST_TERM),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  name: z.string().min(1),
+  /** U.S. Reports cite, else S. Ct., else L. Ed., else Lexis; empty only if SCDB has none. */
+  cite: z.string(),
+  issue_area_id: z.string().nullable(),
+  /** Dissent bucket 0-4. */
+  band: int.min(0).max(4),
+  maj: int.min(0).max(9),
+  min: int.min(0).max(9),
+});
+export type DecisionCaseRow = z.infer<typeof decisionCaseRow>;
 
 export const chiefSpan = z.strictObject({
   scdb_chief: z.string(),
