@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getBothTrend, getViewCurrent } from "@/lib/congress-data";
-import { branches } from "@/lib/verticals";
+import { branches, getBranch } from "@/lib/verticals";
 import { site } from "@/lib/site";
 import { getCourtPayload } from "@/lib/justice-data";
 import { getExecutiveOrdersData } from "@/lib/executive-orders-data";
@@ -31,8 +31,9 @@ const BLURBS: Record<string, string> = {
     "Executive orders, the economy, trade, and immigration, laid out against each presidential term, from gas prices and tariffs to deportations.",
 };
 
-
 export default function Hub() {
+  const presidency = getBranch("presidency");
+  const others = branches.filter((b) => b.id !== "presidency");
   const trend = getBothTrend();
   const congress = getViewCurrent("both");
   const court = getCourtPayload();
@@ -69,8 +70,78 @@ export default function Hub() {
           </p>
         </PageHeader>
 
-        <div className="grid gap-4 lg:grid-cols-3">
-          {branches.map((b) => {
+        <section
+          aria-labelledby="hub-presidency"
+          className="flex flex-col gap-5 rounded-xl border border-line bg-surface p-5 lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8"
+        >
+          <div className="flex flex-col gap-4">
+            <h2
+              id="hub-presidency"
+              className="font-serif text-2xl font-semibold tracking-tight"
+            >
+              <Link
+                href={`${presidency.href}/${presidency.defaultSection}`}
+                className="hover:text-accent"
+              >
+                {presidency.label}
+              </Link>
+            </h2>
+            <p className="text-[0.95rem] leading-relaxed text-ink-muted">
+              {BLURBS.presidency}
+            </p>
+            <div className="mt-auto flex flex-col gap-2">
+              <HubEoChart data={orders} />
+              <p className="text-[0.85rem] text-ink-muted">
+                <span className="font-serif text-2xl font-semibold text-ink">
+                  {orders.total.toLocaleString("en-US")}
+                </span>{" "}
+                executive orders signed since {orders.years[0].year}
+              </p>
+            </div>
+          </div>
+          <ul className="flex flex-col divide-y divide-line self-start border-y border-line lg:w-full">
+            {presidency.sections.map((s) => (
+              <li key={s.id}>
+                {s.status === "live" ? (
+                  <Link
+                    href={s.href}
+                    className="group flex items-baseline justify-between gap-4 py-3 transition-colors"
+                  >
+                    <span className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-4">
+                      <span className="font-serif text-lg font-semibold tracking-tight group-hover:text-accent sm:w-44 sm:shrink-0">
+                        {s.label}
+                      </span>
+                      <span className="text-[0.9rem] leading-snug text-ink-muted">
+                        {s.blurb}
+                      </span>
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="font-mono text-ink-faint transition-colors group-hover:text-accent"
+                    >
+                      →
+                    </span>
+                  </Link>
+                ) : (
+                  <div
+                    aria-disabled="true"
+                    className="flex items-baseline justify-between gap-4 py-3 text-ink-faint"
+                  >
+                    <span className="font-serif text-lg font-semibold">
+                      {s.label}
+                    </span>
+                    <span className="font-mono text-[0.68rem] uppercase tracking-[0.08em]">
+                      Soon
+                    </span>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {others.map((b) => {
             const live = b.status === "live";
             const isCongress = b.id === "congress";
             return (
@@ -116,7 +187,7 @@ export default function Hub() {
                           ? "Most divided ever"
                           : `Most divided since ${lastWider!.year}`}
                       </span>{" "}
-The two parties are{" "}
+                      The two parties are{" "}
                       {wider === 0
                         ? "farther apart than at any point"
                         : `farther apart than at any point since ${lastWider!.year}`}
@@ -134,18 +205,6 @@ The two parties are{" "}
                       </span>{" "}
                       justices were appointed by Republican presidents,{" "}
                       {court.lastTerm} term
-                    </p>
-                  </div>
-                )}
-
-                {b.id === "presidency" && (
-                  <div className="flex flex-col gap-2">
-                    <HubEoChart data={orders} />
-                    <p className="text-[0.85rem] text-ink-muted">
-                      <span className="font-serif text-2xl font-semibold text-ink">
-                        {orders.total.toLocaleString("en-US")}
-                      </span>{" "}
-                      executive orders signed since {orders.years[0].year}
                     </p>
                   </div>
                 )}

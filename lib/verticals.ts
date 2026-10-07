@@ -23,6 +23,8 @@ export interface Section {
   /** `/<vertical>/<section>` */
   href: string;
   status: Status;
+  /** One sentence for the hub's section list. */
+  blurb?: string;
 }
 
 export interface Branch {
@@ -42,6 +44,7 @@ interface SectionDef {
   id: string;
   label: string;
   status: Status;
+  blurb?: string;
 }
 
 interface BranchDef {
@@ -57,13 +60,55 @@ const DEFS: readonly BranchDef[] = [
     label: "Presidency",
     defaultSection: "executive-orders",
     sections: [
-      { id: "executive-orders", label: "Executive orders", status: "live" },
-      { id: "economy", label: "Economy", status: "live" },
-      { id: "trade", label: "Trade", status: "live" },
-      { id: "energy", label: "Energy", status: "live" },
-      { id: "immigration", label: "Immigration", status: "live" },
-      { id: "foreign-aid", label: "Foreign aid", status: "live" },
-      { id: "national-security", label: "National security", status: "live" },
+      {
+        id: "executive-orders",
+        label: "Executive orders",
+        status: "live",
+        blurb:
+          "Every executive order since 1994, by year and topic, set against each presidential term.",
+      },
+      {
+        id: "economy",
+        label: "Economy",
+        status: "live",
+        blurb:
+          "Jobs, inflation, gas prices and more, lined up with who was in the White House.",
+      },
+      {
+        id: "energy",
+        label: "Energy",
+        status: "live",
+        blurb:
+          "Oil, electricity, LNG exports and the Strategic Petroleum Reserve, with the policy actions that moved them.",
+      },
+      {
+        id: "immigration",
+        label: "Immigration",
+        status: "live",
+        blurb:
+          "ICE removals by fiscal year and administration, with changes in what is counted marked.",
+      },
+      {
+        id: "trade",
+        label: "Trade",
+        status: "live",
+        blurb:
+          "Goods trade and the duties charged on imports, by country, through each tariff change.",
+      },
+      {
+        id: "foreign-aid",
+        label: "Foreign aid",
+        status: "live",
+        blurb:
+          "Where U.S. foreign assistance went, by country and sector, year by year.",
+      },
+      {
+        id: "national-security",
+        label: "National security",
+        status: "live",
+        blurb:
+          "Where active-duty U.S. troops are stationed, by country, region and branch.",
+      },
     ],
   },
   {
