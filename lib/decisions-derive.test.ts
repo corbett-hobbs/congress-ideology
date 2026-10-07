@@ -3,6 +3,13 @@ import { describe, expect, it } from "vitest";
 import {
   ALL_AREAS_LABEL,
   areaCells,
+  decadeCells,
+  decadeInWindow,
+  decadeOf,
+  decadesOf,
+  HEAT_MIN_CASES,
+  heatMax,
+  heatValue,
   areaRows,
   areaSeries,
   caseUrl,
@@ -201,5 +208,35 @@ describe("case list", () => {
     expect(caseUrl("347 U.S. 483")).toBe("https://supreme.justia.com/cases/federal/us/347/483/");
     expect(caseUrl("146 S. Ct. 2438")).toBeNull();
     expect(caseUrl("")).toBeNull();
+  });
+});
+
+describe("decade heatmap", () => {
+  it("decades cover every term and each area's cells add up to its total", () => {
+    expect(decadesOf(d)).toEqual([1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020]);
+    expect(decadeOf(1949)).toBe(1940);
+    for (const area of [ALL_AREAS, OTHER_AREAS, 0, 5]) {
+      const cells = decadeCells(d, area);
+      expect(cells.reduce((t, c) => t + c.total, 0)).toBe(areaCells(d, area).reduce((t, b) => t + sumBucket(b), 0));
+    }
+    // 1946-49 and 2020-25 are partial decades.
+    expect(decadeCells(d, ALL_AREAS)[0].total).toBe(sumBucket(windowSum(d, ALL_AREAS, [1946, 1949])));
+  });
+  it("hides shares that rest on too few cases, and scales to the largest trusted one", () => {
+    const thin = decadeCells(d, d.areas.findIndex((a) => a.id === "private-action")).find((c) => c.total > 0 && c.total < HEAT_MIN_CASES)!;
+    expect(heatValue(thin, 4)).toBeNull();
+    const all = decadeCells(d, ALL_AREAS)[2];
+    expect(heatValue(all, 0)).toBeCloseTo(all.bucket[0] / all.total, 10);
+    for (const band of [0, 4]) {
+      const m = heatMax(d, band);
+      expect(m).toBeGreaterThanOrEqual(0.1);
+      expect(Math.round(m * 10)).toBeCloseTo(m * 10, 8);
+      for (const area of [ALL_AREAS, ...d.areas.map((_, i) => i)]) for (const c of decadeCells(d, area)) expect(heatValue(c, band) ?? 0).toBeLessThanOrEqual(m + 1e-9);
+    }
+  });
+  it("a decade is in the window when any of its terms is", () => {
+    expect(decadeInWindow(1960, [1969, 1970])).toBe(true);
+    expect(decadeInWindow(1950, [1960, 1990])).toBe(false);
+    expect(decadeInWindow(2020, [1946, 2025])).toBe(true);
   });
 });

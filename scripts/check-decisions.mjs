@@ -171,10 +171,31 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check((await lede(c1)).includes("in 1969") || (await lede(c1)).includes("1969"), `${tag}: charts follow the Chief selection`);
   await page.locator("button[aria-label^='Reset years']:visible").click();
 
-  // Card 3 scrolls inside itself on phones
+  // Card 3: phones scroll the rows inside a fixed-height box; from lg every row shows (no scroll)
   const box = c3.locator("[aria-label='Issue areas, one row each']");
   const dims = await box.evaluate((el) => ({ sh: el.scrollHeight, ch: el.clientHeight, oy: getComputedStyle(el).overflowY }));
-  check(dims.sh > dims.ch && dims.oy === "auto", `${tag}: card 3 rows scroll inside a fixed-height box (${dims.sh} > ${dims.ch})`);
+  if (w >= 1024) check(dims.sh <= dims.ch + 1 && dims.oy === "visible", `${tag}: card 3 shows the full spread, no scroll box (${dims.sh} vs ${dims.ch}, overflow ${dims.oy})`);
+  else check(dims.sh > dims.ch && dims.oy === "auto", `${tag}: card 3 rows scroll inside a fixed-height box (${dims.sh} > ${dims.ch})`);
+  check((await box.locator("li").count()) === 15, `${tag}: all 15 rows (All + 14 areas) are in the list`);
+
+  // The decade heatmap beside/above the rows
+  const heat = c3.locator("[role=grid]");
+  check((await heat.locator("[role=gridcell]").count()) === 15 * 9, `${tag}: heatmap has 15 rows x 9 decades`);
+  const sideBySide = await heat.evaluate((el, rowsBox) => { const a = el.getBoundingClientRect(), b = document.querySelector(rowsBox).getBoundingClientRect(); return a.right <= b.left + 1; }, "[aria-label='Issue areas, one row each']");
+  check(sideBySide === (w >= 1024), `${tag}: heatmap is ${w >= 1024 ? "left of" : "above"} the rows`);
+  check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${tag}: no horizontal overflow with the heatmap`);
+  const firstShade = () => heat.locator("[role=gridcell]").first().evaluate((e) => e.getAttribute("title") + "|" + e.style.background);
+  const shadeBefore = await firstShade();
+  await c3.locator("button", { hasText: "Unanimous share" }).click();
+  await settle(page);
+  check((await firstShade()) !== shadeBefore, `${tag}: the measure toggle changes the shading`);
+  await heat.locator("[role=gridcell]").nth(3 * 9 + 4).click();
+  await settle(page);
+  check((await page.locator("select[aria-label='Issue area'] option:checked").innerText()) !== "All issue areas", `${tag}: a heatmap cell picks the issue area`);
+  check((await heat.locator("[role=row].opacity-45").count()) === 13, `${tag}: the picked area stays lit and the other 13 areas dim (All never dims)`);
+  await heat.locator("button[aria-pressed=true]").first().click();
+  await settle(page);
+  check((await page.locator("select[aria-label='Issue area']").inputValue()) === "-1", `${tag}: clicking the picked row's label clears it`);
   if (w <= 480) {
     check(dims.ch <= 28 * 16 + 2 && dims.ch < h * 0.7, `${tag}: card 3 box is under two-thirds of the screen (${dims.ch}px of ${h})`);
     await box.hover();

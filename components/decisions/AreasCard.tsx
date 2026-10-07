@@ -9,6 +9,7 @@ import { MethodologyNote } from "@/components/MethodologyNote";
 import { inAreaFilter, areaRows, bandShare, fmtInt, fmtPct, nextAreaSort, windowSum, sumBucket } from "@/lib/decisions-derive";
 import { ALL_AREAS, BAND_COLORS, BAND_LONG, BAND_SHORT, type AreaSort, type AreaSortKey } from "@/lib/decisions-types";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
+import { DecadeHeatmap } from "./DecadeHeatmap";
 import { Swatch, TableView } from "./shared";
 
 const SORTS: { key: AreaSortKey; label: string; hint: string }[] = [
@@ -59,7 +60,7 @@ export function AreasCard() {
   return (
     <ChartCard
       title="Which kinds of cases split the Court?"
-      lede={`Share of cases in ${lo === hi ? `the ${lo} term` : `${lo}–${hi}`}, by how many justices dissented. Click an issue area to filter the charts above.`}
+      lede="Left: how often each issue area split 5–4 (or was unanimous) in each decade. Right: how many justices dissented, in the years shown. Click an issue area in either to filter the charts and the case list."
       action={
         <ReversibleSortToggle
           ariaLabel="Sort issue areas"
@@ -70,22 +71,29 @@ export function AreasCard() {
         />
       }
     >
-      <div className={`mb-2 ${LEGEND_ROW}`}>
-        {[0, 1, 2, 3, 4].map((k) => (
-          <span key={k} className={LEGEND_ITEM}>
-            <Swatch color={BAND_COLORS[k]} />
-            {BAND_LONG[k]}
-          </span>
-        ))}
-      </div>
-      <div className="relative max-h-[28rem] overflow-y-auto overscroll-contain touch-scroll" tabIndex={0} aria-label="Issue areas, one row each">
-        <StackedRows rows={stacked} scaleMax={1} onRowClick={click} ariaLabel="Issue areas by number of dissenting justices" emptyText="No cases in these years." />
+      <div className="grid gap-x-8 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <DecadeHeatmap rows={rows} />
+        <div className="min-w-0">
+          <p className="mb-2 mt-0 text-[0.78rem] text-ink-muted">{`Years shown: ${lo === hi ? lo : `${lo}\u2013${hi}`}`}</p>
+          <div className={`mb-2 ${LEGEND_ROW}`}>
+            {[0, 1, 2, 3, 4].map((k) => (
+              <span key={k} className={LEGEND_ITEM}>
+                <Swatch color={BAND_COLORS[k]} />
+                {BAND_LONG[k]}
+              </span>
+            ))}
+          </div>
+          {/* Phones scroll the rows inside a fixed-height box (rule 11a); from `lg` all of them show (15 rows is not a long list). */}
+          <div className="relative max-h-[28rem] overflow-y-auto overscroll-contain touch-scroll lg:max-h-none lg:overflow-visible" tabIndex={0} aria-label="Issue areas, one row each">
+            <StackedRows rows={stacked} scaleMax={1} onRowClick={click} ariaLabel="Issue areas by number of dissenting justices" emptyText="No cases in these years." />
+          </div>
+        </div>
       </div>
       <MethodologyNote>
         <p>
-          Issue areas are the Supreme Court Database’s own 14 categories, which its authors treat as a rough guide. {topThree.labels} together hold about {fmtPct(topThree.share)} of all cases. Cases the database leaves without an issue area ({fmtInt(data.unclassified)}) count in “All issue areas” but appear in no row. Areas with no cases in the years shown are left out.
+          Issue areas are the Supreme Court Database’s own 14 categories, which its authors treat as a rough guide. {topThree.labels} together hold about {fmtPct(topThree.share)} of all cases. Cases the database leaves without an issue area ({fmtInt(data.unclassified)}) count in “All issue areas” but appear in no row. Areas with no cases in the years shown are left out of the rows on the right; the heatmap always shows every decade and fades those outside the years shown.
         </p>
-        <p>Shares for small areas are rough: an area with a few dozen cases can swing several points on one decision.</p>
+        <p>Shares for small areas are rough: an area with a few dozen cases can swing several points on one decision. The heatmap shades every decade on one scale for all areas, so cells compare; the first and last decades are partial (1946–49 and 2020–25); a cell with fewer than 10 cases is outlined, not shaded.</p>
       </MethodologyNote>
       <TableView
         label="Table of issue areas by number of dissenting justices"
