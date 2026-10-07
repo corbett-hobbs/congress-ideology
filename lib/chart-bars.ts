@@ -20,7 +20,7 @@ export const Y_GUTTER = yGutter(["00000"]);
 
 /** Whether a value label of `text` fits inside a segment `h` tall and `w` wide. */
 export function segmentLabelFits(h: number, w: number, text: string): boolean {
-  return h >= 15 && w >= text.length * 6.4 + 6;
+  return h >= 15 && w >= text.length * 5.6 + 3;
 }
 
 /** In-segment value labels: white with a soft dark edge so they read on light and dark fills alike. */
