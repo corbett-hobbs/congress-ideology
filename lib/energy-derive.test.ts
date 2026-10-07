@@ -8,6 +8,7 @@ import { administration } from "./executive-orders-entities";
 import { BUSH_41, buildEconomyTerms } from "./economy-presidents";
 import { dayOfIso } from "./indicator-time";
 import {
+  laggedNote,
   buildSeries,
   firstPreliminary,
   flagInputs,
@@ -125,5 +126,17 @@ describe("flags", () => {
     // squeezed into a phone-width plot, the two actions four months apart read as one marker
     const narrow = layoutFlags(inputs, { X: (d) => 20 + (d / spanOf(built.spr)) * 300, viewStart: 0, viewEnd: spanOf(built.spr), span: spanOf(built.spr), plotLeft: 20, plotRight: 320, labels: false });
     expect(narrow.map((p) => p.ids.length)).toEqual([2, 1, 1]);
+  });
+});
+
+describe("laggedNote", () => {
+  const now = new Date("2026-10-06T12:00:00");
+  it("says the effect came years after for an old action", () => {
+    expect(laggedNote("2015-12-18", now)).toContain("came years after");
+  });
+  it("says the effect may not show yet for an action within two years", () => {
+    expect(laggedNote("2025-03-01", now)).toContain("may not show yet");
+    expect(laggedNote("2024-10-06", now)).toContain("may not show yet");
+    expect(laggedNote("2024-10-05", now)).toContain("came years after");
   });
 });

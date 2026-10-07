@@ -5,7 +5,7 @@ import { PinReadout } from "@/components/charts/PinReadout";
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
-import { AUTHORITY_LABEL, dateText, KIND_LABEL, LAGGED_NOTE, monthLabel } from "@/lib/energy-derive";
+import { AUTHORITY_LABEL, dateText, KIND_LABEL, laggedNote, monthLabel } from "@/lib/energy-derive";
 import { monthStartDay, niceScale, type Scale } from "@/lib/trade-chart";
 import type { EnergyFlag, EnergyPayload, MonthlyKey } from "@/lib/energy-types";
 import { monthIndexOfDay } from "@/lib/indicator-time";
@@ -196,7 +196,7 @@ export const FlagsTable = memo(function FlagsTable({ flags, lastReviewed, captio
                 <th scope="row" className="whitespace-nowrap px-2 py-1 font-normal tabular-nums">{dateText(f.date)}</th>
                 <td className="px-2 py-1">{f.label}</td>
                 <td className="px-2 py-1">{[AUTHORITY_LABEL[f.authority], KIND_LABEL[f.kind]].filter(Boolean).join(" · ")}</td>
-                <td className="px-2 py-1">{f.description}{f.lagged ? ` ${LAGGED_NOTE}` : ""}</td>
+                <td className="px-2 py-1">{f.description}{f.lagged ? ` ${laggedNote(f.date)}` : ""}</td>
               </tr>
             ))}
           </tbody>

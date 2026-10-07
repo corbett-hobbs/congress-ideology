@@ -129,9 +129,18 @@ export function flagLabel(f: EnergyFlag): string {
   return [AUTHORITY_LABEL[f.authority], kind, f.label].filter(Boolean).join(" · ");
 }
 
-/** The note every flagged-with-delay action carries. */
-export const LAGGED_NOTE =
-  "Enabled, not caused: the effect on this series, if any, came years after the action, so the date marks the action, not the change.";
+/** An action this recent (two years or less) has not had time to show up in the data. */
+const RECENT_YEARS = 2;
+
+/** The note every flagged-with-delay action carries: "came years after" for an old action, "may yet" for a recent one. */
+export function laggedNote(isoDate: string, now: Date = new Date()): string {
+  const cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  cutoff.setFullYear(cutoff.getFullYear() - RECENT_YEARS);
+  if (new Date(`${isoDate}T00:00:00`) >= cutoff) {
+    return "Enabled, not caused: this action is recent, so any effect on this series may not show yet, and the date marks the action, not the change.";
+  }
+  return "Enabled, not caused: the effect on this series, if any, came years after the action, so the date marks the action, not the change.";
+}
 
 export function flagInputs(flags: readonly EnergyFlag[]): FlagInput[] {
   return flags.map((f) => ({ id: f.id, day: dayOfIso(f.date), label: flagLabel(f), priority: f.priority, dateText: dateText(f.date) }));

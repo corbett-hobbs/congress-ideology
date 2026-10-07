@@ -9,7 +9,7 @@ import { yGutter } from "@/lib/chart-bars";
 import { dayFromFraction } from "@/lib/indicator-lookup";
 import { dateOfDay, MONTH_ABBR } from "@/lib/indicator-time";
 import { stackPanels, panelAtY } from "@/lib/energy-chart";
-import { flagInputs as toFlagInputs, layoutFlags, LAGGED_NOTE, AUTHORITY_LABEL, KIND_LABEL, dateText } from "@/lib/energy-derive";
+import { flagInputs as toFlagInputs, layoutFlags, laggedNote, AUTHORITY_LABEL, KIND_LABEL, dateText } from "@/lib/energy-derive";
 import type { EnergyFlag } from "@/lib/energy-types";
 import { lanesUsed } from "@/lib/trade-flags";
 import type { Scale } from "@/lib/trade-chart";
@@ -307,7 +307,7 @@ function FlagNote({ flags }: { flags: readonly EnergyFlag[] }) {
           <div className="font-medium">{dateText(f.date)} · {f.label}</div>
           <div className="opacity-75">{[AUTHORITY_LABEL[f.authority], KIND_LABEL[f.kind]].filter(Boolean).join(" · ")}</div>
           <div>{f.description}</div>
-          {f.lagged && <div className="italic opacity-90">{LAGGED_NOTE}</div>}
+          {f.lagged && <div className="italic opacity-90">{laggedNote(f.date)}</div>}
         </div>
       ))}
     </div>
