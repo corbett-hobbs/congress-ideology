@@ -1,0 +1,65 @@
+{
+  "scdb_version": "2026_01",
+  "csv_sha256": "b3cc84bd73a7a0325856cca52ae6fc5bd6a39433113f83fef248556ad4488528",
+  "raw_rows": 9409,
+  "cases": 8251,
+  "terms": "1946-2025",
+  "exclusions": {
+    "summary_dispositions": 1010,
+    "decrees": 66,
+    "unclear_votes": 82
+  },
+  "unclassified": 67,
+  "bucket_totals": {
+    "Unanimous": 3102,
+    "8–1": 921,
+    "7–2": 1232,
+    "6–3": 1547,
+    "5–4": 1449
+  },
+  "unanimous_share": 0.376,
+  "five_four_share": 0.176,
+  "cases_by_decade": {
+    "1940s": 476,
+    "1950s": 1055,
+    "1960s": 1124,
+    "1970s": 1433,
+    "1980s": 1459,
+    "1990s": 922,
+    "2000s": 755,
+    "2010s": 673,
+    "2020s": 354
+  },
+  "cases_by_issue_area": {
+    "criminal-procedure": 1760,
+    "civil-rights": 1292,
+    "first-amendment": 628,
+    "due-process": 335,
+    "privacy": 110,
+    "unions": 358,
+    "economic-activity": 1754,
+    "judicial-power": 1068,
+    "federalism": 379,
+    "interstate-relations": 66,
+    "federal-taxation": 304,
+    "(unclassified)": 67,
+    "attorneys": 93,
+    "miscellaneous": 32,
+    "private-action": 5
+  },
+  "chief_spans": [
+    "Fred Vinson 1946-1952 (Harry S. Truman, Democratic)",
+    "Earl Warren 1953-1968 (Dwight D. Eisenhower, Republican)",
+    "Warren Burger 1969-1985 (Richard Nixon, Republican)",
+    "William Rehnquist 1986-2004 (Ronald Reagan, Republican)",
+    "John Roberts 2005-2025 (George W. Bush, Republican)"
+  ],
+  "gates": {
+    "cases": 8251,
+    "terms": 80,
+    "unclassified": 67,
+    "rows_in_raw": 9409,
+    "anchors_checked": true
+  },
+  "count_rows": 901
+}

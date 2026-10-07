@@ -285,3 +285,12 @@ Geographical Area) are U.S. Department of Defense publications, public domain, e
 Methodology: `docs/TROOPS_METHODOLOGY.md` ("History"). The page must say 2006-07 are estimates and that earlier years are not like-for-like
 with DMDC's 2008+ tables (no afloat/unassigned rows before 1996).
 
+## Supreme Court Database — decisions counts
+
+The Supreme Court decisions page counts orally argued cases by term, issue area and size of the majority from the Supreme Court Database (Washington University in St. Louis),
+licensed CC BY-NC 3.0 US. Release used: **Version 2026 Release 01** (terms 1946–2025). Requested citation:
+
+> Harold J. Spaeth, Lee Epstein, Andrew D. Martin, Jeffrey A. Segal, Theodore J. Ruger, Sara C. Benesh, and Michael J. Nelson. 2026 Supreme Court Database, Version 2026 Release 01. URL: http://supremecourtdatabase.org
+
+Source: http://scdb.wustl.edu/data.php. Snapshot committed in `pipeline/raw/scdb/`.
+

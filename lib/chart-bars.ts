@@ -40,3 +40,7 @@ export function fmtShare(v: number): string {
   const p = v * 100;
   return `${p < 10 ? (Math.round(p * 10) / 10).toString() : Math.round(p)}%`;
 }
+
+/** Year axes label every `n`th year with `n` in 1, 2, 5, 10, 20 so labels sit about 46px apart (rule 10h); `step` is the px per year. */
+export const yearLabelEvery = (step: number) => [1, 2, 5, 10, 20].find((n) => step * n >= 46) ?? 20;
+

@@ -1,0 +1,121 @@
+{
+  "scdb_version": "2026_01",
+  "scdb_version_label": "Version 2026 Release 01",
+  "source_file": "SCDB_2026_01_caseCentered_Citation.csv",
+  "first_term": 1946,
+  "data_through_term": 2025,
+  "case_count": 8251,
+  "exclusions": {
+    "summary_dispositions": 1010,
+    "decrees": 66,
+    "unclear_votes": 82
+  },
+  "unclassified_count": 67,
+  "citation": "Harold J. Spaeth, Lee Epstein, Andrew D. Martin, Jeffrey A. Segal, Theodore J. Ruger, Sara C. Benesh, and Michael J. Nelson. 2026 Supreme Court Database, Version 2026 Release 01. URL: http://supremecourtdatabase.org",
+  "license": "Creative Commons Attribution-NonCommercial 3.0 United States (CC BY-NC 3.0 US)",
+  "chief_spans": [
+    {
+      "scdb_chief": "Vinson",
+      "name": "Fred Vinson",
+      "justice_id": 87,
+      "start_term": 1946,
+      "end_term": 1952,
+      "appointing_president": "Harry S. Truman",
+      "appointing_party": "Democratic"
+    },
+    {
+      "scdb_chief": "Warren",
+      "name": "Earl Warren",
+      "justice_id": 90,
+      "start_term": 1953,
+      "end_term": 1968,
+      "appointing_president": "Dwight D. Eisenhower",
+      "appointing_party": "Republican"
+    },
+    {
+      "scdb_chief": "Burger",
+      "name": "Warren Burger",
+      "justice_id": 99,
+      "start_term": 1969,
+      "end_term": 1985,
+      "appointing_president": "Richard Nixon",
+      "appointing_party": "Republican"
+    },
+    {
+      "scdb_chief": "Rehnquist",
+      "name": "William Rehnquist",
+      "justice_id": 102,
+      "start_term": 1986,
+      "end_term": 2004,
+      "appointing_president": "Ronald Reagan",
+      "appointing_party": "Republican"
+    },
+    {
+      "scdb_chief": "Roberts",
+      "name": "John Roberts",
+      "justice_id": 111,
+      "start_term": 2005,
+      "end_term": 2025,
+      "appointing_president": "George W. Bush",
+      "appointing_party": "Republican"
+    }
+  ],
+  "issue_areas": [
+    {
+      "id": "criminal-procedure",
+      "label": "Criminal procedure"
+    },
+    {
+      "id": "civil-rights",
+      "label": "Civil rights"
+    },
+    {
+      "id": "first-amendment",
+      "label": "First Amendment"
+    },
+    {
+      "id": "due-process",
+      "label": "Due process"
+    },
+    {
+      "id": "privacy",
+      "label": "Privacy"
+    },
+    {
+      "id": "attorneys",
+      "label": "Attorneys"
+    },
+    {
+      "id": "unions",
+      "label": "Unions"
+    },
+    {
+      "id": "economic-activity",
+      "label": "Economic activity"
+    },
+    {
+      "id": "judicial-power",
+      "label": "Judicial power"
+    },
+    {
+      "id": "federalism",
+      "label": "Federalism"
+    },
+    {
+      "id": "interstate-relations",
+      "label": "Interstate relations"
+    },
+    {
+      "id": "federal-taxation",
+      "label": "Federal taxation"
+    },
+    {
+      "id": "miscellaneous",
+      "label": "Miscellaneous"
+    },
+    {
+      "id": "private-action",
+      "label": "Private action"
+    }
+  ]
+}

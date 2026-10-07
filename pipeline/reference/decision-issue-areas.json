@@ -1,0 +1,19 @@
+{
+  "_comment": "The 14 Supreme Court Database issue areas (SCDB `issueArea` codes 1-14), in the order the Decisions page lists them. The transform maps SCDB codes to `id` through this file only; the page reads labels from decisions_meta.json. To swap the taxonomy, change this file and the mapping in pipeline/transform/decisions.ts (`issueAreaId`); nothing downstream reads `scdb_code`.",
+  "areas": [
+    { "id": "criminal-procedure", "scdb_code": 1, "label": "Criminal procedure" },
+    { "id": "civil-rights", "scdb_code": 2, "label": "Civil rights" },
+    { "id": "first-amendment", "scdb_code": 3, "label": "First Amendment" },
+    { "id": "due-process", "scdb_code": 4, "label": "Due process" },
+    { "id": "privacy", "scdb_code": 5, "label": "Privacy" },
+    { "id": "attorneys", "scdb_code": 6, "label": "Attorneys" },
+    { "id": "unions", "scdb_code": 7, "label": "Unions" },
+    { "id": "economic-activity", "scdb_code": 8, "label": "Economic activity" },
+    { "id": "judicial-power", "scdb_code": 9, "label": "Judicial power" },
+    { "id": "federalism", "scdb_code": 10, "label": "Federalism" },
+    { "id": "interstate-relations", "scdb_code": 11, "label": "Interstate relations" },
+    { "id": "federal-taxation", "scdb_code": 12, "label": "Federal taxation" },
+    { "id": "miscellaneous", "scdb_code": 13, "label": "Miscellaneous" },
+    { "id": "private-action", "scdb_code": 14, "label": "Private action" }
+  ]
+}

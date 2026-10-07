@@ -1,0 +1,108 @@
+name: SCDB data freshness
+
+# Automate the check and the acceptance; the gate is the full CI run (.github/actions/gate-and-merge).
+#
+# Monthly (SCDB publishes about once a year, in late summer): probe scdb.wustl.edu for a release
+# newer than the one pinned in pipeline/raw/scdb/manifest.json (`pnpm fetch:scdb -- --next` HEADs
+# the next release of the same year and release 01 of the next), and if one exists download it and
+# open a pull request. If the host is down or does not return a zip the job ends GREEN WITH A
+# WARNING ANNOTATION, never a red failure (same stance as mq-freshness).
+#
+# Requires repo setting:
+#   Settings > Actions > General > "Allow GitHub Actions to create and
+#   approve pull requests"  (off by default)
+
+on:
+  schedule:
+    - cron: "41 9 1 * *" # 1st of each month, 09:41 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: scdb-freshness
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Probe for a newer SCDB release
+        id: probe
+        run: |
+          set +e
+          pnpm fetch:scdb -- --next
+          code=$?
+          set -e
+          if [ "$code" -eq 2 ]; then
+            echo "unreachable=true" >> "$GITHUB_OUTPUT"
+            echo "::warning title=SCDB freshness check skipped::Unable to check - scdb.wustl.edu was unreachable or did not return a zip. Check http://scdb.wustl.edu/data.php by hand."
+            echo "### SCDB check skipped: host unreachable" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$code" -ne 0 ]; then
+            exit "$code"
+          fi
+
+      - name: Detect changes
+        id: detect
+        if: steps.probe.outputs.unreachable != 'true'
+        run: |
+          if [ -z "$(git status --porcelain -- pipeline/raw/scdb)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No newer SCDB release."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git status --short -- pipeline/raw/scdb
+          fi
+
+      - name: Open pull request
+        id: cpr
+        if: steps.detect.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: pipeline/raw/scdb
+          branch: data/scdb-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): add new Supreme Court Database release"
+          title: "Supreme Court Database refresh"
+          labels: data-refresh
+          body: |
+            The monthly check found a Supreme Court Database release newer than the one pinned in
+            `pipeline/raw/scdb/manifest.json`.
+
+            **Before merging**
+
+            - Review `pipeline/raw/scdb/manifest.json` (version, row count, hashes).
+            - Locally: `pnpm transform`, commit the updated `pipeline/output/decisions_*.json`. The
+              transform's gates fail loudly if SCDB recoded a pinned anchor
+              (`ANCHORS` / `ANCHORS_BY_VERSION` in `pipeline/transform/decisions.ts`: update them
+              deliberately), added an issue area or decision type, or a new Chief Justice
+              (`pipeline/reference/chief-justices.json`).
+            - Update the release label in `docs/CREDITS.md` and `docs/DECISIONS_METHODOLOGY.md`.
+
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      # Auto-merge only if the full CI gate passes (.github/actions/gate-and-merge); otherwise
+      # this step fails and the PR stays open for a human.
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}

@@ -1,0 +1,10 @@
+{
+  "_comment": "Hand-maintained. `scdb_chief` is the value of SCDB's `chief` column. `justice_id` and the appointing president/party are checked against pipeline/output/court/justices.json (`chief_justice_appointment`) by the decisions transform, and the president must exist in ADMINISTRATIONS / HISTORICAL_ADMINISTRATIONS (no second president table). Rehnquist is shown with his appointing president AS CHIEF (Reagan), not as an associate justice (Nixon). Add a row when a new Chief Justice takes the center chair; the transform fails on an unknown `chief` name.",
+  "chiefs": [
+    { "scdb_chief": "Vinson", "name": "Fred Vinson", "justice_id": 87, "appointing_president": "Harry S. Truman", "appointing_party": "Democratic" },
+    { "scdb_chief": "Warren", "name": "Earl Warren", "justice_id": 90, "appointing_president": "Dwight D. Eisenhower", "appointing_party": "Republican" },
+    { "scdb_chief": "Burger", "name": "Warren Burger", "justice_id": 99, "appointing_president": "Richard Nixon", "appointing_party": "Republican" },
+    { "scdb_chief": "Rehnquist", "name": "William Rehnquist", "justice_id": 102, "appointing_president": "Ronald Reagan", "appointing_party": "Republican" },
+    { "scdb_chief": "Roberts", "name": "John Roberts", "justice_id": 111, "appointing_president": "George W. Bush", "appointing_party": "Republican" }
+  ]
+}
