@@ -22,9 +22,8 @@ function usePinnedBarHeight(): number {
 
 /**
  * Three headline numbers for one Congress in the chosen chamber view: the pinned one, else the latest. Every value comes
- * from the payload. On phones the tiles share one row (the detail line is dropped) and the strip sticks under the pinned
- * filter bar once scrolled past, so the pinned Congress's numbers stay in view while you use the charts; from `sm` it is
- * an ordinary block.
+ * from the payload. The tiles share one row (phones drop the detail line) and the strip sticks under the pinned
+ * filter bar once scrolled past, so the pinned Congress's numbers stay in view while you use the charts; the same on desktop, where the detail lines stay.
  */
 export function StatStrip({ row }: { row: DemoCongress }) {
   const barH = usePinnedBarHeight();
@@ -35,19 +34,21 @@ export function StatStrip({ row }: { row: DemoCongress }) {
     { label: "Average time in Congress", short: "Avg. time", value: `${Math.round((row.servedSum / (row.seats || 1)) * 2)} years`, sub: `${fmtShare(row.tenure[0] / (row.seats || 1))} have served up to 2 years` },
   ];
   return (
-    <div style={{ top: barH }} className="z-30 -mx-4 border-b border-line bg-bg px-4 pb-2 pt-1.5 max-sm:sticky sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0">
+    <div style={{ top: barH }} className="sticky z-30 -mx-4 border-b border-line bg-bg px-4 pb-2 pt-1.5 sm:-mx-6 sm:px-6 sm:pb-3 sm:pt-2">
       <p className="m-0 mb-1.5 text-[0.75rem] text-ink-muted sm:mb-2 sm:text-[0.8rem]">
         {ordinal(row.congress)} Congress, {row.year}–{row.year + 1}
       </p>
       <dl className="m-0 grid grid-cols-3 gap-2 sm:gap-3">
         {tiles.map((t) => (
-          <div key={t.label} className="min-w-0 rounded-[10px] border border-line bg-surface px-2.5 py-2 sm:px-4 sm:py-3">
+          <div key={t.label} className="min-w-0 rounded-[10px] border border-line bg-surface px-2.5 py-2 sm:px-4 sm:py-2">
             <dt className="truncate text-[0.62rem] font-medium uppercase tracking-[0.04em] text-ink-muted sm:text-[0.72rem] sm:tracking-[0.06em]">
               <span className="sm:hidden">{t.short}</span>
               <span className="max-sm:hidden">{t.label}</span>
             </dt>
-            <dd className="m-0 mt-1 font-serif text-[1.2rem] font-medium leading-none tabular-nums text-ink sm:text-[1.9rem]">{t.value}</dd>
-            <dd className="m-0 mt-1.5 text-[0.78rem] text-ink-muted max-sm:hidden">{t.sub}</dd>
+            <div className="mt-1 sm:flex sm:flex-wrap sm:items-baseline sm:gap-x-2.5">
+              <dd className="m-0 font-serif text-[1.2rem] font-medium leading-none tabular-nums text-ink sm:text-[1.6rem]">{t.value}</dd>
+              <dd className="m-0 text-[0.78rem] text-ink-muted max-sm:hidden">{t.sub}</dd>
+            </div>
           </div>
         ))}
       </dl>
