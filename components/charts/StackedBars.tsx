@@ -7,8 +7,9 @@ import { Axis } from "./Axis";
 import { Tooltip, useStickyTooltip } from "./Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
-import { Y_GUTTER } from "@/lib/chart-bars";
+import { Y_GUTTER, fmtShare } from "@/lib/chart-bars";
 import { SegmentLabel } from "./SegmentLabel";
+import { TERM_BAND_H, TermBandSvg, type TermSegment } from "./TermBandSvg";
 
 export interface StackSeries {
   id: string;
@@ -25,6 +26,8 @@ export interface StackColumn {
   values: Record<string, number>;
   /** Extra axis line under the label (e.g. "YTD" for a year still in progress). */
   sublabel?: string;
+  /** What a share is a share of, when that is not the stack's own total (women as a share of all seats). Defaults to `total`. */
+  denom?: number;
 }
 
 /** A labelled span under the axis, in column-index space (0 = left edge of column 0). */
@@ -49,6 +52,16 @@ interface Props<C extends StackColumn> {
   bands?: readonly StackBand[];
   ariaLabel: string;
   yAxisLabel?: string;
+  /** What `total` counts, for the column's accessible name (default "executive orders"). */
+  unit?: string;
+  /** Share mode with a `denom`: fit the axis to the tallest share instead of 0-100% (rule 10d). */
+  fitShare?: boolean;
+  /** Share mode: label the tallest and shortest column's share (columns whose bars are all 100% carry none). */
+  markShare?: boolean;
+  /** The selected column as a tinted band (default) or a dashed playhead line. */
+  selectedStyle?: "tint" | "line";
+  /** Presidential terms under the axis as `TermBandSvg` segments (one slot per column); used instead of `bands`. */
+  terms?: readonly TermSegment[];
   renderTooltip: (column: C) => ReactNode;
 }
 
@@ -77,6 +90,11 @@ export function StackedBars<C extends StackColumn>({
   bands = [],
   ariaLabel,
   yAxisLabel,
+  unit = "executive orders",
+  fitShare = false,
+  markShare = false,
+  selectedStyle = "tint",
+  terms,
   renderTooltip,
 }: Props<C>) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
@@ -93,18 +111,22 @@ export function StackedBars<C extends StackColumn>({
   // label sits, in y-domain units: the top of the bar, or of the topic's segment when filtered.
   // Share totals are all 100%, so with no topic picked there is nothing to mark.
   // `columns` is already windowed.
+  const shareOf = (c: C) => (c.denom ?? c.total) || 1;
+  const maxShare = useMemo(() => Math.max(0.01, ...columns.map((c) => c.total / ((c.denom ?? c.total) || 1))), [columns]);
   const marks = useMemo(() => {
-    if (eff === "share") return [];
-    const val = (c: C) => (highlight ? (c.values[highlight] ?? 0) : c.total);
+    if (eff === "share" && !markShare) return [];
+    const share = eff === "share";
+    const val = (c: C) => (share ? c.total / ((c.denom ?? c.total) || 1) : highlight ? (c.values[highlight] ?? 0) : c.total);
     const topOf = val;
-    const fmt = (v: number) => String(v);
+    const fmt = (v: number) => (share ? fmtShare(v) : String(v));
     // A topic with no orders in a year has no bar to label: its low is the smallest year that has some.
     const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: highlight && val(c) === 0 ? null : val(c) })));
     return [peak, low].flatMap((p, k) =>
       p ? [{ i: p.day, kind: k === 0 ? ("peak" as const) : ("low" as const), text: `${columns[p.day].label}: ${fmt(p.value as number)}`, top: topOf(columns[p.day]) }] : [],
     );
-  }, [columns, eff, highlight]);
-  const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 ? BAND_H + 6 : 0) };
+  }, [columns, eff, highlight, markShare]);
+  const bandH = terms ? TERM_BAND_H : BAND_H;
+  const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 || terms ? bandH + 6 : 0) };
 
   return (
     <div ref={wrapRef} data-sticky-tip className="relative -mx-3 sm:mx-0">
@@ -116,11 +138,12 @@ export function StackedBars<C extends StackColumn>({
         onPointerLeave={tip.leave}
       >
         {({ innerWidth, innerHeight }) => {
+          const fitted = eff === "share" && fitShare;
           const y = scaleLinear()
-            .domain(eff === "share" ? [0, 1] : [0, maxTotal])
+            .domain(eff === "share" ? [0, fitted ? maxShare : 1] : [0, maxTotal])
             .range([innerHeight, 0])
-            .nice(eff === "share" ? 4 : 5);
-          const yTicks = eff === "share" ? [0, 0.25, 0.5, 0.75, 1] : y.ticks(5);
+            .nice(eff === "share" ? (fitted ? 4 : 4) : 5);
+          const yTicks = eff === "share" && !fitted ? [0, 0.25, 0.5, 0.75, 1] : y.ticks(fitted ? 4 : 5);
           const yFormat = (v: number) => (eff === "share" ? `${Math.round(v * 100)}%` : String(v));
           const step = innerWidth / columns.length;
           const barW = Math.max(2, step * 0.78);
@@ -153,13 +176,16 @@ export function StackedBars<C extends StackColumn>({
 
               {columns.map((col, i) => {
                 const x = xOf(i) + (step - barW) / 2;
-                const denom = eff === "share" ? col.total || 1 : 1;
+                const denom = eff === "share" ? shareOf(col) : 1;
                 let acc = 0;
                 const selected = col.key === selectedKey;
-                const label = `${col.label}${col.sublabel ? ` ${col.sublabel}` : ""}: ${col.total} executive orders`;
+                const label = `${col.label}${col.sublabel ? ` ${col.sublabel}` : ""}: ${col.total} ${unit}`;
                 return (
                   <g key={col.key}>
-                    {selected && (
+                    {selected && selectedStyle === "line" && (
+                      <line x1={xOf(i) + step / 2} x2={xOf(i) + step / 2} y1={0} y2={innerHeight} stroke="var(--ink)" strokeWidth={1.5} strokeDasharray="4 3" pointerEvents="none" />
+                    )}
+                    {selected && selectedStyle === "tint" && (
                       <rect
                         x={xOf(i)}
                         y={0}
@@ -198,7 +224,7 @@ export function StackedBars<C extends StackColumn>({
                         const y0 = y((a + v) / denom);
                         const h = y(a / denom) - y0;
                         a += v;
-                        const t = eff === "share" ? `${Math.round((v / denom) * 100)}%` : String(v);
+                        const t = eff === "share" ? (fitShare ? fmtShare(v / denom) : `${Math.round((v / denom) * 100)}%`) : String(v);
                         return <SegmentLabel key={s.id} x={x + barW / 2} y={y0 + h / 2} h={h} w={barW} text={t} />;
                       });
                     })()}
@@ -279,6 +305,8 @@ export function StackedBars<C extends StackColumn>({
                   </g>
                 );
               })}
+
+              {terms && <TermBandSvg segments={terms} x0={0} step={step} y={innerHeight + AXIS_H + 6} />}
 
               {/* spans under the axis */}
               {bands.length > 0 && (

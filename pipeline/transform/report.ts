@@ -3,7 +3,7 @@ import type { IdCrosswalk } from "./crosswalk";
 import type { ScoresResult } from "./scores";
 
 export interface TransformReport {
-  legislators: { total: number; withBirthYear: number };
+  legislators: { total: number; withBirthYear: number; withBirthday: number };
   crosswalk: {
     entries: number;
     fromCongressLegislators: number;
@@ -98,6 +98,7 @@ export function buildReport(input: {
     legislators: {
       total: legislators.length,
       withBirthYear: legislators.filter((l) => l.birth_year != null).length,
+      withBirthday: legislators.filter((l) => l.birthday != null).length,
     },
     crosswalk: {
       entries: crosswalk.entries.length,
@@ -139,7 +140,7 @@ export function printReport(r: TransformReport): void {
     d === 0 ? "0%" : `${((100 * n) / d).toFixed(2)}%`;
 
   console.log("\ntransform report");
-  console.log(`  legislators:            ${r.legislators.total}  (${r.legislators.withBirthYear} with birth year)`);
+  console.log(`  legislators:            ${r.legislators.total}  (${r.legislators.withBirthYear} with birth year, ${r.legislators.withBirthday} with full birthday)`);
   console.log(
     `  id_crosswalk entries:   ${r.crosswalk.entries}  (${r.crosswalk.fromCongressLegislators} congress-legislators + ${r.crosswalk.fromVoteview} voteview)`,
   );

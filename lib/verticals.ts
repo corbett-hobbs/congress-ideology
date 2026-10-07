@@ -1,6 +1,6 @@
 /**
  * Two-level site structure: verticals (Congress, Supreme Court, Presidency),
- * each with ordered sections (Congress: Ideology, Wealth). Every section lands
+ * each with ordered sections (Congress: Ideology, Wealth, Demographics). Every section lands
  * at `/<vertical>/<section>`; a bare `/<vertical>` redirects to the vertical's
  * default section.
  *
@@ -129,6 +129,13 @@ const DEFS: readonly BranchDef[] = [
         status: "live",
         blurb:
           "Estimated net worth for members of Congress, from their annual financial disclosures.",
+      },
+      {
+        id: "demographics",
+        label: "Demographics",
+        status: "live",
+        blurb:
+          "How old members of Congress are, how many are women, and how long they have served, since 1933.",
       },
     ],
   },

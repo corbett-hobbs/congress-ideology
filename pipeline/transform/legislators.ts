@@ -7,6 +7,10 @@ function birthYear(birthday: string | undefined): number | undefined {
   return Number.isInteger(y) ? y : undefined;
 }
 
+function fullBirthday(birthday: string | undefined): string | undefined {
+  return birthday && /^\d{4}-\d{2}-\d{2}$/.test(birthday) ? birthday : undefined;
+}
+
 /** Drop keys whose value is `undefined` so JSON output is stable and minimal. */
 function compact<T extends Record<string, unknown>>(obj: T): T {
   return Object.fromEntries(
@@ -30,6 +34,7 @@ export function buildLegislators(raw: readonly RawLegislator[]): Legislator[] {
         bioguide_id: L.id.bioguide,
         name,
         birth_year: birthYear(L.bio.birthday),
+        birthday: fullBirthday(L.bio.birthday),
         gender: L.bio.gender,
       });
     })

@@ -34,3 +34,9 @@ export const SEGMENT_LABEL_STYLE = {
   strokeLinejoin: "round",
   pointerEvents: "none",
 } as const;
+
+/** A share as a percent: one decimal below 10%, where whole numbers would hide the change. */
+export function fmtShare(v: number): string {
+  const p = v * 100;
+  return `${p < 10 ? (Math.round(p * 10) / 10).toString() : Math.round(p)}%`;
+}
