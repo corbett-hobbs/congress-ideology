@@ -114,7 +114,7 @@ export function RemovalsMap({
             viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
             role="img"
             aria-label={`Map of ICE removals by country of citizenship, FY${fy}. The ranked list and table carry the same figures.`}
-            className="mx-auto block h-auto max-h-[30rem] w-full"
+            className="mx-auto block h-auto max-h-[19.5rem] w-full"
             preserveAspectRatio="xMidYMid meet"
             style={{ touchAction: zoom.zoomed ? "none" : "pan-y", cursor: zoom.zoomed ? "grab" : undefined }}
             {...zoom.svgProps}
