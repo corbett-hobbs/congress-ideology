@@ -1,5 +1,6 @@
 "use client";
 
+import { SEGMENT_LABEL_STYLE, segmentLabelFits } from "@/lib/chart-bars";
 import { useId, useMemo, useRef, useState, type PointerEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { ChartFrame } from "@/components/charts/ChartFrame";
@@ -166,6 +167,19 @@ export function FirstPlaceCard() {
                       acc += hh;
                       return <rect key={s} x={x} y={baseY - acc} width={bw} height={hh} style={{ fill: slotColor(s), opacity: dim ? 0.3 : 1 }} />;
                     })}
+                    {!dim &&
+                      (() => {
+                        let a = 0;
+                        return y.topSlots.map((v, s) => {
+                          if (v <= 0) return null;
+                          const hh = v * k;
+                          a += hh;
+                          const t = formatAidMoney(v);
+                          return segmentLabelFits(hh, bw, t) ? (
+                            <text key={s} x={x + bw / 2} y={baseY - a + hh / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>{t}</text>
+                          ) : null;
+                        });
+                      })()}
                     {y.fy === year && <rect x={x - 1} y={baseY - h - 1} width={bw + 2} height={h + 1} rx={1} style={{ fill: "none", stroke: "var(--ink)", strokeWidth: 1.2 }} />}
                     {isPartial(y.fy) && <rect x={x} y={baseY - h} width={bw} height={h} fill={`url(#${hatchId})`} />}
                   </g>

@@ -1,5 +1,6 @@
 "use client";
 
+import { SEGMENT_LABEL_STYLE, segmentLabelFits } from "@/lib/chart-bars";
 import { useId, useMemo, useRef, useState, type PointerEvent } from "react";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ChartCard } from "@/components/charts/ChartCard";
@@ -187,6 +188,18 @@ export function TroopsFirstPlaceCard() {
                       acc += hh;
                       return <rect key={s} x={x} y={baseY - acc} width={bw} height={hh} style={{ fill: measure === 0 && s === 4 ? NO_SPLIT : branchColor(measure === 0 ? s : measure - 1) }} />;
                     })}
+                    {(() => {
+                      let a = 0;
+                      return segs.map((v, s) => {
+                        if (v <= 0) return null;
+                        const hh = v * k;
+                        a += hh;
+                        const t = formatCountCompact(v);
+                        return segmentLabelFits(hh, bw, t) ? (
+                          <text key={s} x={x + bw / 2} y={baseY - a + hh / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>{t}</text>
+                        ) : null;
+                      });
+                    })()}
                     {allYears[y.yi].fy === allYears[yi].fy && <rect x={x - 1} y={baseY - h - 1} width={bw + 2} height={h + 1} rx={1} style={{ fill: "none", stroke: "var(--ink)", strokeWidth: 1.2 }} />}
                     {partial(i) && <rect x={x} y={baseY - h} width={bw} height={h} fill={`url(#${hatchId})`} />}
                   </g>
