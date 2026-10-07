@@ -7,7 +7,8 @@ import { Axis } from "./Axis";
 import { Tooltip, useStickyTooltip } from "./Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
-import { SEGMENT_LABEL_STYLE, Y_GUTTER, segmentLabelFits } from "@/lib/chart-bars";
+import { Y_GUTTER } from "@/lib/chart-bars";
+import { SegmentLabel } from "./SegmentLabel";
 
 export interface StackSeries {
   id: string;
@@ -198,11 +199,7 @@ export function StackedBars<C extends StackColumn>({
                         const h = y(a / denom) - y0;
                         a += v;
                         const t = eff === "share" ? `${Math.round((v / denom) * 100)}%` : String(v);
-                        return segmentLabelFits(h, barW, t) ? (
-                          <text key={s.id} x={x + barW / 2} y={y0 + h / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>
-                            {t}
-                          </text>
-                        ) : null;
+                        return <SegmentLabel key={s.id} x={x + barW / 2} y={y0 + h / 2} h={h} w={barW} text={t} />;
                       });
                     })()}
                     {/* One full-height hit target per column: hover, click, keyboard. */}

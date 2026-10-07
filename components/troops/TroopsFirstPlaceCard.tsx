@@ -1,6 +1,6 @@
 "use client";
 
-import { SEGMENT_LABEL_STYLE, segmentLabelFits } from "@/lib/chart-bars";
+import { SegmentLabel } from "@/components/charts/SegmentLabel";
 import { useId, useMemo, useRef, useState, type PointerEvent } from "react";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ChartCard } from "@/components/charts/ChartCard";
@@ -195,9 +195,7 @@ export function TroopsFirstPlaceCard() {
                         const hh = v * k;
                         a += hh;
                         const t = formatCountCompact(v);
-                        return segmentLabelFits(hh, bw, t) ? (
-                          <text key={s} x={x + bw / 2} y={baseY - a + hh / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>{t}</text>
-                        ) : null;
+                        return <SegmentLabel key={s} x={x + bw / 2} y={baseY - a + hh / 2} h={hh} w={bw} text={t} />;
                       });
                     })()}
                     {allYears[y.yi].fy === allYears[yi].fy && <rect x={x - 1} y={baseY - h - 1} width={bw + 2} height={h + 1} rx={1} style={{ fill: "none", stroke: "var(--ink)", strokeWidth: 1.2 }} />}

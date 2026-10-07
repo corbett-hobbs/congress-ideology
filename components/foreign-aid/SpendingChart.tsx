@@ -8,7 +8,8 @@ import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useStickyTooltip } from "@/components/charts/Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
-import { SEGMENT_LABEL_STYLE, segmentLabelFits, yGutter } from "@/lib/chart-bars";
+import { yGutter } from "@/lib/chart-bars";
+import { SegmentLabel } from "@/components/charts/SegmentLabel";
 import { administrationForTermLabel } from "./term-labels";
 import { SLOT_NAME, fiscalYearSpan, formatAidAxis, formatAidMoney, niceDollarTicks, type SpendingYear } from "@/lib/foreign-aid-derive";
 import { useAidState } from "./ForeignAidState";
@@ -152,11 +153,7 @@ export function SpendingChart({ rows }: { rows: SpendingYear[] }) {
                       const h = y(a) - y1;
                       a += v;
                       const t = formatAidMoney(v);
-                      return segmentLabelFits(h, bw, t) ? (
-                        <text key={k} x={x + bw / 2} y={y1 + h / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>
-                          {t}
-                        </text>
-                      ) : null;
+                      return <SegmentLabel key={k} x={x + bw / 2} y={y1 + h / 2} h={h} w={bw} text={t} />;
                     });
                   })()}
                 </g>

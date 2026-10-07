@@ -7,7 +7,8 @@ import { Axis } from "@/components/charts/Axis";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useStickyTooltip } from "@/components/charts/Tooltip";
 import { findExtremes } from "@/lib/chart-extremes";
-import { SEGMENT_LABEL_STYLE, segmentLabelFits, yGutter } from "@/lib/chart-bars";
+import { yGutter } from "@/lib/chart-bars";
+import { SegmentLabel } from "@/components/charts/SegmentLabel";
 import { useElementWidth } from "@/lib/use-element-width";
 import { REGIONS } from "@/lib/troops-regions";
 import { contingencyAt, formatCount, formatCountAxis, formatCountCompact, measureLabel, niceCountTicks, termOnDate, yearLabelEvery, type RegionStack } from "@/lib/troops-derive";
@@ -248,11 +249,7 @@ export function TroopsChart({ stacks }: { stacks: RegionStack[] }) {
                       const h = y(a) - y1;
                       a += v;
                       const t = formatCountCompact(v);
-                      return segmentLabelFits(h, bw, t) ? (
-                        <text key={k} x={x + bw / 2} y={y1 + h / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>
-                          {t}
-                        </text>
-                      ) : null;
+                      return <SegmentLabel key={k} x={x + bw / 2} y={y1 + h / 2} h={h} w={bw} text={t} />;
                     });
                   })()}
                 </g>
