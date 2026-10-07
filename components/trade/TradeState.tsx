@@ -53,6 +53,13 @@ export function TradeStateProvider({ lastYear, children }: { lastYear: number; c
   const raf = useRef(0);
 
   useEffect(() => () => cancelAnimationFrame(raf.current), []);
+  // The partners chart's year follows the window's last year (the slider's right handle).
+  const windowEnd = range ? range[1] : lastYear;
+  const [seenEnd, setSeenEnd] = useState(windowEnd);
+  if (seenEnd !== windowEnd) {
+    setSeenEnd(windowEnd);
+    setYearState(windowEnd);
+  }
 
   const actions = useMemo<TradeActions>(
     () => ({

@@ -61,7 +61,7 @@ export function TroopsStateProvider({ payload, children }: { payload: TroopsPayl
   const setRange = useCallback(
     (r: [number, number]) => {
       setRangeRaw(r);
-      setYiRaw((p) => (p < r[0] || p > r[1] ? r[1] : p));
+      setYiRaw(r[1]); // the map's year follows the window's last year
     },
     [],
   );

@@ -28,7 +28,7 @@ export function ImmigrationPageClient({ data, countries, worldMap }: { data: Imm
   const setFy = (f: number) => setFyRaw(Math.min(range[1], Math.max(range[0], f)));
   const setRange = (r: [number, number]) => {
     setRangeRaw(r);
-    if (fy < r[0] || fy > r[1]) setFyRaw(pickYear(r));
+    setFyRaw(pickYear(r)); // the country card's year follows the window's last year
   };
   return (
     <>

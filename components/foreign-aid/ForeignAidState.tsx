@@ -24,7 +24,7 @@ export interface AidState {
   sector: number;
   isPartial: (fy: number) => boolean;
   setYear: (fy: number) => void;
-  /** Set the shown window (the two-handle slider); the selected year is clamped into it. */
+  /** Set the shown window (the two-handle slider); the selected year jumps to its last year. */
   setRange: (r: [number, number]) => void;
   /** Select `ci`, or clear it when it is already selected. */
   toggleCountry: (ci: number) => void;
@@ -52,7 +52,7 @@ export function AidStateProvider({ payload, children }: { payload: AidPayload; c
   const setYear = useCallback((fy: number) => setYearRaw(Math.min(range[1], Math.max(range[0], fy))), [range]);
   const setRange = useCallback((r: [number, number]) => {
     setRangeRaw(r);
-    setYearRaw((y) => (y < r[0] || y > r[1] ? r[1] : y));
+    setYearRaw(r[1]); // the map's year follows the window's last year
   }, []);
   const toggleCountry = useCallback((ci: number) => setCountry((c) => (c === ci ? -1 : ci)), []);
   const partial = useMemo(() => new Set(payload.partialYears), [payload.partialYears]);
