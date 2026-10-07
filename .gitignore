@@ -56,3 +56,6 @@ pipeline/raw/_scratch/
 
 # Regenerable output of pipeline/financial_disclosures/scan_checkbox_form_v2.py
 pipeline/financial_disclosures/checkbox_scan_v2_results.json
+
+# Justia extracted lists are local-only until the terms question is settled
+/pipeline/preflight/scdb-landmarks/out/
