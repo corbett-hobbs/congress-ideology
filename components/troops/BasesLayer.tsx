@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, type MouseEvent } from "react";
+import { useMemo, type MouseEvent, type PointerEvent } from "react";
 import { clusterSites } from "@/lib/bases-derive";
 import { SITE_LABEL, SITE_ORDER, type BaseCluster, type BasesPayload } from "@/lib/bases-types";
 
@@ -31,11 +31,13 @@ export function BasesLayer({
   k,
   selIso,
   onPin,
+  onHover,
 }: {
   bases: BasesPayload;
   k: number;
   selIso: string | null;
   onPin: (e: MouseEvent<SVGGElement>, c: BaseCluster) => void;
+  onHover: (e: PointerEvent<SVGGElement>, c: BaseCluster | null) => void;
 }) {
   const r = BASE_R / Math.sqrt(k);
   const clusters = useMemo(() => clusterSites(bases, MERGE_RADII * r), [bases, r]);
@@ -48,7 +50,7 @@ export function BasesLayer({
         const t = one ? bases.sites[c.members[0]].t : 0;
         const rc = r * (one ? 1 : 1.55);
         return (
-          <g key={c.members[0]} className="dot" opacity={dim ? 0.22 : 1} style={{ cursor: "pointer", transition: "opacity .12s", stroke: "none" }} onClick={(e) => onPin(e, c)}>
+          <g key={c.members[0]} className="dot" opacity={dim ? 0.22 : 1} style={{ cursor: "pointer", transition: "opacity .12s", stroke: "none" }} onClick={(e) => onPin(e, c)} onPointerEnter={(e) => onHover(e, c)} onPointerMove={(e) => onHover(e, c)} onPointerLeave={(e) => onHover(e, null)}>
             {one ? (
               <BaseGlyph t={t} r={rc} cx={c.x} cy={c.y} />
             ) : (

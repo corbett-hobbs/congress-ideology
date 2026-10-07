@@ -58,6 +58,7 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
   const tip = useTooltip<Hit>();
   const [showBases, setShowBases] = useState(false);
   const basePin = usePinnedTooltip<BaseHit>();
+  const baseHover = useTooltip<BaseHit>();
   const svgRef = useRef<SVGSVGElement>(null);
   const zoom = useZoomPan({ svgRef, extent: 1, maxK: MAX_ZOOM, getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null, onViewChange: () => {
       tip.hide();
@@ -105,7 +106,7 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
     places.forEach((pl, i) => pl.iso3 && m.set(pl.iso3, i));
     return m;
   }, [places]);
-  const pinBase = (e: MouseEvent<SVGGElement>, c: BaseCluster) => {
+  const baseHit = (c: BaseCluster): BaseHit => {
     const sites = c.members.map((i) => bases.sites[i]);
     const country = bases.countries[sites[0].c];
     const one = sites.length === 1;
@@ -115,8 +116,17 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
           ...sites.slice(0, 6).map((s) => `${s.name} · ${SITE_LABEL[SITE_ORDER[s.t]]}`),
           ...(sites.length > 6 ? [`and ${sites.length - 6} more (zoom in to split them)`] : []),
         ];
+    return { title: one ? sites[0].name : `${sites.length} installations`, country: country.name, iso3: country.iso3, lines, place: placeOfIso.get(country.iso3) ?? null };
+  };
+  const pinBase = (e: MouseEvent<SVGGElement>, c: BaseCluster) => {
     tip.hide();
-    basePin.show({ title: one ? sites[0].name : `${sites.length} installations`, country: country.name, iso3: country.iso3, lines, place: placeOfIso.get(country.iso3) ?? null }, e);
+    baseHover.hide();
+    basePin.show(baseHit(c), e);
+  };
+  /** A mouse hovering a dot shows its card; a pinned card wins, and touch only pins (on tap). */
+  const hoverBase = (e: PointerEvent<SVGGElement>, c: BaseCluster | null) => {
+    if (e.pointerType !== "mouse" || !c || basePin.state) return baseHover.hide();
+    baseHover.show(baseHit(c), e);
   };
 
   const hitFor = (el: Element | null): Hit | null => {
@@ -243,12 +253,13 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
                   />
                 );
               })}
-              {showBases && <BasesLayer bases={bases} k={k} selIso={selIso} onPin={pinBase} />}
+              {showBases && <BasesLayer bases={bases} k={k} selIso={selIso} onPin={pinBase} onHover={hoverBase} />}
               <MapCallouts svgRef={svgRef} entries={callouts} view={vb} />
             </svg>
             <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
           </div>
           <Tooltip state={tip.state}>{(h) => <MapTip hit={h} />}</Tooltip>
+          <Tooltip state={basePin.state ? null : baseHover.state}>{(h) => <BaseTip hit={h} through={bases.through} />}</Tooltip>
           <Tooltip
             state={basePin.state}
             onActivate={(h) => {
