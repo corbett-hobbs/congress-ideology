@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useMemo, useRef, type PointerEvent } from "react";
 import { MapCallouts } from "@/components/charts/MapCallouts";
-import { PillGroup } from "@/components/charts/PillGroup";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useZoomPan } from "@/components/charts/use-zoom-pan";
 import { ZoomControls } from "@/components/charts/ZoomControls";
@@ -18,7 +17,10 @@ export interface MapRow {
   removals: number;
 }
 
-type Region = "americas" | "world";
+export type Region = "americas" | "world";
+
+/** Mexico to Tierra del Fuego plus Cuba, Haiti and the Dominican Republic: the countries the Latin America view lists and frames. */
+export const LATIN_AMERICA = new Set(["MEX", "GTM", "BLZ", "HND", "SLV", "NIC", "CRI", "PAN", "CUB", "DOM", "HTI", "COL", "VEN", "GUY", "SUR", "GUF", "ECU", "PER", "BOL", "BRA", "PRY", "URY", "ARG", "CHL"]);
 /** Base viewBoxes in the world map's 1000 x 446 units. The default frames Latin America (Mexico to Tierra del Fuego), where almost all of the removals go. */
 const VIEW: Record<Region, [number, number, number, number]> = {
   americas: [160, 138, 270, 302],
@@ -47,20 +49,24 @@ export function RemovalsMap({
   country,
   onPick,
   fy,
+  region,
 }: {
   features: readonly MapFeature[];
   rows: readonly MapRow[];
   country: string | null;
   onPick: (key: string | null) => void;
   fy: number;
+  region: Region;
 }) {
-  const [region, setRegion] = useState<Region>("americas");
   const tip = useTooltip<{ title: string; removals: number | null }>();
   const svgRef = useRef<SVGSVGElement>(null);
   const zoom = useZoomPan({ svgRef, extent: 1, maxK: 8, getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null, onViewChange: tip.hide });
   const { k, cx, cy } = zoom.view;
   const [bx, by, bw, bh] = VIEW[region];
   const vb = { x: bx + ((cx + 1) / 2) * bw - bw / (2 * k), y: by + ((1 - cy) / 2) * bh - bh / (2 * k), w: bw / k, h: bh / k };
+  // Switching region re-frames the map from full view.
+  const resetZoom = zoom.reset;
+  useEffect(() => resetZoom(), [region]); // eslint-disable-line react-hooks/exhaustive-deps
   const callouts = useMemo(() => [...rows].sort((a, b) => b.removals - a.removals).slice(0, 3).map((r) => ({ key: r.key, text: `${r.name} ${n(r.removals)}` })), [rows]);
   const byKey = useMemo(() => new Map(rows.map((r) => [r.key, r])), [rows]);
   const drawn = useMemo(() => new Set(features.map((f) => f.key)), [features]);
@@ -94,18 +100,6 @@ export function RemovalsMap({
             </span>
           ))}
         </div>
-        <PillGroup<Region>
-          ariaLabel="Map region"
-          value={region}
-          onChange={(r) => {
-            setRegion(r);
-            zoom.reset();
-          }}
-          options={[
-            { value: "americas", label: "Latin America" },
-            { value: "world", label: "World" },
-          ]}
-        />
       </div>
       <div className="relative mt-2 flex flex-1 items-center justify-center">
         <div className="relative w-full">

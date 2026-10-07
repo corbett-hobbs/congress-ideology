@@ -12,7 +12,8 @@ import {
 } from "@/lib/removals-country-derive";
 import type { RemovalsCountryPayload } from "@/lib/removals-country-types";
 import { MethodologyNote } from "@/components/MethodologyNote";
-import { RemovalsMap, undrawnRemovals } from "./RemovalsMap";
+import { PillGroup } from "@/components/charts/PillGroup";
+import { LATIN_AMERICA, RemovalsMap, undrawnRemovals, type Region } from "./RemovalsMap";
 
 const n = (v: number) => v.toLocaleString("en-US");
 const dateLabel = (iso: string) =>
@@ -42,6 +43,7 @@ export function RemovalsCountryCard({
 }) {
   const coverage = coverageLabel(payload);
 
+  const [region, setRegion] = useState<Region>("americas");
   const [country, setCountry] = useState<string | null>(null);
 
   const year = payload.years.find((y) => y.fy === fy);
@@ -50,6 +52,20 @@ export function RemovalsCountryCard({
 
   const title = "Who gets removed";
   const picker = <YearPicker value={fy} range={range} onChange={onFy} format={(v) => `FY${v}`} ariaLabel="Fiscal year shown" />;
+  const regionToggle = (
+    <PillGroup<Region>
+      ariaLabel="Region shown on the map and list"
+      value={region}
+      onChange={(r) => {
+        setRegion(r);
+        setCountry(null);
+      }}
+      options={[
+        { value: "americas", label: "Latin America" },
+        { value: "world", label: "World" },
+      ]}
+    />
+  );
 
   if (!year) {
     return (
@@ -62,10 +78,12 @@ export function RemovalsCountryCard({
     );
   }
 
-  const selectedRow = country === null ? undefined : ranked.find((r) => names[r.ci].key === country);
+  // The region toggle governs the list as well as the map: Latin America lists only its countries, ranked among themselves.
+  const listed = (region === "americas" ? ranked.filter((r) => LATIN_AMERICA.has(names[r.ci].key)) : ranked).map((r, i) => ({ ...r, rank: i + 1 }));
+  const selectedRow = country === null ? undefined : listed.find((r) => names[r.ci].key === country);
   const selectedName = country === null ? null : (names.find((c) => c.key === country)?.name ?? country);
-  const scaleMax = Math.max(1, ...ranked.map((r) => r.removals));
-  const rows: StackedRowData[] = ranked.map((r) => {
+  const scaleMax = Math.max(1, ...listed.map((r) => r.removals));
+  const rows: StackedRowData[] = listed.map((r) => {
     const c = names[r.ci];
     return {
       id: c.key,
@@ -93,7 +111,7 @@ export function RemovalsCountryCard({
               {selectedRow ? `${selectedName} · No. ${selectedRow.rank} · ${n(selectedRow.removals)}` : `${selectedName} · no removals in FY${fy}`}
             </span>
           )}
-          {picker}
+          <div className="flex flex-nowrap items-center gap-2">{picker}{regionToggle}</div>
         </div>
       }
     >
@@ -104,13 +122,14 @@ export function RemovalsCountryCard({
           country={country}
           onPick={setCountry}
           fy={fy}
+          region={region}
         />
         <div className="flex min-w-0 flex-col">
       <div className="border-t border-line pt-1">
         <div
           className="max-h-[24rem] md:max-h-[27rem] overflow-y-auto overscroll-contain pr-0.5 touch-scroll"
           tabIndex={0}
-          aria-label={`Removals by country, FY${fy}, ${ranked.length} countries, scrollable`}
+          aria-label={`Removals by country, FY${fy}, ${listed.length} countries, scrollable`}
         >
           <StackedRows
             rows={rows}
