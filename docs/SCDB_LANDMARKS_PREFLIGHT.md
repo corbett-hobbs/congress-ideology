@@ -5,7 +5,7 @@ Session 0 was started on 2026-10-07 and stopped at the first step.
 ## Summary
 
 - **Access:** scripted requests to Justia get a Cloudflare challenge, which I did not circumvent. You downloaded the 26 topic pages in a normal browser and uploaded them, plus Miranda Rights separately (the first zip had 26 pages and no Miranda page, and the plan names 27 topics). Extraction used only those saved files.
-- **Terms: still not read by me.** `www.justia.com` is blocked from the sandbox. I cannot say what the terms allow, and I am not resolving that. You or I need to read https://www.justia.com/terms-of-service/ before the lists are published or committed. The extracted lists are local and gitignored. `docs/justia-permission-request.md` is drafted, not sent.
+- **Terms: read (from your saved copy).** They contain no permission for this use and bar unauthorized republication of "the materials provided on the Service" (§6); whether that reaches a citation list is ambiguous. See item 2. The extracted lists are local and gitignored. `docs/justia-permission-request.md` is drafted, not sent.
 - **Lists:** 1,260 topic memberships over 27 topics, 1,132 unique cases (937 from 1946 on, 195 earlier).
 - **Join:** 1,259 of 1,260 rows match SCDB. Of 1946+ rows (1,040), 1,039 match (99.9%). The one miss is *Goldwater v. Carter* (1979), a summary disposition that SCDB does not carry.
 - **Direction:** 99.0% of matched 1946+ rows are liberal or conservative (99.4% of unique cases).
@@ -27,9 +27,22 @@ Modern file: decisions run 1946–2026 (term 2025). `usCite` is blank for 533 ca
 
 ## Item 2 — Justia terms and access
 
-- **Done:** the access route (you saved the pages in a normal browser at human pace; no bot detection was touched) and the permission-request draft.
-- **Not done:** the terms read and `robots.txt`. They are unreachable from here, so there is no paragraph quoting what is allowed. This is an open question, not a settled one. Things to check in the terms: reproduction and republication of lists, automated access, and commercial versus non-commercial use. Citations and years are facts, but the *selection* of landmarks is Justia's curation, which is the part the terms may cover.
-- Sitemap exposure of topic membership (route d) was not checked, for the same reason.
+**Access.** You saved the topic pages and the terms page in a normal browser; nothing was scraped or fetched from Justia by script. The sandbox cannot read Justia itself. `robots.txt` has **not** been read (still missing).
+
+**Terms read (https://www.justia.com/terms-of-service/, "Last reviewed February 2026", supplied as a saved copy).** This is a plain-language read, not legal advice. The terms do not mention scraping, crawlers or robots, and they have no attribution or non-commercial licence. What they do say:
+
+- **§6, last paragraph:** "Any unauthorized reproduction, publication, further distribution or public exhibition of the materials provided on the Service, in whole or in part, is strictly prohibited." Taken at face value this covers republishing anything from the topic pages, including a list of case citations, without authorization.
+- **§12 (No Resale of Service):** "You agree not to reproduce, duplicate, copy, sell, trade, resell or exploit for any commercial purposes, any portion of the Service." The "commercial purposes" qualifier suggests non-commercial use is not what §12 targets, but §6 has no such qualifier.
+- **§18:** "you agree not to modify, rent, lease, loan, sell, distribute or create derivative works based on the Service or the Software, in whole or in part", and "You agree not to access the Service by any means other than through the interface that is provided by Justia." A list built from the topic pages could be read as a derivative work or distribution of part of the Service.
+- **§25:** "Without Justia's prior permission, you agree not to display or use in any manner, the Justia Marks." A plain-text credit naming Justia is probably different from using the logo, but the wording is broad.
+- **§18 and §29 (government documents):** "Justia claims no copyright in any works of the US Federal Government or US State Governments, including court documents, codes, and regulations", and copies go to Public.Resource.org "for use by users with no restrictions whatsoever." This frees the opinions themselves, not Justia's *selection* of which cases are landmarks or how they are grouped by topic.
+- **§6, usage rules and load:** no circumventing "usage rules embedded into the Service", and no actions that impose "an unreasonably or disproportionately large load". This matches the decision not to get around Cloudflare.
+
+**Ambiguity, not resolved here.** Case names and U.S. citations are facts. The question is whether the *list* (which cases, under which topic) is protected curation, and whether the ban on republishing "the materials provided on the Service" reaches it. The terms do not answer that either way, and nothing in them grants permission for this use. On a strict reading, reusing the lists publicly needs Justia's permission; on a narrow reading citations are facts and are fine. That is a legal judgment for the project owner, not something I should settle. **The terms do not give permission, so the safe path is to send the permission request.** Regrouping into nine categories does not remove the question, because the case selection is still Justia's.
+
+Sitemap exposure of topic membership (route d) was not checked.
+
+`docs/justia-permission-request.md` is drafted and unsent. After this read it also cites the relevant sections (§6, §12) and says we would credit Justia in plain text and not use its logo (§25).
 
 ## Item 3 — Extracted lists
 
@@ -196,10 +209,10 @@ Wikipedia sometimes cites a case by `date=` and a named-parameter template rathe
 | ≥95% of 1946+ landmarks match SCDB | **Pass**: 99.9% (1,039 of 1,040 rows) |
 | ≥85% of matched cases have liberal/conservative direction | **Pass**: 99.0% overall; Separation of Powers alone is 74% |
 | Access route that does not circumvent protections | **Pass**: you saved the pages in your own browser; nothing was scraped |
-| Terms permit citation lists with attribution and links, or permission received | **Open**: terms not read, permission not requested |
+| Terms permit citation lists with attribution and links, or permission received | **Not met**: terms read; they grant no permission and §6 bars unauthorized republication (ambiguous for a citation list); permission not yet requested |
 
 ## Recommendation
 
-**Go, on Justia lists plus SCDB, starting at 1946, conditional on the terms question.** The data side is strong: nearly every landmark joins and nearly every case has a direction. The only unresolved gate is Justia's terms. Before anything ships: read the terms, and if they are ambiguous, send the permission request. Until then the lists stay local and gitignored. If Justia says no, Wikipedia is a working but weaker fallback (item 9): about a third of the cases, doctrine-based sections, and a liberal tilt.
+**Go, on Justia lists plus SCDB, starting at 1946, conditional on the terms question.** The data side is strong: nearly every landmark joins and nearly every case has a direction. The only unresolved gate is Justia's terms, which are ambiguous and grant no permission. Before anything ships, send the permission request. Until then the lists stay local and gitignored. If Justia says no, Wikipedia is a working but weaker fallback (item 9): about a third of the cases, doctrine-based sections, and a liberal tilt.
 
 Product notes to carry forward: plot by SCDB `dateDecision`; check how six-digit issue codes should be labelled; show the "coding follows SCDB rules" note near the chart; treat Gun Rights and LGBTQ+ as thin and consider grouping them.

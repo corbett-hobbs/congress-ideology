@@ -11,6 +11,7 @@ We would like to show landmark decisions grouped by topic, and Justia's "Supreme
 
 - **What we would use:** each case's U.S. citation and decision year, and which Justia topic it is listed under. We may group your 27 topics into a smaller set of broader categories on our site. We would not copy Justia's summaries, author lines, or introductory text.
 - **Attribution:** each topic view would credit Justia and link to the matching Justia topic page and, where possible, the Justia page for each case.
+- **Terms:** we have read your Terms of Service and are writing because §6 (reproduction and publication of materials from the Service) and §12 could be read to cover this use. We would credit Justia in plain text with a link, and would not use the Justia name as a logo or mark (§25).
 - **Use:** non-commercial, free to the public, no advertising.
 - **Access:** we would not scrape. We saved the 27 topic index pages once, by hand in a normal browser, for analysis only. We will not republish anything until we hear from you, and we would not scrape or refresh automatically. If you prefer, we will delete our copies or use an export you provide.
 
