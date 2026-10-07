@@ -174,11 +174,20 @@ function projectedRings(feature: NeFeature, project: ReturnType<typeof geoNatura
   return rings;
 }
 
-export function buildWorldMap(geo: NeCollection, recipients: readonly AidRecipient[]): WorldMap {
-  const land = geo.features.filter((f) => f.properties.ADM0_A3 !== "ATA");
-  const projection = geoNaturalEarth1().fitWidth(MAP_WIDTH - 4, { type: "FeatureCollection", features: land } as GeoPermissibleObjects);
+/** The land drawn on the map: every Natural Earth feature but Antarctica. */
+export const mapLand = (geo: NeCollection): NeFeature[] => geo.features.filter((f) => f.properties.ADM0_A3 !== "ATA");
+
+/** The map's projection: Natural Earth, fitted to the land and nudged 2px in. Shared with `bases.ts` so points land on the outlines. */
+export function worldProjection(geo: NeCollection) {
+  const projection = geoNaturalEarth1().fitWidth(MAP_WIDTH - 4, { type: "FeatureCollection", features: mapLand(geo) } as GeoPermissibleObjects);
   const [tx, ty] = projection.translate();
   projection.translate([tx + 2, ty + 2]);
+  return projection;
+}
+
+export function buildWorldMap(geo: NeCollection, recipients: readonly AidRecipient[]): WorldMap {
+  const land = mapLand(geo);
+  const projection = worldProjection(geo);
   let height = 0;
 
   const byKey = new Map<string, { name: string; rings: Pt[][]; area: number; centroid: Pt | null; largest: Pt[] }>();

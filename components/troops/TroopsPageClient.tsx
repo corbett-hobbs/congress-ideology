@@ -2,6 +2,7 @@
 
 import { HowToRead } from "@/components/HowToRead";
 import { PageHeader } from "@/components/PageHeader";
+import type { BasesPayload } from "@/lib/bases-types";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
 import type { TroopsPayload } from "@/lib/troops-types";
 import { MapCard } from "./MapCard";
@@ -13,7 +14,7 @@ import { TroopsStateProvider } from "./TroopsState";
 const dateLabel = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
-export function TroopsPageClient({ payload, map }: { payload: TroopsPayload; map: WorldMapFile }) {
+export function TroopsPageClient({ payload, map, bases }: { payload: TroopsPayload; map: WorldMapFile; bases: BasesPayload }) {
   const first = payload.years[0];
   const last = payload.years[payload.years.length - 1];
   return (
@@ -51,14 +52,14 @@ export function TroopsPageClient({ payload, map }: { payload: TroopsPayload; map
 
         <TroopsChartCard />
 
-        <MapCard map={map} />
+        <MapCard map={map} bases={bases} />
 
         <TroopsFirstPlaceCard />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
           Source: U.S. Department of Defense, Defense Manpower Data Center (DMDC): location tables (September 30 tables from 2008, data through {dateLabel(payload.dataThrough)}) and 309A country tables (1996 and 1998–2005), public domain. 1953–2007
           otherwise from the troopdata compilation (Allen, Flynn and Martinez Machain 2022, <i>Conflict Management and Peace Science</i> 39(3); Kane 2005, Heritage Foundation), GPL-3.0. Space Force is counted with the Air Force (“Air &amp; Space Force”)
-          so the branch is comparable across September 2023. Each year is colored by the president in office on its snapshot date.
+          so the branch is comparable across September 2023. Known installations (optional map layer): David Vine’s lists of U.S. bases abroad as compiled in the troopdata package (Flynn), GPL-3.0, one snapshot through {bases.through}. Each year is colored by the president in office on its snapshot date.
         </p>
       </main>
     </TroopsStateProvider>

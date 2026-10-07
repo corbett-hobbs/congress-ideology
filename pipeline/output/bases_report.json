@@ -1,0 +1,364 @@
+{
+  "source": "troopdata basedata (Vine)",
+  "data_through": 2018,
+  "source_rows": 414,
+  "rows": 404,
+  "needs_review": 2,
+  "by_country": {
+    "Germany": 44,
+    "Japan": 42,
+    "South Korea": 30,
+    "Puerto Rico": 18,
+    "United Kingdom": 16,
+    "Italy": 14,
+    "Afghanistan": 9,
+    "Honduras": 9,
+    "Kuwait": 9,
+    "Saudi Arabia": 9,
+    "Belize": 8,
+    "Guatemala": 7,
+    "Syria": 7,
+    "Belgium": 6,
+    "Marshall Islands": 6,
+    "Netherlands": 6,
+    "Oman": 6,
+    "Pakistan": 6,
+    "Panama": 6,
+    "Philippines": 6,
+    "Turkey": 6,
+    "Colombia": 5,
+    "Costa Rica": 5,
+    "El Salvador": 5,
+    "Israel": 5,
+    "Peru": 5,
+    "Qatar": 5,
+    "Romania": 5,
+    "Australia": 4,
+    "Bahrain": 4,
+    "Bulgaria": 4,
+    "Iraq": 4,
+    "Northern Mariana Islands": 4,
+    "Guam": 3,
+    "Kenya": 3,
+    "United Arab Emirates": 3,
+    "Cameroon": 2,
+    "Canada": 2,
+    "Central African Republic": 2,
+    "Djibouti": 2,
+    "Greece": 2,
+    "Iceland": 2,
+    "Jordan": 2,
+    "Niger": 2,
+    "Norway": 2,
+    "Poland": 2,
+    "Singapore": 2,
+    "Somalia": 2,
+    "Spain": 2,
+    "U.S. Virgin Islands": 2,
+    "Uganda": 2,
+    "American Samoa": 1,
+    "Argentina": 1,
+    "Aruba": 1,
+    "Ascension Island": 1,
+    "Botswana": 1,
+    "British Indian Ocean Territory": 1,
+    "Burkina Faso": 1,
+    "Burundi": 1,
+    "Cambodia": 1,
+    "Chad": 1,
+    "Chile": 1,
+    "Cuba": 1,
+    "Democratic Republic of the Congo": 1,
+    "Denmark": 1,
+    "Dominican Republic": 1,
+    "Ecuador": 1,
+    "Egypt": 1,
+    "Ethiopia": 1,
+    "Gabon": 1,
+    "Georgia": 1,
+    "Ghana": 1,
+    "Greenland": 1,
+    "Hong Kong": 1,
+    "Hungary": 1,
+    "Ireland": 1,
+    "Johnston Atoll": 1,
+    "Kosovo": 1,
+    "Liberia": 1,
+    "Libya": 1,
+    "Mauritania": 1,
+    "Netherlands Antilles": 1,
+    "Portugal": 1,
+    "Senegal": 1,
+    "Seychelles": 1,
+    "South Sudan": 1,
+    "Thailand": 1,
+    "The Bahamas": 1,
+    "Tunisia": 1,
+    "Uruguay": 1,
+    "Wake Island": 1
+  },
+  "by_site_type": {
+    "base": 252,
+    "lilypad": 107,
+    "funded_site": 45
+  },
+  "both_flags_rows": [
+    "Peru: IMF Santa Rosa, Iquitos"
+  ],
+  "excluded": [
+    {
+      "name": "McMurdo Station",
+      "country": "Antarctica",
+      "reason": "Antarctica is not drawn on the map"
+    },
+    {
+      "name": "Douala",
+      "country": "Cameroon",
+      "reason": "no coordinates in the source"
+    },
+    {
+      "name": "Site 54",
+      "country": "Israel",
+      "reason": "no coordinates in the source"
+    },
+    {
+      "name": "Naval Support Activity Naples",
+      "country": "Italy",
+      "reason": "exact duplicate row (same country, name and coordinates)"
+    },
+    {
+      "name": "Pochon",
+      "country": "South Korea",
+      "reason": "exact duplicate row (same country, name and coordinates)"
+    },
+    {
+      "name": "Yongpyong",
+      "country": "Korea, South",
+      "reason": "no coordinates in the source"
+    },
+    {
+      "name": "Mount Pirata, Vieques",
+      "country": "Puerto Rico",
+      "reason": "no coordinates in the source"
+    },
+    {
+      "name": "Sabt",
+      "country": "Syria",
+      "reason": "no coordinates in the source"
+    },
+    {
+      "name": "Ushariya",
+      "country": "Syria",
+      "reason": "no coordinates in the source"
+    },
+    {
+      "name": "Ayn Dadad",
+      "country": "Syria",
+      "reason": "no coordinates in the source"
+    }
+  ],
+  "iso_overrides": [
+    {
+      "country": "American Samoa",
+      "source_iso3": "USA",
+      "iso3": "ASM"
+    },
+    {
+      "country": "Aruba",
+      "source_iso3": "NLD",
+      "iso3": "ABW"
+    },
+    {
+      "country": "Ascension Island",
+      "source_iso3": "GBR",
+      "iso3": "SHN"
+    },
+    {
+      "country": "BR Indian Ocean Territory",
+      "source_iso3": "GBR",
+      "iso3": "IOT"
+    },
+    {
+      "country": "Congo, Democratic Republic",
+      "source_iso3": "COG",
+      "iso3": "COD"
+    },
+    {
+      "country": "Greenland",
+      "source_iso3": "DNK",
+      "iso3": "GRL"
+    },
+    {
+      "country": "Guam",
+      "source_iso3": "USA",
+      "iso3": "GUM"
+    },
+    {
+      "country": "Hong Kong",
+      "source_iso3": "CHN",
+      "iso3": "HKG"
+    },
+    {
+      "country": "Johnston Atoll",
+      "source_iso3": "USA",
+      "iso3": "UMI"
+    },
+    {
+      "country": "Kosovo",
+      "source_iso3": "KSV",
+      "iso3": "XKX"
+    },
+    {
+      "country": "Netherlands Antilles",
+      "source_iso3": "NLD",
+      "iso3": "CUW"
+    },
+    {
+      "country": "Northern Mariana Islands",
+      "source_iso3": "USA",
+      "iso3": "MNP"
+    },
+    {
+      "country": "Puerto Rico",
+      "source_iso3": "USA",
+      "iso3": "PRI"
+    },
+    {
+      "country": "Virgin Islands",
+      "source_iso3": "USA",
+      "iso3": "VIR"
+    },
+    {
+      "country": "Wake Island",
+      "source_iso3": "USA",
+      "iso3": "UMI"
+    }
+  ],
+  "iso_exceptions": {
+    "PRI": "U.S. territory (not a trade partner)",
+    "GUM": "U.S. territory",
+    "ASM": "U.S. territory",
+    "MNP": "U.S. territory",
+    "VIR": "U.S. territory",
+    "UMI": "U.S. Minor Outlying Islands (Johnston Atoll, Wake Island)"
+  },
+  "unmapped_iso3": [],
+  "troops_without_bases": [
+    "AGO",
+    "ALB",
+    "ARM",
+    "AUT",
+    "AZE",
+    "BEN",
+    "BGD",
+    "BIH",
+    "BOL",
+    "BRA",
+    "BRB",
+    "BRN",
+    "CHE",
+    "CHN",
+    "CIV",
+    "COG",
+    "CPV",
+    "CYP",
+    "CZE",
+    "DZA",
+    "EST",
+    "FIN",
+    "FJI",
+    "FRA",
+    "FSM",
+    "GIB",
+    "GIN",
+    "GMB",
+    "GUY",
+    "HRV",
+    "HTI",
+    "IDN",
+    "IND",
+    "JAM",
+    "KAZ",
+    "KGZ",
+    "LAO",
+    "LBN",
+    "LKA",
+    "LTU",
+    "LUX",
+    "LVA",
+    "MAR",
+    "MDA",
+    "MDG",
+    "MEX",
+    "MKD",
+    "MLI",
+    "MLT",
+    "MMR",
+    "MNE",
+    "MNG",
+    "MOZ",
+    "MUS",
+    "MWI",
+    "MYS",
+    "NAM",
+    "NGA",
+    "NIC",
+    "NPL",
+    "NZL",
+    "PLW",
+    "PNG",
+    "PRY",
+    "RUS",
+    "RWA",
+    "SLE",
+    "SRB",
+    "SUR",
+    "SVK",
+    "SVN",
+    "SWE",
+    "SWZ",
+    "TGO",
+    "TJK",
+    "TKM",
+    "TTO",
+    "TWN",
+    "TZA",
+    "UKR",
+    "UZB",
+    "VNM",
+    "WSM",
+    "YEM",
+    "ZAF",
+    "ZMB",
+    "ZWE"
+  ],
+  "bases_without_troops": [
+    "ABW",
+    "AFG",
+    "ASM",
+    "CUW",
+    "GUM",
+    "IRQ",
+    "LBY",
+    "MNP",
+    "PRI",
+    "SHN",
+    "SOM",
+    "SYC",
+    "SYR",
+    "VIR"
+  ],
+  "review": [
+    {
+      "base_id": "jpn-yokota-ab-tokyo",
+      "reason": "Plotted in central Tokyo, about 35 km from Yokota Air Base"
+    },
+    {
+      "base_id": "kor-camp-humphreys-richmond-taejon",
+      "reason": "Plotted at Daejeon, about 100 km from Camp Humphreys"
+    }
+  ],
+  "bytes": 99719,
+  "gzip_bytes": 18211,
+  "latest_troop_period": "2026-03"
+}

@@ -285,6 +285,13 @@ Geographical Area) are U.S. Department of Defense publications, public domain, e
 Methodology: `docs/TROOPS_METHODOLOGY.md` ("History"). The page must say 2006-07 are estimates and that earlier years are not like-for-like
 with DMDC's 2008+ tables (no afloat/unassigned rows before 1996).
 
+## Vine's base lists (via troopdata) — known overseas installations
+
+The optional "Known installations" layer on the national security page uses `basedata.csv` from the **troopdata** package (Michael Flynn, GPL-3.0, pinned commit beside
+the troop file), which packages David Vine's lists of U.S. military bases abroad (American University; "Lists of U.S. Military Bases Abroad, 1776-2020"). One
+undated snapshot, documented through 2018. The page must say it is a snapshot with no headcounts and that newer, classified and unacknowledged sites are missing.
+Methodology: `docs/TROOPS_METHODOLOGY.md` ("Bases"); defects: `docs/BASES_SOURCE_NOTES.md`.
+
 ## Supreme Court Database — decisions counts
 
 The Supreme Court decisions page counts orally argued cases by term, issue area and size of the majority from the Supreme Court Database (Washington University in St. Louis),

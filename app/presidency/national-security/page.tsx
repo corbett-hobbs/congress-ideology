@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { TroopsPageClient } from "@/components/troops/TroopsPageClient";
+import { getBasesPayload } from "@/lib/bases-data";
 import { getTroopsPayload, getTroopsWorldMap } from "@/lib/troops-data";
 import { site } from "@/lib/site";
 
@@ -17,5 +18,5 @@ export const metadata: Metadata = {
 };
 
 export default function NationalSecurityPage() {
-  return <TroopsPageClient payload={getTroopsPayload()} map={getTroopsWorldMap()} />;
+  return <TroopsPageClient payload={getTroopsPayload()} map={getTroopsWorldMap()} bases={getBasesPayload()} />;
 }

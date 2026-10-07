@@ -141,6 +141,26 @@ Sep 2008 onward is `troops_location.json`. Schemas: `lib/troops-entities.ts` (`h
 `pnpm exec tsx pipeline/transform/troops-history-run.ts`, review the diff. To rebuild the DMDC extract, download `M01.zip` and `M05.zip`
 from the DMDC page JSON (`groupName` of the historical reports), unzip, and run `node pipeline/reference/extract-309a.mjs <dir>`.
 
+## Bases (known installations)
+
+`pipeline/transform/bases.ts` (pure; schema `lib/bases-entities.ts`) and `bases-run.ts` turn troopdata's `basedata.csv` into `pipeline/output/bases.json` and
+`bases_report.json`. Source findings and every data defect: `docs/BASES_SOURCE_NOTES.md`.
+
+- **What it is.** David Vine's lists of U.S. bases abroad, as packaged in `troopdata` (Flynn): 414 rows, one **undated snapshot, "through 2018"**. No per-year
+  presence, no headcounts, no branch. It is not tied to the year slider and is labelled "Known installations (source through 2018)". It misses anything opened
+  after the source, classified or unacknowledged sites, and differs from the DoD Base Structure Report. Licence: GPL-3.0 (the package's `LICENSE.md` is beside the file);
+  the page credits Vine's lists and the troopdata package.
+- **Cleaning.** The file is Latin-1 (read as such). Ten names carry a raw tab with a glued-on country, removed. Country labels are mapped to the ISO3 the troop series and map
+  use (`COUNTRY_ISO`: Kosovo `KSV`->`XKX`, Greenland `DNK`->`GRL`, Diego Garcia `GBR`->`IOT`, Hong Kong `CHN`->`HKG`, Congo `COG`->`COD`, Ascension `SHN`, Aruba, Curacao,
+  and the U.S. territories, which the source codes `USA`). Territories are kept as their own places; ISO3 absent from `countries.json` are the territory exception table.
+- **Excluded, and listed in the report:** rows with no coordinates (7), Antarctica (no outline), one exact duplicate and one duplicate that appears only after the tab clean-up.
+  **Not drawn** (kept, `needs_review`): sites whose coordinates were checked and look wrong (Camp Humphreys "Richmond/Taejon" plots at Daejeon; "Yokota AB, Tokyo" plots in central Tokyo),
+  plus any site outside its country's bounding box +3 degrees.
+- **Site type.** `base` (major base) > `lilypad` (under 200 personnel or "other site") > `funded_site` (host-nation base funded by the U.S.); one source row carries two flags
+  and keeps the higher one.
+- **Page.** Optional layer on the host map, off by default; constant-size dots that merge within a country when they overlap and split on zoom; tap pins a card, the card
+  filters to the country. The Country filter dims other countries' sites, the Branch filter does not apply. 404 sites, ~18 KB gzipped, shipped inline.
+
 ## Parsing
 
 Headers are found by text: the cell reading `ACTIVE DUTY` locates the active-duty columns (up to the next group header)

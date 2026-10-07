@@ -1,20 +1,34 @@
 "use client";
 
-import { useMemo, useRef, type PointerEvent } from "react";
+import { useMemo, useRef, useState, type MouseEvent, type PointerEvent } from "react";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MapCallouts } from "@/components/charts/MapCallouts";
-import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import { Tooltip, usePinnedTooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useZoomPan } from "@/components/charts/use-zoom-pan";
 import { YearPicker } from "@/components/charts/YearPicker";
 import { ZoomControls } from "@/components/charts/ZoomControls";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
+import { SITE_LABEL, SITE_ORDER, type BaseCluster, type BasesPayload } from "@/lib/bases-types";
 import { BRANCH_NAMES, MAP_BINS, formatCount, measureLabel, periodView, type ContingencyNote } from "@/lib/troops-derive";
 import { regionLabel } from "@/lib/troops-regions";
 import { useTroopsState } from "./TroopsState";
+import { BASE_R, BaseGlyph, BasesLayer } from "./BasesLayer";
 import { RankedList } from "./RankedList";
 import { TD, TH, TableView, branchColor } from "./shared";
+
+const TH_PLAIN = TH.replace("sticky top-0 ", "");
+
+/** A pinned installation card: one site, or a group merged at this zoom. */
+interface BaseHit {
+  title: string;
+  country: string;
+  iso3: string;
+  lines: string[];
+  /** Troop-series place for the country, when it has one (the card then filters the page to it). */
+  place: number | null;
+}
 
 interface Hit {
   title: string;
@@ -38,12 +52,18 @@ const MAX_ZOOM = 8;
  * scrubbing) beside the ranked host list. The selected country is outlined and raised, the rest dimmed; small hosts
  * get a marker. Territories, afloat and unassigned, and hosts with no outline are stated under the map.
  */
-export function MapCard({ map }: { map: WorldMapFile }) {
+export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload }) {
   const { data, yi, pi, range, setYear, country, toggleCountry, measure } = useTroopsState();
   const { places, periods, years } = data.payload;
   const tip = useTooltip<Hit>();
+  const [showBases, setShowBases] = useState(false);
+  const basePin = usePinnedTooltip<BaseHit>();
   const svgRef = useRef<SVGSVGElement>(null);
-  const zoom = useZoomPan({ svgRef, extent: 1, maxK: MAX_ZOOM, getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null, onViewChange: tip.hide });
+  const zoom = useZoomPan({ svgRef, extent: 1, maxK: MAX_ZOOM, getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null, onViewChange: () => {
+      tip.hide();
+      basePin.hide();
+    },
+  });
   const { k, cx, cy } = zoom.view;
   const vb = { x: ((cx + 1) / 2) * map.width - map.width / (2 * k), y: ((1 - cy) / 2) * map.height - map.height / (2 * k), w: map.width / k, h: map.height / k };
 
@@ -79,6 +99,25 @@ export function MapCard({ map }: { map: WorldMapFile }) {
   const selIso = country >= 0 ? places[country].iso3 : null;
   const ordered = [...map.features.filter((f) => f.key !== selIso), ...map.features.filter((f) => f.key === selIso)];
   const fillOf = (h: Hit | undefined) => (!h ? LAND : h.suppressed ? NOT_REPORTED : h.value ? mix(base, MAP_BINS.mix[MAP_BINS.classOf(h.value) - 1]) : LAND);
+
+  const placeOfIso = useMemo(() => {
+    const m = new Map<string, number>();
+    places.forEach((pl, i) => pl.iso3 && m.set(pl.iso3, i));
+    return m;
+  }, [places]);
+  const pinBase = (e: MouseEvent<SVGGElement>, c: BaseCluster) => {
+    const sites = c.members.map((i) => bases.sites[i]);
+    const country = bases.countries[sites[0].c];
+    const one = sites.length === 1;
+    const lines = one
+      ? [SITE_LABEL[SITE_ORDER[sites[0].t]]]
+      : [
+          ...sites.slice(0, 6).map((s) => `${s.name} · ${SITE_LABEL[SITE_ORDER[s.t]]}`),
+          ...(sites.length > 6 ? [`and ${sites.length - 6} more (zoom in to split them)`] : []),
+        ];
+    tip.hide();
+    basePin.show({ title: one ? sites[0].name : `${sites.length} installations`, country: country.name, iso3: country.iso3, lines, place: placeOfIso.get(country.iso3) ?? null }, e);
+  };
 
   const hitFor = (el: Element | null): Hit | null => {
     const iso = el?.closest("[data-m]")?.getAttribute("data-m") ?? el?.closest("[data-k]")?.getAttribute("data-k");
@@ -132,6 +171,17 @@ export function MapCard({ map }: { map: WorldMapFile }) {
               {selRank ? `${places[country].name} · No. ${selRank.rank} · ${formatCount(selRank.value)}` : `${places[country].name} · ${view.suppressed.includes(country) ? "not reported" : "no troops reported"}`}
             </span>
           )}
+          <button
+            type="button"
+            aria-pressed={showBases}
+            onClick={() => {
+              setShowBases((v) => !v);
+              basePin.hide();
+            }}
+            className={`rounded-md border px-2 py-0.5 text-[0.75rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${showBases ? "border-line-strong bg-surface-raised text-ink" : "border-line text-ink-muted hover:text-ink"}`}
+          >
+            {showBases ? "✓ " : ""}Known installations (source through {bases.through})
+          </button>
           <YearPicker value={yi} range={range} onChange={setYear} format={(i) => `${years[i].fy}`} ariaLabel="Year shown on the map" />
         </div>
       }
@@ -192,11 +242,24 @@ export function MapCard({ map }: { map: WorldMapFile }) {
                   />
                 );
               })}
+              {showBases && <BasesLayer bases={bases} k={k} selIso={selIso} onPin={pinBase} />}
               <MapCallouts svgRef={svgRef} entries={callouts} view={vb} />
             </svg>
             <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
           </div>
           <Tooltip state={tip.state}>{(h) => <MapTip hit={h} />}</Tooltip>
+          <Tooltip
+            state={basePin.state}
+            onActivate={(h) => {
+              if (h.place != null) toggleCountry(h.place);
+              basePin.hide();
+            }}
+            activateHint={
+              basePin.state?.data.place == null ? undefined : places[country]?.iso3 === basePin.state.data.iso3 ? `Clear the ${basePin.state.data.country} filter →` : `Show ${basePin.state.data.country} in the charts above →`
+            }
+          >
+            {(h) => <BaseTip hit={h} through={bases.through} />}
+          </Tooltip>
 
           {!view.unavailable && (
           <div className={`mt-2 ${LEGEND_ROW}`}>
@@ -225,6 +288,25 @@ export function MapCard({ map }: { map: WorldMapFile }) {
               </span>
             )}
           </div>
+          )}
+          {showBases && (
+            <div className={`mt-1 ${LEGEND_ROW}`}>
+              {SITE_ORDER.map((id, t) => (
+                <span key={id} className={LEGEND_ITEM}>
+                  <svg width="12" height="12" aria-hidden>
+                    <BaseGlyph t={t} r={BASE_R * 1.1} cx={6} cy={6} />
+                  </svg>
+                  {SITE_LABEL[id]}
+                </span>
+              ))}
+              <span className={LEGEND_ITEM}>
+                <svg width="14" height="14" aria-hidden>
+                  <circle cx="7" cy="7" r="6" fill="var(--ink)" />
+                  <text x="7" y="7" textAnchor="middle" dominantBaseline="central" fontSize="8" fontWeight="700" fill="var(--surface)">3</text>
+                </svg>
+                Group of sites (zoom to split)
+              </span>
+            </div>
           )}
         </div>
         <RankedList view={view} />
@@ -255,6 +337,11 @@ export function MapCard({ map }: { map: WorldMapFile }) {
           Counts are active-duty personnel assigned to the place. Through 2017 they include deployed forces, so the years before and after 2018 are not like-for-like, and the table’s source changes at 1996 and 2008 (see the chart’s notes).
           {!p.afloatIncluded && " This year’s source has no afloat or unassigned rows."}
         </p>
+        <p>
+          <b className="font-semibold text-ink">Known installations ({bases.sites.length} sites in {bases.countries.length} places, source through {bases.through}):</b> one fixed list of known U.S. sites abroad, not tied to the year chosen above. A dot carries no headcount, so it says nothing about how many of a country’s
+          troops are there or whether the site is open today. Classified and unacknowledged sites are missing, as is anything opened after the source ended, and the list differs from the Defense Department’s own Base Structure Report. Dots that overlap merge into a numbered group and split as you zoom.
+          The Branch filter does not apply (the source has no branch), and a selected country brightens its own sites and dims the rest. {bases.sites.filter((x) => x.review).length} sites whose coordinates look wrong are listed in the table but not drawn. Locations: David Vine’s lists of U.S. bases abroad, as compiled in the troopdata package (Flynn), GPL-3.0.
+        </p>
       </MethodologyNote>
 
       <TableView caption={`Active-duty personnel by host country, ${when}`}>
@@ -284,8 +371,40 @@ export function MapCard({ map }: { map: WorldMapFile }) {
             </tr>
           ))}
         </tbody>
+        <tbody>
+          <tr>
+            <th className={`${TH_PLAIN} text-left`}>Known installation (source through {bases.through})</th>
+            <th className={TH_PLAIN}>Country</th>
+            <th className={TH_PLAIN}>Type</th>
+            <th className={TH_PLAIN}>On the map</th>
+          </tr>
+          {bases.sites.map((b, i) => (
+            <tr key={i}>
+              <td className={TD}>{b.name}</td>
+              <td className={TD}>{bases.countries[b.c].name}</td>
+              <td className={TD}>{SITE_LABEL[SITE_ORDER[b.t]]}</td>
+              <td className={TD}>{b.review ? `no (${b.review})` : "yes"}</td>
+            </tr>
+          ))}
+        </tbody>
       </TableView>
     </ChartCard>
+  );
+}
+
+function BaseTip({ hit, through }: { hit: BaseHit; through: number }) {
+  return (
+    <div>
+      <div style={{ fontWeight: 600 }}>{hit.title}</div>
+      <div className="tt-mono">
+        {hit.country} · known installation, source through {through}
+      </div>
+      {hit.lines.map((l, i) => (
+        <div key={i} className="tt-mono" style={{ marginTop: i === 0 ? 4 : 0 }}>
+          {l}
+        </div>
+      ))}
+    </div>
   );
 }
 
