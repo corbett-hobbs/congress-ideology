@@ -12,8 +12,8 @@
     },
     {
       "path": "pipeline/raw/congress-legislators/legislators-current.yaml",
-      "bytes": 1079984,
-      "sha256": "a4fde6aa9a67b210ea05b8671d88be0c40f5fe2162ed0c502d568294189429bb"
+      "bytes": 1081187,
+      "sha256": "bd32e62b1c89e9585e4ec49df5676563510e9435d779c061ff50139833f73a49"
     },
     {
       "path": "pipeline/raw/congress-legislators/legislators-historical.yaml",
@@ -34,8 +34,8 @@
   "capCongress": 119,
   "report": {
     "legislators": {
-      "total": 12768,
-      "withBirthYear": 12226
+      "total": 12770,
+      "withBirthYear": 12228
     },
     "crosswalk": {
       "entries": 12632,
@@ -45,9 +45,9 @@
       "voteviewIcpsrsUnresolvable": 3
     },
     "terms": {
-      "total": 51586,
+      "total": 51588,
       "byChamber": {
-        "house": 41548,
+        "house": 41550,
         "senate": 10038
       },
       "congressRange": [
@@ -68,7 +68,7 @@
       "unresolvableRowsDropped": 3
     },
     "join": {
-      "termsWithScore": 50752,
+      "termsWithScore": 50754,
       "termsMissingScore": 834,
       "termsMissingScoreReasons": {
         "before1901": 439,
@@ -117,7 +117,7 @@
         "Donna Christensen [C000380] C106 house VI",
         "Donna Christensen [C000380] C107 house VI"
       ],
-      "scoresWithoutTerm": 158
+      "scoresWithoutTerm": 156
     }
   },
   "committees": {
