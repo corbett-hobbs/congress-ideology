@@ -171,17 +171,18 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
               {selRank ? `${places[country].name} · No. ${selRank.rank} · ${formatCount(selRank.value)}` : `${places[country].name} · ${view.suppressed.includes(country) ? "not reported" : "no troops reported"}`}
             </span>
           )}
-          <button
-            type="button"
-            aria-pressed={showBases}
-            onClick={() => {
-              setShowBases((v) => !v);
-              basePin.hide();
-            }}
-            className={`rounded-md border px-2 py-0.5 text-[0.75rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${showBases ? "border-line-strong bg-surface-raised text-ink" : "border-line text-ink-muted hover:text-ink"}`}
-          >
-            {showBases ? "✓ " : ""}Known installations (source through {bases.through})
-          </button>
+          <label className="flex cursor-pointer items-center gap-1.5 text-[0.8rem] text-ink">
+            <input
+              type="checkbox"
+              checked={showBases}
+              onChange={(e) => {
+                setShowBases(e.target.checked);
+                basePin.hide();
+              }}
+              className="h-4 w-4 cursor-pointer accent-[var(--accent)]"
+            />
+            Show known installations (source through {bases.through})
+          </label>
           <YearPicker value={yi} range={range} onChange={setYear} format={(i) => `${years[i].fy}`} ariaLabel="Year shown on the map" />
         </div>
       }
