@@ -36,6 +36,8 @@ definition: `docs/DEMOGRAPHICS_PREFLIGHT.md`.
 - **Caucus, not party.** `terms.json` `caucus`: Democrats and Republicans (compound names such as "Democrat-Liberal" follow their
   party), everything else is "Other". Independents who caucus with a party are in that party. Age lines are Democrats and
   Republicans only; the women chart's third series is "Other women".
+- **One caucus override.** Jo Ann Emerson (`E000172`) is an Independent for the whole 105th in the source but was a Republican
+  apart from one year; she is counted as a Republican (`CAUCUS_OVERRIDE`), so no Congress has an "Other" woman.
 - **Gender.** The source is binary (M/F); every row in range has a value.
 - **Congresses served.** Distinct Congresses up to and including this one with any `terms.json` row for the person, either
   chamber, gaps included, delegate service included, counted back to the 1st Congress (so a member first elected in the 63rd is

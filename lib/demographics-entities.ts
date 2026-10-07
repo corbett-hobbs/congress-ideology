@@ -29,6 +29,12 @@ export const NON_VOTING_STATES: ReadonlySet<string> = new Set(["DC", "PR", "VI",
 export const LAST_TERRITORY_CONGRESS: Readonly<Record<string, number>> = { AK: 85, HI: 85 };
 export const NON_VOTING_MEMBER_CONGRESS: ReadonlySet<string> = new Set(["B001127@86"]);
 
+/**
+ * Caucus group overrides for one member-Congress. Jo Ann Emerson (E000172) is recorded as an Independent for the whole
+ * 105th Congress; she was a Republican apart from that single year, so she is counted as one.
+ */
+export const CAUCUS_OVERRIDE: Readonly<Record<string, "D" | "R">> = { "E000172@105": "R" };
+
 /** Tenure band cut-offs: First Congress (1), 2-5, 6-10, 11 or more. */
 export function tenureBand(served: number): 0 | 1 | 2 | 3 {
   return served <= 1 ? 0 : served <= 5 ? 1 : served <= 10 ? 2 : 3;

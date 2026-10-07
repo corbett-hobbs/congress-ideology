@@ -99,6 +99,9 @@ describe("the real data", () => {
   it("has one row per Congress in every view", () => {
     for (const v of Object.values(payload.views)) expect(v.map((r) => r.congress)).toEqual(Array.from({ length: n }, (_, i) => 73 + i));
   });
+  it("counts Jo Ann Emerson as a Republican in the 105th, so no Congress has an Other woman", () => {
+    for (const r of payload.views.both) expect(r.women.O).toBe(0);
+  });
   it("never has fewer seat-holders than seats: Senate 96/98/100, House 435", () => {
     for (const r of payload.views.senate) expect(r.seats, `Senate ${r.congress}`).toBeGreaterThanOrEqual(r.congress <= 85 ? 96 : r.congress === 86 ? 98 : 100);
     for (const r of payload.views.house) expect(r.seats, `House ${r.congress}`).toBeGreaterThanOrEqual(435);
