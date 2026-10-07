@@ -116,15 +116,35 @@ const DEFS: readonly BranchDef[] = [
     label: "Congress",
     defaultSection: "ideology",
     sections: [
-      { id: "ideology", label: "Ideology", status: "live" },
-      { id: "wealth", label: "Wealth", status: "live" },
+      {
+        id: "ideology",
+        label: "Ideology",
+        status: "live",
+        blurb:
+          "Every member of the House and Senate placed on a two-dimensional map from their roll-call votes.",
+      },
+      {
+        id: "wealth",
+        label: "Wealth",
+        status: "live",
+        blurb:
+          "Estimated net worth for members of Congress, from their annual financial disclosures.",
+      },
     ],
   },
   {
     id: "supreme-court",
     label: "Supreme Court",
     defaultSection: "ideology",
-    sections: [{ id: "ideology", label: "Ideology", status: "live" }],
+    sections: [
+      {
+        id: "ideology",
+        label: "Ideology",
+        status: "live",
+        blurb:
+          "Where each justice has sat since 1937 and how the Court\u2019s median has moved, term by term.",
+      },
+    ],
   },
 ];
 

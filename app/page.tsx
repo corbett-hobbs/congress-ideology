@@ -8,6 +8,7 @@ import { getExecutiveOrdersData } from "@/lib/executive-orders-data";
 import { HubEoChart } from "@/components/executive-orders/HubEoChart";
 import { HubCompass } from "@/components/HubCompass";
 import { CourtHubStrip } from "@/components/court/CourtHubStrip";
+import { HubSectionList } from "@/components/HubSectionList";
 import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
@@ -99,45 +100,10 @@ export default function Hub() {
               </p>
             </div>
           </div>
-          <ul className="flex flex-col divide-y divide-line self-start border-y border-line lg:w-full">
-            {presidency.sections.map((s) => (
-              <li key={s.id}>
-                {s.status === "live" ? (
-                  <Link
-                    href={s.href}
-                    className="group flex items-baseline justify-between gap-4 py-3 transition-colors"
-                  >
-                    <span className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-4">
-                      <span className="font-serif text-lg font-semibold tracking-tight group-hover:text-accent sm:w-44 sm:shrink-0">
-                        {s.label}
-                      </span>
-                      <span className="text-[0.9rem] leading-snug text-ink-muted">
-                        {s.blurb}
-                      </span>
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className="font-mono text-ink-faint transition-colors group-hover:text-accent"
-                    >
-                      →
-                    </span>
-                  </Link>
-                ) : (
-                  <div
-                    aria-disabled="true"
-                    className="flex items-baseline justify-between gap-4 py-3 text-ink-faint"
-                  >
-                    <span className="font-serif text-lg font-semibold">
-                      {s.label}
-                    </span>
-                    <span className="font-mono text-[0.68rem] uppercase tracking-[0.08em]">
-                      Soon
-                    </span>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+          <HubSectionList
+            sections={presidency.sections}
+            className="self-start lg:w-full"
+          />
         </section>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -210,27 +176,11 @@ export default function Hub() {
                 )}
 
                 {live && (
-                  <div className="mt-auto flex flex-wrap gap-2 pt-1">
-                    {b.sections.map((s) =>
-                      s.status === "live" ? (
-                        <Link
-                          key={s.id}
-                          href={s.href}
-                          className="rounded-md border border-line-strong px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-ink-muted transition-colors hover:border-accent hover:text-ink"
-                        >
-                          {s.label} →
-                        </Link>
-                      ) : (
-                        <span
-                          key={s.id}
-                          aria-disabled="true"
-                          className="rounded-md border border-line px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-[0.08em] text-ink-faint"
-                        >
-                          {s.label} · soon
-                        </span>
-                      ),
-                    )}
-                  </div>
+                  <HubSectionList
+                    sections={b.sections}
+                    stacked
+                    className="mt-auto"
+                  />
                 )}
               </section>
             );
