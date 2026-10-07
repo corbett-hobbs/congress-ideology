@@ -1,49 +1,39 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { PillGroup } from "@/components/charts/PillGroup";
-import { decadeCells, decadeInWindow, decadesOf, fmtInt, fmtPct, HEAT_MIN_CASES, heatMax, heatValue, type AreaRow } from "@/lib/decisions-derive";
-import { ALL_AREAS, BAND_COLORS } from "@/lib/decisions-types";
+import { useMemo } from "react";
+import { decadeCells, decadeInWindow, decadesOf, fmtInt, fmtPct, HEAT_MIN_CASES, heatCasesMax, heatMax, heatValue, type AreaRow } from "@/lib/decisions-derive";
+import { ALL_AREAS, BAND_COLORS, type AreaSortKey } from "@/lib/decisions-types";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 
-type Measure = "split" | "unanimous";
-const MEASURES: Record<Measure, { band: number; label: string; noun: string }> = {
-  split: { band: 4, label: "5–4 share", noun: "split 5–4" },
-  unanimous: { band: 0, label: "Unanimous share", noun: "were unanimous" },
+/** What a cell shows, picked by the card's one toggle: how many cases, how many split 5-4, or how many were unanimous. */
+const MEASURES: Record<AreaSortKey, { band: number | null; noun: string }> = {
+  n: { band: null, noun: "cases decided" },
+  f: { band: 4, noun: "split 5–4" },
+  u: { band: 0, noun: "were unanimous" },
 };
 
 /**
- * The companion to the issue-area rows: issue areas down the side (same order as the rows), decades across, each cell
- * shaded by the share of that area's cases that split 5–4 (or were unanimous). The rows show a whole window; this shows when. One solid colour
- * (the band's own), darker = higher, on a single scale for every cell so they compare. Cells with fewer than
+ * The companion to the issue-area rows: issue areas down the side (same order as the rows), decades across. The card's one
+ * toggle picks the measure for both charts: the case count (accent), the share that split 5–4, or the share that were
+ * unanimous (those two in their band's colour). The rows show a whole window; this shows when. Darker = higher, on one scale
+ * for every cell so they compare (case counts: "All issue areas" on its own scale, being several times any area). Cells with fewer than
  * `HEAT_MIN_CASES` cases are outlined, not shaded. A click picks the area for the whole page (the dropdown's value);
  * decades outside the years window fade; a picked area dims the other rows (a comparison chart highlights, rule 4).
  */
-export function DecadeHeatmap({ rows }: { rows: readonly AreaRow[] }) {
+export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; measure: AreaSortKey }) {
   const { data, range, area } = useDecisionsValues();
   const { setArea } = useDecisionsActions();
-  const [measure, setMeasure] = useState<Measure>("split");
   const { band, noun } = MEASURES[measure];
+  const counts = band === null;
   const decades = useMemo(() => decadesOf(data), [data]);
-  const top = useMemo(() => heatMax(data, band), [data, band]);
+  const top = useMemo(() => (band === null ? 0 : heatMax(data, band)), [data, band]);
   const grid = useMemo(() => rows.map((r) => ({ row: r, cells: decadeCells(data, r.index) })), [data, rows]);
-  const color = BAND_COLORS[band];
+  const color = band === null ? "var(--accent)" : BAND_COLORS[band];
 
   return (
     <div>
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <p className="m-0 text-[0.78rem] text-ink-muted">By decade, every year of data</p>
-        <PillGroup
-          ariaLabel="Heatmap measure"
-          value={measure}
-          onChange={setMeasure}
-          options={[
-            { value: "split", label: MEASURES.split.label },
-            { value: "unanimous", label: MEASURES.unanimous.label },
-          ]}
-        />
-      </div>
-      <div role="grid" aria-label={`Share of cases that ${noun}, by issue area and decade`} className="grid gap-px" style={{ gridTemplateColumns: `minmax(5.5rem,8.5rem) repeat(${decades.length}, minmax(0, 1fr))` }}>
+      <p className="m-0 mb-2 text-[0.78rem] text-ink-muted">By decade, every year of data</p>
+      <div role="grid" aria-label={`${counts ? "Cases decided" : `Share of cases that ${noun}`}, by issue area and decade`} className="grid gap-px" style={{ gridTemplateColumns: `minmax(5.5rem,8.5rem) repeat(${decades.length}, minmax(0, 1fr))` }}>
         <div role="row" className="contents">
           <span />
           {decades.map((dec) => (
@@ -68,13 +58,18 @@ export function DecadeHeatmap({ rows }: { rows: readonly AreaRow[] }) {
                 {row.label}
               </button>
               {cells.map((c) => {
-                const v = heatValue(c, band);
+                // Counts are exact, so no cell is too thin to shade; shares under HEAT_MIN_CASES cases are outlined instead.
+                const v = band === null ? (c.total > 0 ? c.total : null) : heatValue(c, band);
+                const thin = band !== null && v === null;
                 const inWin = decadeInWindow(c.decade, range);
-                const strength = v === null ? 0 : v / top;
+                const scale = band === null ? heatCasesMax(data, row.index) : top;
+                const strength = v === null ? 0 : v / scale;
                 const title =
                   c.total === 0
                     ? `${row.label}, ${c.decade}s: no cases`
-                    : `${row.label}, ${c.decade}s: ${fmtPct(c.bucket[band] / c.total)} ${noun} (${fmtInt(c.bucket[band])} of ${fmtInt(c.total)} cases)${v === null ? `. Fewer than ${HEAT_MIN_CASES} cases, so too few to shade.` : ""}`;
+                    : band === null
+                      ? `${row.label}, ${c.decade}s: ${fmtInt(c.total)} cases decided`
+                      : `${row.label}, ${c.decade}s: ${fmtPct(c.bucket[band] / c.total)} ${noun} (${fmtInt(c.bucket[band])} of ${fmtInt(c.total)} cases)${thin ? `. Fewer than ${HEAT_MIN_CASES} cases, so too few to shade.` : ""}`;
                 return (
                   <button
                     key={c.decade}
@@ -83,10 +78,10 @@ export function DecadeHeatmap({ rows }: { rows: readonly AreaRow[] }) {
                     onClick={select}
                     title={title}
                     aria-label={title}
-                    className={`h-[1.9rem] min-w-0 rounded-[3px] p-0 text-center font-mono text-[0.62rem] tabular-nums focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${inWin ? "" : "opacity-40"} ${v === null ? "border border-dashed border-line-strong bg-transparent text-ink-faint" : "border-0"}`}
+                    className={`h-[1.9rem] min-w-0 rounded-[3px] p-0 text-center font-mono text-[0.62rem] tabular-nums focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${inWin ? "" : "opacity-40"} ${thin || v === null ? "border border-dashed border-line-strong bg-transparent text-ink-faint" : "border-0"}`}
                     style={v === null ? undefined : { background: `color-mix(in oklab, ${color} ${Math.round(strength * 100)}%, var(--surface))`, color: strength > 0.5 ? "#fff" : "var(--ink)" }}
                   >
-                    {c.total === 0 ? "" : v === null ? "·" : Math.round(v * 100)}
+                    {c.total === 0 ? "" : v === null ? "·" : counts ? fmtInt(c.total) : Math.round(v * 100)}
                   </button>
                 );
               })}
@@ -96,12 +91,12 @@ export function DecadeHeatmap({ rows }: { rows: readonly AreaRow[] }) {
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.7rem] text-ink-muted">
         <span className="inline-flex items-center gap-1.5">
-          0%
+          0
           <i aria-hidden className="inline-block h-2.5 w-24 rounded-[2px]" style={{ background: `linear-gradient(to right, var(--surface), ${color})`, border: "1px solid var(--line)" }} />
-          {Math.round(top * 100)}%
+          {counts ? "busiest decade" : `${Math.round(top * 100)}%`}
         </span>
         <span>
-          Share of cases that {noun}. A dot (·) marks fewer than {HEAT_MIN_CASES} cases.
+          {counts ? "Cases decided; “All issue areas” is shaded on its own scale." : `Share of cases that ${noun}. A dot (·) marks fewer than ${HEAT_MIN_CASES} cases.`}
         </span>
       </div>
     </div>

@@ -8,6 +8,7 @@ import {
   decadeOf,
   decadesOf,
   HEAT_MIN_CASES,
+  heatCasesMax,
   heatMax,
   heatValue,
   areaRows,
@@ -233,6 +234,12 @@ describe("decade heatmap", () => {
       expect(Math.round(m * 10)).toBeCloseTo(m * 10, 8);
       for (const area of [ALL_AREAS, ...d.areas.map((_, i) => i)]) for (const c of decadeCells(d, area)) expect(heatValue(c, band) ?? 0).toBeLessThanOrEqual(m + 1e-9);
     }
+  });
+  it("case counts scale per row group: areas together, All on its own", () => {
+    const busiestArea = Math.max(...d.areas.flatMap((_, i) => decadeCells(d, i).map((c) => c.total)));
+    expect(heatCasesMax(d, 3)).toBe(busiestArea);
+    expect(heatCasesMax(d, ALL_AREAS)).toBe(Math.max(...decadeCells(d, ALL_AREAS).map((c) => c.total)));
+    expect(heatCasesMax(d, ALL_AREAS)).toBeGreaterThan(heatCasesMax(d, 3));
   });
   it("a decade is in the window when any of its terms is", () => {
     expect(decadeInWindow(1960, [1969, 1970])).toBe(true);
