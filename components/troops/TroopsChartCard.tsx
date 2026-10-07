@@ -12,7 +12,7 @@ import { RegionLegend, TD, TH, TableView } from "./shared";
 
 /** "How many troops are stationed abroad": the stacked-bar time series and everything that explains it. */
 export function TroopsChartCard() {
-  const { data, range, country, measure } = useTroopsState();
+  const { data, yi, range, country, measure } = useTroopsState();
   const { periods, years, places } = data.payload;
   const stacks = useMemo(() => stackByRegion(data, measure, range[0], range[1], country), [data, measure, range, country]);
   const [pick, setPick] = useState<string | null>(null);
@@ -24,8 +24,6 @@ export function TroopsChartCard() {
       return { ...s, regions, total: regions[k] };
     });
   }, [stacks, pick, country]);
-  // The lede is anchored to the window's last year (the slider's right handle), not to the selected bar.
-  const yi = range[1];
   const cur = stacks.find((s) => s.yi === yi);
   const change = changeVsPrior(data, measure, yi, country);
   const showing = [country >= 0 ? places[country].name : null, measure > 0 ? measureLabel(measure) : null].filter(Boolean);
