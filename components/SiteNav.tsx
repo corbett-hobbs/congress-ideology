@@ -118,16 +118,27 @@ export function SiteSectionNav() {
 }
 
 /**
- * The section pills. The row scrolls sideways when it doesn't fit (phones, and desktop widths where the tabs crowd it), so a fade and chevron on the right edge say
- * there is more while anything is cut off, and the active pill is scrolled into view on load.
+ * The section pills. The row scrolls sideways when it doesn't fit (phones, and desktop widths where the tabs crowd it). While pills are cut off on the
+ * right, a raised "+N ›" button over a fade names how many are hidden and scrolls the row on click; a "‹" button mirrors it once the row has been
+ * scrolled. The active pill is scrolled into view on load.
  */
 function ScrollRow({ label, children }: { label: string; children: ReactNode }) {
   const ref = useRef<HTMLElement>(null);
-  const [more, setMore] = useState(false);
+  const [hiddenRight, setHiddenRight] = useState(0);
+  const [canBack, setCanBack] = useState(false);
   const measure = useCallback(() => {
     const el = ref.current;
-    if (el) setMore(el.scrollWidth - el.clientWidth - el.scrollLeft > 4);
+    if (!el) return;
+    const edge = el.scrollLeft + el.clientWidth;
+    let n = 0;
+    for (const c of Array.from(el.children) as HTMLElement[]) {
+      if (c.offsetLeft + c.offsetWidth > edge + 4) n++;
+    }
+    setHiddenRight(n);
+    setCanBack(el.scrollLeft > 4);
   }, []);
+  const scrollBy = (dir: 1 | -1) =>
+    ref.current?.scrollBy({ left: dir * ref.current.clientWidth * 0.6, behavior: "smooth" });
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -138,6 +149,8 @@ function ScrollRow({ label, children }: { label: string; children: ReactNode }) 
     ro.observe(el);
     return () => ro.disconnect();
   }, [measure, children]);
+  const btn =
+    "flex h-7 items-center justify-center rounded-full border border-line bg-surface-raised font-mono text-[0.72rem] text-ink shadow-sm transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-accent md:bg-surface";
   return (
     <div className="relative order-3 min-w-0 basis-full md:order-none md:basis-auto md:self-center">
       <nav
@@ -148,12 +161,23 @@ function ScrollRow({ label, children }: { label: string; children: ReactNode }) 
       >
         {children}
       </nav>
-      {more && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 flex w-12 items-center justify-end bg-gradient-to-l from-surface-raised from-40% to-transparent pr-2 font-mono text-[1.1rem] text-ink-muted md:from-surface"
-        >
-          ›
+      {canBack && (
+        <span className="pointer-events-none absolute inset-y-0 left-0 flex w-14 items-center bg-gradient-to-r from-surface-raised from-50% to-transparent pl-2 md:from-surface">
+          <button type="button" aria-label="Scroll sections back" onClick={() => scrollBy(-1)} className={`pointer-events-auto w-7 text-[1rem] ${btn}`}>
+            ‹
+          </button>
+        </span>
+      )}
+      {hiddenRight > 0 && (
+        <span className="pointer-events-none absolute inset-y-0 right-0 flex w-20 items-center justify-end bg-gradient-to-l from-surface-raised from-55% to-transparent pr-2 md:from-surface">
+          <button
+            type="button"
+            aria-label={`Show ${hiddenRight} more ${hiddenRight === 1 ? "section" : "sections"}`}
+            onClick={() => scrollBy(1)}
+            className={`pointer-events-auto gap-1 px-2.5 ${btn}`}
+          >
+            +{hiddenRight} <span aria-hidden className="text-[1rem] leading-none">›</span>
+          </button>
         </span>
       )}
     </div>
