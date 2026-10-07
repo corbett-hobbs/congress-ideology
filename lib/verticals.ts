@@ -1,6 +1,6 @@
 /**
  * Two-level site structure: verticals (Congress, Supreme Court, Presidency),
- * each with ordered sections (Congress: Ideology, Wealth, Demographics). Every section lands
+ * each with ordered sections (Congress: Ideology, Demographics, Wealth). Every section lands
  * at `/<vertical>/<section>`; a bare `/<vertical>` redirects to the vertical's
  * default section.
  *
@@ -124,18 +124,18 @@ const DEFS: readonly BranchDef[] = [
           "Every member of the House and Senate placed on a two-dimensional map from their roll-call votes.",
       },
       {
-        id: "wealth",
-        label: "Wealth",
-        status: "live",
-        blurb:
-          "Estimated net worth for members of Congress, from their annual financial disclosures.",
-      },
-      {
         id: "demographics",
         label: "Demographics",
         status: "live",
         blurb:
           "How old members of Congress are, how many are women, and how long they have served, since 1933.",
+      },
+      {
+        id: "wealth",
+        label: "Wealth",
+        status: "live",
+        blurb:
+          "Estimated net worth for members of Congress, from their annual financial disclosures.",
       },
     ],
   },
