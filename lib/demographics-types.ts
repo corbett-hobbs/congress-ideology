@@ -51,4 +51,5 @@ export interface DemographicsPayload {
   views: Record<ChamberView, DemoCongress[]>;
 }
 
-export const TENURE_LABELS = ["First Congress", "2–5", "6–10", "11 or more"] as const;
+/** Congresses served (1, 2-5, 6-10, 11+) as years in office at two years a Congress: up to 2, 3-10, 11-20, over 20. */
+export const TENURE_LABELS = ["Up to 2 years", "3–10 years", "11–20 years", "Over 20 years"] as const;

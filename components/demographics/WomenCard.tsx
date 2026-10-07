@@ -36,6 +36,8 @@ export function WomenCard({ rows, presidents, pin, onPin }: { rows: readonly Dem
     setModeRaw("count");
   };
   const by = presidentById(presidents);
+  // "Other women" is drawn (and listed) only when someone in the years shown is neither a Democrat nor a Republican.
+  const series = useMemo(() => (rows.some((r) => r.women.O > 0) ? SERIES : SERIES.filter((s) => s.k !== "O")), [rows]);
   const cols = useMemo<Col[]>(() => rows.map((r) => ({ key: String(r.congress), label: String(r.year), total: womenTotal(r), denom: r.seats, values: { ...r.women }, row: r })), [rows]);
   const segs = useMemo(() => termSegmentsFor(rows, presidents), [rows, presidents]);
   const cur = readoutRow(rows, pin);
@@ -63,7 +65,7 @@ export function WomenCard({ rows, presidents, pin, onPin }: { rows: readonly Dem
       <CongressReadout line={line} pinned={pin !== null && !!cur && cur.congress === pin} onClear={() => onPin(null)} />
       <StackedBars
         columns={cols}
-        series={SERIES}
+        series={series}
         mode={mode}
         highlight={hl}
         selectedKey={pin === null ? null : String(pin)}
@@ -79,7 +81,7 @@ export function WomenCard({ rows, presidents, pin, onPin }: { rows: readonly Dem
             <div>
               Women: {womenTotal(c.row)} of {c.row.seats} members ({fmtShare(womenTotal(c.row) / (c.row.seats || 1))})
             </div>
-            {SERIES.map((s) => (
+            {series.map((s) => (
               <div key={s.id}>
                 <Swatch color={s.fill} /> {s.label}: {c.row.women[s.k]}
               </div>
@@ -88,7 +90,7 @@ export function WomenCard({ rows, presidents, pin, onPin }: { rows: readonly Dem
         )}
       />
       <div className={`mt-2 ${LEGEND_ROW}`}>
-        {SERIES.map((s) => (
+        {series.map((s) => (
           <LegendToggle key={s.id} active={hl === s.id} dimmed={hl !== null && hl !== s.id} onClick={() => pick(s.id)}>
             <span className={LEGEND_ITEM}>
               <Swatch color={s.fill} />
