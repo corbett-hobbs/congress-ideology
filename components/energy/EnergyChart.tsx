@@ -244,7 +244,7 @@ function Examples({ panels, geo, view }: { panels: readonly Panel[]; geo: Geo; v
               return (
                 <g key={q.color + q.x}>
                   <circle cx={q.x} cy={y} r={3.5} fill={q.color} stroke="var(--surface)" strokeWidth={1.5} />
-                  <text x={cx} y={ty} textAnchor="middle" className="text-[11px] font-medium" style={{ ...EX_HALO, fill: q.color }}>{q.text}</text>
+                  <text x={cx} y={ty} textAnchor="middle" className="fill-ink text-[11px] font-medium" style={EX_HALO}>{q.text}</text>
                 </g>
               );
             })}

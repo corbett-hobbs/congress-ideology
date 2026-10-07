@@ -44,7 +44,7 @@ export function ExampleMarks({ marks, left, right, top, bottom, faded = false }:
         return (
           <g key={`${m.color}-${m.x}-${m.y}`}>
             <circle cx={m.x} cy={m.y} r={3.5} fill={m.color} stroke="var(--surface)" strokeWidth={1.5} />
-            <text x={cx} y={ty} textAnchor="middle" className="text-[11px] font-medium" style={{ ...HALO, fill: m.color }}>{m.text}</text>
+            <text x={cx} y={ty} textAnchor="middle" className="fill-ink text-[11px] font-medium" style={HALO}>{m.text}</text>
           </g>
         );
       })}
