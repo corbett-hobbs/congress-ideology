@@ -5,6 +5,7 @@ import { line } from "d3-shape";
 import { fmtMbd, isPreliminary, monthLabel, monthOfDay, monthlyAt, termAtDay } from "@/lib/energy-derive";
 import { monthStartDay, termLabel } from "@/lib/trade-chart";
 import type { EnergyPayload, MonthlyKey } from "@/lib/energy-types";
+import { LegendToggle, useIsolate } from "@/components/charts/LegendToggle";
 import { EnergyChart, type Panel } from "./EnergyChart";
 import { activeDay, useEnergyValues } from "./EnergyState";
 import { CommonKey, EnergyCardShell, Legend, LineKey, lastIndexOf, monthMidDay, monthPoints, MonthTable, prelimBand, scaleOver, statusText } from "./shared";
@@ -15,6 +16,7 @@ const LINES: { key: MonthlyKey; label: string; short: string; color: string }[] 
   { key: "supplied", label: "Products supplied (consumption proxy)", short: "Supplied", color: "var(--sector-ps)" },
 ];
 const KEYS: MonthlyKey[] = ["prod", "supplied"];
+const fmtShort = (v: number) => `${(v / 1000).toFixed(1)}M b/d`;
 const fmtTick = (v: number) => (v === 0 ? "0" : String(v / 1000));
 
 /**
@@ -23,6 +25,8 @@ const fmtTick = (v: number) => (v === 0 ? "0" : String(v / 1000));
  */
 export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; view: readonly [number, number] }) {
   const v = useEnergyValues();
+  const [only, isolate] = useIsolate<MonthlyKey>();
+  const shown = useMemo(() => LINES.filter((l) => !only || l.key === only), [only]);
   const m = payload.monthly;
   const era = useMemo(() => ({ span: payload.span, rec: payload.rec, terms: payload.terms, control: payload.control }), [payload]);
   const prelim = useMemo(() => prelimBand(payload, KEYS), [payload]);
@@ -30,7 +34,7 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
   const noFlags = useMemo(() => [], []);
 
   const panels = useMemo<Panel[]>(() => {
-    const vals = LINES.flatMap((l) => m[l.key].filter((_, i) => monthMidDay(i) >= view[0] && monthMidDay(i) < view[1]));
+    const vals = shown.flatMap((l) => m[l.key].filter((_, i) => monthMidDay(i) >= view[0] && monthMidDay(i) < view[1]));
     return [
       {
         id: "supply",
@@ -41,16 +45,17 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
         fmtTick,
         render: ({ X, Y }) => (
           <>
-            {LINES.map((l) => {
+            {shown.map((l) => {
               const gen = line<{ day: number; value: number | null }>().defined((p) => p.value !== null).x((p) => X(p.day)).y((p) => Y(p.value as number));
               return <path key={l.key} d={gen(monthPoints(m[l.key])) ?? ""} fill="none" stroke={l.color} strokeWidth={2} strokeLinejoin="round" />;
             })}
           </>
         ),
-        dotsAt: (day) => LINES.map((l) => ({ day: monthMidDay(monthOfDay(day)), value: monthlyAt(m[l.key], day), color: l.color })),
+        examples: shown.map((l) => ({ points: monthPoints(m[l.key]), color: l.color, label: (val, month) => `${month}: ${fmtShort(val)}` })),
+        dotsAt: (day) => shown.map((l) => ({ day: monthMidDay(monthOfDay(day)), value: monthlyAt(m[l.key], day), color: l.color })),
       },
     ];
-  }, [m, view]);
+  }, [m, view, shown]);
 
   const day = activeDay(v);
   const month = Math.min(day !== null ? monthOfDay(day) : last, last);
@@ -75,7 +80,7 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
           legend={
             <Legend>
               {LINES.map((l) => (
-                <span key={l.key} className="inline-flex items-center gap-1 whitespace-nowrap"><LineKey color={l.color} />{l.label}</span>
+                <LegendToggle key={l.key} active={only === l.key} dimmed={only !== null && only !== l.key} onClick={() => isolate(l.key)}><LineKey color={l.color} />{l.label}</LegendToggle>
               ))}
               <CommonKey prelim={prelim !== null} flags={false} />
             </Legend>
@@ -87,7 +92,7 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
             return (
               <div className="flex min-w-[11rem] flex-col gap-0.5 text-[0.78rem]">
                 <div className="opacity-75">{monthLabel(mo)}</div>
-                {LINES.map((l) => (
+                {shown.map((l) => (
                   <div key={l.key} className="flex items-center justify-between gap-3">
                     <span className="inline-flex items-center gap-1.5"><LineKey color={l.color} />{l.short}</span>
                     <span className="font-mono">{m[l.key][mo] == null ? "—" : fmtMbd(m[l.key][mo] as number)}</span>

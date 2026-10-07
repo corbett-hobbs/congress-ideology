@@ -4,6 +4,7 @@ import { yGutter } from "@/lib/chart-bars";
 import { memo, useMemo, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { ExampleMarks, pickExample } from "@/components/charts/ExampleMarks";
 import { ExtremeMarks, type ExtremeMark } from "@/components/charts/ExtremeMarks";
 import { findExtremes } from "@/lib/chart-extremes";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
@@ -47,6 +48,9 @@ const EST_CHAR_W = 6.4;
 /** Halo so annotation text stays legible where it crosses a line or recession band. */
 const HALO = { stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" } as const;
 
+/** The two lines of a comparison chart: the card's own series and the dashed one beside it. */
+export type LineId = "main" | "second";
+
 interface Props {
   data: EconomyData;
   spec: ChartSpec;
@@ -54,6 +58,8 @@ interface Props {
   showCong: boolean;
   /** Visible window `[start, end)` in axis days. */
   view: readonly [number, number];
+  /** The one line kept on the chart (legend click), or null for both. */
+  only?: LineId | null;
 }
 
 function termText(t: EconomyTerm, width: number, hero: boolean): string | null {
@@ -88,7 +94,7 @@ interface StaticProps extends Props {
 }
 
 /** Everything that doesn't change with the hovered date. Memoized so a hover frame doesn't rebuild 1,900-point paths nine times. */
-const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCong, view, W }: StaticProps) {
+const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCong, view, W, only = null }: StaticProps) {
   const { toggleRange } = useEconomyActions();
   const firstYear = dateOfDay(0).year;
   const lastYear = dateOfDay(data.span - 1).year;
@@ -171,13 +177,13 @@ const StaticLayer = memo(function StaticLayer({ data, spec, hero = false, showCo
 
               {(spec.kind === "line" || spec.kind === "income" || spec.kind === "debt") && (
                 <>
-                  {spec.key === "gas" && (
+                  {spec.key === "gas" && only !== "main" && (
                     <path d={lineGen(weeklyPoints(data.diesel)) ?? ""} fill="none" stroke="var(--ink-faint)" strokeWidth={2} strokeDasharray="4 3" strokeLinejoin="round" />
                   )}
-                  {spec.kind === "debt" && (
+                  {spec.kind === "debt" && only !== "main" && (
                     <path d={lineGen(quarterlyPoints(data.tot)) ?? ""} fill="none" stroke="var(--ink-faint)" strokeWidth={2} strokeDasharray="4 3" strokeLinejoin="round" />
                   )}
-                  <path d={lineGen(pts) ?? ""} fill="none" stroke="var(--ink)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+                  {only !== "second" && <path d={lineGen(pts) ?? ""} fill="none" stroke="var(--ink)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />}
                 </>
               )}
               {spec.kind === "income" &&
@@ -295,7 +301,7 @@ function markDate(kind: ChartSpec["kind"], day: number): string {
 }
 
 /** The chart's peak and low inside the visible window, drawn on the line. Fades while a date is hovered or pinned. */
-function Marks({ data, spec, hero, showCong, view, W }: { data: EconomyData; spec: ChartSpec; hero: boolean; showCong: boolean; view: readonly [number, number]; W: number }) {
+function Marks({ data, spec, hero, showCong, view, W, only = null }: { only?: LineId | null; data: EconomyData; spec: ChartSpec; hero: boolean; showCong: boolean; view: readonly [number, number]; W: number }) {
   const v = useEconomyValues();
   const { peak, low } = useMemo(() => {
     const pts = chartPoints(data, spec.key).filter((p) => p.day >= view[0] && p.day < view[1]);
@@ -307,9 +313,18 @@ function Marks({ data, spec, hero, showCong, view, W }: { data: EconomyData; spe
     const val = spec.kind === "jobs" ? Math.max(-JOBS_CAP, Math.min(JOBS_CAP, p.value)) : p.value;
     return [{ kind, x: g.X(p.day), y: g.Y(val), text: `${markDate(spec.kind, p.day)}: ${spec.kind === "jobs" && Math.abs(p.value) >= 1000 ? `${p.value > 0 ? "+" : "−"}${(Math.abs(p.value) / 1000).toFixed(1)}M` : spec.head(p.value)}` }];
   };
-  const marks = [...mark(peak, "peak"), ...mark(low, "low")];
-  if (marks.length === 0) return null;
-  return <ExtremeMarks marks={marks} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={activeDay(v) !== null || v.pin !== null} />;
+  const marks = only === "second" ? [] : [...mark(peak, "peak"), ...mark(low, "low")];
+  // The dashed comparison line (diesel on the gas chart, total debt on the held-debt chart) gets one example value.
+  const second = spec.key === "gas" ? weeklyPoints(data.diesel) : spec.kind === "debt" ? quarterlyPoints(data.tot) : null;
+  const ex = second && only !== "main" ? pickExample(second, view) : null;
+  const examples = ex && ex.value !== null ? [{ x: g.X(ex.day), y: g.Y(ex.value), text: `${markDate(spec.kind, ex.day)}: ${spec.head(ex.value)}`, color: "var(--ink-muted)", above: false }] : [];
+  const faded = activeDay(v) !== null || v.pin !== null;
+  return (
+    <>
+      {marks.length > 0 && <ExtremeMarks marks={marks} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={faded} />}
+      {examples.length > 0 && <ExampleMarks marks={examples} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={faded} />}
+    </>
+  );
 }
 
 const dotPos = (reading: Reading, spec: ChartSpec, g: ReturnType<typeof geometry>) => {
@@ -341,7 +356,7 @@ function Overlay({ W, hero, spec, view, showCong, reading }: { W: number; hero: 
   );
 }
 
-export function EconomyChart({ data, spec, hero = false, showCong, view, reading }: Props & { reading: Reading }) {
+export function EconomyChart({ data, spec, hero = false, showCong, view, reading, only = null }: Props & { reading: Reading }) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || (hero ? 1140 : 540);
   const g = geometry(W, hero, spec, view, showCong);
@@ -386,8 +401,8 @@ export function EconomyChart({ data, spec, hero = false, showCong, view, reading
       >
         {() => (
           <>
-            <StaticLayer data={data} spec={spec} hero={hero} showCong={showCong} view={view} W={W} />
-            <Marks data={data} spec={spec} hero={hero} showCong={showCong} view={view} W={W} />
+            <StaticLayer data={data} spec={spec} hero={hero} showCong={showCong} view={view} W={W} only={only} />
+            <Marks data={data} spec={spec} hero={hero} showCong={showCong} view={view} W={W} only={only} />
             <Overlay W={W} hero={hero} spec={spec} view={view} showCong={showCong} reading={reading} />
           </>
         )}

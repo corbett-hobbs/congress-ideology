@@ -3,6 +3,8 @@
 import { Y_GUTTER } from "@/lib/chart-bars";
 import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
+import { LegendToggle, useIsolate } from "@/components/charts/LegendToggle";
+import { ExampleMarks, aboveFlags, pickExample } from "@/components/charts/ExampleMarks";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
 import type {
@@ -62,6 +64,8 @@ export function SenatorTrajectoryChart({
   const first = trajectory[0]?.congress ?? 0;
   const lastPt = trajectory[trajectory.length - 1]?.congress ?? first;
   const single = trajectory.length === 1;
+  const [only, isolate] = useIsolate<"senator" | "mean" | "career">();
+  const show = (k: "senator" | "mean" | "career") => only === null || only === k;
 
   // Pad a single-point domain so the dot and reference line have room.
   const domainLo = single ? first - 1 : first;
@@ -117,6 +121,19 @@ export function SenatorTrajectoryChart({
           .x((d) => x(d.congress))
           .y((d) => y(d[meanKey] as number))(meanInRange);
 
+        // One example value on the senator's line and on the party mean, at the congress 3/4 of the way across.
+        const exView: [number, number] = [domainLo, domainHi + 1];
+        const exSrc = [
+          ...(show("senator") ? [{ pts: trajectory.map((d) => ({ day: d.congress, value: d.dim1 })), color: `var(--${group === "other" ? "oth" : group})` }] : []),
+          ...(meanLine && show("mean") ? [{ pts: meanInRange.map((d) => ({ day: d.congress, value: d[meanKey] })), color: "var(--ink-muted)" }] : []),
+        ];
+        const exPicks = exSrc.flatMap((e) => {
+          const p = pickExample(e.pts, exView);
+          return p && p.value !== null ? [{ day: p.day, value: p.value, color: e.color }] : [];
+        });
+        const exAbove = aboveFlags(exPicks);
+        const exMarks = exPicks.map((p, i) => ({ x: x(p.day), y: y(p.value), above: exAbove[i], color: p.color, text: `${congressStartYear(p.day)}: ${p.value.toFixed(2)}` }));
+
         return (
           <>
             <Axis
@@ -136,7 +153,7 @@ export function SenatorTrajectoryChart({
               format={(c) => String(congressStartYear(c))}
             />
 
-            {meanLine && (
+            {meanLine && show("mean") && (
               <path
                 className={`trend-line ${STROKE[meanKey]}`}
                 d={meanLine}
@@ -144,7 +161,7 @@ export function SenatorTrajectoryChart({
               />
             )}
 
-            {careerDim1 != null && (
+            {careerDim1 != null && show("career") && (
               <line
                 className="grid-line"
                 strokeDasharray="4 3"
@@ -155,10 +172,10 @@ export function SenatorTrajectoryChart({
               />
             )}
 
-            {senatorLine && (
+            {senatorLine && show("senator") && (
               <path className={`trend-line ${STROKE[group]}`} d={senatorLine} />
             )}
-            {trajectory.map((d) =>
+            {show("senator") && trajectory.map((d) =>
               d.dim1 == null ? null : (
                 <circle
                   key={d.congress}
@@ -170,23 +187,24 @@ export function SenatorTrajectoryChart({
               ),
             )}
 
+            {!single && <ExampleMarks marks={exMarks} left={0} right={innerWidth} top={0} bottom={innerHeight} />}
           </>
         );
       }}
     </ChartFrame>
 
     <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.72rem] text-ink-muted">
-      <span className="flex items-center gap-1.5">
+      <LegendToggle active={only === "senator"} dimmed={only !== null && only !== "senator"} onClick={() => isolate("senator")}>
         <Swatch color={GROUP_VAR[group]} /> {memberName}
-      </span>
-      <span className="flex items-center gap-1.5">
+      </LegendToggle>
+      <LegendToggle active={only === "mean"} dimmed={only !== null && only !== "mean"} onClick={() => isolate("mean")}>
         <Swatch color={GROUP_VAR[meanKey]} faint />{" "}
         {meanLabel}
-      </span>
+      </LegendToggle>
       {careerDim1 != null && (
-        <span className="flex items-center gap-1.5">
+        <LegendToggle active={only === "career"} dimmed={only !== null && only !== "career"} onClick={() => isolate("career")}>
           <Swatch color="var(--ink-faint)" dash /> Career average
-        </span>
+        </LegendToggle>
       )}
     </div>
    </div>

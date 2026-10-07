@@ -6,6 +6,7 @@ import { PillGroup } from "@/components/charts/PillGroup";
 import { flagsForCard, fmtMbd, isPreliminary, monthLabel, monthOfDay, monthlyAt, termAtDay } from "@/lib/energy-derive";
 import { monthStartDay, termLabel } from "@/lib/trade-chart";
 import type { EnergyPayload, MonthlyKey } from "@/lib/energy-types";
+import { LegendToggle, useIsolate } from "@/components/charts/LegendToggle";
 import { EnergyChart, type Panel } from "./EnergyChart";
 import { activeDay, useEnergyValues } from "./EnergyState";
 import { CommonKey, EnergyCardShell, FlagsTable, Legend, LineKey, lastIndexOf, monthMidDay, monthPoints, MonthTable, prelimBand, scaleOver, statusText } from "./shared";
@@ -33,6 +34,8 @@ export function OilTradeCard({ payload, view }: { payload: EnergyPayload; view: 
   const v = useEnergyValues();
   const m = payload.monthly;
   const [mode, setMode] = useState<Mode>("balance");
+  const [only, isolate] = useIsolate<MonthlyKey>();
+  const shown = useMemo(() => FLOWS.filter((l) => !only || l.key === only), [only]);
   const flags = useMemo(() => flagsForCard(payload.flags, "oil"), [payload.flags]);
   const era = useMemo(() => ({ span: payload.span, rec: payload.rec, terms: payload.terms, control: payload.control }), [payload]);
   const prelim = useMemo(() => prelimBand(payload, KEYS), [payload]);
@@ -64,20 +67,21 @@ export function OilTradeCard({ payload, view }: { payload: EnergyPayload; view: 
         caption: ["Million barrels per day, total petroleum (crude exports only is the dashed line)", "Million barrels per day, total petroleum", "Million barrels per day"],
         h: 240,
         hCompact: 190,
-        scale: scaleOver(FLOWS.flatMap((l) => inView(m[l.key])), 4, false),
+        scale: scaleOver(shown.flatMap((l) => inView(m[l.key])), 4, false),
         fmtTick,
         render: ({ X, Y }) => (
           <>
-            {FLOWS.map((l) => {
+            {shown.map((l) => {
               const gen = line<{ day: number; value: number | null }>().defined((p) => p.value !== null).x((p) => X(p.day)).y((p) => Y(p.value as number));
               return <path key={l.key} d={gen(monthPoints(m[l.key])) ?? ""} fill="none" stroke={l.color} strokeWidth={l.dash ? 1.4 : 2} strokeDasharray={l.dash ? "4 3" : undefined} strokeLinejoin="round" />;
             })}
           </>
         ),
-        dotsAt: (day) => FLOWS.map((l) => ({ day: monthMidDay(monthOfDay(day)), value: monthlyAt(m[l.key], day), color: l.color })),
+        examples: shown.map((l) => ({ points: monthPoints(m[l.key]), color: l.color, label: (val, month) => `${month}: ${(val / 1000).toFixed(1)}M` })),
+        dotsAt: (day) => shown.map((l) => ({ day: monthMidDay(monthOfDay(day)), value: monthlyAt(m[l.key], day), color: l.color })),
       },
     ];
-  }, [m, view, mode]);
+  }, [m, view, mode, shown]);
 
   const day = activeDay(v);
   const month = Math.min(day !== null ? monthOfDay(day) : last, last);
@@ -109,7 +113,7 @@ export function OilTradeCard({ payload, view }: { payload: EnergyPayload; view: 
                   <span className="inline-flex items-center gap-1 whitespace-nowrap"><LineKey color="var(--ink)" />Net imports (imports minus exports)</span>
                 ) : (
                   FLOWS.map((l) => (
-                    <span key={l.key} className="inline-flex items-center gap-1 whitespace-nowrap"><LineKey color={l.color} dash={l.dash} />{l.label}</span>
+                    <LegendToggle key={l.key} active={only === l.key} dimmed={only !== null && only !== l.key} onClick={() => isolate(l.key)}><LineKey color={l.color} dash={l.dash} />{l.label}</LegendToggle>
                   ))
                 )}
                 <CommonKey prelim={prelim !== null} flags />
@@ -119,7 +123,7 @@ export function OilTradeCard({ payload, view }: { payload: EnergyPayload; view: 
               const mo = Math.min(monthOfDay(d), last);
               if (mo < 0) return null;
               const t = termAtDay(payload.terms, monthStartDay(mo));
-              const rows = mode === "balance" ? [{ key: "net" as MonthlyKey, short: "Net imports", color: "var(--ink)", dash: false }] : FLOWS;
+              const rows = mode === "balance" ? [{ key: "net" as MonthlyKey, short: "Net imports", color: "var(--ink)", dash: false }] : shown;
               return (
                 <div className="flex min-w-[11rem] flex-col gap-0.5 text-[0.78rem]">
                   <div className="opacity-75">{monthLabel(mo)}</div>

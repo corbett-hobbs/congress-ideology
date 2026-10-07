@@ -4,6 +4,7 @@ import { yGutter } from "@/lib/chart-bars";
 import { memo, useEffect, useMemo, useState, type ReactNode, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { line } from "d3-shape";
 import { ChartFrame } from "@/components/charts/ChartFrame";
+import { ExampleMarks, pickExample } from "@/components/charts/ExampleMarks";
 import { ExtremeMarks, type ExtremeMark } from "@/components/charts/ExtremeMarks";
 import { findExtremes } from "@/lib/chart-extremes";
 import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
@@ -44,6 +45,8 @@ interface Props {
   showCong: boolean;
   view: readonly [number, number];
   ariaLabel: string;
+  /** Which one line stays on the chart (legend click), or null for both. */
+  only?: "main" | "reference" | null;
   /** Drawn directly under the chart. */
   legend?: ReactNode;
 }
@@ -87,7 +90,7 @@ interface StaticProps extends Props {
   onFlagLeave: () => void;
 }
 
-const StaticLayer = memo(function StaticLayer({ main, reference, scale, era, showCong, view, W, flagInputs, onFlag, onFlagLeave }: StaticProps) {
+const StaticLayer = memo(function StaticLayer({ main, reference, only = null, scale, era, showCong, view, W, flagInputs, onFlag, onFlagLeave }: StaticProps) {
   const { toggleRange } = useTradeActions();
   const [vs, ve] = view;
   const g = layout(W, view, scale, showCong, flagInputs, era);
@@ -140,8 +143,8 @@ const StaticLayer = memo(function StaticLayer({ main, reference, scale, era, sho
         </g>
       )}
       <g clipPath={`url(#${clipId})`}>
-        {reference && <path d={gen(pts(reference)) ?? ""} fill="none" stroke="var(--ink-faint)" strokeWidth={1.75} strokeLinejoin="round" />}
-        <path d={gen(pts(main)) ?? ""} fill="none" stroke="var(--ink)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+        {reference && only !== "main" && <path d={gen(pts(reference)) ?? ""} fill="none" stroke="var(--ink-faint)" strokeWidth={1.75} strokeLinejoin="round" />}
+        {only !== "reference" && <path d={gen(pts(main)) ?? ""} fill="none" stroke="var(--ink)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />}
       </g>
 
       <YearAxis view={view} X={X} left={ml} plotW={pw} axisY={axisY} />
@@ -191,7 +194,7 @@ const StaticLayer = memo(function StaticLayer({ main, reference, scale, era, sho
 });
 
 /** Peak and low of the duty rate inside the window. Fades while a date is hovered or pinned. */
-function Marks({ W, main, scale, view, showCong, flagInputs, era }: { W: number; main: Monthly; scale: Scale; view: readonly [number, number]; showCong: boolean; flagInputs: readonly FlagInput[]; era: Era }) {
+function Marks({ W, main, reference, only = null, scale, view, showCong, flagInputs, era }: { only?: "main" | "reference" | null; W: number; main: Monthly; reference: Monthly | null; scale: Scale; view: readonly [number, number]; showCong: boolean; flagInputs: readonly FlagInput[]; era: Era }) {
   const v = useTradeValues();
   const g = layout(W, view, scale, showCong, flagInputs, era);
   const marks = useMemo(() => {
@@ -205,8 +208,20 @@ function Marks({ W, main, scale, view, showCong, flagInputs, era }: { W: number;
     }
     return out;
   }, [main, view, g]);
-  if (marks.length === 0) return null;
-  return <ExtremeMarks marks={marks} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={activeDay(v) !== null} />;
+  // With a country selected, the faint all-countries line gets one example value.
+  const example = useMemo(() => {
+    const ex = reference && only !== "main" ? pickExample(reference.map((value, i) => ({ day: monthMidDay(i), value })), view) : null;
+    if (!ex || ex.value === null) return [];
+    const { year, month } = dateOfDay(ex.day);
+    return [{ x: g.X(ex.day), y: g.Y(ex.value), text: `${MONTH_ABBR[month]} ${year}: ${fmtPercent(ex.value)}`, color: "var(--ink-muted)", above: false }];
+  }, [reference, only, view, g]);
+  const faded = activeDay(v) !== null;
+  return (
+    <>
+      {marks.length > 0 && only !== "reference" && <ExtremeMarks marks={marks} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={faded} />}
+      {example.length > 0 && <ExampleMarks marks={example} left={g.ml} right={g.ml + g.pw} top={g.mt} bottom={g.axisY} faded={faded} />}
+    </>
+  );
 }
 
 function Overlay({ W, main, scale, view, showCong, flagInputs, era }: { W: number; main: Monthly; scale: Scale; view: readonly [number, number]; showCong: boolean; flagInputs: readonly FlagInput[]; era: Era }) {
@@ -227,7 +242,7 @@ function Overlay({ W, main, scale, view, showCong, flagInputs, era }: { W: numbe
 }
 
 export function TradeTariffChart(props: Props) {
-  const { main, duties, imports, scale, era, flags, showCong, view, ariaLabel, legend } = props;
+  const { main, reference, only, duties, imports, scale, era, flags, showCong, view, ariaLabel, legend } = props;
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const W = measured || 1140;
   const flagInputs = useFlagInputs(flags);
@@ -317,7 +332,7 @@ export function TradeTariffChart(props: Props) {
               } else if (pinned) return;
               flagTip.show(ids, e);
             }} onFlagLeave={() => !pinned && flagTip.hide()} />
-            <Marks W={W} main={main} scale={scale} view={view} showCong={showCong} flagInputs={flagInputs} era={era} />
+            <Marks W={W} main={main} reference={reference} only={only} scale={scale} view={view} showCong={showCong} flagInputs={flagInputs} era={era} />
             <Overlay W={W} main={main} scale={scale} view={view} showCong={showCong} flagInputs={flagInputs} era={era} />
           </>
         )}

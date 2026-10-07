@@ -1,5 +1,6 @@
 "use client";
 
+import { LegendToggle, useIsolate } from "@/components/charts/LegendToggle";
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { memo, useMemo } from "react";
 import { MONTH_ABBR } from "@/lib/indicator-time";
@@ -94,6 +95,8 @@ export function TradeTariffCard({
   const shown = countryName ? country : national;
   const main = useMemo(() => (shown ? ratePercentSeries(shown.duties, shown.imports) : null), [shown]);
   const reference = useMemo(() => (countryName ? ratePercentSeries(national.duties, national.imports) : null), [countryName, national]);
+  const [picked, isolate] = useIsolate<"main" | "reference">();
+  const only = reference ? picked : null; // a leftover pick means nothing once the comparison line is gone
   const scale = useMemo(() => rateScale(...(main ? [main] : []), ...(reference ? [reference] : [])), [main, reference]);
   const day = activeDay(v);
   const lastIdx = main ? main.map((x) => x !== null).lastIndexOf(true) : -1;
@@ -119,6 +122,7 @@ export function TradeTariffCard({
             duties={shown.duties}
             imports={shown.imports}
             reference={reference}
+            only={only}
             scale={scale}
             era={era}
             flags={flags}
@@ -127,8 +131,12 @@ export function TradeTariffCard({
             ariaLabel={aria}
             legend={
         <div className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.75rem] text-ink-muted">
-          <span className="inline-flex items-center gap-1.5"><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>{countryName ? `${countryName}` : "All countries"}, calculated duties ÷ imports</span>
-          {countryName && <span className="inline-flex items-center gap-1.5"><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="1.75" /></svg>All countries, for reference</span>}
+          {reference ? (
+            <LegendToggle active={only === "main"} dimmed={only === "reference"} onClick={() => isolate("main")}><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>{countryName ? `${countryName}` : "All countries"}, calculated duties ÷ imports</LegendToggle>
+          ) : (
+            <span className="inline-flex items-center gap-1.5"><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>{countryName ? `${countryName}` : "All countries"}, calculated duties ÷ imports</span>
+          )}
+          {reference && <LegendToggle active={only === "reference"} dimmed={only === "main"} onClick={() => isolate("reference")}><svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="1.75" /></svg>All countries, for reference</LegendToggle>}
           <span className="inline-flex items-center gap-1.5"><svg width="22" height="10" aria-hidden><line x1="11" x2="11" y1="0" y2="10" stroke="var(--accent)" strokeWidth="1.4" /><circle cx="11" cy="3" r="2.8" fill="var(--accent)" /></svg>Tariff action (solid: major; dashed: other)</span>
           <span className="inline-flex items-center gap-1.5"><Swatch color="color-mix(in srgb, var(--ink) 9%, transparent)" border />Recession (NBER)</span>
         </div>

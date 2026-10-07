@@ -1,9 +1,10 @@
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
+import { useIsolate } from "@/components/charts/LegendToggle";
 import { memo, type ReactNode } from "react";
 import { fiscalBars, quarterlyPoints, yearRows } from "@/lib/economy-series";
 import type { EconomyData } from "@/lib/indicator-payload";
 import type { Reading } from "@/lib/indicator-lookup";
-import { EconomyChart, chartPoints } from "./EconomyChart";
+import { EconomyChart, chartPoints, type LineId } from "./EconomyChart";
 import { type ChartSpec } from "./specs";
 
 function Readout({ spec, reading, hero }: { spec: ChartSpec; reading: Reading; hero: boolean }) {
@@ -80,8 +81,10 @@ export function EconomyCard({
   view: readonly [number, number];
   desc: string;
   footnote?: ReactNode;
-  legend?: ReactNode;
+  /** A legend node, or a function of the line-isolate controls for cards with a second line. */
+  legend?: ReactNode | ((c: { only: LineId | null; isolate: (k: LineId) => void }) => ReactNode);
 }) {
+  const [only, isolate] = useIsolate<LineId>();
   const Heading = hero ? "h2" : "h3";
   return (
     <section className={`min-w-0 rounded-[10px] border border-line bg-surface ${hero ? "p-5 sm:p-6" : "p-[1.1rem_1.1rem_0.9rem]"}`}>
@@ -94,9 +97,9 @@ export function EconomyCard({
       </div>
       {hero && <p className="m-0 mt-2 text-[0.875rem] leading-[1.5] text-ink-muted">{desc}</p>}
       <div className={hero ? "mt-3.5" : "mt-3"}>
-        <EconomyChart data={data} spec={spec} hero={hero} showCong={showCong} view={view} reading={reading} />
+        <EconomyChart data={data} spec={spec} hero={hero} showCong={showCong} view={view} reading={reading} only={only} />
       </div>
-      {legend}
+      {typeof legend === "function" ? legend({ only, isolate }) : legend}
       {footnote && <p className="m-0 mt-2 text-[0.75rem] leading-[1.45] text-ink-muted">{footnote}</p>}
       <DataTable data={data} spec={spec} />
     </section>

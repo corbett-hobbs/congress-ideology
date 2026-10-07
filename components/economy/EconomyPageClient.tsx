@@ -4,6 +4,7 @@ import { HowToRead } from "@/components/HowToRead";
 import { useMemo, useState } from "react";
 import { EconomyStateProvider, activeDay, useEconomyActions, useEconomyValues } from "./EconomyState";
 import { dateOfDay, dayOf, MONTH_NAMES } from "@/lib/indicator-time";
+import { LegendToggle } from "@/components/charts/LegendToggle";
 import { PageHeader } from "@/components/PageHeader";
 import { fromEconomyPayload, type EconomyPayload } from "@/lib/indicator-payload";
 import { readAll } from "@/lib/indicator-lookup";
@@ -151,29 +152,20 @@ function EconomyPage({
               desc={k === "inc" ? incomeDesc : SPECS[k].desc}
               footnote={notes[k]}
               legend={
-                k === "gas" ? (
-                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] text-ink-muted">
-                    <span className="inline-flex items-center gap-1.5">
-                      <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>
-                      Regular gasoline
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="2" strokeDasharray="4 3" /></svg>
-                      Diesel (from 1994)
-                    </span>
-                  </div>
-                ) : k === "debt" ? (
-                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] text-ink-muted">
-                    <span className="inline-flex items-center gap-1.5">
-                      <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>
-                      Held by the public
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="2" strokeDasharray="4 3" /></svg>
-                      Total, including debt the government owes itself
-                    </span>
-                  </div>
-                ) : undefined
+                k === "gas" || k === "debt"
+                  ? ({ only, isolate }) => (
+                      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] text-ink-muted">
+                        <LegendToggle active={only === "main"} dimmed={only === "second"} onClick={() => isolate("main")}>
+                          <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink)" strokeWidth="2" /></svg>
+                          {k === "gas" ? "Regular gasoline" : "Held by the public"}
+                        </LegendToggle>
+                        <LegendToggle active={only === "second"} dimmed={only === "main"} onClick={() => isolate("second")}>
+                          <svg width="22" height="8" aria-hidden><line x1="0" x2="22" y1="4" y2="4" stroke="var(--ink-faint)" strokeWidth="2" strokeDasharray="4 3" /></svg>
+                          {k === "gas" ? "Diesel (from 1994)" : "Total, including debt the government owes itself"}
+                        </LegendToggle>
+                      </div>
+                    )
+                  : undefined
               }
             />
           ))}

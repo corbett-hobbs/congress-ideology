@@ -4,6 +4,8 @@ import { Y_GUTTER } from "@/lib/chart-bars";
 import type { MouseEventHandler } from "react";
 import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
+import { LegendToggle, useIsolate } from "@/components/charts/LegendToggle";
+import { ExampleMarks, aboveFlags, pickExample } from "@/components/charts/ExampleMarks";
 import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Axis } from "@/components/charts/Axis";
 import type { PartyMeanPoint } from "@/lib/congress-types";
@@ -44,6 +46,8 @@ export function TrendChart({
   onScrub,
   stateOverlay,
 }: TrendChartProps) {
+  const [only, isolate] = useIsolate<"dem" | "rep" | "nat">();
+  const show = (k: "dem" | "rep" | "nat") => only === null || only === k;
   const yearToCongress = (year: number) => Math.round((year - 1789) / 2) + 1;
   const [wrapRef, measuredW] = useElementWidth<HTMLDivElement>();
   // Size the chart to its actual container — see lib/use-element-width.ts.
@@ -91,6 +95,18 @@ export function TrendChart({
           const nationalClass = stateOverlay ? "trend-overlay-line" : "trend-line";
           const nationalDash = stateOverlay ? "1 3" : undefined;
 
+          // One example value per party line (the state's lines when one is selected), 3/4 of the way across.
+          const exSrc = stateOverlay ? stateOverlay.trend : trend;
+          const exPicks = (["dem", "rep"] as const).filter((key) => show(key)).flatMap((key) => {
+            const p = pickExample(exSrc.map((d) => ({ day: d.congress, value: d[key] })), [minCongress, maxCongress + 1]);
+            return p && p.value !== null ? [{ key, day: p.day, value: p.value }] : [];
+          });
+          const exAbove = aboveFlags(exPicks);
+          const exMarks = exPicks.map((p, i) => ({
+            x: x(p.day), y: y(p.value), above: exAbove[i], color: p.key === "dem" ? "var(--dem)" : "var(--rep)",
+            text: `${1789 + (p.day - 1) * 2}: ${p.value.toFixed(2)}`,
+          }));
+
           return (
             <>
               <Axis
@@ -117,14 +133,14 @@ export function TrendChart({
                 y2={y(0)}
               />
 
-              {pathFor(trend, "dem") && (
+              {pathFor(trend, "dem") && show(stateOverlay ? "nat" : "dem") && (
                 <path
                   className={`${nationalClass} stroke-dem`}
                   d={pathFor(trend, "dem") as string}
                   strokeDasharray={nationalDash}
                 />
               )}
-              {pathFor(trend, "rep") && (
+              {pathFor(trend, "rep") && show(stateOverlay ? "nat" : "rep") && (
                 <path
                   className={`${nationalClass} stroke-rep`}
                   d={pathFor(trend, "rep") as string}
@@ -133,12 +149,14 @@ export function TrendChart({
               )}
 
               {/* The selected state's delegation — the primary line when shown. */}
-              {overlayDem && (
+              {overlayDem && show("dem") && (
                 <path className="trend-line stroke-dem" d={overlayDem} />
               )}
-              {overlayRep && (
+              {overlayRep && show("rep") && (
                 <path className="trend-line stroke-rep" d={overlayRep} />
               )}
+
+              <ExampleMarks marks={exMarks} left={0} right={innerWidth} top={0} bottom={innerHeight} />
 
               <line
                 className="trend-playhead"
@@ -163,29 +181,15 @@ export function TrendChart({
       </ChartFrame>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.72rem] text-ink-muted">
-        {stateOverlay ? (
-          <>
-            <span className="flex items-center gap-1.5">
-              <Swatch color="var(--dem)" /> {stateOverlay.label} Democrats
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Swatch color="var(--rep)" /> {stateOverlay.label} Republicans
-            </span>
-            <span className="flex items-center gap-1.5 text-ink-faint">
-              <Swatch color="var(--ink-faint)" dash thin />
-              National party mean
-            </span>
-          </>
-        ) : (
-          <>
-            <span className="flex items-center gap-1.5">
-              <Swatch color="var(--dem)" /> Democrats
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Swatch color="var(--rep)" /> Republicans
-            </span>
-          </>
-        )}
+        {([
+          { k: "dem", color: "var(--dem)", text: stateOverlay ? `${stateOverlay.label} Democrats` : "Democrats" },
+          { k: "rep", color: "var(--rep)", text: stateOverlay ? `${stateOverlay.label} Republicans` : "Republicans" },
+          ...(stateOverlay ? [{ k: "nat", color: "var(--ink-faint)", text: "National party mean" }] : []),
+        ] as { k: "dem" | "rep" | "nat"; color: string; text: string }[]).map((it) => (
+          <LegendToggle key={it.k} active={only === it.k} dimmed={only !== null && only !== it.k} onClick={() => isolate(it.k)}>
+            <Swatch color={it.color} dash={it.k === "nat"} thin={it.k === "nat"} /> {it.text}
+          </LegendToggle>
+        ))}
       </div>
     </div>
   );

@@ -45,6 +45,8 @@ export interface Panel {
   render: (g: PanelGeom) => ReactNode;
   /** Peak and low of one line inside the window (rule 12). Omit where a chart has several lines or a stack. */
   extremes?: { points: readonly ExtremePoint[]; label: (value: number, month: string) => string };
+  /** One example value per line, for a panel with two or more lines: a coloured "Mar 2020: 20.4M" label on each line, picked from the window. */
+  examples?: { points: readonly ExtremePoint[]; color: string; label: (value: number, month: string) => string }[];
   /** Labels drawn above the marks and the hatch, outside the clip (so they may sit in the right gutter). */
   renderLabels?: (g: PanelGeom) => ReactNode;
   /** Draw the preliminary hatch over the marks (a filled stack would hide it underneath), in the surface colour. */
@@ -210,6 +212,49 @@ const StaticLayer = memo(function StaticLayer({ panels, era, view, prelim, geo, 
   );
 });
 
+const EX_CHAR_W = 6.3;
+const EX_HALO = { stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" } as const;
+
+/** One example value per line of a multi-line panel, three quarters of the way across the window (clear of the edge and the hatch). The highest line's label sits above it, the rest below. */
+function Examples({ panels, geo, view }: { panels: readonly Panel[]; geo: Geo; view: readonly [number, number] }) {
+  const v = useEnergyValues();
+  const faded = activeDay(v) !== null;
+  const target = view[0] + (view[1] - view[0]) * 0.75;
+  return (
+    <>
+      {panels.map((p, i) => {
+        if (!p.examples) return null;
+        const picks = p.examples.flatMap((ex) => {
+          const inView = ex.points.filter((q) => q.value !== null && q.day >= view[0] && q.day < view[1]);
+          if (inView.length === 0) return [];
+          const pt = inView.reduce((a, b) => (Math.abs(b.day - target) < Math.abs(a.day - target) ? b : a));
+          const { year, month } = dateOfDay(pt.day);
+          return [{ color: ex.color, x: geo.X(pt.day), value: pt.value as number, text: ex.label(pt.value as number, `${MONTH_ABBR[month]} ${year}`) }];
+        });
+        const top = Math.max(...picks.map((q) => q.value));
+        const left = geo.ml;
+        const right = geo.ml + geo.pw;
+        return (
+          <g key={p.id} pointerEvents="none" opacity={faded ? 0.25 : 1} style={{ transition: "opacity .12s" }}>
+            {picks.map((q) => {
+              const y = geo.Ys[i](q.value);
+              const w = q.text.length * EX_CHAR_W;
+              const cx = Math.min(Math.max(q.x, left + w / 2 + 2), right - w / 2 - 2);
+              const ty = Math.min(Math.max(q.value === top ? y - 9 : y + 17, geo.stack.tops[i] + 10), geo.stack.bottoms[i] - 4);
+              return (
+                <g key={q.color + q.x}>
+                  <circle cx={q.x} cy={y} r={3.5} fill={q.color} stroke="var(--surface)" strokeWidth={1.5} />
+                  <text x={cx} y={ty} textAnchor="middle" className="text-[11px] font-medium" style={{ ...EX_HALO, fill: q.color }}>{q.text}</text>
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+    </>
+  );
+}
+
 /** Peak and low of each panel's designated line inside the window. Fades while a date is hovered or pinned. */
 function Marks({ panels, geo, view }: { panels: readonly Panel[]; geo: Geo; view: readonly [number, number] }) {
   const v = useEnergyValues();
@@ -373,6 +418,7 @@ export function EnergyChart({ panels, era, view, flags, prelim, ariaLabel, legen
               onFlagLeave={() => !pinned && hideFlagTip()}
             />
             <Marks panels={panels} geo={geo} view={view} />
+            <Examples panels={panels} geo={geo} view={view} />
             <Overlay panels={panels} geo={geo} view={view} />
           </>
         )}
