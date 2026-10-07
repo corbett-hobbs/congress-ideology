@@ -401,5 +401,6 @@
 {"period":"2026-04","duties":20198648764,"import_value":299710324247,"rate":0.06739,"source":"census_api"},
 {"period":"2026-05","duties":21029537399,"import_value":305185726019,"rate":0.06891,"source":"census_api"},
 {"period":"2026-06","duties":21290948706,"import_value":312484323572,"rate":0.06813,"source":"census_api"},
-{"period":"2026-07","duties":21004726643,"import_value":325552185079,"rate":0.06452,"source":"census_api"}
+{"period":"2026-07","duties":21004726643,"import_value":325552185079,"rate":0.06452,"source":"census_api"},
+{"period":"2026-08","duties":22727180701,"import_value":330729929356,"rate":0.06872,"source":"census_api"}
 ]

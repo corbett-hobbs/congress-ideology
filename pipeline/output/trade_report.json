@@ -3,7 +3,7 @@
     "country.xlsx": {
       "rows": 9217,
       "first_period": "1985-01",
-      "last_period": "2026-07",
+      "last_period": "2026-08",
       "note": "output window starts 1991-01"
     },
     "gands.xlsx": {
@@ -13,9 +13,9 @@
       "note": "annual BOP, output window starts 1991"
     },
     "duties (census api)": {
-      "rows": 50021,
+      "rows": 50273,
       "first_period": "2010-01",
-      "last_period": "2026-07",
+      "last_period": "2026-08",
       "country_year_rows": 3942
     },
     "duties (usitc dataweb bridge)": {
@@ -37,21 +37,21 @@
     "distinct_country_codes": 241
   },
   "rows": {
-    "trade_national": 995,
+    "trade_national": 997,
     "trade_by_country": 8544,
-    "duties_national": 403,
+    "duties_national": 404,
     "duties_by_country": 7770
   },
   "coverage": {
     "trade_by_country": {
       "first_year": 1991,
       "last_year": 2026,
-      "last_month": 7
+      "last_month": 8
     },
     "duties_by_country": {
       "first_year": 1993,
       "last_year": 2026,
-      "last_period": "2026-07"
+      "last_period": "2026-08"
     }
   },
   "reconciliation": {
@@ -99,11 +99,11 @@
   ],
   "file_sizes_bytes": {
     "countries.json": 44087,
-    "trade_national.json": 148560,
-    "duties_national.json": 43605,
-    "trade_by_country/* (total)": 2005910,
+    "trade_national.json": 148867,
+    "duties_national.json": 43713,
+    "trade_by_country/* (total)": 2005944,
     "trade_by_country/* (largest year)": 59052,
-    "duties_by_country/* (total)": 3235523,
+    "duties_by_country/* (total)": 3237201,
     "duties_by_country/* (largest year)": 98838
   }
 }
