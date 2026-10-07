@@ -3,7 +3,7 @@ import type { ChamberMember } from "@/lib/congress-types";
 import { partyFillClass } from "@/lib/party-palette";
 
 const W = 320;
-const H = 200;
+const H = 170;
 const PAD = 6;
 
 /**

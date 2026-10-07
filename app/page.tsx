@@ -150,8 +150,10 @@ export default function Hub() {
                 </p>
 
                 {isCongress && (
-                  <div className="flex flex-col gap-2">
-                    <HubCompass members={congress.plottable} />
+                  <div className="flex flex-1 flex-col gap-2">
+                    <div className="flex flex-1 flex-col justify-center">
+                      <HubCompass members={congress.plottable} />
+                    </div>
                     <p className="text-[0.85rem] text-ink-muted">
                       <span className="font-serif text-2xl font-semibold text-ink">
                         {wider === 0
@@ -168,8 +170,10 @@ export default function Hub() {
                 )}
 
                 {b.id === "supreme-court" && (
-                  <div className="flex flex-col gap-2">
-                    <CourtHubStrip data={court} />
+                  <div className="flex flex-1 flex-col gap-2">
+                    <div className="flex flex-1 flex-col justify-center">
+                      <CourtHubStrip data={court} />
+                    </div>
                     <p className="text-[0.85rem] text-ink-muted">
                       <span className="font-serif text-2xl font-semibold text-ink">
                         {gopAppointed} of {seated.length}
