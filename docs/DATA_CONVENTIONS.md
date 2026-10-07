@@ -606,3 +606,19 @@ Raw: `pipeline/raw/eia/<SERIES_ID>.json` (`pnpm fetch:eia`; needs `EIA_API_KEY` 
 `pnpm validate` / `pnpm transform`): row schemas, snapshot row counts equal the API's own total (it truncates at 5,000 rows without a warning), units unchanged,
 known missing markers only, `(series_id, date)` unique, display-window coverage, flags reference real series and EOs and carry a primary source.
 
+## 14. Supreme Court decisions track
+
+A ninth data track: institutional counts of Supreme Court decisions from the Supreme Court Database (SCDB, case-centered by citation). Methodology: `docs/DECISIONS_METHODOLOGY.md`;
+pre-flight: `docs/SCDB_PREFLIGHT.md`; schemas: `lib/decisions-entities.ts`. Separate from the Court track's Martin–Quinn data (section 6).
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/output/decisions_counts.json` | one row per `(term, issue area)` with at least one orally argued case | `term` + `issue_area_id` (**not** a `bioguide_id`, not a `justice_id`) | `n` and dissent-bucket counts `d0..d4` (`min(minVotes, 4)`). `issue_area_id` null = no SCDB issue area. Counts only, never percentages (shares are derived in `lib`). |
+| `pipeline/output/decisions_meta.json` | one object | — | SCDB version, data-through term, exclusions, unclassified count, citation, licence, Chief Justice spans (with appointing president and party), the issue-area catalog. |
+| `pipeline/output/decisions_report.json` | run summary | — | Totals by bucket, decade, issue area; gate results. Humans only. |
+
+**Case-grain data is not stored**, only counts: the raw SCDB CSV is committed (`pipeline/raw/scdb/`, with `manifest.json`: version, URL, sha256 of the zip and the CSV, row count; latin-1) and the app reads only the three outputs.
+The issue-area taxonomy lives behind `pipeline/reference/decision-issue-areas.json` so it can be swapped without touching the transform or the UI; Chief Justice to appointing president is `pipeline/reference/chief-justices.json`,
+verified against `court/justices.json` and the presidents tables (no second president table). Raw: `pnpm fetch:scdb` (manual refresh, not in `fetch:all`); freshness: `.github/workflows/scdb-freshness.yml` (monthly, warns when the host is down).
+Gates are build-failing (see the methodology doc).
+

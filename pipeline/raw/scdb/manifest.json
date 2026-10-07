@@ -1,0 +1,10 @@
+{
+  "version": "2026_01",
+  "url": "http://scdb.wustl.edu/_brickFiles/2026_01/SCDB_2026_01_caseCentered_Citation.csv.zip",
+  "zip_sha256": "4d8f34d56363f8c140917bb556c530ee120aaaed6ed564a27866c0e5155e73f7",
+  "csv_file": "SCDB_2026_01_caseCentered_Citation.csv",
+  "csv_sha256": "b3cc84bd73a7a0325856cca52ae6fc5bd6a39433113f83fef248556ad4488528",
+  "rows": 9409,
+  "encoding": "latin1",
+  "fetched": "2026-10-07"
+}
