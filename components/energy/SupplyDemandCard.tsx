@@ -61,7 +61,7 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
   return (
     <EnergyCardShell
       id="supply"
-      title="Supply and demand"
+      title="Oil supply and demand"
       desc="What U.S. fields produce against what refiners supply to the market, monthly, in total petroleum. Products supplied is EIA’s stand-in for consumption, so the gap between the lines is roughly how much the country relies on imports or exports."
       readout={readout}
       chart={
