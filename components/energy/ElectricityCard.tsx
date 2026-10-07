@@ -5,6 +5,7 @@ import { area, line } from "d3-shape";
 import { SEGMENT_LABEL_STYLE } from "@/lib/chart-bars";
 import { placeBandLabels } from "@/lib/energy-chart";
 import { PillGroup } from "@/components/charts/PillGroup";
+import { LegendToggle, useIsolate } from "@/components/charts/LegendToggle";
 import { flagsForCard, fmtTwh, isPreliminary, monthLabel, monthOfDay, monthlyAt, termAtDay } from "@/lib/energy-derive";
 import { FUEL_KEYS, type EnergyPayload, type FuelKey } from "@/lib/energy-types";
 import { monthStartDay, niceScale, termLabel, type Scale } from "@/lib/trade-chart";
@@ -38,6 +39,15 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
   const v = useEnergyValues();
   const m = payload.monthly;
   const [mode, setMode] = useState<Mode>("share");
+  const [only, isolate] = useIsolate<FuelKey>();
+  const pickFuel = (k: FuelKey) => {
+    setMode("amount");
+    isolate(k);
+  };
+  const pickMode = (next: Mode) => {
+    setMode(next);
+    if (next === "share" && only) isolate(only);
+  };
   const flags = useMemo(() => flagsForCard(payload.flags, "electricity"), [payload.flags]);
   const era = useMemo(() => ({ span: payload.span, rec: payload.rec, terms: payload.terms, control: payload.control }), [payload]);
   const prelim = useMemo(() => prelimBand(payload, [...FUEL_KEYS, "total"]), [payload]);
@@ -49,12 +59,14 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
     for (let i = 0; i <= last; i++) if (FUEL_KEYS.every((k) => m[k][i] !== null)) months.push(i);
     const sumAt = (i: number) => FUEL_KEYS.reduce((s, k) => s + (m[k][i] as number), 0);
     const visible = months.filter((i) => monthMidDay(i) >= view[0] && monthMidDay(i) < view[1]);
-    const scale = mode === "share" ? SHARE_SCALE : niceScale(0, Math.max(0, ...visible.map(sumAt)), 4);
+    const keys = only ? [only] : FUEL_KEYS;
+    const topAt = (i: number) => (only ? (m[only][i] as number) : sumAt(i));
+    const scale = mode === "share" ? SHARE_SCALE : niceScale(0, Math.max(0, ...visible.map(topAt)), 4);
     /** Each fuel's lower and upper edge per month, in the chart's units (percent, or million kWh). */
     const stackedValues = () => {
       const out = {} as Record<FuelKey, Map<number, { lo: number; hi: number }>>;
       const below = new Map<number, number>(months.map((i) => [i, 0]));
-      for (const k of FUEL_KEYS) {
+      for (const k of keys) {
         out[k] = new Map();
         for (const i of months) {
           const v = mode === "share" ? ((m[k][i] as number) / sumAt(i)) * 100 : (m[k][i] as number);
@@ -80,7 +92,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
           const stacked = stackedValues();
           return (
             <>
-              {FUEL_KEYS.map((k) => {
+              {keys.map((k) => {
                 const gen = area<number>()
                   .x((i) => X(monthMidDay(i)))
                   .y0((i) => Y(stacked[k].get(i)!.lo))
@@ -95,7 +107,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
           const stacked = stackedValues();
           const inView = months.filter((i) => monthMidDay(i) >= view[0] && monthMidDay(i) < view[1]);
           const placed = placeBandLabels(
-            FUEL_KEYS.map((k) => ({
+            keys.map((k) => ({
               key: k,
               width: FUELS[k].short.length * 6.2 + 8,
               samples: inView.map((i) => ({ x: X(monthMidDay(i)), y0: Y(stacked[k].get(i)!.lo), y1: Y(stacked[k].get(i)!.hi) })),
@@ -104,7 +116,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
           );
           return (
             <g pointerEvents="none">
-              {FUEL_KEYS.map((k) => {
+              {keys.map((k) => {
                 const l = placed.get(k);
                 if (!l) return null;
                 return l.inside ? (
@@ -147,7 +159,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
         dotsAt: (day) => [{ day: monthMidDay(monthOfDay(day)), value: monthlyAt(m.small, day), color: "var(--fuel-solar)" }],
       },
     ];
-  }, [m, view, mode, last, smallFirst]);
+  }, [m, view, mode, only, last, smallFirst]);
 
   const day = activeDay(v);
   const month = Math.min(day !== null ? monthOfDay(day) : last, last);
@@ -164,7 +176,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
       chart={
         <>
           <div className="mb-2.5 w-fit">
-            <PillGroup options={MODES} value={mode} onChange={setMode} ariaLabel="Electricity chart measure" />
+            <PillGroup options={MODES} value={mode} onChange={pickMode} ariaLabel="Electricity chart measure" />
           </div>
           <EnergyChart
             panels={panels}
@@ -177,7 +189,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
             legend={
               <Legend>
                 {[...FUEL_KEYS].reverse().map((k) => (
-                  <span key={k} className="inline-flex items-center gap-1 whitespace-nowrap"><Swatch color={FUELS[k].color} />{FUELS[k].label}</span>
+                  <LegendToggle key={k} active={only === k} dimmed={only !== null && only !== k} onClick={() => pickFuel(k)}><Swatch color={FUELS[k].color} />{FUELS[k].label}</LegendToggle>
                 ))}
                 <span className="inline-flex items-center gap-1 whitespace-nowrap"><LineKey color="var(--fuel-solar)" />Small-scale solar (estimated)</span>
                 <CommonKey prelim={prelim !== null} flags />
