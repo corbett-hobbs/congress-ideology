@@ -31,6 +31,12 @@ export function ageOn(birthdayIso: string, onIso: string): number {
   return y - by - (m < bm || (m === bm && d < bd) ? 1 : 0);
 }
 
+/** Exact age in years on `onIso` (days lived / 365.25), so a median or average can fall between whole years. */
+export function ageYearsOn(birthdayIso: string, onIso: string): number {
+  const day = (iso: string) => Date.parse(`${iso}T00:00:00Z`) / 86_400_000;
+  return (day(onIso) - day(birthdayIso)) / 365.25;
+}
+
 /** A voting seat: not a delegate or resident commissioner, and not a territory's delegate before statehood. */
 export function isVotingTerm(t: Pick<DemoTerm, "bioguide_id" | "congress_number" | "chamber" | "state">): boolean {
   if (NON_VOTING_STATES.has(t.state)) return false;
@@ -128,10 +134,10 @@ export function buildDemographics(legislators: readonly DemoLegislator[], terms:
         const n = servedThrough(id, c);
         tenure[tenureBand(n)]++;
         servedSum += n;
-        if (p.birthday) all.push(ageOn(p.birthday, date));
+        if (p.birthday) all.push(ageYearsOn(p.birthday, date));
         if (p.gender === "F") women[g]++;
         if (g !== "O") {
-          if (p.birthday) ages[g].push(ageOn(p.birthday, date));
+          if (p.birthday) ages[g].push(ageYearsOn(p.birthday, date));
           else ageMissing++;
         } else if (!p.birthday) ageMissing++;
       }

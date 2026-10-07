@@ -4,7 +4,7 @@ import type { ChamberView } from "./chamber";
 
 export type CaucusGroup = "D" | "R" | "O";
 
-/** Age in whole years on the Congress's convening day, for members with a full birthdate. */
+/** Exact age in years (to a tenth) on the Congress's convening day, for members with a full birthdate. */
 export interface AgeStat {
   /** One decimal; null when nobody in the group has a birthdate. */
   median: number | null;
