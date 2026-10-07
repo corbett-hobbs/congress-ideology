@@ -35,7 +35,8 @@
   "report": {
     "legislators": {
       "total": 12770,
-      "withBirthYear": 12228
+      "withBirthYear": 12228,
+      "withBirthday": 12228
     },
     "crosswalk": {
       "entries": 12632,

@@ -25,6 +25,7 @@ describe("buildLegislators", () => {
         official_full: "Bernard Sanders",
       },
       birth_year: 1941,
+      birthday: "1941-09-08",
       gender: "M",
     });
   });
@@ -34,6 +35,7 @@ describe("buildLegislators", () => {
       rawLegislator({ bioguide: "X000001", first: "A", last: "B", gender: "F" }),
     ]);
     expect(leg).not.toHaveProperty("birth_year");
+    expect(leg).not.toHaveProperty("birthday");
     expect(Object.keys(leg.name)).toEqual(["first", "last"]);
   });
 

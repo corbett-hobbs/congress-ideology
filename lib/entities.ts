@@ -54,6 +54,8 @@ export const legislator = z.strictObject({
     official_full: z.string().min(1).optional(),
   }),
   birth_year: z.number().int().gte(1700).lte(2100).optional(),
+  /** Full date of birth (`YYYY-MM-DD`) where the source has one; `birth_year` is its year. */
+  birthday: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   gender: z.enum(["M", "F"]),
 });
 export type Legislator = z.infer<typeof legislator>;
