@@ -26,7 +26,8 @@ export function DemographicsPageClient({ data }: { data: DemographicsPayload }) 
   const rows = useMemo(() => windowRows(all, range), [all, range]);
   // A pin that has left the window is simply not shown (and comes back if the window widens).
   const livePin = rows.some((r) => r.congress === pin) ? pin : null;
-  const latest = all[all.length - 1];
+  // The stat strip follows the pinned Congress; with none pinned it shows the latest.
+  const shown = all.find((r) => r.congress === livePin) ?? all[all.length - 1];
 
   return (
     <>
@@ -43,7 +44,7 @@ export function DemographicsPageClient({ data }: { data: DemographicsPayload }) 
           </HowToRead>
         </PageHeader>
 
-        <StatStrip row={latest} />
+        <StatStrip row={shown} />
 
         <AgeCard rows={rows} presidents={data.presidents} pin={livePin} onPin={setPin} />
         <WomenCard rows={rows} presidents={data.presidents} pin={livePin} onPin={setPin} />
