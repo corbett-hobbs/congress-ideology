@@ -35,7 +35,7 @@ export function DemographicsFilterBar({
   const [lo, hi] = SLIDER_BOUNDS;
   const full = sameRange(range, SLIDER_BOUNDS);
   return (
-    <div className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 shadow-[0_2px_6px_rgba(26,34,51,0.08)] backdrop-blur sm:shadow-none">
+    <div data-pinned-bar className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 shadow-[0_2px_6px_rgba(26,34,51,0.08)] backdrop-blur sm:shadow-none">
       <div className="mx-auto w-full max-w-[1180px] px-4 pb-2 pt-2 sm:px-6 sm:py-2.5">
         <div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:gap-x-5">
           <div className="flex flex-none items-center gap-2 sm:pt-px">
