@@ -153,7 +153,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
   const month = Math.min(day !== null ? monthOfDay(day) : last, last);
   const term = termAtDay(payload.terms, monthStartDay(month));
   const gasShare = m.total[month] ? ((m.gas[month] as number) / (m.total[month] as number)) * 100 : null;
-  const readout = `${monthLabel(month)} · ${fmtTwh(m.total[month] as number)} · Gas ${gasShare === null ? "—" : `${gasShare.toFixed(0)}%`}${isPreliminary(payload, "total", month) ? " (preliminary)" : ""}${term ? ` · ${termLabel(term)}` : ""}`;
+  const readout = { values: [fmtTwh(m.total[month] as number), `Gas ${gasShare === null ? "—" : `${gasShare.toFixed(0)}%`}`], date: `${monthLabel(month)}${isPreliminary(payload, "total", month) ? " (preliminary)" : ""}`, term: term ? termLabel(term) : undefined };
 
   return (
     <EnergyCardShell

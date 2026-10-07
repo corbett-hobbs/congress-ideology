@@ -56,7 +56,7 @@ export function LngCard({ payload, view }: { payload: EnergyPayload; view: reado
   const month = Math.min(day !== null ? monthOfDay(day) : last, last);
   const term = termAtDay(payload.terms, monthStartDay(month));
   const val = m.lng[month];
-  const readout = `${monthLabel(month)} · LNG exports ${val == null ? "—" : fmtBcf(val)}${isPreliminary(payload, "lng", month) ? " (preliminary)" : ""}${term ? ` · ${termLabel(term)}` : ""}`;
+  const readout = { values: [`LNG exports ${val == null ? "—" : fmtBcf(val)}`], date: `${monthLabel(month)}${isPreliminary(payload, "lng", month) ? " (preliminary)" : ""}`, term: term ? termLabel(term) : undefined };
 
   return (
     <EnergyCardShell

@@ -61,7 +61,7 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
   const month = Math.min(day !== null ? monthOfDay(day) : last, last);
   const term = termAtDay(payload.terms, monthStartDay(month));
   const f = (k: MonthlyKey) => (m[k][month] == null ? "—" : fmtMbd(m[k][month] as number));
-  const readout = `${monthLabel(month)} · Produced ${f("prod")} · Supplied ${f("supplied")}${isPreliminary(payload, "prod", month) ? " (preliminary)" : ""}${term ? ` · ${termLabel(term)}` : ""}`;
+  const readout = { values: [`Produced ${f("prod")}`, `Supplied ${f("supplied")}`], date: `${monthLabel(month)}${isPreliminary(payload, "prod", month) ? " (preliminary)" : ""}`, term: term ? termLabel(term) : undefined };
 
   return (
     <EnergyCardShell

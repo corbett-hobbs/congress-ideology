@@ -5,11 +5,29 @@
  * the pinned month, or the latest while nothing is pinned. Page-state-agnostic: the caller passes the line and
  * whether a date is pinned (Trade and Energy each wrap it with their own state).
  */
-export function PinReadout({ line, pinned, onClear }: { line: string; pinned: boolean; onClear: () => void }) {
+export interface PinLine {
+  /** One value per line, e.g. "Produced 21.7M b/d". */
+  values: string[];
+  /** The month (and any "preliminary" note), then the president's term on the same last line. */
+  date: string;
+  term?: string;
+}
+
+export function PinReadout({ line, pinned, onClear }: { line: PinLine | null; pinned: boolean; onClear: () => void }) {
   return (
     <div className="mt-3 sm:hidden">
-      <p className="m-0 font-mono text-[0.8rem] leading-snug text-ink" aria-live="off">{line}</p>
-      <p className="m-0 mt-0.5 text-[0.75rem] text-ink-muted">
+      {line && (
+        <div aria-live="off">
+          {line.values.map((v) => (
+            <p key={v} className="m-0 text-[1.05rem] font-semibold leading-snug tabular-nums text-ink">{v}</p>
+          ))}
+          <p className="m-0 mt-0.5 text-[0.85rem] leading-snug text-ink-muted">
+            {line.date}
+            {line.term ? ` · ${line.term}` : ""}
+          </p>
+        </div>
+      )}
+      <p className="m-0 mt-1.5 text-[0.75rem] text-ink-muted">
         Tap or drag the chart to pin a month.
         {pinned && (
           <>

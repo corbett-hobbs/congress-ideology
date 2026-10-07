@@ -48,7 +48,7 @@ export function SprCard({ payload, view }: { payload: EnergyPayload; view: reado
   const latest = payload.spr[payload.spr.length - 1];
   const at = sprAt(payload.spr, day ?? latest[0]);
   const term = at ? termAtDay(payload.terms, at.day) : undefined;
-  const readout = at ? `Week ending ${dateText(isoOfDay(at.day))} · ${fmtMillionBarrels(at.value)}${term ? ` · ${termLabel(term)}` : ""}` : "";
+  const readout = at ? { values: [fmtMillionBarrels(at.value)], date: `Week ending ${dateText(isoOfDay(at.day))}`, term: term ? termLabel(term) : undefined } : null;
 
   const rows = useMemo(() => {
     const byYear = new Map<number, { last: number; low: number; high: number }>();

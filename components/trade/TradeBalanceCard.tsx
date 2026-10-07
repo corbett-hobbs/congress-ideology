@@ -116,8 +116,12 @@ export function TradeBalanceCard({
     : "—";
   const pres = reading ? termAtDay(era.terms, monthStartDay(reading.month)) : undefined;
   const mobileLine = reading
-    ? `${reading.label} · ${measure === "balance" ? `Balance ${reading.balance === null ? "\u2014" : fmtMoney(reading.balance, { signed: true })}` : `Exports ${reading.exports === null ? "\u2014" : fmtMoney(reading.exports)} · Imports ${reading.imports === null ? "\u2014" : fmtMoney(reading.imports)}`}${pres ? ` · ${termLabel(pres)}` : ""}`
-    : "";
+    ? {
+        values: measure === "balance" ? [`Balance ${reading.balance === null ? "\u2014" : fmtMoney(reading.balance, { signed: true })}`] : [`Exports ${reading.exports === null ? "\u2014" : fmtMoney(reading.exports)}`, `Imports ${reading.imports === null ? "\u2014" : fmtMoney(reading.imports)}`],
+        date: reading.label,
+        term: pres ? termLabel(pres) : undefined,
+      }
+    : null;
   const adjLabel = adjusted ? "Seasonally adjusted" : "Not seasonally adjusted";
   const aria = `${title}, monthly, ${adjLabel.toLowerCase()}, ${measure === "balance" ? "exports minus imports" : "exports and imports"}, with presidential terms and recessions marked. The same data is in the table below.`;
 

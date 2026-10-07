@@ -102,7 +102,7 @@ export function TradeTariffCard({
   const lastIdx = main ? main.map((x) => x !== null).lastIndexOf(true) : -1;
   const rd = shown ? rateReadingAtDay(shown.duties, shown.imports, day ?? (lastIdx >= 0 ? monthStartDay(lastIdx) : -1)) : null;
   const pres = rd ? termAtDay(era.terms, monthStartDay(rd.month)) : undefined;
-  const mobileLine = rd ? `${rd.label} · Duty rate ${rd.rate === null ? "\u2014" : fmtPercent(rd.rate)}${rd.duties !== null ? ` · Duties ${fmtDollars(rd.duties)}` : ""}${pres ? ` · ${termLabel(pres)}` : ""}` : "";
+  const mobileLine = rd ? { values: [`Duty rate ${rd.rate === null ? "\u2014" : fmtPercent(rd.rate)}`, ...(rd.duties !== null ? [`Duties ${fmtDollars(rd.duties)}`] : [])], date: rd.label, term: pres ? termLabel(pres) : undefined } : null;
   const title = countryName ? `Tariffs on imports from ${countryName}` : "Tariffs on imports";
   const aria = `${title}: calculated duties as a share of imports, monthly from 1993, with ${flags.length} tariff actions and court rulings marked, presidential terms and recessions. The same data is in the table below.`;
 

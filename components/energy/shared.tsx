@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, type ReactNode } from "react";
-import { PinReadout } from "@/components/charts/PinReadout";
+import { PinReadout, type PinLine } from "@/components/charts/PinReadout";
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
@@ -85,7 +85,7 @@ export function Legend({ children }: { children: ReactNode }) {
 }
 
 /** The phone readout line wired to `EnergyState`. */
-export function Readout({ line }: { line: string }) {
+export function Readout({ line }: { line: PinLine | null }) {
   const { pin } = useEnergyValues();
   const { clearPin } = useEnergyActions();
   return <PinReadout line={line} pinned={pin !== null} onClear={clearPin} />;
@@ -105,7 +105,7 @@ export function EnergyCardShell({
   id: string;
   title: string;
   desc: ReactNode;
-  readout: string;
+  readout: PinLine | null;
   chart: ReactNode;
   notes: ReactNode;
   tables: ReactNode;

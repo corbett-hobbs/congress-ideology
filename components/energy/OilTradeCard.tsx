@@ -87,7 +87,7 @@ export function OilTradeCard({ payload, view }: { payload: EnergyPayload; view: 
   const month = Math.min(day !== null ? monthOfDay(day) : last, last);
   const term = termAtDay(payload.terms, monthStartDay(month));
   const f = (k: MonthlyKey) => (m[k][month] == null ? "—" : fmtMbd(m[k][month] as number));
-  const readout = `${monthLabel(month)} · ${mode === "balance" ? `Net imports ${f("net")}` : `Imports ${f("imp")} · Exports ${f("exp")}`}${isPreliminary(payload, "net", month) ? " (preliminary)" : ""}${term ? ` · ${termLabel(term)}` : ""}`;
+  const readout = { values: mode === "balance" ? [`Net imports ${f("net")}`] : [`Imports ${f("imp")}`, `Exports ${f("exp")}`], date: `${monthLabel(month)}${isPreliminary(payload, "net", month) ? " (preliminary)" : ""}`, term: term ? termLabel(term) : undefined };
 
   return (
     <EnergyCardShell
