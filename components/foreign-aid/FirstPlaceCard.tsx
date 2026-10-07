@@ -47,7 +47,10 @@ export function FirstPlaceCard() {
   const plotTop = bracketY + TICK + 12;
   const baseY = plotTop + maxH;
   const H = baseY + 24 + TERM_BAND_H + 4;
-  const { ticks, top: maxTop } = niceDollarTicks(Math.max(1, ...years.map((y) => y.ranked[0]?.value ?? 0)));
+  const [pick, setPick] = useState<number | null>(null);
+  const only = sector < 0 ? pick : null;
+  const topVal = (y: (typeof years)[number]) => (only !== null ? y.topSlots[only] ?? 0 : y.ranked[0]?.value ?? 0);
+  const { ticks, top: maxTop } = niceDollarTicks(Math.max(1, ...years.map(topVal)));
   const yOf = (v: number) => baseY - (v / maxTop) * maxH;
   const si = year - range[0];
   const segments = termSegments(n, (i) => {
@@ -78,7 +81,7 @@ export function FirstPlaceCard() {
   };
 
   const cur = years[si];
-  const peak = years.reduce<TopYear | null>((a, b) => (b.ranked[0] && (!a || !a.ranked[0] || b.ranked[0].value > a.ranked[0].value) ? b : a), null);
+  const peak = years.reduce<TopYear | null>((a, b) => (b.ranked[0] && (!a || !a.ranked[0] || topVal(b) > topVal(a)) ? b : a), null);
   const lede = cur?.ranked[0] ? (
     <>
       Largest recipient country each fiscal year{sectorLabel ? ` in ${sectorLabel}` : ""}, with bars colored by its sector mix. FY{year}:{" "}
@@ -153,7 +156,8 @@ export function FirstPlaceCard() {
               })}
               {years.map((y, i) => {
                 if (!y.ranked[0]) return null;
-                const val = y.ranked[0].value;
+                const val = topVal(y);
+                if (val <= 0) return null;
                 const h = Math.max(2, (val / maxTop) * maxH);
                 const x = MX + i * step + (step - bw) / 2;
                 const dim = country >= 0 && y.ranked[0].ci !== country;
@@ -162,7 +166,7 @@ export function FirstPlaceCard() {
                 return (
                   <g key={y.fy}>
                     {y.topSlots.map((v, s) => {
-                      if (v <= 0) return null;
+                      if (v <= 0 || (only !== null && s !== only)) return null;
                       const hh = v * k;
                       acc += hh;
                       return <rect key={s} x={x} y={baseY - acc} width={bw} height={hh} style={{ fill: slotColor(s), opacity: dim ? 0.3 : 1 }} />;
@@ -171,7 +175,7 @@ export function FirstPlaceCard() {
                       (() => {
                         let a = 0;
                         return y.topSlots.map((v, s) => {
-                          if (v <= 0) return null;
+                          if (v <= 0 || (only !== null && s !== only)) return null;
                           const hh = v * k;
                           a += hh;
                           const t = formatAidMoney(v);
@@ -195,8 +199,8 @@ export function FirstPlaceCard() {
               {peak?.ranked[0] &&
                 (() => {
                   const i = peak.fy - range[0];
-                  const h = (peak.ranked[0].value / maxTop) * maxH;
-                  const lab = formatAidMoney(peak.ranked[0].value);
+                  const h = (topVal(peak) / maxTop) * maxH;
+                  const lab = formatAidMoney(topVal(peak));
                   const tw = lab.length * 6.4;
                   const cx = Math.min(Math.max(MX + i * step + step / 2, MX + tw / 2), W - MR - tw / 2);
                   return (
@@ -210,7 +214,7 @@ export function FirstPlaceCard() {
         </ChartFrame>
         <Tooltip state={tip.state}>{(y) => <FirstTip y={y} />}</Tooltip>
       </div>
-      <SectorLegend partial={years.some((y) => isPartial(y.fy))} />
+      <SectorLegend partial={years.some((y) => isPartial(y.fy))} only={only} onPick={(k) => setPick(pick === k ? null : k)} />
       <TableView caption="Largest recipient country by fiscal year">
         <thead>
           <tr>

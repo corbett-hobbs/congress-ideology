@@ -59,15 +59,22 @@ export function RegionLegend({ only, picked = null, onPick, children }: { only?:
 }
 
 /** Legend for the branch split on the ranked list. */
-export function BranchLegend() {
+export function BranchLegend({ picked = null, onPick }: { picked?: number | null; onPick?: (branch: number) => void }) {
   return (
     <div className={`mt-2.5 ${LEGEND_ROW}`}>
-      {BRANCH_NAMES.map((n, k) => (
-        <span key={n} className={LEGEND_ITEM}>
-          <Swatch color={branchColor(k)} />
-          {n}
-        </span>
-      ))}
+      {BRANCH_NAMES.map((n, k) =>
+        onPick ? (
+          <LegendToggle key={n} active={picked === k} dimmed={picked !== null && picked !== k} onClick={() => onPick(k)}>
+            <Swatch color={branchColor(k)} />
+            {n}
+          </LegendToggle>
+        ) : (
+          <span key={n} className={LEGEND_ITEM}>
+            <Swatch color={branchColor(k)} />
+            {n}
+          </span>
+        ),
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
 import { BRANCH_NAMES, formatCount, type PeriodView } from "@/lib/troops-derive";
 import { useTroopsState } from "./TroopsState";
@@ -14,7 +15,9 @@ import { BranchLegend, NO_SPLIT, branchColor, showRest } from "./shared";
 export function RankedList({ view }: { view: PeriodView }) {
   const { data, country, toggleCountry, measure } = useTroopsState();
   const places = data.payload.places;
-  const scaleMax = Math.max(1, ...view.ranked.map((r) => r.value));
+  const [pick, setPick] = useState<number | null>(null);
+  const only = measure === 0 ? pick : null;
+  const scaleMax = Math.max(1, ...view.ranked.map((r) => (only !== null ? r.branches[only] : r.value)));
   const suppressedRow = (p: number): StackedRowData => ({ id: String(p), label: places[p].name, segments: [], total: "n/r", selected: p === country, dimmed: country >= 0 && p !== country });
   const rows: StackedRowData[] = [
     ...view.ranked.map((r) => ({
@@ -22,10 +25,12 @@ export function RankedList({ view }: { view: PeriodView }) {
       rank: r.rank,
       label: places[r.place].name + (view.contingency.some((c) => c.place === r.place) ? " †" : ""),
       segments:
-        measure === 0
+        only !== null
+          ? [{ value: r.branches[only], color: branchColor(only), title: `${BRANCH_NAMES[only]}: ${formatCount(r.branches[only])}` }]
+          : measure === 0
           ? [...r.branches.map((v, k) => ({ value: v, color: branchColor(k), title: `${BRANCH_NAMES[k]}: ${formatCount(v)}` })), ...(showRest(r.rest, r.value) ? [{ value: r.rest, color: NO_SPLIT, title: "No branch split published" }] : [])]
           : [{ value: r.value, color: branchColor(measure - 1) }],
-      total: formatCount(r.value),
+      total: formatCount(only !== null ? r.branches[only] : r.value),
       selected: r.place === country,
       dimmed: country >= 0 && r.place !== country,
     })),
@@ -44,7 +49,7 @@ export function RankedList({ view }: { view: PeriodView }) {
           />
         </div>
       </div>
-      {measure === 0 && !view.unavailable ? <BranchLegend /> : null}
+      {measure === 0 && !view.unavailable ? <BranchLegend picked={only} onPick={(k) => setPick(pick === k ? null : k)} /> : null}
       {measure === 0 && view.ranked.some((r) => showRest(r.rest, r.value)) && (
         <p className="m-0 mt-2 text-[0.72rem] leading-[1.5] text-ink-muted">Grey bars have no branch split: the 2006–07 estimates give a total only.</p>
       )}

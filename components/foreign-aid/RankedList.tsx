@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
 import { SLOT_NAME, countryMilitary, formatAidMoney, rankCountries } from "@/lib/foreign-aid-derive";
 import { useAidState } from "./ForeignAidState";
@@ -19,6 +19,8 @@ export function RankedList({ mode, reversed }: { mode: "dollars" | "share"; reve
   const yi = year - data.payload.years[0];
   const ranked = useMemo(() => rankCountries(data, year, sector), [data, year, sector]);
   const names = data.payload.countries;
+  const [pick, setPick] = useState<number | null>(null);
+  const only = sector < 0 ? pick : null;
 
   const list = useMemo(() => {
     const items = ranked.map((r) => {
@@ -32,13 +34,13 @@ export function RankedList({ mode, reversed }: { mode: "dollars" | "share"; reve
     return items;
   }, [ranked, mode, reversed, data, yi, sector]);
 
-  const scaleMax = Math.max(1, ...ranked.map((r) => Math.max(0, r.value)));
+  const scaleMax = Math.max(1, ...ranked.map((r) => Math.max(0, only !== null ? r.slots[only] : r.value)));
   const rows: StackedRowData[] = list.map(({ r, share, mil }, i) => ({
     id: String(r.ci),
     rank: mode === "share" ? i + 1 : r.rank,
     label: names[r.ci].name,
-    segments: r.slots.map((v, k) => ({ value: v, color: slotColor(k), title: `${SLOT_NAME[k]}: ${formatAidMoney(v)}` })),
-    total: mode === "share" ? (share > 0 ? `${Math.round(share * 100)}%` : "–") : formatAidMoney(r.value),
+    segments: r.slots.map((v, k) => (only !== null && k !== only ? { value: 0, color: slotColor(k) } : { value: v, color: slotColor(k), title: `${SLOT_NAME[k]}: ${formatAidMoney(v)}` })),
+    total: mode === "share" ? (share > 0 ? `${Math.round(share * 100)}%` : "–") : (only !== null ? formatAidMoney(r.slots[only]) : formatAidMoney(r.value)),
     // Military share mode: the share, then the military dollars behind it, in the column that held the change.
     delta: mode === "share" && share > 0 ? formatAidMoney(mil) : undefined,
     selected: r.ci === country,
@@ -52,7 +54,7 @@ export function RankedList({ mode, reversed }: { mode: "dollars" | "share"; reve
           <StackedRows rows={rows} scaleMax={scaleMax} onRowClick={(id) => toggleCountry(Number(id))} ariaLabel="Recipient countries, ranked" emptyText="No disbursements recorded." />
         </div>
       </div>
-      <SectorLegend />
+      <SectorLegend only={only} onPick={(k) => setPick(pick === k ? null : k)} />
     </div>
   );
 }

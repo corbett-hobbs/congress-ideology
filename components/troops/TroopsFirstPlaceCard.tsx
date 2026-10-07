@@ -57,7 +57,10 @@ export function TroopsFirstPlaceCard() {
   const plotTop = bracketY + TICK + 12;
   const baseY = plotTop + maxH;
   const H = baseY + 24 + TERM_BAND_H + 4;
-  const { ticks, top: maxTop } = niceCountTicks(Math.max(1, ...years.map((y) => y.top[0]?.value ?? 0)));
+  const [pick, setPick] = useState<number | null>(null);
+  const only = measure === 0 ? pick : null;
+  const topVal = (y: (typeof years)[number]) => (only !== null ? y.top[0]?.branches[only] ?? 0 : y.top[0]?.value ?? 0);
+  const { ticks, top: maxTop } = niceCountTicks(Math.max(1, ...years.map(topVal)));
   const yOf = (v: number) => baseY - (v / maxTop) * maxH;
   const si = yi - range[0];
   const segments = termSegments(n, (i) => {
@@ -90,7 +93,7 @@ export function TroopsFirstPlaceCard() {
   };
 
   const cur = years[si];
-  const peak = years.reduce<TopHostYear | null>((a, b) => (b.top[0] && (!a || !a.top[0] || b.top[0].value > a.top[0].value) ? b : a), null);
+  const peak = years.reduce<TopHostYear | null>((a, b) => (b.top[0] && (!a || !a.top[0] || topVal(b) > topVal(a)) ? b : a), null);
   const branch = measure > 0 ? ` (${measureLabel(measure)})` : "";
   const lede = cur?.top[0] ? (
     <>
@@ -174,11 +177,13 @@ export function TroopsFirstPlaceCard() {
               {years.map((y, i) => {
                 const t = y.top[0];
                 if (!t) return null;
-                const h = Math.max(2, (t.value / maxTop) * maxH);
+                const val = topVal(y);
+                if (val <= 0) return null;
+                const h = Math.max(2, (val / maxTop) * maxH);
                 const x = MX + i * step + (step - bw) / 2;
                 const dim = country >= 0 && t.place !== country;
-                const k = h / Math.max(1, t.value);
-                const segs = measure === 0 ? [...t.branches, showRest(t.rest, t.value) ? t.rest : 0] : [t.value];
+                const k = h / Math.max(1, val);
+                const segs = only !== null ? [val] : measure === 0 ? [...t.branches, showRest(t.rest, t.value) ? t.rest : 0] : [t.value];
                 let acc = 0;
                 return (
                   <g key={y.yi} opacity={dim ? 0.3 : estimate(i) ? 0.6 : 1}>
@@ -186,7 +191,7 @@ export function TroopsFirstPlaceCard() {
                       if (v <= 0) return null;
                       const hh = v * k;
                       acc += hh;
-                      return <rect key={s} x={x} y={baseY - acc} width={bw} height={hh} style={{ fill: measure === 0 && s === 4 ? NO_SPLIT : branchColor(measure === 0 ? s : measure - 1) }} />;
+                      return <rect key={s} x={x} y={baseY - acc} width={bw} height={hh} style={{ fill: only !== null ? branchColor(only) : measure === 0 && s === 4 ? NO_SPLIT : branchColor(measure === 0 ? s : measure - 1) }} />;
                     })}
                     {(() => {
                       let a = 0;
@@ -217,8 +222,8 @@ export function TroopsFirstPlaceCard() {
               {peak?.top[0] &&
                 (() => {
                   const i = peak.yi - range[0];
-                  const h = (peak.top[0].value / maxTop) * maxH;
-                  const lab = formatCountCompact(peak.top[0].value);
+                  const h = (topVal(peak) / maxTop) * maxH;
+                  const lab = formatCountCompact(topVal(peak));
                   const tw = lab.length * 6.4;
                   const cx = Math.min(Math.max(MX + i * step + step / 2, MX + tw / 2), W - MR - tw / 2);
                   return (
@@ -232,7 +237,7 @@ export function TroopsFirstPlaceCard() {
         </ChartFrame>
         <Tooltip state={tip.state}>{(y) => <FirstTip y={y} />}</Tooltip>
       </div>
-      {measure === 0 ? <BranchLegend /> : null}
+      {measure === 0 ? <BranchLegend picked={only} onPick={(k) => setPick(pick === k ? null : k)} /> : null}
       {(anyPartial || anyEstimate || anyNoSplit) && (
         <div className={`mt-2 ${LEGEND_ROW}`}>
           {anyPartial && (
