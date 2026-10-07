@@ -230,7 +230,7 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
                   />
                 );
               })}
-              {markers.map((m) => {
+              {!showBases && markers.map((m) => {
                 const sel = m.iso === selIso;
                 return (
                   <circle
@@ -280,7 +280,7 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
                 Not reported
               </span>
             )}
-            {markers.length > 0 && (
+            {!showBases && markers.length > 0 && (
               <span className={LEGEND_ITEM}>
                 <svg width="12" height="12" aria-hidden>
                   <circle cx="6" cy="6" r="4" fill="none" stroke="var(--ink-muted)" strokeWidth="1.2" />

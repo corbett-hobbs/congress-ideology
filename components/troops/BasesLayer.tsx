@@ -48,7 +48,7 @@ export function BasesLayer({
         const t = one ? bases.sites[c.members[0]].t : 0;
         const rc = r * (one ? 1 : 1.55);
         return (
-          <g key={c.members[0]} className="dot" opacity={dim ? 0.22 : 1} style={{ cursor: "pointer", transition: "opacity .12s" }} onClick={(e) => onPin(e, c)}>
+          <g key={c.members[0]} className="dot" opacity={dim ? 0.22 : 1} style={{ cursor: "pointer", transition: "opacity .12s", stroke: "none" }} onClick={(e) => onPin(e, c)}>
             {one ? (
               <BaseGlyph t={t} r={rc} cx={c.x} cy={c.y} />
             ) : (
