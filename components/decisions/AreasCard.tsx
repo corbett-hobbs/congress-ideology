@@ -12,10 +12,11 @@ import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 import { DecadeHeatmap } from "./DecadeHeatmap";
 import { Swatch, TableView } from "./shared";
 
+/** One toggle for the whole card: what the heatmap shades and how both charts order their rows. */
 const SORTS: { key: AreaSortKey; label: string; hint: string }[] = [
-  { key: "n", label: "Cases", hint: "Most cases first" },
-  { key: "u", label: "Unanimous", hint: "Largest unanimous share first" },
-  { key: "f", label: "5–4", hint: "Largest 5–4 share first" },
+  { key: "n", label: "Cases", hint: "Case counts in the heatmap; most cases first" },
+  { key: "f", label: "5–4", hint: "Share that split 5–4 in the heatmap; largest first" },
+  { key: "u", label: "Unanimous", hint: "Share that were unanimous in the heatmap; largest first" },
 ];
 
 /**
@@ -60,7 +61,7 @@ export function AreasCard() {
   return (
     <ChartCard
       title="Which kinds of cases split the Court?"
-      lede="Left: how often each issue area split 5–4 (or was unanimous) in each decade. Right: how many justices dissented, in the years shown. Click an issue area in either to filter the charts and the case list."
+      lede="Left: how many cases, how many split 5–4 or how many were unanimous in each decade, by issue area. Right: how many justices dissented, in the years shown. The toggle picks the measure for both and orders the rows; click it again to reverse. Click an issue area in either to filter the charts and the case list."
       action={
         <ReversibleSortToggle
           ariaLabel="Sort issue areas"
@@ -72,7 +73,7 @@ export function AreasCard() {
       }
     >
       <div className="grid gap-x-8 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <DecadeHeatmap rows={rows} />
+        <DecadeHeatmap rows={rows} measure={sort.key} />
         <div className="min-w-0">
           <p className="mb-2 mt-0 text-[0.78rem] text-ink-muted">{`Years shown: ${lo === hi ? lo : `${lo}\u2013${hi}`}`}</p>
           <div className={`mb-2 ${LEGEND_ROW}`}>
@@ -93,7 +94,7 @@ export function AreasCard() {
         <p>
           Issue areas are the Supreme Court Database’s own 14 categories, which its authors treat as a rough guide. {topThree.labels} together hold about {fmtPct(topThree.share)} of all cases. Cases the database leaves without an issue area ({fmtInt(data.unclassified)}) count in “All issue areas” but appear in no row. Areas with no cases in the years shown are left out of the rows on the right; the heatmap always shows every decade and fades those outside the years shown.
         </p>
-        <p>Shares for small areas are rough: an area with a few dozen cases can swing several points on one decision. The heatmap shades every decade on one scale for all areas, so cells compare; the first and last decades are partial (1946–49 and 2020–25); a cell with fewer than 10 cases is outlined, not shaded.</p>
+        <p>Shares for small areas are rough: an area with a few dozen cases can swing several points on one decision. The heatmap shades every decade on one scale for all areas, so cells compare; the first and last decades are partial (1946–49 and 2020–25); in the 5–4 and unanimous views a cell with fewer than 10 cases is outlined, not shaded. In the Cases view every cell shows its count, and “All issue areas”, with several times any one area’s cases, is shaded on its own scale.</p>
       </MethodologyNote>
       <TableView
         label="Table of issue areas by number of dissenting justices"

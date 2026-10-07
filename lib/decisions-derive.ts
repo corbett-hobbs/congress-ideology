@@ -263,6 +263,15 @@ export function decadeCells(d: DecisionsPayload, area: number): DecadeCell[] {
 /** The share a heatmap cell shows for `band` (0 unanimous, 4 split 5-4), or null when the cell has too few cases to trust. */
 export const heatValue = (c: DecadeCell, band: number): number | null => (c.total >= HEAT_MIN_CASES ? bandShare(c.bucket, band) : null);
 
+/**
+ * The top of the colour scale when a cell shows a case count: the busiest decade of any one issue area. "All issue areas" has
+ * several times any area's count, so its row is shaded on its own scale (its own busiest decade).
+ */
+export function heatCasesMax(d: DecisionsPayload, area: number): number {
+  const rows = area === ALL_AREAS ? [ALL_AREAS] : d.areas.map((_, i) => i);
+  return Math.max(1, ...rows.flatMap((a) => decadeCells(d, a).map((c) => c.total)));
+}
+
 /** The top of the colour scale: the largest trusted share in any area-and-decade, rounded up to a whole ten percent, so every cell is comparable. */
 export function heatMax(d: DecisionsPayload, band: number): number {
   let max = 0;
