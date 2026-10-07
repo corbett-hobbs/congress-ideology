@@ -4,6 +4,7 @@ import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
 import type { ReactNode } from "react";
 import { SECTOR_LABEL, SLOT_COUNT, SLOT_NAME, SLOT_VAR, slotOfSector } from "@/lib/foreign-aid-derive";
+import { LegendToggle } from "@/components/charts/LegendToggle";
 import { useAidState } from "./ForeignAidState";
 
 export const slotColor = (slot: number) => `var(${SLOT_VAR[slot]})`;
@@ -31,19 +32,26 @@ export function useSectorLabel(): string | null {
  * Bottom legend for any chart colored by sector: the six slots, or just the filtered sector's slot.
  * `extra` adds chart-specific entries (partial year, term band).
  */
-export function SectorLegend({ partial = false, children }: { partial?: boolean; children?: ReactNode }) {
+export function SectorLegend({ partial = false, only = null, onPick, children }: { partial?: boolean; only?: number | null; onPick?: (slot: number) => void; children?: ReactNode }) {
   const { sector, data } = useAidState();
   const label = useSectorLabel();
   const others = data.ns - (SLOT_COUNT - 1);
   const slots = sector >= 0 ? [slotOfSector(sector)] : Array.from({ length: SLOT_COUNT }, (_, k) => k);
   return (
     <div className={`mt-2.5 ${LEGEND_ROW}`}>
-      {slots.map((k) => (
-        <span key={k} className={LEGEND_ITEM} title={k === SLOT_COUNT - 1 && sector < 0 ? "Multi-sector; democracy, human rights, and governance; education and social services; environment" : undefined}>
-          <i className="inline-block h-[10px] w-[10px] rounded-[2px]" style={{ background: slotColor(k) }} />
-          {sector >= 0 ? label : k === SLOT_COUNT - 1 ? `Other (${others} sectors)` : SLOT_NAME[k]}
-        </span>
-      ))}
+      {slots.map((k) => {
+        const inner = (
+          <>
+            <i className="inline-block h-[10px] w-[10px] rounded-[2px]" style={{ background: slotColor(k) }} />
+            {sector >= 0 ? label : k === SLOT_COUNT - 1 ? `Other (${others} sectors)` : SLOT_NAME[k]}
+          </>
+        );
+        return onPick && sector < 0 ? (
+          <LegendToggle key={k} active={only === k} dimmed={only !== null && only !== k} onClick={() => onPick(k)}>{inner}</LegendToggle>
+        ) : (
+          <span key={k} className={LEGEND_ITEM} title={k === SLOT_COUNT - 1 && sector < 0 ? "Multi-sector; democracy, human rights, and governance; education and social services; environment" : undefined}>{inner}</span>
+        );
+      })}
       {partial && (
         <span className={LEGEND_ITEM}>
           <i

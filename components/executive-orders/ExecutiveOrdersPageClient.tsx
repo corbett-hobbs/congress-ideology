@@ -57,7 +57,16 @@ function termBands(admins: readonly EoAdmin[], firstYear: number, columns: numbe
 
 export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
   const [mode, setMode] = useState<Mode>("count");
-  const [topic, setTopic] = useState<EoTopic | null>(null);
+  const [topic, setTopicRaw] = useState<EoTopic | null>(null);
+  // A topic is shown alone, as a count; Share of year compares the whole mix, so the two never combine.
+  const setTopic = (t: EoTopic | null) => {
+    setTopicRaw(t);
+    if (t) setMode("count");
+  };
+  const pickMode = (m: Mode) => {
+    setMode(m);
+    if (m === "share") setTopicRaw(null);
+  };
   const [selected, setSelected] = useState<string | null>(null);
 
   const first = data.years[0].year;
@@ -145,7 +154,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
         <ChartCard
           title="Executive orders signed per year, by topic"
           lede={`${data.total.toLocaleString("en-US")} orders signed ${first}–${last.year}, counted in the year they were signed. ${last.year} is year to date, through ${fmtDate(data.throughDate)}.`}
-          action={<PillGroup ariaLabel="Chart view" options={MODES} value={mode} onChange={setMode} />}
+          action={<PillGroup ariaLabel="Chart view" options={MODES} value={mode} onChange={pickMode} />}
         >
           {/* Below `sm` the topic chips stay two rows tall and scroll sideways (see .neighbor-chip-row), so the chart isn't pushed down the page. */}
           <div

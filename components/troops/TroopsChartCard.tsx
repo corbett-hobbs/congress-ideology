@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { LEGEND_ITEM } from "@/components/charts/legend";
 import { MethodologyNote } from "@/components/MethodologyNote";
@@ -15,6 +15,15 @@ export function TroopsChartCard() {
   const { data, yi, range, country, measure } = useTroopsState();
   const { periods, years, places } = data.payload;
   const stacks = useMemo(() => stackByRegion(data, measure, range[0], range[1], country), [data, measure, range, country]);
+  const [pick, setPick] = useState<string | null>(null);
+  const shown = useMemo(() => {
+    const k = pick === null ? -1 : REGIONS.findIndex((r) => r.id === pick);
+    if (k < 0 || country >= 0) return stacks;
+    return stacks.map((s) => {
+      const regions = s.regions.map((v, j) => (j === k ? v : 0));
+      return { ...s, regions, total: regions[k] };
+    });
+  }, [stacks, pick, country]);
   const cur = stacks.find((s) => s.yi === yi);
   const change = changeVsPrior(data, measure, yi, country);
   const showing = [country >= 0 ? places[country].name : null, measure > 0 ? measureLabel(measure) : null].filter(Boolean);
@@ -44,8 +53,8 @@ export function TroopsChartCard() {
       lede={lede}
       action={showing.length > 0 ? <span className="rounded-md border border-line-strong bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">Showing {showing.join(" · ")} only</span> : undefined}
     >
-      <TroopsChart stacks={stacks} />
-      <RegionLegend only={only}>
+      <TroopsChart stacks={shown} />
+      <RegionLegend only={only} picked={pick} onPick={(id) => setPick((c) => (c === id ? null : id))}>
         {anyUnavailable && (
           <span className={LEGEND_ITEM}>
             <i className="inline-block h-[10px] w-[10px] rounded-[2px] border border-dashed border-ink-faint" />

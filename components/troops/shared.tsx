@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { TABLE_TOGGLE } from "@/components/charts/table-toggle";
+import { LegendToggle } from "@/components/charts/LegendToggle";
 import { REGIONS, regionLegendLabel } from "@/lib/troops-regions";
 import { BRANCH_NAMES, BRANCH_VARS } from "@/lib/troops-derive";
 
@@ -35,16 +36,23 @@ export function Swatch({ color }: { color: string }) {
 }
 
 /** Legend for the region stack: all six regions, or just the one a Country filter leaves. */
-export function RegionLegend({ only, children }: { only?: string | null; children?: ReactNode }) {
+export function RegionLegend({ only, picked = null, onPick, children }: { only?: string | null; picked?: string | null; onPick?: (id: string) => void; children?: ReactNode }) {
   const shown = only ? REGIONS.filter((r) => r.id === only) : REGIONS;
   return (
     <div className={`mt-2.5 ${LEGEND_ROW}`}>
-      {shown.map((r) => (
-        <span key={r.id} className={LEGEND_ITEM}>
-          <Swatch color={r.color} />
-          {regionLegendLabel(r)}
-        </span>
-      ))}
+      {shown.map((r) =>
+        onPick && !only ? (
+          <LegendToggle key={r.id} active={picked === r.id} dimmed={picked !== null && picked !== r.id} onClick={() => onPick(r.id)}>
+            <Swatch color={r.color} />
+            {regionLegendLabel(r)}
+          </LegendToggle>
+        ) : (
+          <span key={r.id} className={LEGEND_ITEM}>
+            <Swatch color={r.color} />
+            {regionLegendLabel(r)}
+          </span>
+        ),
+      )}
       {children}
     </div>
   );

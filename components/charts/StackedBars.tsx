@@ -55,7 +55,6 @@ const NARROW_W = 560;
 const MARGIN = { top: 34, right: 6, left: Y_GUTTER };
 const BAND_H = 22;
 const AXIS_H = 34;
-const DIM = 0.2;
 const MARK_CHAR_W = 6.3;
 const MARK_HALO = { stroke: "var(--surface)", strokeWidth: 3, paintOrder: "stroke" } as const;
 
@@ -84,33 +83,26 @@ export function StackedBars<C extends StackColumn>({
   const narrow = width < NARROW_W;
   const height = narrow ? 300 : 360;
   const tip = useStickyTooltip<C>();
+  // A highlighted series is isolated: drawn alone from zero as a count, on its own scale.
+  const eff = highlight ? "count" : mode;
 
-  const maxTotal = useMemo(() => Math.max(1, ...columns.map((c) => c.total)), [columns]);
+  const maxTotal = useMemo(() => Math.max(1, ...columns.map((c) => (highlight ? (c.values[highlight] ?? 0) : c.total))), [columns, highlight]);
   // Peak and low, recalculated for what is on screen: every column's total, or, with a topic picked,
-  // that topic's own count (its share of the year in Share mode) over the window. `top` is where the
+  // that topic's own count over the window. `top` is where the
   // label sits, in y-domain units: the top of the bar, or of the topic's segment when filtered.
   // Share totals are all 100%, so with no topic picked there is nothing to mark.
   // `columns` is already windowed.
   const marks = useMemo(() => {
-    if (mode === "share" && !highlight) return [];
-    const denomOf = (c: C) => (mode === "share" ? c.total || 1 : 1);
-    const val = (c: C) => (highlight ? (c.values[highlight] ?? 0) / denomOf(c) : c.total);
-    const topOf = (c: C) => {
-      if (!highlight) return mode === "share" ? 1 : c.total;
-      let acc = 0;
-      for (const s of series) {
-        acc += c.values[s.id] ?? 0;
-        if (s.id === highlight) break;
-      }
-      return acc / denomOf(c);
-    };
-    const fmt = (v: number) => (mode === "share" ? `${Math.round(v * 100)}%` : String(v));
+    if (eff === "share") return [];
+    const val = (c: C) => (highlight ? (c.values[highlight] ?? 0) : c.total);
+    const topOf = val;
+    const fmt = (v: number) => String(v);
     // A topic with no orders in a year has no bar to label: its low is the smallest year that has some.
     const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: highlight && val(c) === 0 ? null : val(c) })));
     return [peak, low].flatMap((p, k) =>
       p ? [{ i: p.day, kind: k === 0 ? ("peak" as const) : ("low" as const), text: `${columns[p.day].label}: ${fmt(p.value as number)}`, top: topOf(columns[p.day]) }] : [],
     );
-  }, [columns, series, mode, highlight]);
+  }, [columns, eff, highlight]);
   const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 ? BAND_H + 6 : 0) };
 
   return (
@@ -124,11 +116,11 @@ export function StackedBars<C extends StackColumn>({
       >
         {({ innerWidth, innerHeight }) => {
           const y = scaleLinear()
-            .domain(mode === "share" ? [0, 1] : [0, maxTotal])
+            .domain(eff === "share" ? [0, 1] : [0, maxTotal])
             .range([innerHeight, 0])
-            .nice(mode === "share" ? 4 : 5);
-          const yTicks = mode === "share" ? [0, 0.25, 0.5, 0.75, 1] : y.ticks(5);
-          const yFormat = (v: number) => (mode === "share" ? `${Math.round(v * 100)}%` : String(v));
+            .nice(eff === "share" ? 4 : 5);
+          const yTicks = eff === "share" ? [0, 0.25, 0.5, 0.75, 1] : y.ticks(5);
+          const yFormat = (v: number) => (eff === "share" ? `${Math.round(v * 100)}%` : String(v));
           const step = innerWidth / columns.length;
           const barW = Math.max(2, step * 0.78);
           // Label as many columns as fit: a zoomed-in window gets every year, the full span every few.
@@ -160,7 +152,7 @@ export function StackedBars<C extends StackColumn>({
 
               {columns.map((col, i) => {
                 const x = xOf(i) + (step - barW) / 2;
-                const denom = mode === "share" ? col.total || 1 : 1;
+                const denom = eff === "share" ? col.total || 1 : 1;
                 let acc = 0;
                 const selected = col.key === selectedKey;
                 const label = `${col.label}${col.sublabel ? ` ${col.sublabel}` : ""}: ${col.total} executive orders`;
@@ -177,7 +169,7 @@ export function StackedBars<C extends StackColumn>({
                     )}
                     {series.map((s) => {
                       const v = col.values[s.id] ?? 0;
-                      if (v === 0) return null;
+                      if (v === 0 || (highlight && highlight !== s.id)) return null;
                       const y0 = y((acc + v) / denom);
                       const y1 = y(acc / denom);
                       acc += v;
@@ -192,7 +184,6 @@ export function StackedBars<C extends StackColumn>({
                             fill: s.fill,
                             stroke: "var(--surface)",
                             strokeWidth: 0.75,
-                            opacity: highlight && highlight !== s.id ? DIM : 1,
                           }}
                         />
                       );
@@ -202,12 +193,11 @@ export function StackedBars<C extends StackColumn>({
                       let a = 0;
                       return series.map((s) => {
                         const v = col.values[s.id] ?? 0;
-                        if (v === 0) return null;
+                        if (v === 0 || (highlight && highlight !== s.id)) return null;
                         const y0 = y((a + v) / denom);
                         const h = y(a / denom) - y0;
                         a += v;
-                        const t = mode === "share" ? `${Math.round((v / denom) * 100)}%` : String(v);
-                        if (highlight && highlight !== s.id) return null;
+                        const t = eff === "share" ? `${Math.round((v / denom) * 100)}%` : String(v);
                         return segmentLabelFits(h, barW, t) ? (
                           <text key={s.id} x={x + barW / 2} y={y0 + h / 2} dy="0.35em" textAnchor="middle" style={SEGMENT_LABEL_STYLE}>
                             {t}

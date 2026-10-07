@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { SLOT_NAME, changeVsPrior, formatAidMoney, spendingByYear } from "@/lib/foreign-aid-derive";
@@ -13,6 +13,8 @@ export function SpendingCard() {
   const { data, year, range, country, sector, isPartial } = useAidState();
   const sectorLabel = useSectorLabel();
   const rows = useMemo(() => spendingByYear(data, range[0], range[1], country, sector), [data, range, country, sector]);
+  const [only, setOnly] = useState<number | null>(null);
+  const shown = useMemo(() => (only === null || sector >= 0 ? rows : rows.map((r) => { const slots = r.slots.map((v, k) => (k === only ? v : 0)); return { ...r, slots, drawn: Math.max(0, slots[only]) }; })), [rows, only, sector]);
   const cur = rows.find((r) => r.fy === year);
   const change = changeVsPrior(data, year, country, sector);
   const showing = [country >= 0 ? data.payload.countries[country].name : null, sectorLabel].filter(Boolean);
@@ -32,8 +34,8 @@ export function SpendingCard() {
       lede={lede}
       action={showing.length > 0 ? <span className="rounded-md border border-line-strong bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">Showing {showing.join(" · ")} only</span> : undefined}
     >
-      <SpendingChart rows={rows} />
-      <SectorLegend partial={anyPartial} />
+      <SpendingChart rows={shown} />
+      <SectorLegend partial={anyPartial} only={sector < 0 ? only : null} onPick={(k) => setOnly((c) => (c === k ? null : k))} />
       <MethodologyNote>
         <p>
           Band under the axis: administration in office for most of the year (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic).
