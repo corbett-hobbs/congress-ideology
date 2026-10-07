@@ -113,6 +113,8 @@ export function buildDemographics(legislators: readonly DemoLegislator[], terms:
     const termId = presidentOnConvening(admins, c).term_id;
     for (const view of ["both", "senate", "house"] as const) {
       const ages: Record<"D" | "R", number[]> = { D: [], R: [] };
+      const all: number[] = [];
+      let servedSum = 0;
       const women: Record<CaucusGroup, number> = { D: 0, R: 0, O: 0 };
       const tenure: [number, number, number, number] = [0, 0, 0, 0];
       let seats = 0;
@@ -123,7 +125,10 @@ export function buildDemographics(legislators: readonly DemoLegislator[], terms:
         if (!p) throw new Error(`demographics: ${id} is in terms.json but not legislators.json`);
         const g = caucusGroup(e.caucus);
         seats++;
-        tenure[tenureBand(servedThrough(id, c))]++;
+        const n = servedThrough(id, c);
+        tenure[tenureBand(n)]++;
+        servedSum += n;
+        if (p.birthday) all.push(ageOn(p.birthday, date));
         if (p.gender === "F") women[g]++;
         if (g !== "O") {
           if (p.birthday) ages[g].push(ageOn(p.birthday, date));
@@ -137,9 +142,11 @@ export function buildDemographics(legislators: readonly DemoLegislator[], terms:
         termId,
         seats,
         age: { D: ageStat(ages.D), R: ageStat(ages.R) },
+        ageAll: ageStat(all),
         ageMissing,
         women,
         tenure,
+        servedSum,
       });
     }
   }

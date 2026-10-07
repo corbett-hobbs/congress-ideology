@@ -13,7 +13,7 @@ export interface PinLine {
   term?: string;
 }
 
-export function PinReadout({ line, pinned, onClear }: { line: PinLine | null; pinned: boolean; onClear: () => void }) {
+export function PinReadout({ line, pinned, onClear, hint = "Tap or drag the chart to pin a month." }: { line: PinLine | null; pinned: boolean; onClear: () => void; hint?: string }) {
   return (
     <div className="mt-3 sm:hidden">
       {line && (
@@ -26,7 +26,7 @@ export function PinReadout({ line, pinned, onClear }: { line: PinLine | null; pi
         </div>
       )}
       <p className="m-0 mt-1.5 text-[0.75rem] text-ink-muted">
-        Tap or drag the chart to pin a month.
+        {hint}
         {pinned && (
           <>
             {" "}

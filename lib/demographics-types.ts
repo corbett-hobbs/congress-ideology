@@ -25,12 +25,16 @@ export interface DemoCongress {
   /** Voting members who held a seat at any time in the Congress (each person once). */
   seats: number;
   age: { D: AgeStat; R: AgeStat };
+  /** Everyone with a birthdate, any caucus (the stat strip's headline median). */
+  ageAll: AgeStat;
   /** Members left out of the age figures for want of a birthdate. */
   ageMissing: number;
   /** Women by caucus. */
   women: Record<CaucusGroup, number>;
   /** Members by Congresses served, counting this one: 1 / 2-5 / 6-10 / 11 or more. */
   tenure: [number, number, number, number];
+  /** Sum of Congresses served over the roster, so the average is `servedSum / seats`. */
+  servedSum: number;
 }
 
 export interface DemoPresident {

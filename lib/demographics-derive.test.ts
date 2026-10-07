@@ -143,7 +143,12 @@ describe("the real data", () => {
     expect(payload.views.both[0].termId).toBe("1933-03-04");
   });
   it("ages run in a plausible range and the latest Congress is older than the 1970s", () => {
-    for (const r of payload.views.both) for (const g of ["D", "R"] as const) expect(r.age[g].median).toBeGreaterThan(40), expect(r.age[g].median).toBeLessThan(70);
+    for (const r of payload.views.both) {
+      for (const g of ["D", "R"] as const) {
+        expect(r.age[g].median).toBeGreaterThan(40);
+        expect(r.age[g].median).toBeLessThan(70);
+      }
+    }
     const row = (c: number) => payload.views.both[c - 73];
     expect(row(118).age.D.average!).toBeGreaterThan(row(95).age.D.average!);
   });
