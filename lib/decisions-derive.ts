@@ -231,6 +231,50 @@ export function chiefSegments(d: DecisionsPayload, terms: readonly number[]): Te
 
 // --------------------------------------------------------------------------- copy
 
+// --------------------------------------------------------------------------- decade heatmap
+
+/** A decade cell with fewer cases than this is drawn as "too few": its share would swing on one decision. */
+export const HEAT_MIN_CASES = 10;
+
+export interface DecadeCell {
+  /** 1940, 1950, ... (the first and last decades are partial: 1946-49 and 2020-25). */
+  decade: number;
+  bucket: Bucket;
+  total: number;
+}
+
+export const decadeOf = (term: number): number => Math.floor(term / 10) * 10;
+
+/** The decades the data covers, oldest first. */
+export const decadesOf = (d: DecisionsPayload): number[] => [...new Set(d.terms.map(decadeOf))];
+
+/** One area's buckets summed by decade (`ALL_AREAS`, `OTHER_AREAS` or an index), over every term, not only the window. */
+export function decadeCells(d: DecisionsPayload, area: number): DecadeCell[] {
+  const cells = areaCells(d, area);
+  return decadesOf(d).map((decade) => {
+    const bucket = zero();
+    d.terms.forEach((t, i) => {
+      if (decadeOf(t) === decade) addInto(bucket, cells[i]);
+    });
+    return { decade, bucket, total: sumBucket(bucket) };
+  });
+}
+
+/** The share a heatmap cell shows for `band` (0 unanimous, 4 split 5-4), or null when the cell has too few cases to trust. */
+export const heatValue = (c: DecadeCell, band: number): number | null => (c.total >= HEAT_MIN_CASES ? bandShare(c.bucket, band) : null);
+
+/** The top of the colour scale: the largest trusted share in any area-and-decade, rounded up to a whole ten percent, so every cell is comparable. */
+export function heatMax(d: DecisionsPayload, band: number): number {
+  let max = 0;
+  for (const area of [ALL_AREAS, ...d.areas.map((_, i) => i)]) {
+    for (const c of decadeCells(d, area)) max = Math.max(max, heatValue(c, band) ?? 0);
+  }
+  return Math.max(0.1, Math.ceil(max * 10) / 10);
+}
+
+/** Is any term of this decade inside the years window? */
+export const decadeInWindow = (decade: number, range: YearRange): boolean => range[1] >= decade && range[0] <= decade + 9;
+
 // --------------------------------------------------------------------------- the case list
 
 export interface CaseFilter {
