@@ -2,7 +2,7 @@ import type { BandTerm } from "../components/charts/TermBand";
 import type { TermSegment } from "../components/charts/TermBandSvg";
 import type { DecisionCountRow, DecisionsMeta } from "./decisions-entities";
 import { initialsOf } from "./term-label";
-import type { AreaSort, AreaSortKey, Bucket, DecisionsChief, DecisionsPayload, SplitMode } from "./decisions-types";
+import { ALL_AREAS, OTHER_AREAS, type AreaSort, type AreaSortKey, type Bucket, type DecisionCase, type DecisionsChief, type DecisionsPayload, type SplitMode } from "./decisions-types";
 import type { YearRange } from "./year-range";
 
 /**
@@ -37,6 +37,14 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
       addInto(by[ai][ti], b);
     }
   }
+  const totals = by.map((rows) => rows.reduce((t, b) => t + sumBucket(b), 0));
+  const topAreas = totals.map((n, i) => ({ n, i })).sort((a, b) => b.n - a.n || a.i - b.i).slice(0, TOP_AREAS).map((x) => x.i);
+  // "Other areas" = everything outside the six biggest, cases with no issue area included, so the series always add up to All.
+  const other = terms.map((_, ti) => {
+    const o: Bucket = [...all[ti]];
+    for (const ai of topAreas) for (let k = 0; k < 5; k++) o[k] -= by[ai][ti][k];
+    return o;
+  });
   const chiefs: DecisionsChief[] = meta.chief_spans.map((s) => ({
     id: s.scdb_chief,
     name: s.name,
@@ -51,6 +59,8 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
     areas: meta.issue_areas.map((a) => ({ id: a.id, label: a.label })),
     all,
     by,
+    other,
+    topAreas,
     chiefs,
     versionLabel: meta.scdb_version_label,
     citation: meta.citation,
@@ -60,7 +70,28 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
   };
 }
 
-export const cellAt = (d: DecisionsPayload, area: number, ti: number): Bucket => (area < 0 ? d.all[ti] : d.by[area][ti]);
+/** How many issue areas get their own series in card 1; the rest are "Other areas". */
+export const TOP_AREAS = 6;
+
+/** The per-term buckets for an area filter value (ALL_AREAS, OTHER_AREAS or an index). */
+export const areaCells = (d: DecisionsPayload, area: number): Bucket[] => (area === ALL_AREAS ? d.all : area === OTHER_AREAS ? d.other : d.by[area]);
+export const cellAt = (d: DecisionsPayload, area: number, ti: number): Bucket => areaCells(d, area)[ti];
+
+/** Does issue-area index `index` (-1 = none coded) fall inside the area filter? */
+export const inAreaFilter = (d: DecisionsPayload, area: number, index: number): boolean =>
+  area === ALL_AREAS || (area === OTHER_AREAS ? !d.topAreas.includes(index) : index === area);
+
+export const areaFilterLabel = (d: DecisionsPayload, area: number): string =>
+  area === ALL_AREAS ? "All issue areas" : area === OTHER_AREAS ? OTHER_LABEL(d) : d.areas[area].label;
+export const OTHER_LABEL = (d: DecisionsPayload): string => `Other areas (${d.areas.length - TOP_AREAS})`;
+
+/** Card 1's series, in stack order: the six biggest areas, then Other. `area` is the filter value that picks the series. */
+export function areaSeries(d: DecisionsPayload): { id: string; label: string; area: number; short: string }[] {
+  return [
+    ...d.topAreas.map((i) => ({ id: d.areas[i].id, label: d.areas[i].label, short: d.areas[i].label, area: i })),
+    { id: "other", label: OTHER_LABEL(d), short: "Other areas", area: OTHER_AREAS },
+  ];
+}
 
 /** Index range `[from, to]` (inclusive) of the terms inside the years window. */
 export function windowIndexes(d: DecisionsPayload, range: YearRange): [number, number] {
@@ -74,7 +105,7 @@ export function windowIndexes(d: DecisionsPayload, range: YearRange): [number, n
 /** The terms in the window and the bucket counts of the chosen area in each. */
 export function windowCells(d: DecisionsPayload, area: number, range: YearRange): { terms: number[]; cells: Bucket[] } {
   const [a, b] = windowIndexes(d, range);
-  return { terms: d.terms.slice(a, b + 1), cells: (area < 0 ? d.all : d.by[area]).slice(a, b + 1) };
+  return { terms: d.terms.slice(a, b + 1), cells: areaCells(d, area).slice(a, b + 1) };
 }
 
 /** Bucket totals over the whole window. */
@@ -95,7 +126,7 @@ export function median(values: readonly number[]): number {
 
 /** Few cases per term in a chosen issue area: shares from single years are rough. Never true for "All issue areas". */
 export function isSmallSample(d: DecisionsPayload, area: number, range: YearRange): boolean {
-  if (area < 0) return false;
+  if (area === ALL_AREAS) return false;
   return median(casesPerTerm(windowCells(d, area, range).cells)) < SMALL_SAMPLE_MEDIAN;
 }
 
@@ -199,6 +230,29 @@ export function chiefSegments(d: DecisionsPayload, terms: readonly number[]): Te
 }
 
 // --------------------------------------------------------------------------- copy
+
+// --------------------------------------------------------------------------- the case list
+
+export interface CaseFilter {
+  range: YearRange;
+  area: number;
+  /** Dissent band 0-4, or null for any. */
+  band: number | null;
+  /** A single pinned term, or null for the whole window. */
+  term: number | null;
+}
+
+/** Cases (newest first) inside the window, the area filter, the band and the pinned term. */
+export function filterCases(d: DecisionsPayload, cases: readonly DecisionCase[], f: CaseFilter): DecisionCase[] {
+  const [lo, hi] = f.term === null ? f.range : [f.term, f.term];
+  return cases.filter((c) => c[0] >= lo && c[0] <= hi && (f.band === null || c[5] === f.band) && inAreaFilter(d, f.area, c[4]));
+}
+
+/** `https://supreme.justia.com/...` for a case with a U.S. Reports cite ("347 U.S. 483"); null when there is no page number to link. */
+export function caseUrl(cite: string): string | null {
+  const m = /^(\d+) U\.S\. (\d+)$/.exec(cite.trim());
+  return m ? `https://supreme.justia.com/cases/federal/us/${m[1]}/${m[2]}/` : null;
+}
 
 export const fmtPct = (v: number): string => `${Math.round(v * 100)}%`;
 export const fmtInt = (n: number): string => n.toLocaleString("en-US");

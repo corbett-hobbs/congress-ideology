@@ -42,15 +42,16 @@ An unknown `chief` name fails the build; add a row when a new Chief takes the ch
 ## Output
 
 - `decisions_counts.json`: one row per `(term, issue_area_id)` that has at least one case, with `n` and `d0..d4`. Counts only, never percentages. Every term 1946–last has rows. `issue_area_id` is `null` for unclassified. ~77 KB.
+- `decisions_cases.json`: one row per case in scope, oldest first (~1.6 MB): `case_id`, `term`, `date`, `name`, `cite`, `issue_area_id`, `band`, `maj`, `min`. Names are SCDB's capitals re-cased for reading (`prettyCaseName`; known acronyms kept, a few newer UTF-8 names repaired); `cite` is the U.S. Reports cite, else Supreme Court Reporter, else Lawyers' Edition, else Lexis.
 - `decisions_meta.json`: version, data-through term, exclusions, unclassified count, citation, licence, chief spans, issue-area catalog.
 - `decisions_report.json`: totals by bucket, decade and issue area, gate results (humans only).
 
 ## Gates (the transform exits non-zero)
 
-Output total equals an independent positional recount straight from the CSV (and the raw row count after exclusions); per-term bucket sums and per-term 5–4 counts equal the recount; terms gap-free from 1946;
+The case list aggregates back to the counts exactly (same cases, same cells, unique ids). Output total equals an independent positional recount straight from the CSV (and the raw row count after exclusions); per-term bucket sums and per-term 5–4 counts equal the recount; terms gap-free from 1946;
 every row's buckets sum to `n`; unclassified and exclusion counts equal the recount; stable anchors (1946 = 142, 1972 = 156, 2015 five-four = 4) and release anchors (2026_01: total 8,251, 2024 = 61, 2025 = 57); chief spans contiguous and covering all terms.
 When a new release legitimately changes an anchor, update `ANCHORS` / `ANCHORS_BY_VERSION` in `pipeline/transform/decisions.ts` in the same PR.
 
 ## Not in scope
 
-Liberal/conservative direction, per-justice votes, landmark-case curation, case lists. This page is institutional counts only.
+Liberal/conservative direction, per-justice votes, landmark-case curation, case summaries. The page is institutional counts plus a plain list of the cases behind them (name, cite, date, issue area, vote).

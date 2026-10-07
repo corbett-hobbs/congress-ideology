@@ -1,20 +1,32 @@
 "use client";
 
-import { useMemo, useRef, type PointerEvent } from "react";
+import { useMemo, useRef, useState, type MouseEvent, type PointerEvent } from "react";
 import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MapCallouts } from "@/components/charts/MapCallouts";
-import { Tooltip, useTooltip } from "@/components/charts/Tooltip";
+import { Tooltip, usePinnedTooltip, useTooltip } from "@/components/charts/Tooltip";
 import { useZoomPan } from "@/components/charts/use-zoom-pan";
 import { YearPicker } from "@/components/charts/YearPicker";
 import { ZoomControls } from "@/components/charts/ZoomControls";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
+import { SITE_LABEL, SITE_ORDER, type BaseCluster, type BasesPayload } from "@/lib/bases-types";
 import { BRANCH_NAMES, MAP_BINS, formatCount, measureLabel, periodView, type ContingencyNote } from "@/lib/troops-derive";
 import { regionLabel } from "@/lib/troops-regions";
 import { useTroopsState } from "./TroopsState";
+import { BASE_R, BaseGlyph, BasesLayer } from "./BasesLayer";
 import { RankedList } from "./RankedList";
 import { TD, TH, TableView, branchColor } from "./shared";
+
+/** A pinned installation card: one site, or a group merged at this zoom. */
+interface BaseHit {
+  title: string;
+  country: string;
+  iso3: string;
+  lines: string[];
+  /** Troop-series place for the country, when it has one (the card then filters the page to it). */
+  place: number | null;
+}
 
 interface Hit {
   title: string;
@@ -38,12 +50,18 @@ const MAX_ZOOM = 8;
  * scrubbing) beside the ranked host list. The selected country is outlined and raised, the rest dimmed; small hosts
  * get a marker. Territories, afloat and unassigned, and hosts with no outline are stated under the map.
  */
-export function MapCard({ map }: { map: WorldMapFile }) {
+export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload }) {
   const { data, yi, pi, range, setYear, country, toggleCountry, measure } = useTroopsState();
   const { places, periods, years } = data.payload;
   const tip = useTooltip<Hit>();
+  const [showBases, setShowBases] = useState(false);
+  const basePin = usePinnedTooltip<BaseHit>();
   const svgRef = useRef<SVGSVGElement>(null);
-  const zoom = useZoomPan({ svgRef, extent: 1, maxK: MAX_ZOOM, getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null, onViewChange: tip.hide });
+  const zoom = useZoomPan({ svgRef, extent: 1, maxK: MAX_ZOOM, getPlotBox: () => svgRef.current?.getBoundingClientRect() ?? null, onViewChange: () => {
+      tip.hide();
+      basePin.hide();
+    },
+  });
   const { k, cx, cy } = zoom.view;
   const vb = { x: ((cx + 1) / 2) * map.width - map.width / (2 * k), y: ((1 - cy) / 2) * map.height - map.height / (2 * k), w: map.width / k, h: map.height / k };
 
@@ -79,6 +97,25 @@ export function MapCard({ map }: { map: WorldMapFile }) {
   const selIso = country >= 0 ? places[country].iso3 : null;
   const ordered = [...map.features.filter((f) => f.key !== selIso), ...map.features.filter((f) => f.key === selIso)];
   const fillOf = (h: Hit | undefined) => (!h ? LAND : h.suppressed ? NOT_REPORTED : h.value ? mix(base, MAP_BINS.mix[MAP_BINS.classOf(h.value) - 1]) : LAND);
+
+  const placeOfIso = useMemo(() => {
+    const m = new Map<string, number>();
+    places.forEach((pl, i) => pl.iso3 && m.set(pl.iso3, i));
+    return m;
+  }, [places]);
+  const pinBase = (e: MouseEvent<SVGGElement>, c: BaseCluster) => {
+    const sites = c.members.map((i) => bases.sites[i]);
+    const country = bases.countries[sites[0].c];
+    const one = sites.length === 1;
+    const lines = one
+      ? [SITE_LABEL[SITE_ORDER[sites[0].t]]]
+      : [
+          ...sites.slice(0, 6).map((s) => `${s.name} · ${SITE_LABEL[SITE_ORDER[s.t]]}`),
+          ...(sites.length > 6 ? [`and ${sites.length - 6} more (zoom in to split them)`] : []),
+        ];
+    tip.hide();
+    basePin.show({ title: one ? sites[0].name : `${sites.length} installations`, country: country.name, iso3: country.iso3, lines, place: placeOfIso.get(country.iso3) ?? null }, e);
+  };
 
   const hitFor = (el: Element | null): Hit | null => {
     const iso = el?.closest("[data-m]")?.getAttribute("data-m") ?? el?.closest("[data-k]")?.getAttribute("data-k");
@@ -192,11 +229,22 @@ export function MapCard({ map }: { map: WorldMapFile }) {
                   />
                 );
               })}
+              {showBases && <BasesLayer bases={bases} k={k} selIso={selIso} onPin={pinBase} />}
               <MapCallouts svgRef={svgRef} entries={callouts} view={vb} />
             </svg>
             <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
           </div>
           <Tooltip state={tip.state}>{(h) => <MapTip hit={h} />}</Tooltip>
+          <Tooltip
+            state={basePin.state}
+            onActivate={(h) => {
+              if (h.place != null) toggleCountry(h.place);
+              basePin.hide();
+            }}
+            activateHint={basePin.state?.data.place != null ? `Show ${basePin.state.data.country} in the charts above →` : undefined}
+          >
+            {(h) => <BaseTip hit={h} through={bases.through} />}
+          </Tooltip>
 
           {!view.unavailable && (
           <div className={`mt-2 ${LEGEND_ROW}`}>

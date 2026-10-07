@@ -6,6 +6,7 @@ import {
   scdbCaseRow,
   type ChiefReferenceEntry,
   type ChiefSpan,
+  type DecisionCaseRow,
   type DecisionCountRow,
   type DecisionsMeta,
   type IssueAreaCatalogEntry,
@@ -88,6 +89,52 @@ export function buildCounts(cases: readonly ScdbCaseRow[], catalog: readonly Iss
   }
   const order = (id: string | null) => (id === null ? catalog.length : catalog.findIndex((a) => a.id === id));
   return [...map.values()].sort((a, b) => a.term - b.term || order(a.issue_area_id) - order(b.issue_area_id));
+}
+
+const SMALL_WORDS = new Set(["v.", "of", "the", "and", "for", "in", "on", "to", "a", "an", "at", "by", "ex", "rel.", "de", "la", "et", "al.", "al", "dba", "aka", "ux.", "etc.", "etc.,"]);
+const KEEP_UPPER = new Set(["U.S.", "U.S.A.", "D.C.", "N.Y.", "II", "III", "IV", "NAACP", "IBM", "AFL-CIO", "UAW", "CIO", "AFL", "EEOC", "FDA", "EPA", "NLRB", "FCC", "FERC", "FTC", "SEC", "IRS", "INS", "HUD", "NCAA", "AT&T", "ACLU", "PGA", "NFL", "NBA", "ERISA", "OSHA", "USDA", "TVA", "RFC", "IRS.", "LLC", "LP", "LLP", "USA", "IAM", "NY", "NJ"]);
+
+/** SCDB capitalises case names; make them readable. Imperfect for unusual acronyms (listed above) but never changes what a name says. */
+export function prettyCaseName(input: string): string {
+  // The file is latin-1, but a few newer names are UTF-8 inside it ("Women\u00e2\u0080\u0099s"): re-read those bytes as UTF-8.
+  const fixed = /[\u00c2\u00c3\u00e2]/.test(input) ? Buffer.from(input, "latin1").toString("utf8") : input;
+  const raw = fixed.includes("\ufffd") ? input : fixed;
+  const words = raw.trim().replace(/\s+/g, " ").split(" ");
+  return words
+    .map((w, i) => {
+      const upper = w.toUpperCase();
+      if (KEEP_UPPER.has(upper)) return upper;
+      const lower = w.toLowerCase();
+      const bare = lower.replace(/[,;]+$/, "");
+      if (i > 0 && SMALL_WORDS.has(bare)) return lower;
+      if (lower === "v.") return "v.";
+      if (/^[A-Z]\.?,?$/.test(w) || /^([A-Z]\.){2,}/.test(w)) return w; // initials and dotted acronyms: "J.", "U.S."
+      return lower.replace(/(^|[-/(\u2013\u2019'&])([a-z\u00e0-\u00ff])/g, (m, pre: string, c: string, off: number) => (pre === "'" || pre === "\u2019" ? (off <= 1 ? pre + c.toUpperCase() : m) : pre + c.toUpperCase())).replace(/^Mc([a-z])/, (_m, c: string) => `Mc${c.toUpperCase()}`);
+    })
+    .join(" ");
+}
+
+const isoDate = (us: string): string => {
+  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(us.trim());
+  if (!m) throw new DecisionsDataError(`unparseable dateDecision "${us}"`);
+  return `${m[3]}-${m[1]!.padStart(2, "0")}-${m[2]!.padStart(2, "0")}`;
+};
+
+/** One row per case in scope, oldest first (the page reverses it). */
+export function buildCaseRows(cases: readonly ScdbCaseRow[], catalog: readonly IssueAreaCatalogEntry[]): DecisionCaseRow[] {
+  return cases
+    .map((c) => ({
+      case_id: c.caseId,
+      term: c.term,
+      date: isoDate(c.dateDecision),
+      name: prettyCaseName(c.caseName),
+      cite: [c.usCite, c.sctCite, c.ledCite, c.lexisCite].map((x) => x.trim()).find((x) => x) ?? "",
+      issue_area_id: issueAreaId(c.issueArea, catalog),
+      band: dissentBucket(c.minVotes),
+      maj: c.majVotes,
+      min: c.minVotes,
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date) || a.case_id.localeCompare(b.case_id));
 }
 
 /** Modal `chief` per term, merged into runs. Every run's chief must be in the reference and appear in one run only. */
@@ -207,12 +254,13 @@ export const ANCHORS_BY_VERSION: Record<string, { total: number; cases: Record<n
 export interface GateInput {
   version: string;
   counts: readonly DecisionCountRow[];
+  caseRows?: readonly DecisionCaseRow[];
   meta: DecisionsMeta;
   recount: Recount;
 }
 
 /** Build-failing gates. Returns the results for the human report. */
-export function runGates({ version, counts, meta, recount }: GateInput): Record<string, number | string | boolean> {
+export function runGates({ version, counts, caseRows, meta, recount }: GateInput): Record<string, number | string | boolean> {
   const fail = (m: string): never => {
     throw new DecisionsDataError(`gate failed: ${m}`);
   };
@@ -250,6 +298,24 @@ export function runGates({ version, counts, meta, recount }: GateInput): Record<
   if (byVersion) {
     if (total !== byVersion.total) fail(`anchor: release ${version} total ${total}, expected ${byVersion.total}`);
     for (const [t, n] of Object.entries(byVersion.cases)) if (perTerm.get(Number(t)) !== n) fail(`anchor: term ${t} has ${perTerm.get(Number(t))} cases, expected ${n}`);
+  }
+
+  if (caseRows) {
+    // The list and the counts must be the same cases: aggregate the list and compare cell by cell.
+    if (caseRows.length !== total) fail(`case list has ${caseRows.length} rows, counts total ${total}`);
+    if (new Set(caseRows.map((r) => r.case_id)).size !== caseRows.length) fail("case list has a duplicate case_id");
+    const agg = new Map<string, number[]>();
+    for (const r of caseRows) {
+      const k = `${r.term}|${r.issue_area_id ?? ""}`;
+      const a = agg.get(k) ?? [0, 0, 0, 0, 0];
+      a[r.band]! += 1;
+      agg.set(k, a);
+    }
+    for (const r of counts) {
+      const a = agg.get(`${r.term}|${r.issue_area_id ?? ""}`);
+      if (!a || a.join() !== [r.d0, r.d1, r.d2, r.d3, r.d4].join()) fail(`case list disagrees with counts for term ${r.term} area ${r.issue_area_id}`);
+    }
+    if (agg.size !== counts.length) fail("case list has a (term, area) cell the counts lack");
   }
 
   const spans = meta.chief_spans;

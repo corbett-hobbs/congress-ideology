@@ -5,6 +5,7 @@
  *   pnpm build && pnpm start &   # or `pnpm dev`
  *   pnpm check:decisions         # BASE_URL=http://localhost:3000 by default
  *
+ * Also: the case list (card 4) follows the card 1 legend (issue area), card 2 (vote band) and a pinned term.
  * At 1280, 1024, 768 and 390px (light), and 1280 / 390 in dark and with the `data-theme` override:
  *   - no console errors; no horizontal page overflow; the filter bar stays pinned;
  *   - year ticks never overlap on either time chart; every Chief Justice segment is labelled (slider band and chart band);
@@ -58,6 +59,8 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   const c1 = card("How many cases");
   const c2 = card("How divided");
   const c3 = card("Which kinds");
+  const c4 = card("Every case");
+  const listCount = async () => (await c4.locator("[aria-live=polite] span").first().innerText()).trim();
   const text = async (loc) => (await loc.innerText()).replace(/\s+/g, " ");
   const lede = async (c) => text(c.locator("p").first());
 
@@ -92,6 +95,36 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check((await legend.count()) === 5, `${tag}: card 2 legend names all five bands`);
   const svgNames = await svgTexts(c2.locator("svg.chart-svg text"));
   if (w >= 520) check(["Unanimous", "5–4"].every((n) => svgNames.includes(n)), `${tag}: card 2 names bands on the chart (${svgNames.filter((n) => /^(Unanimous|\d–\d)$/.test(n)).join(", ")})`);
+
+  // Card 4: the case list, filtered by the legends and the charts
+  await c4.scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => /^[\d,]+ cases?$/.test(document.querySelector("[aria-label='Cases, scrollable']")?.previousElementSibling?.querySelector("span")?.textContent ?? ""), null, { timeout: 15000 });
+  check((await listCount()) === "8,251 cases", `${tag}: case list opens with all 8,251 cases (${await listCount()})`);
+  const listBox = c4.locator("[aria-label='Cases, scrollable']");
+  const rowsNow = () => listBox.locator("li").count();
+  check((await rowsNow()) === 120, `${tag}: list renders a first page of rows (${await rowsNow()})`);
+  await listBox.evaluate((el) => (el.scrollTop = el.scrollHeight));
+  await settle(page);
+  check((await rowsNow()) > 120, `${tag}: scrolling the list adds rows (${await rowsNow()})`);
+  const firstRow = (await listBox.locator("li").first().innerText()).replace(/\s+/g, " ");
+  check(/2026/.test(firstRow) && /\d–\d/.test(firstRow), `${tag}: newest case first with its vote ("${firstRow.slice(0, 70)}")`);
+  const link = listBox.locator("li a").first();
+  check(((await link.getAttribute("href")) ?? "").startsWith("https://supreme.justia.com/cases/federal/us/"), `${tag}: U.S. Reports cases link out`);
+
+  // Legend of card 1 is an issue-area filter for the whole page
+  await c1.locator("button[aria-pressed]", { hasText: "Criminal procedure" }).click();
+  await settle(page);
+  check((await page.locator("select[aria-label='Issue area'] option:checked").innerText()) === "Criminal procedure", `${tag}: card 1 legend sets the issue area`);
+  check((await listCount()) === "1,760 cases", `${tag}: list follows the legend (${await listCount()})`);
+  check((await c1.locator("svg.chart-svg path, svg.chart-svg rect[style*='fill']").count()) > 0 && (await c1.locator("button[aria-pressed=true]", { hasText: "Criminal procedure" }).count()) === 1, `${tag}: legend entry marked active`);
+  await c4.locator("button[aria-label='Clear the issue area filter']").click();
+  await settle(page);
+  check((await listCount()) === "8,251 cases", `${tag}: the chip clears the issue area`);
+  await c1.locator("button[aria-pressed]", { hasText: "Other areas" }).click();
+  await settle(page);
+  check((await listCount()) === "1,696 cases".replace("1,696", await listCount().then((t) => t.split(" ")[0])) && (await page.locator("select[aria-label='Issue area'] option:checked").innerText()).startsWith("Other areas"), `${tag}: Other areas filters too (${await listCount()})`);
+  await c1.locator("button[aria-pressed=true]", { hasText: "Other areas" }).click();
+  await settle(page);
 
   // Peak/low re-picked: area filter and window
   const peaks = async () => (await svgTexts(c1.locator("svg.chart-svg text.fill-ink"))).join(" ");
@@ -156,10 +189,15 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   await c2.scrollIntoViewIfNeeded();
   await legend.nth(4).click();
   await settle(page);
+  check((await listCount()) === "1,449 cases", `${tag}: picking the 5–4 band filters the list (${await listCount()})`);
+  check((await c4.locator("button[aria-label='Clear the vote filter']").count()) === 1, `${tag}: vote chip shown`);
+  check((await lede(c1)).includes("4 dissents"), `${tag}: card 1 narrows to the picked band`);
+  check((await listBox.locator("li").first().innerText()).replace(/\s+/g, " ").includes("5–4") || (await listBox.locator("li").first().innerText()).includes("4–4"), `${tag}: listed cases are 5–4 or 4–4`);
   check((await c2.locator("button[aria-pressed=true]").filter({ hasText: "Number of cases" }).count()) === 1, `${tag}: isolating a band switches to Number of cases`);
   check((await c2.locator("svg.chart-svg path[fill]").count()) === 1, `${tag}: only the isolated band is drawn`);
   await c2.locator("button", { hasText: "Share of cases" }).click();
   await settle(page);
+  check((await listCount()) === "8,251 cases", `${tag}: back to Share clears the vote filter`);
   check((await c2.locator("svg.chart-svg path[fill]").count()) === 5, `${tag}: back to Share clears the pick`);
 
   // Hover links the two time charts (mouse)
@@ -171,6 +209,13 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
     await settle(page);
     check((await c2.locator("svg.chart-svg line[stroke-dasharray]").count()) >= 1, `${tag}: hovering card 1 draws the linked line on card 2`);
     check((await page.locator(".chart-tooltip").count()) === 1, `${tag}: tooltip opens on hover`);
+    await page.mouse.click(svgBox.x + svgBox.width * 0.5, svgBox.y + 150);
+    await settle(page);
+    check(/term$/.test((await listCount()).split(" ").slice(-1)[0] ?? "") || (await c4.locator("button[aria-label='Clear the pinned term']").count()) === 1, `${tag}: pinning a term narrows the list to it`);
+    const pinned = parseInt((await listCount()).replace(/,/g, ""), 10);
+    check(pinned > 0 && pinned < 200, `${tag}: pinned term lists only that term's cases (${pinned})`);
+    await c4.locator("button[aria-label='Clear the pinned term']").click();
+    await settle(page);
     await page.mouse.move(5, 5);
     await settle(page);
     check((await page.locator(".chart-tooltip").count()) === 0, `${tag}: tooltip closes when the pointer leaves`);

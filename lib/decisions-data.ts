@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
 import { buildDecisionsPayload } from "./decisions-derive";
-import { decisionCountRow, decisionsMeta } from "./decisions-entities";
-import type { DecisionsPayload } from "./decisions-types";
+import { decisionCaseRow, decisionCountRow, decisionsMeta } from "./decisions-entities";
+import type { DecisionCase, DecisionsPayload } from "./decisions-types";
 
 /**
  * Build-time reader for /supreme-court/decisions: parses `decisions_counts.json` and `decisions_meta.json` at the boundary
@@ -22,4 +22,18 @@ export function getDecisionsPageData(): DecisionsPayload {
   const meta = decisionsMeta.parse(read("decisions_meta.json"));
   cache = buildDecisionsPayload(counts, meta);
   return cache;
+}
+
+let casesCache: DecisionCase[] | null = null;
+
+/** Every case in scope, newest first, as the compact arrays the list card fetches from `/data/decisions/cases`. */
+export function getDecisionCases(): DecisionCase[] {
+  if (casesCache) return casesCache;
+  const meta = decisionsMeta.parse(read("decisions_meta.json"));
+  const index = new Map(meta.issue_areas.map((a, i) => [a.id, i]));
+  const rows = z.array(decisionCaseRow).parse(read("decisions_cases.json"));
+  casesCache = rows
+    .map((r): DecisionCase => [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : (index.get(r.issue_area_id) ?? -1), r.band, r.maj, r.min])
+    .reverse();
+  return casesCache;
 }

@@ -5,6 +5,7 @@ import {
   DISSENT_BUCKET_LABELS,
   DecisionsDataError,
   chiefReference,
+  decisionCaseRow,
   decisionCountRow,
   decisionsMeta,
   issueAreaCatalog,
@@ -13,7 +14,7 @@ import {
 import { ADMINISTRATIONS } from "./administrations";
 import { HISTORICAL_ADMINISTRATIONS } from "../../lib/troops-presidents";
 import { RAW_DIR } from "../fetch/lib";
-import { buildChiefSpans, buildCounts, buildMeta, checkChiefReference, parseScdb, recountFromCsv, runGates, selectCases } from "./decisions";
+import { buildCaseRows, buildChiefSpans, buildCounts, buildMeta, checkChiefReference, parseScdb, recountFromCsv, runGates, selectCases } from "./decisions";
 
 /**
  * Decisions track transform: raw/scdb (the pinned release in manifest.json) ->
@@ -48,7 +49,8 @@ async function main() {
   const counts = z.array(decisionCountRow).parse(buildCounts(selection.cases, catalog));
   const spans = buildChiefSpans(selection.cases, chiefs);
   const meta = decisionsMeta.parse(buildMeta({ version: manifest.version, sourceFile: manifest.csv_file, cases: selection.cases, selection, catalog, spans }));
-  const gates = runGates({ version: manifest.version, counts, meta, recount: recountFromCsv(text) });
+  const caseRows = z.array(decisionCaseRow).parse(buildCaseRows(selection.cases, catalog));
+  const gates = runGates({ version: manifest.version, counts, caseRows, meta, recount: recountFromCsv(text) });
 
   // Human report: totals by bucket, by decade, by issue area.
   const bucketTotals = [0, 0, 0, 0, 0];
@@ -81,10 +83,11 @@ async function main() {
 
   await mkdir(OUT, { recursive: true });
   await writeFile(`${OUT}/decisions_counts.json`, oneRowPerLine(counts));
+  await writeFile(`${OUT}/decisions_cases.json`, oneRowPerLine(caseRows));
   await writeFile(`${OUT}/decisions_meta.json`, JSON.stringify(meta, null, 2) + "\n");
   await writeFile(`${OUT}/decisions_report.json`, JSON.stringify(report, null, 2) + "\n");
   const size = (await stat(`${OUT}/decisions_counts.json`)).size;
-  console.log(`  ${meta.case_count} cases, terms ${report.terms}, ${counts.length} count rows (${(size / 1024).toFixed(0)} KB), gates ok`);
+  console.log(`  ${meta.case_count} cases, terms ${report.terms}, ${counts.length} count rows (${(size / 1024).toFixed(0)} KB), gates ok; ${caseRows.length} case rows`);
 }
 
 main().catch((e) => {

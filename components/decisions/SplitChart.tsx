@@ -30,8 +30,8 @@ const CAPTION_CHAR_W = 6;
  * same placement the electricity chart uses) and otherwise in a right gutter on wide charts. `iso` draws one band alone
  * from zero on its own axis. Hover, pin and the Chief Justice band are shared with card 1.
  */
-export function SplitChart({ mode, iso, onIso }: { mode: SplitMode; iso: number | null; onIso: (k: number) => void }) {
-  const { data, range, area, hover, pin } = useDecisionsValues();
+export function SplitChart({ mode, onIso }: { mode: SplitMode; onIso: (k: number) => void }) {
+  const { data, range, area, band: iso, hover, pin } = useDecisionsValues();
   const { moveHover, leaveHover, togglePin, pinTerm, clearPin } = useDecisionsActions();
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const tip = useStickyTooltip<number>();

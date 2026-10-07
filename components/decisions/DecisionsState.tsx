@@ -13,8 +13,10 @@ import type { DecisionsPayload } from "@/lib/decisions-types";
 export interface DecisionsValues {
   data: DecisionsPayload;
   range: YearRange;
-  /** Index into `data.areas`, or -1 for All issue areas. */
+  /** Index into `data.areas`, ALL_AREAS (-1) or OTHER_AREAS (-2). */
   area: number;
+  /** Dissent band 0-4 picked on card 2 (legend or band name), or null. Narrows card 1 and the case list. */
+  band: number | null;
   hover: number | null;
   pin: number | null;
 }
@@ -22,6 +24,7 @@ export interface DecisionsValues {
 export interface DecisionsActions {
   setRange: (r: YearRange) => void;
   setArea: (a: number) => void;
+  setBand: (b: number | null) => void;
   moveHover: (term: number) => void;
   leaveHover: () => void;
   /** Pin `term`, or clear the pin when it is already pinned. */
@@ -38,6 +41,7 @@ export function DecisionsStateProvider({ data, children }: { data: DecisionsPayl
   const full = useMemo<YearRange>(() => [data.terms[0], data.terms[data.terms.length - 1]], [data.terms]);
   const [range, setRangeState] = useState<YearRange>(full);
   const [area, setAreaState] = useState(-1);
+  const [band, setBandState] = useState<number | null>(null);
   const [hover, setHover] = useState<number | null>(null);
   const [pin, setPin] = useState<number | null>(null);
   const pending = useRef<number | null>(null);
@@ -49,6 +53,7 @@ export function DecisionsStateProvider({ data, children }: { data: DecisionsPayl
     () => ({
       setRange: (r) => setRangeState((cur) => (sameRange(cur, r) ? cur : r)),
       setArea: (a) => setAreaState(a),
+      setBand: (b) => setBandState(b),
       moveHover: (term) => {
         pending.current = term;
         if (!raf.current)
@@ -71,8 +76,8 @@ export function DecisionsStateProvider({ data, children }: { data: DecisionsPayl
   // A pin or hover that has left the window is simply not shown (and comes back if the window widens).
   const values = useMemo<DecisionsValues>(() => {
     const inWin = (t: number | null) => (t !== null && t >= range[0] && t <= range[1] ? t : null);
-    return { data, range, area, hover: inWin(hover), pin: inWin(pin) };
-  }, [data, range, area, hover, pin]);
+    return { data, range, area, band, hover: inWin(hover), pin: inWin(pin) };
+  }, [data, range, area, band, hover, pin]);
 
   return (
     <ActionsCtx.Provider value={actions}>

@@ -12,18 +12,18 @@ const chiefs: ChiefReferenceEntry[] = [
   { scdb_chief: "Jones", name: "Bo Jones", justice_id: 2, appointing_president: "Richard M. Nixon", appointing_party: "Republican" },
 ];
 
-const HEADER = "caseId,term,decisionType,majVotes,minVotes,voteUnclear,issueArea,chief";
+const HEADER = "caseId,term,decisionType,majVotes,minVotes,voteUnclear,issueArea,chief,dateDecision,caseName,usCite,sctCite,ledCite,lexisCite";
 const csv = (...lines: string[]) => [HEADER, ...lines].join("\n") + "\n";
 const SAMPLE = csv(
-  "1,1946,1,9,0,,1,Smith",
-  "2,1946,1,5,4,,2,Smith",
-  "3,1946,6,8,1,,,Smith", // per curiam, no issue area
-  "4,1946,2,9,0,,1,Smith", // summary: excluded
-  "5,1946,4,9,0,,1,Smith", // decree: excluded
-  "6,1946,1,5,4,1,1,Smith", // unclear: excluded
-  "7,1947,1,6,3,,1,Jones",
-  "8,1947,5,4,4,,1,Jones", // 4-4 tie: bucket 4
-  "9,1947,1,7,1,,2,Smith",
+  "1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,",
+  "2,1946,1,5,4,,2,Smith,11/18/1946,CASE,1 U.S. 1,,,",
+  "3,1946,6,8,1,,,Smith,11/18/1946,CASE,1 U.S. 1,,,", // per curiam, no issue area
+  "4,1946,2,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,", // summary: excluded
+  "5,1946,4,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,", // decree: excluded
+  "6,1946,1,5,4,1,1,Smith,11/18/1946,CASE,1 U.S. 1,,,", // unclear: excluded
+  "7,1947,1,6,3,,1,Jones,11/18/1946,CASE,1 U.S. 1,,,",
+  "8,1947,5,4,4,,1,Jones,11/18/1946,CASE,1 U.S. 1,,,", // 4-4 tie: bucket 4
+  "9,1947,1,7,1,,2,Smith,11/18/1946,CASE,1 U.S. 1,,,",
 );
 
 describe("decisions transform", () => {
@@ -51,13 +51,13 @@ describe("decisions transform", () => {
 
   it("fails loudly on an unknown issue area or chief", () => {
     expect(() => issueAreaId(99, catalog)).toThrow(/unknown SCDB issueArea code 99/);
-    const cases = selectCases(parseScdb(csv("1,1946,1,9,0,,1,Nobody"))).cases;
+    const cases = selectCases(parseScdb(csv("1,1946,1,9,0,,1,Nobody,11/18/1946,CASE,1 U.S. 1,,,"))).cases;
     expect(() => buildChiefSpans(cases, chiefs)).toThrow(/unknown SCDB chief "Nobody"/);
-    expect(() => selectCases(parseScdb(csv("1,1946,3,9,0,,1,Smith")))).toThrow(/unknown decisionType 3/);
+    expect(() => selectCases(parseScdb(csv("1,1946,3,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,")))).toThrow(/unknown decisionType 3/);
   });
 
   it("fails on a duplicate caseId", () => {
-    expect(() => parseScdb(csv("1,1946,1,9,0,,1,Smith", "1,1946,1,9,0,,1,Smith"))).toThrow(/duplicate caseId/);
+    expect(() => parseScdb(csv("1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,", "1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,"))).toThrow(/duplicate caseId/);
   });
 
   it("builds chief spans from the modal chief of each term", () => {
@@ -112,9 +112,39 @@ describe("gates", () => {
     expect(() => runGates({ version: "2026_01", counts, meta: { ...meta, exclusions: { ...meta.exclusions, unclear_votes: 81 } }, recount })).toThrow(/exclusions/);
   });
 
+  it("fail when the case list disagrees with the counts", async () => {
+    const { buildCaseRows } = await import("./decisions");
+    const caseRows = buildCaseRows(sel.cases, realCatalog);
+    expect(() => runGates({ version: "2026_01", counts, caseRows, meta, recount })).not.toThrow();
+    expect(() => runGates({ version: "2026_01", counts, caseRows: caseRows.slice(1), meta, recount })).toThrow(/case list has/);
+    const moved = caseRows.map((r, i) => (i === 0 ? { ...r, band: (r.band + 1) % 5 } : r));
+    expect(() => runGates({ version: "2026_01", counts, caseRows: moved, meta, recount })).toThrow(/case list disagrees/);
+    expect(() => runGates({ version: "2026_01", counts, caseRows: caseRows.map((r, i) => (i === 1 ? { ...r, case_id: caseRows[0]!.case_id } : r)), meta, recount })).toThrow(/duplicate case_id/);
+  });
+
   it("the committed outputs are the transform of the committed raw file", () => {
     const committed = readFileSync("pipeline/output/decisions_counts.json", "utf8");
     const normalized = `[\n${counts.map((r) => JSON.stringify(r)).join(",\n")}\n]\n`;
     expect(committed).toBe(normalized);
+  });
+});
+
+describe("case names and rows", () => {
+  it("title-cases SCDB's capitals", async () => {
+    const { prettyCaseName } = await import("./decisions");
+    expect(prettyCaseName("UNITED STATES v. LOPEZ")).toBe("United States v. Lopez");
+    expect(prettyCaseName("SMITH, ET AL. v. U.S. DEPT. OF STATE")).toBe("Smith, et al. v. U.S. Dept. of State");
+    expect(prettyCaseName("O'BRIEN v. MCDONNELL DOUGLAS CORP.")).toBe("O'Brien v. McDonnell Douglas Corp.");
+    expect(prettyCaseName("NLRB v. AFL-CIO")).toBe("NLRB v. AFL-CIO");
+    expect(prettyCaseName("OIL STATES ENERGY SERVICES, LLC v. GREENE\u00e2\u0080\u0099S ENERGY GROUP, LLC")).toBe("Oil States Energy Services, LLC v. Greene\u2019s Energy Group, LLC");
+    expect(prettyCaseName("DEPARTMENT OF STATE v. MU\u00c3\u00b1OZ")).toBe("Department of State v. Mu\u00f1oz");
+    expect(prettyCaseName("WILLIAMS\u00e2\u0080\u0093YULEE v. FLORIDA BAR")).toBe("Williams\u2013Yulee v. Florida Bar");
+  });
+  it("builds one row per case, and the gates catch a list that disagrees with the counts", async () => {
+    const { buildCaseRows } = await import("./decisions");
+    const sel = selectCases(parseScdb(SAMPLE));
+    const rows = buildCaseRows(sel.cases, catalog);
+    expect(rows).toHaveLength(6);
+    expect(rows[0]).toMatchObject({ date: "1946-11-18", name: "Case", cite: "1 U.S. 1", band: 0 });
   });
 });

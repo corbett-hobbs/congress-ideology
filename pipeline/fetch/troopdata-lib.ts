@@ -12,6 +12,7 @@ export const TROOPDATA_COMMIT = "338bbda879932ac86cb5ef7f83845254f2c94070";
 /** `path` in the upstream repo -> file name committed under `TROOPDATA_RAW_DIR`. */
 export const TROOPDATA_FILES: readonly { path: string; file: string }[] = [
   { path: "data-raw/troopdata-rebuild-country-year-quarter-format.csv", file: "country-year-quarter-format.csv" },
+  { path: "data-raw/basedata.csv", file: "basedata.csv" },
   { path: "LICENSE.md", file: "LICENSE.md" },
   { path: "DESCRIPTION", file: "DESCRIPTION" },
 ];

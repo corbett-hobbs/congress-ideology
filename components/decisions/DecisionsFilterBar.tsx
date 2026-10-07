@@ -7,7 +7,8 @@ import { TermBand } from "@/components/charts/TermBand";
 import { chiefBandTerms } from "@/lib/decisions-derive";
 import { sameRange } from "@/lib/year-range";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
-import { ALL_AREAS_LABEL } from "@/lib/decisions-derive";
+import { ALL_AREAS_LABEL, OTHER_LABEL } from "@/lib/decisions-derive";
+import { OTHER_AREAS } from "@/lib/decisions-types";
 
 const SELECT =
   "min-w-0 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
@@ -39,6 +40,7 @@ export function DecisionsFilterBar() {
                   {a.label}
                 </option>
               ))}
+              <option value={OTHER_AREAS}>{OTHER_LABEL(data)}</option>
             </select>
           </label>
           <RangeSelector
