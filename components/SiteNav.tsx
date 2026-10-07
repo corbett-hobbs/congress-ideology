@@ -22,7 +22,7 @@ export function SiteNav() {
   return (
     <nav
       aria-label="Sections"
-      className="flex h-12 min-w-0 flex-1 items-stretch justify-end gap-0 overflow-x-auto pr-1 md:flex-none md:justify-start md:overflow-visible md:h-auto md:gap-2 md:pr-0"
+      className="[scrollbar-width:none] [&::-webkit-scrollbar]:hidden flex h-12 min-w-0 flex-1 items-stretch justify-end gap-0 overflow-x-auto pr-1 md:flex-none md:justify-start md:overflow-visible md:h-auto md:gap-2 md:pr-0"
     >
       {branches.map((b) => {
           if (b.status !== "live") {
@@ -157,7 +157,7 @@ function ScrollRow({ label, children }: { label: string; children: ReactNode }) 
         ref={ref}
         aria-label={label}
         onScroll={measure}
-        className="flex h-12 items-center gap-1 overflow-x-auto border-t border-line bg-surface-raised px-4 py-0.5 md:h-auto md:gap-1.5 md:border-t-0 md:bg-transparent md:p-1"
+        className="flex h-12 items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-t border-line bg-surface-raised px-4 py-0.5 md:h-auto md:gap-1.5 md:border-t-0 md:bg-transparent md:p-1"
       >
         {children}
       </nav>
