@@ -77,6 +77,14 @@
   --tenure-2: #6c5c9c;
   --tenure-3: #4b3a78;
   --tenure-4: #2a2043;
+  /* Dissent-count bands (components/decisions): unanimous / 8-1 / 7-2 / 6-3 / 5-4 stacked on one chart and drawn together in
+     card 3's rows, so every pair must be separable. NOT party colours (the page's only party colour is the Chief Justice term
+     band); validated by validate_palette.js (FORCED_PAIRS: all pairs plus each vs --dem/--rep, >= 3:1 on every surface). */
+  --split-0: #312c44;
+  --split-1: #23318e;
+  --split-2: #41939d;
+  --split-3: #643e03;
+  --split-4: #a03667;
   /* Amber "note" accent — the wealth scatter's hover-card gap/off-scale
      lines (session 3). Not a party colour, so it sits outside
      validate_palette.js's co-occurrence checker; verified by hand instead —
@@ -153,6 +161,11 @@
     --tenure-2: #9588c8;
     --tenure-3: #b9aee2;
     --tenure-4: #e0d9f5;
+    --split-0: #9591ad;
+    --split-1: #5cb2fd;
+    --split-2: #6acdc6;
+    --split-3: #deb34a;
+    --split-4: #ba446e;
     --note: #e3b04a;
     --focus: #9b84c7;
   --cont-north-america: #5b95de;
@@ -221,6 +234,11 @@
   --tenure-2: #9588c8;
   --tenure-3: #b9aee2;
   --tenure-4: #e0d9f5;
+  --split-0: #9591ad;
+  --split-1: #5cb2fd;
+  --split-2: #6acdc6;
+  --split-3: #deb34a;
+  --split-4: #ba446e;
   --note: #e3b04a;
   --focus: #9b84c7;
   --cont-north-america: #5b95de;

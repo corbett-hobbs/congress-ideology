@@ -7,7 +7,7 @@ import { Axis } from "./Axis";
 import { Tooltip, useStickyTooltip } from "./Tooltip";
 import { useElementWidth } from "@/lib/use-element-width";
 import { findExtremes } from "@/lib/chart-extremes";
-import { Y_GUTTER, fmtShare } from "@/lib/chart-bars";
+import { Y_GUTTER, fmtShare, yearLabelEvery } from "@/lib/chart-bars";
 import { SegmentLabel } from "./SegmentLabel";
 import { TERM_BAND_H, TermBandSvg, type TermSegment } from "./TermBandSvg";
 
@@ -62,6 +62,12 @@ interface Props<C extends StackColumn> {
   selectedStyle?: "tint" | "line";
   /** Presidential terms under the axis as `TermBandSvg` segments (one slot per column); used instead of `bands`. */
   terms?: readonly TermSegment[];
+  /** A column hovered elsewhere (a linked chart): drawn as a faint dashed line, never selected. */
+  activeKey?: string | null;
+  /** Called with the hovered column's key (mouse only) and null on leave, so a sibling chart can follow. */
+  onActive?: (key: string | null) => void;
+  /** Column labels are years: print round years every 1, 2, 5, 10 or 20 (rule 10h) instead of every nth column. */
+  yearTicks?: boolean;
   renderTooltip: (column: C) => ReactNode;
 }
 
@@ -95,6 +101,9 @@ export function StackedBars<C extends StackColumn>({
   markShare = false,
   selectedStyle = "tint",
   terms,
+  activeKey = null,
+  onActive,
+  yearTicks = false,
   renderTooltip,
 }: Props<C>) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
@@ -135,7 +144,10 @@ export function StackedBars<C extends StackColumn>({
         height={height}
         margin={margin}
         ariaLabel={ariaLabel}
-        onPointerLeave={tip.leave}
+        onPointerLeave={(e) => {
+          tip.leave(e);
+          if (e.pointerType === "mouse") onActive?.(null);
+        }}
       >
         {({ innerWidth, innerHeight }) => {
           const fitted = eff === "share" && fitShare;
@@ -148,7 +160,7 @@ export function StackedBars<C extends StackColumn>({
           const step = innerWidth / columns.length;
           const barW = Math.max(2, step * 0.78);
           // Label as many columns as fit: a zoomed-in window gets every year, the full span every few.
-          const every = Math.max(1, Math.ceil((narrow ? 30 : 44) / step));
+          const every = yearTicks ? yearLabelEvery(step) : Math.max(1, Math.ceil((narrow ? 30 : 44) / step));
           const xOf = (i: number) => i * step;
 
           return (
@@ -184,6 +196,9 @@ export function StackedBars<C extends StackColumn>({
                   <g key={col.key}>
                     {selected && selectedStyle === "line" && (
                       <line x1={xOf(i) + step / 2} x2={xOf(i) + step / 2} y1={0} y2={innerHeight} stroke="var(--ink)" strokeWidth={1.5} strokeDasharray="4 3" pointerEvents="none" />
+                    )}
+                    {!selected && col.key === activeKey && (
+                      <line x1={xOf(i) + step / 2} x2={xOf(i) + step / 2} y1={0} y2={innerHeight} stroke="var(--ink)" strokeWidth={1.25} strokeDasharray="3 3" opacity={0.5} pointerEvents="none" />
                     )}
                     {selected && selectedStyle === "tint" && (
                       <rect
@@ -246,7 +261,11 @@ export function StackedBars<C extends StackColumn>({
                         tip.down(e, tip.state?.data === col);
                         tip.show(col, e);
                       }}
-                      onPointerEnter={(e) => e.pointerType === "mouse" && tip.show(col, e)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== "mouse") return;
+                        tip.show(col, e);
+                        onActive?.(col.key);
+                      }}
                       onPointerMove={tip.move}
                       onPointerUp={tip.up}
                       onPointerCancel={tip.moved}
@@ -263,7 +282,7 @@ export function StackedBars<C extends StackColumn>({
               })}
 
               {/* Peak and low, labelled above their bars; they fade while a column is hovered or picked. */}
-              <g pointerEvents="none" opacity={tip.state || selectedKey ? 0.25 : 1} style={{ transition: "opacity .12s" }}>
+              <g pointerEvents="none" opacity={tip.state || selectedKey || activeKey ? 0.25 : 1} style={{ transition: "opacity .12s" }}>
                 {marks.map((m, k) => {
                   const w = m.text.length * MARK_CHAR_W;
                   const clampX = (x: number) => Math.min(Math.max(x, w / 2 + 2), innerWidth - w / 2 - 2);
@@ -287,15 +306,16 @@ export function StackedBars<C extends StackColumn>({
 
               {/* x labels */}
               {columns.map((col, i) => {
-                const show = i % every === 0 || i === columns.length - 1;
+                const year = Number(col.label);
+                const show = yearTicks && Number.isFinite(year) ? year % every === 0 : i % every === 0 || i === columns.length - 1;
                 // Don't crowd the final label with the previous one.
-                const crowded = i !== columns.length - 1 && columns.length - 1 - i < every / 2;
+                const crowded = !yearTicks && i !== columns.length - 1 && columns.length - 1 - i < every / 2;
                 if (!show || crowded) return null;
                 return (
                   <g key={col.key} transform={`translate(${xOf(i) + step / 2},${innerHeight})`}>
                     <line className="grid-line" y1={0} y2={5} />
                     <text className="axis-tick-label" y={18} textAnchor="middle">
-                      {narrow ? `’${col.label.slice(2)}` : col.label}
+                      {narrow && !yearTicks ? `’${col.label.slice(2)}` : col.label}
                     </text>
                     {col.sublabel && (
                       <text className="axis-tick-label" y={30} textAnchor="middle">

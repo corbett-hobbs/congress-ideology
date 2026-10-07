@@ -151,6 +151,13 @@ const DEFS: readonly BranchDef[] = [
         blurb:
           "Where each justice has sat since 1937 and how the Court\u2019s median has moved, term by term.",
       },
+      {
+        id: "decisions",
+        label: "Decisions",
+        status: "live",
+        blurb:
+          "How many argued cases the Court decides each term, and how often it splits, by issue area since 1946.",
+      },
     ],
   },
 ];

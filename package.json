@@ -38,6 +38,7 @@
     "pipeline": "pnpm fetch:all && pnpm validate && pnpm transform && pnpm fetch:photos && pnpm fetch:wikipedia",
     "check:justice-layout": "node scripts/check-justice-layout.mjs",
     "check:foreign-aid": "node scripts/check-foreign-aid.mjs",
+    "check:decisions": "node scripts/check-decisions.mjs",
     "pipeline:check": "pnpm validate && pnpm transform && git diff --exit-code --stat -- pipeline/output"
   },
   "engines": {
