@@ -27,7 +27,7 @@ definition: `docs/DEMOGRAPHICS_PREFLIGHT.md`.
 - **Age.** Whole years on the day the Congress convened, from the full birthdate (a birthday on that day counts). It is counted
   on the convening day for every member of the roster, including one who joined later. Members with no birthdate are left out
   of the age figures and counted in `ageMissing`: 4 member-Congress rows in the 73rd-119th (three people: Rohrbough, Burkhalter,
-  Hutchinson). Median and average are both precomputed (a median cannot be recovered from aggregates); one decimal, shown without a trailing ".0" (58, 50.5, 52.1).
+  Hutchinson). Median and average are both precomputed (a median cannot be recovered from aggregates); one decimal, shown the same way for both (58.0, 50.5, 52.1).
 - **Convening day.** Not Jan 3: the source dates a term from the day the member was sworn in, which is the day the Congress
   convened (the 92nd convened Jan 21, 1971; the 96th Jan 15, 1979; the 73rd's terms start at the March 9, 1933 special session).
   `CONVENING` in `lib/demographics-entities.ts` is the most common House term start in January-March of each Congress's first
