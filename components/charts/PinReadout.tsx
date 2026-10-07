@@ -6,7 +6,7 @@
  * whether a date is pinned (Trade and Energy each wrap it with their own state).
  */
 export interface PinLine {
-  /** One value per line, e.g. "Produced 21.7M b/d". */
+  /** Values shown together on one line, divided by " · ", e.g. "Produced 21.7M b/d". */
   values: string[];
   /** The month (and any "preliminary" note), then the president's term on the same last line. */
   date: string;
@@ -18,9 +18,7 @@ export function PinReadout({ line, pinned, onClear }: { line: PinLine | null; pi
     <div className="mt-3 sm:hidden">
       {line && (
         <div aria-live="off">
-          {line.values.map((v) => (
-            <p key={v} className="m-0 text-[0.9rem] font-medium leading-snug tabular-nums text-ink">{v}</p>
-          ))}
+          <p className="m-0 text-[0.82rem] font-medium leading-snug tabular-nums text-ink">{line.values.join(" · ")}</p>
           <p className="m-0 mt-0.5 text-[0.78rem] leading-snug text-ink-muted">
             {line.date}
             {line.term ? ` · ${line.term}` : ""}

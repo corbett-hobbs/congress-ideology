@@ -196,6 +196,8 @@ const trim = (v: number, dp: number) => v.toFixed(dp);
 export const fmtMillionBarrels = (thousand: number) => `${trim(thousand / 1000, 1)} million barrels`;
 /** Thousand barrels per day -> "13.85 million b/d". */
 export const fmtMbd = (thousandBpd: number) => `${thousandBpd < 0 ? "−" : ""}${trim(Math.abs(thousandBpd) / 1000, 2)} million b/d`;
+/** Thousand barrels per day -> "13.9M b/d" (one decimal; the phone readouts). */
+export const fmtMbdShort = (thousandBpd: number) => `${thousandBpd < 0 ? "−" : ""}${trim(Math.abs(thousandBpd) / 1000, 1)}M b/d`;
 /** Million kWh -> "388.8 TWh". */
 export const fmtTwh = (millionKwh: number) => `${trim(millionKwh / 1000, 1)} TWh`;
 /** Million cubic feet -> "518.8 Bcf". */

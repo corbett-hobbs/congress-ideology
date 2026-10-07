@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { line } from "d3-shape";
-import { fmtMbd, isPreliminary, monthLabel, monthOfDay, monthlyAt, termAtDay } from "@/lib/energy-derive";
+import { fmtMbd, fmtMbdShort, isPreliminary, monthLabel, monthOfDay, monthlyAt, termAtDay } from "@/lib/energy-derive";
 import { monthStartDay, termLabel } from "@/lib/trade-chart";
 import type { EnergyPayload, MonthlyKey } from "@/lib/energy-types";
 import { LegendToggle, useIsolate } from "@/components/charts/LegendToggle";
@@ -60,7 +60,7 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
   const day = activeDay(v);
   const month = Math.min(day !== null ? monthOfDay(day) : last, last);
   const term = termAtDay(payload.terms, monthStartDay(month));
-  const f = (k: MonthlyKey) => (m[k][month] == null ? "—" : fmtMbd(m[k][month] as number));
+  const f = (k: MonthlyKey) => (m[k][month] == null ? "—" : fmtMbdShort(m[k][month] as number));
   const readout = { values: [`Produced ${f("prod")}`, `Supplied ${f("supplied")}`], date: `${monthLabel(month)}${isPreliminary(payload, "prod", month) ? " (preliminary)" : ""}`, term: term ? termLabel(term) : undefined };
 
   return (
