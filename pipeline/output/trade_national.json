@@ -720,7 +720,7 @@
 {"period":"2016-08","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":122657.9,"imports":193986.7,"balance":-71328.8},
 {"period":"2016-08","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":122932,"imports":184388,"balance":-61456},
 {"period":"2016-09","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":124482.7,"imports":185985.6,"balance":-61502.9},
-{"period":"2016-09","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":123689,"imports":183218,"balance":-59529},
+{"period":"2016-09","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":123690,"imports":183218,"balance":-59528},
 {"period":"2016-10","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":128525.3,"imports":191999.7,"balance":-63474.4},
 {"period":"2016-10","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":123159,"imports":183547,"balance":-60388},
 {"period":"2016-11","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":122999.2,"imports":191156.7,"balance":-68157.5},
@@ -979,7 +979,7 @@
 {"period":"2025-11","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":184180.4,"imports":271013.8,"balance":-86833.4},
 {"period":"2025-12","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":178214.7,"imports":281970.8,"balance":-103756.1},
 {"period":"2025-12","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":180013.7,"imports":280594.6,"balance":-100580.9},
-{"period":"2026","frequency":"annual","basis":"census","scope":"goods","adjustment":"nsa","exports":1436452.5,"imports":2079009.5,"balance":-642557},
+{"period":"2026","frequency":"annual","basis":"census","scope":"goods","adjustment":"nsa","exports":1641297.9,"imports":2415230.6,"balance":-773932.7},
 {"period":"2026-01","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":186300.4,"imports":260593.3,"balance":-74292.9},
 {"period":"2026-01","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":193932.7,"imports":272956.3,"balance":-79023.6},
 {"period":"2026-02","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":195194,"imports":253619.8,"balance":-58425.8},
@@ -992,6 +992,8 @@
 {"period":"2026-05","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":209180.5,"imports":314507,"balance":-105326.5},
 {"period":"2026-06","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":208373.9,"imports":317255.5,"balance":-108881.6},
 {"period":"2026-06","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":205613.7,"imports":306668.4,"balance":-101054.7},
-{"period":"2026-07","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":197454.1,"imports":332919.9,"balance":-135465.8},
-{"period":"2026-07","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":199689.4,"imports":318629.6,"balance":-118940.2}
+{"period":"2026-07","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":197550.9,"imports":332971.1,"balance":-135420.2},
+{"period":"2026-07","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":199823.5,"imports":318679.2,"balance":-118855.7},
+{"period":"2026-08","frequency":"monthly","basis":"census","scope":"goods","adjustment":"nsa","exports":204748.7,"imports":336169.8,"balance":-131421.1},
+{"period":"2026-08","frequency":"monthly","basis":"census","scope":"goods","adjustment":"sa","exports":203977,"imports":336046.2,"balance":-132069.2}
 ]
