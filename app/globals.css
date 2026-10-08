@@ -77,22 +77,15 @@
   --tenure-2: #6c5c9c;
   --tenure-3: #4b3a78;
   --tenure-4: #2a2043;
-  /* Dissent-count bands (components/decisions): unanimous / 8-1 / 7-2 / 6-3 / 5-4 as one sequential gradient, teal to deep
-     violet in light mode (darker = more divided) and teal to near-white in dark mode (brighter = more divided), stacked on
-     one chart and drawn together in the rows, so every pair must be separable by lightness. NOT party colours (the page's
-     only party colour is the Chief Justice term band); validated by validate_palette.js (FORCED_PAIRS: all pairs, >= 3:1 on
-     every surface). Not forced against --dem/--rep: a lightness ramp this long cannot also stay clear of both. */
-  --split-0: #559292;
-  --split-1: #347087;
-  --split-2: #2b4b75;
-  --split-3: #2c2659;
-  --split-4: #250133;
-  /* In-bar value labels on the dissent bands: white on the dark gradient, dark ink where dark mode's gradient turns pale. */
-  --split-ink-0: #ffffff;
-  --split-ink-1: #ffffff;
-  --split-ink-2: #ffffff;
-  --split-ink-3: #ffffff;
-  --split-ink-4: #ffffff;
+  /* Dissent-count bands (components/decisions): unanimous / 8-1 / 7-2 / 6-3 / 5-4 stacked on one chart and drawn together in
+     the rows, so every pair must be separable. NOT party colours (the page's only party colour is the Chief Justice term
+     band); validated by validate_palette.js (FORCED_PAIRS: all pairs plus each vs --dem/--rep, >= 3:1 on every surface).
+     Five distinct hues, not a gradient: a gradient was tried and was too hard to read. */
+  --split-0: #312c44;
+  --split-1: #23318e;
+  --split-2: #41939d;
+  --split-3: #643e03;
+  --split-4: #a03667;
   /* Amber "note" accent — the wealth scatter's hover-card gap/off-scale
      lines (session 3). Not a party colour, so it sits outside
      validate_palette.js's co-occurrence checker; verified by hand instead —
@@ -169,16 +162,11 @@
     --tenure-2: #9588c8;
     --tenure-3: #b9aee2;
     --tenure-4: #e0d9f5;
-    --split-0: #377a85;
-    --split-1: #6d95ab;
-    --split-2: #a1b3cb;
-    --split-3: #d0d3e5;
-    --split-4: #f9f7fe;
-    --split-ink-0: #ffffff;
-    --split-ink-1: #14161c;
-    --split-ink-2: #14161c;
-    --split-ink-3: #14161c;
-    --split-ink-4: #14161c;
+    --split-0: #9591ad;
+    --split-1: #5cb2fd;
+    --split-2: #6acdc6;
+    --split-3: #deb34a;
+    --split-4: #ba446e;
     --note: #e3b04a;
     --focus: #9b84c7;
   --cont-north-america: #5b95de;
@@ -247,16 +235,11 @@
   --tenure-2: #9588c8;
   --tenure-3: #b9aee2;
   --tenure-4: #e0d9f5;
-  --split-0: #377a85;
-  --split-1: #6d95ab;
-  --split-2: #a1b3cb;
-  --split-3: #d0d3e5;
-  --split-4: #f9f7fe;
-  --split-ink-0: #ffffff;
-  --split-ink-1: #14161c;
-  --split-ink-2: #14161c;
-  --split-ink-3: #14161c;
-  --split-ink-4: #14161c;
+  --split-0: #9591ad;
+  --split-1: #5cb2fd;
+  --split-2: #6acdc6;
+  --split-3: #deb34a;
+  --split-4: #ba446e;
   --note: #e3b04a;
   --focus: #9b84c7;
   --cont-north-america: #5b95de;

@@ -79,7 +79,7 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
                     title={title}
                     aria-label={title}
                     className={`h-[1.9rem] min-w-0 rounded-[3px] p-0 text-center font-mono text-[0.62rem] tabular-nums focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${inWin ? "" : "opacity-40"} ${thin || v === null ? "border border-dashed border-line-strong bg-transparent text-ink-faint" : "border-0"}`}
-                    style={v === null ? undefined : { background: `color-mix(in oklab, ${color} ${Math.round(strength * 100)}%, var(--surface))`, color: strength > 0.5 ? (band === null ? "var(--accent-ink)" : `var(--split-ink-${band})`) : "var(--ink)" }}
+                    style={v === null ? undefined : { background: `color-mix(in oklab, ${color} ${Math.round(strength * 100)}%, var(--surface))`, color: strength > 0.5 ? (band === null ? "var(--accent-ink)" : "#fff") : "var(--ink)" }}
                   >
                     {c.total === 0 ? "" : v === null ? "·" : counts ? fmtInt(c.total) : Math.round(v * 100)}
                   </button>

@@ -38,7 +38,7 @@ function Chip({ children, onClear, label }: { children: string; onClear: () => v
 export function CaseListCard() {
   const { data, range, area, band, pin, landmark } = useDecisionsValues();
   const { setArea, setBand, clearPin, setLandmark } = useDecisionsActions();
-  const { cases, failed } = useDecisionCases();
+  const { cases, failed } = useDecisionCases(data.casesVersion);
   const rows = useMemo(() => (cases ? filterCases(data, cases, { range, area, band, term: pin, landmark }) : []), [data, cases, range, area, band, pin, landmark]);
   const sig = `${range[0]}-${range[1]}|${area}|${band}|${pin}|${landmark}`;
   const [shown, setShown] = useState<{ sig: string; n: number }>({ sig, n: PAGE });

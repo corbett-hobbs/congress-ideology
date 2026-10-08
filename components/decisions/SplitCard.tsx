@@ -17,7 +17,7 @@ interface Col extends StackColumn {
   bucket: Bucket;
 }
 
-const SERIES: StackSeries[] = [0, 1, 2, 3, 4].map((k) => ({ id: String(k), label: BAND_SHORT[k], fill: BAND_COLORS[k], labelFill: `var(--split-ink-${k})` }));
+const SERIES: StackSeries[] = [0, 1, 2, 3, 4].map((k) => ({ id: String(k), label: BAND_SHORT[k], fill: BAND_COLORS[k] }));
 
 /**
  * Card 2: how divided the Court is, as stacked bars: five dissent bands per term (unanimous at the bottom, 5–4 on top), as
@@ -111,7 +111,7 @@ export function SplitCard() {
       )}
       <MethodologyNote>
         <p>
-          Each band is the number of justices who dissented: none (9–0), one (8–1), two (7–2), three (6–3), four (5–4, or a 4–4 tie). The bands are one gradient: the more justices dissent, the {" "}darker the band in light mode and the brighter in dark mode. Bands count dissents, not the full tally, so in terms with fewer than nine justices (for example 2016, after Justice Scalia died) a 5–3 decision lands in the 6–3 band. Click a legend entry to see just that band, in cases per term; the stacked bars above and the case list below then show only those cases.
+          Each band is the number of justices who dissented: none (9–0), one (8–1), two (7–2), three (6–3), four (5–4, or a 4–4 tie). Bands count dissents, not the full tally, so in terms with fewer than nine justices (for example 2016, after Justice Scalia died) a 5–3 decision lands in the 6–3 band. Click a legend entry to see just that band, in cases per term; the stacked bars above and the case list below then show only those cases.
         </p>
         <p>Cases are counted once, in the term they were decided (October to June). Values print inside a bar where it is tall and wide enough.</p>
       </MethodologyNote>
