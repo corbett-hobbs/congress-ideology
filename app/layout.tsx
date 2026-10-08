@@ -28,7 +28,7 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const HEADLINE = `${site.name} · 1789–present`;
+const HEADLINE = `${site.name} · ${site.tagline}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
