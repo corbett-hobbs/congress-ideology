@@ -132,13 +132,16 @@ const words = (s: string): string[] => norm(s).match(/[a-z0-9]{4,}/g) ?? [];
 /**
  * A model-written sentence is usable only if it is one finished line of 40-300 characters AND is held to the lead it was written
  * from: `evidence` (the words the model says state the ruling) is a verbatim stretch of the lead that itself names a ruling, and
- * most of the sentence's own words appear in the lead. The model is asked to write only from the text; this is what stops it
+ * most of the sentence's own words, and every number in it, appear in the lead. The model is asked to write only from the text; this is what stops it
  * writing a ruling from memory (an early trial had it state the opposite of what the Court held where the lead gave no ruling).
  */
 export function checkAiSummary(sentence: string, evidence: string, lead: string): boolean {
   if (sentence.length < MIN_CHARS || sentence.length > MAX_CHARS || /[\n\r]/.test(sentence) || !/[.!?]["”)]?$/.test(sentence) || splitSentences(sentence).length !== 1) return false;
   const e = norm(evidence);
   if (e.length < 25 || !norm(lead).includes(e) || !RULING.test(evidence)) return false;
+  // A number the lead does not contain is a misread or an invention (an early answer wrote "2981" for 1981).
+  const leadText = norm(lead);
+  if ((sentence.match(/\d[\d,.]*/g) ?? []).some((n) => !leadText.includes(n.replace(/[.,]+$/, "")))) return false;
   const have = new Set(words(lead));
   const mine = words(sentence);
   return mine.length > 0 && mine.filter((w) => have.has(w)).length / mine.length >= 0.7;

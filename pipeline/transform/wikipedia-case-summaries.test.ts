@@ -121,6 +121,12 @@ describe("checkAiSummary", () => {
     expect(checkAiSummary(sentence, "the Court held that the state acted unlawfully in every respect", lead)).toBe(false);
     expect(checkAiSummary(sentence, "It involved a federal prisoner", lead)).toBe(false);
   });
+  it("rejects a sentence with a number the lead does not have", () => {
+    const l = "Chevron v. NRDC, 467 U.S. 837 (1984), was a case in which the Court held that courts should defer to the agency. In 1981, the EPA changed its definition of source.";
+    const ev = "the Court held that courts should defer to the agency";
+    expect(checkAiSummary("In a challenge to the EPA's 1981 change to its definition of source, the Court held that courts should defer to the agency.", ev, l)).toBe(true);
+    expect(checkAiSummary("In a challenge to the EPA's 2981 change to its definition of source, the Court held that courts should defer to the agency.", ev, l)).toBe(false);
+  });
   it("rejects a sentence that adds many words the lead does not have, is too short, or runs on", () => {
     expect(checkAiSummary("The Court held that a state violated detainer rules after Congress amended sentencing guidelines nationwide.", evidence, lead)).toBe(false);
     expect(checkAiSummary("The Court held so.", evidence, lead)).toBe(false);

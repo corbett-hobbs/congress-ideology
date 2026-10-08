@@ -5,7 +5,7 @@ import type { WikiCaseEntry } from "./wikipedia-cases-lib";
 
 /**
  * The opening of every Wikipedia case article named by `articles.json` -> `pipeline/raw/wikipedia-cases/leads.json`
- * (`{ "<article title>": "<plain-text lead, first 1,000 characters>" }`). The TextExtracts API returns 20 articles a request,
+ * (`{ "<article title>": "<plain-text lead, first 2,500 characters>" }`). The TextExtracts API returns 20 articles a request,
  * so about 230 requests, 150 ms apart, with an identifying User-Agent. Manual refresh, run after `fetch:wikipedia-cases`:
  *
  *   pnpm fetch:wikipedia-case-leads          # only titles not fetched before
@@ -18,7 +18,7 @@ import type { WikiCaseEntry } from "./wikipedia-cases-lib";
  */
 const DIR = `${RAW_DIR}/wikipedia-cases`;
 const USER_AGENT = "InsideGov-pipeline/0.1 (+https://github.com/corbett-hobbs/insidegov; case-article lead lookup, 20 titles per request)";
-const LEAD_CHARS = 1000;
+const LEAD_CHARS = 2500;
 const BATCH = 20;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -60,22 +60,27 @@ async function main() {
   const none = new Set(prior?.none ?? []);
   const wanted = all.filter((t) => !(t in leads) && !none.has(t));
   for (let i = 0; i < wanted.length; i += BATCH) {
-    const batch = wanted.slice(i, i + BATCH);
-    const reply = await getBatch(batch);
-    // A requested title can be normalised ("a_b" -> "A b") and then redirected; walk the chain back to the request.
-    const hop = new Map<string, string>();
-    for (const n of reply.query?.normalized ?? []) hop.set(n.to, n.from);
-    for (const r of reply.query?.redirects ?? []) hop.set(r.to, hop.get(r.from) ?? r.from);
-    const byRequest = new Map<string, Page>();
-    for (const p of reply.query?.pages ?? []) byRequest.set(hop.get(p.title) ?? p.title, p);
-    for (const t of batch) {
-      const p = byRequest.get(t);
-      const text = p && !p.missing ? (p.extract ?? "").trim() : "";
-      if (!text) {
-        none.add(t);
-        continue;
+    // The API sometimes answers a batch without the extracts of some pages it did find (load, not absence), so a title
+    // with no text is asked for again, twice, before it counts as having none.
+    let ask = wanted.slice(i, i + BATCH);
+    for (let round = 0; round < 3 && ask.length > 0; round++) {
+      if (round > 0) await sleep(1500 * round);
+      const reply = await getBatch(ask);
+      // A requested title can be normalised ("a_b" -> "A b") and then redirected; walk the chain back to the request.
+      const hop = new Map<string, string>();
+      for (const n of reply.query?.normalized ?? []) hop.set(n.to, n.from);
+      for (const r of reply.query?.redirects ?? []) hop.set(r.to, hop.get(r.from) ?? r.from);
+      const byRequest = new Map<string, Page>();
+      for (const p of reply.query?.pages ?? []) byRequest.set(hop.get(p.title) ?? p.title, p);
+      const again: string[] = [];
+      for (const t of ask) {
+        const p = byRequest.get(t);
+        const text = p && !p.missing ? (p.extract ?? "").trim() : "";
+        if (text) leads[t] = text.slice(0, LEAD_CHARS);
+        else if (!p?.missing && round < 2) again.push(t);
+        else none.add(t);
       }
-      leads[t] = text.slice(0, LEAD_CHARS);
+      ask = again;
     }
     if ((i / BATCH) % 25 === 0) console.log(`  ${Math.min(i + BATCH, wanted.length)} / ${wanted.length}`);
     await sleep(150);
