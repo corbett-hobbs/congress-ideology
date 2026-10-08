@@ -141,15 +141,15 @@ export const scdbManifest = z.strictObject({
 });
 export type ScdbManifest = z.infer<typeof scdbManifest>;
 
-/** `decisions_landmarks.json`: the cases Wikipedia's list of landmark decisions names that join to a case in `decisions_cases.json`. */
+/** `decisions_landmarks.json`: the cases Wikipedia's list of landmark decisions names (plus those whose article's opening calls them a landmark) that join to a case in `decisions_cases.json`. */
 export const landmarkRow = z.strictObject({
   case_id: z.string().min(1),
   /** The Wikipedia article title (the link target). */
   title: z.string().min(1),
   /** The list's headings the case sits under, e.g. "Criminal law \u203a Fourth Amendment rights"; a case can sit under several. */
-  topics: z.array(z.string().min(1)).min(1),
-  /** How it joined: U.S. Reports cite, docket number, or case name plus year (every name match is listed in the report). */
-  via: z.enum(["us_cite", "docket", "name_year"]),
+  topics: z.array(z.string().min(1)),
+  /** How it joined: U.S. Reports cite, docket number, or case name plus year (every name match is listed in the report); "lead" = not on the list, but the article's opening sentence calls it a landmark (no topics). */
+  via: z.enum(["us_cite", "docket", "name_year", "lead"]),
 });
 export type LandmarkRow = z.infer<typeof landmarkRow>;
 

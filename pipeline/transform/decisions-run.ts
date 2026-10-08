@@ -22,7 +22,7 @@ import { RAW_DIR } from "../fetch/lib";
 import type { WikiCaseEntry } from "../fetch/wikipedia-cases-lib";
 import { checkWikipediaCases, matchWikipediaCases, type WikiVia } from "./wikipedia-cases";
 import { CASE_SUMMARIES_AI, aiSummaryCache, buildCaseSummaries, checkCaseSummaries } from "./wikipedia-case-summaries";
-import { checkLandmarks, matchLandmarks, parseLandmarkList } from "./landmarks";
+import { checkLandmarks, leadLandmarks, matchLandmarks, parseLandmarkList } from "./landmarks";
 import { buildCaseRows, buildChiefSpans, buildCounts, buildMeta, checkChiefReference, parseScdb, recountFromCsv, runGates, selectCases } from "./decisions";
 
 /**
@@ -65,8 +65,8 @@ async function main() {
   if (sha256(Buffer.from(lmText)) !== lmManifest.sha256) throw new DecisionsDataError("list.wikitext does not match the sha256 in its manifest; re-run pnpm fetch:landmarks");
   const lmEntries = parseLandmarkList(lmText);
   const lm = matchLandmarks(lmEntries, rows, selection.cases);
-  const landmarks = z.array(landmarkRow).parse(lm.rows);
-  checkLandmarks(lmEntries, landmarks, lm.report, new Set(selection.cases.map((c) => c.caseId)));
+  const listed = z.array(landmarkRow).parse(lm.rows);
+  checkLandmarks(lmEntries, listed, lm.report, new Set(selection.cases.map((c) => c.caseId)));
 
   // Wikipedia's volume and term lists -> the article for each case (landmarks keep the list's own link).
   const wiki = JSON.parse(await readFile(`${RAW_DIR}/wikipedia-cases/articles.json`, "utf8").catch(() => {
@@ -76,7 +76,7 @@ async function main() {
   checkWikipediaCases(wc.rows, wc.report, new Set(selection.cases.map((c) => c.caseId)));
   const articleBy = new Map<string, { title: string | null; via: WikiVia | null }>(wc.rows.map((r) => [r.case_id, { title: r.title, via: r.via }]));
   // A landmark's article is the list's own link; a case a list shows as a red link has no article (title null); a case on no list has no row.
-  for (const l of landmarks) articleBy.set(l.case_id, { title: l.title, via: l.via });
+  for (const l of listed) articleBy.set(l.case_id, { title: l.title, via: l.via as WikiVia });
   const redLinked = new Set(wc.report.red_linked);
   for (const id of redLinked) if (!articleBy.has(id)) articleBy.set(id, { title: null, via: null });
   const articles = z.array(caseArticleRow).parse([...articleBy].map(([case_id, a]) => ({ case_id, ...a })).sort((a, b) => a.case_id.localeCompare(b.case_id)));
@@ -88,6 +88,9 @@ async function main() {
   const leadsText = await readFile(`${RAW_DIR}/wikipedia-cases/leads.json`, "utf8");
   if (sha256(Buffer.from(leadsText)) !== leadsManifest.sha256) throw new DecisionsDataError("leads.json does not match the sha256 in its manifest; re-run pnpm fetch:wikipedia-case-leads");
   const linked = articles.flatMap((a) => (a.title === null ? [] : [{ case_id: a.case_id, title: a.title }]));
+  // Landmarks the list has not caught up with: the article's own first sentence says "landmark".
+  const leadRows = leadLandmarks(linked, (JSON.parse(leadsText) as { leads: Record<string, string> }).leads, new Set(listed.map((l) => l.case_id)));
+  const landmarks = z.array(landmarkRow).parse([...listed, ...leadRows].sort((a, b) => a.case_id.localeCompare(b.case_id)));
   // Sentences the model wrote for articles the plain picker cannot use (`pnpm summarize:cases`); absent file = none yet.
   const aiCache = aiSummaryCache.parse(await readJson(CASE_SUMMARIES_AI).catch(() => []));
   const cs = buildCaseSummaries(linked, (JSON.parse(leadsText) as { leads: Record<string, string> }).leads, new Map(aiCache.map((e) => [e.title, e.summary])));
@@ -135,6 +138,7 @@ async function main() {
       out_of_scope: lm.report.out_of_scope,
       unmatched: lm.report.unmatched,
       name_matches: lm.report.name_matches,
+      from_article_lead: leadRows.map((r) => r.title),
     },
     case_articles: {
       cases: wc.report.cases,
