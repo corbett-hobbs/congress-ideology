@@ -8,6 +8,7 @@ import { getJusticeRefs } from "@/lib/justice-data";
 import { justicePath } from "@/lib/justice-url";
 import { liveSections } from "@/lib/verticals";
 import { absoluteUrl } from "@/lib/site";
+import { STATIC_PAGES } from "@/lib/site-info";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -49,6 +50,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.9,
+    })),
+    ...STATIC_PAGES.map((path) => ({
+      url: absoluteUrl(path),
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
     })),
     ...profiles,
     ...committees,

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Newsreader, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { site, siteUrl } from "@/lib/site";
 import { SiteHeader } from "@/components/SiteHeader";
+import { GlobalFooter } from "@/components/GlobalFooter";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { BackLinkProvider } from "@/components/BackLinkContext";
 import "./globals.css";
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <ScrollToTop />
           <SiteHeader />
           {children}
+          <GlobalFooter />
         </BackLinkProvider>
       </body>
     </html>

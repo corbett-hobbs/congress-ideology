@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { STATIC_PAGES } from "./site-info";
 import { describe, expect, it } from "vitest";
 import {
   activeBranch,
@@ -52,5 +53,12 @@ describe("verticals config", () => {
     expect(activeSection(branches.find((b) => b.id === "congress")!,"/congress/wealth")?.id).toBe("wealth");
     expect(sectionRow("/congress/senators/x/y")?.active).toBeUndefined();
     expect(sectionRow("/")).toBeNull();
+  });
+
+  it("top-level static pages belong to no vertical and get no section row", () => {
+    for (const path of STATIC_PAGES) {
+      expect(activeBranch(path)).toBeUndefined();
+      expect(sectionRow(path)).toBeNull();
+    }
   });
 });

@@ -5,10 +5,15 @@ import { usePathname } from "next/navigation";
 import { SiteNav, SiteSectionNav } from "./SiteNav";
 import { useBackLinkHref } from "./BackLinkContext";
 import { liveSections } from "@/lib/verticals";
+import { STATIC_PAGES } from "@/lib/site-info";
 
 /** Pages where the primary nav is itself the way around: the wordmark is a
  *  plain link to "/" with no arrow. Every other page is a detail page. */
-const SECTION_PAGES = new Set(["/", ...liveSections().map((s) => s.href)]);
+const SECTION_PAGES = new Set<string>([
+  "/",
+  ...STATIC_PAGES,
+  ...liveSections().map((s) => s.href),
+]);
 
 /**
  * One header row at `md`+ (two slim rows below): wordmark, branch tabs

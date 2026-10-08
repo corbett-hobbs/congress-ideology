@@ -2,8 +2,9 @@
 
 Data sources used by this project, and how they must be credited.
 
-The Voteview citation and congress-legislators credit appear in the Congress ideology page
-footer (`components/senate/SiteFooter.tsx`, not the home page) and the README. Keep those in sync
+The Voteview citation appears in the site-wide footer (`components/GlobalFooter.tsx`) and, with the
+congress-legislators credit, in the Congress page footer (`components/senate/SiteFooter.tsx`) and the README.
+Every credit below is also restated on `/methodology` (`lib/methodology-content.ts`). Keep those in sync
 with this file.
 
 ---
