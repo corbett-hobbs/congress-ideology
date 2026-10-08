@@ -40,19 +40,41 @@ export function CaseListCard() {
   const { setArea, setBand, clearPin, setLandmark } = useDecisionsActions();
   const { cases, failed } = useDecisionCases(data.casesVersion);
   const rows = useMemo(() => (cases ? filterCases(data, cases, { range, area, band, term: pin, landmark }) : []), [data, cases, range, area, band, pin, landmark]);
-  const sig = `${range[0]}-${range[1]}|${area}|${band}|${pin}|${landmark}`;
+  const [query, setQuery] = useState("");
+  const terms = useMemo(() => query.toLowerCase().split(/\s+/).filter(Boolean), [query]);
+  const matched = useMemo(() => {
+    if (terms.length === 0) return rows;
+    return rows.filter((c) => {
+      const hay = `${c[2]} ${c[3]} ${c[4] >= 0 ? data.areas[c[4]].label : ""} ${c[9] ?? ""} ${c[11] ?? ""}`.toLowerCase();
+      return terms.every((t) => hay.includes(t));
+    });
+  }, [rows, terms, data]);
+  const sig = `${range[0]}-${range[1]}|${area}|${band}|${pin}|${landmark}|${terms.join(" ")}`;
   const [shown, setShown] = useState<{ sig: string; n: number }>({ sig, n: PAGE });
   const n = shown.sig === sig ? shown.n : PAGE;
   const grow = (e: UIEvent<HTMLElement>) => {
     const el = e.currentTarget;
-    if (n < rows.length && el.scrollTop + el.clientHeight > el.scrollHeight - 240) setShown({ sig, n: n + PAGE });
+    if (n < matched.length && el.scrollTop + el.clientHeight > el.scrollHeight - 240) setShown({ sig, n: n + PAGE });
   };
   const years = range[0] === range[1] ? `the ${range[0]} term` : `${range[0]}–${range[1]}`;
 
   return (
-    <ChartCard tight title="Every case" lede={`Argued cases decided in ${pin !== null ? `the ${pin} term` : years}, newest first. The list follows the filters above and the charts: pick an issue area, a vote or a term to narrow it.`}>
+    <ChartCard
+      tight
+      title="Every case"
+      action={
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search title or keyword"
+          aria-label="Search cases by title or keyword"
+          className="w-full rounded-md border border-line-strong bg-surface-raised px-2.5 py-1 text-[0.82rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-60"
+        />
+      }
+      lede={`Argued cases decided in ${pin !== null ? `the ${pin} term` : years}, newest first. The list follows the filters above and the charts: pick an issue area, a vote or a term to narrow it.`}>
       <div className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-ink-muted" aria-live="polite">
-        <span className="tabular-nums text-ink">{cases ? `${fmtInt(rows.length)} case${rows.length === 1 ? "" : "s"}` : failed ? "Cases unavailable" : "Loading cases…"}</span>
+        <span className="tabular-nums text-ink">{cases ? `${fmtInt(matched.length)} case${matched.length === 1 ? "" : "s"}` : failed ? "Cases unavailable" : "Loading cases…"}</span>
         {landmark && (
           <Chip onClear={() => setLandmark(false)} label="Clear the landmark filter">
             Landmark cases
@@ -73,7 +95,12 @@ export function CaseListCard() {
             {`${pin} term`}
           </Chip>
         )}
-        {area === ALL_AREAS && band === null && pin === null && !landmark && <span>{ALL_AREAS_LABEL}, any vote.</span>}
+        {terms.length > 0 && (
+          <Chip onClear={() => setQuery("")} label="Clear the search">
+            {`“${query.trim()}”`}
+          </Chip>
+        )}
+        {area === ALL_AREAS && band === null && pin === null && !landmark && terms.length === 0 && <span>{ALL_AREAS_LABEL}, any vote.</span>}
       </div>
       <div
         key={sig}
@@ -84,11 +111,11 @@ export function CaseListCard() {
       >
         {failed ? (
           <p className="m-0 px-4 py-8 text-center text-[0.82rem] text-ink-muted">The case list could not be loaded. Reload the page to try again.</p>
-        ) : rows.length === 0 && cases ? (
+        ) : matched.length === 0 && cases ? (
           <p className="m-0 px-4 py-8 text-center text-[0.82rem] text-ink-muted">No cases match these filters.</p>
         ) : (
           <ol className="m-0 list-none p-0">
-            {rows.slice(0, n).map((c, i) => (
+            {matched.slice(0, n).map((c, i) => (
               <CaseRow key={`${c[0]}-${c[1]}-${c[3]}-${i}`} c={c} area={c[4] >= 0 ? data.areas[c[4]].label : "No issue area"} />
             ))}
           </ol>
