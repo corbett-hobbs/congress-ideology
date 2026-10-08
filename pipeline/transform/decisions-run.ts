@@ -125,6 +125,11 @@ async function main() {
     five_four_share: Number((bucketTotals[4]! / meta.case_count).toFixed(3)),
     cases_by_decade: byDecade,
     cases_by_issue_area: byArea,
+    outcome_direction: {
+      liberal: caseRows.filter((r) => r.direction === "liberal").length,
+      conservative: caseRows.filter((r) => r.direction === "conservative").length,
+      none: caseRows.filter((r) => r.direction === null).length,
+    },
     chief_spans: spans.map((s) => `${s.name} ${s.start_term}-${s.end_term} (${s.appointing_president}, ${s.appointing_party})`),
     landmarks: {
       source: `${lmManifest.page}, revision ${lmManifest.revid} (${lmManifest.revision_timestamp})`,

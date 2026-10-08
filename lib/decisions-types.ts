@@ -54,6 +54,8 @@ export interface DecisionsPayload {
   articleSource: { count: number; fetched: string };
   /** Where the one-sentence case summaries come from (the opening of each Wikipedia article): how many cases have one. */
   summarySource: { count: number; claude: number; fetched: string };
+  /** Cases the list tags Liberal / Conservative, and those with no direction coded (no tag). */
+  outcomeSource: { coded: number; none: number };
   /** Counts of the areas outside `topAreas`, summed ("Other areas"): `other[termIndex]`. */
   other: Bucket[];
   /** Indexes (into `areas`) of the six biggest issue areas by total cases: card 1 draws each as its own series. */
@@ -77,6 +79,9 @@ export interface AreaSort {
   reversed: boolean;
 }
 
+/** SCDB's coding of who prevailed: 1 conservative, 2 liberal. Unspecifiable and not-coded cases carry neither (0 in a case tuple). */
+export type DecisionDirection = 1 | 2;
+
 /** Area filter values: an index into `areas`, ALL_AREAS, or OTHER_AREAS (every area outside `topAreas`). */
 export const ALL_AREAS = -1;
 export const OTHER_AREAS = -2;
@@ -85,7 +90,8 @@ export const OTHER_AREAS = -2;
  * One case in the list: `[term, date (ISO), name, cite, area index or -1, dissent band 0-4, majority, minority, landmark
  * article title or "", landmark topics ("Fourth Amendment rights \u00b7 Search and seizure") or "", Wikipedia article
  * title / "" when no list names the case / null when the lists say it has no article, one sentence from that article saying how
- * the Court ruled or "", 1 when that sentence was written by the model rather than taken from the article]`.
+ * the Court ruled or "", 1 when that sentence was written by the model rather than taken from the article, outcome direction:
+ * 1 conservative / 2 liberal / 0 none coded]`.
  * Arrays, not objects: 8,000+ of them travel to the browser.
  */
-export type DecisionCase = [number, string, string, string, number, number, number, number, string, string, string | null, string, 0 | 1];
+export type DecisionCase = [number, string, string, string, number, number, number, number, string, string, string | null, string, 0 | 1, DecisionDirection | 0];

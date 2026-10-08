@@ -35,6 +35,8 @@ export const scdbCaseRow = z.object({
   /** Blank = no issue area coded. */
   issueArea: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.number().int().min(1).nullable()),
   chief: z.string().min(1),
+  /** SCDB `decisionDirection`: 1 conservative, 2 liberal, 3 unspecifiable; blank = not coded. Both of the last two become null. */
+  decisionDirection: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.union([z.literal(1), z.literal(2), z.literal(3)]).nullable()),
   dateDecision: z.string(),
   caseName: z.string(),
   docket: z.string(),
@@ -89,6 +91,8 @@ export const decisionCaseRow = z.strictObject({
   band: int.min(0).max(4),
   maj: int.min(0).max(9),
   min: int.min(0).max(9),
+  /** Who prevailed, in SCDB's coding for the case's issue area; null = unspecifiable or not coded (no tag on the page). */
+  direction: z.enum(["liberal", "conservative"]).nullable(),
 });
 export type DecisionCaseRow = z.infer<typeof decisionCaseRow>;
 
