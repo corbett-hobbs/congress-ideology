@@ -28,13 +28,9 @@ export function RemovalsCard({ data, range, fy, onFy }: { data: ImmigrationPageD
       />
 
       <MethodologyNote>
-      <p>
-        Smaller caveats sit on each bar’s hover or tap card — for example, FY2010 leaves out 76,732 expedited removals ICE
-        closed for CBP, and counts lock around October 5, so late closures roll into the next year. ICE figures only:
-        Border Patrol actions, including Title 42 expulsions, are not included. Across the full series,{" "}
-        {data.finalCount} of {data.years.length} years are final and {data.corroboratedCount} are confirmed by a second
-        source.
-      </p>
+        <p>
+          ICE figures only: Border Patrol actions, including Title 42 expulsions, are not included. Counts lock around October 5, so late closures roll into the next year, and each bar’s hover or tap card carries its own caveats (FY2010 leaves out 76,732 expedited removals ICE closed for CBP). {data.finalCount} of {data.years.length} years are final and {data.corroboratedCount} are confirmed by a second source.
+        </p>
       </MethodologyNote>
 
       <details className="mt-3 text-[0.8rem] text-ink-muted">

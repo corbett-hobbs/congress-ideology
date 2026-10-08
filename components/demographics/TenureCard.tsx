@@ -61,7 +61,7 @@ export function TenureCard({ rows, presidents, pin, onPin }: { rows: readonly De
       </div>
       <MethodologyNote>
         <p>
-          Time in office counts the Congresses a member served in either chamber, including gaps, back to their first, even before 1933, at two years a Congress (so up to 2 years is a first Congress, 3–10 years is two to five Congresses, and so on). A first-term senator has served one Congress and will serve two more. Every bar is 100%, so there is no tallest or shortest label. The strip under the chart shows the president in office on the Congress’s first day.
+          Time in office counts the Congresses a member served in either chamber, including gaps and service before 1933, at two years a Congress (up to 2 years is a first Congress, 3–10 years is two to five). Every bar is 100%, so there are no tallest or shortest labels. The strip under the chart shows the president in office on the Congress’s first day.
         </p>
       </MethodologyNote>
       <TableView

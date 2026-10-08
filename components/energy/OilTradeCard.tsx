@@ -142,18 +142,9 @@ export function OilTradeCard({ payload, view }: { payload: EnergyPayload; view: 
         </>
       }
       notes={
-        <>
-          <p>
-            Energy Information Administration, Monthly Energy Review. Imports, exports and net imports are <em>total petroleum</em>: crude oil plus natural gas liquids and refined products. Net imports is imports minus
-            exports as EIA publishes it; below zero the U.S. exported more than it imported, which first happened on an annual basis in 2020. The dashed line is the one crude-only series, shown in the Exports & imports view because
-            crude exports is where the 2015 repeal shows.
-          </p>
-          <p>
-            Congress repealed the statutory restriction on crude exports in December 2015; crude exports rose from about 0.5 million barrels a day in 2015 to about 3 million in 2019, but the date marks the act, which enabled the change and did not cause it by
-            itself. Monthly figures are rates (thousand barrels per day, shown in millions), not seasonally adjusted, so they swing with the seasons. The hatched stretch is the last 12 months, which EIA revises (the real lag before
-            a month is final was not verified, so 12 months is a cautious placeholder), and the newest month can be an estimate.
-          </p>
-        </>
+        <p>
+          Energy Information Administration, Monthly Energy Review. Imports, exports and net imports are <em>total petroleum</em> (crude oil plus natural gas liquids and refined products). Net imports below zero means the U.S. exported more than it imported, first true for a full year in 2020. The dashed line is the one crude-only series, where the 2015 repeal shows: crude exports rose from about 0.5 million barrels a day in 2015 to about 3 million in 2019, but the flag marks the act, which enabled the change and did not cause it by itself. Monthly rates are not seasonally adjusted. The hatched stretch is the last 12 months, which EIA revises.
+        </p>
       }
       tables={
         <>

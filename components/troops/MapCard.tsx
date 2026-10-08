@@ -332,28 +332,15 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
             ? `U.S. territories ${view.territories.map((t) => `${places[t.place].name} ${formatCount(t.value)}`).join(", ")} (${formatCount(view.territoryTotal)}) sit inside DMDC’s overseas total but are not hosts and are not counted above`
             : "no U.S. territory figures this quarter"}
           {view.afloat > 0 ? `; ${formatCount(view.afloat)} are afloat or unassigned (DMDC’s UNKNOWN row)` : ""}
-          {noOutline.length > 0 ? `; no outline is drawn for ${noOutline.map((r) => `${places[r.place].name} ${formatCount(r.value)}`).join(", ")}` : ""}.
-        </p>
-        {view.contingency.length > 0 && (
-          <p>
-            † {view.contingency.map((c) => places[c.place].name).join(" and ")}: DMDC’s separate total for forces in and around the country ({view.contingency.some((c) => c.basis === "includes_reserve_guard") ? "including deployed Reserve and National Guard" : "active duty"}) stands in for the country table, which prints zero. It covers the whole theatre, so it is on a different basis from the other countries.
-          </p>
-        )}
-        <p>
-          {view.suppressed.length > 0 ? (
-            <>
-              {view.suppressed.map((x) => places[x].name).join(", ")} {view.suppressed.length > 1 ? "print" : "prints"} blank or unavailable in this table (listed “n/r”): not reported, not zero.
-            </>
-          ) : (
-            <>An absent or blank row is not a zero: Afghanistan has no row at all from 2023 and Iraq and Syria none from 2024 in the DMDC tables, and several hosts print blank before.</>
-          )}{" "}
-          Counts are active-duty personnel assigned to the place. Through 2017 they include deployed forces, so the years before and after 2018 are not like-for-like, and the table’s source changes at 1996 and 2008 (see the chart’s notes).
-          {!p.afloatIncluded && " This year’s source has no afloat or unassigned rows."}
-        </p>
-        <p>
-          <b className="font-semibold text-ink">Known installations ({bases.sites.length} sites in {bases.countries.length} places, source through {bases.through}):</b> one fixed list of known U.S. sites abroad, not tied to the year chosen above. A dot carries no headcount, so it says nothing about how many of a country’s
-          troops are there or whether the site is open today. Classified and unacknowledged sites are missing, as is anything opened after the source ended, and the list differs from the Defense Department’s own Base Structure Report. Dots that overlap merge into a numbered group and split as you zoom.
-          The Branch filter does not apply (the source has no branch), and a selected country brightens its own sites and dims the rest. {bases.sites.filter((x) => x.review).length} sites whose coordinates look wrong are listed in the table but not drawn. Locations: David Vine’s lists of U.S. bases abroad, as compiled in the troopdata package (Flynn), GPL-3.0.
+          {noOutline.length > 0 ? `; no outline is drawn for ${noOutline.map((r) => `${places[r.place].name} ${formatCount(r.value)}`).join(", ")}` : ""}.{" "}
+          {view.contingency.length > 0 &&
+            `† ${view.contingency.map((c) => places[c.place].name).join(" and ")}: DMDC’s separate theatre total stands in for the country table, which prints zero, so it is on a different basis from the other countries. `}
+          {view.suppressed.length > 0
+            ? `${view.suppressed.map((x) => places[x].name).join(", ")} ${view.suppressed.length > 1 ? "print" : "prints"} blank or unavailable (listed “n/r”): not reported, not zero. `
+            : "A blank row is not a zero. "}
+          Counts are active-duty personnel assigned to the place and include deployed forces through 2017, so years before and after 2018 are not like-for-like.
+          {!p.afloatIncluded && " This year’s source has no afloat or unassigned rows."}{" "}
+          <b className="font-semibold text-ink">Known installations</b> ({bases.sites.length} sites in {bases.countries.length} places, through {bases.through}) are one fixed list from David Vine’s compilation in the troopdata package (GPL-3.0), not tied to the year chosen. Dots carry no headcount, classified sites are missing, and {bases.sites.filter((x) => x.review).length} sites with doubtful coordinates are in the table but not drawn.
         </p>
       </MethodologyNote>
 

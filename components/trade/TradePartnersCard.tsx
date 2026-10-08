@@ -193,10 +193,11 @@ export function TradePartnersCard({
       </div>
       </div>
 
-      <MethodologyNote><p>
-        Census Bureau goods trade, Census basis. The map and the list share the year and the Total trade / Balance choice; the map is shaded on fixed bins so years compare, and you can zoom and pan it. Sorted by {sort.key === "balance" ? "balance: the largest deficits first, then surpluses" : "total trade, largest first"}
-        {sort.reversed ? ", reversed" : ""}; click the active sort again to reverse it. Click a row to pick that country above. The scale is symmetric log, so small partners stay visible next to China; distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.{model.undrawn.length > 0 ? ` Not drawn on the map: ${model.undrawn.length} small partners with no outline (${fmtMoney(model.undrawn.reduce((a, r) => a + r.exports + r.imports, 0))} of ${fmtMoney(model.totals.total)} total trade); they are in the list and the table.` : ""}
-        </p></MethodologyNote>
+      <MethodologyNote>
+        <p>
+          Census Bureau goods trade, Census basis. The map and the list share the year and the Total trade / Balance choice; the map is shaded on fixed bins so years compare. The list uses a symmetric log scale so small partners stay visible next to China, so distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.{model.undrawn.length > 0 ? ` ${model.undrawn.length} small partners with no outline (${fmtMoney(model.undrawn.reduce((a, r) => a + r.exports + r.imports, 0))} of ${fmtMoney(model.totals.total)}) are in the list and table but not on the map.` : ""}
+        </p>
+      </MethodologyNote>
       {rows.length > 0 && <DataTable rows={rows} year={shown} />}
     </ChartCard>
   );

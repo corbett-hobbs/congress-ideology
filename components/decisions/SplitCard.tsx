@@ -82,9 +82,8 @@ export function SplitCard() {
       ) : null}
       <MethodologyNote>
         <p>
-          Each band is the number of justices who dissented: none (9–0), one (8–1), two (7–2), three (6–3), four (5–4, or a 4–4 tie). Bands count dissents, not the full tally, so in terms with fewer than nine justices (for example 2016, after Justice Scalia died) a 5–3 decision lands in the 6–3 band. Click a band name or legend entry to see just that band, in cases per term; the stacked bars above and the case list below then show only those cases.
+          Each band is the number of justices who dissented, not the full tally, so a 5–3 decision (when only eight justices sat) lands in the 6–3 band. Cases are counted once, in the term they were decided. A selection with a median under 15 cases a term is grouped by decade automatically; the first and last decades are partial (1946–49 and 2020–25).
         </p>
-        <p>Cases are counted once, in the term they were decided (October to June). A selection with a median under 15 cases a term (the landmark filter, a small issue area) is grouped by decade automatically; the first and last decades are partial (1946–49 and 2020–25).</p>
       </MethodologyNote>
       <TableView
         label={`Table of cases by number of dissenting justices, per ${grain}`}

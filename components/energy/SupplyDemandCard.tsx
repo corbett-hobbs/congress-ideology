@@ -106,18 +106,9 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
         />
       }
       notes={
-        <>
-          <p>
-            Energy Information Administration, Monthly Energy Review. Both lines are <em>total petroleum</em>: crude oil plus natural gas liquids and refined products. Crude alone is a smaller number
-            (about 13.7 million barrels a day produced in 2025 against 21.2 million for total petroleum), so crude and total are never mixed in one comparison. Products supplied is what left refineries,
-            blending and storage for the domestic market, adjusted for stock changes; it approximates consumption and is not a direct measure of use. Prices, the economy, weather and the vehicle fleet drive it,
-            not any one policy, so this card carries no policy marks.
-          </p>
-          <p>
-            Monthly figures are rates (thousand barrels per day, shown in millions) and are not seasonally adjusted, so they swing with the seasons; read the trend, not the month-to-month moves. The hatched
-            stretch is the last 12 months, which EIA revises (the real lag before a month is final was not verified, so 12 months is a cautious placeholder), and the newest month can be an estimate.
-          </p>
-        </>
+        <p>
+          Energy Information Administration, Monthly Energy Review. Both lines are <em>total petroleum</em> (crude oil plus natural gas liquids and refined products); crude alone is smaller, about 13.7 million barrels a day produced in 2025 against 21.2 million for total. Products supplied is what left refineries, blending and storage for the domestic market, adjusted for stock changes, and approximates consumption. Monthly rates are not seasonally adjusted, so read the trend. The hatched stretch is the last 12 months, which EIA revises (12 months is a cautious placeholder). Prices, weather and the vehicle fleet drive both lines, not any one policy, so the card carries no policy marks.
+        </p>
       }
       tables={
         <MonthTable

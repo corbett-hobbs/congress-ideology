@@ -132,13 +132,7 @@ export function CasesCard() {
       </div>
       <MethodologyNote>
         <p>
-          Orally argued cases only (Supreme Court Database decision types 1, 5, 6 and 7): summary reversals and other orders issued without argument are not counted, and {fmtInt(data.unclearVotes)} cases whose vote the database marks unclear are left out. The docket here is cases decided in a term (October to June), not cases filed or granted. Labels name the busiest and quietest terms in what is drawn.
-        </p>
-        <p>
-          The six biggest of the database’s 14 issue areas each get a colour; “Other areas” holds the other eight and the {fmtInt(data.unclassified)} cases with no issue area. Click a legend entry to show one area on every chart and in the case list below; click it again to clear. “Share of term” is the area’s share of all cases decided that term.
-        </p>
-        <p>
-          The band under the axis marks the president in office for most of each term (a term runs October to the following June, so one that spans an inauguration goes to whoever held office for most of it), tinted by that president’s party. Hover a term to see which Chief Justice led the Court.
+          Orally argued cases only, counted in the term they were decided (October to June). Summary reversals and the {fmtInt(data.unclearVotes)} cases whose vote the Supreme Court Database marks unclear are left out. The six biggest of the database’s 14 issue areas get a colour; “Other areas” holds the rest and the {fmtInt(data.unclassified)} cases with no area. The band under the axis marks the president in office for most of each term.
         </p>
       </MethodologyNote>
       <TableView
