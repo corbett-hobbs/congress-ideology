@@ -30,8 +30,6 @@ const check = (ok, msg) => {
 };
 const settle = (page) => page.waitForTimeout(250);
 /** SVG <text> has no innerText; read textContent. */
-/** The distinct fills of a chart's data bars (not the Chief band, not hit targets). */
-const barFills = (loc) => loc.locator("svg.chart-svg rect").evaluateAll((els) => [...new Set(els.filter((e) => e.style.fill && !e.closest("g[aria-hidden=true]")).map((e) => getComputedStyle(e).fill))]);
 const svgTexts = (loc) => loc.evaluateAll((els) => els.map((e) => (e.textContent ?? "").trim()));
 
 const browser = await chromium.launch();
