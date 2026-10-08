@@ -95,7 +95,7 @@ export function AreasCard() {
         <p>
           Issue areas are the Supreme Court Database’s own 14 categories, which its authors treat as a rough guide. {topThree.labels} together hold about {fmtPct(topThree.share)} of all cases. Cases the database leaves without an issue area ({fmtInt(data.unclassified)}) count in “All issue areas” but appear in no row. Areas with no cases in the years shown are left out of the rows on the right; the heatmap always shows every decade and fades those outside the years shown.
         </p>
-        <p>Shares for small areas are rough: an area with a few dozen cases can swing several points on one decision. The heatmap shades every decade on one scale for all areas, so cells compare; the first and last decades are partial (1946–49 and 2020–25); in the 5–4 and unanimous views a cell with fewer than 10 cases is outlined, not shaded. In the Cases view every cell shows its count, and “All issue areas”, with several times any one area’s cases, is shaded on its own scale.</p>
+        <p>Shares for small areas are rough: an area with a few dozen cases can swing several points on one decision. The heatmap shades every decade on one scale for all areas, so cells compare; the first and last decades are partial (1946–49 and 2020–25). Every cell is a number of cases (all, 5–4 or unanimous, as the toggle says), the same counts as the rows on the right, and “All issue areas”, with several times any one area’s cases, is shaded on its own scale.</p>
       </MethodologyNote>
       <TableView
         label="Table of issue areas by number of dissenting justices"
