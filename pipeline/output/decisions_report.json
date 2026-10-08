@@ -1375,17 +1375,17 @@
   "case_summaries": {
     "fetched": "2026-10-08",
     "linked_cases": 3402,
-    "cases_with_summary": 2787,
+    "cases_with_summary": 2910,
     "articles": 3325,
     "with_lead": 3294,
-    "summarized": 2738,
-    "claude": 735,
+    "summarized": 2856,
+    "claude": 853,
     "from_sentence": {
       "1": 1663,
       "2": 264,
       "3": 76
     },
-    "without": 615
+    "without": 492
   },
   "gates": {
     "cases": 8251,
