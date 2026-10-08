@@ -45,7 +45,7 @@ function useJusticeVotes(justiceId: number): { votes: JusticeVote[] | null; fail
 function Qualifier({ v }: { v: VotedCase }) {
   const role = ROLE_LABEL[v.role];
   return (
-    <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 sm:flex-col sm:items-start sm:gap-y-px">
+    <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 sm:flex-nowrap">
       <span className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-px text-[0.74rem] font-medium ${PILL[v.vote as keyof typeof PILL]}`}>{VOTE_LABEL[v.vote]}</span>
       {role && <span className="text-[0.7rem] text-ink-muted">{role}</span>}
     </span>
