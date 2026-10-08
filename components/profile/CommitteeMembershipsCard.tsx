@@ -60,43 +60,44 @@ export function CommitteeMembershipsCard({
 
       <div className="border-t border-line">
         {memberships.map((m) => (
-          <div key={m.committeeId} className="-mx-1 border-b border-line px-1">
-            <Link
-              href={committeePath(m)}
-              className="group grid grid-cols-[1fr_140px] items-center gap-4 rounded py-[0.7rem] hover:bg-surface-raised sm:grid-cols-[1fr_180px]"
-            >
-              <div className="min-w-0">
-                <span className="text-[0.9rem] text-ink group-hover:text-accent group-hover:underline">
-                  {m.shortName}
-                </span>
-                <RoleTag role={m.role} />
-                <div className="mt-0.5 text-[0.72rem] text-ink-faint">
-                  {m.memberCount} members · seniority rank {m.rank}
-                </div>
+          <div
+            key={m.committeeId}
+            className="relative -mx-1 grid grid-cols-[1fr_140px] items-center gap-x-4 rounded border-b border-line px-1 py-[0.7rem] hover:bg-surface-raised sm:grid-cols-[1fr_clamp(220px,34%,380px)]"
+          >
+            <div className="min-w-0 sm:col-start-1 sm:row-start-1">
+              <Link
+                href={committeePath(m)}
+                className="group text-[0.9rem] text-ink hover:text-accent hover:underline after:absolute after:inset-0 after:content-['']"
+              >
+                {m.shortName}
+              </Link>
+              <RoleTag role={m.role} />
+              <div className="mt-0.5 text-[0.72rem] text-ink-faint sm:ml-3 sm:mt-0 sm:inline">
+                {m.memberCount} members · seniority rank {m.rank}
               </div>
-              <div>
-                {currentDim1 != null && m.blendDim1 != null ? (
-                  <>
-                    <AlignmentTrack
-                      points={[
-                        { value: m.blendDim1, faint: true },
-                        { value: currentDim1, color: primaryColor },
-                      ]}
-                    />
-                    <div className="mt-[0.15rem] whitespace-nowrap text-right font-mono text-[0.68rem] text-ink-faint">
-                      Δ {fmt2(Math.abs(currentDim1 - m.blendDim1))} from center
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-right text-[0.72rem] text-ink-faint">
-                    Not enough scored members to compare
+            </div>
+            <div className="col-start-2 row-span-2 row-start-1">
+              {currentDim1 != null && m.blendDim1 != null ? (
+                <>
+                  <AlignmentTrack
+                    points={[
+                      { value: m.blendDim1, faint: true },
+                      { value: currentDim1, color: primaryColor },
+                    ]}
+                  />
+                  <div className="mt-[0.15rem] whitespace-nowrap text-right font-mono text-[0.68rem] text-ink-faint">
+                    Δ {fmt2(Math.abs(currentDim1 - m.blendDim1))} from center
                   </div>
-                )}
-              </div>
-            </Link>
+                </>
+              ) : (
+                <div className="text-right text-[0.72rem] text-ink-faint">
+                  Not enough scored members to compare
+                </div>
+              )}
+            </div>
             {m.subcommittees.length > 0 && (
-              <details className="group/sub pb-[0.6rem]">
-                <summary className="flex cursor-pointer list-none items-center gap-1 text-[0.72rem] text-ink-muted hover:text-accent [&::-webkit-details-marker]:hidden">
+              <details className="group/sub relative z-10 col-span-2 row-start-3 mt-1.5 sm:col-span-1 sm:col-start-1 sm:row-start-2 sm:mt-0.5">
+                <summary className="flex w-fit cursor-pointer list-none items-center gap-1 text-[0.72rem] text-ink-muted hover:text-accent [&::-webkit-details-marker]:hidden">
                   <span className="inline-block transition-transform group-open/sub:rotate-90">
                     ▸
                   </span>
