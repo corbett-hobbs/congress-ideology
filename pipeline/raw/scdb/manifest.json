@@ -6,5 +6,12 @@
   "csv_sha256": "b3cc84bd73a7a0325856cca52ae6fc5bd6a39433113f83fef248556ad4488528",
   "rows": 9409,
   "encoding": "latin1",
-  "fetched": "2026-10-07"
+  "justice_zip": {
+    "file": "SCDB_2026_01_justiceCentered_Citation.csv.zip",
+    "url": "http://scdb.wustl.edu/_brickFiles/2026_01/SCDB_2026_01_justiceCentered_Citation.csv.zip",
+    "zip_sha256": "c2298a2672068ad6edefe0132224e85378d2b35b0729781004bedb14186d8c12",
+    "csv_sha256": "fc8c5b9e986867c4b7fe377aa2885e66aa25b5669670eab6bffc2cbf13001ee3",
+    "rows": 84256
+  },
+  "fetched": "2026-10-08"
 }

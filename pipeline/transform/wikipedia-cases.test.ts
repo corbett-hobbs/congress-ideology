@@ -4,7 +4,7 @@ import type { ScdbCaseRow } from "../../lib/decisions-entities";
 import { checkWikipediaCases, isCaseArticle, matchWikipediaCases, overlap, sideKey } from "./wikipedia-cases";
 
 const scdb = (o: Partial<ScdbCaseRow> & { caseId: string; caseName: string }): ScdbCaseRow => ({
-  term: 2000, decisionType: 1, majVotes: 9, minVotes: 0, voteUnclear: 0, issueArea: 1, chief: "Rehnquist", decisionDirection: null, dateDecision: "6/1/2001", docket: "", usCite: "", sctCite: "", ledCite: "", lexisCite: "", ...o,
+  term: 2000, decisionType: 1, majVotes: 9, minVotes: 0, voteUnclear: 0, issueArea: 1, chief: "Rehnquist", majOpinWriter: null, decisionDirection: null, dateDecision: "6/1/2001", docket: "", usCite: "", sctCite: "", ledCite: "", lexisCite: "", ...o,
 });
 const wiki = (o: Partial<WikiCaseEntry> & { name: string }): WikiCaseEntry => ({ title: o.name, volume: null, page: null, docket: null, year: null, source: "s", ...o });
 

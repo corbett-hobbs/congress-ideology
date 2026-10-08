@@ -74,11 +74,13 @@ export function JusticeRosterCard({
         Closest career average first. Filled dot: the peer. Ring: {last}.
       </p>
 
+      {/* The list fills whatever height the row has (190px minimum), so it grows with the left card when its note is opened. */}
+      <div className="relative md:min-h-[190px] md:flex-1">
       <div
         role="region"
         tabIndex={0}
         aria-label={`${mode === "alongside" ? "Justices who served alongside" : "Nearest neighbors of"} ${last}`}
-        className={`overflow-x-hidden rounded-md border border-line md:max-h-[190px] md:overflow-y-auto ${
+        className={`overflow-x-hidden rounded-md border border-line md:absolute md:inset-0 md:overflow-y-auto ${
           expanded ? "" : "max-md:overflow-y-hidden"
         }`}
       >
@@ -106,6 +108,7 @@ export function JusticeRosterCard({
             domain={chart.domain}
           />
         ))}
+      </div>
       </div>
 
       {canExpand && (

@@ -105,7 +105,7 @@ export const OTHER_AREAS = -2;
  * article title or "", landmark topics ("Fourth Amendment rights \u00b7 Search and seizure") or "", Wikipedia article
  * title / "" when no list names the case / null when the lists say it has no article, one sentence from that article saying how
  * the Court ruled or "", 1 when that sentence was written by the model rather than taken from the article, outcome direction:
- * 1 conservative / 2 liberal / 0 none coded]`.
+ * 1 conservative / 2 liberal / 0 none coded, SCDB case id (the key into `court/justice_votes.json`)]`.
  * Arrays, not objects: 8,000+ of them travel to the browser.
  */
-export type DecisionCase = [number, string, string, string, number, number, number, number, string, string, string | null, string, 0 | 1, DecisionDirection | 0];
+export type DecisionCase = [number, string, string, string, number, number, number, number, string, string, string | null, string, 0 | 1, DecisionDirection | 0, string];

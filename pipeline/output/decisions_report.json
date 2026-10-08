@@ -1387,6 +1387,26 @@
     },
     "without": 492
   },
+  "justice_votes": {
+    "justices": 40,
+    "rows": 73912,
+    "by_vote": {
+      "none": 1857,
+      "majority": 57775,
+      "dissent": 13364,
+      "divided": 916
+    },
+    "by_role": {
+      "none": 53577,
+      "majority_opinion": 7556,
+      "concurrence": 4278,
+      "dissent": 6285,
+      "concurred": 2216
+    },
+    "cases_without_rows": 0,
+    "out_of_scope_rows": 10344,
+    "justices_not_in_martin_quinn": []
+  },
   "gates": {
     "cases": 8251,
     "terms": 80,

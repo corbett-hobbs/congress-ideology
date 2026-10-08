@@ -22,6 +22,12 @@ let cache: DecisionsPayload | null = null;
 /** A short hash of the case list, for the fetch URL. */
 const casesVersion = (): string => createHash("sha1").update(JSON.stringify(getDecisionCases())).digest("hex").slice(0, 10);
 
+/** What a justice's case table needs from the Decisions data: the issue-area names and the cache key of the shared case list. */
+export function getJusticeVotesSource(): { casesVersion: string; areas: { id: string; label: string }[] } {
+  const d = getDecisionsPageData();
+  return { casesVersion: d.casesVersion, areas: d.areas.map((a) => ({ id: a.id, label: a.label })) };
+}
+
 export function getDecisionsPageData(): DecisionsPayload {
   if (cache) return cache;
   const counts = z.array(decisionCountRow).parse(read("decisions_counts.json"));
@@ -53,7 +59,7 @@ export function getDecisionCases(): DecisionCase[] {
   casesCache = rows
     .map((r): DecisionCase => {
       const lm = landmarks.get(r.case_id);
-      return [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : (index.get(r.issue_area_id) ?? -1), r.band, r.maj, r.min, lm?.title ?? "", lm ? topicText(lm.topics) : "", lm ? lm.title : articles.has(r.case_id) ? articles.get(r.case_id) ?? null : "", summaries.get(r.case_id)?.summary ?? "", summaries.get(r.case_id)?.via === "claude" ? 1 : 0, r.direction === "conservative" ? 1 : r.direction === "liberal" ? 2 : 0];
+      return [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : (index.get(r.issue_area_id) ?? -1), r.band, r.maj, r.min, lm?.title ?? "", lm ? topicText(lm.topics) : "", lm ? lm.title : articles.has(r.case_id) ? articles.get(r.case_id) ?? null : "", summaries.get(r.case_id)?.summary ?? "", summaries.get(r.case_id)?.via === "claude" ? 1 : 0, r.direction === "conservative" ? 1 : r.direction === "liberal" ? 2 : 0, r.case_id];
     })
     .reverse();
   return casesCache;

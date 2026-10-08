@@ -2,9 +2,10 @@ import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { parse as parseCsv } from "csv-parse/sync";
-import { scdbManifest, type ScdbManifest } from "../../lib/decisions-entities";
+import { z } from "zod";
+import { type ScdbManifest } from "../../lib/decisions-entities";
 import { RAW_DIR } from "./lib";
-import { SCDB_BASE, isVersion, nextVersionCandidates, releaseCsvName, releaseUrl, unzipFirstFile } from "./scdb-lib";
+import { SCDB_BASE, isVersion, justiceUrl, justiceZipName, nextVersionCandidates, releaseCsvName, releaseUrl, unzipFirstFile } from "./scdb-lib";
 
 /**
  * Supreme Court Database (Washington University in St. Louis), case-centered by citation.
@@ -45,9 +46,10 @@ async function getZip(url: string): Promise<Buffer> {
   return Buffer.from(await res.arrayBuffer());
 }
 
-async function currentManifest(): Promise<ScdbManifest | null> {
+/** Only the pinned version is read here, so a manifest from before the justice file was added still works. */
+async function currentManifest(): Promise<{ version: string } | null> {
   if (!existsSync(MANIFEST)) return null;
-  return scdbManifest.parse(JSON.parse(await readFile(MANIFEST, "utf8")));
+  return z.object({ version: z.string() }).loose().parse(JSON.parse(await readFile(MANIFEST, "utf8")));
 }
 
 async function fetchRelease(version: string) {
@@ -64,8 +66,23 @@ async function fetchRelease(version: string) {
   if (!header.includes("caseId") || !header.includes("minVotes")) throw new Unreachable(`${url} is not the SCDB case-centered CSV (header: ${header.slice(0, 80)})`);
   const rows = parseCsv(text, { columns: true, skip_empty_lines: true, bom: true }).length;
 
+  // The justice-centered file (one row per case and justice), kept as the zip: the CSV is 30 MB, the zip 1.7 MB.
+  const jUrl = justiceUrl(version);
+  const jZip = await getZip(jUrl);
+  let jCsv: Buffer;
+  try {
+    jCsv = unzipFirstFile(jZip).data;
+  } catch (e) {
+    throw new Unreachable(`${jUrl} did not return a zip: ${e instanceof Error ? e.message : e}`);
+  }
+  const jText = jCsv.toString("latin1");
+  const jHeader = jText.split(/\r?\n/, 1)[0] ?? "";
+  if (!jHeader.includes("justiceName") || !jHeader.includes("majority")) throw new Unreachable(`${jUrl} is not the SCDB justice-centered CSV (header: ${jHeader.slice(0, 80)})`);
+  const jRows = parseCsv(jText, { columns: true, skip_empty_lines: true, bom: true }).length;
+
   await mkdir(DIR, { recursive: true });
-  for (const f of await readdir(DIR)) if (f.endsWith(".csv") && f !== releaseCsvName(version)) await rm(`${DIR}/${f}`);
+  for (const f of await readdir(DIR)) if ((f.endsWith(".csv") && f !== releaseCsvName(version)) || (f.endsWith(".zip") && f !== justiceZipName(version))) await rm(`${DIR}/${f}`);
+  await writeFile(`${DIR}/${justiceZipName(version)}`, jZip);
   await writeFile(`${DIR}/${releaseCsvName(version)}`, csv);
   const manifest: ScdbManifest = {
     version,
@@ -75,6 +92,7 @@ async function fetchRelease(version: string) {
     csv_sha256: sha256(csv),
     rows,
     encoding: "latin1",
+    justice_zip: { file: justiceZipName(version), url: jUrl, zip_sha256: sha256(jZip), csv_sha256: sha256(jCsv), rows: jRows },
     fetched: new Date().toISOString().slice(0, 10),
   };
   await writeFile(MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
