@@ -274,6 +274,29 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   await ctx.close();
 }
 
+// A stale cached case list (the earlier 8-field rows, no landmark flag) must not break the landmark filter
+{
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await ctx.newPage();
+  const urls = [];
+  let served = 0;
+  await page.route("**/data/decisions/cases*", async (route) => {
+    urls.push(route.request().url());
+    if (served++ > 0) return route.continue();
+    const real = await (await route.fetch()).json();
+    await route.fulfill({ json: real.map((r) => r.slice(0, 8)) });
+  });
+  await page.goto(URL, { waitUntil: "networkidle" });
+  await page.waitForTimeout(400);
+  check(urls.every((u) => /[?&]v=[0-9a-f]{10}$/.test(u)), `stale cache: the case list is fetched with a content version (${urls[0]?.split("?")[1]})`);
+  check(urls.length === 2, `stale cache: an old-shaped list is detected and refetched (${urls.length} requests)`);
+  await page.locator("[data-pinned-bar] input[type=checkbox]").check();
+  await page.waitForTimeout(400);
+  const c4 = page.locator("section", { has: page.locator("h2", { hasText: "Every case" }) });
+  check((await c4.locator("[aria-live=polite] span").first().innerText()).trim() === "339 cases", `stale cache: the landmark filter still narrows the list to 339 (${(await c4.locator("[aria-live=polite] span").first().innerText()).trim()})`);
+  await ctx.close();
+}
+
 // Phone: touch tooltip stays open after the finger lifts; closes on second tap, outside tap, Esc and scroll
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
@@ -325,7 +348,7 @@ for (const [name, opts, attr] of [["dark", { colorScheme: "dark" }, null], ["dat
       return [0, 1, 2, 3, 4].map((k) => cs.getPropertyValue(`--split-${k}`).trim().toLowerCase());
     });
     const dark = name !== "data-theme=light";
-    const expected = dark ? ["#377a85", "#6d95ab", "#a1b3cb", "#d0d3e5", "#f9f7fe"] : ["#559292", "#347087", "#2b4b75", "#2c2659", "#250133"];
+    const expected = dark ? ["#9591ad", "#5cb2fd", "#6acdc6", "#deb34a", "#ba446e"] : ["#312c44", "#23318e", "#41939d", "#643e03", "#a03667"];
     check(JSON.stringify(tokens) === JSON.stringify(expected), `${tag}: --split-0..4 resolve to the ${dark ? "dark" : "light"} set`);
     const fills = await barFills(c2);
     check(fills.length === 5, `${tag}: five distinct band fills (${fills.length})`);

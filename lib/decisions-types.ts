@@ -57,6 +57,8 @@ export interface DecisionsPayload {
   chiefs: DecisionsChief[];
   /** "Version 2026 Release 01". */
   versionLabel: string;
+  /** Changes whenever the case list does: the list is fetched as `/data/decisions/cases?v=<this>`, so a cached older copy is never reused. */
+  casesVersion: string;
   citation: string;
   caseCount: number;
   unclearVotes: number;

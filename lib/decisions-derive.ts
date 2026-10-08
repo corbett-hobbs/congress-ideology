@@ -90,6 +90,7 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
     topAreas,
     chiefs,
     versionLabel: meta.scdb_version_label,
+    casesVersion: "",
     citation: meta.citation,
     caseCount: meta.case_count,
     unclearVotes: meta.exclusions.unclear_votes,
@@ -330,7 +331,7 @@ export interface CaseFilter {
 /** Cases (newest first) inside the window, the area filter, the band and the pinned term. */
 export function filterCases(d: DecisionsPayload, cases: readonly DecisionCase[], f: CaseFilter): DecisionCase[] {
   const [lo, hi] = f.term === null ? f.range : [f.term, f.term];
-  return cases.filter((c) => c[0] >= lo && c[0] <= hi && (f.band === null || c[5] === f.band) && (!f.landmark || c[8] !== "") && inAreaFilter(d, f.area, c[4]));
+  return cases.filter((c) => c[0] >= lo && c[0] <= hi && (f.band === null || c[5] === f.band) && (!f.landmark || !!c[8]) && inAreaFilter(d, f.area, c[4]));
 }
 
 /** `https://supreme.justia.com/...` for a case with a U.S. Reports cite ("347 U.S. 483"); null when there is no page number to link. */

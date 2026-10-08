@@ -1,4 +1,5 @@
 import "server-only";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
@@ -16,13 +17,16 @@ const read = (file: string): unknown => JSON.parse(readFileSync(join(OUT, file),
 
 let cache: DecisionsPayload | null = null;
 
+/** A short hash of the case list, for the fetch URL. */
+const casesVersion = (): string => createHash("sha1").update(JSON.stringify(getDecisionCases())).digest("hex").slice(0, 10);
+
 export function getDecisionsPageData(): DecisionsPayload {
   if (cache) return cache;
   const counts = z.array(decisionCountRow).parse(read("decisions_counts.json"));
   const meta = decisionsMeta.parse(read("decisions_meta.json"));
   const landmarkIds = new Set(z.array(landmarkRow).parse(read("decisions_landmarks.json")).map((r) => r.case_id));
   const caseRows = z.array(decisionCaseRow).parse(read("decisions_cases.json"));
-  cache = buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id))));
+  cache = { ...buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id)))), casesVersion: casesVersion() };
   return cache;
 }
 
