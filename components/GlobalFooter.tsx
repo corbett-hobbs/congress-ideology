@@ -18,6 +18,7 @@ export function GlobalFooter() {
           <ul className="m-0 flex list-none flex-wrap gap-x-[22px] gap-y-1.5 p-0 text-[0.88rem]">
             <li><Link href="/about" className={LINK}>About</Link></li>
             <li><Link href="/methodology" className={LINK}>Methodology and sources</Link></li>
+            <li><Link href="/contact" className={LINK}>Contact and corrections</Link></li>
             <li><a href={siteInfo.githubUrl} className={LINK}>GitHub</a></li>
             <li><a href="/sitemap.xml" className={LINK}>Sitemap</a></li>
           </ul>

@@ -102,6 +102,14 @@ export default function AboutPage() {
             <p>InsideGov is built and maintained by {builderName}.</p>
           </Section>
         )}
+
+        <Section title="Contact">
+          <p>
+            Questions, ideas, or a number that looks wrong? Use the{" "}
+            <Link href="/contact" className={LINK}>contact form</Link>. We fix confirmed errors and note significant
+            ones.
+          </p>
+        </Section>
       </div>
     </main>
   );

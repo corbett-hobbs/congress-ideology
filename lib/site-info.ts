@@ -22,4 +22,4 @@ export function docUrl(docPath: string): string {
 
 /** Top-level pages that sit outside every vertical: no tab is active, no section nav,
  *  and the wordmark is a plain link to "/" (like the hub). */
-export const STATIC_PAGES = ["/about", "/methodology"] as const;
+export const STATIC_PAGES = ["/about", "/methodology", "/contact"] as const;
