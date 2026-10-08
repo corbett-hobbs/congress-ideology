@@ -110,8 +110,12 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check((await rowsNow()) > 120, `${tag}: scrolling the list adds rows (${await rowsNow()})`);
   const firstRow = (await listBox.locator("li").first().innerText()).replace(/\s+/g, " ");
   check(/2026/.test(firstRow) && /\d–\d/.test(firstRow), `${tag}: newest case first with its vote ("${firstRow.slice(0, 70)}")`);
-  const link = listBox.locator("li a[href*='justia']").first();
-  check(((await link.getAttribute("href")) ?? "").startsWith("https://supreme.justia.com/cases/federal/us/"), `${tag}: U.S. Reports cases link out`);
+  const hrefs = await listBox.locator("li a").evaluateAll((els) => els.map((e) => e.getAttribute("href") ?? ""));
+  check(hrefs.length > 0 && hrefs.every((h) => h.startsWith("https://en.wikipedia.org/")) && !hrefs.some((h) => /justia/.test(h)), `${tag}: every case link goes to Wikipedia, none to Justia (${hrefs.length} links)`);
+  const firstName = await listBox.locator("li").first().locator("a").first().getAttribute("href");
+  check(/Trump_v\._Barbara/.test(firstName ?? ""), `${tag}: a landmark's name links to its article (${firstName})`);
+  const plainLink = await listBox.locator("li:not(:has(a[title^='Landmark']))").first().locator("a").first().getAttribute("href");
+  check(/index\.php\?search=.*go=Go/.test(plainLink ?? ""), `${tag}: another case links to a Wikipedia go-search (${(plainLink ?? "").slice(0, 70)})`);
 
   // Legend of card 1 is an issue-area filter for the whole page
   await c1.locator("button[aria-pressed]", { hasText: "Criminal procedure" }).click();
@@ -139,11 +143,19 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check((await c4.locator("button[aria-label='Clear the landmark filter']").count()) === 1, `${tag}: landmark chip shown`);
   check((await listBox.locator("li a", { hasText: "Landmark" }).count()) > 0, `${tag}: landmark rows carry a Wikipedia badge`);
   check((await lede(c2)).includes(`of ${lmCount} cases`), `${tag}: card 2 follows the landmark filter (${(await lede(c2)).slice(0, 80)})`);
-  check(/Few cases per term/.test(await text(c2)), `${tag}: landmark view carries the few-cases note`);
+  check(/Grouped by decade/.test(await text(c2)), `${tag}: landmark view says it is grouped by decade`);
+  check((await c2.locator("svg.chart-svg path[fill]").count()) === 0 && (await c2.locator("svg.chart-svg rect[role=button]").count()) === 9, `${tag}: landmark view is nine decade bars, not the area`);
+  check(/n=\d+/.test((await svgTexts(c2.locator("svg.chart-svg text"))).join(" ")), `${tag}: each decade bar shows its case count`);
+  await c2.locator("[aria-label='Grouping'] button", { hasText: "By term" }).click();
+  await settle(page);
+  check((await c2.locator("svg.chart-svg path[fill]").count()) === 5 && /Few cases per term/.test(await text(c2)), `${tag}: "By term" forces the area back, with the few-cases note`);
+  await c2.locator("[aria-label='Grouping'] button", { hasText: "Auto" }).click();
+  await settle(page);
   const tot = await c1.locator("svg.chart-svg").first().evaluate((e) => e.getAttribute("aria-label"));
   check(!!tot, `${tag}: card 1 still draws`);
   await c4.locator("button[aria-label='Clear the landmark filter']").click();
   await settle(page);
+  check((await c2.locator("svg.chart-svg path[fill]").count()) === 5, `${tag}: unfiltered, card 2 is the area per term again`);
   check((await lmBox.isChecked()) === false && (await listCount()) === lmBefore, `${tag}: the chip clears it (${await listCount()})`);
 
   // Peak/low re-picked: area filter and window

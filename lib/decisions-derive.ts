@@ -315,6 +315,49 @@ export function heatMax(d: DecisionsPayload, band: number): number {
 /** Is any term of this decade inside the years window? */
 export const decadeInWindow = (decade: number, range: YearRange): boolean => range[1] >= decade && range[0] <= decade + 9;
 
+// --------------------------------------------------------------------------- grouping by decade
+
+export type SplitGrain = "term" | "decade";
+export type GrainChoice = "auto" | SplitGrain;
+
+export interface DecadeBin {
+  decade: number;
+  /** First and last term of the decade inside the window ("1946-1949" for the first, partial decade). */
+  first: number;
+  last: number;
+  bucket: Bucket;
+  total: number;
+}
+
+/** The window's terms summed by decade; a decade the window only clips keeps just the terms inside it. */
+export function binByDecade(terms: readonly number[], cells: readonly Bucket[]): DecadeBin[] {
+  const out: DecadeBin[] = [];
+  terms.forEach((t, i) => {
+    const dec = decadeOf(t);
+    let bin = out[out.length - 1];
+    if (!bin || bin.decade !== dec) {
+      bin = { decade: dec, first: t, last: t, bucket: zero(), total: 0 };
+      out.push(bin);
+    }
+    bin.last = t;
+    addInto(bin.bucket, cells[i]);
+    bin.total += sumBucket(cells[i]);
+  });
+  return out;
+}
+
+/**
+ * Which grain "How divided is the Court?" draws. Auto: per term while a term holds enough cases to read a share from (the
+ * whole docket, a big issue area), per decade once the selection is thin (landmarks, a small issue area), unless the window
+ * has fewer than two decades, where there is nothing to group. A forced choice wins.
+ */
+export function splitGrain(d: DecisionsPayload, area: number, range: YearRange, choice: GrainChoice): SplitGrain {
+  if (choice !== "auto") return choice;
+  const { terms } = windowCells(d, area, range);
+  const decades = new Set(terms.map(decadeOf)).size;
+  return decades >= 2 && isSmallSample(d, area, range) ? "decade" : "term";
+}
+
 // --------------------------------------------------------------------------- the case list
 
 export interface CaseFilter {
@@ -334,10 +377,21 @@ export function filterCases(d: DecisionsPayload, cases: readonly DecisionCase[],
   return cases.filter((c) => c[0] >= lo && c[0] <= hi && (f.band === null || c[5] === f.band) && (!f.landmark || !!c[8]) && inAreaFilter(d, f.area, c[4]));
 }
 
-/** `https://supreme.justia.com/...` for a case with a U.S. Reports cite ("347 U.S. 483"); null when there is no page number to link. */
-export function caseUrl(cite: string): string | null {
-  const m = /^(\d+) U\.S\. (\d+)$/.exec(cite.trim());
-  return m ? `https://supreme.justia.com/cases/federal/us/${m[1]}/${m[2]}/` : null;
+const WIKI = "https://en.wikipedia.org/wiki/";
+
+/** The Wikipedia article for an article title: spaces become underscores, the rest is percent-encoded. */
+export const wikiArticleUrl = (title: string): string => WIKI + encodeURIComponent(title.replaceAll(" ", "_"));
+
+/**
+ * Where a case's name links. A landmark has an exact article (the list's own link). Any other case links to Wikipedia's
+ * "go" search for its name, which jumps straight to the article when a page has exactly that title (most case articles are
+ * titled by the name: "Dunaway v. New York") and otherwise lists the closest pages; we hold no article titles for the other
+ * ~7,900 cases, and a search is honest about that. "et al." is dropped so a name keeps its best chance of an exact title.
+ */
+export function wikiCaseUrl(c: DecisionCase): string {
+  if (c[8]) return wikiArticleUrl(c[8]);
+  const query = c[2].replace(/,?\s+et\s+al\.?/gi, "").trim();
+  return `https://en.wikipedia.org/w/index.php?${new URLSearchParams({ search: query, go: "Go", ns0: "1" }).toString()}`;
 }
 
 export const fmtPct = (v: number): string => `${Math.round(v * 100)}%`;

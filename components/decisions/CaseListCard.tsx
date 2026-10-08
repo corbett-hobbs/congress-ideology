@@ -3,7 +3,7 @@
 import { useMemo, useState, type UIEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MethodologyNote } from "@/components/MethodologyNote";
-import { ALL_AREAS_LABEL, areaFilterLabel, caseUrl, filterCases, fmtInt } from "@/lib/decisions-derive";
+import { ALL_AREAS_LABEL, areaFilterLabel, filterCases, fmtInt, wikiArticleUrl, wikiCaseUrl } from "@/lib/decisions-derive";
 import { ALL_AREAS, BAND_COLORS, BAND_LONG, BAND_SHORT, type DecisionCase } from "@/lib/decisions-types";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 import { Swatch } from "./shared";
@@ -96,7 +96,7 @@ export function CaseListCard() {
       </div>
       <MethodologyNote>
         <p>
-          The same cases as the charts: orally argued, {fmtInt(data.unclearVotes)} with an unclear vote left out. The vote is the justices in the majority and minority; the colour is how many dissented (the bands of the chart above), so a 5–3 decision is coloured with the 6–3 band. Landmark badges come from Wikipedia’s “List of landmark court decisions in the United States” ({fmtInt(data.landmarkSource.count)} cases on this page, from the {data.landmarkSource.revisionDate} revision, CC BY-SA 4.0); a badge links to the article and names the list’s heading. Citations are U.S. Reports where there is one, otherwise the Supreme Court Reporter or Lawyers’ Edition; links go to Justia for U.S. Reports cases.
+          The same cases as the charts: orally argued, {fmtInt(data.unclearVotes)} with an unclear vote left out. The vote is the justices in the majority and minority; the colour is how many dissented (the bands of the chart above), so a 5–3 decision is coloured with the 6–3 band. Landmark badges come from Wikipedia’s “List of landmark court decisions in the United States” ({fmtInt(data.landmarkSource.count)} cases on this page, from the {data.landmarkSource.revisionDate} revision, CC BY-SA 4.0); a badge links to the article and names the list’s heading. Citations are U.S. Reports where there is one, otherwise the Supreme Court Reporter or Lawyers’ Edition. A case name links to its Wikipedia article for landmarks and to a Wikipedia search for its name for every other case (which jumps to the article when Wikipedia has a page with that title).
         </p>
         <p>Case names are the Supreme Court Database’s, re-capitalised for reading. Issue areas are the database’s own.</p>
       </MethodologyNote>
@@ -114,17 +114,20 @@ const BADGE =
  * never both exposed.
  */
 function CaseRow({ c, area }: { c: DecisionCase; area: string }) {
-  const url = caseUrl(c[3]);
-  const name = url ? (
-    <a href={url} target="_blank" rel="noreferrer" className="text-ink underline decoration-line-strong underline-offset-2 hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
+  const name = (
+    <a
+      href={wikiCaseUrl(c)}
+      target="_blank"
+      rel="noreferrer"
+      title={c[8] ? "Wikipedia article" : "Search Wikipedia for this case"}
+      className="text-ink underline decoration-line-strong underline-offset-2 hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+    >
       {c[2]}
     </a>
-  ) : (
-    <span className="text-ink">{c[2]}</span>
   );
   const badge = c[8] ? (
     <a
-      href={`https://en.wikipedia.org/wiki/${encodeURIComponent(c[8].replaceAll(" ", "_"))}`}
+      href={wikiArticleUrl(c[8])}
       target="_blank"
       rel="noreferrer"
       title={`Landmark decision on Wikipedia${c[9] ? `: ${c[9]}` : ""}`}
