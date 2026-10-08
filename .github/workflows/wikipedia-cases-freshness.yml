@@ -77,6 +77,17 @@ jobs:
         if: steps.detect.outputs.changed == 'true'
         run: pnpm exec tsx pipeline/transform/decisions-run.ts
 
+      # New articles whose opening does not give a ruling sentence the plain picker can take get one written by the Claude API,
+      # held to the article's own words (pipeline/classify/case-summaries-auto.ts). Needs the ANTHROPIC_API_KEY repo secret; with
+      # none the step does nothing and those cases simply have no sentence. Then the transform again to pick the answers up.
+      - name: Summarise new cases the plain picker cannot
+        if: steps.detect.outputs.changed == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          pnpm summarize:cases
+          pnpm exec tsx pipeline/transform/decisions-run.ts
+
       - name: Open pull request
         id: cpr
         if: steps.detect.outputs.changed == 'true'
@@ -84,6 +95,7 @@ jobs:
         with:
           add-paths: |
             pipeline/raw/wikipedia-cases
+            pipeline/classification/case_summaries.json
             pipeline/output/decisions_*.json
           branch: data/wikipedia-cases-refresh
           base: main
@@ -94,7 +106,8 @@ jobs:
           body: |
             Wikipedia's Supreme Court volume and term lists changed (a new article, a renamed one, or new decisions).
             `pipeline/output/decisions_articles.json`, `decisions_summaries.json` (the one-sentence case summaries, from each new
-            article's opening) and the report (`decisions_report.json` > `case_articles`, `case_summaries`) are regenerated.
+            article's opening; where that does not state a ruling, a sentence from the Claude API checked against the article's own words,
+            cached in `pipeline/classification/case_summaries.json`) and the report (`decisions_report.json` > `case_articles`, `case_summaries`) are regenerated.
 
             Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
             (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.

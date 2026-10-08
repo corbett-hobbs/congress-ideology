@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { DecisionsDataError } from "../../lib/decisions-entities";
 
 /**
@@ -12,8 +13,11 @@ import { DecisionsDataError } from "../../lib/decisions-entities";
  *   3. Keep it only if it reads as one finished sentence of at most `MAX_CHARS`: no footnote marks, no stray brackets, no
  *      tail cut off. Otherwise the case has no summary, and the table shows none rather than a mangled one.
  *
- * The text is Wikipedia's (CC BY-SA 4.0); the page links each case name to its article. Pure; `decisions-run.ts` does the I/O.
+ * The text is Wikipedia's (CC BY-SA 4.0); the page links each case name to its article. Where no sentence passes, a sentence the
+ * Claude API wrote from the same lead (`classify/case-summaries-auto.ts`, cached in `CASE_SUMMARIES_AI`) fills in; the report and the
+ * page's Data notes keep the two apart. Pure; `decisions-run.ts` does the I/O.
  */
+export const CASE_SUMMARIES_AI = "pipeline/classification/case_summaries.json";
 export const MAX_CHARS = 300;
 const MIN_CHARS = 40;
 
@@ -118,41 +122,70 @@ export function summarizeLead(lead: string): { text: string; sentence: 1 | 2 | 3
   return null;
 }
 
+/** One cached answer of the model for an article: its sentence, or null when the lead does not say how the Court ruled. */
+export const aiSummaryCache = z.array(z.strictObject({ title: z.string().min(1), summary: z.string().nullable(), model: z.string().min(1) }));
+export type AiSummaryEntry = z.infer<typeof aiSummaryCache>[number];
+
+const norm = (s: string): string => s.replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\s+/g, " ").trim().toLowerCase();
+const words = (s: string): string[] => norm(s).match(/[a-z0-9]{4,}/g) ?? [];
+
+/**
+ * A model-written sentence is usable only if it is one finished line of 40-300 characters AND is held to the lead it was written
+ * from: `evidence` (the words the model says state the ruling) is a verbatim stretch of the lead that itself names a ruling, and
+ * most of the sentence's own words appear in the lead. The model is asked to write only from the text; this is what stops it
+ * writing a ruling from memory (an early trial had it state the opposite of what the Court held where the lead gave no ruling).
+ */
+export function checkAiSummary(sentence: string, evidence: string, lead: string): boolean {
+  if (sentence.length < MIN_CHARS || sentence.length > MAX_CHARS || /[\n\r]/.test(sentence) || !/[.!?]["”)]?$/.test(sentence) || splitSentences(sentence).length !== 1) return false;
+  const e = norm(evidence);
+  if (e.length < 25 || !norm(lead).includes(e) || !RULING.test(evidence)) return false;
+  const have = new Set(words(lead));
+  const mine = words(sentence);
+  return mine.length > 0 && mine.filter((w) => have.has(w)).length / mine.length >= 0.7;
+}
+
 export interface CaseSummaryRow {
   case_id: string;
   summary: string;
+  /** "wikipedia" = the article's own sentence, trimmed; "claude" = written by the model from the article's lead. */
+  via: "wikipedia" | "claude";
 }
 
 export interface CaseSummariesReport {
   articles: number;
   with_lead: number;
   summarized: number;
+  /** Of `summarized`, articles whose sentence the model wrote. */
+  claude: number;
   from_sentence: Record<"1" | "2" | "3", number>;
   /** Matched cases whose article has no summary (no lead, or no clean ruling sentence). */
   without: number;
 }
 
 /** Join matched cases to their article's sentence. Several cases can share one article (companion cases); each gets the same sentence. */
-export function buildCaseSummaries(matched: readonly { case_id: string; title: string }[], leads: Readonly<Record<string, string>>): { rows: CaseSummaryRow[]; report: CaseSummariesReport } {
-  const byTitle = new Map<string, ReturnType<typeof summarizeLead>>();
-  const report: CaseSummariesReport = { articles: 0, with_lead: 0, summarized: 0, from_sentence: { "1": 0, "2": 0, "3": 0 }, without: 0 };
+export function buildCaseSummaries(matched: readonly { case_id: string; title: string }[], leads: Readonly<Record<string, string>>, ai: ReadonlyMap<string, string | null> = new Map()): { rows: CaseSummaryRow[]; report: CaseSummariesReport } {
+  const byTitle = new Map<string, { text: string; sentence: 1 | 2 | 3 | 0 } | null>();
+  const report: CaseSummariesReport = { articles: 0, with_lead: 0, summarized: 0, claude: 0, from_sentence: { "1": 0, "2": 0, "3": 0 }, without: 0 };
   for (const m of matched) {
     if (byTitle.has(m.title)) continue;
     report.articles++;
     const lead = leads[m.title];
     if (lead) report.with_lead++;
-    byTitle.set(m.title, lead ? summarizeLead(lead) : null);
+    const picked = lead ? summarizeLead(lead) : null;
+    const written = ai.get(m.title);
+    byTitle.set(m.title, picked ?? (written ? { text: written, sentence: 0 } : null));
   }
   const rows: CaseSummaryRow[] = [];
   for (const m of matched) {
     const s = byTitle.get(m.title);
-    if (s) rows.push({ case_id: m.case_id, summary: s.text });
+    if (s) rows.push({ case_id: m.case_id, summary: s.text, via: s.sentence === 0 ? "claude" : "wikipedia" });
     else report.without++;
   }
   for (const s of byTitle.values()) {
     if (!s) continue;
     report.summarized++;
-    report.from_sentence[String(s.sentence) as "1" | "2" | "3"]++;
+    if (s.sentence === 0) report.claude++;
+    else report.from_sentence[String(s.sentence) as "1" | "2" | "3"]++;
   }
   return { rows, report };
 }

@@ -21,7 +21,7 @@ import { HISTORICAL_ADMINISTRATIONS } from "../../lib/troops-presidents";
 import { RAW_DIR } from "../fetch/lib";
 import type { WikiCaseEntry } from "../fetch/wikipedia-cases-lib";
 import { checkWikipediaCases, matchWikipediaCases, type WikiVia } from "./wikipedia-cases";
-import { buildCaseSummaries, checkCaseSummaries } from "./wikipedia-case-summaries";
+import { CASE_SUMMARIES_AI, aiSummaryCache, buildCaseSummaries, checkCaseSummaries } from "./wikipedia-case-summaries";
 import { checkLandmarks, matchLandmarks, parseLandmarkList } from "./landmarks";
 import { buildCaseRows, buildChiefSpans, buildCounts, buildMeta, checkChiefReference, parseScdb, recountFromCsv, runGates, selectCases } from "./decisions";
 
@@ -88,7 +88,9 @@ async function main() {
   const leadsText = await readFile(`${RAW_DIR}/wikipedia-cases/leads.json`, "utf8");
   if (sha256(Buffer.from(leadsText)) !== leadsManifest.sha256) throw new DecisionsDataError("leads.json does not match the sha256 in its manifest; re-run pnpm fetch:wikipedia-case-leads");
   const linked = articles.flatMap((a) => (a.title === null ? [] : [{ case_id: a.case_id, title: a.title }]));
-  const cs = buildCaseSummaries(linked, (JSON.parse(leadsText) as { leads: Record<string, string> }).leads);
+  // Sentences the model wrote for articles the plain picker cannot use (`pnpm summarize:cases`); absent file = none yet.
+  const aiCache = aiSummaryCache.parse(await readJson(CASE_SUMMARIES_AI).catch(() => []));
+  const cs = buildCaseSummaries(linked, (JSON.parse(leadsText) as { leads: Record<string, string> }).leads, new Map(aiCache.map((e) => [e.title, e.summary])));
   checkCaseSummaries(cs.rows, linked.length, new Set(selection.cases.map((c) => c.caseId)));
   const summaries = z.array(caseSummaryRow).parse(cs.rows.sort((a, b) => a.case_id.localeCompare(b.case_id)));
 

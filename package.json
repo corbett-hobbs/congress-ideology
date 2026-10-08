@@ -30,6 +30,7 @@
     "fetch:executive-orders": "tsx pipeline/fetch/executive-orders.ts",
     "classify:eos": "tsx pipeline/classify/executive-orders.ts",
     "classify:eos:auto": "tsx pipeline/classify/executive-orders-auto.ts",
+    "summarize:cases": "tsx pipeline/classify/case-summaries-auto.ts",
     "classify:audit": "tsx pipeline/classify/executive-orders-audit.ts",
     "fetch:scdb": "tsx pipeline/fetch/scdb.ts",
     "fetch:landmarks": "tsx pipeline/fetch/wikipedia-landmarks.ts",

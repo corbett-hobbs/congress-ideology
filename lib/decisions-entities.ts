@@ -173,6 +173,8 @@ export type CaseArticleRow = z.infer<typeof caseArticleRow>;
 export const caseSummaryRow = z.strictObject({
   case_id: z.string().min(1),
   summary: z.string().min(40).max(300),
+  /** "wikipedia" = the article's own sentence, trimmed; "claude" = written by the model from the article's lead (never from memory). */
+  via: z.enum(["wikipedia", "claude"]),
 });
 export type CaseSummaryRow = z.infer<typeof caseSummaryRow>;
 
