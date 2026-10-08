@@ -19,7 +19,7 @@ describe("methodology content", () => {
 
   it("has no placeholder text and every source link is https or a known http host", () => {
     for (const e of entries) {
-      for (const text of [e.description, e.caveats, e.updates, e.credit ?? ""]) expect(text).not.toMatch(/TODO|\[[^\]]*\]/);
+      for (const text of [e.description, e.updates, e.credit ?? ""]) expect(text).not.toMatch(/TODO|\[[^\]]*\]/);
       for (const s of e.sources) if (s.url) expect(s.url).toMatch(/^https?:\/\//);
     }
   });

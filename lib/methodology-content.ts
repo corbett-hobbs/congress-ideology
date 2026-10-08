@@ -23,8 +23,6 @@ export interface MethodEntry {
   credit?: string;
   /** How often the data is refreshed. */
   updates: string;
-  /** The "worth knowing" line. */
-  caveats: string;
   /** Path in the repo to the full write-up, when one exists. */
   docPath?: string;
 }
@@ -72,8 +70,6 @@ export const METHODOLOGY: MethodGroup[] = [
           { name: "Federal Register", url: "https://www.federalregister.gov/presidential-documents/executive-orders" },
         ],
         updates: "Checked weekly.",
-        caveats:
-          "Topics are our grouping, assigned by a language model from each order’s title and agencies. A person checked a random sample of 100 and agreed with every one, so counts by topic are classifier-assisted, not audited. A transition year counts orders under both presidents.",
       },
       {
         id: "economy",
@@ -92,8 +88,6 @@ export const METHODOLOGY: MethodGroup[] = [
         credit:
           "This product uses the FRED® API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.",
         updates: "Checked weekly.",
-        caveats:
-          "Recent months are often revised. Household income and the deficit are annual figures that arrive a year or more late.",
         docPath: "docs/INDICATORS_METHODOLOGY.md",
       },
       {
@@ -104,8 +98,6 @@ export const METHODOLOGY: MethodGroup[] = [
           "Weekly and monthly petroleum, Strategic Petroleum Reserve, natural gas and electricity series, in the source’s own units. Policy flags come from a hand-kept list of dated actions, each naming the authority behind it.",
         sources: [{ name: "U.S. Energy Information Administration", url: "https://www.eia.gov/" }],
         updates: "Checked weekly.",
-        caveats:
-          "The newest months are preliminary and marked as such. Flags for actions whose effects arrive years later say “enabled, not caused.”",
         docPath: "docs/ENERGY_METHODOLOGY.md",
       },
       {
@@ -119,8 +111,6 @@ export const METHODOLOGY: MethodGroup[] = [
         ],
         credit: "U.S. Immigration and Customs Enforcement, Enforcement and Removal Operations.",
         updates: "Refreshed by hand after ICE publishes a fiscal year’s figures.",
-        caveats:
-          "ICE only. Removals carried out by Border Patrol itself and Title 42 expulsions are excluded, so these are not DHS-wide totals. Returns are counted from FY2007 on. Counting rules changed over time, and the chart marks each change.",
         docPath: "docs/IMMIGRATION_ENFORCEMENT_METHODOLOGY.md",
       },
       {
@@ -136,8 +126,6 @@ export const METHODOLOGY: MethodGroup[] = [
         credit:
           "This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.",
         updates: "Checked weekly.",
-        caveats:
-          "The duty source changes in 2010, marked on the chart. The national line is seasonally adjusted; country lines are not.",
         docPath: "docs/TRADE_METHODOLOGY.md",
       },
       {
@@ -148,8 +136,6 @@ export const METHODOLOGY: MethodGroup[] = [
           "Disbursements by recipient and sector since FY2001. Military share is the portion of a recipient’s total the source classes as military assistance.",
         sources: [{ name: "ForeignAssistance.gov", url: "https://foreignassistance.gov/" }],
         updates: "Checked weekly.",
-        caveats:
-          "Foreign assistance only: most arms sales are not in the source. Dollars are nominal, not adjusted for inflation. The default year is the latest complete one.",
         docPath: "docs/FOREIGN_AID_METHODOLOGY.md",
       },
       {
@@ -165,8 +151,6 @@ export const METHODOLOGY: MethodGroup[] = [
         credit:
           "troopdata is used under the GPL-3.0 license; the license text is included in the project repository. Allen, Flynn and Martinez Machain (2022), “Global U.S. military deployment data: 1950-2020,” *Conflict Management and Peace Science* 39(3): 351-370.",
         updates: "Checked weekly for new quarterly reports.",
-        caveats:
-          "The series changes meaning in December 2017 (permanent assignment only), and 2006 and 2007 are estimates, so we never calculate a change across those breaks. Afghanistan, Iraq and Syria are “not reported,” not zero, from December 2017 to September 2021. Territories and ships at sea are not counted as hosts. Newer, classified and unacknowledged installations are missing from the base layer.",
         docPath: "docs/TROOPS_METHODOLOGY.md",
       },
     ],
@@ -187,8 +171,6 @@ export const METHODOLOGY: MethodGroup[] = [
         ],
         credit: VOTEVIEW_CITATION,
         updates: "Checked weekly.",
-        caveats:
-          "Scores describe voting relative to colleagues, not beliefs. A member who served in both chambers in one Congress appears once for each.",
       },
       {
         id: "committees",
@@ -201,7 +183,6 @@ export const METHODOLOGY: MethodGroup[] = [
           { name: "Voteview", url: "https://voteview.com/data", note: "scores, as above" },
         ],
         updates: "Rosters checked daily, scores weekly.",
-        caveats: "Current Congress only. The source has no historical rosters.",
       },
       {
         id: "demographics",
@@ -213,8 +194,6 @@ export const METHODOLOGY: MethodGroup[] = [
           { name: "congress-legislators", url: "https://github.com/unitedstates/congress-legislators", note: "birthdates, gender, terms" },
         ],
         updates: "Checked daily.",
-        caveats:
-          "A member replaced mid-term and the replacement both count, so a Congress has more members than seats. Delegates and resident commissioners are left out. A few members have no birthdate and are left out of the age figures.",
         docPath: "docs/DEMOGRAPHICS_METHODOLOGY.md",
       },
       {
@@ -228,8 +207,6 @@ export const METHODOLOGY: MethodGroup[] = [
           { name: "Senate", url: "https://efdsearch.senate.gov/search/home/", note: "electronic financial disclosures" },
         ],
         updates: "Refreshed by hand after new filings are published.",
-        caveats:
-          "Figures are read from scanned and PDF filings and can contain errors, so each year carries a confidence flag and only high-confidence filings count toward totals. The top range has no upper limit, so very large estimates are floors.",
         docPath: "docs/NET_WORTH_METHODOLOGY.md",
       },
     ],
@@ -252,8 +229,6 @@ export const METHODOLOGY: MethodGroup[] = [
         credit:
           "Martin, Andrew D. and Kevin M. Quinn. 2002. “Dynamic Ideal Point Estimation via Markov Chain Monte Carlo for the U.S. Supreme Court, 1953–1999.” *Political Analysis* 10:134–153.",
         updates: "Checked monthly for a new release.",
-        caveats:
-          "Scores are not on the same scale as congressional DW-NOMINATE scores. Intervals can overlap. Terms with a mid-term change in membership are split into two parts.",
         docPath: "docs/SCOTUS_DATA_METHODOLOGY.md",
       },
       {
@@ -269,8 +244,6 @@ export const METHODOLOGY: MethodGroup[] = [
         credit:
           "Harold J. Spaeth, Lee Epstein, Andrew D. Martin, Jeffrey A. Segal, Theodore J. Ruger, Sara C. Benesh, and Michael J. Nelson. 2026 Supreme Court Database, Version 2026 Release 01. URL: http://supremecourtdatabase.org. Licensed CC BY-NC 3.0 US. Wikipedia text is available under CC BY-SA 4.0.",
         updates: "Database checked monthly; Wikipedia links checked weekly.",
-        caveats:
-          "Summary dispositions decided without argument are excluded. Dissent bands count dissents, not the full tally, so a 5–3 decision falls in the 6–3 band. Not every case has a Wikipedia article.",
         docPath: "docs/DECISIONS_METHODOLOGY.md",
       },
     ],
@@ -288,8 +261,6 @@ export const METHODOLOGY: MethodGroup[] = [
           { name: "National Bureau of Economic Research", url: "https://www.nber.org/research/data/us-business-cycle-expansions-and-contractions", note: "via FRED" },
         ],
         updates: "Checked weekly with the Economy data.",
-        caveats:
-          "Dates are announced after the fact, so the most recent months may not be shaded yet.",
       },
       {
         id: "maps",
@@ -300,7 +271,6 @@ export const METHODOLOGY: MethodGroup[] = [
         sources: [{ name: "Natural Earth", url: "https://www.naturalearthdata.com/" }],
         credit: "Made with Natural Earth.",
         updates: "Fixed snapshot.",
-        caveats: "Simplified for the web, so small borders are approximate.",
       },
       {
         id: "biographies",
@@ -314,8 +284,6 @@ export const METHODOLOGY: MethodGroup[] = [
         ],
         credit: "Wikipedia text is available under the Creative Commons Attribution-ShareAlike 4.0 license.",
         updates: "Checked weekly.",
-        caveats:
-          "Biographies are trimmed to whole sentences, never rewritten, and each excerpt links to its source article.",
       },
     ],
   },

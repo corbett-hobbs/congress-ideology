@@ -74,8 +74,7 @@ function Entry({ entry }: { entry: MethodEntry }) {
           )}
         </div>
         <p className="text-[0.88rem] text-ink-muted">
-          <span className="font-medium text-ink">Updates:</span> {entry.updates}{" "}
-          <span className="font-medium text-ink">Worth knowing:</span> {entry.caveats}
+          <span className="font-medium text-ink">Updates:</span> {entry.updates}
         </p>
       </div>
     </div>
