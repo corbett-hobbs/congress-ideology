@@ -50,6 +50,10 @@ export interface DecisionsPayload {
   landmark: LandmarkCells;
   /** Where the landmark flag comes from. */
   landmarkSource: { url: string; page: string; revisionDate: string; license: string; count: number };
+  /** Where the case-name links come from (Wikipedia's volume and term lists): how many cases link to an article, and when the lists were read. */
+  articleSource: { count: number; fetched: string };
+  /** Where the one-sentence case summaries come from (the opening of each Wikipedia article): how many cases have one. */
+  summarySource: { count: number; fetched: string };
   /** Counts of the areas outside `topAreas`, summed ("Other areas"): `other[termIndex]`. */
   other: Bucket[];
   /** Indexes (into `areas`) of the six biggest issue areas by total cases: card 1 draws each as its own series. */
@@ -79,7 +83,9 @@ export const OTHER_AREAS = -2;
 
 /**
  * One case in the list: `[term, date (ISO), name, cite, area index or -1, dissent band 0-4, majority, minority, landmark
- * article title or "", landmark topics ("Fourth Amendment rights \u00b7 Search and seizure") or ""]`.
+ * article title or "", landmark topics ("Fourth Amendment rights \u00b7 Search and seizure") or "", Wikipedia article
+ * title / "" when no list names the case / null when the lists say it has no article, one sentence from that article saying how
+ * the Court ruled or ""]`.
  * Arrays, not objects: 8,000+ of them travel to the browser.
  */
-export type DecisionCase = [number, string, string, string, number, number, number, number, string, string];
+export type DecisionCase = [number, string, string, string, number, number, number, number, string, string, string | null, string];

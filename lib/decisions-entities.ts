@@ -153,6 +153,39 @@ export const landmarkRow = z.strictObject({
 });
 export type LandmarkRow = z.infer<typeof landmarkRow>;
 
+/**
+ * `decisions_articles.json`: every case Wikipedia's volume and term lists name, with the article each links (`title`), or
+ * null when the list shows the case as a red link (Wikipedia has no article). Cases on no list have no row.
+ */
+export const caseArticleRow = z.strictObject({
+  case_id: z.string().min(1),
+  title: z.string().min(1).nullable(),
+  /** How it joined: U.S. Reports cite, docket number, or case name plus year; null for a case with no article. */
+  via: z.enum(["us_cite", "docket", "name_year"]).nullable(),
+});
+export type CaseArticleRow = z.infer<typeof caseArticleRow>;
+
+/**
+ * `decisions_summaries.json`: for the cases with an article, one sentence from the article's lead that states how the Court
+ * ruled (Wikipedia's own words, CC BY-SA 4.0; `transform/wikipedia-case-summaries.ts`). A case whose article opens without a
+ * clean ruling sentence has no row.
+ */
+export const caseSummaryRow = z.strictObject({
+  case_id: z.string().min(1),
+  summary: z.string().min(40).max(300),
+});
+export type CaseSummaryRow = z.infer<typeof caseSummaryRow>;
+
+/** `pipeline/raw/wikipedia-cases/leads-manifest.json`. */
+export const caseLeadsManifest = z.strictObject({
+  fetched: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  license: z.string(),
+  titles: int,
+  with_lead: int,
+  without_lead: int,
+  sha256: z.string().length(64),
+});
+
 export const landmarksManifest = z.strictObject({
   page: z.string(),
   url: z.string().url(),

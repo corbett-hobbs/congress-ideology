@@ -294,6 +294,2312 @@
       }
     ]
   },
+  "case_articles": {
+    "cases": 8251,
+    "linked": 3388,
+    "by_via": {
+      "us_cite": 2911,
+      "docket": 0,
+      "name_year": 454
+    },
+    "no_article": 4850,
+    "unlisted": 36,
+    "conflicts": [
+      {
+        "case_id": "2019-014",
+        "scdb_name": "RETIREMENT PLANS COMMITTEE OF IBM v. JANDER",
+        "wiki_name": "Retirement Plans Committee v. Jander / Retirement Plans Comm. of IBM v. Jander",
+        "via": "name_year",
+        "reason": "more than one article fits the name and year"
+      }
+    ],
+    "name_matches": [
+      {
+        "case_id": "2016-003",
+        "scdb_name": "MANRIQUE v. UNITED STATES",
+        "title": "Manrique v. United States"
+      },
+      {
+        "case_id": "2016-004",
+        "scdb_name": "SALMAN v. UNITED STATES",
+        "title": "Salman v. United States"
+      },
+      {
+        "case_id": "2016-006",
+        "scdb_name": "FRY v. NAPOLEON COMMUNITY SCHOOLS",
+        "title": "Fry v. Napoleon Community Schools"
+      },
+      {
+        "case_id": "2016-007",
+        "scdb_name": "STAR ATHLETICA, L.L.C. v. VARSITY BRANDS, INC.",
+        "title": "Star Athletica, LLC v. Varsity Brands, Inc."
+      },
+      {
+        "case_id": "2016-008",
+        "scdb_name": "CZYZEWSKI v. JEVIC HOLDING CORP.",
+        "title": "Czyzewski v. Jevic Holding Corp."
+      },
+      {
+        "case_id": "2016-009",
+        "scdb_name": "SCA HYGIENE PRODS. AKTIEBOLAG v. FIRST QUALITY BABY PRODS., LLC",
+        "title": "SCA Hygiene Products Aktiebolag v. First Quality Baby Products, LLC"
+      },
+      {
+        "case_id": "2016-011",
+        "scdb_name": "NLRB v. SW GENERAL, INC.",
+        "title": "NLRB v. SW General, Inc."
+      },
+      {
+        "case_id": "2016-014",
+        "scdb_name": "LIGHTFOOT v. CENDANT MORTGAGE CORP.",
+        "title": "Lightfoot v. Cendant Mortgage Corp."
+      },
+      {
+        "case_id": "2016-015",
+        "scdb_name": "SESSIONS, ATT'Y GEN. v. MORALES-SANTANA",
+        "title": "Sessions v. Morales-Santana"
+      },
+      {
+        "case_id": "2016-016",
+        "scdb_name": "BRAVO-FERNANDEZ v. UNITED STATES",
+        "title": "Bravo-Fernandez v. United States"
+      },
+      {
+        "case_id": "2016-020",
+        "scdb_name": "STATE FARM FIRE & CASUALTY CO. v. UNITED STATES, EX REL RIGSBY",
+        "title": "State Farm Fire & Casualty Co. v. United States ex rel. Rigsby"
+      },
+      {
+        "case_id": "2016-026",
+        "scdb_name": "BECKLES v. UNITED STATES",
+        "title": "Beckles v. United States"
+      },
+      {
+        "case_id": "2016-027",
+        "scdb_name": "MOORE v. TEXAS",
+        "title": "Moore v. Texas (2017)"
+      },
+      {
+        "case_id": "2016-030",
+        "scdb_name": "COOPER v. HARRIS",
+        "title": "Cooper v. Harris"
+      },
+      {
+        "case_id": "2016-031",
+        "scdb_name": "LIFE TECHNOLOGIES CORP. v. PROMEGA CORP.",
+        "title": "Life Technologies Corp. v. Promega Corp."
+      },
+      {
+        "case_id": "2016-033",
+        "scdb_name": "NELSON v. COLORADO",
+        "title": "Nelson v. Colorado"
+      },
+      {
+        "case_id": "2016-034",
+        "scdb_name": "LEWIS v. CLARKE",
+        "title": "Lewis v. Clarke"
+      },
+      {
+        "case_id": "2016-035",
+        "scdb_name": "EXPRESSIONS HAIR DESIGN v. SCHNEIDERMAN",
+        "title": "Expressions Hair Design v. Schneiderman"
+      },
+      {
+        "case_id": "2016-036",
+        "scdb_name": "GOODYEAR TIRE & RUBBER CO. v. HAEGER",
+        "title": "Goodyear Tire & Rubber Co. v. Haeger"
+      },
+      {
+        "case_id": "2016-037",
+        "scdb_name": "ENDREW F. v. DOUGLAS CNTY. SCH. DIST. RE-1",
+        "title": "Endrew F. v. Douglas County School District RE–1"
+      },
+      {
+        "case_id": "2016-039",
+        "scdb_name": "MIDLAND FUNDING LLC v. JOHNSON",
+        "title": "Midland Funding, LLC v. Johnson"
+      },
+      {
+        "case_id": "2016-040",
+        "scdb_name": "MATAL v. TAM",
+        "title": "Matal v. Tam"
+      },
+      {
+        "case_id": "2016-041",
+        "scdb_name": "ZIGLAR v. ABBASI",
+        "title": "Ziglar v. Abbasi"
+      },
+      {
+        "case_id": "2016-042",
+        "scdb_name": "SHAW v. UNITED STATES",
+        "title": "Shaw v. United States"
+      },
+      {
+        "case_id": "2016-043",
+        "scdb_name": "HERNANDEZ v. MESA",
+        "title": "Hernandez v. Mesa"
+      },
+      {
+        "case_id": "2016-045",
+        "scdb_name": "KINDRED NURSING CENTERS v. CLARK",
+        "title": "Kindred Nursing Centers, L.P. v. Clark"
+      },
+      {
+        "case_id": "2016-046",
+        "scdb_name": "PACKINGHAM v. NORTH CAROLINA",
+        "title": "Packingham v. North Carolina"
+      },
+      {
+        "case_id": "2016-047",
+        "scdb_name": "ESQUIVEL-QUINTANA v. SESSIONS",
+        "title": "Esquivel-Quintana v. Sessions"
+      },
+      {
+        "case_id": "2016-048",
+        "scdb_name": "DEAN v. UNITED STATES",
+        "title": "Dean v. United States (2017)"
+      },
+      {
+        "case_id": "2016-049",
+        "scdb_name": "COVENTRY HEALTH CARE OF MISSOURI v. NEVILS",
+        "title": "Coventry Health Care v. Nevils"
+      },
+      {
+        "case_id": "2016-051",
+        "scdb_name": "MURR v. WISCONSIN",
+        "title": "Murr v. Wisconsin"
+      },
+      {
+        "case_id": "2016-052",
+        "scdb_name": "HOWELL v. HOWELL",
+        "title": "Howell v. Howell"
+      },
+      {
+        "case_id": "2016-053",
+        "scdb_name": "MICROSOFT CORP. v. BAKER",
+        "title": "Microsoft Corp. v. Baker"
+      },
+      {
+        "case_id": "2016-054",
+        "scdb_name": "IMPRESSION PRODUCTS v. LEXMARK INTERNATIONAL",
+        "title": "Impression Products, Inc. v. Lexmark International, Inc."
+      },
+      {
+        "case_id": "2016-056",
+        "scdb_name": "WATER SPLASH, INC. v. MENON",
+        "title": "Water Splash, Inc. v. Menon"
+      },
+      {
+        "case_id": "2016-057",
+        "scdb_name": "ADVOCATE HEALTH CARE NETWORK v. STAPLETON",
+        "title": "Advocate Health Care Network v. Stapleton"
+      },
+      {
+        "case_id": "2016-058",
+        "scdb_name": "TC HEARTLAND LLC v. KRAFT FOODS GROUP BRANDS",
+        "title": "TC Heartland LLC v. Kraft Foods Group Brands LLC"
+      },
+      {
+        "case_id": "2016-061",
+        "scdb_name": "TURNER v. UNITED STATES",
+        "title": "Turner v. United States"
+      },
+      {
+        "case_id": "2016-062",
+        "scdb_name": "HONEYCUTT v. UNITED STATES",
+        "title": "Honeycutt v. United States"
+      },
+      {
+        "case_id": "2016-063",
+        "scdb_name": "PERRY v. MERIT SYSTEMS PROTECTION BD.",
+        "title": "Perry v. Merit Systems Protection Board"
+      },
+      {
+        "case_id": "2016-064",
+        "scdb_name": "TOWN OF CHESTER v. LAROE ESTATES",
+        "title": "Town of Chester v. Laroe Estates, Inc."
+      },
+      {
+        "case_id": "2016-066",
+        "scdb_name": "KOKESH v. SEC",
+        "title": "Kokesh v. SEC"
+      },
+      {
+        "case_id": "2016-067",
+        "scdb_name": "HENSON v. SANTANDER CONSUMER USA INC.",
+        "title": "Henson v. Santander Consumer USA Inc."
+      },
+      {
+        "case_id": "2016-068",
+        "scdb_name": "TRINITY LUTHERAN CHURCH v. COMER, DIRECTOR, MISSOURI DEPARTMENT OF NATURAL RESOURCES",
+        "title": "Trinity Lutheran Church of Columbia, Inc. v. Comer"
+      },
+      {
+        "case_id": "2016-069",
+        "scdb_name": "WEAVER v. MASSACHUSETTS",
+        "title": "Weaver v. Massachusetts"
+      },
+      {
+        "case_id": "2016-070",
+        "scdb_name": "MCWILLIAMS v. DUNN",
+        "title": "McWilliams v. Dunn"
+      },
+      {
+        "case_id": "2016-071",
+        "scdb_name": "DAVILA v. DAVIS",
+        "title": "Davila v. Davis"
+      },
+      {
+        "case_id": "2016-072",
+        "scdb_name": "BRISTOL-MYERS SQUIBB CO. v. SUPERIOR COURT OF CA.",
+        "title": "Bristol-Myers Squibb Co. v. Superior Court"
+      },
+      {
+        "case_id": "2016-073",
+        "scdb_name": "BNSF RAILWAY CO. v. TYRRELL",
+        "title": "BNSF Railway Co. v. Tyrrell"
+      },
+      {
+        "case_id": "2016-074",
+        "scdb_name": "SANDOZ INC. v. AMGEN INC.",
+        "title": "Sandoz Inc. v. Amgen Inc."
+      },
+      {
+        "case_id": "2016-075",
+        "scdb_name": "MASLENJAK v. UNITED STATES",
+        "title": "Maslenjak v. United States"
+      },
+      {
+        "case_id": "2016-076",
+        "scdb_name": "BUCK v. DAVIS",
+        "title": "Buck v. Davis"
+      },
+      {
+        "case_id": "2017-001",
+        "scdb_name": "SESSIONS v. DIMAYA",
+        "title": "Sessions v. Dimaya"
+      },
+      {
+        "case_id": "2017-002",
+        "scdb_name": "EPIC SYSTEMS CORP. v. LEWIS",
+        "title": "Epic Systems Corp. v. Lewis"
+      },
+      {
+        "case_id": "2017-003",
+        "scdb_name": "JENNINGS v. RODRIGUEZ",
+        "title": "Jennings v. Rodriguez"
+      },
+      {
+        "case_id": "2017-004",
+        "scdb_name": "GILL v. WHITFORD",
+        "title": "Gill v. Whitford"
+      },
+      {
+        "case_id": "2017-005",
+        "scdb_name": "CLASS v. UNITED STATES",
+        "title": "Class v. United States"
+      },
+      {
+        "case_id": "2017-006",
+        "scdb_name": "DISTRICT OF COLUMBIA v. WESBY",
+        "title": "District of Columbia v. Wesby"
+      },
+      {
+        "case_id": "2017-008",
+        "scdb_name": "HAMER v. NEIGHBORHOOD HOUSING SERVICES OF CHICAGO",
+        "title": "Hamer v. Neighborhood Housing Services of Chicago"
+      },
+      {
+        "case_id": "2017-009",
+        "scdb_name": "NATIONAL ASSOCIATION OF MANUFACTURERS v. DEPARTMENT OF DEFENSE",
+        "title": "National Association of Manufacturers v. Department of Defense"
+      },
+      {
+        "case_id": "2017-010",
+        "scdb_name": "JESNER v. ARAB BANK, PLC",
+        "title": "Jesner v. Arab Bank, PLC"
+      },
+      {
+        "case_id": "2017-011",
+        "scdb_name": "AYESTAS v. DAVIS",
+        "title": "Ayestas v. Davis"
+      },
+      {
+        "case_id": "2017-012",
+        "scdb_name": "WILSON v. SELLERS",
+        "title": "Wilson v. Sellers"
+      },
+      {
+        "case_id": "2017-013",
+        "scdb_name": "U.S. BANK NATIONAL ASSOCIATION v. VILLAGE AT LAKERIDGE",
+        "title": "U.S. Bank N.A. v. Village at Lakeridge, LLC"
+      },
+      {
+        "case_id": "2017-014",
+        "scdb_name": "ARTIS v. DISTRICT OF COLUMBIA",
+        "title": "Artis v. District of Columbia"
+      },
+      {
+        "case_id": "2017-016",
+        "scdb_name": "MERIT MANAGEMENT GROUP, LP v. FTI CONSULTING, INC",
+        "title": "Merit Management Group, LP v. FTI Consulting, Inc."
+      },
+      {
+        "case_id": "2017-017",
+        "scdb_name": "PATCHAK v. ZINKE",
+        "title": "Patchak v. Zinke"
+      },
+      {
+        "case_id": "2017-019",
+        "scdb_name": "CYAN v. BEAVER COUNTY EMPLOYEES RETIREMENT FUND",
+        "title": "Cyan, Inc. v. Beaver County Employees Retirement Fund"
+      },
+      {
+        "case_id": "2017-020",
+        "scdb_name": "MASTERPIECE CAKESHOP, LTD. v. COLORADO CIVIL RIGHTS COMMISSION",
+        "title": "Masterpiece Cakeshop v. Colorado Civil Rights Commission"
+      },
+      {
+        "case_id": "2017-021",
+        "scdb_name": "CARPENTER v. UNITED STATES",
+        "title": "Carpenter v. United States"
+      },
+      {
+        "case_id": "2017-022",
+        "scdb_name": "MURPHY v. NATIONAL COLLEGIATE ATHLETIC ASSOCIATION",
+        "title": "Murphy v. National Collegiate Athletic Association"
+      },
+      {
+        "case_id": "2017-023",
+        "scdb_name": "RUBIN v. ISLAMIC REPUBLIC OF IRAN",
+        "title": "Rubin v. Islamic Republic of Iran"
+      },
+      {
+        "case_id": "2017-024",
+        "scdb_name": "OIL STATES ENERGY SERVICES, LLC v. GREENEâS ENERGY GROUP, LLC",
+        "title": "Oil States Energy Services, LLC v. Greene's Energy Group, LLC"
+      },
+      {
+        "case_id": "2017-025",
+        "scdb_name": "SAS INSTITUTE INC. v. IANCU",
+        "title": "SAS Institute Inc. v. Iancu"
+      },
+      {
+        "case_id": "2017-026",
+        "scdb_name": "MURPHY v. SMITH",
+        "title": "Murphy v. Smith"
+      },
+      {
+        "case_id": "2017-027",
+        "scdb_name": "MARINELLO v. UNITED STATES",
+        "title": "Marinello v. United States"
+      },
+      {
+        "case_id": "2017-028",
+        "scdb_name": "DIGITAL REALTY TRUST v. SOMERS",
+        "title": "Digital Realty Trust, Inc. v. Somers"
+      },
+      {
+        "case_id": "2017-031",
+        "scdb_name": "FLORIDA v. GEORGIA",
+        "title": "Florida v. Georgia (2018)"
+      },
+      {
+        "case_id": "2017-032",
+        "scdb_name": "TEXAS v. NEW MEXICO AND COLORADO",
+        "title": "Texas v. New Mexico and Colorado"
+      },
+      {
+        "case_id": "2017-033",
+        "scdb_name": "BYRD v. UNITED STATES",
+        "title": "Byrd v. United States"
+      },
+      {
+        "case_id": "2017-035",
+        "scdb_name": "COX v. UNITED STATES",
+        "title": "Cox v. United States (2018)"
+      },
+      {
+        "case_id": "2017-036",
+        "scdb_name": "DALMAZZI v. UNITED STATES",
+        "title": "Dalmazzi v. United States"
+      },
+      {
+        "case_id": "2017-037",
+        "scdb_name": "HALL v. HALL",
+        "title": "Hall v. Hall"
+      },
+      {
+        "case_id": "2017-038",
+        "scdb_name": "ORTIZ v. UNITED STATES",
+        "title": "Ortiz v. United States"
+      },
+      {
+        "case_id": "2017-039",
+        "scdb_name": "MCCOY v. LOUISIANA",
+        "title": "McCoy v. Louisiana"
+      },
+      {
+        "case_id": "2017-040",
+        "scdb_name": "ENCINO MOTORCARS, LLC v. NAVARRO",
+        "title": "Encino Motorcars v. Navarro"
+      },
+      {
+        "case_id": "2017-041",
+        "scdb_name": "NATIONAL INSTITUTE OF FAMILY AND LIFE ADVOCATES v. BECERRA",
+        "title": "National Institute of Family and Life Advocates v. Becerra"
+      },
+      {
+        "case_id": "2017-042",
+        "scdb_name": "CURRIER v. VIRGINIA",
+        "title": "Currier v. Virginia"
+      },
+      {
+        "case_id": "2017-043",
+        "scdb_name": "MINNESOTA VOTERS ALLIANCE v. MANSKY",
+        "title": "Minnesota Voters Alliance v. Mansky"
+      },
+      {
+        "case_id": "2017-044",
+        "scdb_name": "OHIO v. AMERICAN EXPRESS CO.",
+        "title": "Ohio v. American Express Co."
+      },
+      {
+        "case_id": "2017-046",
+        "scdb_name": "CITY OF HAYS, KANSAS v. VOGT",
+        "title": "City of Hays v. Vogt"
+      },
+      {
+        "case_id": "2017-047",
+        "scdb_name": "ROSALES-MIRELES v. UNITED STATES",
+        "title": "Rosales-Mireles v. United States"
+      },
+      {
+        "case_id": "2017-049",
+        "scdb_name": "LOZMAN v. CITY OF RIVIERA BEACH, FLORIDA",
+        "title": "Lozman v. City of Riviera Beach (2018)"
+      },
+      {
+        "case_id": "2017-050",
+        "scdb_name": "DAHDA v. UNITED STATES",
+        "title": "Dahda v. United States"
+      },
+      {
+        "case_id": "2017-052",
+        "scdb_name": "BENISEK v. LAMONE",
+        "title": "Benisek v. Lamone"
+      },
+      {
+        "case_id": "2017-057",
+        "scdb_name": "WISCONSIN CENTRAL LTD. v. UNITED STATES",
+        "title": "Wisconsin Central Ltd. v. United States"
+      },
+      {
+        "case_id": "2017-058",
+        "scdb_name": "WESTERNGECO LLC v. ION GEOPHYSICAL CORP.",
+        "title": "WesternGeco LLC v. ION Geophysical Corp."
+      },
+      {
+        "case_id": "2017-059",
+        "scdb_name": "SOUTH DAKOTA v. WAYFAIR",
+        "title": "South Dakota v. Wayfair, Inc."
+      },
+      {
+        "case_id": "2017-060",
+        "scdb_name": "LAMAR, ARCHER & COFRIN v. APPLING",
+        "title": "Lamar, Archer & Cofrin, LLP v. Appling"
+      },
+      {
+        "case_id": "2017-061",
+        "scdb_name": "LAGOS v. UNITED STATES",
+        "title": "Lagos v. United States"
+      },
+      {
+        "case_id": "2017-063",
+        "scdb_name": "SVEEN v. MELIN",
+        "title": "Sveen v. Melin"
+      },
+      {
+        "case_id": "2017-064",
+        "scdb_name": "UPPER SKAGIT INDIAN TRIBE v. LUNDGREN",
+        "title": "Upper Skagit Tribe v. Lundgren"
+      },
+      {
+        "case_id": "2017-065",
+        "scdb_name": "UNITED STATES v. SANCHEZ-GOMEZ",
+        "title": "United States v. Sanchez-Gomez"
+      },
+      {
+        "case_id": "2017-066",
+        "scdb_name": "CHINA AGRITECH, INC. v. RESH",
+        "title": "China Agritech, Inc. v. Resh"
+      },
+      {
+        "case_id": "2017-067",
+        "scdb_name": "HUGHES v. UNITED STATES",
+        "title": "Hughes v. United States"
+      },
+      {
+        "case_id": "2017-068",
+        "scdb_name": "KOONS v. UNITED STATES",
+        "title": "Koons v. United States"
+      },
+      {
+        "case_id": "2017-069",
+        "scdb_name": "LUCIA v. SEC",
+        "title": "Lucia v. Securities and Exchange Commission"
+      },
+      {
+        "case_id": "2017-070",
+        "scdb_name": "PEREIRA v. SESSIONS, ATT'Y GEN.",
+        "title": "Pereira v. Sessions"
+      },
+      {
+        "case_id": "2017-071",
+        "scdb_name": "CHAVEZ-MEZA v. UNITED STATES",
+        "title": "Chavez-Meza v. United States"
+      },
+      {
+        "case_id": "2017-072",
+        "scdb_name": "ABBOTT v. PEREZ",
+        "title": "Abbott v. Perez"
+      },
+      {
+        "case_id": "2017-073",
+        "scdb_name": "ANIMAL SCIENCE PRODUCTS v. HEBEI WELCOME PHARMACEUTICAL CO.",
+        "title": "Animal Science Products v. Hebei Welcome Pharmaceuticals"
+      },
+      {
+        "case_id": "2017-074",
+        "scdb_name": "TRUMP, PRESIDENT OF U.S. v. HAWAII",
+        "title": "Trump v. Hawaii"
+      },
+      {
+        "case_id": "2017-075",
+        "scdb_name": "COLLINS v. VIRGINIA",
+        "title": "Collins v. Virginia"
+      },
+      {
+        "case_id": "2018-001",
+        "scdb_name": "MOUNT LEMMON FIRE DISTRICT v. GUIDO",
+        "title": "Mount Lemmon Fire District v. Guido"
+      },
+      {
+        "case_id": "2018-002",
+        "scdb_name": "WEYERHAEUSER COMPANY v. U.S. FISH AND WILDLIFE SERVICE",
+        "title": "Weyerhaeuser Company v. United States Fish and Wildlife Service"
+      },
+      {
+        "case_id": "2018-003",
+        "scdb_name": "GUNDY v. UNITED STATES",
+        "title": "Gundy v. United States"
+      },
+      {
+        "case_id": "2018-004",
+        "scdb_name": "MADISON v. ALABAMA",
+        "title": "Madison v. Alabama"
+      },
+      {
+        "case_id": "2018-005",
+        "scdb_name": "KNICK v. TOWNSHIP OF SCOTT, PENNSYLVANIA",
+        "title": "Knick v. Township of Scott"
+      },
+      {
+        "case_id": "2018-006",
+        "scdb_name": "NEW PRIME INC. v. OLIVEIRA",
+        "title": "New Prime Inc. v. Oliveira"
+      },
+      {
+        "case_id": "2018-007",
+        "scdb_name": "STOKELING v. UNITED STATES",
+        "title": "Stokeling v. United States"
+      },
+      {
+        "case_id": "2018-008",
+        "scdb_name": "UNITED STATES v. STITT",
+        "title": "United States v. Stitt"
+      },
+      {
+        "case_id": "2018-009",
+        "scdb_name": "AIR AND LIQUID SYSTEMS CORP. v. DEVRIES",
+        "title": "Air & Liquid Systems Corp. v. DeVries"
+      },
+      {
+        "case_id": "2018-010",
+        "scdb_name": "NIELSEN v. PREAP",
+        "title": "Nielsen v. Preap"
+      },
+      {
+        "case_id": "2018-011",
+        "scdb_name": "LAMPS PLUS INC. v. VARELA",
+        "title": "Lamps Plus, Inc. v. Varela"
+      },
+      {
+        "case_id": "2018-012",
+        "scdb_name": "HENRY SCHEIN INC. v. ARCHER AND WHITE SALES INC.",
+        "title": "Henry Schein, Inc. v. Archer & White Sales, Inc."
+      },
+      {
+        "case_id": "2018-013",
+        "scdb_name": "WASHINGTON STATE DEPARTMENT OF LICENSING v. COUGAR DEN INC.",
+        "title": "Washington State Department of Licensing v. Cougar Den, Inc."
+      },
+      {
+        "case_id": "2018-014",
+        "scdb_name": "GARZA v. IDAHO",
+        "title": "Garza v. Idaho"
+      },
+      {
+        "case_id": "2018-015",
+        "scdb_name": "FRANK v. GAOS",
+        "title": "Frank v. Gaos"
+      },
+      {
+        "case_id": "2018-016",
+        "scdb_name": "JAM v. INT'L FINANCE CORP.",
+        "title": "Jam v. International Finance Corp."
+      },
+      {
+        "case_id": "2018-017",
+        "scdb_name": "VIRGINIA URANIUM v. WARREN",
+        "title": "Virginia Uranium, Inc. v. Warren"
+      },
+      {
+        "case_id": "2018-018",
+        "scdb_name": "STURGEON v. FROST",
+        "title": "Sturgeon v. Frost"
+      },
+      {
+        "case_id": "2018-019",
+        "scdb_name": "BNSF RAILWAY COMPANY v. LOOS",
+        "title": "BNSF Railway Co. v. Loos"
+      },
+      {
+        "case_id": "2018-020",
+        "scdb_name": "BUCKLEW v. PRECYTHE",
+        "title": "Bucklew v. Precythe"
+      },
+      {
+        "case_id": "2018-021",
+        "scdb_name": "CULBERTSON v. BERRYHILL",
+        "title": "Culbertson v. Berryhill"
+      },
+      {
+        "case_id": "2018-022",
+        "scdb_name": "REPUBLIC OF SUDAN v. HARRISON",
+        "title": "Republic of Sudan v. Harrison"
+      },
+      {
+        "case_id": "2018-023",
+        "scdb_name": "APPLE INC. v. PEPPER",
+        "title": "Apple Inc. v. Pepper"
+      },
+      {
+        "case_id": "2018-024",
+        "scdb_name": "MERCK SHARP & DOHME CORP. v. ALBRECHT",
+        "title": "Merck Sharp & Dohme Corp. v. Albrecht"
+      },
+      {
+        "case_id": "2018-025",
+        "scdb_name": "DAWSON v. STEAGER",
+        "title": "Dawson v. Steager"
+      },
+      {
+        "case_id": "2018-026",
+        "scdb_name": "HERRERA v. WYOMING",
+        "title": "Herrera v. Wyoming"
+      },
+      {
+        "case_id": "2018-027",
+        "scdb_name": "FOURTH ESTATE PUBLIC BENEFIT CORP. v. WALL-STREET.COM",
+        "title": "Fourth Estate Public Benefit Corp. v. Wall-Street.com"
+      },
+      {
+        "case_id": "2018-028",
+        "scdb_name": "GAMBLE v. UNITED STATES",
+        "title": "Gamble v. United States"
+      },
+      {
+        "case_id": "2018-029",
+        "scdb_name": "LORENZO v. SECURITIES AND EXCHANGE COMMISSION",
+        "title": "Lorenzo v. SEC"
+      },
+      {
+        "case_id": "2018-030",
+        "scdb_name": "TIMBS v. INDIANA",
+        "title": "Timbs v. Indiana"
+      },
+      {
+        "case_id": "2018-031",
+        "scdb_name": "NUTRACEUTICAL CORP. v. LAMBERT",
+        "title": "Nutraceutical Corp. v. Lambert"
+      },
+      {
+        "case_id": "2018-033",
+        "scdb_name": "NIEVES v. BARTLETT",
+        "title": "Nieves v. Bartlett"
+      },
+      {
+        "case_id": "2018-034",
+        "scdb_name": "BIESTEK v. BERRYHILL",
+        "title": "Biestek v. Berryhill"
+      },
+      {
+        "case_id": "2018-035",
+        "scdb_name": "HELSINN HEALTHCARE S.A. v. TEVA PHARMACEUTICALS USA INC.",
+        "title": "Helsinn Healthcare S. A. v. Teva Pharmaceuticals USA, Inc."
+      },
+      {
+        "case_id": "2018-036",
+        "scdb_name": "FRANCHISE TAX BOARD OF CALIFORNIA v. HYATT",
+        "title": "Franchise Tax Board of California v. Hyatt"
+      },
+      {
+        "case_id": "2018-037",
+        "scdb_name": "OBDUSKEY v. MCCARTHY & HOLTHUS LLP",
+        "title": "Obduskey v. McCarthy & Holthus LLP"
+      },
+      {
+        "case_id": "2018-039",
+        "scdb_name": "HOME DEPOT U.S.A. INC. v. JACKSON",
+        "title": "Home Depot U.S.A., Inc. v. Jackson"
+      },
+      {
+        "case_id": "2018-040",
+        "scdb_name": "AZAR v. ALLINA HEALTH SERVICES",
+        "title": "Azar v. Allina Health Services"
+      },
+      {
+        "case_id": "2018-041",
+        "scdb_name": "RETURN MAIL INC. v. U.S. POSTAL SERVICE",
+        "title": "Return Mail Inc. v. United States Postal Service"
+      },
+      {
+        "case_id": "2018-042",
+        "scdb_name": "SMITH v. BERRYHILL",
+        "title": "Smith v. Berryhill"
+      },
+      {
+        "case_id": "2018-043",
+        "scdb_name": "RIMINI STREET INC. v. ORACLE USA INC.",
+        "title": "Rimini Street Inc. v. Oracle USA Inc."
+      },
+      {
+        "case_id": "2018-044",
+        "scdb_name": "MISSION PRODUCT HOLDINGS INC. v. TEMPNOLOGY, LLC",
+        "title": "Mission Product Holdings, Inc. v. Tempnology, LLC"
+      },
+      {
+        "case_id": "2018-045",
+        "scdb_name": "UNITED STATES v. HAYMOND",
+        "title": "United States v. Haymond"
+      },
+      {
+        "case_id": "2018-047",
+        "scdb_name": "MANHATTAN COMMUNITY ACCESS CORP. v. HALLECK",
+        "title": "Manhattan Community Access Corp. v. Halleck"
+      },
+      {
+        "case_id": "2018-048",
+        "scdb_name": "AMERICAN LEGION v. AMERICAN HUMANIST ASSOCIATION",
+        "title": "American Legion v. American Humanist Association"
+      },
+      {
+        "case_id": "2018-049",
+        "scdb_name": "MONT v. UNITED STATES",
+        "title": "Mont v. United States"
+      },
+      {
+        "case_id": "2018-050",
+        "scdb_name": "FLOWERS v. MISSISSIPPI",
+        "title": "Flowers v. Mississippi"
+      },
+      {
+        "case_id": "2018-052",
+        "scdb_name": "TENNESSEE WINE & SPIRITS RETAILERS ASSOCIATION v. THOMAS",
+        "title": "Tennessee Wine & Spirits Retailers Ass'n v. Thomas"
+      },
+      {
+        "case_id": "2018-057",
+        "scdb_name": "VIRGINIA HOUSE OF DELEGATES v. BETHUNE-HILL",
+        "title": "Virginia House of Delegates v. Bethune-Hill"
+      },
+      {
+        "case_id": "2018-058",
+        "scdb_name": "COCHISE CONSULTANCY INC. v. U.S., EX REL. HUNT",
+        "title": "Cochise Consultancy, Inc. v. United States ex rel. Hunt"
+      },
+      {
+        "case_id": "2018-059",
+        "scdb_name": "PDR NETWORK, LLC v. CARLTON & HARRIS CHIROPRACTIC INC.,",
+        "title": "PDR Network, LLC v. Carlton Harris Chiropractic, Inc."
+      },
+      {
+        "case_id": "2018-060",
+        "scdb_name": "THE DUTRA GROUP v. BATTERTON",
+        "title": "Dutra Group v. Batterton"
+      },
+      {
+        "case_id": "2018-062",
+        "scdb_name": "RUCHO v. COMMON CAUSE",
+        "title": "Rucho v. Common Cause"
+      },
+      {
+        "case_id": "2018-063",
+        "scdb_name": "KISOR v. WILKIE",
+        "title": "Kisor v. Wilkie"
+      },
+      {
+        "case_id": "2018-064",
+        "scdb_name": "IANCU v. BRUNETTI",
+        "title": "Iancu v. Brunetti"
+      },
+      {
+        "case_id": "2018-065",
+        "scdb_name": "FORT BEND COUNTY, TEXAS v. DAVIS",
+        "title": "Fort Bend County v. Davis"
+      },
+      {
+        "case_id": "2018-066",
+        "scdb_name": "REHAIF v. UNITED STATES",
+        "title": "Rehaif v. United States"
+      },
+      {
+        "case_id": "2018-067",
+        "scdb_name": "MITCHELL v. WISCONSIN",
+        "title": "Mitchell v. Wisconsin"
+      },
+      {
+        "case_id": "2018-068",
+        "scdb_name": "DEPARTMENT OF COMMERCE v. NEW YORK",
+        "title": "Department of Commerce v. New York"
+      },
+      {
+        "case_id": "2018-069",
+        "scdb_name": "EMULEX CORP. v. VARJABEDIAN",
+        "title": "Emulex Corp. v. Varjabedian"
+      },
+      {
+        "case_id": "2018-070",
+        "scdb_name": "PARKER DRILLING MANAGEMENT SERVICES, LTD. v. NEWTON",
+        "title": "Parker Drilling Management Services v. Newton"
+      },
+      {
+        "case_id": "2018-071",
+        "scdb_name": "NORTH CAROLINA DEPARTMENT OF REVENUE v. THE KIMBERLEY RICE KAESTNER 1992 FAMILY TRUST",
+        "title": "North Carolina Department of Revenue v. Kimberley Rice Kaestner 1992 Family Trust"
+      },
+      {
+        "case_id": "2018-072",
+        "scdb_name": "UNITED STATES v. DAVIS",
+        "title": "United States v. Davis (2019)"
+      },
+      {
+        "case_id": "2018-073",
+        "scdb_name": "MCDONOUGH v. SMITH",
+        "title": "McDonough v. Smith"
+      },
+      {
+        "case_id": "2018-074",
+        "scdb_name": "FOOD MARKETING INSTITUTE v. ARGUS LEADER MEDIA",
+        "title": "Food Marketing Institute v. Argus Leader Media"
+      },
+      {
+        "case_id": "2018-075",
+        "scdb_name": "QUARLES v. UNITED STATES",
+        "title": "Quarles v. United States"
+      },
+      {
+        "case_id": "2018-076",
+        "scdb_name": "TAGGART v. LORENZEN",
+        "title": "Taggart v. Lorenzen"
+      },
+      {
+        "case_id": "2019-001",
+        "scdb_name": "KAHLER v. KANSAS",
+        "title": "Kahler v. Kansas"
+      },
+      {
+        "case_id": "2019-002",
+        "scdb_name": "RAMOS v. LOUISIANA",
+        "title": "Ramos v. Louisiana"
+      },
+      {
+        "case_id": "2019-003",
+        "scdb_name": "PETER v. NANTKWEST INC.",
+        "title": "Peter v. NantKwest, Inc."
+      },
+      {
+        "case_id": "2019-004",
+        "scdb_name": "BOSTOCK v. CLAYTON COUNTY, GEORGIA",
+        "title": "Bostock v. Clayton County"
+      },
+      {
+        "case_id": "2019-006",
+        "scdb_name": "FINANCIAL OVERSIGHT AND MANAGEMENT BOARD FOR PUERTO RICO v. AURELIUS INVESTMENT, LLC",
+        "title": "Financial Oversight and Management Board for Puerto Rico v. Aurelius Investment, LLC"
+      },
+      {
+        "case_id": "2019-007",
+        "scdb_name": "ROTKISKE v. KLEMM",
+        "title": "Rotkiske v. Klemm"
+      },
+      {
+        "case_id": "2019-009",
+        "scdb_name": "KANSAS v. GARCIA",
+        "title": "Kansas v. Garcia"
+      },
+      {
+        "case_id": "2019-010",
+        "scdb_name": "BARTON v. BARR",
+        "title": "Barton v. Barr"
+      },
+      {
+        "case_id": "2019-011",
+        "scdb_name": "KANSAS v. GLOVER",
+        "title": "Kansas v. Glover"
+      },
+      {
+        "case_id": "2019-012",
+        "scdb_name": "ALLEN v. COOPER",
+        "title": "Allen v. Cooper"
+      },
+      {
+        "case_id": "2019-013",
+        "scdb_name": "CITGO ASPHALT REFINING CO. v. FRESCATI SHIPPING CO., LTD.",
+        "title": "CITGO Asphalt Refining Co. v. Frescati Shipping Co."
+      },
+      {
+        "case_id": "2019-015",
+        "scdb_name": "COUNTY OF MAUI, HAWAII v. HAWAII WILDLIFE FUND",
+        "title": "County of Maui v. Hawaii Wildlife Fund"
+      },
+      {
+        "case_id": "2019-016",
+        "scdb_name": "HERNANDEZ v. MESA",
+        "title": "Hernandez v. Mesa"
+      },
+      {
+        "case_id": "2019-017",
+        "scdb_name": "DEPARTMENT OF HOMELAND SECURITY v. REGENTS OF THE UNIVERSITY OF CALIFORNIA",
+        "title": "Department of Homeland Security v. Regents of the University of California"
+      },
+      {
+        "case_id": "2019-018",
+        "scdb_name": "RITZEN GROUP INC. v. JACKSON MASONRY, LLC",
+        "title": "Ritzen Group, Inc. v. Jackson Masonry, LLC"
+      },
+      {
+        "case_id": "2019-019",
+        "scdb_name": "COMCAST CORP. v. NATIONAL ASSOCIATION OF AFRICAN AMERICAN-OWNED MEDIA",
+        "title": "Comcast v. National Association of African-American-Owned Media"
+      },
+      {
+        "case_id": "2019-020",
+        "scdb_name": "GEORGIA v. PUBLIC.RESOURCE.ORG INC.",
+        "title": "Georgia v. Public.Resource.Org, Inc."
+      },
+      {
+        "case_id": "2019-022",
+        "scdb_name": "ATLANTIC RICHFIELD CO. v. CHRISTIAN",
+        "title": "Atlantic Richfield Co. v. Christian"
+      },
+      {
+        "case_id": "2019-024",
+        "scdb_name": "INTEL CORP. INVESTMENT POLICY COMMITTEE v. SULYMA",
+        "title": "Intel Corp. Investment Policy Committee v. Sulyma"
+      },
+      {
+        "case_id": "2019-025",
+        "scdb_name": "BANISTER v. DAVIS",
+        "title": "Banister v. Davis"
+      },
+      {
+        "case_id": "2019-026",
+        "scdb_name": "THRYV v. CLICK-TO-CALL TECHNOLOGIES, LP",
+        "title": "Thryv, Inc. v. Click-To-Call Technologies, LP"
+      },
+      {
+        "case_id": "2019-027",
+        "scdb_name": "GUERRERO-LASPRILLA v. BARR",
+        "title": "Guerrero-Lasprilla v. Barr"
+      },
+      {
+        "case_id": "2019-028",
+        "scdb_name": "HOLGUIN-HERNANDEZ v. UNITED STATES",
+        "title": "Holguin-Hernandez v. United States"
+      },
+      {
+        "case_id": "2019-029",
+        "scdb_name": "MAINE COMMUNITY HEALTH OPTIONS v. UNITED STATES",
+        "title": "Maine Community Health Options v. United States"
+      },
+      {
+        "case_id": "2019-030",
+        "scdb_name": "MONASKY v. TAGLIERI",
+        "title": "Monasky v. Taglieri"
+      },
+      {
+        "case_id": "2019-031",
+        "scdb_name": "MCKINNEY v. ARIZONA",
+        "title": "McKinney v. Arizona"
+      },
+      {
+        "case_id": "2019-032",
+        "scdb_name": "OPATI v. REPUBLIC OF SUDAN",
+        "title": "Opati v. Republic of Sudan"
+      },
+      {
+        "case_id": "2019-033",
+        "scdb_name": "THOLE v. U.S. BANK, N.A.",
+        "title": "Thole v. U.S. Bank"
+      },
+      {
+        "case_id": "2019-034",
+        "scdb_name": "BABB v. WILKIE",
+        "title": "Babb v. Wilkie"
+      },
+      {
+        "case_id": "2019-035",
+        "scdb_name": "GE ENERGY POWER CONVERSION FRANCE SAS v. OUTOKUMPU STAINLESS USA LLC",
+        "title": "GE Energy Power Conversion France SAS v. Outokumpu Stainless USA, LLC"
+      },
+      {
+        "case_id": "2019-036",
+        "scdb_name": "KELLY v. UNITED STATES",
+        "title": "Kelly v. United States"
+      },
+      {
+        "case_id": "2019-037",
+        "scdb_name": "LUCKY BRAND DUNGAREES INC. v. MARCEL FASHION GROUP INC.",
+        "title": "Lucky Brand Dungarees, Inc. v. Marcel Fashions Group, Inc."
+      },
+      {
+        "case_id": "2019-038",
+        "scdb_name": "ESPINOZA v. MONTANA DEPARTMENT OF REVENUE",
+        "title": "Espinoza v. Montana Department of Revenue"
+      },
+      {
+        "case_id": "2019-039",
+        "scdb_name": "ROMAG FASTENERS INC. v. FOSSIL INC.",
+        "title": "Romag Fasteners, Inc. v. Fossil, Inc."
+      },
+      {
+        "case_id": "2019-040",
+        "scdb_name": "JUNE MEDICAL SERVICES LLC v. RUSSO",
+        "title": "June Medical Services, LLC v. Russo"
+      },
+      {
+        "case_id": "2019-041",
+        "scdb_name": "U.S. FOREST SERVICE v. COWPASTURE RIVER PRESERVATION ASSOCIATION",
+        "title": "United States Forest Service v. Cowpasture River Preservation Ass'n"
+      },
+      {
+        "case_id": "2019-042",
+        "scdb_name": "SHULAR v. UNITED STATES",
+        "title": "Shular v. United States"
+      },
+      {
+        "case_id": "2019-043",
+        "scdb_name": "UNITED STATES v. SINENENG-SMITH",
+        "title": "United States v. Sineneng-Smith"
+      },
+      {
+        "case_id": "2019-045",
+        "scdb_name": "TRUMP v. VANCE",
+        "title": "Trump v. Vance"
+      },
+      {
+        "case_id": "2019-048",
+        "scdb_name": "MCGIRT v. OKLAHOMA",
+        "title": "McGirt v. Oklahoma"
+      },
+      {
+        "case_id": "2019-054",
+        "scdb_name": "OUR LADY OF GUADALUPE SCHOOL v. MORRISSEY-BERRU",
+        "title": "Our Lady of Guadalupe School v. Morrissey-Berru"
+      },
+      {
+        "case_id": "2019-060",
+        "scdb_name": "LITTLE SISTERS OF THE POOR SAINTS PETER AND PAUL HOME v. PENNSYLVANIA",
+        "title": "Little Sisters of the Poor Saints Peter and Paul Home v. Pennsylvania"
+      },
+      {
+        "case_id": "2019-062",
+        "scdb_name": "CHIAFALO v. WASHINGTON",
+        "title": "Chiafalo v. Washington"
+      },
+      {
+        "case_id": "2019-063",
+        "scdb_name": "BARR v. AMERICAN ASSOCIATION OF POLITICAL CONSULTANTS INC.",
+        "title": "Barr v. American Ass'n of Political Consultants"
+      },
+      {
+        "case_id": "2019-067",
+        "scdb_name": "NASRALLAH v. BARR",
+        "title": "Nasrallah v. Barr"
+      },
+      {
+        "case_id": "2019-068",
+        "scdb_name": "LOMAX v. ORTIZ-MARQUEZ",
+        "title": "Lomax v. Ortiz-Marquez"
+      },
+      {
+        "case_id": "2019-070",
+        "scdb_name": "DEPARTMENT OF HOMELAND SECURITY v. THURAISSIGIAM",
+        "title": "Department of Homeland Security v. Thuraissigiam"
+      },
+      {
+        "case_id": "2019-071",
+        "scdb_name": "SEILA LAW LLC v. CONSUMER FINANCIAL PROTECTION BUREAU",
+        "title": "Seila Law LLC v. Consumer Financial Protection Bureau"
+      },
+      {
+        "case_id": "2019-072",
+        "scdb_name": "LIU v. SECURITIES AND EXCHANGE COMMISSION",
+        "title": "Liu v. Securities and Exchange Commission"
+      },
+      {
+        "case_id": "2019-074",
+        "scdb_name": "TRUMP v. MAZARS USA, LLP",
+        "title": "Trump v. Mazars USA, LLP"
+      },
+      {
+        "case_id": "2019-075",
+        "scdb_name": "SHARP v. MURPHY",
+        "title": "Sharp v. Murphy"
+      },
+      {
+        "case_id": "2020-001",
+        "scdb_name": "TEXAS v. NEW MEXICO",
+        "title": "Texas v. New Mexico"
+      },
+      {
+        "case_id": "2020-002",
+        "scdb_name": "CARNEY v. ADAMS",
+        "title": "Carney v. Adams"
+      },
+      {
+        "case_id": "2020-003",
+        "scdb_name": "TANZIN v. TANVIR",
+        "title": "Tanzin v. Tanvir"
+      },
+      {
+        "case_id": "2020-004",
+        "scdb_name": "RUTLEDGE v. PHARMACEUTICAL CARE MANAGEMENT ASSOCIATION",
+        "title": "Rutledge v. Pharmaceutical Care Management Ass'n"
+      },
+      {
+        "case_id": "2020-005",
+        "scdb_name": "FORD MOTOR COMPANY v. MONTANA EIGHTH JUDICIAL DISTRICT COURT",
+        "title": "Ford Motor Co. v. Montana Eighth Judicial District"
+      },
+      {
+        "case_id": "2020-006",
+        "scdb_name": "GOOGLE LLC v. ORACLE AMERICA INC.",
+        "title": "Google LLC v. Oracle America, Inc."
+      },
+      {
+        "case_id": "2020-007",
+        "scdb_name": "CITY OF CHICAGO, ILLINOIS v. FULTON",
+        "title": "City of Chicago v. Fulton"
+      },
+      {
+        "case_id": "2020-008",
+        "scdb_name": "UNITED STATES. v. BRIGGS",
+        "title": "United States v. Briggs (2020)"
+      },
+      {
+        "case_id": "2020-009",
+        "scdb_name": "TORRES v. MADRID",
+        "title": "Torres v. Madrid"
+      },
+      {
+        "case_id": "2020-010",
+        "scdb_name": "PEREIDA v. WILKINSON",
+        "title": "Pereida v. Wilkinson"
+      },
+      {
+        "case_id": "2020-011",
+        "scdb_name": "U.S. FISH AND WILDLIFE SERVICE v. SIERRA CLUB",
+        "title": "United States Fish and Wildlife Service v. Sierra Club"
+      },
+      {
+        "case_id": "2020-013",
+        "scdb_name": "BORDEN v. UNITED STATES",
+        "title": "Borden v. United States"
+      },
+      {
+        "case_id": "2020-014",
+        "scdb_name": "JONES v. MISSISSIPPI",
+        "title": "Jones v. Mississippi"
+      },
+      {
+        "case_id": "2020-015",
+        "scdb_name": "FULTON v. CITY OF PHILADELPHIA, PENNSYLVANIA",
+        "title": "Fulton v. City of Philadelphia"
+      },
+      {
+        "case_id": "2020-016",
+        "scdb_name": "BROWNBACK v. KING",
+        "title": "Brownback v. King"
+      },
+      {
+        "case_id": "2020-017",
+        "scdb_name": "NIZ-CHAVEZ v. GARLAND, ATTORNEY GENERAL",
+        "title": "Niz-Chavez v. Garland"
+      },
+      {
+        "case_id": "2020-018",
+        "scdb_name": "CALIFORNIA v. TEXAS",
+        "title": "California v. Texas"
+      },
+      {
+        "case_id": "2020-019",
+        "scdb_name": "VAN BUREN v. UNITED STATES",
+        "title": "Van Buren v. United States"
+      },
+      {
+        "case_id": "2020-020",
+        "scdb_name": "EDWARDS v. VANNOY, WARDEN",
+        "title": "Edwards v. Vannoy"
+      },
+      {
+        "case_id": "2020-022",
+        "scdb_name": "CIC SERVICES, LLC v. INTERNAL REVENUE SERVICE",
+        "title": "CIC Services, LLC v. Internal Revenue Service"
+      },
+      {
+        "case_id": "2020-025",
+        "scdb_name": "REPUBLIC OF HUNGARY v. SIMON",
+        "title": "Republic of Hungary v. Simon (2021)"
+      },
+      {
+        "case_id": "2020-026",
+        "scdb_name": "FEDERAL REPUBLIC OF GERMANY v. PHILIPP",
+        "title": "Federal Republic of Germany v. Philipp"
+      },
+      {
+        "case_id": "2020-027",
+        "scdb_name": "FACEBOOK INC. v. DUGUID",
+        "title": "Facebook, Inc. v. Duguid"
+      },
+      {
+        "case_id": "2020-028",
+        "scdb_name": "HENRY SCHEIN INC. v. ARCHER AND WHITE SALES INC.",
+        "title": "Henry Schein, Inc. v. Archer & White Sales, Inc."
+      },
+      {
+        "case_id": "2020-029",
+        "scdb_name": "COLLINS v. YELLEN",
+        "title": "Collins v. Yellen"
+      },
+      {
+        "case_id": "2020-031",
+        "scdb_name": "JOHNSON v. GUZMAN CHAVEZ",
+        "title": "Johnson v. Guzman Chavez"
+      },
+      {
+        "case_id": "2020-032",
+        "scdb_name": "UZUEGBUNAM v. PRECZEWSKI",
+        "title": "Uzuegbunam v. Preczewski"
+      },
+      {
+        "case_id": "2020-033",
+        "scdb_name": "TRUMP v. NEW YORK",
+        "title": "Trump v. New York"
+      },
+      {
+        "case_id": "2020-038",
+        "scdb_name": "FEDERAL COMMUNICATIONS COMMISSION v. PROMETHEUS RADIO PROJECT",
+        "title": "FCC v. Prometheus Radio Project"
+      },
+      {
+        "case_id": "2020-039",
+        "scdb_name": "BP P.L.C. v. MAYOR AND CITY COUNCIL OF BALTIMORE",
+        "title": "BP p.l.c. v. Mayor and City Council of Baltimore"
+      },
+      {
+        "case_id": "2020-042",
+        "scdb_name": "GARLAND v. MING DAI",
+        "title": "Garland v. Ming Dai"
+      },
+      {
+        "case_id": "2020-043",
+        "scdb_name": "LANGE v. CALIFORNIA",
+        "title": "Lange v. California"
+      },
+      {
+        "case_id": "2020-044",
+        "scdb_name": "UNITED STATES v. ARTHREX INC.",
+        "title": "United States v. Arthrex, Inc."
+      },
+      {
+        "case_id": "2020-046",
+        "scdb_name": "BRNOVICH v. DEMOCRATIC NATIONAL COMMITTEE",
+        "title": "Brnovich v. Democratic National Committee"
+      },
+      {
+        "case_id": "2020-047",
+        "scdb_name": "CARR v. SAUL, COMMISSIONER OF SOCIAL SECURITY",
+        "title": "Carr v. Saul"
+      },
+      {
+        "case_id": "2020-049",
+        "scdb_name": "UNITED STATES v. COOLEY",
+        "title": "United States v. Cooley"
+      },
+      {
+        "case_id": "2020-051",
+        "scdb_name": "CEDAR POINT NURSERY v. HASSID",
+        "title": "Cedar Point Nursery v. Hassid"
+      },
+      {
+        "case_id": "2020-052",
+        "scdb_name": "CANIGLIA v. STROM",
+        "title": "Caniglia v. Strom"
+      },
+      {
+        "case_id": "2020-053",
+        "scdb_name": "GOLDMAN SACHS GROUP INC. v. ARKANSAS TEACHER RETIREMENT SYSTEM",
+        "title": "Goldman Sachs Group, Inc. v. Arkansas Teacher Retirement System"
+      },
+      {
+        "case_id": "2020-054",
+        "scdb_name": "TRANSUNION LLC v. RAMIREZ",
+        "title": "TransUnion LLC v. Ramirez"
+      },
+      {
+        "case_id": "2020-055",
+        "scdb_name": "NATIONAL COLLEGIATE ATHLETIC ASSOCIATION v. ALSTON",
+        "title": "National Collegiate Athletic Association v. Alston"
+      },
+      {
+        "case_id": "2020-056",
+        "scdb_name": "AMERICANS FOR PROSPERITY FOUNDATION v. BONTA",
+        "title": "Americans for Prosperity Foundation v. Bonta"
+      },
+      {
+        "case_id": "2020-057",
+        "scdb_name": "MAHANOY AREA SCHOOL DISTRICT v. B.L.",
+        "title": "Mahanoy Area School District v. B.L."
+      },
+      {
+        "case_id": "2020-058",
+        "scdb_name": "SANCHEZ v. MAYORKAS",
+        "title": "Sanchez v. Mayorkas"
+      },
+      {
+        "case_id": "2020-060",
+        "scdb_name": "GUAM v. UNITED STATES",
+        "title": "Guam v. United States"
+      },
+      {
+        "case_id": "2020-061",
+        "scdb_name": "UNITED STATES v. PALOMAR-SANTIAGO",
+        "title": "United States v. Palomar-Santiago"
+      },
+      {
+        "case_id": "2020-062",
+        "scdb_name": "MINERVA SURGICAL INC. v. HOLOGIC INC.",
+        "title": "Minerva Surgical, Inc. v. Hologic, Inc."
+      },
+      {
+        "case_id": "2020-064",
+        "scdb_name": "HOLLYFRONTIER CHEYENNE REFINING, LLC v. RENEWABLE FUELS ASSOCIATION",
+        "title": "HollyFrontier Cheyenne Refining, LLC v. Renewable Fuels Ass'n"
+      },
+      {
+        "case_id": "2020-065",
+        "scdb_name": "YELLEN v. CONFEDERATED TRIBES OF THE CHEHALIS RESERVATION",
+        "title": "Yellen v. Confederated Tribes of the Chehalis Reservation"
+      },
+      {
+        "case_id": "2020-066",
+        "scdb_name": "TERRY v. UNITED STATES",
+        "title": "Terry v. United States"
+      },
+      {
+        "case_id": "2020-067",
+        "scdb_name": "GREER v. UNITED STATES",
+        "title": "Greer v. United States (2021)"
+      },
+      {
+        "case_id": "2020-068",
+        "scdb_name": "PENNEAST PIPELINE CO. v. NEW JERSEY",
+        "title": "PennEast Pipeline Co. v. New Jersey"
+      },
+      {
+        "case_id": "2021-001",
+        "scdb_name": "WOODEN v. UNITED STATES",
+        "title": "Wooden v. United States"
+      },
+      {
+        "case_id": "2021-002",
+        "scdb_name": "MISSISSIPPI v. TENNESSEE",
+        "title": "Mississippi v. Tennessee"
+      },
+      {
+        "case_id": "2021-003",
+        "scdb_name": "BROWN v. DAVENPORT",
+        "title": "Brown v. Davenport"
+      },
+      {
+        "case_id": "2021-004",
+        "scdb_name": "HEMPHILL v. NEW YORK",
+        "title": "Hemphill v. New York"
+      },
+      {
+        "case_id": "2021-005",
+        "scdb_name": "UNITED STATES v. ZUBAYDAH",
+        "title": "United States v. Zubaydah"
+      },
+      {
+        "case_id": "2021-006",
+        "scdb_name": "CAMERON v. EMW WOMENâS SURGICAL CENTER, P.S.C.",
+        "title": "Cameron v. EMW Women's Surgical Center, P.S.C."
+      },
+      {
+        "case_id": "2021-007",
+        "scdb_name": "THOMPSON v. CLARK",
+        "title": "Thompson v. Clark"
+      },
+      {
+        "case_id": "2021-008",
+        "scdb_name": "UNITED STATES v. TSARNAEV",
+        "title": "United States v. Tsarnaev"
+      },
+      {
+        "case_id": "2021-009",
+        "scdb_name": "BABCOCK v. KIJAKAZI",
+        "title": "Babcock v. Kijakazi"
+      },
+      {
+        "case_id": "2021-010",
+        "scdb_name": "SHINN v. RAMIREZ",
+        "title": "Shinn v. Ramirez"
+      },
+      {
+        "case_id": "2021-011",
+        "scdb_name": "HOUSTON COMMUNITY COLLEGE SYSTEM v. WILSON",
+        "title": "Houston Community College System v. Wilson"
+      },
+      {
+        "case_id": "2021-012",
+        "scdb_name": "BADGEROW v. WALTERS",
+        "title": "Badgerow v. Walters"
+      },
+      {
+        "case_id": "2021-013",
+        "scdb_name": "NEW YORK STATE RIFLE & PISTOL ASSOCIATION INC. v. BRUEN",
+        "title": "New York State Rifle & Pistol Ass'n v. Bruen"
+      },
+      {
+        "case_id": "2021-014",
+        "scdb_name": "FEDERAL BUREAU OF INVESTIGATION v. FAZAGA",
+        "title": "Federal Bureau of Investigation v. Fazaga"
+      },
+      {
+        "case_id": "2021-015",
+        "scdb_name": "UNICOLORS, INC v. H&M HENNES & MAURITZ, LP",
+        "title": "Unicolors, Inc. v. H&M Hennes & Mauritz, L.P."
+      },
+      {
+        "case_id": "2021-016",
+        "scdb_name": "UNITED STATES v. VAELLO MADERO",
+        "title": "United States v. Vaello Madero"
+      },
+      {
+        "case_id": "2021-017",
+        "scdb_name": "CITY OF AUSTIN, TEXAS v. REAGAN NATIONAL ADVERTISING OF TEXAS INC",
+        "title": "City of Austin v. Reagan National Advertising of Austin, LLC"
+      },
+      {
+        "case_id": "2021-018",
+        "scdb_name": "JOHNSON v. ARTEAGA-MARTINEZ",
+        "title": "Johnson v. Arteaga-Martinez"
+      },
+      {
+        "case_id": "2021-019",
+        "scdb_name": "DOBBS v. JACKSON WOMENâS HEALTH ORGANIZATION",
+        "title": "Dobbs v. Jackson Women's Health Organization"
+      },
+      {
+        "case_id": "2021-020",
+        "scdb_name": "HUGHES v. NORTHWESTERN UNIVERSITY",
+        "title": "Hughes v. Northwestern University"
+      },
+      {
+        "case_id": "2021-021",
+        "scdb_name": "CUMMINGS v. PREMIER REHAB KELLER, P.L.L.C.",
+        "title": "Cummings v. Premier Rehab Keller, P.L.L.C."
+      },
+      {
+        "case_id": "2021-023",
+        "scdb_name": "PATEL v. GARLAND",
+        "title": "Patel v. Garland"
+      },
+      {
+        "case_id": "2021-024",
+        "scdb_name": "CARSON v. MAKIN",
+        "title": "Carson v. Makin"
+      },
+      {
+        "case_id": "2021-025",
+        "scdb_name": "AMERICAN HOSPITAL ASSOCIATION v. BECERRA",
+        "title": "American Hospital Association v. Becerra"
+      },
+      {
+        "case_id": "2021-026",
+        "scdb_name": "GALLARDO v. MARSTILLER",
+        "title": "Gallardo v. Marstiller"
+      },
+      {
+        "case_id": "2021-027",
+        "scdb_name": "BECERRA v. EMPIRE HEALTH FOUNDATION",
+        "title": "Becerra v. Empire Health Foundation"
+      },
+      {
+        "case_id": "2021-029",
+        "scdb_name": "UNITED STATES v. TAYLOR",
+        "title": "United States v. Taylor"
+      },
+      {
+        "case_id": "2021-030",
+        "scdb_name": "RAMIREZ v. COLLIER",
+        "title": "Ramirez v. Collier"
+      },
+      {
+        "case_id": "2021-033",
+        "scdb_name": "WHOLE WOMAN'S HEALTH v. JACKSON",
+        "title": "Whole Woman's Health v. Jackson"
+      },
+      {
+        "case_id": "2021-034",
+        "scdb_name": "UNITED STATES v. TEXAS",
+        "title": "United States v. Texas (2021)"
+      },
+      {
+        "case_id": "2021-036",
+        "scdb_name": "BIDEN v. MISSOURI",
+        "title": "Biden v. Missouri"
+      },
+      {
+        "case_id": "2021-037",
+        "scdb_name": "BOECHLER, P.C. v. COMMISSIONER OF INTERNAL REVENUE",
+        "title": "Boechler v. Commissioner"
+      },
+      {
+        "case_id": "2021-038",
+        "scdb_name": "CASSIRER v. THYSSEN-BORNEMISZA COLLECTION FOUNDATION",
+        "title": "Cassirer v. Thyssen-Bornemisza Collection Foundation"
+      },
+      {
+        "case_id": "2021-039",
+        "scdb_name": "SHURTLEFF v. CITY OF BOSTON",
+        "title": "Shurtleff v. City of Boston"
+      },
+      {
+        "case_id": "2021-041",
+        "scdb_name": "CONCEPCION v. UNITED STATES",
+        "title": "Concepcion v. United States"
+      },
+      {
+        "case_id": "2021-042",
+        "scdb_name": "DENEZPI v. UNITED STATES",
+        "title": "Denezpi v. United States"
+      },
+      {
+        "case_id": "2021-043",
+        "scdb_name": "YSLETA DEL SUR PUEBLO v. TEXAS",
+        "title": "Ysleta del Sur Pueblo v. Texas"
+      },
+      {
+        "case_id": "2021-044",
+        "scdb_name": "ARIZONA v. CITY AND COUNTY OF SAN FRANCISCO, CALIFORNIA",
+        "title": "Arizona v. City and County of San Francisco"
+      },
+      {
+        "case_id": "2021-046",
+        "scdb_name": "RUAN v. UNITED STATES",
+        "title": "Ruan v. United States"
+      },
+      {
+        "case_id": "2021-047",
+        "scdb_name": "MARIETTA MEMORIAL HOSPITAL EMPLOYEE HEALTH BENEFIT PLAN v. DAVITA",
+        "title": "Marietta Memorial Hospital Employee Health Benefit Plan v. DaVita Inc."
+      },
+      {
+        "case_id": "2021-048",
+        "scdb_name": "EGBERT v. BOULE",
+        "title": "Egbert v. Boule"
+      },
+      {
+        "case_id": "2021-049",
+        "scdb_name": "TORRES v. TEXAS DEPARTMENT OF PUBLIC SAFETY",
+        "title": "Torres v. Texas Department of Public Safety"
+      },
+      {
+        "case_id": "2021-050",
+        "scdb_name": "LEDURE v. UNION PACIFIC RAILROAD COMPANY",
+        "title": "LeDure v. Union Pacific Railroad Company"
+      },
+      {
+        "case_id": "2021-051",
+        "scdb_name": "GOLAN v. SAADA",
+        "title": "Golan v. Saada"
+      },
+      {
+        "case_id": "2021-053",
+        "scdb_name": "VIKING RIVER CRUISES v. MORIANA",
+        "title": "Viking River Cruises, Inc. v. Moriana"
+      },
+      {
+        "case_id": "2021-055",
+        "scdb_name": "GEORGE v. MCDONOUGH",
+        "title": "George v. McDonough"
+      },
+      {
+        "case_id": "2021-056",
+        "scdb_name": "BERGER v. NORTH CAROLINA STATE CONFERENCE OF THE NAACP",
+        "title": "Berger v. North Carolina State Conference of the NAACP"
+      },
+      {
+        "case_id": "2021-057",
+        "scdb_name": "SOUTHWEST AIRLINES CO. v. SAXON",
+        "title": "Southwest Airlines Co. v. Saxon"
+      },
+      {
+        "case_id": "2021-058",
+        "scdb_name": "MORGAN v. SUNDANCE, INC.",
+        "title": "Morgan v. Sundance, Inc."
+      },
+      {
+        "case_id": "2021-059",
+        "scdb_name": "ZF AUTOMOTIVE US v. LUXSHARE, LTD.",
+        "title": "ZF Automotive U.S., Inc. v. Luxshare, Ltd."
+      },
+      {
+        "case_id": "2021-060",
+        "scdb_name": "UNITED STATES v. WASHINGTON",
+        "title": "United States v. Washington (2022)"
+      },
+      {
+        "case_id": "2021-061",
+        "scdb_name": "KENNEDY v. BREMERTON SCHOOL DISTRICT",
+        "title": "Kennedy v. Bremerton School District"
+      },
+      {
+        "case_id": "2021-062",
+        "scdb_name": "OKLAHOMA v. CASTRO-HUERTA",
+        "title": "Oklahoma v. Castro-Huerta"
+      },
+      {
+        "case_id": "2021-063",
+        "scdb_name": "NANCE v. WARD",
+        "title": "Nance v. Ward"
+      },
+      {
+        "case_id": "2021-064",
+        "scdb_name": "SIEGEL v. FITZGERALD",
+        "title": "Siegel v. Fitzgerald"
+      },
+      {
+        "case_id": "2021-066",
+        "scdb_name": "VEGA v. TEKOH",
+        "title": "Vega v. Tekoh"
+      },
+      {
+        "case_id": "2021-067",
+        "scdb_name": "SHOOP v. TWYFORD",
+        "title": "Shoop v. Twyford"
+      },
+      {
+        "case_id": "2021-068",
+        "scdb_name": "KEMP v. UNITED STATES",
+        "title": "Kemp v. United States"
+      },
+      {
+        "case_id": "2021-069",
+        "scdb_name": "BIDEN v. TEXAS",
+        "title": "Biden v. Texas"
+      },
+      {
+        "case_id": "2023-006",
+        "scdb_name": "ALEXANDER v. SOUTH CAROLINA STATE CONFERENCE OF THE NAACP",
+        "title": "Alexander v. South Carolina State Conference of the NAACP"
+      },
+      {
+        "case_id": "2023-012",
+        "scdb_name": "UNITED STATES v. RAHIMI",
+        "title": "United States v. Rahimi"
+      },
+      {
+        "case_id": "2023-014",
+        "scdb_name": "MULDROW v. CITY OF ST. LOUIS, MISSOURI",
+        "title": "Muldrow v. City of St. Louis"
+      },
+      {
+        "case_id": "2023-015",
+        "scdb_name": "LOPER BRIGHT ENTERPRISES v. RAIMONDO",
+        "title": "Loper Bright Enterprises v. Raimondo"
+      },
+      {
+        "case_id": "2023-017",
+        "scdb_name": "CAMPOS-CHAVES v. GARLAND",
+        "title": "Campos-Chaves v. Garland"
+      },
+      {
+        "case_id": "2023-019",
+        "scdb_name": "MOORE v. UNITED STATES",
+        "title": "Moore v. United States (2024)"
+      },
+      {
+        "case_id": "2023-020",
+        "scdb_name": "SECURITIES AND EXCHANGE COMMISSION v. JARKESY",
+        "title": "SEC v. Jarkesy"
+      },
+      {
+        "case_id": "2023-021",
+        "scdb_name": "BROWN v. UNITED STATES",
+        "title": "Brown v. United States (2024)"
+      },
+      {
+        "case_id": "2023-022",
+        "scdb_name": "HARRINGTON v. PURDUE PHARMA L.P.",
+        "title": "Harrington v. Purdue Pharma L.P."
+      },
+      {
+        "case_id": "2023-026",
+        "scdb_name": "OFFICE OF THE U.S. TRUSTEE v. JOHN Q. HAMMONS FALL 2006, LLC",
+        "title": "Office of the United States Trustee v. John Q. Hammons Fall 2006, LLC"
+      },
+      {
+        "case_id": "2023-027",
+        "scdb_name": "SMITH v. ARIZONA",
+        "title": "Smith v. Arizona"
+      },
+      {
+        "case_id": "2023-032",
+        "scdb_name": "CORNER POST v. BOARD OF GOVERNORS OF THE FEDERAL RESERVE SYSTEM",
+        "title": "Corner Post, Inc. v. Board of Governors of the Federal Reserve System"
+      },
+      {
+        "case_id": "2023-038",
+        "scdb_name": "CANTERO v. BANK OF AMERICA",
+        "title": "Cantero v. Bank of America, N.A."
+      },
+      {
+        "case_id": "2023-040",
+        "scdb_name": "COINBASE v. SUSKI",
+        "title": "Coinbase, Inc. v. Suski"
+      },
+      {
+        "case_id": "2023-041",
+        "scdb_name": "MURTHY v. MISSOURI",
+        "title": "Murthy v. Missouri"
+      },
+      {
+        "case_id": "2023-043",
+        "scdb_name": "DIAZ v. UNITED STATES",
+        "title": "Diaz v. United States"
+      },
+      {
+        "case_id": "2023-044",
+        "scdb_name": "TRUCK INSURANCE EXCHANGE v. KAISER GYPSUM COMPANY",
+        "title": "Truck Insurance Exchange v. Kaiser Gypsum Co."
+      },
+      {
+        "case_id": "2023-045",
+        "scdb_name": "GONZALEZ v. TREVINO",
+        "title": "Gonzalez v. Trevino"
+      },
+      {
+        "case_id": "2023-046",
+        "scdb_name": "TEXAS v. NEW MEXICO AND COLORADO",
+        "title": "Texas v. New Mexico and Colorado (2024)"
+      },
+      {
+        "case_id": "2023-047",
+        "scdb_name": "BECERRA v. SAN CARLOS APACHE TRIBE",
+        "title": "Becerra v. San Carlos Apache Tribe"
+      },
+      {
+        "case_id": "2023-050",
+        "scdb_name": "ERLINGER v. UNITED STATES",
+        "title": "Erlinger v. United States"
+      },
+      {
+        "case_id": "2023-051",
+        "scdb_name": "CONNELLY v. UNITED STATES",
+        "title": "Connelly v. United States"
+      },
+      {
+        "case_id": "2023-052",
+        "scdb_name": "SNYDER v. UNITED STATES",
+        "title": "Snyder v. United States"
+      },
+      {
+        "case_id": "2023-053",
+        "scdb_name": "CHIAVERINI v. CITY OF NAPOLEON, OHIO",
+        "title": "Chiaverini v. City of Napoleon"
+      },
+      {
+        "case_id": "2023-054",
+        "scdb_name": "FISCHER v. UNITED STATES",
+        "title": "Fischer v. United States (2024)"
+      },
+      {
+        "case_id": "2023-055",
+        "scdb_name": "THORNELL v. JONES",
+        "title": "Thornell v. Jones"
+      },
+      {
+        "case_id": "2023-056",
+        "scdb_name": "CITY OF GRANTS PASS, OREGON v. JOHNSON",
+        "title": "City of Grants Pass v. Johnson"
+      },
+      {
+        "case_id": "2023-058",
+        "scdb_name": "DEPARTMENT OF STATE v. MUÃ±OZ",
+        "title": "Department of State v. Muñoz"
+      },
+      {
+        "case_id": "2023-059",
+        "scdb_name": "STARBUCKS CORP. v. MCKINNEY",
+        "title": "Starbucks Corp. v. McKinney"
+      },
+      {
+        "case_id": "2023-060",
+        "scdb_name": "MOYLE v. UNITED STATES",
+        "title": "Moyle v. United States"
+      },
+      {
+        "case_id": "2023-061",
+        "scdb_name": "TRUMP v. UNITED STATES",
+        "title": "Trump v. United States"
+      },
+      {
+        "case_id": "2023-062",
+        "scdb_name": "MOODY v. NETCHOICE, LLC",
+        "title": "Moody v. NetChoice, LLC"
+      },
+      {
+        "case_id": "2024-002",
+        "scdb_name": "MEDICAL MARIJUANA, INC. v. HORN",
+        "title": "Medical Marijuana, Inc. v. Horn"
+      },
+      {
+        "case_id": "2024-003",
+        "scdb_name": "FDA v. WAGES AND WHITE LION INVESTMENTS, LLC",
+        "title": "FDA v. Wages and White Lion Investments, L.L.C."
+      },
+      {
+        "case_id": "2024-004",
+        "scdb_name": "WILLIAMS v. REED",
+        "title": "Williams v. Reed"
+      },
+      {
+        "case_id": "2024-005",
+        "scdb_name": "BONDI v. VANDERSTOK",
+        "title": "Bondi v. VanDerStok"
+      },
+      {
+        "case_id": "2024-006",
+        "scdb_name": "LACKEY v. STINNIE",
+        "title": "Lackey v. Stinnie"
+      },
+      {
+        "case_id": "2024-007",
+        "scdb_name": "GLOSSIP v. OKLAHOMA",
+        "title": "Glossip v. Oklahoma"
+      },
+      {
+        "case_id": "2024-009",
+        "scdb_name": "BUFKIN v. COLLINS",
+        "title": "Bufkin v. Collins"
+      },
+      {
+        "case_id": "2024-010",
+        "scdb_name": "WISCONSIN BELL v. U.S., EX REL. TODD HEATH",
+        "title": "Wisconsin Bell, Inc. v. United States ex rel. Heath"
+      },
+      {
+        "case_id": "2024-011",
+        "scdb_name": "ADVOCATE CHRIST MEDICAL CENTER v. KENNEDY",
+        "title": "Advocate Christ Medical Center v. Kennedy"
+      },
+      {
+        "case_id": "2024-014",
+        "scdb_name": "VELAZQUEZ v. BONDI",
+        "title": "Velazquez v. Bondi"
+      },
+      {
+        "case_id": "2024-015",
+        "scdb_name": "DELLIGATTI v. UNITED STATES",
+        "title": "Delligatti v. United States"
+      },
+      {
+        "case_id": "2024-017",
+        "scdb_name": "UNITED STATES v. MILLER",
+        "title": "United States v. Miller (2025)"
+      },
+      {
+        "case_id": "2024-018",
+        "scdb_name": "REPUBLIC OF HUNGARY v. SIMON",
+        "title": "Republic of Hungary v. Simon"
+      },
+      {
+        "case_id": "2024-019",
+        "scdb_name": "UNITED STATES v. SKRMETTI",
+        "title": "United States v. Skrmetti"
+      },
+      {
+        "case_id": "2024-020",
+        "scdb_name": "KOUSISIS v. UNITED STATES",
+        "title": "Kousisis v. United States"
+      },
+      {
+        "case_id": "2024-021",
+        "scdb_name": "FELICIANO v. DEPARTMENT OF TRANSPORTATION",
+        "title": "Feliciano v. Department of Transportation"
+      },
+      {
+        "case_id": "2024-022",
+        "scdb_name": "SEVEN COUNTY INFASTRUCTURE COALITION v. EAGLE COUNTY, COLORADO",
+        "title": "Seven County Infrastructure Coalition v. Eagle County"
+      },
+      {
+        "case_id": "2024-023",
+        "scdb_name": "DEWBERRY GROUP v. DEWBERRY ENGINEERS",
+        "title": "Dewberry Group v. Dewberry Engineers"
+      },
+      {
+        "case_id": "2024-024",
+        "scdb_name": "HEWITT v. UNITED STATES",
+        "title": "Hewitt v. United States"
+      },
+      {
+        "case_id": "2024-026",
+        "scdb_name": "STANLEY v. CITY OF SANFORD, FLORIDA",
+        "title": "Stanley v. City of Sanford"
+      },
+      {
+        "case_id": "2024-027",
+        "scdb_name": "THOMPSON v. UNITED STATES",
+        "title": "Thompson v. United States (2025)"
+      },
+      {
+        "case_id": "2024-028",
+        "scdb_name": "WAETZIG v. HALLIBURTON ENERGY SERVICES",
+        "title": "Waetzig v. Halliburton Energy Services, Inc."
+      },
+      {
+        "case_id": "2024-029",
+        "scdb_name": "FREE SPEECH COALITION v. PAXTON",
+        "title": "Free Speech Coalition v. Paxton"
+      },
+      {
+        "case_id": "2024-030",
+        "scdb_name": "FOOD AND DRUG ADMINISTRATION v. R.J. REYNOLDS VAPOR CO.",
+        "title": "Food and Drug Administration v. R.J. Reynolds Vapor Co."
+      },
+      {
+        "case_id": "2024-031",
+        "scdb_name": "MCLAUGHLIN CHIROPRACTIC ASSOCIATES v. MCKESSON CORPORATION",
+        "title": "McLaughlin Chiropractic Associates, Inc. v. McKesson Corp."
+      },
+      {
+        "case_id": "2024-032",
+        "scdb_name": "BARNES v. FELIX",
+        "title": "Barnes v. Felix"
+      },
+      {
+        "case_id": "2024-033",
+        "scdb_name": "CUNNINGHAM v. CORNELL UNIVERSITY",
+        "title": "Cunningham v. Cornell University"
+      },
+      {
+        "case_id": "2024-034",
+        "scdb_name": "GUTIERREZ v. SAENZ",
+        "title": "Gutierrez v. Saenz"
+      },
+      {
+        "case_id": "2024-035",
+        "scdb_name": "ESTERAS v. UNITED STATES",
+        "title": "Esteras v. United States"
+      },
+      {
+        "case_id": "2024-036",
+        "scdb_name": "PERTTU v. RICHARDS",
+        "title": "Perttu v. Richards"
+      },
+      {
+        "case_id": "2024-037",
+        "scdb_name": "AMES v. OHIO DEPARTMENT OF YOUTH SERVICES",
+        "title": "Ames v. Ohio Department of Youth Services"
+      },
+      {
+        "case_id": "2024-038",
+        "scdb_name": "CC/DEVAS (MAURITIUS) LIMITED v. ANTRIX CORP. LTD.",
+        "title": "CC/Devas (Mauritius) Ltd. v. Antrix Corp. Ltd."
+      },
+      {
+        "case_id": "2024-039",
+        "scdb_name": "BLOM BANK SAL v. HONICKMAN",
+        "title": "BLOM Bank SAL v. Honickman"
+      },
+      {
+        "case_id": "2024-046",
+        "scdb_name": "RILEY v. BONDI",
+        "title": "Riley v. Bondi"
+      },
+      {
+        "case_id": "2024-048",
+        "scdb_name": "FEDERAL COMMUNICATIONS COMMISSION v. CONSUMERS' RESEARCH",
+        "title": "FCC v. Consumers' Research"
+      },
+      {
+        "case_id": "2024-049",
+        "scdb_name": "TIKTOK, INC. v. GARLAND",
+        "title": "TikTok, Inc. v. Garland"
+      },
+      {
+        "case_id": "2024-052",
+        "scdb_name": "RIVERS v. GUERRERO",
+        "title": "Rivers v. Guerrero"
+      },
+      {
+        "case_id": "2024-053",
+        "scdb_name": "FULD v. PALESTINE LIBERATION ORGANIZATION",
+        "title": "Fuld v. Palestine Liberation Organization"
+      },
+      {
+        "case_id": "2024-054",
+        "scdb_name": "MEDINA v. PLANNED PARENTHOOD SOUTH ATLANTIC",
+        "title": "Medina v. Planned Parenthood South Atlantic"
+      },
+      {
+        "case_id": "2024-055",
+        "scdb_name": "KENNEDY v. BRAIDWOOD MANAGEMENT",
+        "title": "Kennedy v. Braidwood Management, Inc."
+      },
+      {
+        "case_id": "2024-056",
+        "scdb_name": "PARRISH v. UNITED STATES",
+        "title": "Parrish v. United States"
+      },
+      {
+        "case_id": "2024-057",
+        "scdb_name": "COMMISSIONER OF INTERNAL REVENUE v. ZUCH",
+        "title": "Commissioner v. Zuch"
+      },
+      {
+        "case_id": "2024-058",
+        "scdb_name": "MAHMOUD v. TAYLOR",
+        "title": "Mahmoud v. Taylor"
+      },
+      {
+        "case_id": "2024-059",
+        "scdb_name": "DIAMOND ALTERNATIVE ENERGY LLC v. ENVIRONMENTAL PROTECTION AGENCY",
+        "title": "Diamond Alternative Energy, LLC v. Environmental Protection Agency"
+      },
+      {
+        "case_id": "2024-060",
+        "scdb_name": "SOTO v. UNITED STATES",
+        "title": "Soto v. United States"
+      },
+      {
+        "case_id": "2024-061",
+        "scdb_name": "A.J.T. v. OSSEO AREA SCHOOLS, INDEPENDENT SCHOOL DISTRICT NO. 279",
+        "title": "A. J. T. v. Osseo Area Schools"
+      },
+      {
+        "case_id": "2024-062",
+        "scdb_name": "MARTIN v. UNITED STATES",
+        "title": "Martin v. United States"
+      },
+      {
+        "case_id": "2024-065",
+        "scdb_name": "TRUMP, PRESIDENT OF THE UNITED STATES v. CASA, INC.",
+        "title": "Trump v. CASA, Inc."
+      },
+      {
+        "case_id": "2025-014",
+        "scdb_name": "LOUISIANA v. CALLAIS",
+        "title": "Louisiana v. Callais"
+      },
+      {
+        "case_id": "2025-020",
+        "scdb_name": "LANDOR v. LOUISIANA DEPARTMENT OF CORRECTIONS AND PUBLIC SAFETY",
+        "title": "Landor v. Louisiana Department of Corrections and Public Safety"
+      },
+      {
+        "case_id": "2025-021",
+        "scdb_name": "RUTHERFORD v. UNITED STATES",
+        "title": "Rutherford v. United States"
+      },
+      {
+        "case_id": "2025-022",
+        "scdb_name": "FERNANDEZ v. UNITED STATES",
+        "title": "Fernandez v. United States"
+      },
+      {
+        "case_id": "2025-025",
+        "scdb_name": "FIRST CHOICE WOMENâS RESOURCE CENTERS v. DAVENPORT",
+        "title": "First Choice Women's Resource Centers, Inc. v. Davenport"
+      },
+      {
+        "case_id": "2025-027",
+        "scdb_name": "TRUMP v. SLAUGHTER",
+        "title": "Trump v. Slaughter"
+      },
+      {
+        "case_id": "2025-029",
+        "scdb_name": "HAMM v. SMITH",
+        "title": "Hamm v. Smith"
+      },
+      {
+        "case_id": "2025-030",
+        "scdb_name": "FS CREDIT OPPORTUNITIES CORP. v. SABA CAPITAL MASTER FUND, LTD.",
+        "title": "FS Credit Opportunities Corp. v. Saba Capital Master Fund"
+      },
+      {
+        "case_id": "2025-032",
+        "scdb_name": "WEST VIRGINIA v. B.P.J.",
+        "title": "West Virginia v. B. P. J."
+      },
+      {
+        "case_id": "2025-035",
+        "scdb_name": "WOLFORD v. LOPEZ",
+        "title": "Wolford v. Lopez"
+      },
+      {
+        "case_id": "2025-036",
+        "scdb_name": "M & K EMPLOYEE SOLUTIONS, LLC v. TRUSTEES OF THE IAM NATIONAL PENSION FUND",
+        "title": "M & K Employee Solutions, LLC v. Trustees of the IAM National Pension Fund"
+      },
+      {
+        "case_id": "2025-037",
+        "scdb_name": "TRUMP v. COOK",
+        "title": "Trump v. Cook"
+      },
+      {
+        "case_id": "2025-038",
+        "scdb_name": "HAVANA DOCKS CORPORATION v. ROYAL CARIBBEAN CRUISES, LTD.",
+        "title": "Havana Docks Corp. v. Royal Caribbean Cruises"
+      },
+      {
+        "case_id": "2025-041",
+        "scdb_name": "PUNG v. ISABELLA COUNTY, MICHIGAN",
+        "title": "Pung v. Isabella County"
+      },
+      {
+        "case_id": "2025-042",
+        "scdb_name": "UNITED STATES v. HEMANI",
+        "title": "United States v. Hemani"
+      },
+      {
+        "case_id": "2025-044",
+        "scdb_name": "ABOUAMMO v. UNITED STATES",
+        "title": "Abouammo v. United States"
+      },
+      {
+        "case_id": "2025-046",
+        "scdb_name": "BLANCHE v. LAU",
+        "title": "Blanche v. Lau"
+      },
+      {
+        "case_id": "2025-047",
+        "scdb_name": "CHATRIE v. UNITED STATES",
+        "title": "Chatrie v. United States"
+      },
+      {
+        "case_id": "2025-048",
+        "scdb_name": "CISCO SYSTEMS v. DOE",
+        "title": "Cisco Systems, Inc. v. Doe"
+      },
+      {
+        "case_id": "2025-049",
+        "scdb_name": "FEDERAL COMMUNICATIONS COMMISSION v. AT&T",
+        "title": "FCC v. AT&T Inc. (2026)"
+      },
+      {
+        "case_id": "2025-050",
+        "scdb_name": "FLOWER FOODS v. BROCK",
+        "title": "Flowers Foods, Inc. v. Brock"
+      },
+      {
+        "case_id": "2025-051",
+        "scdb_name": "HIKMA PHARMACEUTICALS USA INC. v. AMARIN PHARMA",
+        "title": "Hikma Pharmaceuticals USA Inc. v. Amarin Pharma, Inc."
+      },
+      {
+        "case_id": "2025-053",
+        "scdb_name": "KEATHLEY v. BUDDY AYERS CONSTRUCTION",
+        "title": "Keathley v. Buddy Ayers Construction, Inc."
+      },
+      {
+        "case_id": "2025-054",
+        "scdb_name": "MONSANTO COMPANY v. DURNELL",
+        "title": "Monsanto Co. v. Durnell"
+      },
+      {
+        "case_id": "2025-055",
+        "scdb_name": "MULLIN v. AL OTRO LADO",
+        "title": "Mullin v. Al Otro Lado"
+      },
+      {
+        "case_id": "2025-056",
+        "scdb_name": "PITCHFORD v. CAIN",
+        "title": "Pitchford v. Cain"
+      },
+      {
+        "case_id": "2025-057",
+        "scdb_name": "SRIPETCH v. SECURITIES AND EXCHANGE COMMISSION",
+        "title": "Sripetch v. SEC"
+      },
+      {
+        "case_id": "2025-058",
+        "scdb_name": "T. M. v. UNIVERSITY OF MARYLAND MEDICAL SYSTEM CORP.",
+        "title": "T.M. v. University of Maryland Medical System Corp."
+      },
+      {
+        "case_id": "2025-059",
+        "scdb_name": "TRUMP v. BARBARA",
+        "title": "Trump v. Barbara"
+      },
+      {
+        "case_id": "2025-060",
+        "scdb_name": "WATSON v. REPUBLICAN NATIONAL COMMITTEE",
+        "title": "Watson v. Republican National Committee"
+      },
+      {
+        "case_id": "2025-064",
+        "scdb_name": "HUNTER v. UNITED STATES",
+        "title": "Hunter v. United States"
+      },
+      {
+        "case_id": "2025-065",
+        "scdb_name": "MULLIN v. DOE",
+        "title": "Mullin v. Doe"
+      }
+    ]
+  },
+  "case_summaries": {
+    "fetched": "2026-10-08",
+    "linked_cases": 3388,
+    "cases_with_summary": 1991,
+    "articles": 3311,
+    "with_lead": 3258,
+    "summarized": 1961,
+    "from_sentence": {
+      "1": 1608,
+      "2": 272,
+      "3": 81
+    },
+    "without": 1397
+  },
   "gates": {
     "cases": 8251,
     "terms": 80,

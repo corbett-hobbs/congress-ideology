@@ -87,6 +87,8 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
     other,
     landmark,
     landmarkSource: { url: meta.landmarks.url, page: meta.landmarks.page, revisionDate: meta.landmarks.revision_date, license: meta.landmarks.license, count: meta.landmarks.count },
+    articleSource: { count: 0, fetched: "" },
+    summarySource: { count: 0, fetched: "" },
     topAreas,
     chiefs,
     versionLabel: meta.scdb_version_label,
@@ -382,13 +384,16 @@ const WIKI = "https://en.wikipedia.org/wiki/";
 export const wikiArticleUrl = (title: string): string => WIKI + encodeURIComponent(title.replaceAll(" ", "_"));
 
 /**
- * Where a case's name links. A landmark has an exact article (the list's own link). Any other case links to Wikipedia's
- * "go" search for its name, which jumps straight to the article when a page has exactly that title (most case articles are
- * titled by the name: "Dunaway v. New York") and otherwise lists the closest pages; we hold no article titles for the other
- * ~7,900 cases, and a search is honest about that. "et al." is dropped so a name keeps its best chance of an exact title.
+ * Where a case's name links, or null for none. A landmark has an exact article (the list's own link), and so does any case
+ * Wikipedia's volume and term lists tie to one by cite, docket or name and year (`c[10]`). A case those lists show with no
+ * article has nothing to link to. A case on no list (newest decisions, odd cites) falls back to Wikipedia's "go" search for its
+ * name, which jumps to the article when a page has exactly that title and otherwise lists the closest pages. "et al." is
+ * dropped so a name keeps its best chance of an exact title.
  */
-export function wikiCaseUrl(c: DecisionCase): string {
+export function wikiCaseUrl(c: DecisionCase): string | null {
   if (c[8]) return wikiArticleUrl(c[8]);
+  if (c[10]) return wikiArticleUrl(c[10]);
+  if (c[10] === null) return null;
   const query = c[2].replace(/,?\s+et\s+al\.?/gi, "").trim();
   return `https://en.wikipedia.org/w/index.php?${new URLSearchParams({ search: query, go: "Go", ns0: "1" }).toString()}`;
 }

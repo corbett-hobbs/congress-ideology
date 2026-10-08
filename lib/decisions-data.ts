@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
 import { buildDecisionsPayload, countCaseRows } from "./decisions-derive";
-import { decisionCaseRow, decisionCountRow, decisionsMeta, landmarkRow } from "./decisions-entities";
+import { caseArticleRow, caseSummaryRow, decisionCaseRow, decisionCountRow, decisionsMeta, landmarkRow } from "./decisions-entities";
 import type { DecisionCase, DecisionsPayload } from "./decisions-types";
 
 /**
@@ -26,7 +26,11 @@ export function getDecisionsPageData(): DecisionsPayload {
   const meta = decisionsMeta.parse(read("decisions_meta.json"));
   const landmarkIds = new Set(z.array(landmarkRow).parse(read("decisions_landmarks.json")).map((r) => r.case_id));
   const caseRows = z.array(decisionCaseRow).parse(read("decisions_cases.json"));
-  cache = { ...buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id)))), casesVersion: casesVersion() };
+  const articles = z.array(caseArticleRow).parse(read("decisions_articles.json")).filter((r) => r.title !== null);
+  const fetched = z.object({ fetched: z.string() }).parse(JSON.parse(readFileSync(join(process.cwd(), "pipeline", "raw", "wikipedia-cases", "manifest.json"), "utf8"))).fetched;
+  const summaries = z.array(caseSummaryRow).parse(read("decisions_summaries.json"));
+  const summaryFetched = z.object({ fetched: z.string() }).parse(JSON.parse(readFileSync(join(process.cwd(), "pipeline", "raw", "wikipedia-cases", "leads-manifest.json"), "utf8"))).fetched;
+  cache = { ...buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id)))), casesVersion: casesVersion(), articleSource: { count: articles.length, fetched }, summarySource: { count: summaries.length, fetched: summaryFetched } };
   return cache;
 }
 
@@ -41,11 +45,13 @@ export function getDecisionCases(): DecisionCase[] {
   const meta = decisionsMeta.parse(read("decisions_meta.json"));
   const index = new Map(meta.issue_areas.map((a, i) => [a.id, i]));
   const landmarks = new Map(z.array(landmarkRow).parse(read("decisions_landmarks.json")).map((r) => [r.case_id, r]));
+  const articles = new Map(z.array(caseArticleRow).parse(read("decisions_articles.json")).map((r) => [r.case_id, r.title] as const));
+  const summaries = new Map(z.array(caseSummaryRow).parse(read("decisions_summaries.json")).map((r) => [r.case_id, r.summary] as const));
   const rows = z.array(decisionCaseRow).parse(read("decisions_cases.json"));
   casesCache = rows
     .map((r): DecisionCase => {
       const lm = landmarks.get(r.case_id);
-      return [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : (index.get(r.issue_area_id) ?? -1), r.band, r.maj, r.min, lm?.title ?? "", lm ? topicText(lm.topics) : ""];
+      return [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : (index.get(r.issue_area_id) ?? -1), r.band, r.maj, r.min, lm?.title ?? "", lm ? topicText(lm.topics) : "", lm ? lm.title : articles.has(r.case_id) ? articles.get(r.case_id) ?? null : "", summaries.get(r.case_id) ?? ""];
     })
     .reverse();
   return casesCache;
