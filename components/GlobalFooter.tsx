@@ -6,7 +6,7 @@ const LINK =
 
 /**
  * The site-wide footer, rendered once by the root layout: a wrapping row of links,
- * a hairline, then the disclaimer and the Voteview citation (docs/CREDITS.md).
+ * a hairline, then the disclaimer.
  * Page-specific source lines (e.g. `senate/SiteFooter`) stay on their pages.
  * Only links to routes that exist belong here.
  */
@@ -26,17 +26,6 @@ export function GlobalFooter() {
         <div className="flex flex-col gap-1.5 border-t border-line pb-6 pt-4 text-[0.78rem] leading-[1.6] text-ink-muted">
           <p className="m-0">
             InsideGov is an independent project and is not affiliated with any government agency or political party.
-          </p>
-          <p className="m-0">
-            Ideology data: Lewis, Poole, Rosenthal, Boche, Rudkin &amp; Sonnet,{" "}
-            <a href="https://voteview.com/" className="underline decoration-line-strong underline-offset-2 hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-              <em>Voteview: Congressional Roll-Call Votes Database</em>
-            </a>
-            . Full credits on{" "}
-            <Link href="/methodology" className="underline decoration-line-strong underline-offset-2 hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-              Methodology and sources
-            </Link>
-            .
           </p>
         </div>
       </div>
