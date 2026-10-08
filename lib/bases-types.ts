@@ -12,6 +12,9 @@ export const SITE_LABEL: Record<SiteType, string> = {
   funded_site: "Host-nation base, U.S.-funded",
 };
 
+/** Shorter wording for the map tooltip; the legend and table keep the full SITE_LABEL. */
+export const SITE_TIP_LABEL: Record<SiteType, string> = { ...SITE_LABEL, lilypad: "Small site" };
+
 export interface BaseSite {
   name: string;
   /** Index into `countries`. */

@@ -10,7 +10,7 @@ import { YearPicker } from "@/components/charts/YearPicker";
 import { ZoomControls } from "@/components/charts/ZoomControls";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import type { WorldMapFile } from "@/lib/foreign-aid-entities";
-import { SITE_LABEL, SITE_ORDER, type BaseCluster, type BasesPayload } from "@/lib/bases-types";
+import { SITE_LABEL, SITE_ORDER, SITE_TIP_LABEL, type BaseCluster, type BasesPayload } from "@/lib/bases-types";
 import { BRANCH_NAMES, MAP_BINS, formatCount, measureLabel, periodView, type ContingencyNote } from "@/lib/troops-derive";
 import { regionLabel } from "@/lib/troops-regions";
 import { useTroopsState } from "./TroopsState";
@@ -111,9 +111,9 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
     const country = bases.countries[sites[0].c];
     const one = sites.length === 1;
     const lines = one
-      ? [SITE_LABEL[SITE_ORDER[sites[0].t]]]
+      ? [SITE_TIP_LABEL[SITE_ORDER[sites[0].t]]]
       : [
-          ...sites.slice(0, 6).map((s) => `${s.name} · ${SITE_LABEL[SITE_ORDER[s.t]]}`),
+          ...sites.slice(0, 6).map((s) => `${s.name} · ${SITE_TIP_LABEL[SITE_ORDER[s.t]]}`),
           ...(sites.length > 6 ? [`and ${sites.length - 6} more (zoom in to split them)`] : []),
         ];
     return { title: one ? sites[0].name : `${sites.length} installations`, country: country.name, iso3: country.iso3, lines, place: placeOfIso.get(country.iso3) ?? null };
@@ -260,7 +260,7 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
             <ZoomControls onZoomIn={zoom.zoomIn} onZoomOut={zoom.zoomOut} onReset={zoom.reset} canZoomIn={zoom.canZoomIn} zoomed={zoom.zoomed} />
           </div>
           <Tooltip state={tip.state}>{(h) => <MapTip hit={h} />}</Tooltip>
-          <Tooltip state={basePin.state ? null : baseHover.state}>{(h) => <BaseTip hit={h} through={bases.through} />}</Tooltip>
+          <Tooltip state={basePin.state ? null : baseHover.state}>{(h) => <BaseTip hit={h} />}</Tooltip>
           <Tooltip
             state={basePin.state}
             onActivate={(h) => {
@@ -271,7 +271,7 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
               basePin.state?.data.place == null ? undefined : places[country]?.iso3 === basePin.state.data.iso3 ? `Clear the ${basePin.state.data.country} filter →` : `Show ${basePin.state.data.country} in the charts above →`
             }
           >
-            {(h) => <BaseTip hit={h} through={bases.through} />}
+            {(h) => <BaseTip hit={h} />}
           </Tooltip>
 
           {!view.unavailable && (
@@ -405,12 +405,11 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
   );
 }
 
-function BaseTip({ hit, through }: { hit: BaseHit; through: number }) {
+function BaseTip({ hit }: { hit: BaseHit }) {
   return (
     <div>
-      <div style={{ fontWeight: 600 }}>{hit.title}</div>
-      <div className="tt-mono">
-        {hit.country} · known installation, source through {through}
+      <div style={{ fontWeight: 600 }}>
+        {hit.title} · {hit.country}
       </div>
       {hit.lines.map((l, i) => (
         <div key={i} className="tt-mono" style={{ marginTop: i === 0 ? 4 : 0 }}>
