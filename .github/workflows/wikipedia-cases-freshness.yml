@@ -1,6 +1,7 @@
 name: Wikipedia case-article links freshness
 
-# Keeps the Decisions page's case-name links current as new opinions are decided and Wikipedia writes their articles.
+# Keeps the Decisions page's case-name links and one-sentence case summaries current as new opinions are decided and Wikipedia
+# writes their articles.
 #
 # Weekly: re-read Wikipedia's Supreme Court volume and term lists (`pnpm fetch:wikipedia-cases`, ~300 requests, polite
 # User-Agent). If any list row, article link or redirect changed, re-run the decisions transform (which joins the lists to
@@ -47,6 +48,11 @@ jobs:
           set +e
           pnpm fetch:wikipedia-cases
           code=$?
+          # The opening of any article not fetched before (one sentence per case comes from it); exit 2 = unreachable, as above.
+          if [ "$code" -eq 0 ]; then
+            pnpm fetch:wikipedia-case-leads
+            code=$?
+          fi
           set -e
           if [ "$code" -eq 2 ]; then
             echo "unreachable=true" >> "$GITHUB_OUTPUT"
@@ -87,7 +93,8 @@ jobs:
           labels: data-refresh
           body: |
             Wikipedia's Supreme Court volume and term lists changed (a new article, a renamed one, or new decisions).
-            `pipeline/output/decisions_articles.json` and the report (`decisions_report.json` > `case_articles`) are regenerated.
+            `pipeline/output/decisions_articles.json`, `decisions_summaries.json` (the one-sentence case summaries, from each new
+            article's opening) and the report (`decisions_report.json` > `case_articles`, `case_summaries`) are regenerated.
 
             Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
             (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.

@@ -34,6 +34,7 @@
     "fetch:scdb": "tsx pipeline/fetch/scdb.ts",
     "fetch:landmarks": "tsx pipeline/fetch/wikipedia-landmarks.ts",
     "fetch:wikipedia-cases": "tsx pipeline/fetch/wikipedia-cases.ts",
+    "fetch:wikipedia-case-leads": "tsx pipeline/fetch/wikipedia-case-leads.ts",
     "fetch:justice-bios": "tsx pipeline/fetch/justice-bios.ts",
     "validate": "tsx pipeline/validate/validate.ts",
     "transform": "tsx pipeline/transform/index.ts && tsx pipeline/transform/court-run.ts && tsx pipeline/transform/executive-orders-run.ts && tsx pipeline/transform/indicators-run.ts && tsx pipeline/transform/energy-run.ts && tsx pipeline/transform/enforcement-run.ts && tsx pipeline/transform/trade-run.ts && tsx pipeline/transform/foreign-aid-run.ts && tsx pipeline/transform/troops-location-run.ts && tsx pipeline/transform/troops-history-run.ts && tsx pipeline/transform/world-map-run.ts && tsx pipeline/transform/bases-run.ts && tsx pipeline/transform/removals-country-run.ts && tsx pipeline/transform/tariff-actions-run.ts && tsx pipeline/transform/energy-actions-run.ts && tsx pipeline/transform/decisions-run.ts",

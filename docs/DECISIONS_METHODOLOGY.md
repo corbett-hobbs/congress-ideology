@@ -73,8 +73,19 @@ Every case name in the list links to its Wikipedia article when Wikipedia's own 
 - **Landmarks** keep the landmark list's own link, which wins.
 - **Gate:** one row per case, no unknown case ids, at least 30% of cases matched. The report (`decisions_report.json` > `case_articles`) lists the counts by rung, every name-and-year match and every conflict.
 - **Result:** about 3,400 of 8,251 cases link to an article, 4,850 are red links on the lists (Wikipedia has no article), about 40 fall back to search.
-- **Stored:** article titles only (links back), never Wikipedia's prose. Wikipedia's lists are CC BY-SA 4.0.
+- **Stored:** article titles only (links back). Wikipedia's lists are CC BY-SA 4.0. (The one-sentence summaries, next, are the one place Wikipedia's prose is kept.)
+
+## One-sentence case summaries
+
+Under a case name the list shows one sentence on how the Court ruled, for the cases that have an article (about 2,000 of the 3,400). It is Wikipedia's wording, not ours: `pnpm fetch:wikipedia-case-leads` saves the first 1,000 characters of each linked article's lead (`pipeline/raw/wikipedia-cases/leads.json`, 20 articles a request, incremental), and `transform/wikipedia-case-summaries.ts` picks the sentence.
+
+- **Pick:** the first of the lead's first three sentences that states a ruling (held that, ruled, decided, struck down, upheld, reversed, ...). A later sentence counts only if the Court is its subject and it does not point back at a sentence we are not showing ("such officials", "this case").
+- **Trim:** a case article opens "Name, 558 U.S. 100 (2009), is a United States Supreme Court case in which the Court held that ...". The name and cite are already in the row, so the head is cut; a bare verb ("held that ...") gets "The Court" put back. Footnote marks go.
+- **Keep only if clean:** one finished sentence of 40-300 characters with balanced brackets and quotes. An article whose first sentence is not a case head (a redirect into a term list or a section) gets none.
+- **Result:** about 60% of linked articles pass (2.0k cases); the rest open with context or the question presented and no ruling, and show no sentence rather than a guessed one.
+- **Gate:** one row per case, every case id real, 40-300 characters, at least half of the linked cases summarised. The report (`decisions_report.json` > `case_summaries`) counts articles, leads and which sentence each came from.
+- **Caveats:** companion cases that share an article share its sentence; the sentence is the article's first account, which can be vaguer than the opinion ("The Court held that the New York state rule applied."). The card's Data notes say it is Wikipedia's text (CC BY-SA 4.0) and to check the article.
 
 ## Not in scope
 
-Liberal/conservative direction, per-justice votes, landmark-case curation, case summaries. The page is institutional counts plus a plain list of the cases behind them (name, cite, date, issue area, vote).
+Liberal/conservative direction, per-justice votes, landmark-case curation, case summaries written by us (the one sentence under a case is Wikipedia's, above). The page is institutional counts plus a plain list of the cases behind them (name, cite, date, issue area, vote).
