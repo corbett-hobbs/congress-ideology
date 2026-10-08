@@ -91,7 +91,13 @@ export default function Hub() {
               {BLURBS.presidency}
             </p>
             <div className="mt-auto flex flex-col gap-2">
-              <HubEoChart data={orders} />
+              <Link
+                href={`${presidency.href}/${presidency.defaultSection}`}
+                aria-label={`${presidency.label}: open the first page`}
+                className="block"
+              >
+                <HubEoChart data={orders} />
+              </Link>
               <p className="text-[0.85rem] text-ink-muted">
                 <span className="font-serif text-2xl font-semibold text-ink">
                   {orders.total.toLocaleString("en-US")}
@@ -102,7 +108,7 @@ export default function Hub() {
           </div>
           <HubSectionList
             sections={presidency.sections}
-            className="self-start lg:w-full"
+            className="self-start border-t-2 border-t-line-strong lg:w-full lg:border-t lg:border-t-line"
           />
         </section>
 
@@ -110,11 +116,6 @@ export default function Hub() {
           {others.map((b) => {
             const live = b.status === "live";
             const isCongress = b.id === "congress";
-            // A card with more pages than its neighbour lays them side by
-            // side (shorter card, no dead space beside the leaner one); the
-            // leaner card keeps its rows right under its content.
-            const fewest = Math.min(...others.map((o) => o.sections.length));
-            const columns = b.sections.length > fewest ? b.sections.length : 1;
             return (
               <section
                 key={b.id}
@@ -152,7 +153,13 @@ export default function Hub() {
                 {isCongress && (
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex flex-1 flex-col justify-center">
-                      <HubCompass members={congress.plottable} />
+                      <Link
+                        href={`${b.href}/${b.defaultSection}`}
+                        aria-label={`${b.label}: open the first page`}
+                        className="block"
+                      >
+                        <HubCompass members={congress.plottable} />
+                      </Link>
                     </div>
                     <p className="text-[0.85rem] text-ink-muted">
                       <span className="font-serif text-2xl font-semibold text-ink">
@@ -172,7 +179,13 @@ export default function Hub() {
                 {b.id === "supreme-court" && (
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex flex-1 flex-col justify-center">
-                      <CourtHubStrip data={court} />
+                      <Link
+                        href={`${b.href}/${b.defaultSection}`}
+                        aria-label={`${b.label}: open the first page`}
+                        className="block"
+                      >
+                        <CourtHubStrip data={court} />
+                      </Link>
                     </div>
                     <p className="text-[0.85rem] text-ink-muted">
                       <span className="font-serif text-2xl font-semibold text-ink">
@@ -188,8 +201,7 @@ export default function Hub() {
                   <HubSectionList
                     sections={b.sections}
                     stacked
-                    columns={columns}
-                    className={columns > 1 ? "mt-auto" : ""}
+                    className="mt-auto border-t-2 border-t-line-strong"
                   />
                 )}
               </section>
