@@ -266,9 +266,6 @@ export function chiefSegments(d: DecisionsPayload, terms: readonly number[]): Te
 
 // --------------------------------------------------------------------------- decade heatmap
 
-/** A decade cell with fewer cases than this is drawn as "too few": its share would swing on one decision. */
-export const HEAT_MIN_CASES = 10;
-
 export interface DecadeCell {
   /** 1940, 1950, ... (the first and last decades are partial: 1946-49 and 2020-25). */
   decade: number;
@@ -293,25 +290,16 @@ export function decadeCells(d: DecisionsPayload, area: number): DecadeCell[] {
   });
 }
 
-/** The share a heatmap cell shows for `band` (0 unanimous, 4 split 5-4), or null when the cell has too few cases to trust. */
-export const heatValue = (c: DecadeCell, band: number): number | null => (c.total >= HEAT_MIN_CASES ? bandShare(c.bucket, band) : null);
+/** The count a heatmap cell shows: every case in it (`band` null), or just those in one dissent band (0 unanimous, 4 split 5-4). */
+export const heatCount = (c: DecadeCell, band: number | null): number => (band === null ? c.total : c.bucket[band]);
 
 /**
- * The top of the colour scale when a cell shows a case count: the busiest decade of any one issue area. "All issue areas" has
+ * The top of the colour scale for the counts a cell shows: the busiest decade of any one issue area. "All issue areas" has
  * several times any area's count, so its row is shaded on its own scale (its own busiest decade).
  */
-export function heatCasesMax(d: DecisionsPayload, area: number): number {
+export function heatCountMax(d: DecisionsPayload, area: number, band: number | null): number {
   const rows = area === ALL_AREAS ? [ALL_AREAS] : d.areas.map((_, i) => i);
-  return Math.max(1, ...rows.flatMap((a) => decadeCells(d, a).map((c) => c.total)));
-}
-
-/** The top of the colour scale: the largest trusted share in any area-and-decade, rounded up to a whole ten percent, so every cell is comparable. */
-export function heatMax(d: DecisionsPayload, band: number): number {
-  let max = 0;
-  for (const area of [ALL_AREAS, ...d.areas.map((_, i) => i)]) {
-    for (const c of decadeCells(d, area)) max = Math.max(max, heatValue(c, band) ?? 0);
-  }
-  return Math.max(0.1, Math.ceil(max * 10) / 10);
+  return Math.max(1, ...rows.flatMap((a) => decadeCells(d, a).map((c) => heatCount(c, band))));
 }
 
 /** Is any term of this decade inside the years window? */

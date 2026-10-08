@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { decadeCells, decadeInWindow, decadesOf, fmtInt, fmtPct, HEAT_MIN_CASES, heatCasesMax, heatMax, heatValue, type AreaRow } from "@/lib/decisions-derive";
+import { decadeCells, decadeInWindow, decadesOf, fmtInt, heatCount, heatCountMax, type AreaRow } from "@/lib/decisions-derive";
 import { ALL_AREAS, BAND_COLORS, type AreaSortKey } from "@/lib/decisions-types";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 
@@ -14,10 +14,10 @@ const MEASURES: Record<AreaSortKey, { band: number | null; noun: string }> = {
 
 /**
  * The companion to the issue-area rows: issue areas down the side (same order as the rows), decades across. The card's one
- * toggle picks the measure for both charts: the case count (accent), the share that split 5–4, or the share that were
- * unanimous (those two in their band's colour). The rows show a whole window; this shows when. Darker = higher, on one scale
- * for every cell so they compare (case counts: "All issue areas" on its own scale, being several times any area). Cells with fewer than
- * `HEAT_MIN_CASES` cases are outlined, not shaded. A click picks the area for the whole page (the dropdown's value);
+ * toggle picks the measure for both charts, in the same numbers as the rows: cases decided (accent), cases that split 5–4, or
+ * cases that were unanimous (those two in their band's colour). The rows show a whole window; this shows when. Darker = more
+ * cases, on one scale for every area (the busiest decade of any one) with "All issue areas" on its own, being several times any
+ * area. A click picks the area for the whole page (the dropdown's value);
  * decades outside the years window fade; a picked area dims the other rows (a comparison chart highlights, rule 4).
  */
 export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; measure: AreaSortKey }) {
@@ -26,14 +26,13 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
   const { band, noun } = MEASURES[measure];
   const counts = band === null;
   const decades = useMemo(() => decadesOf(data), [data]);
-  const top = useMemo(() => (band === null ? 0 : heatMax(data, band)), [data, band]);
   const grid = useMemo(() => rows.map((r) => ({ row: r, cells: decadeCells(data, r.index) })), [data, rows]);
   const color = band === null ? "var(--accent)" : BAND_COLORS[band];
 
   return (
     <div>
       <p className="m-0 mb-2 text-[0.78rem] text-ink-muted">By decade, every year of data</p>
-      <div role="grid" aria-label={`${counts ? "Cases decided" : `Share of cases that ${noun}`}, by issue area and decade`} className="grid gap-px [--heat-label:6rem] min-[520px]:[--heat-label:minmax(5.5rem,8.5rem)]" style={{ gridTemplateColumns: `var(--heat-label) repeat(${decades.length}, minmax(0, 1fr))` }}>
+      <div role="grid" aria-label={`${counts ? "Cases decided" : `Cases that ${noun}`}, by issue area and decade`} className="grid gap-px [--heat-label:6rem] min-[520px]:[--heat-label:minmax(5.5rem,8.5rem)]" style={{ gridTemplateColumns: `var(--heat-label) repeat(${decades.length}, minmax(0, 1fr))` }}>
         <div role="row" className="contents">
           <span />
           {decades.map((dec) => (
@@ -58,18 +57,16 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
                 {row.label}
               </button>
               {cells.map((c) => {
-                // Counts are exact, so no cell is too thin to shade; shares under HEAT_MIN_CASES cases are outlined instead.
-                const v = band === null ? (c.total > 0 ? c.total : null) : heatValue(c, band);
-                const thin = band !== null && v === null;
+                // Counts, the same numbers as the rows on the right; an area-decade with no cases is an empty outlined cell.
+                const v = c.total > 0 ? heatCount(c, band) : null;
                 const inWin = decadeInWindow(c.decade, range);
-                const scale = band === null ? heatCasesMax(data, row.index) : top;
-                const strength = v === null ? 0 : v / scale;
+                const strength = v === null ? 0 : v / heatCountMax(data, row.index, band);
                 const title =
                   c.total === 0
                     ? `${row.label}, ${c.decade}s: no cases`
                     : band === null
                       ? `${row.label}, ${c.decade}s: ${fmtInt(c.total)} cases decided`
-                      : `${row.label}, ${c.decade}s: ${fmtPct(c.bucket[band] / c.total)} ${noun} (${fmtInt(c.bucket[band])} of ${fmtInt(c.total)} cases)${thin ? `. Fewer than ${HEAT_MIN_CASES} cases, so too few to shade.` : ""}`;
+                      : `${row.label}, ${c.decade}s: ${fmtInt(c.bucket[band])} of ${fmtInt(c.total)} cases ${noun}`;
                 return (
                   <button
                     key={c.decade}
@@ -78,10 +75,10 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
                     onClick={select}
                     title={title}
                     aria-label={title}
-                    className={`h-[2.1rem] min-w-0 rounded-[3px] p-0 text-center font-mono text-[0.58rem] tabular-nums min-[520px]:h-[1.9rem] min-[520px]:text-[0.62rem] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${inWin ? "" : "opacity-40"} ${thin || v === null ? "border border-dashed border-line-strong bg-transparent text-ink-faint" : "border-0"}`}
+                    className={`h-[2.1rem] min-w-0 rounded-[3px] p-0 text-center font-mono text-[0.58rem] tabular-nums min-[520px]:h-[1.9rem] min-[520px]:text-[0.62rem] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${inWin ? "" : "opacity-40"} ${v === null ? "border border-dashed border-line-strong bg-transparent text-ink-faint" : "border-0"}`}
                     style={v === null ? undefined : { background: `color-mix(in oklab, ${color} ${Math.round(strength * 100)}%, var(--surface))`, color: strength > 0.5 ? (band === null ? "var(--accent-ink)" : "#fff") : "var(--ink)" }}
                   >
-                    {c.total === 0 ? "" : v === null ? "·" : counts ? <CountText n={c.total} /> : Math.round(v * 100)}
+                    {v === null ? "" : <CountText n={v} />}
                   </button>
                 );
               })}
@@ -93,10 +90,10 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
         <span className="inline-flex items-center gap-1.5">
           0
           <i aria-hidden className="inline-block h-2.5 w-24 rounded-[2px]" style={{ background: `linear-gradient(to right, var(--surface), ${color})`, border: "1px solid var(--line)" }} />
-          {counts ? "busiest decade" : `${Math.round(top * 100)}%`}
+          busiest decade
         </span>
         <span>
-          {counts ? "Cases decided; “All issue areas” is shaded on its own scale." : `Share of cases that ${noun}. A dot (·) marks fewer than ${HEAT_MIN_CASES} cases.`}
+          {counts ? "Cases decided" : `Cases that ${noun}`}, per decade; “All issue areas” is shaded on its own scale.
         </span>
       </div>
     </div>

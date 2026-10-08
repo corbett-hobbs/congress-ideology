@@ -7,10 +7,8 @@ import {
   decadeInWindow,
   decadeOf,
   decadesOf,
-  HEAT_MIN_CASES,
-  heatCasesMax,
-  heatMax,
-  heatValue,
+  heatCount,
+  heatCountMax,
   areaRows,
   areaSeries,
   wikiArticleUrl,
@@ -242,23 +240,13 @@ describe("decade heatmap", () => {
     // 1946-49 and 2020-25 are partial decades.
     expect(decadeCells(d, ALL_AREAS)[0].total).toBe(sumBucket(windowSum(d, ALL_AREAS, [1946, 1949])));
   });
-  it("hides shares that rest on too few cases, and scales to the largest trusted one", () => {
-    const thin = decadeCells(d, d.areas.findIndex((a) => a.id === "private-action")).find((c) => c.total > 0 && c.total < HEAT_MIN_CASES)!;
-    expect(heatValue(thin, 4)).toBeNull();
-    const all = decadeCells(d, ALL_AREAS)[2];
-    expect(heatValue(all, 0)).toBeCloseTo(all.bucket[0] / all.total, 10);
-    for (const band of [0, 4]) {
-      const m = heatMax(d, band);
-      expect(m).toBeGreaterThanOrEqual(0.1);
-      expect(Math.round(m * 10)).toBeCloseTo(m * 10, 8);
-      for (const area of [ALL_AREAS, ...d.areas.map((_, i) => i)]) for (const c of decadeCells(d, area)) expect(heatValue(c, band) ?? 0).toBeLessThanOrEqual(m + 1e-9);
+  it("counts scale per row group: areas together, All on its own", () => {
+    for (const band of [null, 0, 4]) {
+      const busiestArea = Math.max(...d.areas.flatMap((_, i) => decadeCells(d, i).map((c) => heatCount(c, band))));
+      expect(heatCountMax(d, 3, band)).toBe(Math.max(1, busiestArea));
+      expect(heatCountMax(d, ALL_AREAS, band)).toBe(Math.max(1, ...decadeCells(d, ALL_AREAS).map((c) => heatCount(c, band))));
+      expect(heatCountMax(d, ALL_AREAS, band)).toBeGreaterThan(heatCountMax(d, 3, band));
     }
-  });
-  it("case counts scale per row group: areas together, All on its own", () => {
-    const busiestArea = Math.max(...d.areas.flatMap((_, i) => decadeCells(d, i).map((c) => c.total)));
-    expect(heatCasesMax(d, 3)).toBe(busiestArea);
-    expect(heatCasesMax(d, ALL_AREAS)).toBe(Math.max(...decadeCells(d, ALL_AREAS).map((c) => c.total)));
-    expect(heatCasesMax(d, ALL_AREAS)).toBeGreaterThan(heatCasesMax(d, 3));
   });
   it("a decade is in the window when any of its terms is", () => {
     expect(decadeInWindow(1960, [1969, 1970])).toBe(true);
