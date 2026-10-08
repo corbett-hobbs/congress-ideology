@@ -313,16 +313,12 @@ describe("grouping by decade", () => {
     expect(bins.reduce((t, b) => t + b.total, 0)).toBe(cells.reduce((t, b) => t + sumBucket(b), 0));
     for (const b of bins) expect(sumBucket(b.bucket)).toBe(b.total);
   });
-  it("auto: by term for the docket, by decade for a thin selection, by term when there is nothing to group", () => {
-    expect(splitGrain(d, ALL_AREAS, FULL, "auto")).toBe("term");
+  it("by term for the docket, by decade for a thin selection, by term when there is nothing to group", () => {
+    expect(splitGrain(d, ALL_AREAS, FULL)).toBe("term");
     const lm = viewOf(d, true);
-    expect(splitGrain(lm, ALL_AREAS, FULL, "auto")).toBe("decade");
-    expect(splitGrain(lm, ALL_AREAS, [1972, 1977], "auto")).toBe("term"); // one decade: nothing to group
+    expect(splitGrain(lm, ALL_AREAS, FULL)).toBe("decade");
+    expect(splitGrain(lm, ALL_AREAS, [1972, 1977])).toBe("term"); // one decade: nothing to group
     const thin = d.areas.findIndex((a) => a.id === "private-action");
-    expect(splitGrain(d, thin, FULL, "auto")).toBe("decade");
-  });
-  it("a forced choice wins either way", () => {
-    expect(splitGrain(d, ALL_AREAS, FULL, "decade")).toBe("decade");
-    expect(splitGrain(viewOf(d, true), ALL_AREAS, FULL, "term")).toBe("term");
+    expect(splitGrain(d, thin, FULL)).toBe("decade");
   });
 });

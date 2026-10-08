@@ -146,11 +146,7 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check(/Grouped by decade/.test(await text(c2)), `${tag}: landmark view says it is grouped by decade`);
   check((await c2.locator("svg.chart-svg path[fill]").count()) === 0 && (await c2.locator("svg.chart-svg rect[role=button]").count()) === 9, `${tag}: landmark view is nine decade bars, not the area`);
   check(/n=\d+/.test((await svgTexts(c2.locator("svg.chart-svg text"))).join(" ")), `${tag}: each decade bar shows its case count`);
-  await c2.locator("[aria-label='Grouping'] button", { hasText: "By term" }).click();
-  await settle(page);
-  check((await c2.locator("svg.chart-svg path[fill]").count()) === 5 && /Few cases per term/.test(await text(c2)), `${tag}: "By term" forces the area back, with the few-cases note`);
-  await c2.locator("[aria-label='Grouping'] button", { hasText: "Auto" }).click();
-  await settle(page);
+  check((await c2.locator("[aria-label='Grouping']").count()) === 0, `${tag}: no grouping toggle (the grain is automatic)`);
   const tot = await c1.locator("svg.chart-svg").first().evaluate((e) => e.getAttribute("aria-label"));
   check(!!tot, `${tag}: card 1 still draws`);
   await c4.locator("button[aria-label='Clear the landmark filter']").click();

@@ -318,7 +318,6 @@ export const decadeInWindow = (decade: number, range: YearRange): boolean => ran
 // --------------------------------------------------------------------------- grouping by decade
 
 export type SplitGrain = "term" | "decade";
-export type GrainChoice = "auto" | SplitGrain;
 
 export interface DecadeBin {
   decade: number;
@@ -347,12 +346,12 @@ export function binByDecade(terms: readonly number[], cells: readonly Bucket[]):
 }
 
 /**
- * Which grain "How divided is the Court?" draws. Auto: per term while a term holds enough cases to read a share from (the
- * whole docket, a big issue area), per decade once the selection is thin (landmarks, a small issue area), unless the window
- * has fewer than two decades, where there is nothing to group. A forced choice wins.
+ * Which grain "How divided is the Court?" draws: per term while a term holds enough cases to read a share from (the whole
+ * docket, a big issue area), per decade once the selection is thin (landmarks, a small issue area), unless the window has
+ * fewer than two decades, where there is nothing to group. There is no manual override: per term on a thin selection is
+ * the spiky view the grouping exists to avoid.
  */
-export function splitGrain(d: DecisionsPayload, area: number, range: YearRange, choice: GrainChoice): SplitGrain {
-  if (choice !== "auto") return choice;
+export function splitGrain(d: DecisionsPayload, area: number, range: YearRange): SplitGrain {
   const { terms } = windowCells(d, area, range);
   const decades = new Set(terms.map(decadeOf)).size;
   return decades >= 2 && isSmallSample(d, area, range) ? "decade" : "term";
