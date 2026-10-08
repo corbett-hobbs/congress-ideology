@@ -35,6 +35,8 @@ const SYSTEM = `You write one line of a table about U.S. Supreme Court cases. Yo
 
 Set ruling_stated to true ONLY if the text itself says how the Court decided the case (held, ruled, struck down, upheld, reversed, ...). A text that only names the issue, the question, the parties or the case's importance does NOT state a ruling: set ruling_stated to false and leave the other fields empty. Never use what you remember about the case; many leads give no ruling and the right answer is false.
 
+The ruling must be the Supreme Court's own decision of the case. Do NOT use a lower court's ruling, or an earlier emergency or interim order made before the case was argued and decided, as the ruling: if the only ruling the text gives is one of those, set ruling_stated to false. If the text gives both an earlier order and the Court's decision of this same case (even one on an application, made after argument), use the decision of this case. The ruling must be in the case the article is about, the one in its title and citation; a later or related case that the text mentions (a remand decided years on, an overruling, a sequel) is not this case's ruling. The ruling can come late in the text; read all of it.
+
 When true:
 - evidence: the exact words from the text, copied verbatim, that state the ruling.
 - sentence: ONE sentence, 300 characters or fewer, in plain past tense, saying what the case was about and how the Court ruled, using only facts in the text. Start with the context or "The Court". Do not start with or repeat the case name or its citation. No vote counts, dates or names that the text does not give.`;
