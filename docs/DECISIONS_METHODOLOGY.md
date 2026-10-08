@@ -63,6 +63,18 @@ The page's "Landmark cases" checkbox uses Wikipedia's [List of landmark court de
 - **Stored:** only which cases it names, the article title (a link back) and the headings, never the list's prose. A case under several headings keeps all of them; the page shows up to two.
 - **A judgement call, not a ruling:** "landmark" is Wikipedia editors' classification, not the Court's or SCDB's. It is recent-heavy (the list keeps adding new decisions) and its 339 cases are about four a term, so landmark-only shares are rough; the page says so.
 
+## Case-name links to Wikipedia
+
+Every case name in the list links to its Wikipedia article when Wikipedia's own indexes tie the case to one. `pnpm fetch:wikipedia-cases` reads "List of United States Supreme Court cases, volume N" (volumes 329 onward) and "<year> term opinions of the Supreme Court of the United States" (2010 onward, for decisions too new for a volume) through the MediaWiki parse API (identified User-Agent, 150 ms apart, ~300 requests; refreshed weekly by `wikipedia-cases-freshness.yml`, which opens a gated pull request only when a row, link or redirect changed) plus the redirect map for every linked title, into `pipeline/raw/wikipedia-cases/articles.json`. Each list row carries the article it links (a red link means no article), the U.S. Reports volume and page or the docket, and the year.
+
+- **Join to SCDB**, most certain first; a case takes the first rung that yields exactly one article: (1) U.S. Reports volume and page, (2) volume and docket number, (3) normalised parties plus decision year, from an entry with no usable cite (a decision too new for a page number). A name alone never joins, and a cite match is not vetoed by abbreviations ("N.Y.C. & St. L.R. Co." is the same case as "New York, Chicago & St. Louis Railroad Co."). Companion cases that share a cite are told apart by name; a redirect and its target count as one article; a title with the decision year in brackets breaks a tie between "X v. Y" and "X v. Y (2021)".
+- **Rejected links:** a row that links the volume list itself, or a topic page unrelated to the case's name ("Fifth Amendment to the United States Constitution"), is not the case's article.
+- **No article:** a case the lists show as a red link, or a printed U.S. Reports cite that no list carries (an order), has `title: null` and is not linked. Only cases on no list (the newest decisions, cited by S. Ct.) fall back to a Wikipedia search.
+- **Landmarks** keep the landmark list's own link, which wins.
+- **Gate:** one row per case, no unknown case ids, at least 30% of cases matched. The report (`decisions_report.json` > `case_articles`) lists the counts by rung, every name-and-year match and every conflict.
+- **Result:** about 3,400 of 8,251 cases link to an article, 4,850 are red links on the lists (Wikipedia has no article), about 40 fall back to search.
+- **Stored:** article titles only (links back), never Wikipedia's prose. Wikipedia's lists are CC BY-SA 4.0.
+
 ## Not in scope
 
 Liberal/conservative direction, per-justice votes, landmark-case curation, case summaries. The page is institutional counts plus a plain list of the cases behind them (name, cite, date, issue area, vote).

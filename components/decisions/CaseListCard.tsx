@@ -96,7 +96,7 @@ export function CaseListCard() {
       </div>
       <MethodologyNote>
         <p>
-          The same cases as the charts: orally argued, {fmtInt(data.unclearVotes)} with an unclear vote left out. The vote is the justices in the majority and minority; the colour is how many dissented (the bands of the chart above), so a 5–3 decision is coloured with the 6–3 band. Landmark badges come from Wikipedia’s “List of landmark court decisions in the United States” ({fmtInt(data.landmarkSource.count)} cases on this page, from the {data.landmarkSource.revisionDate} revision, CC BY-SA 4.0); a badge links to the article and names the list’s heading. Citations are U.S. Reports where there is one, otherwise the Supreme Court Reporter or Lawyers’ Edition. A case name links to its Wikipedia article for landmarks and to a Wikipedia search for its name for every other case (which jumps to the article when Wikipedia has a page with that title).
+          The same cases as the charts: orally argued, {fmtInt(data.unclearVotes)} with an unclear vote left out. The vote is the justices in the majority and minority; the colour is how many dissented (the bands of the chart above), so a 5–3 decision is coloured with the 6–3 band. Landmark badges come from Wikipedia’s “List of landmark court decisions in the United States” ({fmtInt(data.landmarkSource.count)} cases on this page, from the {data.landmarkSource.revisionDate} revision, CC BY-SA 4.0); a badge links to the article and names the list’s heading. Citations are U.S. Reports where there is one, otherwise the Supreme Court Reporter or Lawyers’ Edition. The sentence under a case is how Wikipedia’s article on it opens: the first of its first three sentences that states the ruling, with the case name and citation cut off the front, in Wikipedia’s words (CC BY-SA 4.0, {fmtInt(data.summarySource.count)} cases, read {data.summarySource.fetched}). Where an article opens without a ruling, or does not exist, the row has no sentence; it is Wikipedia’s summary, not ours, so check the article before relying on it. A case name links to its Wikipedia article when Wikipedia’s volume and term lists of Supreme Court cases tie it to one (by U.S. Reports citation, docket number, or case name and year; {fmtInt(data.articleSource.count)} cases). A case those lists show with no article, which is most of them, is not linked. The few the lists do not cover (the newest decisions) link to a Wikipedia search for the name.
         </p>
         <p>Case names are the Supreme Court Database’s, re-capitalised for reading. Issue areas are the database’s own.</p>
       </MethodologyNote>
@@ -114,16 +114,19 @@ const BADGE =
  * never both exposed.
  */
 function CaseRow({ c, area }: { c: DecisionCase; area: string }) {
-  const name = (
+  const href = wikiCaseUrl(c);
+  const name = href ? (
     <a
-      href={wikiCaseUrl(c)}
+      href={href}
       target="_blank"
       rel="noreferrer"
-      title={c[8] ? "Wikipedia article" : "Search Wikipedia for this case"}
+      title={c[8] || c[10] ? "Wikipedia article" : "Search Wikipedia for this case"}
       className="text-ink underline decoration-line-strong underline-offset-2 hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
     >
       {c[2]}
     </a>
+  ) : (
+    c[2]
   );
   const badge = c[8] ? (
     <a
@@ -163,6 +166,28 @@ function CaseRow({ c, area }: { c: DecisionCase; area: string }) {
         <span className="font-medium">{`${c[6]}\u2013${c[7]}`}</span>
         <span className="sr-only">{BAND_SHORT[c[5]]} band</span>
       </span>
+      {c[11] && <Summary text={c[11]} />}
     </li>
+  );
+}
+
+/**
+ * The one-sentence summary under a case: how the Court ruled, in the opening words of the case's Wikipedia article. Full width
+ * under the row (from `sm` it lines up with the name column). On phones it holds to three lines and a tap opens the rest; a
+ * wide row shows the whole sentence, which is at most 300 characters.
+ */
+function Summary({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <p className="col-span-2 m-0 text-[0.76rem] leading-[1.45] text-ink-muted sm:col-span-3 sm:col-start-2 sm:row-start-2">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className={`block w-full cursor-pointer border-0 bg-transparent p-0 text-left font-[inherit] text-inherit sm:cursor-text ${open ? "" : "max-sm:line-clamp-3"} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus`}
+      >
+        {text}
+      </button>
+    </p>
   );
 }
