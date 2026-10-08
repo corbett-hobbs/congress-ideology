@@ -131,6 +131,10 @@ describe("checkAiSummary", () => {
     const ev = "is a United States Supreme Court decision that individuals may not be held liable in their personal capacities under a Spending Clause statute";
     expect(checkAiSummary("The Court decided that individuals may not be held liable in their personal capacities under a Spending Clause statute unless they consented to answer lawsuits.", ev, LANDOR)).toBe(true);
   });
+  it("accepts 'agreed in an 8-0 decision, determining that ...' as evidence", () => {
+    const l = "Chevron USA Inc. v. Plaquemines Parish, 608 U.S. ____ (2026), was a case about removal. The Supreme Court agreed in an 8–0 decision, determining that Chevron had shown its production was connected to wartime fuel contracts, and thus the case belonged in federal courts.";
+    expect(checkAiSummary("In a removal dispute, the Court agreed in an 8–0 decision that Chevron had shown its production was connected to wartime fuel contracts, so the case belonged in federal courts.", "The Supreme Court agreed in an 8–0 decision, determining that Chevron had shown its production was connected to wartime fuel contracts", l)).toBe(true);
+  });
   it("rejects a ruling the lead does not state (written from memory)", () => {
     expect(checkAiSummary("The Court held that the later prosecution was permissible under the compact.", "the Court held that the later prosecution was permissible", lead)).toBe(false);
   });
