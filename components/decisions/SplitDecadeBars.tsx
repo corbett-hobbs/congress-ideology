@@ -45,6 +45,7 @@ export function SplitDecadeBars({ mode }: { mode: SplitMode }) {
       selectedKey={null}
       onSelect={() => {}}
       unit="cases"
+      marginTop={20}
       ariaLabel="Stacked bar chart of Supreme Court cases by number of dissenting justices, one bar per decade"
       renderTooltip={(c) => (
         <TooltipCard title={`${c.label}`} sub={c.first === c.last ? `${c.first} term` : `${c.first}–${c.last} terms (${c.last - c.first + 1})`}>
