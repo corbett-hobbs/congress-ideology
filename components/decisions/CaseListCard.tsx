@@ -81,7 +81,7 @@ export function CaseListCard() {
           className="w-full rounded-md border border-line-strong bg-surface-raised px-2.5 py-1 text-[0.82rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-60"
         />
       }
-      lede={`Argued cases decided in ${pin !== null ? `the ${pin} term` : years}, newest first. The list follows the filters above and the charts: pick an issue area, a vote or a term to narrow it. A Liberal or Conservative tag is the Supreme Court Database’s coding of who prevailed; hover or tap it for what that means in the case’s issue area.`}>
+      lede={`Argued cases decided in ${pin !== null ? `the ${pin} term` : years}, newest first. The list follows the filters above and the charts: pick an issue area, a vote or a term to narrow it. A Liberal or Conservative tag is the Supreme Court Database’s coding of who prevailed in the case, not a rating of the justices or the reasoning; hover or tap it for what it means in that case’s issue area.`}>
       <div className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-ink-muted" aria-live="polite">
         <span className="tabular-nums text-ink">{cases ? `${fmtInt(matched.length)} case${matched.length === 1 ? "" : "s"}` : failed ? "Cases unavailable" : "Loading cases…"}</span>
         <div role="group" aria-label="Outcome" className="flex flex-wrap items-center gap-1.5">
