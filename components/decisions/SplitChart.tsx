@@ -15,7 +15,7 @@ import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 import { Swatch, TooltipCard, chiefLine } from "./shared";
 
 const AXIS_H = 34;
-const TOP = 28;
+const TOP = 22;
 const GUTTER_W = 92;
 const WIDE_W = 520;
 const CAPTIONS: Record<SplitMode, readonly string[]> = {
@@ -118,7 +118,7 @@ export function SplitChart({ mode, onIso }: { mode: SplitMode; onIso: (k: number
         {() => (
           <>
             <Axis scale={y} orientation="left" ticks={ticks} offset={0} gridExtent={pw} format={(v) => (eff === "share" ? (v === 0 ? "0" : `${v}%`) : String(v))} zeroAt={0} />
-            <text className="axis-caption" x={0} y={-12} textAnchor="start">
+            <text className="axis-caption" x={0} y={-8} textAnchor="start">
               {caption}
             </text>
 

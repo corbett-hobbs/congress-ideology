@@ -60,6 +60,7 @@ export function AreasCard() {
 
   return (
     <ChartCard
+      tight
       title="Which kinds of cases split the Court?"
       lede="Left: how many cases, how many split 5–4 or how many were unanimous in each decade, by issue area. Right: how many justices dissented, in the years shown. The toggle picks the measure for both and orders the rows; click it again to reverse. Click an issue area in either to filter the charts and the case list."
       action={
