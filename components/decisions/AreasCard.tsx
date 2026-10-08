@@ -6,7 +6,7 @@ import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { ReversibleSortToggle } from "@/components/charts/SortToggle";
 import { StackedRows, type StackedRowData } from "@/components/charts/StackedRows";
 import { MethodologyNote } from "@/components/MethodologyNote";
-import { inAreaFilter, areaRows, bandShare, fmtInt, fmtPct, nextAreaSort, windowSum, sumBucket } from "@/lib/decisions-derive";
+import { inAreaFilter, areaRows, bandShare, fmtInt, fmtPct, nextAreaSort } from "@/lib/decisions-derive";
 import { ALL_AREAS, BAND_COLORS, BAND_LONG, BAND_SHORT, type AreaSort, type AreaSortKey } from "@/lib/decisions-types";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 import { DecadeHeatmap } from "./DecadeHeatmap";
@@ -49,12 +49,6 @@ export function AreasCard() {
     const row = rows.find((r) => r.id === id);
     setArea(!row || row.index < 0 || row.index === area ? -1 : row.index);
   };
-  // The three biggest areas over every term ("Criminal procedure", "Economic activity" and "Judicial power" hold more than half the docket): computed, not hard-coded.
-  const topThree = useMemo(() => {
-    const full: [number, number] = [data.terms[0], data.terms[data.terms.length - 1]];
-    const ranked = data.areas.map((a, i) => ({ label: a.label, n: sumBucket(windowSum(data, i, full)) })).sort((a, b) => b.n - a.n).slice(0, 3);
-    return { labels: `“${ranked[0].label}”, “${ranked[1].label}” and “${ranked[2].label}”`, share: ranked.reduce((s, t) => s + t.n, 0) / data.caseCount };
-  }, [data]);
   const lo = range[0];
   const hi = range[1];
 
@@ -93,9 +87,8 @@ export function AreasCard() {
       </div>
       <MethodologyNote>
         <p>
-          Issue areas are the Supreme Court Database’s own 14 categories, which its authors treat as a rough guide. {topThree.labels} together hold about {fmtPct(topThree.share)} of all cases. Cases the database leaves without an issue area ({fmtInt(data.unclassified)}) count in “All issue areas” but appear in no row. Areas with no cases in the years shown are left out of the rows on the right; the heatmap always shows every decade and fades those outside the years shown.
+          Issue areas are the Supreme Court Database’s own 14 categories, a rough guide; the {fmtInt(data.unclassified)} cases with none count only in “All issue areas”. Shares for small areas are rough, since a few dozen cases can swing several points. The heatmap counts cases (all, 5–4 or unanimous, as the toggle says) on one scale, except “All issue areas”, which has its own; the first and last decades are partial (1946–49 and 2020–25).
         </p>
-        <p>Shares for small areas are rough: an area with a few dozen cases can swing several points on one decision. The heatmap shades every decade on one scale for all areas, so cells compare; the first and last decades are partial (1946–49 and 2020–25). Every cell is a number of cases (all, 5–4 or unanimous, as the toggle says), the same counts as the rows on the right, and “All issue areas”, with several times any one area’s cases, is shaded on its own scale.</p>
       </MethodologyNote>
       <TableView
         label="Table of issue areas by number of dissenting justices"

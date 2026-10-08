@@ -95,17 +95,9 @@ export function LngCard({ payload, view }: { payload: EnergyPayload; view: reado
         />
       }
       notes={
-        <>
-          <p>
-            Energy Information Administration, natural gas exports of liquefied natural gas, not seasonally adjusted. The series starts in January 1997, but large-scale exports from the lower
-            48 begin in February 2016 (26 million cubic feet in January 2016, 3.3 billion in February); what the much smaller earlier volumes were is not verified, so read the long flat stretch as small, not necessarily zero.
-            The hatched stretch is the last 12 months, which EIA revises.
-          </p>
-          <p>
-            Export approvals come years before cargoes, so these actions are context: they mark what the Department of Energy decided and when, and exports kept rising through the 2024 pause. A date here is
-            when an action was taken; it does not explain any month’s volume.
-          </p>
-        </>
+        <p>
+          Energy Information Administration, natural gas exports of liquefied natural gas, not seasonally adjusted. The series starts in 1997 but large-scale exports begin in February 2016; the earlier volumes are small but unverified, so read the flat stretch as small, not necessarily zero. The hatched stretch is the last 12 months, which EIA revises. Export approvals come years before cargoes, so the flags mark what the Department of Energy decided and when, not any month’s volume.
+        </p>
       }
       tables={
         <>

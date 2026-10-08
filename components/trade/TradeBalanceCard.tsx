@@ -164,10 +164,11 @@ export function TradeBalanceCard({
         <span className="ml-auto">{adjLabel}{countryName ? `. Axis rescales to ${countryName}.` : "."}</span>
       </div>
 
-      <MethodologyNote><p>
-        Census Bureau goods trade on the Census basis, monthly. The national line is seasonally adjusted; the country view is not. Services are not included, so the figure differs from the
-        combined goods-and-services deficit usually quoted in the news. Click or drag on the chart to pin a month.
-        </p></MethodologyNote>
+      <MethodologyNote>
+        <p>
+          Census Bureau goods trade on the Census basis, monthly. The national line is seasonally adjusted; the country view is not. Services are not included, so the figure differs from the combined goods-and-services deficit usually quoted in the news.
+        </p>
+      </MethodologyNote>
       {series && <DataTable series={series} era={era} caption={`${title}, monthly, ${adjLabel.toLowerCase()}`} />}
     </section>
   );

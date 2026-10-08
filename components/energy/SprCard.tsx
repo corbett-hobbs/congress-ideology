@@ -105,19 +105,9 @@ export function SprCard({ payload, view }: { payload: EnergyPayload; view: reado
         />
       }
       notes={
-        <>
-          <p>
-            Stock reading at the end of each week from the Energy Information Administration, which takes it from the Department of Energy’s inventory;
-            it is a level, not a flow, and there is no preliminary stretch. The level is shared between presidents and Congress: presidents authorize
-            emergency drawdowns and exchanges, while Congress mandates sales, cancels them and sets appropriations. A sale sells the oil;
-            an exchange lends it, to be returned later with a premium; a refill buys oil or takes back what was lent. The 2026 drawdown is an exchange, with a stated plan to replace the barrels, so
-            the lower level is not a sale. A date marks when an action was authorized, which is not always when the barrels moved.
-          </p>
-          <p>
-            Actions come from a hand-curated list checked against Department of Energy and Federal Register pages. The 1991 Desert Storm sale falls
-            before the first weekly reading shown here, and the 2005 and 2011 sales are not yet marked because their months are unconfirmed.
-          </p>
-        </>
+        <p>
+          Weekly stock level from the Energy Information Administration, taken from the Department of Energy’s inventory: a level, not a flow. Presidents authorize emergency drawdowns and exchanges; Congress mandates sales, cancels them and sets appropriations. A sale sells the oil, an exchange lends it to be returned with a premium, and a refill buys oil or takes back what was lent. The 2026 drawdown is an exchange, so the lower level is not a sale. A date marks when an action was authorized, not when barrels moved. Actions are a hand-curated list checked against Department of Energy and Federal Register pages; the 1991 sale predates the first weekly reading, and the 2005 and 2011 sales are unmarked because their months are unconfirmed.
+        </p>
       }
       tables={
         <>

@@ -223,19 +223,9 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
         </>
       }
       notes={
-        <>
-          <p>
-            Energy Information Administration, Monthly Energy Review: net generation, all sectors, <em>utility-scale only</em>. That table leaves out small-scale solar
-            (rooftop panels and similar), which EIA estimates separately from 2014; in 2025 it was about a quarter of all solar generation, so solar and the total are understated in the stack
-            from 2014. The two are not spliced into one series because they come from different EIA tables and the estimate has no history before 2014. “Other” is the total minus the six named fuels, so it
-            holds petroleum, biomass, geothermal, waste, pumped storage and other gases, and the stack always adds back to the total. Through 1988 the table covered electric utilities only; the chart begins in 1991.
-          </p>
-          <p>
-            Not seasonally adjusted, so shares swing with the seasons (gas and hydro most). The hatched stretch is the current and previous calendar year, which EIA treats as preliminary
-            until its annual figures. This is context, not a score: how much of each fuel runs is set by prices, demand, weather, plant lifetimes and years-long build cycles. The 2022 Inflation Reduction Act
-            and the 2025 reconciliation law (which ends credits for wind and solar) mark when Congress acted; they enable or constrain building years later and do not explain any month’s mix.
-          </p>
-        </>
+        <p>
+          Energy Information Administration, Monthly Energy Review: net generation, all sectors, <em>utility-scale only</em>. Small-scale solar such as rooftop panels is estimated separately from 2014 (about a quarter of all solar in 2025), so solar and the total are understated from then; the two are not spliced. “Other” is the total minus the six named fuels (petroleum, biomass, geothermal, waste, pumped storage and other gases). Not seasonally adjusted, so shares swing with the seasons. The hatched stretch is the current and previous calendar year, preliminary until EIA’s annual figures. Prices, demand, weather and build cycles set the mix; the 2022 Inflation Reduction Act and 2025 reconciliation law flags mark when Congress acted, not any month’s mix.
+        </p>
       }
       tables={
         <>

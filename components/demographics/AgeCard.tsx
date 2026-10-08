@@ -38,7 +38,7 @@ export function AgeCard({ rows, presidents, pin, onPin }: { rows: readonly DemoC
       <AgeChart rows={rows} presidents={presidents} measure={measure} pin={pin} onPin={onPin} />
       <MethodologyNote>
         <p>
-          Each point is one Congress and counts everyone who held a seat at any time in it, so mid-term replacements are included. Age is exact (to a tenth of a year) on the day the Congress convened, from the member’s birthdate; the few members with no recorded birthdate are left out. Independents who caucus with a party are grouped with it. The strip under the chart shows the president in office on the Congress’s first day. Labeled dots show each caucus’s value at one point in the window.
+          Each point is one Congress and counts everyone who held a seat at any time in it, so mid-term replacements are included. Age is exact on the day the Congress convened; members with no recorded birthdate are left out, and independents who caucus with a party are grouped with it. The strip under the chart shows the president in office on the Congress’s first day.
         </p>
       </MethodologyNote>
       <TableView

@@ -145,24 +145,15 @@ export function RemovalsCountryCard({
       </div>
 
       <MethodologyNote>
-      <p>
-        A removal is a confirmed movement of a non-citizen out of the U.S. that the government enforces. These are ICE’s headline counts, which since FY2007
-        include returns (voluntary returns, voluntary departures and withdrawals under docket control). ICE only: removals carried out by Border Patrol, and
-        Title 42 expulsions, are not counted. Countries are countries of citizenship, not where a person was sent: a person removed to a third country is
-        counted under their own citizenship.
-      </p>
-      <p>
-        ICE prints country tables for {coverage} only. FY2013 lists just the top ten and FY2025 has no table, so neither can be chosen. Countries with no
-        removals in a year are left out; “Unknown” and “Stateless” are ICE categories, not countries. FY2020 to FY2023 leave out Title 42 expulsions.
-      </p>
-      <p>
-        {off.count > 0 && <>Not drawn on the map: {off.count} rows with no outline (ICE categories such as Unknown and Stateless, and small or former states), {n(off.removals)} removals in all; they are in the list and the table. </>}
-        FY{fy}: {n(year.total)} removals across {ranked.length} countries and categories, matching the timeline above. Source:{" "}
-        <a href={year.sourceUrl} target="_blank" rel="noreferrer" className="text-accent underline-offset-2 hover:underline">
-          {year.source}
-        </a>
-        , data as of {dateLabel(year.asOf)}.
-      </p>
+        <p>
+          ICE’s headline removal counts, which since FY2007 include returns, by country of citizenship rather than where a person was sent. ICE only: Border Patrol removals and Title 42 expulsions are not counted. ICE prints country tables for {coverage} only (FY2013 lists just the top ten; FY2025 has none), and “Unknown” and “Stateless” are ICE categories, not countries.
+          {off.count > 0 && <>{off.count} rows with no outline ({n(off.removals)} removals) are in the list and table but not on the map. </>}
+          FY{fy}: {n(year.total)} removals across {ranked.length} countries and categories. Source:{" "}
+          <a href={year.sourceUrl} target="_blank" rel="noreferrer" className="text-accent underline-offset-2 hover:underline">
+            {year.source}
+          </a>
+          , data as of {dateLabel(year.asOf)}.
+        </p>
       </MethodologyNote>
 
       <details className="mt-3 text-[0.8rem] text-ink-muted">
