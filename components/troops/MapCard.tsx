@@ -407,7 +407,7 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
 
 function BaseTip({ hit }: { hit: BaseHit }) {
   return (
-    <div>
+    <div className="tt-wide">
       <div style={{ fontWeight: 600 }}>
         {hit.title} · {hit.country}
       </div>

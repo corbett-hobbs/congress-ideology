@@ -525,6 +525,15 @@ body {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
 /* A tooltip pinned to a dot: it takes the pointer so the whole card can be clicked through to the profile. */
+/* A card whose lines should not wrap (the installations list) sizes to its longest line, up to the viewport. */
+.chart-tooltip:has(.tt-wide) {
+  max-width: calc(100vw - 16px);
+  width: max-content;
+}
+.chart-tooltip .tt-wide,
+.chart-tooltip .tt-wide > div {
+  white-space: nowrap;
+}
 .chart-tooltip.is-pinned {
   pointer-events: auto;
   cursor: pointer;
