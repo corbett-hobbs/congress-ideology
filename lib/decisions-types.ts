@@ -10,6 +10,18 @@ export const BAND_LONG = ["No dissent (9–0)", "1 dissent (8–1)", "2 dissents
 export const BAND_COLORS = ["var(--split-0)", "var(--split-1)", "var(--split-2)", "var(--split-3)", "var(--split-4)"] as const;
 export const BAND_KEYS = [0, 1, 2, 3, 4] as const;
 
+export interface DecisionsPresident {
+  /** The administration's `term_id` (inauguration date). */
+  id: string;
+  /** Full name ("Barack Obama"): the term band shortens it with `lib/term-label`. */
+  name: string;
+  last: string;
+  party: "D" | "R";
+  /** First and last Court term (inclusive) this president was in office for the majority of. */
+  start: number;
+  end: number;
+}
+
 export interface DecisionsChief {
   id: string;
   /** Full name ("Earl Warren"): the term band shortens it with `lib/term-label`. */
@@ -61,6 +73,8 @@ export interface DecisionsPayload {
   /** Indexes (into `areas`) of the six biggest issue areas by total cases: card 1 draws each as its own series. */
   topAreas: number[];
   chiefs: DecisionsChief[];
+  /** The president in office for most of each term, oldest first; the slider's term band. */
+  presidents: DecisionsPresident[];
   /** "Version 2026 Release 01". */
   versionLabel: string;
   /** Changes whenever the case list does: the list is fetched as `/data/decisions/cases?v=<this>`, so a cached older copy is never reused. */

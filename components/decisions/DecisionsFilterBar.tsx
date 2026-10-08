@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { RangeReset } from "@/components/charts/RangeReset";
 import { RangeSelector } from "@/components/charts/RangeSelector";
 import { TermBand } from "@/components/charts/TermBand";
-import { chiefBandTerms } from "@/lib/decisions-derive";
+import { presidentBandTerms } from "@/lib/decisions-derive";
 import { sameRange } from "@/lib/year-range";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 import { ALL_AREAS_LABEL, OTHER_LABEL } from "@/lib/decisions-derive";
@@ -16,14 +16,14 @@ const LABEL = "font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-fai
 
 /**
  * The pinned filter bar for /supreme-court/decisions, directly under the site navigation: the Issue area dropdown, then
- * the Years-shown slider with the Chief Justice term band under its track (tinted by the party of the president who
- * appointed each Chief; there is no President dropdown). Phones: Issue area is alone on its row, so its label sits
+ * the Years-shown slider with the presidential-term band under its track (tinted by each president's party; there is no
+ * President dropdown). Phones: Issue area is alone on its row, so its label sits
  * beside it (rule 5a); the slider row follows. The area is the same value a click on a row in card 3 sets.
  */
 export function DecisionsFilterBar() {
   const { data, range, area, landmark } = useDecisionsValues();
   const { setRange, setArea, setLandmark } = useDecisionsActions();
-  const terms = useMemo(() => chiefBandTerms(data), [data]);
+  const terms = useMemo(() => presidentBandTerms(data), [data]);
   const lo = data.terms[0];
   const hi = data.terms[data.terms.length - 1];
   const full = sameRange(range, [lo, hi]);
