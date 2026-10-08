@@ -49,7 +49,7 @@ const landmarkRows = read<{ case_id: string; title: string; topics: string[] }[]
 const landmarkIds = new Set(landmarkRows.map((r) => r.case_id));
 const d = buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id))));
 const cases: DecisionCase[] = caseRows
-  .map((r): DecisionCase => [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : d.areas.findIndex((a) => a.id === r.issue_area_id), r.band, r.maj, r.min, landmarkIds.has(r.case_id) ? "Landmark" : "", "", "", ""])
+  .map((r): DecisionCase => [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : d.areas.findIndex((a) => a.id === r.issue_area_id), r.band, r.maj, r.min, landmarkIds.has(r.case_id) ? "Landmark" : "", "", "", "", 0])
   .reverse();
 const FULL: [number, number] = [d.terms[0], d.terms[d.terms.length - 1]];
 
@@ -213,21 +213,21 @@ describe("case list", () => {
     expect(f({ term: 2015, band: 4 })).toHaveLength(d.all[2015 - 1946][4]);
   });
   it("links a case to its Wikipedia article when the lists give one, to nothing when they say there is none, else to a search", () => {
-    const joined: DecisionCase = [1969, "1969-06-02", "Pung v. Isabella County, Michigan", "", 1, 0, 9, 0, "", "", "Pung v. Isabella County", ""];
+    const joined: DecisionCase = [1969, "1969-06-02", "Pung v. Isabella County, Michigan", "", 1, 0, 9, 0, "", "", "Pung v. Isabella County", "", 0];
     expect(wikiCaseUrl(joined)).toBe("https://en.wikipedia.org/wiki/Pung_v._Isabella_County");
-    expect(wikiCaseUrl([1960, "x", "Obscure v. Order", "350 U.S. 1", 1, 0, 9, 0, "", "", null, ""])).toBeNull();
+    expect(wikiCaseUrl([1960, "x", "Obscure v. Order", "350 U.S. 1", 1, 0, 9, 0, "", "", null, "", 0])).toBeNull();
   });
   it("links a landmark to its article and any other case to a Wikipedia search, never to Justia", () => {
-    const lm: DecisionCase = [1954, "1954-05-17", "Brown v. Board of Education", "347 U.S. 483", 1, 0, 9, 0, "Brown v. Board of Education", "Race", "Brown v. Board of Education", ""];
+    const lm: DecisionCase = [1954, "1954-05-17", "Brown v. Board of Education", "347 U.S. 483", 1, 0, 9, 0, "Brown v. Board of Education", "Race", "Brown v. Board of Education", "", 0];
     expect(wikiCaseUrl(lm)).toBe("https://en.wikipedia.org/wiki/Brown_v._Board_of_Education");
     expect(wikiArticleUrl("Dobbs v. Jackson Women's Health Organization")).toBe("https://en.wikipedia.org/wiki/Dobbs_v._Jackson_Women's_Health_Organization");
-    const plain: DecisionCase = [1962, "1962-01-01", "Smith & Co. v. Jones", "369 U.S. 1", 1, 0, 9, 0, "", "", "", ""];
+    const plain: DecisionCase = [1962, "1962-01-01", "Smith & Co. v. Jones", "369 U.S. 1", 1, 0, 9, 0, "", "", "", "", 0];
     const u = new URL(wikiCaseUrl(plain)!);
     expect(u.host).toBe("en.wikipedia.org");
     expect(u.searchParams.get("search")).toBe("Smith & Co. v. Jones");
     expect(u.searchParams.get("go")).toBe("Go");
     expect(wikiCaseUrl(plain)).not.toMatch(/justia/);
-    expect(new URL(wikiCaseUrl([1962, "x", "Graham et al. v. John Deere Co. et al.", "", -1, 0, 9, 0, "", "", "", ""])!).searchParams.get("search")).toBe("Graham v. John Deere Co.");
+    expect(new URL(wikiCaseUrl([1962, "x", "Graham et al. v. John Deere Co. et al.", "", -1, 0, 9, 0, "", "", "", "", 0])!).searchParams.get("search")).toBe("Graham v. John Deere Co.");
   });
 });
 

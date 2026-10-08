@@ -88,7 +88,7 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
     landmark,
     landmarkSource: { url: meta.landmarks.url, page: meta.landmarks.page, revisionDate: meta.landmarks.revision_date, license: meta.landmarks.license, count: meta.landmarks.count },
     articleSource: { count: 0, fetched: "" },
-    summarySource: { count: 0, fetched: "" },
+    summarySource: { count: 0, claude: 0, fetched: "" },
     topAreas,
     chiefs,
     versionLabel: meta.scdb_version_label,

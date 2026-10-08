@@ -2589,16 +2589,17 @@
   "case_summaries": {
     "fetched": "2026-10-08",
     "linked_cases": 3388,
-    "cases_with_summary": 1991,
+    "cases_with_summary": 2621,
     "articles": 3311,
     "with_lead": 3258,
-    "summarized": 1961,
+    "summarized": 2573,
+    "claude": 612,
     "from_sentence": {
       "1": 1608,
       "2": 272,
       "3": 81
     },
-    "without": 1397
+    "without": 767
   },
   "gates": {
     "cases": 8251,

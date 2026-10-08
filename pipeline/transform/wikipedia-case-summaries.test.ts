@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DecisionsDataError } from "../../lib/decisions-entities";
-import { buildCaseSummaries, checkCaseSummaries, splitSentences, stripHead, summarizeLead } from "./wikipedia-case-summaries";
+import { buildCaseSummaries, checkAiSummary, checkCaseSummaries, splitSentences, stripHead, summarizeLead } from "./wikipedia-case-summaries";
 
 // Real openings of Wikipedia case articles (trimmed), one per shape the picker has to handle.
 const MOHAWK =
@@ -77,16 +77,53 @@ describe("buildCaseSummaries / checkCaseSummaries", () => {
     { case_id: "1976-001", title: "Hills v. Gautreaux" },
     { case_id: "1990-001", title: "No Lead v. Fetched" },
   ];
-  const { rows, report } = buildCaseSummaries(matched, leads);
+  const { rows, report } = buildCaseSummaries(matched, leads, new Map([["No Lead v. Fetched", "x"]]));
   it("gives every case on an article its sentence and counts articles, not cases", () => {
-    expect(rows.map((r) => r.case_id)).toEqual(["2009-001", "2009-002"]);
-    expect(report).toMatchObject({ articles: 3, with_lead: 2, summarized: 1, without: 2 });
+    expect(rows.map((r) => r.case_id)).toEqual(["2009-001", "2009-002", "1990-001"]);
+    expect(rows.map((r) => r.via)).toEqual(["wikipedia", "wikipedia", "claude"]);
+    expect(report).toMatchObject({ articles: 3, with_lead: 2, summarized: 2, claude: 1, without: 1 });
+  });
+  it("prefers the article's own sentence over a cached model sentence for the same article", () => {
+    const withBoth = buildCaseSummaries([{ case_id: "2009-001", title: "Mohawk Industries, Inc. v. Carpenter" }], leads, new Map([["Mohawk Industries, Inc. v. Carpenter", "A model-written sentence that must not be used for this case."]]));
+    expect(withBoth.rows).toHaveLength(1);
+    expect(withBoth.rows[0]).toMatchObject({ via: "wikipedia", summary: expect.stringMatching(/^The Court held that disclosure orders/) });
+    expect(withBoth.report.claude).toBe(0);
+  });
+  it("uses a cached model sentence only where the picker finds nothing, and never a null answer", () => {
+    const only = buildCaseSummaries(
+      [{ case_id: "1976-001", title: "Hills v. Gautreaux" }, { case_id: "1990-001", title: "No Lead v. Fetched" }],
+      leads,
+      new Map<string, string | null>([["Hills v. Gautreaux", "In a housing dispute, the Court held that a federal remedy could reach beyond the city limits."], ["No Lead v. Fetched", null]]),
+    );
+    expect(only.rows.map((r) => [r.case_id, r.via])).toEqual([["1976-001", "claude"]]);
   });
   it("fails the build on a duplicate, an unknown case or a collapsed yield", () => {
     const ids = new Set(matched.map((m) => m.case_id));
-    expect(() => checkCaseSummaries(rows, 4, ids)).not.toThrow();
+    expect(() => checkCaseSummaries(rows, 4, ids)).toThrow(); // "x" is not a real sentence
+    expect(() => checkCaseSummaries(rows.slice(0, 2), 4, ids)).not.toThrow();
     expect(() => checkCaseSummaries([...rows, rows[0]!], 4, ids)).toThrow(DecisionsDataError);
-    expect(() => checkCaseSummaries(rows, 4, new Set(["2009-001"]))).toThrow(DecisionsDataError);
-    expect(() => checkCaseSummaries(rows, 40, ids)).toThrow(DecisionsDataError);
+    expect(() => checkCaseSummaries(rows.slice(0, 2), 4, new Set(["2009-001"]))).toThrow(DecisionsDataError);
+    expect(() => checkCaseSummaries(rows.slice(0, 2), 40, ids)).toThrow(DecisionsDataError);
+  });
+});
+
+describe("checkAiSummary", () => {
+  const lead = "Alabama v. Bozeman, 533 U.S. 146 (2001), was a case in which the Court held that a state violated the Interstate Agreement on Detainers by returning a prisoner to prison before trial on the charges. It involved a federal prisoner.";
+  const sentence = "The Court held that a state violated the Interstate Agreement on Detainers by returning a prisoner to prison before his trial.";
+  const evidence = "the Court held that a state violated the Interstate Agreement on Detainers by returning a prisoner to prison before trial";
+  it("accepts a sentence whose evidence is in the lead and whose words come from it", () => {
+    expect(checkAiSummary(sentence, evidence, lead)).toBe(true);
+  });
+  it("rejects a ruling the lead does not state (written from memory)", () => {
+    expect(checkAiSummary("The Court held that the later prosecution was permissible under the compact.", "the Court held that the later prosecution was permissible", lead)).toBe(false);
+  });
+  it("rejects evidence that is not a verbatim stretch of the lead, or does not name a ruling", () => {
+    expect(checkAiSummary(sentence, "the Court held that the state acted unlawfully in every respect", lead)).toBe(false);
+    expect(checkAiSummary(sentence, "It involved a federal prisoner", lead)).toBe(false);
+  });
+  it("rejects a sentence that adds many words the lead does not have, is too short, or runs on", () => {
+    expect(checkAiSummary("The Court held that a state violated detainer rules after Congress amended sentencing guidelines nationwide.", evidence, lead)).toBe(false);
+    expect(checkAiSummary("The Court held so.", evidence, lead)).toBe(false);
+    expect(checkAiSummary(`${sentence} It involved a federal prisoner.`, evidence, lead)).toBe(false);
   });
 });
