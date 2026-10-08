@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Congress · Laws page (mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+/* Tokens copied from app/globals.css so the mock reads like the site. */
+:root{--bg:#eef1f5;--surface:#fff;--surface-raised:#f7f8fa;--ink:#1a2233;--ink-muted:#5b6472;--ink-faint:#8890a0;--line:#d7dce3;--line-strong:#b9c1cc;--accent:#5c4b7a;--accent-ink:#fff;--dem:#3a66c2;--rep:#c24a3a;
+--fuel-coal:#4d425d;--fuel-gas:#8c0403;--fuel-nuclear:#5d6dd3;--fuel-hydro:#1244a7;--fuel-wind:#708ca9;--fuel-solar:#878b36;--fuel-other:#526f64;
+--split-0:#312c44;--split-1:#23318e;--split-2:#41939d;--split-3:#643e03;--split-4:#a03667}
+@media (prefers-color-scheme:dark){:root{--bg:#14161c;--surface:#1b1e26;--surface-raised:#20242e;--ink:#e9eaee;--ink-muted:#9aa2af;--ink-faint:#6b7280;--line:#2a2e38;--line-strong:#3a4050;--accent:#9b84c7;--accent-ink:#14161c;--dem:#4c7fdb;--rep:#d96a56;
+--fuel-coal:#9c8ea2;--fuel-gas:#ca7f23;--fuel-nuclear:#927aed;--fuel-hydro:#75bef6;--fuel-wind:#5bf6ef;--fuel-solar:#eedb3c;--fuel-other:#ddb183;
+--split-0:#9591ad;--split-1:#5cb2fd;--split-2:#6acdc6;--split-3:#deb34a;--split-4:#ba446e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif}
+.note{max-width:1180px;margin:0 auto;padding:20px 24px 0;font-size:.82rem;line-height:1.55;color:var(--ink-muted)}
+.note b{color:var(--ink)} .note code{font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+.note ul{margin:.4rem 0 0 1.1rem;padding:0}
+h3.frame{max-width:1180px;margin:26px auto 8px;padding:0 24px;font:500 .8rem 'IBM Plex Mono',monospace;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em}
+.board-d{max-width:1280px;margin:0 auto;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.board-p{width:390px;margin:0 auto 60px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+
+/* ---- page chrome ---- */
+.pg{background:var(--bg);position:relative}
+.site{display:flex;align-items:center;gap:20px;height:52px;padding:0 24px;background:var(--surface);border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden}
+.wm{font:500 1.05rem Newsreader,Georgia,serif;margin-right:6px}
+.tabs,.subs{display:flex;gap:0;height:100%}
+.tabs a,.subs a{display:flex;align-items:center;padding:0 14px;font:500 .72rem 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none;border-bottom:2px solid transparent}
+.tabs a.on,.subs a.on{color:var(--ink);border-bottom-color:var(--accent)}
+.subs{border-left:1px solid var(--line);padding-left:6px}
+.new{font:500 .55rem 'IBM Plex Mono',monospace;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:1px 6px;margin-left:6px;letter-spacing:.04em}
+.bar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);padding:8px 24px 6px;display:flex;align-items:flex-start;gap:14px}
+.bar .lab{font:500 .62rem 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);padding-top:8px}
+select,.sel{appearance:none;border:1px solid var(--line-strong);background:var(--surface-raised) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238890a0' stroke-width='1.4'/%3E%3C/svg%3E") no-repeat right .55rem center;color:var(--ink);border-radius:6px;padding:4px 1.5rem 4px .6rem;font:inherit;font-size:.8rem}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--ink-muted);padding-top:5px;white-space:nowrap}
+.bar select{width:13.5rem;flex:none}.p .bar select{width:auto;flex:1}
+.q{display:inline-grid;place-items:center;width:15px;height:15px;border:1px solid var(--line-strong);border-radius:50%;font-size:.62rem;color:var(--ink-muted);cursor:help}
+.slider{flex:1;min-width:0}
+.trk{position:relative;height:20px;margin:0 8px}
+.trk i{position:absolute;left:0;right:0;top:9px;height:3px;background:var(--accent);border-radius:2px}
+.trk b{position:absolute;top:3px;width:14px;height:14px;border:2px solid var(--accent);background:var(--surface);border-radius:50%}
+.tband{display:flex;height:17px;margin:0 8px;gap:1px}
+.tband span{display:grid;place-items:center;font-size:.6rem;color:var(--ink);overflow:hidden;white-space:nowrap;border-top:2.5px solid;border-radius:2px;background:color-mix(in oklab,var(--c) 20%,var(--surface));border-top-color:var(--c)}
+.readout{font:500 .85rem 'IBM Plex Mono',monospace;padding-top:6px;white-space:nowrap}
+.main{max-width:1180px;margin:0 auto;padding:22px 24px 40px}
+.eyebrow{font:500 .66rem 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 .5rem}
+h1{font:400 2.1rem/1.15 Newsreader,Georgia,serif;margin:0 0 .7rem}
+.intro{font-size:.88rem;line-height:1.65;color:var(--ink-muted);margin:0 0 .7rem}
+.jump{font-size:.84rem;margin:0 0 .8rem}.jump a{color:var(--ink);text-decoration-color:var(--line-strong);text-underline-offset:3px}
+details.how{font-size:.82rem;color:var(--ink-muted);margin-bottom:1rem}
+details.how summary{cursor:pointer}details.how p{margin:.5rem 0 0;line-height:1.6}
+.opt{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--ink-muted);margin:0 0 .6rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1.1rem}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+h2{font:500 1.1rem Newsreader,Georgia,serif;margin:0}
+.lede{margin:.3rem 0 .6rem;font-size:.8rem;line-height:1.5;color:var(--ink-muted)}
+.tog{display:inline-flex;border:1px solid var(--line-strong);border-radius:6px;overflow:hidden}
+.tog button{border:0;background:var(--surface-raised);color:var(--ink-muted);font:inherit;font-size:.75rem;padding:5px 11px;cursor:pointer}
+.tog button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
+.cw{position:relative}
+svg{display:block;width:100%;overflow:visible}
+svg text{font-family:'IBM Plex Sans',sans-serif}
+svg .pl{paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.legend{margin-top:.55rem;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.7rem;color:var(--ink-muted)}
+.legend button{display:inline-flex;align-items:center;gap:5px;border:0;background:none;color:inherit;font:inherit;padding:0;cursor:pointer;white-space:nowrap}
+.legend button[aria-pressed=false]{opacity:.45}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.tip{position:absolute;pointer-events:none;z-index:10;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:.5rem .65rem;font-size:.74rem;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.12);min-width:170px;display:none}
+.tip b{font-weight:600}.tip .r{display:flex;justify-content:space-between;gap:14px}.tip .r i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+.tip .m{color:var(--ink-muted);margin-top:3px}
+.dn{margin-top:.7rem;font-size:.76rem;line-height:1.55;color:var(--ink-muted)}
+.dn summary{cursor:pointer;color:var(--ink-muted);font-size:.76rem}.dn p{margin:.4rem 0 0}.dn a{color:var(--ink-muted)}
+.vt{margin-top:.3rem;font-size:.72rem;color:var(--ink-faint)}.vt summary{cursor:pointer}
+.vt table{margin-top:.4rem;border-collapse:collapse;font-size:.72rem;color:var(--ink-muted)}.vt td,.vt th{padding:2px 10px 2px 0;text-align:right}.vt th:first-child,.vt td:first-child{text-align:left}
+.source{margin:0;font-size:.8rem;line-height:1.6;color:var(--ink-muted)}
+
+/* heatmap + rows */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.sub{font-size:.72rem;color:var(--ink-muted);margin:0 0 .35rem}
+.hm{display:grid;grid-template-columns:minmax(7.5rem,1.35fr) repeat(6,minmax(0,1fr));grid-template-rows:34px;grid-auto-rows:30px;gap:2px;font-size:.72rem}
+.hm .h{font-size:.66rem;color:var(--ink-faint);text-align:center;padding-bottom:4px;align-self:end}
+.hm .rl{display:flex;align-items:center;padding:0 4px;color:var(--ink);cursor:pointer;line-height:1.1}
+.hm .rl.sel,.rw.sel{background:var(--surface-raised);font-weight:500}
+.hm .c{display:grid;place-items:center;height:30px;border-radius:3px;font-variant-numeric:tabular-nums;border:1px solid transparent;cursor:pointer}
+.hm .c.dim{opacity:.35}
+.hm .c.empty{border:1px dashed var(--line-strong)}
+.rows{display:grid;grid-template-rows:34px;grid-auto-rows:30px;gap:2px}
+.rw{display:grid;grid-template-columns:minmax(7rem,.9fr) minmax(0,2fr) 3.2rem;gap:10px;align-items:center;padding:0 4px;height:30px;font-size:.72rem;line-height:1.1;cursor:pointer}
+.rw.dim{opacity:.4}
+.rw .bar2{display:flex;height:11px;border-radius:2px;overflow:hidden}.rw .bar2 i{display:block;height:100%}
+.rw .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-muted)}
+.bandkey{margin-top:.5rem;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.68rem;color:var(--ink-muted)}.bandkey i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
+.p .boxs{max-height:21rem;overflow-y:auto;overscroll-behavior:contain}
+
+/* list */
+.row1{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.78rem;color:var(--ink-muted);margin-bottom:.5rem}
+.row1 .n{color:var(--ink);font-variant-numeric:tabular-nums;margin-right:4px}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface-raised);color:var(--ink-muted);border-radius:999px;padding:2px 10px;font:inherit;font-size:.75rem;cursor:pointer}
+.pill[aria-pressed=true]{border-color:var(--ink);background:var(--surface);color:var(--ink)}
+.chip{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line-strong);border-radius:6px;padding:1px 8px;font-size:.72rem;color:var(--ink);background:var(--surface);cursor:pointer}
+.search{border:1px solid var(--line-strong);background:var(--surface-raised);color:var(--ink);border-radius:6px;padding:4px 10px;font:inherit;font-size:.82rem;width:15rem}
+.lbox{max-height:32rem;overflow-y:auto;border:1px solid var(--line);border-radius:6px;position:relative}
+.colhead,.lrow{display:grid;grid-template-columns:6.3rem minmax(0,1fr) 10.5rem 10.8rem 7rem;column-gap:14px}
+.colhead{padding:.4rem .75rem;font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);border-bottom:1px solid var(--line-strong);background:var(--surface-raised);position:sticky;top:0;z-index:2}
+ol{list-style:none;margin:0;padding:0}
+.lrow{align-items:baseline;border-bottom:1px solid var(--line);padding:.6rem .75rem;font-size:.82rem}
+.lrow:last-child{border-bottom:0}
+.d{font-size:.75rem;color:var(--ink-muted);font-variant-numeric:tabular-nums}
+.nm a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:2px}
+.cite{margin-left:8px;font-size:.75rem;color:var(--ink-faint);white-space:nowrap}
+.badge{display:inline-block;margin-left:8px;border:1px solid var(--line-strong);background:var(--surface-raised);color:var(--ink-muted);border-radius:999px;padding:1px 6px;font-size:.66rem;font-weight:500;white-space:nowrap}
+.badge.ov{border-style:dashed;color:var(--ink)}
+.spon{display:block;font-size:.72rem;color:var(--ink-muted);margin-top:1px}.spon a{color:var(--ink-muted);text-decoration-color:var(--line-strong)}
+.sum{grid-column:2/-1;margin:2px 0 0;font-size:.76rem;line-height:1.45;color:var(--ink-muted)}
+.area{font-size:.75rem;color:var(--ink-muted);line-height:1.3}
+.vote{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:.76rem}
+.vote i{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.vote span small{display:block;color:var(--ink-faint);font-size:.66rem;line-height:1.2}
+.by{font-size:.76rem;white-space:nowrap}.by u{text-decoration:none;display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.ph{opacity:.7}.ph .nm a{font-style:italic}
+
+/* ---- phone ---- */
+.p .site{height:auto;flex-wrap:wrap;gap:0;padding:0 12px}
+.p .site .wm{padding:12px 0;margin-right:12px}.p .tabs{height:48px}.p .tabs a{padding:0 9px;font-size:.66rem}
+.p .subs{flex-basis:100%;border-left:0;padding:0;overflow-x:auto;height:44px;border-top:1px solid var(--line)}.p .subs a{padding:0 12px;font-size:.66rem}
+.p .bar{flex-wrap:wrap;padding:8px 12px 6px;gap:6px 10px}
+.p .bar .slider{flex-basis:100%;order:3}.p .bar .readout{order:2;margin-left:auto}
+.p .main{padding:16px 14px 28px}.p h1{font-size:1.65rem}.p .card{padding:.9rem .75rem}
+.p .two{grid-template-columns:1fr}.p .colhead{display:none}
+.p .lrow{grid-template-columns:minmax(0,1fr);row-gap:4px;padding:.7rem .6rem}
+.p .lrow .nm{order:1}.p .lrow .d{order:2}.p .lrow .area{order:3}.p .lrow .vcol{order:4}.p .lrow .by{order:5}.p .lrow .sum{order:6;grid-column:1}
+.p .lrow .nm .cite{display:none}.p .lrow .mob{display:inline}
+.mob{display:none}
+.p .search{width:100%}
+.p .intro{font-size:.84rem}
+.p .readout{font-size:.75rem}
+</style>
+</head>
+<body>
+
+<div class="note">
+<b>Mockup — a new “Laws” section under Congress</b> (Congress → Ideology · <b>Laws</b> · Demographics · Wealth), built to sit beside Supreme Court → Decisions: pinned filter bar with the years slider and president band, three linked chart cards, then a scrolling list of every law. Click things — the legend, the Number / Share toggle, the heatmap rows and measure toggle, the party-control checkbox, the list filters, “Major laws”.
+<ul>
+<li><b>Illustrative numbers.</b> The pipeline is not built. Per-Congress totals are real for the 93rd (651), 85th and 118th (274), which I read from the Congress.gov API; the rest are approximate (from memory, within a few of the official counts). <b>The policy-area mix, vote bands and “major law” counts are placeholders shaped to look plausible. Do not read any trend off them.</b> The first pre-flight job is replacing them with the real thing.</li>
+<li><b>List rows are real laws</b> (names, Pub. L. numbers, dates, sponsors, tallies from my memory, to be re-checked in the pipeline). Policy-area labels and one-line summaries are illustrative; the real summary is the first sentence of the CRS summary. The last row is a placeholder for a law passed with no recorded vote.</li>
+<li>The year slider is drawn, not wired. The filter bar, cards and list use the same chrome and rules as the Decisions page (rules 3–5b, 7, 10a–10h, 15).</li>
+</ul></div>
+
+<h3 class="frame">Desktop · 1280</h3>
+<div class="board-d"><div class="pg" id="desk"></div></div>
+<h3 class="frame">Phone · 390</h3>
+<div class="board-p"><div class="pg p" id="mob"></div></div>
+
+<script>
+/* =================================================================== data (placeholder) */
+const rnd=(a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296})(11);
+const CONGS=[];for(let c=93;c<=119;c++)CONGS.push({c,y:1973+2*(c-93),partial:c===119});
+const TOT={93:651,94:588,95:633,96:613,97:473,98:623,99:664,100:713,101:650,102:590,103:465,104:333,105:394,106:580,107:377,108:498,109:482,110:460,111:383,112:283,113:296,114:329,115:443,116:344,117:362,118:274,119:140};
+const ord=n=>n+(["th","st","nd","rd"][(n%100>10&&n%100<14)?0:(n%10<4?n%10:0)]);
+const AREAS=[
+ {id:"gov",  nm:"Government operations & politics",s:[.13,.24],b:[.22,-.08,-.07,-.05,-.02]},
+ {id:"lands",nm:"Public lands & natural resources",s:[.14,.10],b:[.15,-.05,-.05,-.03,-.02]},
+ {id:"armed",nm:"Armed forces & national security",s:[.10,.13],b:[-.15,.15,.06,-.03,-.03]},
+ {id:"trans",nm:"Transportation & public works",   s:[.07,.09],b:[.05,.02,-.02,-.03,-.02]},
+ {id:"econ", nm:"Economics & public finance",      s:[.06,.08],b:[-.2,-.1,.02,.1,.18]},
+ {id:"health",nm:"Health",                         s:[.05,.07],b:[-.15,-.05,.03,.07,.10]},
+ {id:"intl", nm:"International affairs",           s:[.07,.04],b:[-.05,.1,.05,-.05,-.05]},
+ {id:"tax",  nm:"Taxation",                        s:[.05,.04],b:[-.25,-.1,.05,.1,.2]},
+ {id:"comm", nm:"Commerce",                        s:[.08,.05],b:[0,.02,0,-.01,-.01]},
+ {id:"crime",nm:"Crime & law enforcement",         s:[.03,.05],b:[-.05,.05,.03,0,-.03]},
+ {id:"educ", nm:"Education",                       s:[.04,.03],b:[-.05,0,.03,.02,0]},
+ {id:"agri", nm:"Agriculture & food",              s:[.05,.03],b:[-.05,.02,.03,0,0]},
+ {id:"other",nm:"Other areas (20)",                s:[.12,.12],b:[0,0,0,0,0]},
+];
+const BANDS=["No recorded vote","90% or more yes","75–90% yes","60–75% yes","Under 60% yes"];
+const ORDER=[0,4,3,2,1]; // display order: no recorded vote beside under 60%
+const BC=["var(--split-0)","var(--split-1)","var(--split-2)","var(--split-3)","var(--split-4)"];
+function dist(total,w){const s=w.reduce((a,b)=>a+b,0),raw=w.map(x=>x/s*total),fl=raw.map(Math.floor);let left=total-fl.reduce((a,b)=>a+b,0);
+ raw.map((r,i)=>[r-fl[i],i]).sort((a,b)=>b[0]-a[0]).slice(0,left).forEach(([,i])=>fl[i]++);return fl}
+const D={};
+CONGS.forEach(({c})=>{const t=(c-93)/26;
+ const sh=AREAS.map(a=>a.s[0]+(a.s[1]-a.s[0])*t).map((x,i)=>x*(1+(rnd()-.5)*.28));
+ const named=sh.slice(0,12),ns=named.reduce((a,b)=>a+b,0),target=1-sh[12]/(sh.reduce((a,b)=>a+b,0));
+ const w=[...named.map(x=>x/ns*(1-.13)),.13],n=dist(TOT[c],w);D[c]={};
+ AREAS.forEach((a,i)=>{
+  const base=[.40+.05*t,.30-.17*t,.17-.05*t,.08+.05*t,.03+.13*t];
+  const bw=base.map((x,k)=>Math.max(.006,x+a.b[k]*(.8+.2*t)+(rnd()-.5)*.05));
+  const b=dist(n[i],bw);D[c][a.id]={n:n[i],b,m:Math.round(n[i]*(a.id==="other"?.012:.03)*(.4+rnd()*1.6))}})});
+const sumArea=id=>CONGS.reduce((s,{c})=>s+D[c][id].n,0);
+const RANK=AREAS.filter(a=>a.id!=="other").sort((a,b)=>sumArea(b.id)-sumArea(a.id));
+const TOP6=RANK.slice(0,6).map(a=>a.id);
+const FUEL=["--fuel-coal","--fuel-gas","--fuel-nuclear","--fuel-hydro","--fuel-wind","--fuel-solar"];
+const colOf=id=>{const i=TOP6.indexOf(id);return i<0?"var(--fuel-other)":`var(${FUEL[i]})`};
+const PRES=[ // [name, party, first Congress slot, last, candidates]
+ ["Nixon","R",93,93,["Nixon","Nix.","RN","N"]],["Ford","R",94,94,["Ford","For.","GF","F"]],["Carter","D",95,96,["Carter","Cart.","JC","C"]],
+ ["Reagan","R",97,100,["Reagan","Reag.","RR","R"]],["Bush","R",101,102,["Bush 41","Bush","GB","B"]],["Clinton","D",103,106,["Clinton","Clin.","BC","C"]],
+ ["Bush","R",107,110,["Bush 43","Bush","GWB","B"]],["Obama","D",111,114,["Obama","Obam.","BO","O"]],["Trump","R",115,116,["Trump","Trum.","DT","T"]],
+ ["Biden","D",117,118,["Biden","Bide.","JB","B"]],["Trump","R",119,119,["Trump","Trum.","DT","T"]]];
+const SIGNER=c=>PRES.find(p=>c>=p[2]&&c<=p[3]);
+const HOUSE={}, SENATE={};
+CONGS.forEach(({c})=>{HOUSE[c]=(c<=103||c===110||c===111||c===116||c===117)?"D":"R";SENATE[c]=(c<=96||(c>=100&&c<=103)||c===107||(c>=110&&c<=113)||c===117||c===118)?"D":"R"});
+const DECADES=[["1970s",93,96],["1980s",97,101],["1990s",102,106],["2000s",107,111],["2010s",112,116],["2020s",117,119]];
+const fit=(cands,w)=>cands.find(s=>s.length*6.1+8<=w)||cands[cands.length-1];
+const fmt=n=>n.toLocaleString("en-US");
+const pc=(a,b)=>b?Math.round(a/b*100)+"%":"0%";
+
+/* the list: real laws (tallies from memory — to be verified in the pipeline) */
+const L=[
+["2025-07-04","One Big Beautiful Bill Act","119-21",1,0,"H.R. 1","Rep. Jason Smith (R-MO)",1,"Taxation","tax","Provides for budget reconciliation: extends and expands the 2017 individual tax cuts and changes spending on Medicaid, nutrition aid, defense and border security.","S 51–50","H 218–214",4,"Trump","R"],
+["2023-06-03","Fiscal Responsibility Act of 2023","118-5",1,0,"H.R. 3746","Rep. Garret Graves (R-LA)",0,"Economics and Public Finance","econ","Suspends the debt limit until January 2025 and sets caps on discretionary spending for fiscal 2024 and 2025.","S 63–36","H 314–117",3,"Biden","D"],
+["2022-08-16","Inflation Reduction Act of 2022","117-169",1,0,"H.R. 5376","Rep. John Yarmuth (D-KY)",0,"Taxation","tax","Reconciliation law covering climate and energy tax credits, a corporate minimum tax, and Medicare drug-price negotiation.","S 51–50","H 220–207",4,"Biden","D"],
+["2021-11-15","Infrastructure Investment and Jobs Act","117-58",1,0,"H.R. 3684","Rep. Peter DeFazio (D-OR)",0,"Transportation and Public Works","trans","Authorizes funding for roads, bridges, transit, rail, broadband and water systems.","S 69–30","H 228–206",4,"Biden","D"],
+["2021-06-17","Juneteenth National Independence Day Act","117-17",0,0,"S. 475","Sen. Edward Markey (D-MA)",1,"Arts, Culture, Religion","other","Makes June 19 a federal holiday.","S unanimous consent","H 415–14",1,"Biden","D"],
+["2021-03-11","American Rescue Plan Act of 2021","117-2",1,0,"H.R. 1319","Rep. John Yarmuth (D-KY)",0,"Economics and Public Finance","econ","Provides pandemic relief: direct payments, expanded unemployment aid and child tax credit, and funds for states and schools.","S 50–49","H 220–211",4,"Biden","D"],
+["2020-03-27","CARES Act","116-136",1,0,"H.R. 748","Rep. Peter DeFazio (D-OR)",0,"Economics and Public Finance","econ","Responds to the COVID-19 pandemic with direct payments, loans to businesses and expanded unemployment insurance.","S 96–0","H voice vote",1,"Trump","R"],
+["2017-12-22","Tax Cuts and Jobs Act","115-97",1,0,"H.R. 1","Rep. Kevin Brady (R-TX)",0,"Taxation","tax","Cuts the corporate tax rate to 21% and lowers individual rates through 2025.","S 51–48","H 224–201",4,"Trump","R"],
+["2010-07-21","Dodd-Frank Wall Street Reform and Consumer Protection Act","111-203",1,0,"H.R. 4173","Rep. Barney Frank (D-MA)",0,"Finance and Financial Sector","other","Overhauls financial regulation and creates the Consumer Financial Protection Bureau.","S 60–39","H 237–192",4,"Obama","D"],
+["2010-03-23","Patient Protection and Affordable Care Act","111-148",1,0,"H.R. 3590","Rep. Charles Rangel (D-NY)",0,"Health","health","Expands health coverage through insurance exchanges, subsidies and a Medicaid expansion.","S 60–39","H 219–212",4,"Obama","D"],
+["2009-02-17","American Recovery and Reinvestment Act of 2009","111-5",1,0,"H.R. 1","Rep. David Obey (D-WI)",0,"Economics and Public Finance","econ","Provides stimulus spending and tax cuts in response to the recession.","S 61–37","H 246–183",4,"Obama","D"],
+["2005-08-08","Energy Policy Act of 2005","109-58",1,0,"H.R. 6","Rep. Joe Barton (R-TX)",0,"Energy","other","Sets energy policy: tax incentives for oil, gas, nuclear and renewables, and a renewable-fuel standard.","S 74–26","H 275–156",3,"Bush","R"],
+["2003-12-08","Medicare Prescription Drug, Improvement, and Modernization Act","108-173",1,0,"H.R. 1","Rep. Bill Thomas (R-CA)",0,"Health","health","Adds an outpatient prescription drug benefit to Medicare (Part D).","S 54–44","H 220–215",4,"Bush","R"],
+["2002-01-08","No Child Left Behind Act of 2001","107-110",1,0,"H.R. 1","Rep. John Boehner (R-OH)",0,"Education","educ","Requires annual state testing and accountability for schools that receive federal aid.","S 87–10","H 381–41",2,"Bush","R"],
+["2001-10-26","USA PATRIOT Act","107-56",1,0,"H.R. 3162","Rep. James Sensenbrenner (R-WI)",0,"Crime and Law Enforcement","crime","Expands surveillance and law-enforcement powers after the September 11 attacks.","S 98–1","H 357–66",2,"Bush","R"],
+["1996-08-22","Personal Responsibility and Work Opportunity Reconciliation Act","104-193",1,0,"H.R. 3734","",0,"Social Welfare","other","Replaces the federal welfare entitlement with block grants to states and work requirements.","S 78–21","H 328–101",2,"Clinton","D"],
+["1990-07-26","Americans with Disabilities Act of 1990","101-336",1,0,"S. 933","Sen. Tom Harkin (D-IA)",0,"Civil Rights and Liberties","other","Prohibits discrimination against people with disabilities in jobs, public services and public places.","S 91–6","H 377–28",1,"Bush","R"],
+["1986-10-22","Tax Reform Act of 1986","99-514",1,0,"H.R. 3838","Rep. Dan Rostenkowski (D-IL)",0,"Taxation","tax","Cuts individual rates, widens the base and closes many shelters.","S 74–23","H 292–136",3,"Reagan","R"],
+["1973-11-07","War Powers Resolution","93-148",1,1,"H.J.Res. 542","Rep. Clement Zablocki (D-WI)",0,"Armed Forces and National Security","armed","Limits the President’s power to commit U.S. forces abroad without Congress. Passed over a veto.","S 75–18","H 284–135",3,"Nixon (veto overridden)","R"],
+["1973-06-30","A bill to designate a Postal Service facility (placeholder row)","93-—",0,0,"—","",0,"Government Operations and Politics","gov","Placeholder for a law passed with no recorded vote in either chamber.","S voice vote","H voice vote",0,"Nixon","R"],
+];
+const ROWS=L.map(r=>({date:r[0],name:r[1],cite:r[2],major:r[3],ovr:r[4],bill:r[5],spon:r[6],link:r[7],area:r[8],rid:r[9],sum:r[10],s:r[11],h:r[12],band:r[13],by:r[14],party:r[15],ph:r[1].includes("placeholder")}));
+
+/* =================================================================== page factory */
+function Page(root,{phone}){
+ const st={area:null,major:false,mode:"n",mode2:"s",measure:"n",dir:-1,ctl:false,vband:null,q:"",hover:null};
+ const W=()=>Math.max(300,root.querySelector(".cw").clientWidth);
+ const win=CONGS; // slider not wired in the mock
+ const cell=(c,id)=>{const x=D[c][id];if(!st.major)return x;const n=x.m;return{n,b:dist(n,x.b.map(v=>v+.0001))}};
+ const sel=()=>st.area;
+ const areasShown=()=>st.area?AREAS.filter(a=>a.id===st.area):AREAS;
+ const total=(c)=>areasShown().reduce((s,a)=>s+cell(c,a.id).n,0);
+ const bandAt=(c,k)=>areasShown().reduce((s,a)=>s+cell(c,a.id).b[k],0);
+ const nTotal=()=>win.reduce((s,{c})=>s+total(c),0);
+
+ root.innerHTML=`
+ <header class="site"><span class="wm">InsideGov</span>
+  <nav class="tabs"><a>Presidency</a><a class="on">Congress</a><a>Supreme Court</a></nav>
+  <nav class="subs"><a>Ideology</a><a class="on">Laws<span class="new">new</span></a><a>Demographics</a><a>Wealth</a></nav></header>
+ <div class="bar">
+  ${phone?"":'<span class="lab">Policy area</span>'}
+  <select id="area" aria-label="Policy area"><option value="">All policy areas</option>${AREAS.map(a=>`<option value="${a.id}">${a.nm}</option>`).join("")}</select>
+  <label class="chk"><input type="checkbox" id="major"> Major laws <span class="q" title="A major law is one that David Mayhew’s lists of important enactments name, judged by contemporary press and later historians. About 3% of laws.">?</span></label>
+  <div class="slider"><div class="trk"><i></i><b style="left:-7px"></b><b style="right:-7px"></b></div><div class="tband" id="tband"></div></div>
+  <span class="readout">1973–2026</span>
+ </div>
+ <main class="main">
+  <p class="eyebrow">Congress · Laws</p>
+  <h1>What Laws Does Congress Pass?</h1>
+  <p class="intro">The Ideology page shows where each member sits; this page shows what Congress enacts. Every public law since 1973 is tallied by the Congress that passed it and its policy area, so you can watch the output shrink, the mix shift and the votes narrow. Narrow the years with the slider or the presidents under it, or pick a policy area or a vote in the charts; the list at the bottom names every law that matches.</p>
+  <p class="jump"><a href="#list">Browse all <span id="jn"></span> laws ↓</a></p>
+  <details class="how"><summary>How to read this</summary><p>One bar is one two-year Congress, labelled by the year it opens. A law counts in the Congress that enacted it, signed or not (veto overrides included); private laws are left out. The president under each bar is the one who signed most of that Congress’s laws. A law’s policy area is the single area the Congressional Research Service assigns its bill. Its vote band comes from the closest final-passage vote it faced in either chamber, so a law is only as broadly supported as its narrowest vote; laws passed by voice vote or unanimous consent in both chambers have no tally and form their own band.</p></details>
+  <label class="opt"><input type="checkbox" id="ctl"> Show which party held the House and Senate under each chart</label>
+
+  <section class="card" id="c1"><div class="head"><div><h2>How many laws does Congress pass?</h2><p class="lede" id="l1"></p></div>
+   <div class="tog" role="group" aria-label="Measure"><button data-m="n" aria-pressed="false">Number of laws</button><button data-m="s" aria-pressed="false">Share of Congress</button></div></div>
+   <div class="cw"><div id="ch1"></div><div class="tip" id="tip1"></div></div>
+   <div class="legend" id="lg1"></div>
+   <details class="dn" open><summary>Data notes</summary><p>Counts public laws by the Congress that enacted them, from the 93rd (1973) on; private laws and bills that never became law are left out. A law’s policy area is the one Congress.gov assigns its bill (one per bill), so a law that touches several topics is counted once. The 119th Congress is still in session, so its bar is partial. The president shown signed most of that Congress’s laws. Source: Congress.gov, Library of Congress. <a href="#">Report a correction</a></p></details>
+   <details class="vt"><summary>View as table</summary><div id="tb1"></div></details>
+  </section>
+
+  <section class="card" id="c2"><div class="head"><div><h2>How broadly are laws supported?</h2><p class="lede" id="l2">Each law is sorted by the closest recorded vote on its final passage in either chamber.</p></div>
+   <div class="tog" role="group" aria-label="Measure"><button data-m="s" aria-pressed="false">Share</button><button data-m="n" aria-pressed="false">Number</button></div></div>
+   <div class="cw"><div id="ch2"></div><div class="tip" id="tip2"></div></div>
+   <div class="legend" id="lg2"></div>
+   <details class="dn" open><summary>Data notes</summary><p>A law’s band is the yes share of the narrowest recorded final-passage vote it faced; a law passed by voice vote or unanimous consent in both chambers has no tally and sits in its own band. Tallies are Voteview’s, joined to each law through the roll-call number in the bill’s action history. Bands count yes votes out of votes cast, not out of members, so a 50–49 vote lands in “under 60%”. The 119th Congress is partial. <a href="#">Report a correction</a></p></details>
+  </section>
+
+  <section class="card" id="c3"><div class="head"><div><h2>Which kinds of laws are narrow, and which sail through?</h2>
+   <p class="lede">Left: how many laws, how many narrow votes or how many with no recorded vote in each decade, by policy area. Right: how the laws in each area were supported, over the years shown. The toggle picks the measure for both and orders the rows; click it again to reverse. Click an area in either to filter the charts and the list.</p></div>
+   <div class="tog" role="group" aria-label="Measure"><button data-k="n" aria-pressed="false">Laws</button><button data-k="4" aria-pressed="false">Narrow votes</button><button data-k="0" aria-pressed="false">No recorded vote</button></div></div>
+   <div class="two"><div><p class="sub">By decade, every Congress that opened in it</p><div class="hm" id="hm"></div></div>
+   <div><p class="sub" id="rsub"></p><div class="boxs"><div class="rows" id="rows"></div></div></div></div>
+   <details class="dn" open><summary>Data notes</summary><p>Decades group Congresses by the year they opened (the 2020s hold three, one still in session). “Narrow votes” are laws in the under-60% band; “no recorded vote” are laws passed by voice vote or unanimous consent in both chambers. The page shows counts, never shares, so a small area’s cell is a handful of laws, not a rate. Areas are Congress.gov’s 32; the 12 largest are listed, the other 20 are one row. <a href="#">Report a correction</a></p></details>
+  </section>
+
+  <section class="card" id="list"><div class="head"><div><h2>Every law</h2></div><input class="search" id="q" type="search" placeholder="Search name, bill, sponsor or area" aria-label="Search laws"></div>
+   <p class="lede">Every public law enacted since 1973, newest first. A major law is one that David Mayhew’s lists of important enactments name. The sentence under a name is the first sentence of the Congressional Research Service’s summary of the bill.</p>
+   <div class="row1"><span class="n" id="ln"></span>
+    <span role="group" aria-label="Vote" style="display:contents"><button class="pill" data-v="" aria-pressed="true">All votes</button><button class="pill" data-v="4" aria-pressed="false">Under 60% yes</button><button class="pill" data-v="0" aria-pressed="false">No recorded vote</button></span><span id="chips" style="display:contents"></span></div>
+   <div class="lbox" tabindex="0" aria-label="Laws, scrollable"><div class="colhead"><span>Signed</span><span>Law</span><span>Policy area</span><span>Final passage</span><span>Signed by</span></div><ol id="lrows"></ol></div>
+   <details class="dn" open><summary>Data notes</summary><p>Every public law from the 93rd Congress (1973) to now: ${""}<span id="dnn"></span> in all. “Signed” is the date it became law, which for a veto override is the day of the second vote. The sponsor is the bill’s sponsor, which for a large package is often the member whose bill carried the text, not its author. Passage tallies are Voteview’s; sponsor names link to a profile where the member has one. <a href="#">Report a correction</a></p></details>
+  </section>
+  <p class="source">Source: Congress.gov (Library of Congress) for laws, sponsors, policy areas and summaries; Voteview (Lewis, Poole, Rosenthal, Boche, Rudkin and Sonnet) for roll-call tallies; David Mayhew, lists of important enactments, for major laws; Senate Historical Office and the Clerk of the House for party control. Presidents: the White House Historical Association.</p>
+ </main>`;
+
+ const $=s=>root.querySelector(s), $$=s=>[...root.querySelectorAll(s)];
+
+ /* president band on the slider (HTML) */
+ (()=>{const y0=1973,y1=2027,T=[["Nixon","R",1973,1974.6,PRES[0][4]],["Ford","R",1974.6,1977.05,PRES[1][4]],["Carter","D",1977.05,1981.05,PRES[2][4]],["Reagan","R",1981.05,1989.05,PRES[3][4]],["Bush","R",1989.05,1993.05,PRES[4][4]],["Clinton","D",1993.05,2001.05,PRES[5][4]],["Bush","R",2001.05,2009.05,PRES[6][4]],["Obama","D",2009.05,2017.05,PRES[7][4]],["Trump","R",2017.05,2021.05,PRES[8][4]],["Biden","D",2021.05,2025.05,PRES[9][4]],["Trump","R",2025.05,2027,PRES[10][4]]];
+  const bw=()=>$("#tband").clientWidth||300;
+  $("#tband").innerHTML=T.map(t=>{const w=(t[3]-t[2])/(y1-y0)*bw();return`<span style="flex:${t[3]-t[2]};--c:var(--${t[1]==="R"?"rep":"dem"})">${fit(t[4],w)}</span>`}).join("")})();
+
+ /* ----- geometry helpers ----- */
+ const ML=40,MR=6,TOPM=22,PH=phone?190:240,AX=18,BANDH=24,CTLH=10;
+ const ticks=mx=>{const st=[1,2,5].flatMap(m=>[1,10,100,1000].map(p=>m*p)).sort((a,b)=>a-b).find(s=>mx/s<=5)||1;const t=[];for(let v=0;v<=mx;v+=st)t.push(v);return{t,top:Math.ceil(mx/st)*st}};
+ const presBand=(x0,sl,y)=>PRES.map(p=>{const a=x0+(p[2]-93)*sl,w=(p[3]-p[2]+1)*sl;const c=p[1]==="R"?"var(--rep)":"var(--dem)";
+  return`<g><rect x="${a+.5}" y="${y}" width="${w-1}" height="${BANDH-4}" rx="2" style="fill:color-mix(in oklab,${c} 20%,var(--surface))"/><rect x="${a+.5}" y="${y}" width="${w-1}" height="2.5" style="fill:${c}"/><text x="${a+w/2}" y="${y+14}" text-anchor="middle" font-size="10" style="fill:var(--ink)">${fit(p[4],w)}</text></g>`}).join("");
+ const ctlRows=(x0,sl,y)=>{const row=(m,lab,yy)=>`<text x="${x0-6}" y="${yy+7}" text-anchor="end" font-size="9" style="fill:var(--ink-faint)">${lab}</text>`+CONGS.map(({c},i)=>`<rect x="${x0+i*sl+.5}" y="${yy}" width="${sl-1}" height="8" style="fill:var(${m[c]==="R"?"--rep":"--dem"})"/>`).join("");
+  return row(HOUSE,"House",y)+row(SENATE,"Senate",y+CTLH)};
+ const yearAx=(x0,sl,y)=>CONGS.map(({y:yr},i)=>(yr%10===5||(i===0&&sl>=22))?`<text x="${x0+(i+.5)*sl}" y="${y}" text-anchor="middle" font-size="10" style="fill:var(--ink-muted)">${yr}</text>`:"").join("");
+ const tipFor=(i,series,vals,tipEl,cw,ev)=>{const {c,y,partial}=CONGS[i],sg=SIGNER(c);
+  tipEl.innerHTML=`<b>${ord(c)} Congress</b> · ${y}–${y+1}${partial?" (in progress)":""}<div class="m">Signed mostly by ${sg[0]==="Bush"?(c<103?"Bush (41)":"Bush (43)"):sg[0]} (${sg[1]})</div><div style="margin-top:4px">`+
+   series.map((s,k)=>`<div class="r"><span><i style="background:${s.col}"></i>${s.nm}</span><span>${vals[k]}</span></div>`).join("")+"</div>";
+  tipEl.style.display="block";const r=cw.getBoundingClientRect(),x=ev.clientX-r.left,w=tipEl.offsetWidth;tipEl.style.left=Math.max(0,Math.min(r.width-w,x+14))+"px";tipEl.style.top="20px"};
+ const setHover=i=>{st.hover=i;["ch1","ch2"].forEach(id=>{const l=$("#"+id+" .xh");if(!l)return;if(i==null){l.style.display="none";return}const x=+l.dataset.x0+(i+.5)*+l.dataset.sl;l.setAttribute("x1",x);l.setAttribute("x2",x);l.style.display=""})};
+
+ /* ----- card 1: stacked bars by area ----- */
+ function chart1(){
+  const w=W(),pw=w-ML-MR,sl=pw/CONGS.length,bw=sl*.78;
+  let series;
+  if(st.area){const a=AREAS.find(x=>x.id===st.area);series=[{id:a.id,nm:a.nm,col:colOf(a.id),f:c=>cell(c,a.id).n}]}
+  else{series=[...TOP6.map(id=>({id,nm:AREAS.find(a=>a.id===id).nm,col:colOf(id),f:c=>cell(c,id).n})),{id:"__o",nm:"Other areas (26)",col:"var(--fuel-other)",f:c=>AREAS.filter(a=>!TOP6.includes(a.id)).reduce((s,a)=>s+cell(c,a.id).n,0)}]}
+  const totalOf=c=>series.reduce((s,x)=>s+x.f(c),0);
+  const share=st.mode==="s"&&!st.area;
+  const mx=share?100:Math.max(...CONGS.map(({c})=>totalOf(c)));
+  const tk=share?{t:[0,25,50,75,100],top:100}:ticks(mx),H=TOPM+PH+AX+BANDH+(st.ctl?CTLH*2+6:0)+4;
+  const Y=v=>TOPM+PH-v/tk.top*PH;
+  let g=tk.t.map(v=>`<line x1="${ML}" x2="${ML+pw}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line)"/><text x="${ML-6}" y="${Y(v)+3.5}" text-anchor="end" font-size="10" style="fill:var(--ink-faint)">${v}${share?"%":""}</text>`).join("");
+  CONGS.forEach(({c,partial},i)=>{let acc=0;const tot=totalOf(c)||1;series.forEach(s=>{const v=s.f(c),h=share?v/tot*100:v;
+   const y0=Y(acc+h),hh=Y(acc)-y0;acc+=h;if(hh>0)g+=`<rect x="${ML+i*sl+(sl-bw)/2}" y="${y0}" width="${bw}" height="${hh}" style="fill:${s.col}" ${partial?'opacity=".6"':""}/>`;
+   if(partial&&hh>0)g+=`<rect x="${ML+i*sl+(sl-bw)/2}" y="${y0}" width="${bw}" height="${hh}" fill="url(#hat)"/>`})});
+  // peak / low labels (complete Congresses only, share mode has none)
+  if(!share){const comp=CONGS.filter(x=>!x.partial).map(x=>({i:CONGS.indexOf(x),v:totalOf(x.c),y:x.y}));
+   const hi=comp.reduce((a,b)=>b.v>a.v?b:a),lo=comp.filter(x=>x.v>0).reduce((a,b)=>b.v<a.v?b:a);
+   [hi,lo].forEach(e=>{if(hi.v===lo.v&&e===lo)return;g+=`<text x="${Math.min(w-ML-30,Math.max(ML+22,ML+(e.i+.5)*sl))}" y="${Y(e.v)-4}" text-anchor="middle" font-size="10" class="pl" style="fill:var(--ink)">${e.y}: ${e.v}</text>`})}
+  const ay=TOPM+PH+13;g+=yearAx(ML,sl,ay);
+  g+=presBand(ML,sl,TOPM+PH+AX);
+  if(st.ctl)g+=ctlRows(ML,sl,TOPM+PH+AX+BANDH+2);
+  g+=`<line class="xh" data-x0="${ML}" data-sl="${sl}" y1="${TOPM}" y2="${TOPM+PH}" style="stroke:var(--ink);stroke-dasharray:3 3;display:none"/>`;
+  $("#ch1").innerHTML=`<svg viewBox="0 0 ${w} ${H}" height="${H}" role="img" aria-label="Public laws per Congress"><defs><pattern id="hat" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" stroke-width="2.5" opacity=".7"/></pattern></defs>${g}<rect x="${ML}" y="${TOPM}" width="${pw}" height="${PH}" fill="transparent" id="hit1"/></svg>`;
+  const hit=$("#hit1"),cw=$("#c1 .cw"),tip=$("#tip1");
+  const idx=e=>{const r=hit.getBoundingClientRect();return Math.max(0,Math.min(CONGS.length-1,Math.floor((e.clientX-r.left)/r.width*CONGS.length)))};
+  hit.addEventListener("pointermove",e=>{const i=idx(e);setHover(i);const c=CONGS[i].c;tipFor(i,[...series].reverse(),[...series].reverse().map(s=>share?pc(s.f(c),totalOf(c)):fmt(s.f(c))),tip,cw,e)});
+  hit.addEventListener("pointerleave",()=>{setHover(null);tip.style.display="none"});
+  // legend = filters
+  $("#lg1").innerHTML=(st.area?[series[0]]:[...series]).map(s=>`<button data-id="${s.id}" aria-pressed="${st.area?true:true}"><i style="background:${s.col}"></i>${s.nm}</button>`).join("");
+  $$("#lg1 button").forEach(b=>b.onclick=()=>{const id=b.dataset.id==="__o"?"other":b.dataset.id;st.area=st.area===id?null:id;renderAll()});
+  // lede + table
+  const first=TOT[93],last=TOT[118];
+  $("#l1").textContent=st.area||st.major?`${fmt(nTotal())} ${st.major?"major ":""}laws since 1973${st.area?" in "+AREAS.find(a=>a.id===st.area).nm.toLowerCase():""}.`:`${first} laws enacted by the 93rd Congress (1973–74), ${last} by the 118th (2023–24).`;
+  $("#tb1").innerHTML=`<table><tr><th>Congress</th><th>Opened</th><th>Laws</th></tr>${CONGS.map(({c,y})=>`<tr><td>${ord(c)}</td><td>${y}</td><td>${fmt(totalOf(c))}</td></tr>`).join("")}</table>`;
+  $$("#c1 [data-m]").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.m===st.mode));b.onclick=()=>{st.mode=b.dataset.m;renderAll()}});
+ }
+
+ /* ----- card 2: stacked area by vote band ----- */
+ function chart2(){
+  const w=W(),pw=w-ML-MR,sl=pw/CONGS.length;
+  const share=st.mode2==="s",bandSeries=ORDER.map(k=>({k,nm:BANDS[k],col:BC[k]}));
+  const mx=share?100:Math.max(...CONGS.map(({c})=>total(c)));const tk=share?{t:[0,25,50,75,100],top:100}:ticks(mx);
+  const H=TOPM+PH+AX+BANDH+(st.ctl?CTLH*2+6:0)+4,Y=v=>TOPM+PH-v/tk.top*PH;
+  let g=tk.t.map(v=>`<line x1="${ML}" x2="${ML+pw}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line)"/><text x="${ML-6}" y="${Y(v)+3.5}" text-anchor="end" font-size="10" style="fill:var(--ink-faint)">${v}${share?"%":""}</text>`).join("");
+  const acc=CONGS.map(()=>0);const th={};
+  bandSeries.forEach(s=>{const lo=[],hi=[];CONGS.forEach(({c},i)=>{const tot=total(c)||1,v=bandAt(c,s.k),h=share?v/tot*100:v;lo.push(acc[i]);acc[i]+=h;hi.push(acc[i])});
+   const xs=i=>ML+(i+.5)*sl;let d=`M${ML},${Y(hi[0])} `+hi.map((v,i)=>`L${xs(i)},${Y(v)}`).join(" ")+` L${ML+pw},${Y(hi[hi.length-1])} L${ML+pw},${Y(lo[lo.length-1])} `+lo.map((v,i)=>`L${xs(i)},${Y(v)}`).reverse().join(" ")+` L${ML},${Y(lo[0])}Z`;
+   g+=`<path d="${d}" style="fill:${s.col}"/>`;th[s.k]=hi.map((v,i)=>Y(lo[i])-Y(v))});
+  // in-band labels where thick enough
+  const li=Math.round(CONGS.length*.55);bandSeries.forEach(s=>{const t=th[s.k][li];if(t>16){const i=li,lo=acc.length;let base=0;for(const q of bandSeries.slice(0,bandSeries.indexOf(s))){base+=share?bandAt(CONGS[i].c,q.k)/(total(CONGS[i].c)||1)*100:bandAt(CONGS[i].c,q.k)}
+   const v=share?bandAt(CONGS[i].c,s.k)/(total(CONGS[i].c)||1)*100:bandAt(CONGS[i].c,s.k);g+=`<text x="${ML+(i+.5)*sl}" y="${Y(base+v/2)+4}" text-anchor="middle" font-size="11" font-weight="500" fill="#fff">${w>520?s.nm:s.nm.split(" ")[0]+(s.k?" "+s.nm.split(" ")[1]:"")}</text>`}});
+  g+=yearAx(ML,sl,TOPM+PH+13)+presBand(ML,sl,TOPM+PH+AX);if(st.ctl)g+=ctlRows(ML,sl,TOPM+PH+AX+BANDH+2);
+  g+=`<line class="xh" data-x0="${ML}" data-sl="${sl}" y1="${TOPM}" y2="${TOPM+PH}" style="stroke:var(--surface);stroke-width:1.5;stroke-dasharray:3 3;display:none"/>`;
+  $("#ch2").innerHTML=`<svg viewBox="0 0 ${w} ${H}" height="${H}" role="img" aria-label="How broadly laws were supported"><defs></defs>${g}<rect x="${ML}" y="${TOPM}" width="${pw}" height="${PH}" fill="transparent" id="hit2"/></svg>`;
+  const hit=$("#hit2"),cw=$("#c2 .cw"),tip=$("#tip2");
+  hit.addEventListener("pointermove",e=>{const r=hit.getBoundingClientRect(),i=Math.max(0,Math.min(CONGS.length-1,Math.floor((e.clientX-r.left)/r.width*CONGS.length)));setHover(i);const c=CONGS[i].c,tot=total(c);
+   tipFor(i,[...bandSeries].reverse(),[...bandSeries].reverse().map(s=>share?pc(bandAt(c,s.k),tot):fmt(bandAt(c,s.k))),tip,cw,e)});
+  hit.addEventListener("pointerleave",()=>{setHover(null);tip.style.display="none"});
+  $("#lg2").innerHTML=bandSeries.map(s=>`<button data-k="${s.k}" aria-pressed="${st.vband===null||st.vband===s.k}"><i style="background:${s.col}"></i>${s.nm}</button>`).join("");
+  $$("#lg2 button").forEach(b=>b.onclick=()=>{const k=+b.dataset.k;st.vband=st.vband===k?null:k;renderAll()});
+  $$("#c2 [data-m]").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.m===st.mode2));b.onclick=()=>{st.mode2=b.dataset.m;renderAll()}});
+ }
+
+ /* ----- card 3: decade heatmap + rows ----- */
+ function chart3(){
+  const meas=a=>{const f=(id,[,c0,c1])=>CONGS.filter(x=>x.c>=c0&&x.c<=c1).reduce((s,{c})=>s+(st.measure==="n"?cell(c,id).n:cell(c,id).b[+st.measure]),0);return f};
+  const f=meas();const ids=AREAS.map(a=>a.id);
+  const val=(id,d)=>id==="all"?ids.reduce((s,i)=>s+f(i,d),0):f(id,d);
+  const rowTot=id=>DECADES.reduce((s,d)=>s+val(id,d),0);
+  const order=[...AREAS].sort((a,b)=>(a.id==="other")-(b.id==="other")||st.dir*(rowTot(a.id)-rowTot(b.id)));
+  const rowsAll=[{id:"all",nm:"All policy areas"},...order];
+  const mxc=Math.max(...order.flatMap(a=>DECADES.map(d=>val(a.id,d))),1),mxall=Math.max(...DECADES.map(d=>val("all",d)),1);
+  const short=n=>phone&&n>=1000?(n/1000).toFixed(1)+"k":fmt(n);
+  let h=`<span></span>${DECADES.map(d=>`<span class="h">${d[0]}</span>`).join("")}`;
+  rowsAll.forEach(r=>{const on=st.area===r.id;h+=`<span class="rl ${on?"sel":""}" data-a="${r.id==="all"?"":r.id}">${r.nm}</span>`;
+   DECADES.forEach(d=>{const v=val(r.id,d),m=r.id==="all"?mxall:mxc,p=Math.round(8+Math.pow(v/m,.8)*72),dark=p>46;
+    h+=`<span class="c ${v===0?"empty":""} ${st.area&&st.area!==r.id&&r.id!=="all"?"dim":""}" data-a="${r.id==="all"?"":r.id}" style="${v?`background:color-mix(in oklab,var(--accent) ${p}%,var(--surface));color:${dark?"var(--accent-ink)":"var(--ink)"}`:""}" title="${r.nm}, ${d[0]}: ${fmt(v)}">${v?short(v):""}</span>`})});
+  $("#hm").innerHTML=h;
+  // right rows: five-band 100% bars over the years shown
+  const bandsFor=id=>{const o=[0,0,0,0,0];(id==="all"?ids:[id]).forEach(i=>CONGS.forEach(({c})=>{const x=cell(c,i);x.b.forEach((v,k)=>o[k]+=v)}));return o};
+  $("#rsub").textContent="Years shown: 1973–2026";
+  $("#rows").innerHTML=rowsAll.map(r=>{const b=bandsFor(r.id),n=b.reduce((s,v)=>s+v,0)||1;const on=st.area===r.id||(!st.area&&r.id==="all");
+   return`<div class="rw ${on&&r.id!=="all"?"sel":""} ${st.area&&st.area!==r.id&&r.id!=="all"?"dim":""}" data-a="${r.id==="all"?"":r.id}"><span>${r.nm}</span><span class="bar2">${ORDER.map(k=>`<i style="width:${b[k]/n*100}%;background:${BC[k]}" title="${BANDS[k]}: ${fmt(b[k])}"></i>`).join("")}</span><span class="n">${fmt(n===1?0:b.reduce((s,v)=>s+v,0))}</span></div>`}).join("");
+  $("#rows").insertAdjacentHTML("afterbegin",`<div class="bandkey" style="margin:0;align-self:end;padding-bottom:4px">${ORDER.map(k=>`<span><i style="background:${BC[k]}"></i>${BANDS[k]}</span>`).join("")}</div>`);
+  $$("#hm [data-a],#rows [data-a]").forEach(e=>e.onclick=()=>{const a=e.dataset.a;st.area=(a===""||st.area===a)?null:a;renderAll()});
+  $$("#c3 [data-k]").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.k===st.measure));b.onclick=()=>{if(st.measure===b.dataset.k)st.dir*=-1;else{st.measure=b.dataset.k;st.dir=-1}renderAll()};
+   if(b.dataset.k===st.measure)b.textContent=b.textContent.replace(/ [▾▴]$/,"")+(st.dir<0?" ▾":" ▴");else b.textContent=b.textContent.replace(/ [▾▴]$/,"")});
+ }
+
+ /* ----- list ----- */
+ function list(){
+  const rows=ROWS.filter(r=>(!st.area||r.rid===st.area)&&(!st.major||r.major)&&(st.vband===null||r.band===st.vband)&&(!st.q||(r.name+r.bill+r.spon+r.area+r.sum).toLowerCase().includes(st.q.toLowerCase())));
+  const total=nTotal();
+  $("#jn").textContent=fmt(Object.values(TOT).reduce((a,b)=>a+b,0));$("#dnn").textContent=fmt(Object.values(TOT).reduce((a,b)=>a+b,0));
+  $("#ln").textContent=(st.area||st.major||st.vband!==null||st.q)?`${fmt(rows.length)} of ${ROWS.length} sample laws`:`${fmt(Object.values(TOT).reduce((a,b)=>a+b,0))} laws (${ROWS.length} sampled in this mock)`;
+  $("#lrows").innerHTML=rows.map(r=>{
+   const dt=new Date(r.date+"T12:00:00Z").toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric",timeZone:"UTC"});
+   const sp=r.spon?(r.link?`<a href="#">${r.spon}</a>`:r.spon):"";
+   return`<li class="lrow ${r.ph?"ph":""}"><span class="d">${dt}<span class="mob"> · Pub. L. ${r.cite}</span></span>
+    <span class="nm"><a href="#">${r.name}</a>${r.major?'<span class="badge">Major law</span>':""}${r.ovr?'<span class="badge ov">Veto override</span>':""}<span class="cite">Pub. L. ${r.cite}</span>${sp||r.bill!=="—"?`<span class="spon">${r.bill}${sp?" · "+sp:""}</span>`:""}</span>
+    <span class="area">${r.area}</span>
+    <span class="vote vcol"><i style="background:${BC[r.band]}"></i><span>${r.s}<small>${r.h}</small></span></span>
+    <span class="by"><u style="background:var(--${r.party==="R"?"rep":"dem"})"></u>${r.by}</span>
+    <p class="sum">${r.sum}</p></li>`}).join("")||`<li class="lrow"><span class="nm">No sample laws match these filters.</span></li>`;
+  const chips=[];if(st.area)chips.push(["area",AREAS.find(a=>a.id===st.area).nm]);if(st.major)chips.push(["major","Major laws"]);if(st.vband!==null)chips.push(["vband",BANDS[st.vband]]);
+  $("#chips").innerHTML=chips.map(c=>`<button class="chip" data-c="${c[0]}">${c[1]} ✕</button>`).join("");
+  $$("#chips .chip").forEach(b=>b.onclick=()=>{const k=b.dataset.c;if(k==="area")st.area=null;if(k==="major")st.major=false;if(k==="vband")st.vband=null;renderAll()});
+  $$("[data-v]").forEach(b=>{const v=b.dataset.v===""?null:+b.dataset.v;b.setAttribute("aria-pressed",String(v===st.vband));b.onclick=()=>{st.vband=v;renderAll()}});
+ }
+
+ function renderAll(){$("#area").value=st.area||"";$("#major").checked=st.major;$("#ctl").checked=st.ctl;chart1();chart2();chart3();list()}
+ $("#area").onchange=e=>{st.area=e.target.value||null;renderAll()};
+ $("#major").onchange=e=>{st.major=e.target.checked;renderAll()};
+ $("#ctl").onchange=e=>{st.ctl=e.target.checked;renderAll()};
+ $("#q").oninput=e=>{st.q=e.target.value;list()};
+ renderAll();
+ new ResizeObserver(()=>{chart1();chart2()}).observe(root);
+ return renderAll;
+}
+Page(document.getElementById("desk"),{phone:false});
+Page(document.getElementById("mob"),{phone:true});
+</script>
+</body>
+</html>
