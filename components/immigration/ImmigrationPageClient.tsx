@@ -40,7 +40,7 @@ export function ImmigrationPageClient({ data, countries, worldMap }: { data: Imm
             also includes returns — voluntary returns, voluntary departures and withdrawals under docket control — so it
             runs higher than a tally of formal removals alone. Each bar below is one fiscal year (October to September),
             colored by the administration in office for most of it; drag the slider’s handles, or tap a president under it, to choose which years the timeline shows, then click a bar (or use the year menu in the card below) to choose the year whose countries are listed. ICE has changed what it counts several times, so numbered markers on the timeline show where one era
-            stops being directly comparable to the next; hover or tap a number to see what changed.
+            stops being directly comparable to the next; select a number to see what changed.
           </p>
         </PageHeader>
 
