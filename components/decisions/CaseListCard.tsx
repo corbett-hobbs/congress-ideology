@@ -104,6 +104,15 @@ export function CaseListCard() {
   );
 }
 
+const BADGE =
+  "inline-block whitespace-nowrap rounded-full border border-line-strong bg-surface-raised px-1.5 py-px align-baseline text-[0.66rem] font-medium text-ink-muted no-underline hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
+
+/**
+ * One case. Phones: the name on its own line; under it the date and citation on the left with the vote on the right (the
+ * count a reader scans for); the issue area and the landmark badge below. From `sm`: date, name (badge and citation inline),
+ * issue area and vote in four columns. The phone and wide copies of the citation and badge are one or the other (display:none),
+ * never both exposed.
+ */
 function CaseRow({ c, area }: { c: DecisionCase; area: string }) {
   const url = caseUrl(c[3]);
   const name = url ? (
@@ -113,30 +122,42 @@ function CaseRow({ c, area }: { c: DecisionCase; area: string }) {
   ) : (
     <span className="text-ink">{c[2]}</span>
   );
+  const badge = c[8] ? (
+    <a
+      href={`https://en.wikipedia.org/wiki/${encodeURIComponent(c[8].replaceAll(" ", "_"))}`}
+      target="_blank"
+      rel="noreferrer"
+      title={`Landmark decision on Wikipedia${c[9] ? `: ${c[9]}` : ""}`}
+      className={BADGE}
+    >
+      Landmark{c[9] ? ` \u00b7 ${c[9]}` : ""}
+    </a>
+  ) : null;
   return (
-    <li className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 border-b border-line px-3 py-2 text-[0.82rem] last:border-b-0 sm:grid-cols-[6.5rem_1fr_9.5rem_4.5rem] sm:items-baseline">
-      <span className="order-2 text-[0.75rem] tabular-nums text-ink-muted sm:order-none">{fmtDate(c[1])}</span>
-      <span className="order-1 col-span-2 min-w-0 sm:order-none sm:col-span-1">
-        <span className="break-words">{name}</span>
-        {c[8] && (
-          <a
-            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(c[8].replaceAll(" ", "_"))}`}
-            target="_blank"
-            rel="noreferrer"
-            title={`Landmark decision on Wikipedia${c[9] ? `: ${c[9]}` : ""}`}
-            className="ml-2 inline-block whitespace-nowrap rounded-full border border-line-strong bg-surface-raised px-1.5 py-px align-baseline text-[0.66rem] font-medium text-ink-muted no-underline hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-          >
-            Landmark{c[9] ? ` · ${c[9]}` : ""}
-          </a>
-        )}
-        {c[3] && <span className="ml-2 whitespace-nowrap text-[0.75rem] tabular-nums text-ink-faint">{c[3]}</span>}
+    <li className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-b border-line px-3 py-2.5 text-[0.82rem] last:border-b-0 sm:grid-cols-[6.5rem_minmax(0,1fr)_9.5rem_4.5rem] sm:items-baseline sm:gap-y-0.5 sm:py-2">
+      {/* name (+ badge and citation inline from sm) */}
+      <span className="col-span-2 min-w-0 break-words sm:col-span-1 sm:col-start-2 sm:row-start-1">
+        {name}
+        {badge && <span className="ml-2 max-sm:hidden">{badge}</span>}
+        {c[3] && <span className="ml-2 whitespace-nowrap text-[0.75rem] tabular-nums text-ink-faint max-sm:hidden">{c[3]}</span>}
       </span>
-      <span className="order-3 col-span-1 truncate text-[0.75rem] text-ink-muted sm:order-none" title={area}>
+      {/* date (and, on phones, the citation) */}
+      <span className="col-start-1 row-start-2 text-[0.75rem] tabular-nums text-ink-muted sm:col-start-1 sm:row-start-1">
+        {fmtDate(c[1])}
+        {c[3] && <span className="text-ink-faint sm:hidden">{` \u00b7 ${c[3]}`}</span>}
+      </span>
+      {/* issue area (and, on phones, the landmark badge) */}
+      <span className="col-start-1 row-start-3 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-[0.75rem] text-ink-muted sm:col-start-3 sm:row-start-1 sm:block sm:truncate" title={area}>
         {area}
+        {badge && <span className="sm:hidden">{badge}</span>}
       </span>
-      <span className="order-4 inline-flex items-center justify-end gap-1.5 whitespace-nowrap tabular-nums sm:order-none" title={`${BAND_LONG[c[5]]}`}>
+      {/* vote: right-aligned under the name on phones */}
+      <span
+        className="col-start-2 row-span-2 row-start-2 inline-flex items-center justify-end gap-1.5 self-center whitespace-nowrap text-[0.95rem] tabular-nums sm:col-start-4 sm:row-span-1 sm:row-start-1 sm:self-baseline sm:text-[0.82rem]"
+        title={BAND_LONG[c[5]]}
+      >
         <Swatch color={BAND_COLORS[c[5]]} />
-        <span className="font-medium">{`${c[6]}–${c[7]}`}</span>
+        <span className="font-medium">{`${c[6]}\u2013${c[7]}`}</span>
         <span className="sr-only">{BAND_SHORT[c[5]]} band</span>
       </span>
     </li>

@@ -30,8 +30,6 @@ const check = (ok, msg) => {
 };
 const settle = (page) => page.waitForTimeout(250);
 /** SVG <text> has no innerText; read textContent. */
-/** The distinct fills of a chart's data bars (not the Chief band, not hit targets). */
-const barFills = (loc) => loc.locator("svg.chart-svg rect").evaluateAll((els) => [...new Set(els.filter((e) => e.style.fill && !e.closest("g[aria-hidden=true]")).map((e) => getComputedStyle(e).fill))]);
 const svgTexts = (loc) => loc.evaluateAll((els) => els.map((e) => (e.textContent ?? "").trim()));
 
 const browser = await chromium.launch();
@@ -95,6 +93,11 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   // Band names: in-band, gutter or legend; legend always there and isolates
   const legend = c2.locator("button[aria-pressed]", { hasText: /dissent|No dissent/ });
   check((await legend.count()) === 5, `${tag}: card 2 legend names all five bands`);
+  // Card 2 is a stacked area again, with the band names drawn on it (in the band, else in the right gutter on wide charts)
+  check((await c2.locator("svg.chart-svg path[fill]").count()) === 5, `${tag}: card 2 is a stacked area of five bands`);
+  const svgNames = await svgTexts(c2.locator("svg.chart-svg text"));
+  if (w >= 520) check(["Unanimous", "5–4"].every((n) => svgNames.includes(n)), `${tag}: card 2 names bands on the chart (${svgNames.filter((n) => /^(Unanimous|\d–\d)$/.test(n)).join(", ")})`);
+
   // Card 4: the case list, filtered by the legends and the charts
   await c4.scrollIntoViewIfNeeded();
   await page.waitForFunction(() => /^[\d,]+ cases?$/.test(document.querySelector("[aria-label='Cases, scrollable']")?.previousElementSibling?.querySelector("span")?.textContent ?? ""), null, { timeout: 15000 });
@@ -195,6 +198,20 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   else check(dims.sh > dims.ch && dims.oy === "auto", `${tag}: card 3 rows scroll inside a fixed-height box (${dims.sh} > ${dims.ch})`);
   check((await box.locator("li").count()) === 15, `${tag}: all 15 rows (All + 14 areas) are in the list`);
 
+  // Phones: thousands in the heatmap are compact and never clipped; case rows put the vote on the right under the name
+  if (w <= 480) {
+    const clipped = await c3.locator("[role=grid] [role=gridcell]").evaluateAll((els) => els.filter((e) => e.scrollWidth > e.clientWidth + 1).length);
+    check(clipped === 0, `${tag}: no heatmap number is clipped (${clipped} cells)`);
+    const compact = await c3.locator("[role=grid] [role=gridcell]").nth(1).innerText();
+    check(/^\d+(\.\d)?k?$/.test(compact.trim()), `${tag}: a four-digit count is compact on a phone ("${compact.trim()}")`);
+    const row = await c4.locator("ol li").first().evaluate((li) => {
+      const [nameEl, dateEl, , voteEl] = [...li.children];
+      const r = (e) => e.getBoundingClientRect();
+      return { nameBottom: r(nameEl).bottom, voteTop: r(voteEl).top, voteRight: r(voteEl).right, liRight: r(li).right, dateBottom: r(dateEl).bottom, dateLeft: r(dateEl).left, voteLeft: r(voteEl).left };
+    });
+    check(row.voteTop >= row.nameBottom - 1 && row.voteLeft > row.dateLeft + 60 && row.liRight - row.voteRight < 20, `${tag}: the vote sits on the right, below the case name`);
+  }
+
   // The decade heatmap beside/above the rows
   const heat = c3.locator("[role=grid]");
   check((await heat.locator("[role=gridcell]").count()) === 15 * 9, `${tag}: heatmap has 15 rows x 9 decades`);
@@ -245,11 +262,11 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check((await lede(c1)).includes("4 dissents"), `${tag}: card 1 narrows to the picked band`);
   check((await listBox.locator("li").first().innerText()).replace(/\s+/g, " ").includes("5–4") || (await listBox.locator("li").first().innerText()).includes("4–4"), `${tag}: listed cases are 5–4 or 4–4`);
   check((await c2.locator("button[aria-pressed=true]").filter({ hasText: "Number of cases" }).count()) === 1, `${tag}: isolating a band switches to Number of cases`);
-  check((await barFills(c2)).length === 1, `${tag}: only the isolated band is drawn`);
+  check((await c2.locator("svg.chart-svg path[fill]").count()) === 1, `${tag}: only the isolated band is drawn`);
   await c2.locator("button", { hasText: "Share of cases" }).click();
   await settle(page);
   check((await listCount()) === "8,251 cases", `${tag}: back to Share clears the vote filter`);
-  check((await barFills(c2)).length === 5, `${tag}: back to Share clears the pick`);
+  check((await c2.locator("svg.chart-svg path[fill]").count()) === 5, `${tag}: back to Share clears the pick`);
 
   // Hover links the two time charts (mouse)
   if (w >= 768) {
@@ -350,8 +367,8 @@ for (const [name, opts, attr] of [["dark", { colorScheme: "dark" }, null], ["dat
     const dark = name !== "data-theme=light";
     const expected = dark ? ["#9591ad", "#5cb2fd", "#6acdc6", "#deb34a", "#ba446e"] : ["#312c44", "#23318e", "#41939d", "#643e03", "#a03667"];
     check(JSON.stringify(tokens) === JSON.stringify(expected), `${tag}: --split-0..4 resolve to the ${dark ? "dark" : "light"} set`);
-    const fills = await barFills(c2);
-    check(fills.length === 5, `${tag}: five distinct band fills (${fills.length})`);
+    const fills = await c2.locator("svg.chart-svg path[fill]").evaluateAll((els) => els.map((e) => getComputedStyle(e).fill));
+    check(new Set(fills).size === 5, `${tag}: five distinct band fills (${new Set(fills).size})`);
     const bandBg = await c2.locator("svg.chart-svg g[aria-hidden=true] rect").first().evaluate((e) => getComputedStyle(e).fill);
     check(/^(color|rgb|oklab|oklch)/.test(bandBg), `${tag}: party-tinted Chief band renders (${bandBg.slice(0, 40)})`);
     check(errors.length === 0, `${tag}: no console errors`);
