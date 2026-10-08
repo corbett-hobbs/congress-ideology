@@ -13,14 +13,17 @@ import {
   heatValue,
   areaRows,
   areaSeries,
-  caseUrl,
+  wikiArticleUrl,
+  wikiCaseUrl,
   filterCases,
   inAreaFilter,
   bandShare,
   buildDecisionsPayload,
   countCaseRows,
   viewOf,
+  binByDecade,
   buildStacks,
+  splitGrain,
   casesPerTerm,
   chiefBandTerms,
   chiefOfTerm,
@@ -209,10 +212,17 @@ describe("case list", () => {
     expect(f({ term: 2015 })).toHaveLength(sumBucket(d.all[2015 - 1946]));
     expect(f({ term: 2015, band: 4 })).toHaveLength(d.all[2015 - 1946][4]);
   });
-  it("links U.S. Reports cites to Justia and nothing else", () => {
-    expect(caseUrl("347 U.S. 483")).toBe("https://supreme.justia.com/cases/federal/us/347/483/");
-    expect(caseUrl("146 S. Ct. 2438")).toBeNull();
-    expect(caseUrl("")).toBeNull();
+  it("links a landmark to its article and any other case to a Wikipedia search, never to Justia", () => {
+    const lm: DecisionCase = [1954, "1954-05-17", "Brown v. Board of Education", "347 U.S. 483", 1, 0, 9, 0, "Brown v. Board of Education", "Race"];
+    expect(wikiCaseUrl(lm)).toBe("https://en.wikipedia.org/wiki/Brown_v._Board_of_Education");
+    expect(wikiArticleUrl("Dobbs v. Jackson Women's Health Organization")).toBe("https://en.wikipedia.org/wiki/Dobbs_v._Jackson_Women's_Health_Organization");
+    const plain: DecisionCase = [1962, "1962-01-01", "Smith & Co. v. Jones", "369 U.S. 1", 1, 0, 9, 0, "", ""];
+    const u = new URL(wikiCaseUrl(plain));
+    expect(u.host).toBe("en.wikipedia.org");
+    expect(u.searchParams.get("search")).toBe("Smith & Co. v. Jones");
+    expect(u.searchParams.get("go")).toBe("Go");
+    expect(wikiCaseUrl(plain)).not.toMatch(/justia/);
+    expect(new URL(wikiCaseUrl([1962, "x", "Graham et al. v. John Deere Co. et al.", "", -1, 0, 9, 0, "", ""])).searchParams.get("search")).toBe("Graham v. John Deere Co.");
   });
 });
 
@@ -292,5 +302,27 @@ describe("landmark view", () => {
   it("flags a thin selection as a small sample, the landmark view included", () => {
     expect(isSmallSample(viewOf(d, true), ALL_AREAS, FULL)).toBe(true);
     expect(isSmallSample(d, ALL_AREAS, FULL)).toBe(false);
+  });
+});
+
+describe("grouping by decade", () => {
+  it("bins a window by decade, partial decades clipped to the window", () => {
+    const { terms, cells } = windowCells(d, ALL_AREAS, [1946, 1962]);
+    const bins = binByDecade(terms, cells);
+    expect(bins.map((b) => [b.decade, b.first, b.last])).toEqual([[1940, 1946, 1949], [1950, 1950, 1959], [1960, 1960, 1962]]);
+    expect(bins.reduce((t, b) => t + b.total, 0)).toBe(cells.reduce((t, b) => t + sumBucket(b), 0));
+    for (const b of bins) expect(sumBucket(b.bucket)).toBe(b.total);
+  });
+  it("auto: by term for the docket, by decade for a thin selection, by term when there is nothing to group", () => {
+    expect(splitGrain(d, ALL_AREAS, FULL, "auto")).toBe("term");
+    const lm = viewOf(d, true);
+    expect(splitGrain(lm, ALL_AREAS, FULL, "auto")).toBe("decade");
+    expect(splitGrain(lm, ALL_AREAS, [1972, 1977], "auto")).toBe("term"); // one decade: nothing to group
+    const thin = d.areas.findIndex((a) => a.id === "private-action");
+    expect(splitGrain(d, thin, FULL, "auto")).toBe("decade");
+  });
+  it("a forced choice wins either way", () => {
+    expect(splitGrain(d, ALL_AREAS, FULL, "decade")).toBe("decade");
+    expect(splitGrain(viewOf(d, true), ALL_AREAS, FULL, "term")).toBe("term");
   });
 });
