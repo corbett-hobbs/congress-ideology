@@ -87,12 +87,12 @@ FORCED_PAIRS.push(...FUEL_KEYS.flatMap((a, i) => FUEL_KEYS.slice(i + 1).map((b) 
 // They never meet a party colour, and adjacent steps must differ in lightness, not hue.
 const TENURE_KEYS = ["tenure-1", "tenure-2", "tenure-3", "tenure-4"];
 FORCED_PAIRS.push(...TENURE_KEYS.flatMap((a, i) => TENURE_KEYS.slice(i + 1).map((b) => [a, b])));
-// Dissent-count bands (components/decisions): five bands stacked on one chart (and in card 3's rows), so every pair must be
-// separable, and each is also held against --dem/--rep (they are not party colours and must not read as them, though they
-// never co-occur with a real party_code).
+// Dissent-count bands (components/decisions): five steps of one sequential gradient stacked on one chart (and in the rows),
+// so every pair must be separable, by lightness (the ramp is monotone). They are not party colours and never co-occur with a
+// party_code; they are deliberately NOT forced against --dem/--rep, because a ramp that spans enough lightness for five
+// steps to clear dE 0.1 for every viewer cannot also avoid both party hues.
 const SPLIT_KEYS = ["split-0", "split-1", "split-2", "split-3", "split-4"];
 FORCED_PAIRS.push(...SPLIT_KEYS.flatMap((a, i) => SPLIT_KEYS.slice(i + 1).map((b) => [a, b])));
-FORCED_PAIRS.push(...SPLIT_KEYS.flatMap((a) => [[a, "dem"], [a, "rep"]]));
 const NEW_KEYS = ["committee-house", "committee-senate", "committee-joint", ...SECTOR_KEYS, ...FUEL_KEYS, ...TENURE_KEYS, ...SPLIT_KEYS];
 
 // ---- CLI overrides -------------------------------------------------------

@@ -1,8 +1,8 @@
 import type { BandTerm } from "../components/charts/TermBand";
 import type { TermSegment } from "../components/charts/TermBandSvg";
-import type { DecisionCountRow, DecisionsMeta } from "./decisions-entities";
+import type { DecisionCaseRow, DecisionCountRow, DecisionsMeta } from "./decisions-entities";
 import { initialsOf } from "./term-label";
-import { ALL_AREAS, OTHER_AREAS, type AreaSort, type AreaSortKey, type Bucket, type DecisionCase, type DecisionsChief, type DecisionsPayload, type SplitMode } from "./decisions-types";
+import { ALL_AREAS, OTHER_AREAS, type AreaSort, type AreaSortKey, type Bucket, type DecisionCase, type DecisionsChief, type DecisionsPayload, type LandmarkCells, type SplitMode } from "./decisions-types";
 import type { YearRange } from "./year-range";
 
 /**
@@ -19,16 +19,28 @@ const addInto = (acc: Bucket, b: readonly number[]) => {
 /** A median case count per term under this is a "small sample": single-year shares swing widely. */
 export const SMALL_SAMPLE_MEDIAN = 15;
 
-export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta: DecisionsMeta): DecisionsPayload {
-  const terms: number[] = [];
-  for (let t = meta.first_term; t <= meta.data_through_term; t++) terms.push(t);
+/** Count rows for a subset of case rows (the landmarks), in the same shape as `decisions_counts.json`. */
+export function countCaseRows(rows: readonly DecisionCaseRow[]): DecisionCountRow[] {
+  const map = new Map<string, DecisionCountRow>();
+  for (const r of rows) {
+    const key = `${r.term}|${r.issue_area_id ?? ""}`;
+    const row = map.get(key) ?? { term: r.term, issue_area_id: r.issue_area_id, n: 0, d0: 0, d1: 0, d2: 0, d3: 0, d4: 0 };
+    row.n += 1;
+    row[(["d0", "d1", "d2", "d3", "d4"] as const)[r.band]] += 1;
+    map.set(key, row);
+  }
+  return [...map.values()];
+}
+
+/** Per-term arrays for a set of count rows: every case, each area, and "Other areas" (everything outside `topAreas`, unclassified included). */
+function shapeCounts(counts: readonly DecisionCountRow[], terms: readonly number[], areaIds: readonly string[], topAreas: readonly number[]): LandmarkCells {
   const termIndex = new Map(terms.map((t, i) => [t, i]));
-  const areaIndex = new Map(meta.issue_areas.map((a, i) => [a.id, i]));
+  const areaIndex = new Map(areaIds.map((id, i) => [id, i]));
   const all = terms.map(zero);
-  const by = meta.issue_areas.map(() => terms.map(zero));
+  const by = areaIds.map(() => terms.map(zero));
   for (const r of counts) {
     const ti = termIndex.get(r.term);
-    if (ti === undefined) throw new Error(`decisions: count row for term ${r.term} outside ${meta.first_term}-${meta.data_through_term}`);
+    if (ti === undefined) throw new Error(`decisions: count row for term ${r.term} outside ${terms[0]}-${terms[terms.length - 1]}`);
     const b: Bucket = [r.d0, r.d1, r.d2, r.d3, r.d4];
     addInto(all[ti], b);
     if (r.issue_area_id !== null) {
@@ -37,14 +49,27 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
       addInto(by[ai][ti], b);
     }
   }
-  const totals = by.map((rows) => rows.reduce((t, b) => t + sumBucket(b), 0));
-  const topAreas = totals.map((n, i) => ({ n, i })).sort((a, b) => b.n - a.n || a.i - b.i).slice(0, TOP_AREAS).map((x) => x.i);
   // "Other areas" = everything outside the six biggest, cases with no issue area included, so the series always add up to All.
   const other = terms.map((_, ti) => {
     const o: Bucket = [...all[ti]];
     for (const ai of topAreas) for (let k = 0; k < 5; k++) o[k] -= by[ai][ti][k];
     return o;
   });
+  const caseCount = all.reduce((t, b) => t + sumBucket(b), 0);
+  const classified = by.reduce((t, rows) => t + rows.reduce((u, b) => u + sumBucket(b), 0), 0);
+  return { all, by, other, caseCount, unclassified: caseCount - classified };
+}
+
+export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta: DecisionsMeta, landmarkCounts: readonly DecisionCountRow[] = []): DecisionsPayload {
+  const terms: number[] = [];
+  for (let t = meta.first_term; t <= meta.data_through_term; t++) terms.push(t);
+  const areaIds = meta.issue_areas.map((a) => a.id);
+  // The six biggest areas are fixed by the whole docket, so colours and series stay put when the landmark filter is on.
+  const full = shapeCounts(counts, terms, areaIds, []);
+  const totals = full.by.map((rows) => rows.reduce((t, b) => t + sumBucket(b), 0));
+  const topAreas = totals.map((n, i) => ({ n, i })).sort((a, b) => b.n - a.n || a.i - b.i).slice(0, TOP_AREAS).map((x) => x.i);
+  const { all, by, other } = shapeCounts(counts, terms, areaIds, topAreas);
+  const landmark = shapeCounts(landmarkCounts, terms, areaIds, topAreas);
   const chiefs: DecisionsChief[] = meta.chief_spans.map((s) => ({
     id: s.scdb_chief,
     name: s.name,
@@ -60,6 +85,8 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
     all,
     by,
     other,
+    landmark,
+    landmarkSource: { url: meta.landmarks.url, page: meta.landmarks.page, revisionDate: meta.landmarks.revision_date, license: meta.landmarks.license, count: meta.landmarks.count },
     topAreas,
     chiefs,
     versionLabel: meta.scdb_version_label,
@@ -75,6 +102,10 @@ export const TOP_AREAS = 6;
 
 /** The per-term buckets for an area filter value (ALL_AREAS, OTHER_AREAS or an index). */
 export const areaCells = (d: DecisionsPayload, area: number): Bucket[] => (area === ALL_AREAS ? d.all : area === OTHER_AREAS ? d.other : d.by[area]);
+/** The payload as the page shows it: the whole docket, or only the landmark cases (the pinned bar's checkbox). Series and colours stay fixed. */
+export const viewOf = (d: DecisionsPayload, landmarkOnly: boolean): DecisionsPayload =>
+  landmarkOnly ? { ...d, all: d.landmark.all, by: d.landmark.by, other: d.landmark.other, caseCount: d.landmark.caseCount, unclassified: d.landmark.unclassified } : d;
+
 export const cellAt = (d: DecisionsPayload, area: number, ti: number): Bucket => areaCells(d, area)[ti];
 
 /** Does issue-area index `index` (-1 = none coded) fall inside the area filter? */
@@ -124,9 +155,8 @@ export function median(values: readonly number[]): number {
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 }
 
-/** Few cases per term in a chosen issue area: shares from single years are rough. Never true for "All issue areas". */
+/** Few cases per term in this selection (a thin issue area, or the landmark filter): shares from single years are rough. */
 export function isSmallSample(d: DecisionsPayload, area: number, range: YearRange): boolean {
-  if (area === ALL_AREAS) return false;
   return median(casesPerTerm(windowCells(d, area, range).cells)) < SMALL_SAMPLE_MEDIAN;
 }
 
@@ -293,12 +323,14 @@ export interface CaseFilter {
   band: number | null;
   /** A single pinned term, or null for the whole window. */
   term: number | null;
+  /** Only the cases on Wikipedia's list of landmark decisions. */
+  landmark?: boolean;
 }
 
 /** Cases (newest first) inside the window, the area filter, the band and the pinned term. */
 export function filterCases(d: DecisionsPayload, cases: readonly DecisionCase[], f: CaseFilter): DecisionCase[] {
   const [lo, hi] = f.term === null ? f.range : [f.term, f.term];
-  return cases.filter((c) => c[0] >= lo && c[0] <= hi && (f.band === null || c[5] === f.band) && inAreaFilter(d, f.area, c[4]));
+  return cases.filter((c) => c[0] >= lo && c[0] <= hi && (f.band === null || c[5] === f.band) && (!f.landmark || c[8] !== "") && inAreaFilter(d, f.area, c[4]));
 }
 
 /** `https://supreme.justia.com/...` for a case with a U.S. Reports cite ("347 U.S. 483"); null when there is no page number to link. */

@@ -52,6 +52,17 @@ The case list aggregates back to the counts exactly (same cases, same cells, uni
 every row's buckets sum to `n`; unclassified and exclusion counts equal the recount; stable anchors (1946 = 142, 1972 = 156, 2015 five-four = 4) and release anchors (2026_01: total 8,251, 2024 = 61, 2025 = 57); chief spans contiguous and covering all terms.
 When a new release legitimately changes an anchor, update `ANCHORS` / `ANCHORS_BY_VERSION` in `pipeline/transform/decisions.ts` in the same PR.
 
+## Landmark cases
+
+The page's "Landmark cases" checkbox uses Wikipedia's [List of landmark court decisions in the United States](https://en.wikipedia.org/wiki/List_of_landmark_court_decisions_in_the_United_States): one request to the MediaWiki API (`pnpm fetch:landmarks`, identified User-Agent), saved as `pipeline/raw/wikipedia-landmarks/list.wikitext` with a manifest (revision id, timestamp, sha256, licence CC BY-SA 4.0). The list is grouped under topical headings, and each case carries a `{{ussc|volume|page|year}}` template (some recent ones use named parameters or a docket number).
+
+- **Join to SCDB**, in order: U.S. Reports cite; docket number (when the list gives one); case name plus decision year (the first significant word on each side of "v."). Every name match is listed in `decisions_report.json` for review.
+- **What does not join, and why** (all listed by title in the report): cases decided before SCDB's modern file (1945 term and earlier: 133 entries); cases SCDB holds but the page leaves out because they were not orally argued or the vote is unclear (7, e.g. *Dusky v. United States*); and three entries with no SCDB row: *One, Inc. v. Olesen* (listed twice; a one-line per curiam SCDB does not hold) and *Lucas v. South Carolina Coastal Council*, which the list cites as 503 U.S. 1003 where SCDB has 505 U.S. 1003 (a typo on Wikipedia; not corrected here).
+- **Result at the 2026 revision:** 485 list entries, 339 cases on the page (300 by cite, 5 by docket, 34 by name and year).
+- **Gate:** every entry is accounted for exactly once; at least 300 matched; no more than 3% of the post-SCDB entries unmatched.
+- **Stored:** only which cases it names, the article title (a link back) and the headings, never the list's prose. A case under several headings keeps all of them; the page shows up to two.
+- **A judgement call, not a ruling:** "landmark" is Wikipedia editors' classification, not the Court's or SCDB's. It is recent-heavy (the list keeps adding new decisions) and its 339 cases are about four a term, so landmark-only shares are rough; the page says so.
+
 ## Not in scope
 
 Liberal/conservative direction, per-justice votes, landmark-case curation, case summaries. The page is institutional counts plus a plain list of the cases behind them (name, cite, date, issue area, vote).

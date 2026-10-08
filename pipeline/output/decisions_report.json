@@ -54,6 +54,246 @@
     "William Rehnquist 1986-2004 (Ronald Reagan, Republican)",
     "John Roberts 2005-2025 (George W. Bush, Republican)"
   ],
+  "landmarks": {
+    "source": "List of landmark court decisions in the United States, revision 1375676234 (2026-09-19T08:06:18Z)",
+    "entries": 485,
+    "pre_scdb": 133,
+    "matched": 339,
+    "by_via": {
+      "us_cite": 300,
+      "docket": 5,
+      "name_year": 34
+    },
+    "out_of_scope": [
+      {
+        "title": "United States v. Guest",
+        "cite": "383 U.S. 745",
+        "year": 1966
+      },
+      {
+        "title": "Kinsella v. Krueger",
+        "cite": "351 U.S. 470",
+        "year": 1956
+      },
+      {
+        "title": "Dusky v. United States",
+        "cite": "362 U.S. 402",
+        "year": 1960
+      },
+      {
+        "title": "Breard v. Greene",
+        "cite": "523 U.S. 371",
+        "year": 1998
+      },
+      {
+        "title": "National Socialist Party of America v. Village of Skokie",
+        "cite": "432 U.S. 43",
+        "year": 1977
+      },
+      {
+        "title": "Caetano v. Massachusetts",
+        "cite": "577 U.S. 411",
+        "year": 2016
+      },
+      {
+        "title": "Cleveland Board of Education v. Loudermill",
+        "cite": "470 U.S. 532",
+        "year": 1985
+      }
+    ],
+    "unmatched": [
+      {
+        "title": "One, Inc. v. Olesen",
+        "cite": "355 U.S. 371",
+        "year": 1958,
+        "reason": "no SCDB row with this cite, docket or name and year"
+      },
+      {
+        "title": "One, Inc. v. Olesen",
+        "cite": "355 U.S. 371",
+        "year": 1958,
+        "reason": "no SCDB row with this cite, docket or name and year"
+      },
+      {
+        "title": "Lucas v. South Carolina Coastal Council",
+        "cite": "503 U.S. 1003",
+        "year": 1992,
+        "reason": "no SCDB row with this cite, docket or name and year"
+      }
+    ],
+    "name_matches": [
+      {
+        "title": "Bostock v. Clayton County",
+        "scdb_name": "BOSTOCK v. CLAYTON COUNTY, GEORGIA",
+        "year": 2020
+      },
+      {
+        "title": "Dobbs v. Jackson Women's Health Organization",
+        "scdb_name": "DOBBS v. JACKSON WOMENâS HEALTH ORGANIZATION",
+        "year": 2022
+      },
+      {
+        "title": "Trump v. Barbara",
+        "scdb_name": "TRUMP v. BARBARA",
+        "year": 2026
+      },
+      {
+        "title": "Carpenter v. United States",
+        "scdb_name": "CARPENTER v. UNITED STATES",
+        "year": 2018
+      },
+      {
+        "title": "Kahler v. Kansas",
+        "scdb_name": "KAHLER v. KANSAS",
+        "year": 2020
+      },
+      {
+        "title": "Bucklew v. Precythe",
+        "scdb_name": "BUCKLEW v. PRECYTHE",
+        "year": 2019
+      },
+      {
+        "title": "Ramos v. Louisiana",
+        "scdb_name": "RAMOS v. LOUISIANA",
+        "year": 2020
+      },
+      {
+        "title": "Bristol-Myers Squibb Co. v. Superior Court",
+        "scdb_name": "BRISTOL-MYERS SQUIBB CO. v. SUPERIOR COURT OF CA.",
+        "year": 2017
+      },
+      {
+        "title": "Ford Motor Co. v. Montana Eighth Judicial District",
+        "scdb_name": "FORD MOTOR COMPANY v. MONTANA EIGHTH JUDICIAL DISTRICT COURT",
+        "year": 2021
+      },
+      {
+        "title": "Murphy v. National Collegiate Athletic Association",
+        "scdb_name": "MURPHY v. NATIONAL COLLEGIATE ATHLETIC ASSOCIATION",
+        "year": 2018
+      },
+      {
+        "title": "Herrera v. Wyoming",
+        "scdb_name": "HERRERA v. WYOMING",
+        "year": 2019
+      },
+      {
+        "title": "McGirt v. Oklahoma",
+        "scdb_name": "MCGIRT v. OKLAHOMA",
+        "year": 2020
+      },
+      {
+        "title": "Sharp v. Murphy",
+        "scdb_name": "SHARP v. MURPHY",
+        "year": 2020
+      },
+      {
+        "title": "United States v. Cooley",
+        "scdb_name": "UNITED STATES v. COOLEY",
+        "year": 2021
+      },
+      {
+        "title": "Oklahoma v. Castro-Huerta",
+        "scdb_name": "OKLAHOMA v. CASTRO-HUERTA",
+        "year": 2022
+      },
+      {
+        "title": "Manual Enterprises, Inc. v. Day",
+        "scdb_name": "MANUAL ENTERPRISES, INC., et al. v. DAY, POSTMASTER GENERAL",
+        "year": 1962
+      },
+      {
+        "title": "Minnesota Voters Alliance v. Mansky",
+        "scdb_name": "MINNESOTA VOTERS ALLIANCE v. MANSKY",
+        "year": 2018
+      },
+      {
+        "title": "FEC v. Ted Cruz for Senate",
+        "scdb_name": "FEDERAL ELECTION COMMISSION v. TED CRUZ FOR SENATE",
+        "year": 2022
+      },
+      {
+        "title": "American Legion v. American Humanist Association",
+        "scdb_name": "AMERICAN LEGION v. AMERICAN HUMANIST ASSOCIATION",
+        "year": 2019
+      },
+      {
+        "title": "Espinoza v. Montana Department of Revenue",
+        "scdb_name": "ESPINOZA v. MONTANA DEPARTMENT OF REVENUE",
+        "year": 2020
+      },
+      {
+        "title": "Carson v. Makin",
+        "scdb_name": "CARSON v. MAKIN",
+        "year": 2022
+      },
+      {
+        "title": "Kennedy v. Bremerton School District",
+        "scdb_name": "KENNEDY v. BREMERTON SCHOOL DISTRICT",
+        "year": 2022
+      },
+      {
+        "title": "New York State Rifle & Pistol Association, Inc. v. Bruen",
+        "scdb_name": "NEW YORK STATE RIFLE & PISTOL ASSOCIATION INC. v. BRUEN",
+        "year": 2022
+      },
+      {
+        "title": "Trump v. Slaughter",
+        "scdb_name": "TRUMP v. SLAUGHTER",
+        "year": 2026
+      },
+      {
+        "title": "West Virginia v. EPA",
+        "scdb_name": "WEST VIRGINIA v. ENVIRONMENTAL PROTECTION AGENCY",
+        "year": 2022
+      },
+      {
+        "title": "Trump v. Mazars USA, LLP",
+        "scdb_name": "TRUMP v. MAZARS USA, LLP",
+        "year": 2020
+      },
+      {
+        "title": "Trump v. Vance",
+        "scdb_name": "TRUMP v. VANCE",
+        "year": 2020
+      },
+      {
+        "title": "Trump v. Hawaii",
+        "scdb_name": "TRUMP, PRESIDENT OF U.S. v. HAWAII",
+        "year": 2018
+      },
+      {
+        "title": "Learning Resources, Inc. v. Trump",
+        "scdb_name": "LEARNING RESOURCES v. TRUMP",
+        "year": 2026
+      },
+      {
+        "title": "Rucho v. Common Cause",
+        "scdb_name": "RUCHO v. COMMON CAUSE",
+        "year": 2019
+      },
+      {
+        "title": "Chiafalo v. Washington",
+        "scdb_name": "CHIAFALO v. WASHINGTON",
+        "year": 2020
+      },
+      {
+        "title": "Brnovich v. Democratic National Committee",
+        "scdb_name": "BRNOVICH v. DEMOCRATIC NATIONAL COMMITTEE",
+        "year": 2021
+      },
+      {
+        "title": "Louisiana v. Callais",
+        "scdb_name": "LOUISIANA v. CALLAIS",
+        "year": 2026
+      },
+      {
+        "title": "National Collegiate Athletic Association v. Alston",
+        "scdb_name": "NATIONAL COLLEGIATE ATHLETIC ASSOCIATION v. ALSTON",
+        "year": 2021
+      }
+    ]
+  },
   "gates": {
     "cases": 8251,
     "terms": 80,

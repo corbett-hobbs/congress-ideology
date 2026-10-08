@@ -28,6 +28,16 @@ export interface DecisionsArea {
   label: string;
 }
 
+/** Per-term bucket arrays for a subset of cases, shaped like the payload's own `all` / `by` / `other`. */
+export interface LandmarkCells {
+  all: Bucket[];
+  by: Bucket[][];
+  other: Bucket[];
+  caseCount: number;
+  /** Cases in the subset with no issue area. */
+  unclassified: number;
+}
+
 export interface DecisionsPayload {
   /** Every term from the first to the last, dense. */
   terms: number[];
@@ -36,6 +46,10 @@ export interface DecisionsPayload {
   all: Bucket[];
   /** `by[areaIndex][termIndex]`, areas in catalog order. */
   by: Bucket[][];
+  /** The same arrays for the landmark cases only (Wikipedia's list of landmark decisions), for the "Landmark cases" filter. */
+  landmark: LandmarkCells;
+  /** Where the landmark flag comes from. */
+  landmarkSource: { url: string; page: string; revisionDate: string; license: string; count: number };
   /** Counts of the areas outside `topAreas`, summed ("Other areas"): `other[termIndex]`. */
   other: Bucket[];
   /** Indexes (into `areas`) of the six biggest issue areas by total cases: card 1 draws each as its own series. */
@@ -62,7 +76,8 @@ export const ALL_AREAS = -1;
 export const OTHER_AREAS = -2;
 
 /**
- * One case in the list: `[term, date (ISO), name, cite, area index or -1, dissent band 0-4, majority, minority]`.
+ * One case in the list: `[term, date (ISO), name, cite, area index or -1, dissent band 0-4, majority, minority, landmark
+ * article title or "", landmark topics ("Fourth Amendment rights \u00b7 Search and seizure") or ""]`.
  * Arrays, not objects: 8,000+ of them travel to the browser.
  */
-export type DecisionCase = [number, string, string, string, number, number, number, number];
+export type DecisionCase = [number, string, string, string, number, number, number, number, string, string];

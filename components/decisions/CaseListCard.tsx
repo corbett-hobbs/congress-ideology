@@ -36,11 +36,11 @@ function Chip({ children, onClear, label }: { children: string; onClear: () => v
  * scrolled, so 8,000 cases never sit in the page at once.
  */
 export function CaseListCard() {
-  const { data, range, area, band, pin } = useDecisionsValues();
-  const { setArea, setBand, clearPin } = useDecisionsActions();
+  const { data, range, area, band, pin, landmark } = useDecisionsValues();
+  const { setArea, setBand, clearPin, setLandmark } = useDecisionsActions();
   const { cases, failed } = useDecisionCases();
-  const rows = useMemo(() => (cases ? filterCases(data, cases, { range, area, band, term: pin }) : []), [data, cases, range, area, band, pin]);
-  const sig = `${range[0]}-${range[1]}|${area}|${band}|${pin}`;
+  const rows = useMemo(() => (cases ? filterCases(data, cases, { range, area, band, term: pin, landmark }) : []), [data, cases, range, area, band, pin, landmark]);
+  const sig = `${range[0]}-${range[1]}|${area}|${band}|${pin}|${landmark}`;
   const [shown, setShown] = useState<{ sig: string; n: number }>({ sig, n: PAGE });
   const n = shown.sig === sig ? shown.n : PAGE;
   const grow = (e: UIEvent<HTMLElement>) => {
@@ -53,6 +53,11 @@ export function CaseListCard() {
     <ChartCard title="Every case" lede={`Argued cases decided in ${pin !== null ? `the ${pin} term` : years}, newest first. The list follows the filters above and the charts: pick an issue area, a vote or a term to narrow it.`}>
       <div className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-ink-muted" aria-live="polite">
         <span className="tabular-nums text-ink">{cases ? `${fmtInt(rows.length)} case${rows.length === 1 ? "" : "s"}` : failed ? "Cases unavailable" : "Loading cases…"}</span>
+        {landmark && (
+          <Chip onClear={() => setLandmark(false)} label="Clear the landmark filter">
+            Landmark cases
+          </Chip>
+        )}
         {area !== ALL_AREAS && (
           <Chip onClear={() => setArea(ALL_AREAS)} label="Clear the issue area filter">
             {areaFilterLabel(data, area)}
@@ -68,7 +73,7 @@ export function CaseListCard() {
             {`${pin} term`}
           </Chip>
         )}
-        {area === ALL_AREAS && band === null && pin === null && <span>{ALL_AREAS_LABEL}, any vote.</span>}
+        {area === ALL_AREAS && band === null && pin === null && !landmark && <span>{ALL_AREAS_LABEL}, any vote.</span>}
       </div>
       <div
         key={sig}
@@ -91,7 +96,7 @@ export function CaseListCard() {
       </div>
       <MethodologyNote>
         <p>
-          The same cases as the charts: orally argued, {fmtInt(data.unclearVotes)} with an unclear vote left out. The vote is the justices in the majority and minority; the colour is how many dissented (the bands of the chart above), so a 5–3 decision is coloured with the 6–3 band. Citations are U.S. Reports where there is one, otherwise the Supreme Court Reporter or Lawyers’ Edition; links go to Justia for U.S. Reports cases.
+          The same cases as the charts: orally argued, {fmtInt(data.unclearVotes)} with an unclear vote left out. The vote is the justices in the majority and minority; the colour is how many dissented (the bands of the chart above), so a 5–3 decision is coloured with the 6–3 band. Landmark badges come from Wikipedia’s “List of landmark court decisions in the United States” ({fmtInt(data.landmarkSource.count)} cases on this page, from the {data.landmarkSource.revisionDate} revision, CC BY-SA 4.0); a badge links to the article and names the list’s heading. Citations are U.S. Reports where there is one, otherwise the Supreme Court Reporter or Lawyers’ Edition; links go to Justia for U.S. Reports cases.
         </p>
         <p>Case names are the Supreme Court Database’s, re-capitalised for reading. Issue areas are the database’s own.</p>
       </MethodologyNote>
@@ -113,6 +118,17 @@ function CaseRow({ c, area }: { c: DecisionCase; area: string }) {
       <span className="order-2 text-[0.75rem] tabular-nums text-ink-muted sm:order-none">{fmtDate(c[1])}</span>
       <span className="order-1 col-span-2 min-w-0 sm:order-none sm:col-span-1">
         <span className="break-words">{name}</span>
+        {c[8] && (
+          <a
+            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(c[8].replaceAll(" ", "_"))}`}
+            target="_blank"
+            rel="noreferrer"
+            title={`Landmark decision on Wikipedia${c[9] ? `: ${c[9]}` : ""}`}
+            className="ml-2 inline-block whitespace-nowrap rounded-full border border-line-strong bg-surface-raised px-1.5 py-px align-baseline text-[0.66rem] font-medium text-ink-muted no-underline hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          >
+            Landmark{c[9] ? ` · ${c[9]}` : ""}
+          </a>
+        )}
         {c[3] && <span className="ml-2 whitespace-nowrap text-[0.75rem] tabular-nums text-ink-faint">{c[3]}</span>}
       </span>
       <span className="order-3 col-span-1 truncate text-[0.75rem] text-ink-muted sm:order-none" title={area}>

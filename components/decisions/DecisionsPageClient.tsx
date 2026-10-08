@@ -28,7 +28,7 @@ export function DecisionsPageClient({ data }: { data: DecisionsPayload }) {
           </p>
           <HowToRead>
             <p>
-              A case counts once, in the term it was decided. “Unanimous” means no justice dissented; the other bands count the justices who dissented, so “5–4” is four dissents (a 4–4 tie is counted there too). Hover or tap a term to see its numbers; click to pin it on both time charts and in the case list. The legends are filters: an issue area under the top chart, or a vote (how many justices dissented) under the second. Shares for small issue areas are rough, because a few cases can move them a long way.
+              A case counts once, in the term it was decided. “Unanimous” means no justice dissented; the other bands count the justices who dissented, so “5–4” is four dissents (a 4–4 tie is counted there too). Hover or tap a term to see its numbers; click to pin it on both time charts and in the case list. The legends are filters: an issue area under the top chart, or a vote (how many justices dissented) under the second. “Landmark cases” in the top bar narrows everything to the cases on Wikipedia’s list of landmark decisions. Shares for small issue areas and for landmarks are rough, because a few cases can move them a long way.
             </p>
           </HowToRead>
         </PageHeader>
@@ -39,7 +39,7 @@ export function DecisionsPageClient({ data }: { data: DecisionsPayload }) {
         <CaseListCard />
 
         <p className="m-0 text-[0.8rem] leading-[1.6] text-ink-muted">
-          Source: {data.citation}, case-centered by citation, argued cases only, terms {first}–{last}. A term runs October to June. {fmtInt(data.unclearVotes)} cases whose vote is marked unclear are left out. Licensed CC BY-NC 3.0 US.
+          Source: {data.citation}, case-centered by citation, argued cases only, terms {first}–{last}. A term runs October to June. {fmtInt(data.unclearVotes)} cases whose vote is marked unclear are left out. Licensed CC BY-NC 3.0 US. Landmark cases: Wikipedia, “{data.landmarkSource.page}”, revision of {data.landmarkSource.revisionDate} (CC BY-SA 4.0), joined to the database by U.S. Reports citation, docket or case name and year; {fmtInt(data.landmarkSource.count)} of its cases are argued cases in these terms.
         </p>
       </main>
     </DecisionsStateProvider>

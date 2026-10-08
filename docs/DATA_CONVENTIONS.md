@@ -627,6 +627,7 @@ pre-flight: `docs/SCDB_PREFLIGHT.md`; schemas: `lib/decisions-entities.ts`. Sepa
 | --- | --- | --- | --- |
 | `pipeline/output/decisions_counts.json` | one row per `(term, issue area)` with at least one orally argued case | `term` + `issue_area_id` (**not** a `bioguide_id`, not a `justice_id`) | `n` and dissent-bucket counts `d0..d4` (`min(minVotes, 4)`). `issue_area_id` null = no SCDB issue area. Counts only, never percentages (shares are derived in `lib`). |
 | `pipeline/output/decisions_cases.json` | one row per case in scope (8,251), oldest first, ~1.6 MB | `case_id` (SCDB `caseId`) | Term, ISO decision date, title-cased name, cite (U.S., else S. Ct., else L. Ed., else Lexis), `issue_area_id`, dissent `band`, `maj`/`min`. Feeds the page's case list only; a gate checks that aggregating it reproduces `decisions_counts.json` cell for cell. |
+| `pipeline/output/decisions_landmarks.json` | the landmark cases on the page (339) | `case_id` | Title of the Wikipedia article, the list headings ("Criminal law › Fourth Amendment rights"), and `via` (how it joined SCDB). From `pipeline/raw/wikipedia-landmarks/list.wikitext` (`pnpm fetch:landmarks`; CC BY-SA 4.0; manual refresh). |
 | `pipeline/output/decisions_meta.json` | one object | — | SCDB version, data-through term, exclusions, unclassified count, citation, licence, Chief Justice spans (with appointing president and party), the issue-area catalog. |
 | `pipeline/output/decisions_report.json` | run summary | — | Totals by bucket, decade, issue area; gate results. Humans only. |
 
