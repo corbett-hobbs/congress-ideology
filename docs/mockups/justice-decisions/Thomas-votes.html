@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Justice profile — How Thomas voted (mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f5;--surface:#fff;--surface-raised:#f7f8fa;--ink:#1a2233;--ink-muted:#5b6472;--ink-faint:#8890a0;--line:#d7dce3;--line-strong:#b9c1cc;--focus:#5c4b7a;
+--outcome-lib:#0f6e56;--outcome-lib-bg:#e1f5ee;--outcome-lib-ink:#085041;--outcome-con:#534ab7;--outcome-con-bg:#eeedfe;--outcome-con-ink:#3c3489;
+--split-0:#312c44;--split-1:#23318e;--split-2:#41939d;--split-3:#643e03;--split-4:#a03667}
+@media (prefers-color-scheme:dark){:root{--bg:#14161c;--surface:#1b1e26;--surface-raised:#20242e;--ink:#e9eaee;--ink-muted:#9aa2af;--ink-faint:#6b7280;--line:#2a2e38;--line-strong:#3a4050;--focus:#9b84c7;
+--outcome-lib:#5dcaa5;--outcome-lib-bg:#0b3a30;--outcome-lib-ink:#9fe1cb;--outcome-con:#afa9ec;--outcome-con-bg:#28235a;--outcome-con-ink:#cecbf6}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif}
+.note{max-width:1180px;margin:0 auto;padding:20px 24px 0;font-size:.82rem;line-height:1.55;color:var(--ink-muted)}
+.note b{color:var(--ink)}
+h3.frame{max-width:1180px;margin:22px auto 8px;padding:0 24px;font:500 .8rem 'IBM Plex Mono',monospace;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 24px}
+.phone{width:390px;margin:0 auto 40px;padding:0 16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.25rem}
+.phone .card{padding:1rem .9rem}
+h2{font:500 1.05rem Newsreader,Georgia,serif;margin:0}
+.lede{margin:.25rem 0 .75rem;font-size:.82rem;line-height:1.5;color:var(--ink-muted)}
+.row1{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.78rem;color:var(--ink-muted)}
+.row1 .n{color:var(--ink);font-variant-numeric:tabular-nums}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface-raised);color:var(--ink-muted);border-radius:999px;padding:2px 10px;font:inherit;font-size:.75rem;cursor:pointer}
+.pill[aria-pressed=true]{border-color:var(--ink);background:var(--surface);color:var(--ink)}
+.search{border:1px solid var(--line-strong);background:var(--surface-raised);color:var(--ink);border-radius:6px;padding:4px 10px;font:inherit;font-size:.82rem;width:15rem}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.phone .head .search{width:100%}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:.2rem 0 .8rem}
+.phone .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stat{border:1px solid var(--line);background:var(--surface-raised);border-radius:8px;padding:.5rem .7rem}
+.stat b{display:block;font-size:1.15rem;font-weight:500;font-variant-numeric:tabular-nums}
+.stat span{font-size:.72rem;color:var(--ink-muted);line-height:1.35;display:block}
+.box{margin-top:.5rem;max-height:32rem;overflow-y:auto;border:1px solid var(--line);border-radius:6px}
+ol{list-style:none;margin:0;padding:0}
+li{display:grid;grid-template-columns:6.5rem minmax(0,1fr) 9rem 4.2rem 9.5rem;column-gap:12px;row-gap:2px;align-items:baseline;border-bottom:1px solid var(--line);padding:.55rem .75rem;font-size:.82rem}
+li:last-child{border-bottom:0}
+.phone li{grid-template-columns:minmax(0,1fr) auto;row-gap:4px;padding:.65rem .75rem}
+.d{font-size:.75rem;color:var(--ink-muted);font-variant-numeric:tabular-nums}
+.nm{min-width:0;overflow-wrap:anywhere}
+.nm a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:2px}
+.cite{margin-left:8px;font-size:.75rem;color:var(--ink-faint);white-space:nowrap}
+.tag{display:inline-block;margin-left:6px;border-radius:999px;padding:1px 6px;font-size:.66rem;font-weight:500;white-space:nowrap}
+.lib{background:var(--outcome-lib-bg);color:var(--outcome-lib-ink)}.con{background:var(--outcome-con-bg);color:var(--outcome-con-ink)}
+.badge{display:inline-block;margin-left:8px;border:1px solid var(--line-strong);background:var(--surface-raised);color:var(--ink-muted);border-radius:999px;padding:1px 6px;font-size:.66rem;font-weight:500;white-space:nowrap}
+.area{font-size:.75rem;color:var(--ink-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vote{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:500}
+.vote i{width:10px;height:10px;border-radius:2px;display:inline-block}
+/* the new column */
+.hv{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+.q{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:1px 9px;font-size:.74rem;font-weight:500;white-space:nowrap;border:1px solid transparent}
+.q.maj{background:var(--surface-raised);border-color:var(--line-strong);color:var(--ink)}
+.q.dis{background:var(--ink);color:var(--surface)}
+.q.mix{background:var(--surface);border:1px dashed var(--ink-muted);color:var(--ink)}
+.q.out{background:transparent;border-color:var(--line);color:var(--ink-faint)}
+.role{font-size:.7rem;color:var(--ink-muted)}
+.sum{grid-column:2/-1;margin:0;font-size:.76rem;line-height:1.45;color:var(--ink-muted)}
+.phone .sum{grid-column:1/-1}
+.colhead{display:grid;grid-template-columns:6.5rem minmax(0,1fr) 9rem 4.2rem 9.5rem;column-gap:12px;padding:.4rem .75rem;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);border-bottom:1px solid var(--line-strong);background:var(--surface-raised);position:sticky;top:0;z-index:1}
+.phone .colhead{display:none}
+.phone .d{grid-row:2}.phone .vcol{grid-column:2;grid-row:1/3;align-self:center;justify-self:end}
+.phone .area{grid-column:1/-1;white-space:normal}
+.phone .hv{grid-column:1/-1;flex-direction:row;align-items:center;gap:8px}
+.phone .nm .cite,.phone .nm .badge{display:none}
+.mobonly{display:none}.phone .mobonly{display:inline}.phone .deskonly{display:none}
+.dn{margin-top:.6rem;font-size:.78rem;line-height:1.5;color:var(--ink-muted)}
+.dn summary{cursor:pointer;color:var(--ink-muted);font-size:.78rem}
+.dn p{margin:.4rem 0 0}
+.legend{margin-top:.5rem;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.7rem;color:var(--ink-muted);align-items:center}
+</style>
+</head>
+<body>
+<div class="note"><b>Mockup — new card at the bottom of every justice page (shown for Clarence Thomas).</b>
+Same list pattern as <i>Every case</i> on the Decisions page (date, name with outcome tag and landmark badge, issue area, vote, one-sentence summary), plus one new column, <b>How Thomas voted</b>: <b>Majority</b>, <b>Dissent</b> (the inverted pill, because it is the rarer and more interesting one), <b>Split</b> (concurred in part, dissented in part) or <b>Did not take part</b>, with a small “wrote the opinion / concurrence / dissent” line under it. Words carry the meaning, not colour (rule 8); the case’s Liberal/Conservative tag keeps its teal/violet so the two never read as one scale. The rows are real cases from <code>decisions_cases.json</code>; the “how he voted” values (from my memory of each opinion) and the four summary numbers (placeholders) are illustrative until the justice-by-justice votes are loaded (see the data note in the reply).</div>
+
+<h3 class="frame">Desktop · 1180</h3>
+<div class="wrap" id="desk"></div>
+<h3 class="frame">Phone · 390</h3>
+<div class="phone" id="mob"></div>
+
+<script>
+const R=[
+ ["2022-06-24","Dobbs v. Jackson Women’s Health Organization","142 S. Ct. 2228","Privacy","6–3",3,"con","maj","Wrote a concurrence","Held that the Constitution does not confer a right to abortion, overruling Roe v. Wade and Planned Parenthood v. Casey.","Landmark · Abortion"],
+ ["2022-06-27","Kennedy v. Bremerton School District","142 S. Ct. 2407","First Amendment","6–3",3,"con","maj","","Held that a public school district violated a football coach’s free-exercise and free-speech rights by disciplining him for praying on the field after games.","Landmark · Religion"],
+ ["2022-01-13","National Federation of Independent Business v. Department of Labor","142 S. Ct. 661","Economic activity","6–3",3,"con","maj","","",""],
+ ["2015-06-26","Obergefell v. Hodges","576 U.S. 644","Due process","5–4",4,"lib","dis","Wrote a dissent","Held that the Fourteenth Amendment requires every state to license and recognize marriages between two people of the same sex.","Landmark · Equal protection"],
+ ["2013-06-25","Shelby County v. Holder","570 U.S. 529","Civil rights","5–4",4,"con","maj","Wrote a concurrence","Held that the coverage formula in Section 4(b) of the Voting Rights Act is unconstitutional.","Landmark · Voting rights"],
+ ["2012-06-28","National Federation of Independent Business v. Sebelius","567 U.S. 519","Federalism","5–4",4,"lib","dis","Joined the joint dissent","Upheld the Affordable Care Act’s individual mandate as a tax and limited the law’s Medicaid expansion.","Landmark · Healthcare"],
+ ["2010-01-21","Citizens United v. Federal Election Commission","558 U.S. 310","First Amendment","5–4",4,"con","mix","Concurred in part, dissented in part","Held that the First Amendment prohibits limits on independent political spending by corporations and unions.","Landmark · Campaign finance"],
+ ["2008-06-26","District of Columbia v. Heller","554 U.S. 570","Criminal procedure","5–4",4,"con","maj","","Held that the Second Amendment protects an individual right to keep a handgun at home for self-defense.","Landmark · Second Amendment"],
+ ["2005-06-23","Kelo v. City of New London","545 U.S. 469","Due process","5–4",4,"lib","dis","Wrote a dissent","Held that a city’s taking of private homes for economic redevelopment is a “public use” under the Fifth Amendment.","Landmark · Takings"],
+ ["2003-06-23","Grutter v. Bollinger","539 U.S. 306","Civil rights","5–4",4,"lib","mix","Concurred in part, dissented in part","Upheld the University of Michigan Law School’s race-conscious admissions policy.","Landmark · Affirmative action"],
+ ["2000-12-04","Bush v. Palm Beach County Canvassing Board","531 U.S. 70","Judicial power","9–0",0,"con","maj","","",""],
+];
+const BC=["--split-0","--split-1","--split-2","--split-3","--split-4"];
+const qtxt={maj:"Majority",dis:"Dissent",mix:"Split",out:"Did not take part"};
+function row(r){const[ d,n,c,a,v,b,t,q,role,sum,badge]=r;
+ const dt=new Date(d+"T12:00:00Z").toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric",timeZone:"UTC"});
+ return `<li>
+  <span class="d">${dt}<span class="mobonly"> · ${c}</span></span>
+  <span class="nm"><a href="#">${n}</a><span class="tag ${t}">${t==="lib"?"Liberal":"Conservative"}</span>${badge?`<span class="badge">${badge}</span>`:""}<span class="cite">${c}</span></span>
+  <span class="area">${a}${badge?`<span class="mobonly badge">${badge}</span>`:""}</span>
+  <span class="vote vcol"><i style="background:var(${BC[b]})"></i>${v}</span>
+  <span class="hv"><span class="q ${q}">${qtxt[q]}</span>${role?`<span class="role">${role}</span>`:""}</span>
+  ${sum?`<p class="sum">${sum}</p>`:""}
+ </li>`}
+function card(){return `<section class="card" aria-label="How Thomas voted">
+ <div class="head"><div><h2>How Thomas voted</h2></div><input class="search" type="search" placeholder="Search title or keyword" aria-label="Search cases"></div>
+ <p class="lede">Argued cases decided while Clarence Thomas sat on the Court (1991–2025), newest first. The column on the right is how he voted in each: with the majority, in dissent, or split. A Liberal or Conservative tag is the Supreme Court Database’s coding of who prevailed, not a rating of the justices.</p>
+ <div class="stats">
+  <div class="stat"><b>2,486</b><span>cases he took part in</span></div>
+  <div class="stat"><b>86%</b><span>in the majority</span></div>
+  <div class="stat"><b>13%</b><span>in dissent</span></div>
+  <div class="stat"><b>61%</b><span>in the majority in 5–4 cases</span></div>
+ </div>
+ <div class="row1"><span class="n">11 cases</span>
+  <span role="group" aria-label="How he voted" style="display:contents">
+  <button class="pill" aria-pressed="true">All votes</button><button class="pill" aria-pressed="false">Majority</button><button class="pill" aria-pressed="false">Dissent</button><button class="pill" aria-pressed="false">Wrote the opinion</button></span>
+  <button class="pill" aria-pressed="false">Landmark cases</button></div>
+ <div class="box" tabindex="0" aria-label="Cases, scrollable">
+  <div class="colhead"><span>Date</span><span>Case</span><span>Issue area</span><span>Vote</span><span>How Thomas voted</span></div>
+  <ol>${R.map(row).join("")}</ol></div>
+ <details class="dn" open><summary>Data notes</summary><p>Every orally argued case from the 1991 term (his first) to the latest term in the Supreme Court Database, 2,486 in all; cases where he did not take part are listed and left out of the percentages. “Majority” includes concurring in the judgment; “Split” is a vote coded as concurring in part and dissenting in part. The stats count the cases matching the filters above. Votes and opinion authorship: Supreme Court Database (Spaeth et al.), justice-centered file; case summaries from Wikipedia as on the Decisions page. <a href="#" style="color:var(--ink-muted)">Report a correction</a></p></details>
+</section>`}
+document.getElementById("desk").innerHTML=card();
+document.getElementById("mob").innerHTML=card();
+</script>
+</body>
+</html>

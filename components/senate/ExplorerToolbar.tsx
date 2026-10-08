@@ -120,7 +120,7 @@ export function ExplorerToolbar({
               />
             </div>
 
-            <div className="flex min-w-0 flex-1 items-center gap-3 pb-3.5 sm:min-w-[220px]">
+            <div className="flex min-w-0 flex-1 items-center gap-3 sm:min-w-[220px]">
               <button
                 type="button"
                 onClick={onTogglePlay}
@@ -139,18 +139,20 @@ export function ExplorerToolbar({
                 onChange={(e) => onCongressChange(+e.target.value)}
                 className="h-6 min-w-0 flex-1 cursor-pointer accent-[var(--accent)]"
               />
-              <div className="relative flex flex-none flex-col items-end whitespace-nowrap tabular-nums leading-tight sm:flex-row sm:items-baseline sm:gap-1.5 sm:leading-normal">
+              <div className="relative flex flex-none flex-col items-end">
+                <div className={`flex flex-col items-end whitespace-nowrap tabular-nums leading-tight transition-transform sm:flex-row sm:items-baseline sm:gap-1.5 sm:leading-normal ${congress !== max ? "-translate-y-[0.4rem]" : ""}`}>
                 <span className="font-mono text-[0.95rem] font-semibold text-ink">
                   {ordinal(congress)}
                 </span>
                 <span className="text-[0.66rem] text-ink-muted sm:text-[0.76rem]">
                   {congressYears(congress)}
                 </span>
+                </div>
                 <RangeReset
                   show={congress !== max}
                   onReset={() => onCongressChange(max)}
                   ariaLabel="Reset to the latest Congress"
-                  className="absolute right-0 top-full mt-0.5 font-sans leading-none"
+                  className="absolute right-0 top-full -mt-[0.35rem] font-sans leading-none"
                 />
               </div>
             </div>

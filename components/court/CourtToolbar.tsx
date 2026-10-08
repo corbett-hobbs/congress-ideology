@@ -83,7 +83,7 @@ export function CourtToolbar({
             </select>
           </div>
 
-          <div className="flex w-full min-w-0 items-center gap-3 sm:ml-auto sm:w-auto sm:min-w-[300px] sm:max-w-[520px] sm:flex-1 pb-3.5">
+          <div className="flex w-full min-w-0 items-center gap-3 sm:ml-auto sm:w-auto sm:min-w-[300px] sm:flex-1">
             <button
               type="button"
               onClick={onTogglePlay}
@@ -104,12 +104,12 @@ export function CourtToolbar({
               className="h-6 min-w-0 flex-1 cursor-pointer accent-[var(--accent)]"
             />
             <span className="relative flex-none whitespace-nowrap font-mono text-[0.95rem] font-semibold tabular-nums text-ink">
-              {label}
+              <span className={`inline-block transition-transform ${term !== max ? "-translate-y-[0.4rem]" : ""}`}>{label}</span>
               <RangeReset
                 show={term !== max}
                 onReset={() => onTermChange(max)}
                 ariaLabel="Reset to the latest term"
-                className="absolute right-0 top-full mt-0.5 font-sans leading-none"
+                className="absolute right-0 top-full -mt-[0.35rem] font-sans leading-none"
               />
             </span>
           </div>
