@@ -191,3 +191,20 @@ export function checkLandmarks(entries: readonly LandmarkEntry[], rows: readonly
   if (report.unmatched.length > Math.ceil(post * 0.03)) fail(`${report.unmatched.length} of ${post} post-SCDB entries did not join (limit 3%): ${report.unmatched.map((u) => u.title).join("; ")}`);
   if (report.matched < 300) fail(`only ${report.matched} landmarks matched; the list's format has probably changed`);
 }
+
+// --------------------------------------------------------------------------- landmarks the list has not caught up with
+
+/** "... is a landmark United States Supreme Court case ...": the article's own opening sentence calls the case a landmark. */
+const LEAD_LANDMARK = /\b(?:is|was|are|were) (?:a|an|one of the|among the) (?:[\w\-,]+ ){0,5}?landmarks?\b/i;
+
+/**
+ * Cases whose Wikipedia article opens by calling itself a landmark but that the list does not name (the list is edited by hand
+ * and lags new decisions). `linked` is each case's article title; cases already on the list are skipped. Only the opening
+ * 600 characters are read, so a later "landmark" in the lead does not count.
+ */
+export function leadLandmarks(linked: readonly { case_id: string; title: string }[], leads: Readonly<Record<string, string>>, onList: ReadonlySet<string>): LandmarkRow[] {
+  return linked
+    .filter((a) => !onList.has(a.case_id) && LEAD_LANDMARK.test((leads[a.title] ?? "").slice(0, 600)))
+    .map((a): LandmarkRow => ({ case_id: a.case_id, title: a.title, topics: [], via: "lead" }))
+    .sort((a, b) => a.case_id.localeCompare(b.case_id));
+}

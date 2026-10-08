@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { DecisionsDataError } from "../../lib/decisions-entities";
 import { parseScdb, selectCases } from "./decisions";
-import { checkLandmarks, matchLandmarks, nameKey, parseLandmarkList } from "./landmarks";
+import { checkLandmarks, leadLandmarks, matchLandmarks, nameKey, parseLandmarkList } from "./landmarks";
 
 const WIKI = `
 == Individual rights ==
@@ -73,5 +73,22 @@ describe("against the real data", () => {
     expect(() => checkLandmarks(entries, rows, { ...report, unmatched: report.unmatched.concat(Array(30).fill(report.unmatched[0]!)), pre_1946: report.pre_1946 - 30 }, ids)).toThrow(/did not join|accounted/);
     expect(() => checkLandmarks(entries, rows, report, new Set())).toThrow(/not a case on the page/);
     expect(() => checkLandmarks(entries.slice(0, 40), rows.slice(0, 5), { ...report, entries: 40, matched: 5 }, ids)).toThrow(DecisionsDataError);
+  });
+});
+
+describe("leadLandmarks", () => {
+  const linked = [
+    { case_id: "2025-065", title: "Mullin v. Doe" },
+    { case_id: "1990-001", title: "On the list" },
+    { case_id: "1990-002", title: "Late mention" },
+    { case_id: "1990-003", title: "No lead" },
+  ];
+  const leads = {
+    "Mullin v. Doe": "Mullin v. Doe, 609 U.S. ___ (2026), is a landmark United States Supreme Court case in which the Court held",
+    "On the list": "X v. Y is a landmark decision.",
+    "Late mention": `${"A".repeat(700)} is a landmark decision.`,
+  };
+  it("flags an article whose opening calls the case a landmark, once, and not a case already on the list", () => {
+    expect(leadLandmarks(linked, leads, new Set(["1990-001"]))).toEqual([{ case_id: "2025-065", title: "Mullin v. Doe", topics: [], via: "lead" }]);
   });
 });
