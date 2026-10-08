@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { siteInfo } from "@/lib/site-info";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 
 const DESCRIPTION =
   "InsideGov puts public government records into charts you can explore: the presidency, Congress and the Supreme Court, without reading the raw files.";
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: "/about" },
   openGraph: {
+    ...ogDefaults,
     title: `About · ${site.name}`,
     description: DESCRIPTION,
     url: "/about",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
-  twitter: { images: ["/opengraph-image"] },
+  twitter: twitterDefaults,
 };
 
 const QUESTIONS = [

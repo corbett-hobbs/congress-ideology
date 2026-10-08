@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getBothTrend, getViewCurrent } from "@/lib/congress-data";
 import { branches, getBranch } from "@/lib/verticals";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 import { getCourtPayload } from "@/lib/justice-data";
 import { getExecutiveOrdersData } from "@/lib/executive-orders-data";
 import { HubEoChart } from "@/components/executive-orders/HubEoChart";
@@ -12,24 +12,25 @@ import { HubSectionList } from "@/components/HubSectionList";
 import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
-  title: { absolute: `${site.name} · 1789–present` },
-  description: site.hubDescription,
+  title: { absolute: `${site.name} · ${site.tagline}` },
+  description: site.description,
   alternates: { canonical: "/" },
   openGraph: {
-    title: site.name,
-    description: site.hubDescription,
+    ...ogDefaults,
+    title: `${site.name} · ${site.tagline}`,
+    description: site.description,
     url: "/",
   },
+  twitter: twitterDefaults,
 };
 
 const BLURBS: Record<string, string> = {
   congress:
-    "Every member\u2019s votes as a two-dimensional ideology score, plus estimated net worth from financial disclosures.",
+    "Every member\u2019s votes as a two-dimensional ideology score, who serves by age, gender and tenure, and estimated net worth from financial disclosures.",
   "supreme-court":
-    // PLACEHOLDER COPY — awaiting Corby's edit.
-    "Where the justices sit over time, from Martin\u2013Quinn ideology scores.",
+    "Where the justices sit over time, from Martin\u2013Quinn ideology scores, and how many cases the Court decides and how often it splits.",
   presidency:
-    "Executive orders, the economy, trade, and immigration, laid out against each presidential term, from gas prices and tariffs to deportations.",
+    "Executive orders, the economy, energy, trade, immigration, foreign aid and troops abroad, laid out against each presidential term, from gas prices and tariffs to deportations.",
 };
 
 export default function Hub() {
@@ -59,8 +60,9 @@ export default function Hub() {
         <PageHeader title={site.tagline} size="hero">
           <p>
             Explore the presidency, Congress, and the Supreme Court through the
-            public record: executive orders, the economy, trade, immigration,
-            ideology, and net worth.
+            public record: executive orders, the economy, energy, trade,
+            immigration, foreign aid, troops abroad, ideology, net worth, and
+            court decisions.
           </p>
           <p>
             Every order signed, roll call cast, ruling issued, and financial

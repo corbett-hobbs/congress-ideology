@@ -1,9 +1,14 @@
 # InsideGov
 
 **[insidegov.fyi](https://insidegov.fyi)** ·
-every member of Congress's voting record reduced to a point in a
-two-dimensional ideology space, from the 1st Congress (1789) to the 119th
-(2025–27).
+the U.S. government, by the numbers: the presidency (executive orders, the
+economy, energy, trade, immigration, foreign aid, troops abroad), Congress
+(ideology, demographics, net worth) and the Supreme Court (ideology,
+decisions), charted from public records.
+
+The original page, and still the centrepiece of the Congress section, reduces
+every member's voting record to a point in a two-dimensional ideology space,
+from the 1st Congress (1789) to the 119th (2025–27).
 
 ![The ideology explorer](docs/images/screenshot-home.png)
 
