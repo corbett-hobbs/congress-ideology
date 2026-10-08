@@ -6,6 +6,7 @@ import type { CommitteeProfile, SubcommitteeProfile } from "@/lib/committee-type
 import { hasProfilePage, memberPath } from "@/lib/member-url";
 import { AlignmentTrack, type AlignmentTrackPoint } from "@/components/charts/AlignmentTrack";
 import { GROUP_VAR, fmt3, partyAbbr } from "@/components/senate/format";
+import { RoleTag } from "./RoleTag";
 import { ProfilePanel } from "@/components/profile/ProfilePanel";
 
 const FOCUS_RING =
@@ -110,6 +111,15 @@ function SubcommitteeRow({
                   ) : (
                     m.name
                   )}
+                  <RoleTag
+                    role={
+                      m.bioguideId === sub.chair?.bioguideId
+                        ? "chair"
+                        : m.bioguideId === sub.rankingMember?.bioguideId
+                          ? "ranking_member"
+                          : "member"
+                    }
+                  />
                 </td>
                 <td className="border-b border-line px-[0.4rem] py-[0.42rem]">
                   {partyAbbr(m.party)}

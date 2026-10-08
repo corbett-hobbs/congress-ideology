@@ -4,29 +4,8 @@ import type { MemberProfile } from "@/lib/congress-types";
 import { committeePath } from "@/lib/committee-url";
 import { AlignmentTrack } from "@/components/charts/AlignmentTrack";
 import { GROUP_VAR, fmt2, ordinal } from "@/components/senate/format";
+import { RoleTag } from "@/components/committee/RoleTag";
 import { ProfilePanel } from "./ProfilePanel";
-
-const ROLE_LABEL = {
-  chair: "Chair",
-  ranking_member: "Ranking Member",
-  member: null,
-} as const;
-
-function RoleTag({ role }: { role: MemberCommitteeMembership["role"] }) {
-  const label = ROLE_LABEL[role];
-  if (!label) return null;
-  return (
-    <span
-      className={`ml-2 inline-block rounded-full px-[0.5rem] py-[0.1rem] align-middle text-[0.66rem] font-semibold tracking-[0.01em] ${
-        role === "chair"
-          ? "bg-accent text-accent-ink"
-          : "border border-line-strong bg-surface-raised text-ink-muted"
-      }`}
-    >
-      {label}
-    </span>
-  );
-}
 
 /**
  * A member's committee assignments, at the bottom of their profile page —
