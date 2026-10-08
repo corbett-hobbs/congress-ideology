@@ -2,13 +2,13 @@
   "sources": [
     {
       "path": "pipeline/raw/voteview/HSall_members.csv",
-      "bytes": 6201434,
-      "sha256": "c9cad95f555957622e4f80fb4d3cb4eee07daffba3bf9ad8745d234bc8151c24"
+      "bytes": 6201422,
+      "sha256": "d78f55120b59534e99f30541469325059f953b210f0ddb6ebb54601c9303c0f6"
     },
     {
       "path": "pipeline/raw/voteview/HSall_parties.csv",
-      "bytes": 59810,
-      "sha256": "f57e2d40ddbd9a48394300c2ad4d4979354194707d6e1591b2b2d553fdb89b8c"
+      "bytes": 59787,
+      "sha256": "2e87975b147d75a4f5ee5490e939d39f535840cd6734630b3e7912e35f8e8ae4"
     },
     {
       "path": "pipeline/raw/congress-legislators/legislators-current.yaml",
