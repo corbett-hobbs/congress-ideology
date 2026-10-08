@@ -22,7 +22,7 @@ export const MAX_CHARS = 300;
 const MIN_CHARS = 40;
 
 /** Words that mark a sentence as stating how the Court ruled. */
-const RULING = /\b(held(?=\s+(?:that|unanimously|\d)\b|,)|holds|holding|ruled|rules|ruling|decided|found|finds|determined|concluded|declared|struck down|strikes down|upheld|upholds|reversed|affirmed|invalidated|overturned|overruled|vacated|remanded|dismissed|denied|sustained|unanimously|rejected|refused|approved|confirmed|limited|allowed|permitted|prohibited|barred|extended|expanded|narrowed)\b/i;
+const RULING = /\b(held(?=\s+(?:that|unanimously|\d)\b|,)|(?:court|justices?|majority)\s+held(?!\s+(?:oral|re-?arg|arguments?|hearings?|a\s+(?:hearing|conference|session)|the\s+(?:hearing|oral|arguments?)))|holds|holding|ruled|rules|ruling|decided|found|finds|determined|concluded|declared|struck down|strikes down|upheld|upholds|reversed|affirmed|invalidated|overturned|overruled|vacated|remanded|dismissed|denied|sustained|unanimously|rejected|refused|approved|confirmed|limited|allowed|permitted|prohibited|barred|extended|expanded|narrowed)\b/i;
 
 /** Abbreviations whose full stop does not end a sentence. */
 const ABBREV = /(?:\b(?:v|vs|no|nos|inc|co|corp|ltd|mr|mrs|ms|dr|st|ct|cir|jr|sr|al|stat|cong|amend|rel|dept|gov|[a-z])|\bU\.S|S\.Ct|L\.Ed)\.$/i;
@@ -116,7 +116,8 @@ export function summarizeLead(lead: string): { text: string; sentence: 1 | 2 | 3
     const text = clean(stripped);
     if (!text || !RULING.test(text)) continue;
     if (!cut && !COURT_SUBJECT.test(text)) continue;
-    if (/\b(?:such|these|those|this case|the case)\b/i.test(text) && !cut) continue; // points back at a sentence we are not showing
+    if (/\b(?:such|these|those|this|also|the case)\b/i.test(text) && !cut) continue; // points back at a sentence we are not showing
+    if (/\b(?:held|ruled|found|decided|concluded)\s+in\s+[A-Z][^,.]{0,60}?\sv\.\s/.test(text) && !cut) continue; // "held in Batson v. Kentucky that ...": that case's holding, not this one's
     return { text, sentence: (i + 1) as 1 | 2 | 3 };
   }
   return null;
@@ -131,14 +132,16 @@ const words = (s: string): string[] => norm(s).match(/[a-z0-9]{4,}/g) ?? [];
 
 /**
  * A model-written sentence is usable only if it is one finished line of 40-300 characters AND is held to the lead it was written
- * from: `evidence` (the words the model says state the ruling) is a verbatim stretch of the lead that itself names a ruling, and
- * most of the sentence's own words, and every number in it, appear in the lead. The model is asked to write only from the text; this is what stops it
+ * from: `evidence` (the words the model says state the ruling) is a verbatim stretch of the lead, and most of the sentence's own
+ * words, and every number in it, appear in the lead. The quote is not tested for a ruling word: a word list cannot know every way
+ * a lead says "the Court upheld / invalidated / established / declined / agreed ... determining that", and an audit found it
+ * rejecting ~110 correct answers of 556; the quote, the numbers and the word overlap are what keep the sentence to the lead. The model is asked to write only from the text; this is what stops it
  * writing a ruling from memory (an early trial had it state the opposite of what the Court held where the lead gave no ruling).
  */
 export function checkAiSummary(sentence: string, evidence: string, lead: string): boolean {
   if (sentence.length < MIN_CHARS || sentence.length > MAX_CHARS || /[\n\r]/.test(sentence) || !/[.!?]["”)]?$/.test(sentence) || splitSentences(sentence).length !== 1) return false;
   const e = norm(evidence);
-  if (e.length < 25 || !norm(lead).includes(e) || !RULING.test(evidence)) return false;
+  if (e.length < 25 || !norm(lead).includes(e)) return false;
   // A number the lead does not contain is a misread or an invention (an early answer wrote "2981" for 1981).
   const leadText = norm(lead);
   if ((sentence.match(/\d[\d,.]*/g) ?? []).some((n) => !leadText.includes(n.replace(/[.,]+$/, "")))) return false;

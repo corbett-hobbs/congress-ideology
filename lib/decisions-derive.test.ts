@@ -1,5 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { administration } from "./executive-orders-entities";
+import { HISTORICAL_ADMINISTRATIONS } from "./troops-presidents";
 import {
   ALL_AREAS_LABEL,
   areaCells,
@@ -17,15 +19,16 @@ import {
   inAreaFilter,
   bandShare,
   buildDecisionsPayload,
+  presidentBandTerms,
+  presidentOfTerm,
+  presidentSegments,
   countCaseRows,
   viewOf,
   binByDecade,
   buildStacks,
   splitGrain,
   casesPerTerm,
-  chiefBandTerms,
   chiefOfTerm,
-  chiefSegments,
   isSmallSample,
   median,
   nextAreaSort,
@@ -45,7 +48,8 @@ const report = read<{ cases: number; bucket_totals: Record<string, number>; case
 const caseRows = read<{ case_id: string; term: number; date: string; name: string; cite: string; issue_area_id: string | null; band: number; maj: number; min: number; direction: "liberal" | "conservative" | null }[]>("decisions_cases.json");
 const landmarkRows = read<{ case_id: string; title: string; topics: string[] }[]>("decisions_landmarks.json");
 const landmarkIds = new Set(landmarkRows.map((r) => r.case_id));
-const d = buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id))));
+const admins = [...HISTORICAL_ADMINISTRATIONS, ...read<unknown[]>("administrations.json").map((r) => administration.parse(r))];
+const d = buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id))), admins);
 const cases: DecisionCase[] = caseRows
   .map((r): DecisionCase => [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : d.areas.findIndex((a) => a.id === r.issue_area_id), r.band, r.maj, r.min, landmarkIds.has(r.case_id) ? "Landmark" : "", "", "", "", 0, r.direction === "conservative" ? 1 : r.direction === "liberal" ? 2 : 0])
   .reverse();
@@ -86,12 +90,25 @@ describe("chief spans", () => {
     expect(d.chiefs.map((c) => c.party)).toEqual(["D", "R", "R", "R", "R"]);
     expect(chiefOfTerm(d, 1970)?.name).toBe("Warren Burger");
   });
+});
+
+describe("presidential bands", () => {
+  it("cover every term exactly once, oldest first", () => {
+    for (const t of d.terms) expect(d.presidents.filter((p) => t >= p.start && t <= p.end), String(t)).toHaveLength(1);
+    expect(d.presidents[0]).toMatchObject({ last: "Truman", start: 1946, party: "D" });
+    expect(d.presidents[d.presidents.length - 1].end).toBe(d.terms[d.terms.length - 1]);
+  });
+  it("give a term that spans an inauguration to the president in office for most of it", () => {
+    expect(presidentOfTerm(d, 1960)?.last).toBe("Kennedy");
+    expect(presidentOfTerm(d, 1963)?.last).toBe("Johnson");
+    expect(presidentOfTerm(d, 2016)?.last).toBe("Trump");
+    expect(presidentOfTerm(d, 2020)?.last).toBe("Biden");
+  });
   it("make a slider band and per-slot runs", () => {
-    const band = chiefBandTerms(d);
-    expect(band[0]).toMatchObject({ last: "Vinson", initials: "FV", from: 1946, to: 1952, party: "D" });
-    expect(band[1].label).toContain("appointed Chief Justice by Dwight D. Eisenhower");
-    const segs = chiefSegments(d, [1951, 1952, 1953, 1954]);
-    expect(segs.map((s) => [s.last, s.s, s.e])).toEqual([["Vinson", 0, 1], ["Warren", 2, 3]]);
+    const band = presidentBandTerms(d);
+    expect(band[0]).toMatchObject({ last: "Truman", initials: "HST", from: 1946, party: "D" });
+    const segs = presidentSegments(d, [1951, 1952, 1953, 1954]);
+    expect(segs.map((s) => [s.last, s.s, s.e])).toEqual([["Truman", 0, 0], ["Eisenhower", 1, 3]]);
   });
 });
 

@@ -2,7 +2,8 @@ import type { BandTerm } from "../components/charts/TermBand";
 import type { TermSegment } from "../components/charts/TermBandSvg";
 import type { DecisionCaseRow, DecisionCountRow, DecisionsMeta } from "./decisions-entities";
 import { initialsOf } from "./term-label";
-import { ALL_AREAS, OTHER_AREAS, type AreaSort, type AreaSortKey, type Bucket, type DecisionCase, type DecisionDirection, type DecisionsChief, type DecisionsPayload, type LandmarkCells, type SplitMode } from "./decisions-types";
+import { ALL_AREAS, OTHER_AREAS, type AreaSort, type AreaSortKey, type Bucket, type DecisionCase, type DecisionDirection, type DecisionsChief, type DecisionsPayload, type DecisionsPresident, type LandmarkCells, type SplitMode } from "./decisions-types";
+import type { Administration } from "./executive-orders-entities";
 import type { YearRange } from "./year-range";
 
 /**
@@ -60,7 +61,7 @@ function shapeCounts(counts: readonly DecisionCountRow[], terms: readonly number
   return { all, by, other, caseCount, unclassified: caseCount - classified };
 }
 
-export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta: DecisionsMeta, landmarkCounts: readonly DecisionCountRow[] = []): DecisionsPayload {
+export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta: DecisionsMeta, landmarkCounts: readonly DecisionCountRow[] = [], admins: readonly Administration[] = []): DecisionsPayload {
   const terms: number[] = [];
   for (let t = meta.first_term; t <= meta.data_through_term; t++) terms.push(t);
   const areaIds = meta.issue_areas.map((a) => a.id);
@@ -92,6 +93,7 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
     outcomeSource: { coded: 0, none: 0 },
     topAreas,
     chiefs,
+    presidents: presidentsByTerm(admins, terms),
     versionLabel: meta.scdb_version_label,
     casesVersion: "",
     citation: meta.citation,
@@ -233,32 +235,53 @@ export function areaRows(d: DecisionsPayload, range: YearRange, sort: AreaSort):
 /** Click on the active key reverses it; another key starts largest-first. */
 export const nextAreaSort = (cur: AreaSort, key: AreaSortKey): AreaSort => (cur.key === key ? { key, reversed: !cur.reversed } : { key, reversed: false });
 
-// --------------------------------------------------------------------------- Chief Justice bands
+// --------------------------------------------------------------------------- presidential bands
 
-/** The slider's term band: one segment per Chief Justice, tinted by the party of the president who appointed them Chief. */
-export function chiefBandTerms(d: DecisionsPayload): BandTerm[] {
-  return d.chiefs.map((c) => ({
-    id: c.id,
-    label: `${c.name} (${c.start}–${c.end === d.terms[d.terms.length - 1] ? "present" : c.end}), appointed Chief Justice by ${c.president}`,
-    last: c.last,
-    initials: initialsOf(c.name),
-    party: c.party,
-    from: c.start,
-    to: c.end,
+/**
+ * The president for each term: whoever held office on April 1 of the term's second calendar year, which is the middle of
+ * the term (October to the following September) and the stretch most opinions are issued in. A term that straddles an
+ * inauguration goes to the president in office for most of it. Consecutive terms with the same president are one entry.
+ */
+export function presidentsByTerm(admins: readonly Administration[], terms: readonly number[]): DecisionsPresident[] {
+  const sorted = [...admins].sort((a, b) => a.start.localeCompare(b.start));
+  const out: DecisionsPresident[] = [];
+  for (const t of terms) {
+    const day = `${t + 1}-04-01`;
+    const a = sorted.filter((x) => x.start <= day).pop();
+    if (!a) throw new Error(`decisions: no president on ${day}`);
+    const prev = out[out.length - 1];
+    if (prev && prev.id === a.term_id) prev.end = t;
+    else out.push({ id: a.term_id, name: a.president, last: a.president.split(" ").pop() ?? a.president, party: a.party === "Democratic" ? "D" : "R", start: t, end: t });
+  }
+  return out;
+}
+
+/** The slider's term band: one segment per president, tinted by their own party. */
+export function presidentBandTerms(d: DecisionsPayload): BandTerm[] {
+  const lastTerm = d.terms[d.terms.length - 1];
+  return d.presidents.map((p) => ({
+    id: p.id,
+    label: `${p.name} (${p.start}\u2013${p.end === lastTerm ? "present" : p.end} terms)`,
+    last: p.last,
+    initials: initialsOf(p.name),
+    party: p.party,
+    from: p.start,
+    to: p.end,
   }));
 }
 
 export const chiefOfTerm = (d: DecisionsPayload, term: number): DecisionsChief | undefined => d.chiefs.find((c) => term >= c.start && term <= c.end);
+export const presidentOfTerm = (d: DecisionsPayload, term: number): DecisionsPresident | undefined => d.presidents.find((p) => term >= p.start && term <= p.end);
 
-/** Per-slot runs for `TermBandSvg`: one slot per term shown, the Chief in the center chair that term. */
-export function chiefSegments(d: DecisionsPayload, terms: readonly number[]): TermSegment[] {
+/** Per-slot runs for `TermBandSvg`: one slot per term shown, the president in office for most of that term. */
+export function presidentSegments(d: DecisionsPayload, terms: readonly number[]): TermSegment[] {
   const out: TermSegment[] = [];
   terms.forEach((t, i) => {
-    const c = chiefOfTerm(d, t);
-    if (!c) return;
+    const p = presidentOfTerm(d, t);
+    if (!p) return;
     const prev = out[out.length - 1];
-    if (prev && prev.id === c.id && prev.e === i - 1) prev.e = i;
-    else out.push({ id: c.id, last: c.last, president: c.name, party: c.party, s: i, e: i });
+    if (prev && prev.id === p.id && prev.e === i - 1) prev.e = i;
+    else out.push({ id: p.id, last: p.last, president: p.name, party: p.party, s: i, e: i });
   });
   return out;
 }

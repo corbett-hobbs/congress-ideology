@@ -7,7 +7,7 @@ import { ChartFrame } from "@/components/charts/ChartFrame";
 import { Tooltip, useStickyTooltip } from "@/components/charts/Tooltip";
 import { TERM_BAND_H, TermBandSvg } from "@/components/charts/TermBandSvg";
 import { SEGMENT_LABEL_STYLE, Y_GUTTER, yearLabelEvery } from "@/lib/chart-bars";
-import { buildStacks, chiefSegments, niceStep, sumBucket, windowCells, fmtPct, bandShare } from "@/lib/decisions-derive";
+import { buildStacks, presidentSegments, niceStep, sumBucket, windowCells, fmtPct, bandShare } from "@/lib/decisions-derive";
 import { BAND_COLORS, BAND_LONG, BAND_SHORT, type SplitMode } from "@/lib/decisions-types";
 import { placeBandLabels } from "@/lib/energy-chart";
 import { useElementWidth } from "@/lib/use-element-width";
@@ -28,7 +28,7 @@ const CAPTION_CHAR_W = 6;
  * The stacked area of card 2: five dissent bands (unanimous at the bottom, 5-4 on top) over the terms in the window, as a
  * share of the term's cases or as a count. Band names sit inside the band where it is thick enough (`placeBandLabels`, the
  * same placement the electricity chart uses) and otherwise in a right gutter on wide charts. `iso` draws one band alone
- * from zero on its own axis. Hover, pin and the Chief Justice band are shared with card 1.
+ * from zero on its own axis. Hover, pin and the presidential-term band are shared with card 1.
  */
 export function SplitChart({ mode, onIso }: { mode: SplitMode; onIso: (k: number) => void }) {
   const { data, range, area, band: iso, hover, pin } = useDecisionsValues();
@@ -40,7 +40,7 @@ export function SplitChart({ mode, onIso }: { mode: SplitMode; onIso: (k: number
   const eff: SplitMode = iso !== null ? "count" : mode;
 
   const { terms, cells } = useMemo(() => windowCells(data, area, range), [data, area, range]);
-  const segs = useMemo(() => chiefSegments(data, terms), [data, terms]);
+  const segs = useMemo(() => presidentSegments(data, terms), [data, terms]);
   const vis = useMemo(() => (iso === null ? [0, 1, 2, 3, 4] : [iso]), [iso]);
   const stacks = useMemo(() => buildStacks(cells, eff, vis), [cells, eff, vis]);
 
@@ -153,7 +153,7 @@ export function SplitChart({ mode, onIso }: { mode: SplitMode; onIso: (k: number
             {lineAt(hover !== pin ? hover : null, false)}
             {lineAt(pin, true)}
 
-            {/* Year ticks (rule 10h) and the Chief Justice band (rule 10j). */}
+            {/* Year ticks (rule 10h) and the presidential-term band (rule 10j). */}
             {terms.map((t, i) =>
               t % every === 0 ? (
                 <g key={t} transform={`translate(${X(i)},${ph})`}>

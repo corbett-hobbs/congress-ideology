@@ -7,7 +7,7 @@ import { LEGEND_ITEM, LEGEND_ROW } from "@/components/charts/legend";
 import { PillGroup } from "@/components/charts/PillGroup";
 import { StackedBars, type StackColumn, type StackSeries } from "@/components/charts/StackedBars";
 import { MethodologyNote } from "@/components/MethodologyNote";
-import { areaCells, areaFilterLabel, areaSeries, chiefSegments, fmtInt, sumBucket, windowIndexes } from "@/lib/decisions-derive";
+import { areaCells, areaFilterLabel, areaSeries, presidentSegments, fmtInt, sumBucket, windowIndexes } from "@/lib/decisions-derive";
 import { ALL_AREAS, BAND_LONG, type Bucket } from "@/lib/decisions-types";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
 import { Swatch, TableView, TooltipCard, chiefLine } from "./shared";
@@ -25,7 +25,7 @@ type Mode = "count" | "share";
  * Card 1: argued cases decided per term, stacked by issue area (the six biggest areas, then Other areas), narrowed by the
  * years window, the issue area and the dissent band picked on card 2 (rule 4). Legend entries filter: a click picks that
  * issue area for the whole page (the dropdown's value) and a second click clears it. Peak and low are re-picked from what
- * is drawn (rule 12), the Chief Justice band runs under the axis (rule 10j), and the crosshair and pin are shared with card 2.
+ * is drawn (rule 12), the presidential-term band runs under the axis (rule 10j), and the crosshair and pin are shared with card 2.
  */
 export function CasesCard() {
   const { data, range, area, band, hover, pin } = useDecisionsValues();
@@ -58,7 +58,7 @@ export function CasesCard() {
     return { terms: rows.map((r) => r.term), cols: rows };
   }, [data, range, band, series, every, area]);
 
-  const segs = useMemo(() => chiefSegments(data, terms), [data, terms]);
+  const segs = useMemo(() => presidentSegments(data, terms), [data, terms]);
   const first = cols[0];
   const last = cols[cols.length - 1];
   const lede =
@@ -138,7 +138,7 @@ export function CasesCard() {
           The six biggest of the database’s 14 issue areas each get a colour; “Other areas” holds the other eight and the {fmtInt(data.unclassified)} cases with no issue area. Click a legend entry to show one area on every chart and in the case list below; click it again to clear. “Share of term” is the area’s share of all cases decided that term.
         </p>
         <p>
-          The band under the axis marks each Chief Justice, tinted by the party of the president who appointed them to that role: Vinson (Truman) blue; Warren (Eisenhower), Burger (Nixon), Rehnquist (Reagan) and Roberts (G.W. Bush) red.
+          The band under the axis marks the president in office for most of each term (a term runs October to the following June, so one that spans an inauguration goes to whoever held office for most of it), tinted by that president’s party. Hover a term to see which Chief Justice led the Court.
         </p>
       </MethodologyNote>
       <TableView

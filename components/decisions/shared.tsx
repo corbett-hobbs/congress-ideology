@@ -58,7 +58,7 @@ export function TooltipCard({ title, sub, children }: { title: string; sub?: str
   );
 }
 
-/** "Chief Justice Earl Warren, appointed by Eisenhower" for a term, for tooltips. */
+/** "Chief Justice Earl Warren (appointed by Eisenhower)" for a term, for tooltips: the Chief stays as a secondary label under the presidential band. */
 export function chiefLine(d: DecisionsPayload, term: number): string | undefined {
   const c = chiefOfTerm(d, term);
   return c ? `Chief Justice ${c.name} (appointed by ${c.president.split(" ").pop()})` : undefined;

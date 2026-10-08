@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
+import { administration } from "./executive-orders-entities";
+import { HISTORICAL_ADMINISTRATIONS } from "./troops-presidents";
 import { buildDecisionsPayload, countCaseRows } from "./decisions-derive";
 import { caseArticleRow, caseSummaryRow, decisionCaseRow, decisionCountRow, decisionsMeta, landmarkRow } from "./decisions-entities";
 import type { DecisionCase, DecisionsPayload } from "./decisions-types";
@@ -30,7 +32,7 @@ export function getDecisionsPageData(): DecisionsPayload {
   const fetched = z.object({ fetched: z.string() }).parse(JSON.parse(readFileSync(join(process.cwd(), "pipeline", "raw", "wikipedia-cases", "manifest.json"), "utf8"))).fetched;
   const summaries = z.array(caseSummaryRow).parse(read("decisions_summaries.json"));
   const summaryFetched = z.object({ fetched: z.string() }).parse(JSON.parse(readFileSync(join(process.cwd(), "pipeline", "raw", "wikipedia-cases", "leads-manifest.json"), "utf8"))).fetched;
-  cache = { ...buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id)))), casesVersion: casesVersion(), articleSource: { count: articles.length, fetched }, summarySource: { count: summaries.length, claude: summaries.filter((r) => r.via === "claude").length, fetched: summaryFetched }, outcomeSource: { coded: caseRows.filter((r) => r.direction !== null).length, none: caseRows.filter((r) => r.direction === null).length } };
+  cache = { ...buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id))), [...HISTORICAL_ADMINISTRATIONS, ...z.array(administration).parse(read("administrations.json"))]), casesVersion: casesVersion(), articleSource: { count: articles.length, fetched }, summarySource: { count: summaries.length, claude: summaries.filter((r) => r.via === "claude").length, fetched: summaryFetched }, outcomeSource: { coded: caseRows.filter((r) => r.direction !== null).length, none: caseRows.filter((r) => r.direction === null).length } };
   return cache;
 }
 
