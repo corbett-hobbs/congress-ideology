@@ -37,6 +37,14 @@ describe("matchWikipediaCases", () => {
     const companions = [wiki({ name: "Roe v. Wade", volume: 410, page: 113 }), wiki({ name: "Doe v. Bolton", volume: 410, page: 113 })];
     expect(matchWikipediaCases(companions, [scdb({ caseId: "d", caseName: "DOE v. BOLTON", usCite: "410 U.S. 113" })]).rows[0]!.title).toBe("Doe v. Bolton");
   });
+  it("joins a decision with no U.S. cite by its docket and year, the names only vetoing", () => {
+    const entries = [wiki({ name: "National Republican Senatorial Committee v. FEC", volume: 609, docket: "24-621", year: 2026 }), wiki({ name: "Other v. Case", volume: 609, docket: "24-999", year: 2026 })];
+    const nrsc = scdb({ caseId: "n", caseName: "NATIONAL REPUBLICAN SENATORIAL COMMITTEE v. FEDERAL ELECTION COMMISSION", docket: "24-621", dateDecision: "6/30/2026", ledCite: "225 L. Ed. 2d 998" });
+    expect(matchWikipediaCases(entries, [nrsc]).rows).toEqual([{ case_id: "n", title: "National Republican Senatorial Committee v. FEC", via: "docket" }]);
+    // same docket, unrelated name or a different year: no match
+    expect(matchWikipediaCases(entries, [{ ...nrsc, caseName: "ACME CORP. v. WIDGET CO." }]).rows).toEqual([]);
+    expect(matchWikipediaCases(entries, [{ ...nrsc, dateDecision: "6/30/2019" }]).rows).toEqual([]);
+  });
   it("joins by docket within the volume", () => {
     const { rows } = matchWikipediaCases([wiki({ name: "Allen v. Milligan", volume: 599, docket: "21-1086" })], [scdb({ caseId: "m", caseName: "ALLEN v. MILLIGAN", docket: "21-1086", usCite: "599 U.S. 99999" })]);
     expect(rows).toEqual([{ case_id: "m", title: "Allen v. Milligan", via: "docket" }]);
