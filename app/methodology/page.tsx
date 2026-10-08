@@ -100,10 +100,17 @@ export default function MethodologyPage() {
             </li>
           ))}
         </ul>
-        <nav aria-label="On this page" className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[0.88rem]">
+        <nav aria-label="On this page" className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {METHODOLOGY.map((g) => (
-            <a key={g.id} href={`#${g.id}`} className={`text-ink-muted underline-offset-2 hover:text-ink hover:underline ${FOCUS}`}>
-              {g.title}
+            <a
+              key={g.id}
+              href={`#${g.id}`}
+              className={`flex flex-col gap-1 rounded-xl border border-line bg-surface p-4 transition-colors hover:border-accent ${FOCUS}`}
+            >
+              <span className="font-serif text-[1.15rem] font-medium leading-tight text-ink">{g.title}</span>
+              <span className="text-[0.85rem] leading-snug text-ink-muted">
+                {g.entries.map((e) => e.title).join(", ")}
+              </span>
             </a>
           ))}
         </nav>
