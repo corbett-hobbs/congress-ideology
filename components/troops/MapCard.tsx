@@ -175,13 +175,14 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
         )
       }
       action={
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-full flex-wrap items-center justify-between gap-x-2 gap-y-2 sm:w-auto sm:gap-x-3 sm:justify-end">
           {country >= 0 && (
-            <span className="rounded-md border border-line-strong bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">
+            <span className="w-full rounded-md border border-line-strong sm:w-auto bg-surface-raised px-2 py-0.5 text-[0.75rem] text-ink">
               {selRank ? `${places[country].name} · No. ${selRank.rank} · ${formatCount(selRank.value)}` : `${places[country].name} · ${view.suppressed.includes(country) ? "not reported" : "no troops reported"}`}
             </span>
           )}
-          <label className="flex cursor-pointer items-center gap-1.5 text-[0.8rem] text-ink">
+          {/* One line with the play button and year menu, on phones too: a short label that never wraps. */}
+          <label className="flex min-w-0 cursor-pointer items-center gap-1.5 whitespace-nowrap text-[0.75rem] text-ink sm:text-[0.8rem]">
             <input
               type="checkbox"
               checked={showBases}
@@ -191,7 +192,7 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
               }}
               className="h-4 w-4 cursor-pointer accent-[var(--accent)]"
             />
-            Show known installations (source through {bases.through})
+            Known bases (as of {bases.through})
           </label>
           <YearPicker value={yi} range={range} onChange={setYear} format={(i) => `${years[i].fy}`} ariaLabel="Year shown on the map" />
         </div>
