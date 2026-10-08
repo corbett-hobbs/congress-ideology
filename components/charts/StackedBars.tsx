@@ -16,6 +16,8 @@ export interface StackSeries {
   label: string;
   /** Any SVG `fill` value: a colour token, or `url(#pattern)` the caller defines. */
   fill: string;
+  /** Colour of this series' in-bar value labels, when the default white (with a dark edge) would not read on its fill. */
+  labelFill?: string;
 }
 
 export interface StackColumn {
@@ -240,7 +242,7 @@ export function StackedBars<C extends StackColumn>({
                         const h = y(a / denom) - y0;
                         a += v;
                         const t = eff === "share" ? (fitShare ? fmtShare(v / denom) : `${Math.round((v / denom) * 100)}%`) : String(v);
-                        return <SegmentLabel key={s.id} x={x + barW / 2} y={y0 + h / 2} h={h} w={barW} text={t} />;
+                        return <SegmentLabel key={s.id} x={x + barW / 2} y={y0 + h / 2} h={h} w={barW} text={t} fill={s.labelFill} />;
                       });
                     })()}
                     {/* One full-height hit target per column: hover, click, keyboard. */}

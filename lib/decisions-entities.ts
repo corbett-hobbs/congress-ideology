@@ -37,6 +37,7 @@ export const scdbCaseRow = z.object({
   chief: z.string().min(1),
   dateDecision: z.string(),
   caseName: z.string(),
+  docket: z.string(),
   usCite: z.string(),
   sctCite: z.string(),
   ledCite: z.string(),
@@ -121,6 +122,8 @@ export const decisionsMeta = z.strictObject({
   unclassified_count: int,
   citation: z.string(),
   license: z.string(),
+  /** Wikipedia's list of landmark decisions: how many cases on the page it names, and the revision they came from. */
+  landmarks: z.strictObject({ count: int.min(1), page: z.string(), url: z.string().url(), revision_id: int, revision_date: z.string(), license: z.string() }),
   chief_spans: z.array(chiefSpan).min(1),
   issue_areas: z.array(z.strictObject({ id: z.string(), label: z.string() })).min(1),
 });
@@ -137,3 +140,26 @@ export const scdbManifest = z.strictObject({
   fetched: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 export type ScdbManifest = z.infer<typeof scdbManifest>;
+
+/** `decisions_landmarks.json`: the cases Wikipedia's list of landmark decisions names that join to a case in `decisions_cases.json`. */
+export const landmarkRow = z.strictObject({
+  case_id: z.string().min(1),
+  /** The Wikipedia article title (the link target). */
+  title: z.string().min(1),
+  /** The list's headings the case sits under, e.g. "Criminal law \u203a Fourth Amendment rights"; a case can sit under several. */
+  topics: z.array(z.string().min(1)).min(1),
+  /** How it joined: U.S. Reports cite, docket number, or case name plus year (every name match is listed in the report). */
+  via: z.enum(["us_cite", "docket", "name_year"]),
+});
+export type LandmarkRow = z.infer<typeof landmarkRow>;
+
+export const landmarksManifest = z.strictObject({
+  page: z.string(),
+  url: z.string().url(),
+  revid: z.number().int(),
+  revision_timestamp: z.string(),
+  sha256: z.string().length(64),
+  fetched: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  license: z.string(),
+});
+export type LandmarksManifest = z.infer<typeof landmarksManifest>;

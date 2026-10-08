@@ -312,7 +312,7 @@ export function buildMeta(args: {
   selection: Selection;
   catalog: readonly IssueAreaCatalogEntry[];
   spans: ChiefSpan[];
-}): DecisionsMeta {
+}): Omit<DecisionsMeta, "landmarks"> {
   const { version, cases, selection, catalog, spans, sourceFile } = args;
   const [year, rel] = version.split("_");
   const terms = cases.map((c) => c.term);

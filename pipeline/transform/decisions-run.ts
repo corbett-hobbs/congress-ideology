@@ -7,6 +7,8 @@ import {
   chiefReference,
   decisionCaseRow,
   decisionCountRow,
+  landmarkRow,
+  landmarksManifest,
   decisionsMeta,
   issueAreaCatalog,
   scdbManifest,
@@ -14,6 +16,7 @@ import {
 import { ADMINISTRATIONS } from "./administrations";
 import { HISTORICAL_ADMINISTRATIONS } from "../../lib/troops-presidents";
 import { RAW_DIR } from "../fetch/lib";
+import { checkLandmarks, matchLandmarks, parseLandmarkList } from "./landmarks";
 import { buildCaseRows, buildChiefSpans, buildCounts, buildMeta, checkChiefReference, parseScdb, recountFromCsv, runGates, selectCases } from "./decisions";
 
 /**
@@ -48,7 +51,21 @@ async function main() {
   const selection = selectCases(rows);
   const counts = z.array(decisionCountRow).parse(buildCounts(selection.cases, catalog));
   const spans = buildChiefSpans(selection.cases, chiefs);
-  const meta = decisionsMeta.parse(buildMeta({ version: manifest.version, sourceFile: manifest.csv_file, cases: selection.cases, selection, catalog, spans }));
+  // Wikipedia's list of landmark decisions -> the cases it names.
+  const lmManifest = landmarksManifest.parse(await readJson(`${RAW_DIR}/wikipedia-landmarks/manifest.json`).catch(() => {
+    throw new DecisionsDataError("pipeline/raw/wikipedia-landmarks/manifest.json is missing; run pnpm fetch:landmarks");
+  }));
+  const lmText = await readFile(`${RAW_DIR}/wikipedia-landmarks/list.wikitext`, "utf8");
+  if (sha256(Buffer.from(lmText)) !== lmManifest.sha256) throw new DecisionsDataError("list.wikitext does not match the sha256 in its manifest; re-run pnpm fetch:landmarks");
+  const lmEntries = parseLandmarkList(lmText);
+  const lm = matchLandmarks(lmEntries, rows, selection.cases);
+  const landmarks = z.array(landmarkRow).parse(lm.rows);
+  checkLandmarks(lmEntries, landmarks, lm.report, new Set(selection.cases.map((c) => c.caseId)));
+
+  const meta = decisionsMeta.parse({
+    ...buildMeta({ version: manifest.version, sourceFile: manifest.csv_file, cases: selection.cases, selection, catalog, spans }),
+    landmarks: { count: landmarks.length, page: lmManifest.page, url: lmManifest.url, revision_id: lmManifest.revid, revision_date: lmManifest.revision_timestamp.slice(0, 10), license: lmManifest.license },
+  });
   const caseRows = z.array(decisionCaseRow).parse(buildCaseRows(selection.cases, catalog));
   const gates = runGates({ version: manifest.version, counts, caseRows, meta, recount: recountFromCsv(text) });
 
@@ -77,6 +94,16 @@ async function main() {
     cases_by_decade: byDecade,
     cases_by_issue_area: byArea,
     chief_spans: spans.map((s) => `${s.name} ${s.start_term}-${s.end_term} (${s.appointing_president}, ${s.appointing_party})`),
+    landmarks: {
+      source: `${lmManifest.page}, revision ${lmManifest.revid} (${lmManifest.revision_timestamp})`,
+      entries: lm.report.entries,
+      pre_scdb: lm.report.pre_1946,
+      matched: lm.report.matched,
+      by_via: lm.report.by_via,
+      out_of_scope: lm.report.out_of_scope,
+      unmatched: lm.report.unmatched,
+      name_matches: lm.report.name_matches,
+    },
     gates,
     count_rows: counts.length,
   };
@@ -84,6 +111,7 @@ async function main() {
   await mkdir(OUT, { recursive: true });
   await writeFile(`${OUT}/decisions_counts.json`, oneRowPerLine(counts));
   await writeFile(`${OUT}/decisions_cases.json`, oneRowPerLine(caseRows));
+  await writeFile(`${OUT}/decisions_landmarks.json`, oneRowPerLine(landmarks));
   await writeFile(`${OUT}/decisions_meta.json`, JSON.stringify(meta, null, 2) + "\n");
   await writeFile(`${OUT}/decisions_report.json`, JSON.stringify(report, null, 2) + "\n");
   const size = (await stat(`${OUT}/decisions_counts.json`)).size;

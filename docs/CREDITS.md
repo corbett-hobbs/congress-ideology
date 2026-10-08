@@ -292,6 +292,10 @@ the troop file), which packages David Vine's lists of U.S. military bases abroad
 undated snapshot, documented through 2018. The page must say it is a snapshot with no headcounts and that newer, classified and unacknowledged sites are missing.
 Methodology: `docs/TROOPS_METHODOLOGY.md` ("Bases"); defects: `docs/BASES_SOURCE_NOTES.md`.
 
+## Wikipedia — landmark cases on the Decisions page
+
+The "Landmark cases" filter uses the list "List of landmark court decisions in the United States" (Wikipedia contributors, CC BY-SA 4.0; revision recorded in `pipeline/raw/wikipedia-landmarks/manifest.json`). Only the cases it names, its headings and article links are used; the page credits it in its Source line and links each landmark to its article.
+
 ## Supreme Court Database — decisions counts
 
 The Supreme Court decisions page counts orally argued cases by term, issue area and size of the majority from the Supreme Court Database (Washington University in St. Louis),

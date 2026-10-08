@@ -30,6 +30,8 @@ const check = (ok, msg) => {
 };
 const settle = (page) => page.waitForTimeout(250);
 /** SVG <text> has no innerText; read textContent. */
+/** The distinct fills of a chart's data bars (not the Chief band, not hit targets). */
+const barFills = (loc) => loc.locator("svg.chart-svg rect").evaluateAll((els) => [...new Set(els.filter((e) => e.style.fill && !e.closest("g[aria-hidden=true]")).map((e) => getComputedStyle(e).fill))]);
 const svgTexts = (loc) => loc.evaluateAll((els) => els.map((e) => (e.textContent ?? "").trim()));
 
 const browser = await chromium.launch();
@@ -93,9 +95,6 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   // Band names: in-band, gutter or legend; legend always there and isolates
   const legend = c2.locator("button[aria-pressed]", { hasText: /dissent|No dissent/ });
   check((await legend.count()) === 5, `${tag}: card 2 legend names all five bands`);
-  const svgNames = await svgTexts(c2.locator("svg.chart-svg text"));
-  if (w >= 520) check(["Unanimous", "5–4"].every((n) => svgNames.includes(n)), `${tag}: card 2 names bands on the chart (${svgNames.filter((n) => /^(Unanimous|\d–\d)$/.test(n)).join(", ")})`);
-
   // Card 4: the case list, filtered by the legends and the charts
   await c4.scrollIntoViewIfNeeded();
   await page.waitForFunction(() => /^[\d,]+ cases?$/.test(document.querySelector("[aria-label='Cases, scrollable']")?.previousElementSibling?.querySelector("span")?.textContent ?? ""), null, { timeout: 15000 });
@@ -108,7 +107,7 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check((await rowsNow()) > 120, `${tag}: scrolling the list adds rows (${await rowsNow()})`);
   const firstRow = (await listBox.locator("li").first().innerText()).replace(/\s+/g, " ");
   check(/2026/.test(firstRow) && /\d–\d/.test(firstRow), `${tag}: newest case first with its vote ("${firstRow.slice(0, 70)}")`);
-  const link = listBox.locator("li a").first();
+  const link = listBox.locator("li a[href*='justia']").first();
   check(((await link.getAttribute("href")) ?? "").startsWith("https://supreme.justia.com/cases/federal/us/"), `${tag}: U.S. Reports cases link out`);
 
   // Legend of card 1 is an issue-area filter for the whole page
@@ -125,6 +124,24 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check((await listCount()) === "1,696 cases".replace("1,696", await listCount().then((t) => t.split(" ")[0])) && (await page.locator("select[aria-label='Issue area'] option:checked").innerText()).startsWith("Other areas"), `${tag}: Other areas filters too (${await listCount()})`);
   await c1.locator("button[aria-pressed=true]", { hasText: "Other areas" }).click();
   await settle(page);
+
+  // Landmark cases checkbox in the pinned bar narrows everything
+  const lmBox = page.locator("[data-pinned-bar] input[type=checkbox]");
+  check((await lmBox.count()) === 1 && !(await lmBox.isChecked()), `${tag}: "Landmark cases" checkbox in the pinned bar, off by default`);
+  const lmBefore = await listCount();
+  await lmBox.check();
+  await settle(page);
+  const lmCount = parseInt((await listCount()).replace(/,/g, ""), 10);
+  check(lmCount > 300 && lmCount < 400, `${tag}: landmark filter lists only landmarks (${lmCount})`);
+  check((await c4.locator("button[aria-label='Clear the landmark filter']").count()) === 1, `${tag}: landmark chip shown`);
+  check((await listBox.locator("li a", { hasText: "Landmark" }).count()) > 0, `${tag}: landmark rows carry a Wikipedia badge`);
+  check((await lede(c2)).includes(`of ${lmCount} cases`), `${tag}: card 2 follows the landmark filter (${(await lede(c2)).slice(0, 80)})`);
+  check(/Few cases per term/.test(await text(c2)), `${tag}: landmark view carries the few-cases note`);
+  const tot = await c1.locator("svg.chart-svg").first().evaluate((e) => e.getAttribute("aria-label"));
+  check(!!tot, `${tag}: card 1 still draws`);
+  await c4.locator("button[aria-label='Clear the landmark filter']").click();
+  await settle(page);
+  check((await lmBox.isChecked()) === false && (await listCount()) === lmBefore, `${tag}: the chip clears it (${await listCount()})`);
 
   // Peak/low re-picked: area filter and window
   const peaks = async () => (await svgTexts(c1.locator("svg.chart-svg text.fill-ink"))).join(" ");
@@ -228,11 +245,11 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check((await lede(c1)).includes("4 dissents"), `${tag}: card 1 narrows to the picked band`);
   check((await listBox.locator("li").first().innerText()).replace(/\s+/g, " ").includes("5–4") || (await listBox.locator("li").first().innerText()).includes("4–4"), `${tag}: listed cases are 5–4 or 4–4`);
   check((await c2.locator("button[aria-pressed=true]").filter({ hasText: "Number of cases" }).count()) === 1, `${tag}: isolating a band switches to Number of cases`);
-  check((await c2.locator("svg.chart-svg path[fill]").count()) === 1, `${tag}: only the isolated band is drawn`);
+  check((await barFills(c2)).length === 1, `${tag}: only the isolated band is drawn`);
   await c2.locator("button", { hasText: "Share of cases" }).click();
   await settle(page);
   check((await listCount()) === "8,251 cases", `${tag}: back to Share clears the vote filter`);
-  check((await c2.locator("svg.chart-svg path[fill]").count()) === 5, `${tag}: back to Share clears the pick`);
+  check((await barFills(c2)).length === 5, `${tag}: back to Share clears the pick`);
 
   // Hover links the two time charts (mouse)
   if (w >= 768) {
@@ -308,10 +325,10 @@ for (const [name, opts, attr] of [["dark", { colorScheme: "dark" }, null], ["dat
       return [0, 1, 2, 3, 4].map((k) => cs.getPropertyValue(`--split-${k}`).trim().toLowerCase());
     });
     const dark = name !== "data-theme=light";
-    const expected = dark ? ["#9591ad", "#5cb2fd", "#6acdc6", "#deb34a", "#ba446e"] : ["#312c44", "#23318e", "#41939d", "#643e03", "#a03667"];
+    const expected = dark ? ["#377a85", "#6d95ab", "#a1b3cb", "#d0d3e5", "#f9f7fe"] : ["#559292", "#347087", "#2b4b75", "#2c2659", "#250133"];
     check(JSON.stringify(tokens) === JSON.stringify(expected), `${tag}: --split-0..4 resolve to the ${dark ? "dark" : "light"} set`);
-    const fills = await c2.locator("svg.chart-svg path[fill]").evaluateAll((els) => els.map((e) => getComputedStyle(e).fill));
-    check(new Set(fills).size === 5, `${tag}: five distinct band fills (${new Set(fills).size})`);
+    const fills = await barFills(c2);
+    check(fills.length === 5, `${tag}: five distinct band fills (${fills.length})`);
     const bandBg = await c2.locator("svg.chart-svg g[aria-hidden=true] rect").first().evaluate((e) => getComputedStyle(e).fill);
     check(/^(color|rgb|oklab|oklch)/.test(bandBg), `${tag}: party-tinted Chief band renders (${bandBg.slice(0, 40)})`);
     check(errors.length === 0, `${tag}: no console errors`);

@@ -18,6 +18,8 @@ import {
   inAreaFilter,
   bandShare,
   buildDecisionsPayload,
+  countCaseRows,
+  viewOf,
   buildStacks,
   casesPerTerm,
   chiefBandTerms,
@@ -39,10 +41,12 @@ const read = <T>(f: string): T => JSON.parse(readFileSync(`pipeline/output/${f}`
 const counts = read<DecisionCountRow[]>("decisions_counts.json");
 const meta = read<DecisionsMeta>("decisions_meta.json");
 const report = read<{ cases: number; bucket_totals: Record<string, number>; cases_by_issue_area: Record<string, number>; terms: string }>("decisions_report.json");
-const caseRows = read<{ term: number; date: string; name: string; cite: string; issue_area_id: string | null; band: number; maj: number; min: number }[]>("decisions_cases.json");
-const d = buildDecisionsPayload(counts, meta);
+const caseRows = read<{ case_id: string; term: number; date: string; name: string; cite: string; issue_area_id: string | null; band: number; maj: number; min: number }[]>("decisions_cases.json");
+const landmarkRows = read<{ case_id: string; title: string; topics: string[] }[]>("decisions_landmarks.json");
+const landmarkIds = new Set(landmarkRows.map((r) => r.case_id));
+const d = buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id))));
 const cases: DecisionCase[] = caseRows
-  .map((r): DecisionCase => [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : d.areas.findIndex((a) => a.id === r.issue_area_id), r.band, r.maj, r.min])
+  .map((r): DecisionCase => [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : d.areas.findIndex((a) => a.id === r.issue_area_id), r.band, r.maj, r.min, landmarkIds.has(r.case_id) ? "Landmark" : "", ""])
   .reverse();
 const FULL: [number, number] = [d.terms[0], d.terms[d.terms.length - 1]];
 
@@ -154,7 +158,7 @@ describe("small-sample test", () => {
   it("is on for a thin issue area and never for All", () => {
     const privacy = d.areas.findIndex((a) => a.id === "private-action");
     expect(isSmallSample(d, privacy, FULL)).toBe(true);
-    expect(isSmallSample(d, -1, FULL)).toBe(false);
+    expect(isSmallSample(d, -1, FULL)).toBe(false); // the whole docket is ~100 cases a term
     const crim = d.areas.findIndex((a) => a.id === "criminal-procedure");
     expect(isSmallSample(d, crim, [1960, 1980])).toBe(false);
     expect(median([5, 1, 3])).toBe(3);
@@ -245,5 +249,48 @@ describe("decade heatmap", () => {
     expect(decadeInWindow(1960, [1969, 1970])).toBe(true);
     expect(decadeInWindow(1950, [1960, 1990])).toBe(false);
     expect(decadeInWindow(2020, [1946, 2025])).toBe(true);
+  });
+});
+
+describe("landmark view", () => {
+  it("counts exactly the landmark cases, by term, area and band", () => {
+    expect(d.landmark.caseCount).toBe(landmarkRows.length);
+    expect(d.landmarkSource.count).toBe(landmarkRows.length);
+    expect(d.landmark.all.reduce((t, b) => t + sumBucket(b), 0)).toBe(landmarkRows.length);
+    // Never more than the docket, in any term, area or band.
+    d.terms.forEach((_, ti) => {
+      for (let k = 0; k < 5; k++) {
+        expect(d.landmark.all[ti][k]).toBeLessThanOrEqual(d.all[ti][k]);
+        d.areas.forEach((__, ai) => expect(d.landmark.by[ai][ti][k]).toBeLessThanOrEqual(d.by[ai][ti][k]));
+      }
+    });
+    // The series still add up to All in the landmark view.
+    const v = viewOf(d, true);
+    d.terms.forEach((_, ti) => {
+      for (let k = 0; k < 5; k++) {
+        const sum = areaSeries(v).reduce((t, s) => t + areaCells(v, s.area)[ti][k], 0);
+        expect(sum).toBe(v.all[ti][k]);
+      }
+    });
+  });
+  it("viewOf swaps the arrays and keeps the series fixed", () => {
+    const v = viewOf(d, true);
+    expect(v.caseCount).toBe(landmarkRows.length);
+    expect(v.topAreas).toEqual(d.topAreas);
+    expect(viewOf(d, false)).toBe(d);
+  });
+  it("the list filters to the same landmark cases the charts count, for any window, area and band", () => {
+    const v = viewOf(d, true);
+    for (const area of [ALL_AREAS, OTHER_AREAS, 3]) {
+      for (const band of [null, 4]) {
+        const want = windowCells(v, area, FULL).cells.reduce((t, b) => t + (band === null ? sumBucket(b) : b[band]), 0);
+        expect(filterCases(d, cases, { range: FULL, area, band, term: null, landmark: true }).length, `${area}/${band}`).toBe(want);
+      }
+    }
+    expect(filterCases(d, cases, { range: FULL, area: ALL_AREAS, band: null, term: null, landmark: true })).toHaveLength(landmarkRows.length);
+  });
+  it("flags a thin selection as a small sample, the landmark view included", () => {
+    expect(isSmallSample(viewOf(d, true), ALL_AREAS, FULL)).toBe(true);
+    expect(isSmallSample(d, ALL_AREAS, FULL)).toBe(false);
   });
 });

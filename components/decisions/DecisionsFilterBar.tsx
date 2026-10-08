@@ -21,8 +21,8 @@ const LABEL = "font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-fai
  * beside it (rule 5a); the slider row follows. The area is the same value a click on a row in card 3 sets.
  */
 export function DecisionsFilterBar() {
-  const { data, range, area } = useDecisionsValues();
-  const { setRange, setArea } = useDecisionsActions();
+  const { data, range, area, landmark } = useDecisionsValues();
+  const { setRange, setArea, setLandmark } = useDecisionsActions();
   const terms = useMemo(() => chiefBandTerms(data), [data]);
   const lo = data.terms[0];
   const hi = data.terms[data.terms.length - 1];
@@ -31,7 +31,8 @@ export function DecisionsFilterBar() {
     <div data-pinned-bar className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 shadow-[0_2px_6px_rgba(26,34,51,0.08)] backdrop-blur sm:shadow-none">
       <div className="mx-auto w-full max-w-[1180px] px-4 pb-2 pt-2 sm:px-6 sm:py-2.5">
         <div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:gap-x-5">
-          <label className="flex flex-none items-center gap-2 sm:pt-px">
+          <div className="flex flex-none items-center gap-3 sm:pt-px">
+          <label className="flex min-w-0 flex-1 items-center gap-2 sm:flex-none">
             <span className={LABEL}>Issue area</span>
             <select value={area} onChange={(e) => setArea(Number(e.target.value))} aria-label="Issue area" className={`${SELECT} min-w-0 flex-1 sm:w-[10.5rem] sm:flex-none`}>
               <option value={-1}>{ALL_AREAS_LABEL}</option>
@@ -43,6 +44,11 @@ export function DecisionsFilterBar() {
               <option value={OTHER_AREAS}>{OTHER_LABEL(data)}</option>
             </select>
           </label>
+          <label className="flex flex-none cursor-pointer items-center gap-1.5 whitespace-nowrap text-[0.8rem] text-ink" title="Only the cases on Wikipedia's list of landmark decisions in the United States">
+            <input type="checkbox" checked={landmark} onChange={(e) => setLandmark(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[var(--accent)]" />
+            Landmark cases
+          </label>
+          </div>
           <RangeSelector
             min={lo}
             max={hi}
