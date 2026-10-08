@@ -44,9 +44,9 @@ export function DecisionsFilterBar() {
               <option value={OTHER_AREAS}>{OTHER_LABEL(data)}</option>
             </select>
           </label>
-          <label className="flex flex-none cursor-pointer items-center gap-1.5 whitespace-nowrap text-[0.8rem] text-ink" title="Only the cases on Wikipedia's list of landmark decisions in the United States">
+          <label className="flex flex-none cursor-pointer items-center gap-1.5 whitespace-nowrap text-[0.8rem] text-ink" title="A landmark case is a Supreme Court decision that set a major precedent or changed how the law works; this filter uses Wikipedia's list of landmark decisions in the United States.">
             <input type="checkbox" checked={landmark} onChange={(e) => setLandmark(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[var(--accent)]" />
-            Landmark cases
+            <span className="underline decoration-dotted decoration-1 underline-offset-4">Landmark cases</span>
           </label>
           </div>
           <RangeSelector
