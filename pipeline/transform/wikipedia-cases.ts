@@ -9,6 +9,8 @@ import type { WikiCaseEntry } from "../fetch/wikipedia-cases-lib";
  *   1. `us_cite`   the U.S. Reports volume and page (a cite is one case, so the article is certain; names only veto a
  *                  clash such as a companion case sharing a page).
  *   2. `docket`    the volume and docket number, for the newer volumes whose lists print dockets, not pages.
+ *      With no U.S. cite at all (the newest decisions: SCDB prints only an S. Ct. or L. Ed. cite until the volume is paged),
+ *      the docket number alone, in the decision year (give or take one), pins the case; the names only veto.
  *   3. `name_year` the case name (parties, normalised) and the year, from a list entry with no usable cite: a decision too
  *                  new for a page number ("609 U.S. ___"), or an old list that prints no cite. Needs exactly one candidate.
  *
@@ -117,7 +119,9 @@ export function matchWikipediaCases(rawEntries: readonly WikiCaseEntry[], cases:
   const byCite = new Map<string, WikiCaseEntry[]>();
   const byDocket = new Map<string, WikiCaseEntry[]>();
   const byKey = new Map<string, WikiCaseEntry[]>();
+  const byDocketOnly = new Map<string, WikiCaseEntry[]>();
   for (const e of entries) {
+    if (e.docket) push(byDocketOnly, dash(e.docket), e);
     if (e.volume !== null && e.page !== null) push(byCite, `${e.volume}/${e.page}`, e);
     if (e.volume !== null && e.docket) push(byDocket, `${e.volume}/${dash(e.docket)}`, e);
     const k = sideKey(e.title ?? e.name);
@@ -158,6 +162,18 @@ export function matchWikipediaCases(rawEntries: readonly WikiCaseEntry[], cases:
         via = v;
         break;
       }
+    }
+
+    // 2b: no U.S. cite to name the volume (a decision too new for its page), so the docket and the year pin the case.
+    if (!title && !us && c.docket.trim()) {
+      const y = decisionYear(c);
+      const found = (byDocketOnly.get(dash(c.docket)) ?? []).filter((e) => e.year !== null && Math.abs(e.year - y) <= 1 && sameCase(c.caseName, e.title ?? e.name, 0.5));
+      if (found.length > 0) listed = true;
+      const ts = titlesOf(found, c.caseName);
+      if (ts.length === 1) {
+        title = ts[0]!;
+        via = "docket";
+      } else if (ts.length > 1) conflict("docket", ts.join(" / "), "the docket names more than one article");
     }
 
     // 3: name and year, from entries with no usable page. One unambiguous article, whose name fits closely.
