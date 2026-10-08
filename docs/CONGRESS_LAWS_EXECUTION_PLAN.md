@@ -40,13 +40,14 @@ Companion to `docs/CONGRESS_LAWS_SCOPE.md` (what and why) and the mockup `docs/m
 2. For a random sample of 40 laws per Congress, 93rd–119th: fill rate of `policyArea`, `sponsors[].bioguideId`, `summaries`, and the `Became Public Law` action date. Report by Congress.
 3. Signing date: `Became Public Law` action date vs the list's `latestAction.actionDate`; how often and by how much they differ; how veto overrides appear.
 4. Votes: pull the action history of 30 laws per decade; extract recorded-vote references (`chamber`, roll number, voice vote, unanimous consent). Join to Voteview's roll-call file (fetch it; confirm it has `yea_count` / `nay_count`, else derive from the member-votes file) and confirm the tallies equal the action-text tallies where both exist. Report parse and join rate by decade.
-5. Actual request cost: calls per law (detail, actions, summaries), measured rate limit, projected hours for the full back-fill.
-6. Confirm `legislators.json` / historical YAML contains every sampled sponsor `bioguideId`.
-7. Mayhew: confirm the 2023–2024 list is still the latest; list each file's format; estimate extraction effort (law count 1973–2024).
+5. **Bulk vs API.** Look at the GovInfo Bill Status bulk listing (https://www.govinfo.gov/bulkdata/BILLSTATUS: 108th–119th, one ZIP per bill type per Congress). **Ask before downloading anything**: state file names and sizes first, then fetch only what you need for a sample (e.g. the House and Senate bill ZIPs for two Congresses, one of them the 118th). Confirm which fields the XML really carries (policy area, sponsor `bioguideId`, cosponsors, summaries, public law number, `recordedVotes` per action), then for the 2003–2024 laws in your sample compare it to the API: same law set, same policy area, same sponsor, same enactment date? Say where each is better. Also look for any bulk source for 1973–2002 (the `unitedstates/congress` THOMAS scraper output, an archive); report it or confirm there is none.
+6. Actual request cost for the Congresses that need the API (1973–2002 and any gap newer than the bulk releases): calls per law (detail, actions, summaries), measured rate limit, projected hours for the full back-fill. Also the size of the bulk ZIPs and what to keep from them.
+7. Confirm `legislators.json` / historical YAML contains every sampled sponsor `bioguideId`.
+8. Mayhew: confirm the 2023–2024 list is still the latest; list each file's format; estimate extraction effort (law count 1973–2024).
 
-**Gate (stop here):** report fill rates, parse rates and the request budget. You decide: (a) is 1973 still the start; (b) where the support card must start if pre-1990 vote parsing is thin; (c) whether any stretch needs a "Not classified" series.
+**Gate (stop here):** report fill rates, parse rates, the bulk-vs-API comparison and the request budget. You decide: (0) the source split (bulk from 2003, API before, or the API throughout); (a) is 1973 still the start; (b) where the support card must start if pre-1990 vote parsing is thin; (c) whether any stretch needs a "Not classified" series.
 
-**Prompt:** "Do Session 0 of `docs/CONGRESS_LAWS_EXECUTION_PLAN.md`. Read the scope doc first. `CONGRESS_API_KEY` is in `.env.local`. Write findings to `docs/LAWS_PREFLIGHT.md` and stop at the gate."
+**Prompt:** "Do Session 0 of `docs/CONGRESS_LAWS_EXECUTION_PLAN.md`. Read the scope doc first. `CONGRESS_API_KEY` is in `.env.local`. Item 5 (bulk vs API) involves downloading GovInfo zips: ask me first, with file names and sizes, before fetching. Write findings to `docs/LAWS_PREFLIGHT.md` and stop at the gate."
 
 ---
 
@@ -55,7 +56,7 @@ Companion to `docs/CONGRESS_LAWS_SCOPE.md` (what and why) and the mockup `docs/m
 **Goal:** every public law 1973– as a validated, committed file, with counts the page will chart.
 
 **Do:**
-- `pipeline/fetch/congress-gov.ts` + `congress-gov-lib.ts` (`pnpm fetch:laws`; incremental on `updateDate`; resumable; writes `pipeline/raw/congress-gov/`; honours the measured rate limit; not in `fetch:all`).
+- Fetchers, split as Session 0 decided (default: bulk from the 108th, API before): `pipeline/fetch/govinfo-billstatus.ts` + lib (`pnpm fetch:billstatus`; keyless; downloads the per-Congress, per-bill-type ZIPs, keeps what the transform reads; ask before the first large download; writes `pipeline/raw/govinfo-billstatus/`) and `pipeline/fetch/congress-gov.ts` + `congress-gov-lib.ts` (`pnpm fetch:laws`; incremental on `updateDate`; resumable; writes `pipeline/raw/congress-gov/`; honours the measured rate limit). Neither is in `fetch:all`. The transform reads both and records per law which source it came from in the report; where both cover a law (a validation overlap), gate that they agree.
 - `pipeline/transform/laws.ts` (pure) + `laws-run.ts`; schemas `lib/laws-entities.ts`; add to `pnpm transform`, `pipeline/validate/schemas.ts`. Outputs: `laws.json` (row per law: `law_id`, congress, number, date, title, bill type/number, origin chamber, `sponsor_bioguide_id`, `policy_area`, CRS first sentence, `veto_override`), `laws_counts.json` (congress × policy area, band counts left empty for Session 2), `laws_meta.json` (data-through, policy-area catalog, partial-Congress flag), `laws_report.json`.
 - The signing president is **derived** from the date through `administrations.json` (+ `HISTORICAL_ADMINISTRATIONS`), never stored; the per-Congress "signed most" attribution is computed in derive code and tested (also the Congresses where it splits).
 - Gates (transform throws): per-Congress count equals the source's own `count`; every sponsor id resolves in the legislators data (or is listed in the report); every law has a date inside its Congress; counts file sums back to the list.
