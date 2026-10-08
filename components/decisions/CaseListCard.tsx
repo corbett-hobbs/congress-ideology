@@ -157,7 +157,7 @@ export function CaseListCard() {
 }
 
 /** Wide-screen columns of a row with a qualifier: date, name, issue area, vote, how the justice voted. */
-export const JUSTICE_COLUMNS = "sm:grid-cols-[6.5rem_minmax(0,1fr)_9rem_4.5rem_9.5rem]";
+export const JUSTICE_COLUMNS = "sm:grid-cols-[6rem_minmax(0,1fr)_8.5rem_4.5rem_13rem]";
 
 const BADGE =
   "inline-block whitespace-nowrap rounded-full border border-line-strong bg-surface-raised px-1.5 py-px align-baseline text-[0.66rem] font-medium text-ink-muted no-underline hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";

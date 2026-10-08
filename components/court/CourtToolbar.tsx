@@ -1,5 +1,6 @@
 "use client";
 
+import { RangeReset } from "@/components/charts/RangeReset";
 import { PillGroup } from "@/components/charts/PillGroup";
 import {
   termLabel,
@@ -82,7 +83,7 @@ export function CourtToolbar({
             </select>
           </div>
 
-          <div className="flex w-full min-w-0 items-center gap-3 sm:ml-auto sm:w-auto sm:min-w-[300px] sm:max-w-[520px] sm:flex-1">
+          <div className="flex w-full min-w-0 items-center gap-3 sm:ml-auto sm:w-auto sm:min-w-[300px] sm:max-w-[520px] sm:flex-1 pb-3.5">
             <button
               type="button"
               onClick={onTogglePlay}
@@ -102,8 +103,14 @@ export function CourtToolbar({
               onChange={(e) => onTermChange(+e.target.value)}
               className="h-6 min-w-0 flex-1 cursor-pointer accent-[var(--accent)]"
             />
-            <span className="flex-none whitespace-nowrap font-mono text-[0.95rem] font-semibold tabular-nums text-ink">
+            <span className="relative flex-none whitespace-nowrap font-mono text-[0.95rem] font-semibold tabular-nums text-ink">
               {label}
+              <RangeReset
+                show={term !== max}
+                onReset={() => onTermChange(max)}
+                ariaLabel="Reset to the latest term"
+                className="absolute right-0 top-full mt-0.5 font-sans leading-none"
+              />
             </span>
           </div>
         </div>
