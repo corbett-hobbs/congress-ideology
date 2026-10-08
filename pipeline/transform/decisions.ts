@@ -113,6 +113,7 @@ export function buildCaseRows(cases: readonly ScdbCaseRow[], catalog: readonly I
       band: dissentBucket(c.minVotes),
       maj: c.majVotes,
       min: c.minVotes,
+      direction: c.decisionDirection === 1 ? ("conservative" as const) : c.decisionDirection === 2 ? ("liberal" as const) : null,
     }))
     .sort((a, b) => a.date.localeCompare(b.date) || a.case_id.localeCompare(b.case_id));
 }

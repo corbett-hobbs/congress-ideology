@@ -47,6 +47,11 @@
     "miscellaneous": 32,
     "private-action": 5
   },
+  "outcome_direction": {
+    "liberal": 4093,
+    "conservative": 3996,
+    "none": 162
+  },
   "chief_spans": [
     "Fred Vinson 1946-1952 (Harry S. Truman, Democratic)",
     "Earl Warren 1953-1968 (Dwight D. Eisenhower, Republican)",

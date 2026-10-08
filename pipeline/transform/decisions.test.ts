@@ -12,18 +12,18 @@ const chiefs: ChiefReferenceEntry[] = [
   { scdb_chief: "Jones", name: "Bo Jones", justice_id: 2, appointing_president: "Richard M. Nixon", appointing_party: "Republican" },
 ];
 
-const HEADER = "caseId,term,decisionType,majVotes,minVotes,voteUnclear,issueArea,chief,dateDecision,caseName,usCite,sctCite,ledCite,lexisCite,docket";
+const HEADER = "caseId,term,decisionType,majVotes,minVotes,voteUnclear,issueArea,chief,dateDecision,caseName,usCite,sctCite,ledCite,lexisCite,docket,decisionDirection";
 const csv = (...lines: string[]) => [HEADER, ...lines].join("\n") + "\n";
 const SAMPLE = csv(
-  "1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1",
-  "2,1946,1,5,4,,2,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1",
-  "3,1946,6,8,1,,,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1", // per curiam, no issue area
-  "4,1946,2,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1", // summary: excluded
-  "5,1946,4,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1", // decree: excluded
-  "6,1946,1,5,4,1,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1", // unclear: excluded
-  "7,1947,1,6,3,,1,Jones,11/18/1946,CASE,1 U.S. 1,,,,D1",
-  "8,1947,5,4,4,,1,Jones,11/18/1946,CASE,1 U.S. 1,,,,D1", // 4-4 tie: bucket 4
-  "9,1947,1,7,1,,2,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1",
+  "1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,2",
+  "2,1946,1,5,4,,2,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,1",
+  "3,1946,6,8,1,,,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,", // per curiam, no issue area
+  "4,1946,2,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,", // summary: excluded
+  "5,1946,4,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,", // decree: excluded
+  "6,1946,1,5,4,1,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,", // unclear: excluded
+  "7,1947,1,6,3,,1,Jones,11/18/1946,CASE,1 U.S. 1,,,,D1,3",
+  "8,1947,5,4,4,,1,Jones,11/18/1946,CASE,1 U.S. 1,,,,D1,", // 4-4 tie: bucket 4
+  "9,1947,1,7,1,,2,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,",
 );
 
 describe("decisions transform", () => {
@@ -51,13 +51,13 @@ describe("decisions transform", () => {
 
   it("fails loudly on an unknown issue area or chief", () => {
     expect(() => issueAreaId(99, catalog)).toThrow(/unknown SCDB issueArea code 99/);
-    const cases = selectCases(parseScdb(csv("1,1946,1,9,0,,1,Nobody,11/18/1946,CASE,1 U.S. 1,,,,D1"))).cases;
+    const cases = selectCases(parseScdb(csv("1,1946,1,9,0,,1,Nobody,11/18/1946,CASE,1 U.S. 1,,,,D1,"))).cases;
     expect(() => buildChiefSpans(cases, chiefs)).toThrow(/unknown SCDB chief "Nobody"/);
-    expect(() => selectCases(parseScdb(csv("1,1946,3,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1")))).toThrow(/unknown decisionType 3/);
+    expect(() => selectCases(parseScdb(csv("1,1946,3,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,")))).toThrow(/unknown decisionType 3/);
   });
 
   it("fails on a duplicate caseId", () => {
-    expect(() => parseScdb(csv("1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1", "1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1"))).toThrow(/duplicate caseId/);
+    expect(() => parseScdb(csv("1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,", "1,1946,1,9,0,,1,Smith,11/18/1946,CASE,1 U.S. 1,,,,D1,"))).toThrow(/duplicate caseId/);
   });
 
   it("builds chief spans from the modal chief of each term", () => {
@@ -136,6 +136,8 @@ describe("case rows", () => {
     const sel = selectCases(parseScdb(SAMPLE));
     const rows = buildCaseRows(sel.cases, catalog);
     expect(rows).toHaveLength(6);
-    expect(rows[0]).toMatchObject({ date: "1946-11-18", name: "Case", cite: "1 U.S. 1", band: 0 });
+    expect(rows[0]).toMatchObject({ date: "1946-11-18", name: "Case", cite: "1 U.S. 1", band: 0, direction: "liberal" });
+    // 1 conservative, 2 liberal; 3 (unspecifiable) and blank carry no direction.
+    expect(rows.map((r) => r.direction)).toEqual(["liberal", "conservative", null, null, null, null]);
   });
 });

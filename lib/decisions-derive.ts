@@ -2,7 +2,7 @@ import type { BandTerm } from "../components/charts/TermBand";
 import type { TermSegment } from "../components/charts/TermBandSvg";
 import type { DecisionCaseRow, DecisionCountRow, DecisionsMeta } from "./decisions-entities";
 import { initialsOf } from "./term-label";
-import { ALL_AREAS, OTHER_AREAS, type AreaSort, type AreaSortKey, type Bucket, type DecisionCase, type DecisionsChief, type DecisionsPayload, type LandmarkCells, type SplitMode } from "./decisions-types";
+import { ALL_AREAS, OTHER_AREAS, type AreaSort, type AreaSortKey, type Bucket, type DecisionCase, type DecisionDirection, type DecisionsChief, type DecisionsPayload, type LandmarkCells, type SplitMode } from "./decisions-types";
 import type { YearRange } from "./year-range";
 
 /**
@@ -89,6 +89,7 @@ export function buildDecisionsPayload(counts: readonly DecisionCountRow[], meta:
     landmarkSource: { url: meta.landmarks.url, page: meta.landmarks.page, revisionDate: meta.landmarks.revision_date, license: meta.landmarks.license, count: meta.landmarks.count },
     articleSource: { count: 0, fetched: "" },
     summarySource: { count: 0, claude: 0, fetched: "" },
+    outcomeSource: { coded: 0, none: 0 },
     topAreas,
     chiefs,
     versionLabel: meta.scdb_version_label,
@@ -358,12 +359,14 @@ export interface CaseFilter {
   term: number | null;
   /** Only the cases on Wikipedia's list of landmark decisions. */
   landmark?: boolean;
+  /** Only cases coded liberal (2) or conservative (1) by SCDB; null/absent for any. */
+  direction?: DecisionDirection | null;
 }
 
 /** Cases (newest first) inside the window, the area filter, the band and the pinned term. */
 export function filterCases(d: DecisionsPayload, cases: readonly DecisionCase[], f: CaseFilter): DecisionCase[] {
   const [lo, hi] = f.term === null ? f.range : [f.term, f.term];
-  return cases.filter((c) => c[0] >= lo && c[0] <= hi && (f.band === null || c[5] === f.band) && (!f.landmark || !!c[8]) && inAreaFilter(d, f.area, c[4]));
+  return cases.filter((c) => c[0] >= lo && c[0] <= hi && (f.band === null || c[5] === f.band) && (!f.landmark || !!c[8]) && (!f.direction || c[13] === f.direction) && inAreaFilter(d, f.area, c[4]));
 }
 
 const WIKI = "https://en.wikipedia.org/wiki/";

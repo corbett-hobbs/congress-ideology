@@ -4,12 +4,20 @@ import { useMemo, useState, type UIEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { ALL_AREAS_LABEL, areaFilterLabel, filterCases, fmtInt, wikiArticleUrl, wikiCaseUrl } from "@/lib/decisions-derive";
-import { ALL_AREAS, BAND_COLORS, BAND_LONG, BAND_SHORT, type DecisionCase } from "@/lib/decisions-types";
+import { ALL_AREAS, BAND_COLORS, BAND_LONG, BAND_SHORT, type DecisionCase, type DecisionDirection } from "@/lib/decisions-types";
 import { useDecisionsActions, useDecisionsValues } from "./DecisionsState";
+import { DIRECTION_DOT, DirectionTag } from "./DirectionTag";
 import { Swatch } from "./shared";
 import { useDecisionCases } from "./useDecisionCases";
 
 const PAGE = 120;
+
+/** The outcome pills above the list: SCDB's coding of who prevailed (see `lib/decisions-direction.ts`). */
+const OUTCOMES: { value: DecisionDirection | null; label: string }[] = [
+  { value: null, label: "All outcomes" },
+  { value: 2, label: "Liberal outcome" },
+  { value: 1, label: "Conservative outcome" },
+];
 
 const fmtDate = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 
@@ -39,7 +47,8 @@ export function CaseListCard() {
   const { data, range, area, band, pin, landmark } = useDecisionsValues();
   const { setArea, setBand, clearPin, setLandmark } = useDecisionsActions();
   const { cases, failed } = useDecisionCases(data.casesVersion);
-  const rows = useMemo(() => (cases ? filterCases(data, cases, { range, area, band, term: pin, landmark }) : []), [data, cases, range, area, band, pin, landmark]);
+  const [direction, setDirection] = useState<DecisionDirection | null>(null);
+  const rows = useMemo(() => (cases ? filterCases(data, cases, { range, area, band, term: pin, landmark, direction }) : []), [data, cases, range, area, band, pin, landmark, direction]);
   const [query, setQuery] = useState("");
   const terms = useMemo(() => query.toLowerCase().split(/\s+/).filter(Boolean), [query]);
   const matched = useMemo(() => {
@@ -49,7 +58,7 @@ export function CaseListCard() {
       return terms.every((t) => hay.includes(t));
     });
   }, [rows, terms, data]);
-  const sig = `${range[0]}-${range[1]}|${area}|${band}|${pin}|${landmark}|${terms.join(" ")}`;
+  const sig = `${range[0]}-${range[1]}|${area}|${band}|${pin}|${landmark}|${direction}|${terms.join(" ")}`;
   const [shown, setShown] = useState<{ sig: string; n: number }>({ sig, n: PAGE });
   const n = shown.sig === sig ? shown.n : PAGE;
   const grow = (e: UIEvent<HTMLElement>) => {
@@ -72,9 +81,26 @@ export function CaseListCard() {
           className="w-full rounded-md border border-line-strong bg-surface-raised px-2.5 py-1 text-[0.82rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-60"
         />
       }
-      lede={`Argued cases decided in ${pin !== null ? `the ${pin} term` : years}, newest first. The list follows the filters above and the charts: pick an issue area, a vote or a term to narrow it.`}>
+      lede={`Argued cases decided in ${pin !== null ? `the ${pin} term` : years}, newest first. The list follows the filters above and the charts: pick an issue area, a vote or a term to narrow it. A Liberal or Conservative tag is the Supreme Court Database’s coding of who prevailed; hover or tap it for what that means in the case’s issue area.`}>
       <div className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-ink-muted" aria-live="polite">
         <span className="tabular-nums text-ink">{cases ? `${fmtInt(matched.length)} case${matched.length === 1 ? "" : "s"}` : failed ? "Cases unavailable" : "Loading cases…"}</span>
+        <div role="group" aria-label="Outcome" className="flex flex-wrap items-center gap-1.5">
+          {OUTCOMES.map((o) => {
+            const on = direction === o.value;
+            return (
+              <button
+                key={o.label}
+                type="button"
+                aria-pressed={on}
+                onClick={() => setDirection(o.value)}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[0.75rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${on ? "border-ink bg-surface text-ink" : "border-line-strong bg-surface-raised text-ink-muted hover:text-ink"}`}
+              >
+                {o.value !== null && <i aria-hidden className="inline-block h-2 w-2 flex-none rounded-full" style={{ background: DIRECTION_DOT[o.value] }} />}
+                {o.label}
+              </button>
+            );
+          })}
+        </div>
         {landmark && (
           <Chip onClear={() => setLandmark(false)} label="Clear the landmark filter">
             Landmark cases
@@ -100,7 +126,7 @@ export function CaseListCard() {
             {`“${query.trim()}”`}
           </Chip>
         )}
-        {area === ALL_AREAS && band === null && pin === null && !landmark && terms.length === 0 && <span>{ALL_AREAS_LABEL}, any vote.</span>}
+        {area === ALL_AREAS && band === null && pin === null && !landmark && terms.length === 0 && direction === null && <span>{ALL_AREAS_LABEL}, any vote.</span>}
       </div>
       <div
         key={sig}
@@ -116,7 +142,7 @@ export function CaseListCard() {
         ) : (
           <ol className="m-0 list-none p-0">
             {matched.slice(0, n).map((c, i) => (
-              <CaseRow key={`${c[0]}-${c[1]}-${c[3]}-${i}`} c={c} area={c[4] >= 0 ? data.areas[c[4]].label : "No issue area"} />
+              <CaseRow key={`${c[0]}-${c[1]}-${c[3]}-${i}`} c={c} area={c[4] >= 0 ? data.areas[c[4]].label : "No issue area"} areaId={c[4] >= 0 ? data.areas[c[4]].id : null} />
             ))}
           </ol>
         )}
@@ -124,6 +150,9 @@ export function CaseListCard() {
       <MethodologyNote>
         <p>
           The same cases as the charts: orally argued, {fmtInt(data.unclearVotes)} with an unclear vote left out. The vote is the justices in the majority and minority; the colour is how many dissented (the bands of the chart above), so a 5–3 decision is coloured with the 6–3 band. Landmark badges come from Wikipedia’s “List of landmark court decisions in the United States” ({fmtInt(data.landmarkSource.count)} cases on this page, from the {data.landmarkSource.revisionDate} revision, CC BY-SA 4.0); a badge links to the article and names the list’s heading. Citations are U.S. Reports where there is one, otherwise the Supreme Court Reporter or Lawyers’ Edition. The sentence under a case says how the Court ruled, and comes from how Wikipedia’s article on it opens (CC BY-SA 4.0; {fmtInt(data.summarySource.count)} cases, read {data.summarySource.fetched}). For {fmtInt(data.summarySource.count - data.summarySource.claude)} it is the first ruling sentence of the article’s opening, in Wikipedia’s words, with the case name and citation cut off; for {fmtInt(data.summarySource.claude)}, tagged “AI-written”, the article’s opening states the ruling less directly, so Claude wrote the sentence from that opening alone and was told to say nothing the text does not. Where an article does not state a ruling in its opening, or does not exist, the row has no sentence. Neither kind is checked against the opinion: read the article before relying on it. A case name links to its Wikipedia article when Wikipedia’s volume and term lists of Supreme Court cases tie it to one (by U.S. Reports citation, docket number, or case name and year; {fmtInt(data.articleSource.count)} cases). A case those lists show with no article, which is most of them, is not linked. The few the lists do not cover (the newest decisions) link to a Wikipedia search for the name.
+        </p>
+        <p>
+          The Liberal and Conservative tags are the Supreme Court Database’s own “decision direction” for each case ({fmtInt(data.outcomeSource.coded)} tagged; the other {fmtInt(data.outcomeSource.none)} are coded unspecifiable, such as disputes between states, or not coded, and have no tag). It describes the outcome, who prevailed, by a fixed rule for each issue area: in criminal procedure, for example, a ruling for the person accused is liberal and one for the government is conservative. It is not a measure of the justices’ views, of the reasoning, or of a case’s importance, and the rule is a convention that some cases fit poorly. Hover (or tap) a tag for the rule in that case’s issue area; the full rules are in the database’s codebook under “Decision Direction”. Use the Outcome buttons to list only one side.
         </p>
         <p>Case names are the Supreme Court Database’s, re-capitalised for reading. Issue areas are the database’s own.</p>
       </MethodologyNote>
@@ -140,7 +169,7 @@ const BADGE =
  * issue area and vote in four columns. The phone and wide copies of the citation and badge are one or the other (display:none),
  * never both exposed.
  */
-function CaseRow({ c, area }: { c: DecisionCase; area: string }) {
+function CaseRow({ c, area, areaId }: { c: DecisionCase; area: string; areaId: string | null }) {
   const href = wikiCaseUrl(c);
   const name = href ? (
     <a
@@ -171,6 +200,7 @@ function CaseRow({ c, area }: { c: DecisionCase; area: string }) {
       {/* name (+ badge and citation inline from sm) */}
       <span className="col-span-2 min-w-0 break-words sm:col-span-1 sm:col-start-2 sm:row-start-1">
         {name}
+        {c[13] !== 0 && <DirectionTag direction={c[13]} areaId={areaId} />}
         {badge && <span className="ml-2 max-sm:hidden">{badge}</span>}
         {c[3] && <span className="ml-2 whitespace-nowrap text-[0.75rem] tabular-nums text-ink-faint max-sm:hidden">{c[3]}</span>}
       </span>

@@ -30,7 +30,7 @@ export function getDecisionsPageData(): DecisionsPayload {
   const fetched = z.object({ fetched: z.string() }).parse(JSON.parse(readFileSync(join(process.cwd(), "pipeline", "raw", "wikipedia-cases", "manifest.json"), "utf8"))).fetched;
   const summaries = z.array(caseSummaryRow).parse(read("decisions_summaries.json"));
   const summaryFetched = z.object({ fetched: z.string() }).parse(JSON.parse(readFileSync(join(process.cwd(), "pipeline", "raw", "wikipedia-cases", "leads-manifest.json"), "utf8"))).fetched;
-  cache = { ...buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id)))), casesVersion: casesVersion(), articleSource: { count: articles.length, fetched }, summarySource: { count: summaries.length, claude: summaries.filter((r) => r.via === "claude").length, fetched: summaryFetched } };
+  cache = { ...buildDecisionsPayload(counts, meta, countCaseRows(caseRows.filter((r) => landmarkIds.has(r.case_id)))), casesVersion: casesVersion(), articleSource: { count: articles.length, fetched }, summarySource: { count: summaries.length, claude: summaries.filter((r) => r.via === "claude").length, fetched: summaryFetched }, outcomeSource: { coded: caseRows.filter((r) => r.direction !== null).length, none: caseRows.filter((r) => r.direction === null).length } };
   return cache;
 }
 
@@ -51,7 +51,7 @@ export function getDecisionCases(): DecisionCase[] {
   casesCache = rows
     .map((r): DecisionCase => {
       const lm = landmarks.get(r.case_id);
-      return [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : (index.get(r.issue_area_id) ?? -1), r.band, r.maj, r.min, lm?.title ?? "", lm ? topicText(lm.topics) : "", lm ? lm.title : articles.has(r.case_id) ? articles.get(r.case_id) ?? null : "", summaries.get(r.case_id)?.summary ?? "", summaries.get(r.case_id)?.via === "claude" ? 1 : 0];
+      return [r.term, r.date, r.name, r.cite, r.issue_area_id === null ? -1 : (index.get(r.issue_area_id) ?? -1), r.band, r.maj, r.min, lm?.title ?? "", lm ? topicText(lm.topics) : "", lm ? lm.title : articles.has(r.case_id) ? articles.get(r.case_id) ?? null : "", summaries.get(r.case_id)?.summary ?? "", summaries.get(r.case_id)?.via === "claude" ? 1 : 0, r.direction === "conservative" ? 1 : r.direction === "liberal" ? 2 : 0];
     })
     .reverse();
   return casesCache;
