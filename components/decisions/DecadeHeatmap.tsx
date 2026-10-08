@@ -33,7 +33,7 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
   return (
     <div>
       <p className="m-0 mb-2 text-[0.78rem] text-ink-muted">By decade, every year of data</p>
-      <div role="grid" aria-label={`${counts ? "Cases decided" : `Share of cases that ${noun}`}, by issue area and decade`} className="grid gap-px" style={{ gridTemplateColumns: `minmax(5.5rem,8.5rem) repeat(${decades.length}, minmax(0, 1fr))` }}>
+      <div role="grid" aria-label={`${counts ? "Cases decided" : `Share of cases that ${noun}`}, by issue area and decade`} className="grid gap-px [--heat-label:6rem] min-[520px]:[--heat-label:minmax(5.5rem,8.5rem)]" style={{ gridTemplateColumns: `var(--heat-label) repeat(${decades.length}, minmax(0, 1fr))` }}>
         <div role="row" className="contents">
           <span />
           {decades.map((dec) => (
@@ -53,7 +53,7 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
                 onClick={select}
                 aria-pressed={row.index === area}
                 title={row.label}
-                className={`truncate pr-2 text-left text-[0.74rem] leading-[1.9rem] text-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus ${row.index === area ? "font-semibold" : ""}`}
+                className={`line-clamp-2 pr-1.5 text-left text-[0.7rem] leading-[1.05rem] text-ink hover:underline min-[520px]:truncate min-[520px]:text-[0.74rem] min-[520px]:leading-[1.9rem] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus ${row.index === area ? "font-semibold" : ""}`}
               >
                 {row.label}
               </button>
@@ -78,10 +78,10 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
                     onClick={select}
                     title={title}
                     aria-label={title}
-                    className={`h-[1.9rem] min-w-0 rounded-[3px] p-0 text-center font-mono text-[0.62rem] tabular-nums focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${inWin ? "" : "opacity-40"} ${thin || v === null ? "border border-dashed border-line-strong bg-transparent text-ink-faint" : "border-0"}`}
+                    className={`h-[2.1rem] min-w-0 rounded-[3px] p-0 text-center font-mono text-[0.58rem] tabular-nums min-[520px]:h-[1.9rem] min-[520px]:text-[0.62rem] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus ${inWin ? "" : "opacity-40"} ${thin || v === null ? "border border-dashed border-line-strong bg-transparent text-ink-faint" : "border-0"}`}
                     style={v === null ? undefined : { background: `color-mix(in oklab, ${color} ${Math.round(strength * 100)}%, var(--surface))`, color: strength > 0.5 ? (band === null ? "var(--accent-ink)" : "#fff") : "var(--ink)" }}
                   >
-                    {c.total === 0 ? "" : v === null ? "·" : counts ? fmtInt(c.total) : Math.round(v * 100)}
+                    {c.total === 0 ? "" : v === null ? "·" : counts ? <CountText n={c.total} /> : Math.round(v * 100)}
                   </button>
                 );
               })}
@@ -100,5 +100,16 @@ export function DecadeHeatmap({ rows, measure }: { rows: readonly AreaRow[]; mea
         </span>
       </div>
     </div>
+  );
+}
+
+/** A case count: "1,055" where the cell is wide, "1.1k" on a phone, where nine columns share the width. */
+function CountText({ n }: { n: number }) {
+  if (n < 1000) return <>{n}</>;
+  return (
+    <>
+      <span className="max-[519px]:hidden">{fmtInt(n)}</span>
+      <span className="min-[520px]:hidden">{`${(n / 1000).toFixed(1)}k`}</span>
+    </>
   );
 }
