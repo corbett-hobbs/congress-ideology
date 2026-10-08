@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { parse as parseCsv } from "csv-parse/sync";
 import { z } from "zod";
 import {
   DISSENT_BUCKET_LABELS,
@@ -14,8 +15,12 @@ import {
   landmarksManifest,
   decisionsMeta,
   issueAreaCatalog,
+  justiceVotesFile,
+  scdbJusticeRow,
   scdbManifest,
 } from "../../lib/decisions-entities";
+import { unzipFirstFile } from "../fetch/scdb-lib";
+import { buildJusticeVotes } from "./justice-votes";
 import { ADMINISTRATIONS } from "./administrations";
 import { HISTORICAL_ADMINISTRATIONS } from "../../lib/troops-presidents";
 import { RAW_DIR } from "../fetch/lib";
@@ -47,6 +52,18 @@ async function main() {
   if (sha256(csvBuf) !== manifest.csv_sha256) throw new DecisionsDataError(`${manifest.csv_file} does not match the sha256 in manifest.json; re-run pnpm fetch:scdb`);
   const text = csvBuf.toString("latin1");
 
+  // How each justice voted: the justice-centered file of the same release, kept as a zip.
+  const zipBuf = await readFile(`${DIR}/${manifest.justice_zip.file}`);
+  if (sha256(zipBuf) !== manifest.justice_zip.zip_sha256) throw new DecisionsDataError(`${manifest.justice_zip.file} does not match the sha256 in manifest.json; re-run pnpm fetch:scdb`);
+  const jCsv = unzipFirstFile(zipBuf).data;
+  if (sha256(jCsv) !== manifest.justice_zip.csv_sha256) throw new DecisionsDataError(`${manifest.justice_zip.file} unzips to a different CSV than manifest.json records`);
+  const justiceRows = (parseCsv(jCsv.toString("latin1"), { columns: true, skip_empty_lines: true, bom: true }) as Record<string, string>[]).map((r, i) => {
+    const p = scdbJusticeRow.safeParse(r);
+    if (!p.success) throw new DecisionsDataError(`SCDB justice row ${i + 2} fails the schema: ${p.error.message}`);
+    return p.data;
+  });
+  if (justiceRows.length !== manifest.justice_zip.rows) throw new DecisionsDataError(`manifest says ${manifest.justice_zip.rows} justice rows, parsed ${justiceRows.length}`);
+
   const catalog = issueAreaCatalog.parse(await readJson(`${REF}/decision-issue-areas.json`)).areas;
   const chiefs = chiefReference.parse(await readJson(`${REF}/chief-justices.json`)).chiefs;
   const justices = z.array(z.object({ justice_id: z.number(), chief_justice_appointment: z.object({ president: z.string(), party: z.string() }).nullable() }).loose()).parse(await readJson(`${OUT}/court/justices.json`));
@@ -55,6 +72,10 @@ async function main() {
   const rows = parseScdb(text);
   if (rows.length !== manifest.rows) throw new DecisionsDataError(`manifest says ${manifest.rows} rows, parsed ${rows.length}`);
   const selection = selectCases(rows);
+  const jv = buildJusticeVotes(justiceRows, selection.cases);
+  const jvFile = justiceVotesFile.parse(jv.votes);
+  const known = new Set(justices.map((j) => j.justice_id));
+  const unknownIds = Object.keys(jvFile).filter((id) => !known.has(Number(id)));
   const counts = z.array(decisionCountRow).parse(buildCounts(selection.cases, catalog));
   const spans = buildChiefSpans(selection.cases, chiefs);
   // Wikipedia's list of landmark decisions -> the cases it names.
@@ -155,6 +176,7 @@ async function main() {
       name_matches: wc.report.name_matches,
     },
     case_summaries: { fetched: leadsManifest.fetched, linked_cases: linked.length, cases_with_summary: summaries.length, ...cs.report },
+    justice_votes: { ...jv.report, justices_not_in_martin_quinn: unknownIds },
     gates,
     count_rows: counts.length,
   };
@@ -165,6 +187,9 @@ async function main() {
   await writeFile(`${OUT}/decisions_landmarks.json`, oneRowPerLine(landmarks));
   await writeFile(`${OUT}/decisions_articles.json`, oneRowPerLine(articles));
   await writeFile(`${OUT}/decisions_summaries.json`, oneRowPerLine(summaries));
+  await mkdir(`${OUT}/court`, { recursive: true });
+  const ids = Object.keys(jvFile);
+  await writeFile(`${OUT}/court/justice_votes.json`, `{\n${ids.map((id) => `${JSON.stringify(id)}: ${JSON.stringify(jvFile[id])}`).join(",\n")}\n}\n`);
   await writeFile(`${OUT}/decisions_meta.json`, JSON.stringify(meta, null, 2) + "\n");
   await writeFile(`${OUT}/decisions_report.json`, JSON.stringify(report, null, 2) + "\n");
   const size = (await stat(`${OUT}/decisions_counts.json`)).size;

@@ -10,6 +10,10 @@ export const releaseZipName = (version: string) => `SCDB_${version}_caseCentered
 export const releaseCsvName = (version: string) => `SCDB_${version}_caseCentered_Citation.csv`;
 export const releaseUrl = (version: string) => `${SCDB_BASE}/${version}/${releaseZipName(version)}`;
 
+export const justiceZipName = (version: string) => `SCDB_${version}_justiceCentered_Citation.csv.zip`;
+export const justiceCsvName = (version: string) => `SCDB_${version}_justiceCentered_Citation.csv`;
+export const justiceUrl = (version: string) => `${SCDB_BASE}/${version}/${justiceZipName(version)}`;
+
 export const isVersion = (v: string) => /^\d{4}_\d{2}$/.test(v);
 
 /** "2026_01" -> "Version 2026 Release 01". */

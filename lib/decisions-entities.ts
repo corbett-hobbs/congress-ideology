@@ -35,6 +35,8 @@ export const scdbCaseRow = z.object({
   /** Blank = no issue area coded. */
   issueArea: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.number().int().min(1).nullable()),
   chief: z.string().min(1),
+  /** SCDB `majOpinWriter`: the justice id who wrote the majority opinion; blank = none (per curiam, equally divided). */
+  majOpinWriter: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.number().int().nullable()),
   /** SCDB `decisionDirection`: 1 conservative, 2 liberal, 3 unspecifiable; blank = not coded. Both of the last two become null. */
   decisionDirection: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.union([z.literal(1), z.literal(2), z.literal(3)]).nullable()),
   dateDecision: z.string(),
@@ -46,6 +48,42 @@ export const scdbCaseRow = z.object({
   lexisCite: z.string(),
 });
 export type ScdbCaseRow = z.infer<typeof scdbCaseRow>;
+
+/** The columns read from the justice-centered CSV: one row per (case, justice). Blank `vote` / `majority` = the justice did not take part. */
+export const scdbJusticeRow = z.object({
+  caseId: z.string().min(1),
+  justice: z.coerce.number().int().min(1),
+  /** SCDB `vote`: 1 with the majority, 2 dissent, 3 regular concurrence, 4 special concurrence, 5 judgment of the Court, 6 dissent from a denial of review, 7 jurisdictional dissent, 8 equally divided Court. */
+  vote: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.number().int().min(1).max(8).nullable()),
+  /** SCDB `opinion`: 1 wrote no opinion, 2 wrote an opinion, 3 joined another justice's opinion. */
+  opinion: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.number().int().min(1).max(3).nullable()),
+  /** SCDB `majority`: 1 in the minority, 2 in the majority. */
+  majority: z.string().transform((s) => (s.trim() === "" ? null : Number(s))).pipe(z.number().int().min(1).max(2).nullable()),
+});
+export type ScdbJusticeRow = z.infer<typeof scdbJusticeRow>;
+
+/** How a justice voted in a case (`JusticeVote[1]`). */
+export const VOTE_NONE = 0;
+export const VOTE_MAJORITY = 1;
+export const VOTE_DISSENT = 2;
+export const VOTE_DIVIDED = 3;
+/** What a justice wrote in a case (`JusticeVote[2]`). */
+export const ROLE_NONE = 0;
+export const ROLE_MAJORITY = 1;
+export const ROLE_CONCURRENCE = 2;
+export const ROLE_DISSENT = 3;
+export const ROLE_CONCURRED = 4;
+
+/**
+ * `court/justice_votes.json`: `{ "<justice_id>": [[case_id, vote, role], ...] }`, oldest case first, one entry per case in
+ * `decisions_cases.json` the justice has a row for. vote: 0 did not take part, 1 majority, 2 dissent, 3 equally divided Court.
+ * role: 0 none, 1 wrote the majority opinion, 2 wrote a concurrence, 3 wrote a dissent, 4 concurred (joined the majority and
+ * did not write). Arrays, not objects: about 60,000 rows.
+ */
+export const justiceVoteTuple = z.tuple([z.string().min(1), z.number().int().min(0).max(3), z.number().int().min(0).max(4)]);
+export type JusticeVote = z.infer<typeof justiceVoteTuple>;
+export const justiceVotesFile = z.record(z.string().regex(/^\d+$/), z.array(justiceVoteTuple).min(1));
+export type JusticeVotesFile = z.infer<typeof justiceVotesFile>;
 
 export const issueAreaCatalogEntry = z.strictObject({
   id: z.string().regex(/^[a-z-]+$/),
@@ -141,6 +179,14 @@ export const scdbManifest = z.strictObject({
   csv_sha256: z.string().length(64),
   rows: int,
   encoding: z.literal("latin1"),
+  /** The same release's justice-centered file, kept as the zip the host serves (1.7 MB; the CSV is 30 MB). One row per (case, justice). */
+  justice_zip: z.strictObject({
+    file: z.string(),
+    url: z.string().url(),
+    zip_sha256: z.string().length(64),
+    csv_sha256: z.string().length(64),
+    rows: int,
+  }),
   fetched: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 export type ScdbManifest = z.infer<typeof scdbManifest>;

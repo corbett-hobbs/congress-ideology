@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type UIEvent } from "react";
+import { useMemo, useState, type ReactNode, type UIEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { ALL_AREAS_LABEL, areaFilterLabel, filterCases, fmtInt, wikiArticleUrl, wikiCaseUrl } from "@/lib/decisions-derive";
@@ -19,7 +19,7 @@ const OUTCOMES: { value: DecisionDirection | null; label: string }[] = [
   { value: 1, label: "Conservative outcome" },
 ];
 
-const fmtDate = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+export const fmtDate = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 
 function Chip({ children, onClear, label }: { children: string; onClear: () => void; label: string }) {
   return (
@@ -156,6 +156,9 @@ export function CaseListCard() {
   );
 }
 
+/** Wide-screen columns of a row with a qualifier: date, name, issue area, vote, how the justice voted. */
+export const JUSTICE_COLUMNS = "sm:grid-cols-[6.5rem_minmax(0,1fr)_9rem_4.5rem_9.5rem]";
+
 const BADGE =
   "inline-block whitespace-nowrap rounded-full border border-line-strong bg-surface-raised px-1.5 py-px align-baseline text-[0.66rem] font-medium text-ink-muted no-underline hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
@@ -163,9 +166,10 @@ const BADGE =
  * One case. Phones: the name on its own line; under it the date and citation on the left with the vote on the right (the
  * count a reader scans for); the issue area and the landmark badge below. From `sm`: date, name (badge and citation inline),
  * issue area and vote in four columns. The phone and wide copies of the citation and badge are one or the other (display:none),
- * never both exposed.
+ * never both exposed. `qualifier` adds a fifth column (the justice page's "how they voted"): after the issue area on phones, at the
+ * right on wide screens.
  */
-function CaseRow({ c, area, areaId }: { c: DecisionCase; area: string; areaId: string | null }) {
+export function CaseRow({ c, area, areaId, qualifier }: { c: DecisionCase; area: string; areaId: string | null; qualifier?: ReactNode }) {
   const href = wikiCaseUrl(c);
   const name = href ? (
     <a
@@ -192,7 +196,7 @@ function CaseRow({ c, area, areaId }: { c: DecisionCase; area: string; areaId: s
     </a>
   ) : null;
   return (
-    <li className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-b border-line px-3 py-2.5 text-[0.82rem] last:border-b-0 sm:grid-cols-[6.5rem_minmax(0,1fr)_9.5rem_4.5rem] sm:items-baseline sm:gap-y-0.5 sm:py-2">
+    <li className={`grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-b border-line px-3 py-2.5 text-[0.82rem] last:border-b-0 ${qualifier ? JUSTICE_COLUMNS : "sm:grid-cols-[6.5rem_minmax(0,1fr)_9.5rem_4.5rem]"} sm:items-baseline sm:gap-y-0.5 sm:py-2`}>
       {/* name (+ badge and citation inline from sm) */}
       <span className="col-span-2 min-w-0 break-words sm:col-span-1 sm:col-start-2 sm:row-start-1">
         {name}
@@ -219,7 +223,8 @@ function CaseRow({ c, area, areaId }: { c: DecisionCase; area: string; areaId: s
         <span className="font-medium">{`${c[6]}\u2013${c[7]}`}</span>
         <span className="sr-only">{BAND_SHORT[c[5]]} band</span>
       </span>
-      {c[11] && <Summary text={c[11]} claude={c[12] === 1} />}
+      {qualifier && <span className="col-span-2 col-start-1 row-start-4 sm:col-span-1 sm:col-start-5 sm:row-start-1">{qualifier}</span>}
+      {c[11] && <Summary text={c[11]} claude={c[12] === 1} wide={!!qualifier} />}
     </li>
   );
 }
@@ -230,10 +235,10 @@ function CaseRow({ c, area, areaId }: { c: DecisionCase; area: string; areaId: s
  * under the row (from `sm` it lines up with the name column). On phones it holds to three lines and a tap opens the rest; a
  * wide row shows the whole sentence, which is at most 300 characters.
  */
-function Summary({ text, claude }: { text: string; claude: boolean }) {
+function Summary({ text, claude, wide }: { text: string; claude: boolean; wide: boolean }) {
   const [open, setOpen] = useState(false);
   return (
-    <p className="col-span-2 m-0 text-[0.76rem] leading-[1.45] text-ink-muted sm:col-span-3 sm:col-start-2 sm:row-start-2">
+    <p className={`col-span-2 m-0 text-[0.76rem] leading-[1.45] text-ink-muted sm:col-start-2 sm:row-start-2 ${wide ? "max-sm:row-start-5 sm:col-span-4" : "sm:col-span-3"}`}>
       <button
         type="button"
         onClick={() => setOpen(!open)}

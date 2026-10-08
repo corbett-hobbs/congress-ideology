@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
+import { getJusticeVotesSource } from "@/lib/decisions-data";
 import { getJusticeProfile, getJusticeRefs } from "@/lib/justice-data";
+import { getVotedJusticeIds } from "@/lib/justice-votes-data";
 import { justicePath, justiceSlug } from "@/lib/justice-url";
 import { JusticeProfileView } from "@/components/court/JusticeProfileView";
 
@@ -65,5 +67,8 @@ export default async function JusticePage({
     permanentRedirect(justicePath(profile.justice));
   }
 
-  return <JusticeProfileView profile={profile} />;
+  // The court's argued-case record starts in 1946: an earlier justice has no votes to list.
+  const votes = getVotedJusticeIds().includes(profile.justice.id) ? getJusticeVotesSource() : null;
+
+  return <JusticeProfileView profile={profile} votes={votes} />;
 }
