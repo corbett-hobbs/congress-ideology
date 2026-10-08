@@ -83,6 +83,20 @@ describe("buildCaseSummaries / checkCaseSummaries", () => {
     expect(rows.map((r) => r.via)).toEqual(["wikipedia", "wikipedia", "claude"]);
     expect(report).toMatchObject({ articles: 3, with_lead: 2, summarized: 2, claude: 1, without: 1 });
   });
+  it("prefers the article's own sentence over a cached model sentence for the same article", () => {
+    const withBoth = buildCaseSummaries([{ case_id: "2009-001", title: "Mohawk Industries, Inc. v. Carpenter" }], leads, new Map([["Mohawk Industries, Inc. v. Carpenter", "A model-written sentence that must not be used for this case."]]));
+    expect(withBoth.rows).toHaveLength(1);
+    expect(withBoth.rows[0]).toMatchObject({ via: "wikipedia", summary: expect.stringMatching(/^The Court held that disclosure orders/) });
+    expect(withBoth.report.claude).toBe(0);
+  });
+  it("uses a cached model sentence only where the picker finds nothing, and never a null answer", () => {
+    const only = buildCaseSummaries(
+      [{ case_id: "1976-001", title: "Hills v. Gautreaux" }, { case_id: "1990-001", title: "No Lead v. Fetched" }],
+      leads,
+      new Map<string, string | null>([["Hills v. Gautreaux", "In a housing dispute, the Court held that a federal remedy could reach beyond the city limits."], ["No Lead v. Fetched", null]]),
+    );
+    expect(only.rows.map((r) => [r.case_id, r.via])).toEqual([["1976-001", "claude"]]);
+  });
   it("fails the build on a duplicate, an unknown case or a collapsed yield", () => {
     const ids = new Set(matched.map((m) => m.case_id));
     expect(() => checkCaseSummaries(rows, 4, ids)).toThrow(); // "x" is not a real sentence
