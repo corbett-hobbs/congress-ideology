@@ -6,9 +6,9 @@
  */
 export const siteInfo = {
   /** Who builds and maintains the site, e.g. "one person" or a name. Blank = the "Who's behind it" section is left out. */
-  builderName: "",
+  builderName: "Corbett Hobbs",
   /** One sentence on funding / ads, shown under Independence. Blank = omitted. */
-  fundingStatement: "",
+  fundingStatement: "It is a personal project and has no connection to my employer.",
   /** One or two sentences on why it was built, shown under "Why it exists". Blank = omitted. */
   whyIBuiltIt: "",
   /** The public repo (the old congress-ideology name redirects here). */
