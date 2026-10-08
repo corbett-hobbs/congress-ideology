@@ -17,6 +17,11 @@ const IANCU =
 const MATTZ = "Mattz v. Arnett was a United States Supreme Court case in which the Court held that the land that had been the Klamath River Reservation remained Indian country within the meaning of federal law.";
 const REL = "Louisiana ex rel. Francis v. Resweber, 329 U.S. 459 (1947), is a case in which the U.S. Supreme Court held that a second attempt at execution did not violate the Constitution.";
 
+const RUTHERFORD =
+  'Rutherford v. United States (consolidated with Carter v. United States), 608 U.S. 454 (2026), was a United States Supreme Court case regarding federal sentencing laws. The Court held the First Step Act\'s amendments to 18 U.S.C. § 924(c) are not retroactively "extraordinary and compelling reasons" for granting compassionate release.';
+const LANDOR =
+  "Landor v. Louisiana Department of Corrections (No. 23-1197) is a United States Supreme Court decision that individuals may not be held liable in their personal capacities under a Spending Clause statute unless those individuals have voluntarily and knowingly consented to answer lawsuits under the statute.";
+
 describe("splitSentences", () => {
   it("leaves v., U.S., Co., No. and initials inside a sentence", () => {
     expect(splitSentences("Smith v. Jones Co., No. 12-34, 500 U.S. 1 (1991), was a case. The Court held that X.")).toEqual(["Smith v. Jones Co., No. 12-34, 500 U.S. 1 (1991), was a case.", "The Court held that X."]);
@@ -51,6 +56,14 @@ describe("summarizeLead", () => {
   it("falls through to a later sentence that opens with the Court as its subject", () => {
     expect(summarizeLead(STUMP)).toEqual({ sentence: 3, text: "The Supreme Court held that the judge was immune from being sued for issuing the order because it was issued as a judicial function." });
     expect(summarizeLead(IANCU)?.text).toMatch(/^The Court decided 6–3 that/);
+  });
+  it("takes 'The Court held the ...' but not 'The Court held oral argument'", () => {
+    expect(summarizeLead(RUTHERFORD)).toMatchObject({ sentence: 2, text: expect.stringMatching(/^The Court held the First Step Act's amendments/) });
+    expect(summarizeLead("Foo v. Bar, 1 U.S. 1 (1950), was a case about taxes. The Court held oral argument on the question in the spring of that year.")).toBeNull();
+  });
+  it("skips a later sentence that says 'this' or names another case", () => {
+    expect(summarizeLead("Lomax v. Ortiz-Marquez, 1 U.S. 1 (2020), was a case about prisoners. The court held this in a unanimous decision, although one justice joined all but a footnote.")).toBeNull();
+    expect(summarizeLead("Flowers v. Mississippi, 588 U.S. 284 (2019), was a case about jurors. The Supreme Court held in Batson v. Kentucky that race-based strikes are unconstitutional.")).toBeNull();
   });
   it("gives nothing when the opening states no ruling", () => {
     expect(summarizeLead("Hills v. Gautreaux, 425 U.S. 284 (1976), was a decision of the United States Supreme Court.")).toBeNull();
@@ -113,6 +126,10 @@ describe("checkAiSummary", () => {
   const evidence = "the Court held that a state violated the Interstate Agreement on Detainers by returning a prisoner to prison before trial";
   it("accepts a sentence whose evidence is in the lead and whose words come from it", () => {
     expect(checkAiSummary(sentence, evidence, lead)).toBe(true);
+  });
+  it("accepts a ruling stated as 'a decision that ...' as evidence", () => {
+    const ev = "is a United States Supreme Court decision that individuals may not be held liable in their personal capacities under a Spending Clause statute";
+    expect(checkAiSummary("The Court decided that individuals may not be held liable in their personal capacities under a Spending Clause statute unless they consented to answer lawsuits.", ev, LANDOR)).toBe(true);
   });
   it("rejects a ruling the lead does not state (written from memory)", () => {
     expect(checkAiSummary("The Court held that the later prosecution was permissible under the compact.", "the Court held that the later prosecution was permissible", lead)).toBe(false);
