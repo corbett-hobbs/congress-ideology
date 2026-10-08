@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { RangeReset } from "@/components/charts/RangeReset";
 import { RangeSelector } from "@/components/charts/RangeSelector";
 import { TermBand } from "@/components/charts/TermBand";
@@ -13,6 +13,56 @@ import { OTHER_AREAS } from "@/lib/decisions-types";
 const SELECT =
   "min-w-0 rounded-md border border-line-strong bg-surface-raised px-[0.55rem] py-[0.42rem] text-[0.8rem] text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 const LABEL = "font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-faint";
+
+const LANDMARK_DEFINITION =
+  "A landmark case is a Supreme Court decision that set a major precedent or changed how the law works; this filter uses Wikipedia's list of landmark decisions in the United States.";
+
+/**
+ * A small "?" button beside the Landmark checkbox. The label still toggles the filter; this only explains it. A mouse
+ * previews on hover; a tap (or click) keeps the note open until a tap elsewhere, Esc or a scroll, so it works on phones.
+ */
+function LandmarkInfo() {
+  const [hover, setHover] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  const open = hover || pinned;
+  useEffect(() => {
+    if (!pinned) return;
+    const close = () => setPinned(false);
+    const down = (e: PointerEvent) => {
+      if (!ref.current?.contains(e.target as Node)) close();
+    };
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("pointerdown", down);
+    document.addEventListener("keydown", key);
+    window.addEventListener("scroll", close, { passive: true });
+    return () => {
+      document.removeEventListener("pointerdown", down);
+      document.removeEventListener("keydown", key);
+      window.removeEventListener("scroll", close);
+    };
+  }, [pinned]);
+  return (
+    <span ref={ref} onPointerEnter={(e) => e.pointerType === "mouse" && setHover(true)} onPointerLeave={() => setHover(false)}>
+      <button
+        type="button"
+        aria-label="What is a landmark case?"
+        aria-expanded={open}
+        onClick={() => setPinned((p) => !p)}
+        className="flex h-5 w-5 items-center justify-center rounded-full border border-line-strong font-mono text-[0.65rem] leading-none text-ink-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      >
+        ?
+      </button>
+      {open && (
+        <span role="note" className="absolute left-4 top-full z-50 mt-1 w-[min(19rem,calc(100vw-2rem))] rounded-md border border-line-strong bg-surface-raised p-2.5 text-[0.78rem] leading-snug text-ink shadow-md sm:left-6">
+          {LANDMARK_DEFINITION}
+        </span>
+      )}
+    </span>
+  );
+}
 
 /**
  * The pinned filter bar for /supreme-court/decisions, directly under the site navigation: the Issue area dropdown, then
@@ -44,10 +94,13 @@ export function DecisionsFilterBar() {
               <option value={OTHER_AREAS}>{OTHER_LABEL(data)}</option>
             </select>
           </label>
-          <label className="flex flex-none cursor-pointer items-center gap-1.5 whitespace-nowrap text-[0.8rem] text-ink" title="A landmark case is a Supreme Court decision that set a major precedent or changed how the law works; this filter uses Wikipedia's list of landmark decisions in the United States.">
-            <input type="checkbox" checked={landmark} onChange={(e) => setLandmark(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[var(--accent)]" />
-            <span className="underline decoration-dotted decoration-1 underline-offset-4">Landmark cases</span>
-          </label>
+          <div className="flex flex-none items-center gap-1">
+            <label className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-[0.8rem] text-ink">
+              <input type="checkbox" checked={landmark} onChange={(e) => setLandmark(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[var(--accent)]" />
+              Landmark cases
+            </label>
+            <LandmarkInfo />
+          </div>
           </div>
           <RangeSelector
             min={lo}
