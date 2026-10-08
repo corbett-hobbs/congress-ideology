@@ -72,6 +72,7 @@ export function CasesCard() {
 
   return (
     <ChartCard
+      tight
       title="How many cases does the Court decide?"
       lede={[lede, filters].filter(Boolean).join(" ")}
       action={
@@ -100,6 +101,7 @@ export function CasesCard() {
         activeKey={hover === null ? null : String(hover)}
         onActive={(k) => (k === null ? leaveHover() : moveHover(Number(k)))}
         yearTicks
+        marginTop={20}
         unit="cases decided"
         ariaLabel="Stacked bar chart of the number of argued cases the Supreme Court decided, one bar per term, by issue area"
         renderTooltip={(c) => (

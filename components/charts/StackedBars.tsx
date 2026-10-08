@@ -70,6 +70,8 @@ interface Props<C extends StackColumn> {
   onActive?: (key: string | null) => void;
   /** Column labels are years: print round years every 1, 2, 5, 10 or 20 (rule 10h) instead of every nth column. */
   yearTicks?: boolean;
+  /** Room above the plot for the peak and low labels (default 34, enough for a y-axis caption too). */
+  marginTop?: number;
   renderTooltip: (column: C) => ReactNode;
 }
 
@@ -106,6 +108,7 @@ export function StackedBars<C extends StackColumn>({
   activeKey = null,
   onActive,
   yearTicks = false,
+  marginTop,
   renderTooltip,
 }: Props<C>) {
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
@@ -137,7 +140,7 @@ export function StackedBars<C extends StackColumn>({
     );
   }, [columns, eff, highlight, markShare]);
   const bandH = terms ? TERM_BAND_H : BAND_H;
-  const margin = { ...MARGIN, bottom: AXIS_H + (bands.length > 0 || terms ? bandH + 6 : 0) };
+  const margin = { ...MARGIN, ...(marginTop === undefined ? {} : { top: marginTop }), bottom: AXIS_H + (bands.length > 0 || terms ? bandH + 6 : 0) };
 
   return (
     <div ref={wrapRef} data-sticky-tip className="relative -mx-3 sm:mx-0">
