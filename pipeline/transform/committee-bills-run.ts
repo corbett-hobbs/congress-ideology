@@ -4,7 +4,7 @@ import { z } from "zod";
 import { committeeBillsMeta, committeeBillsShard, CommitteeBillsDataError, rawBillsFile } from "../../lib/committee-bills-entities";
 import { lawRow } from "../../lib/laws-entities";
 import { RAW_DIR } from "../fetch/lib";
-import { buildShards, checkLaws, dataThrough, type KnownCommittee, type KnownSubcommittee } from "./committee-bills";
+import { buildShards, checkLaws, dataThrough, type EnactingBill, type KnownCommittee, type KnownSubcommittee } from "./committee-bills";
 
 /**
  * Committee-legislation transform: raw/govinfo-bills/<current Congress>.json + committees.json + subcommittees.json ->
@@ -41,7 +41,8 @@ async function main() {
   const subs = z.array(z.object({ subcommittee_id: z.string(), parent_committee_id: z.string(), name: z.string() })).parse(await readJson(`${OUT}/subcommittees.json`)) as KnownSubcommittee[];
   const laws = z.array(lawRow).parse(await readJson(`${OUT}/laws.json`));
 
-  const { shards, report } = buildShards(raw.bills, congress, committees, subs);
+  const vehicles = new Map<string, EnactingBill>(laws.filter((l) => l.congress === congress).map((l) => [`${l.congress}-${l.law_id.split("-pub-")[1]}`, { b: l.bill_type, n: String(l.bill_number) }]));
+  const { shards, report } = buildShards(raw.bills, congress, committees, subs, vehicles);
   checkLaws(report.law_numbers, laws.filter((l) => l.congress === congress).map((l) => `${l.congress}-${l.law_id.split("-pub-")[1]}`), congress);
 
   const through = dataThrough(raw.bills);

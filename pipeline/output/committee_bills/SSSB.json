@@ -42,7 +42,7 @@
 {"b":"s","n":"3417","t":"Main Street Lending Improvement Act of 2025","i":"2025-12-10","s":38,"a":0,"r":"2025-12-10"},
 {"b":"hr","n":"2965","t":"Small Business Regulatory Reduction Act of 2025","i":"2025-04-17","s":11,"c":[0,5,0],"a":0,"r":"2025-12-04","x":1,"g":["2025-12-03",null],"o":1,"e":["H. Rept. 119-111"],"z":["2025-12-02","Motion to reconsider laid on the table Agreed to without objection."]},
 {"b":"hr","n":"4305","t":"DUMP Red Tape Act","i":"2025-07-10","s":14,"c":[0,3,0],"a":0,"r":"2025-12-04","x":1,"g":["2025-12-03",null],"e":["H. Rept. 119-383"],"z":["2025-12-02","Motion to reconsider laid on the table Agreed to without objection."]},
-{"b":"s","n":"3341","t":"Investing in All of America Act of 2025","i":"2025-12-03","s":36,"c":[3,4,0],"a":0,"r":"2025-12-03"},
+{"b":"s","n":"3341","t":"Investing in All of America Act of 2025","i":"2025-12-03","s":36,"c":[3,4,0],"a":0,"r":"2025-12-03","y":["119-92","hr","2066"],"z":["2026-05-19","Became Public Law No: 119-92."]},
 {"b":"hr","n":"2066","t":"Investing in All of America Act of 2025","i":"2025-03-11","s":8,"c":[4,4,0],"a":0,"r":"2025-12-02","d":"2026-04-16","k":"2025-08-15","x":1,"g":["2025-12-01","2026-04-15"],"l":"119-92","w":"2026-05-19","e":["H. Rept. 119-227"],"z":["2025-05-22","Read twice and referred to the Committee on Small Business and Entrepreneurship."]},
 {"b":"hr","n":"4491","t":"SBA IT Modernization Reporting Act","i":"2025-07-17","s":15,"c":[0,1,0],"a":0,"r":"2025-12-02","x":1,"g":["2025-12-01",null],"e":["H. Rept. 119-223"],"z":["2026-07-13","Read twice and referred to the Committee on Small Business and Entrepreneurship."]},
 {"b":"s","n":"3171","t":"Veteran Entrepreneurship Empowerment Act","i":"2025-11-10","s":32,"c":[1,0,0],"a":0,"r":"2025-11-10"},

@@ -97,7 +97,7 @@ export function prepareBills(p: Pick<CommitteeBillsPayload, "rows" | "chamber" |
       month: row.r.slice(0, 7),
       last,
       waiting: stage <= 3 && waited >= WAITING_FROM_DAYS ? waited : null,
-      haystack: [billLabel(row), row.t, sponsor?.[0] ?? "", row.a === undefined ? "" : (p.areas[row.a] ?? ""), row.l ?? ""].join(" ").toLowerCase(),
+      haystack: [billLabel(row), row.t, sponsor?.[0] ?? "", row.a === undefined ? "" : (p.areas[row.a] ?? ""), row.l ?? "", row.y ? `${row.y[0]} ${billLabel({ b: row.y[1], n: row.y[2] })}` : ""].join(" ").toLowerCase(),
     };
   });
 }

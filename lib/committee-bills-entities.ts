@@ -72,6 +72,8 @@ export type RawBillsFile = z.infer<typeof rawBillsFile>;
  *   r referred to this committee · h first hearing · m first markup, or "ordered to be reported" · p reported · d discharged
  *   k placed on a calendar (only after p or d) · u indexes into `subs` the bill was referred to or acted on in
  *   x number of other committees it was also referred to · g first passage `[House, Senate]` (bill-level, not the committee's; null = not passed)
+ *   y enacted inside another bill: `[public law, that bill's type, its number]`, only for a bill with no public law of its own whose latest
+ *   action says it became one (its text rode in an omnibus or a vehicle bill); it is not a law of its own and its stage is unchanged
  *   l public law (`119-23`) · w the day it became law · v 1 = vetoed · q how the committee ordered it reported: `[yea, nay]`, `voice` or `unanimous` · o CBO estimates on file
  *   e committee report citations · z latest action `[date, text]` (only kept once a bill has moved past referral)
  */
@@ -93,6 +95,7 @@ export const committeeBillRow = z.object({
   x: int.optional(),
   g: z.tuple([isoDate.nullable(), isoDate.nullable()]).optional(),
   l: z.string().optional(),
+  y: z.tuple([z.string().regex(/^\d+-\d+$/), billType, z.string().regex(/^\d+$/)]).optional(),
   w: isoDate.optional(),
   v: z.literal(1).optional(),
   q: z.union([z.tuple([int, int]), z.enum(["voice", "unanimous"])]).optional(),

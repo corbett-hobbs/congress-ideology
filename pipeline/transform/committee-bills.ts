@@ -135,9 +135,30 @@ export interface BuildReport {
   unmapped_committees: Record<string, { name: string; chamber: string | null; rows: number }>;
   unmapped_subcommittees: Record<string, { name: string; rows: number }>;
   unparsed_sponsor_names: number;
+  /** Rows for bills with no public law of their own whose latest action says they became one (enacted inside another bill). */
+  enacted_elsewhere: number;
   events_before_introduction: number;
   rows_by_committee: Record<string, number>;
   law_numbers: string[];
+}
+
+/** The bill a public law is, as the Laws track holds it (`119-37` -> H.R. 5371). */
+export interface EnactingBill {
+  b: CommitteeBillRow["b"];
+  n: string;
+}
+
+/**
+ * A bill with no public law of its own whose latest action reads "Became Public Law No: 119-37." was enacted inside another bill
+ * (an omnibus, or a companion the law carried). Returns that law and the bill that is the law, or undefined. Never for a bill that
+ * carries a law itself, and never when the law is not in `vehicles` (the text is then not trusted).
+ */
+export function enactedElsewhere(b: RawBill, vehicles: ReadonlyMap<string, EnactingBill>): NonNullable<CommitteeBillRow["y"]> | undefined {
+  if (b.laws.length > 0 || !b.latest_action) return undefined;
+  const m = /Became Public Law No:\s*(\d+-\d+)/i.exec(b.latest_action.text);
+  const v = m ? vehicles.get(m[1]!) : undefined;
+  if (!m || !v || (v.b === b.type && v.n === b.number)) return undefined;
+  return [m[1]!, v.b, v.n];
 }
 
 /** Every bill -> a shard per committee (those in `committees`), newest referral first. */
@@ -146,10 +167,11 @@ export function buildShards(
   congress: number,
   committees: readonly KnownCommittee[],
   subcommittees: readonly KnownSubcommittee[],
+  vehicles: ReadonlyMap<string, EnactingBill> = new Map(),
 ): { shards: Map<string, CommitteeBillsShard>; report: BuildReport } {
   const known = new Map(committees.map((c) => [c.committee_id, c]));
   const subName = new Map(subcommittees.map((s) => [s.subcommittee_id, s.name]));
-  const report: BuildReport = { bills: bills.length, rows: 0, unmapped_committees: {}, unmapped_subcommittees: {}, unparsed_sponsor_names: 0, events_before_introduction: 0, rows_by_committee: {}, law_numbers: [] };
+  const report: BuildReport = { bills: bills.length, rows: 0, unmapped_committees: {}, unmapped_subcommittees: {}, unparsed_sponsor_names: 0, enacted_elsewhere: 0, events_before_introduction: 0, rows_by_committee: {}, law_numbers: [] };
   const work = new Map<string, { areas: Map<string, number>; subs: Map<string, number>; sponsors: Map<string, number>; shard: CommitteeBillsShard }>();
   const laws = new Set<string>();
 
@@ -225,10 +247,15 @@ export function buildShards(
         row.l = law;
         row.w = facts.signed;
       }
+      const via = law ? undefined : enactedElsewhere(b, vehicles);
+      if (via) {
+        row.y = via;
+        report.enacted_elsewhere++;
+      }
       if (facts.vetoed) row.v = 1;
       if (b.cbo_estimates > 0) row.o = b.cbo_estimates;
       if (b.reports.length > 0) row.e = b.reports;
-      const moved = !!(row.h || row.m || row.p || row.d || row.g || row.l);
+      const moved = !!(row.h || row.m || row.p || row.d || row.g || row.l || row.y);
       if (moved && b.latest_action) row.z = [b.latest_action.date, b.latest_action.text];
       w.shard.rows.push(row);
       report.rows++;
