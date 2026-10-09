@@ -96,7 +96,7 @@ function Summary({ law }: { law: LawPageData }) {
 
 function Timeline({ law }: { law: LawPageData }) {
   return (
-    <ChartCard title="Timeline" lede={`The steps on the floor and with the president, from the first chamber’s passage to ${law.veto ? "the override" : "signing"}.`}>
+    <ChartCard title="Timeline" lede={`From introduction to ${law.veto ? "the override" : "signing"}, newest first: the committees, the floor and the president.`}>
       <ol className="m-0 list-none p-0">
         {law.actions.map((a: TimelineAction, i) => {
           const first = i === 0 || law.actions[i - 1]!.date !== a.date;
@@ -118,7 +118,7 @@ function Timeline({ law }: { law: LawPageData }) {
         })}
       </ol>
       <MethodologyNote>
-        <p>Introduction and committee actions are not included yet: this timeline shows the floor, conference, presidential and became-law steps only. Two entries the source lists twice are shown once.</p>
+        <p>Shows the introduction, each committee and subcommittee step the source dates (referral, hearings, markup, report, discharge), and the floor, conference, presidential and became-law steps. Calendar placements, messages between the chambers, amendments and committee report numbers are not shown. Two entries the source lists twice are shown once.</p>
       </MethodologyNote>
     </ChartCard>
   );

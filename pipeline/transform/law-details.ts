@@ -62,7 +62,7 @@ const TYPE_CODE = new Map<string, number>(LAW_ACTION_TYPES.map((t, i) => [t, i])
 const CHAMBER_CODE = { House: 0, Senate: 1 } as const;
 
 /**
- * The action list, oldest first. The source lists many actions twice (the House or Senate's own entry and the Library of
+ * The action list, oldest first (introduction and committee steps first on a shared date). The source lists many actions twice (the House or Senate's own entry and the Library of
  * Congress copy that starts "Passed/agreed to in House:", or a President and a BecameLaw entry with the same text): two
  * actions on the same date with the same cleaned text are one, keeping the first type seen and merging their roll calls.
  */
@@ -85,10 +85,53 @@ export function buildActions(actions: readonly RawAction[]): LawAction[] {
     .map(({ a }): LawAction => (a.votes.length > 0 ? [a.date, a.type, a.text, a.votes] : [a.date, a.type, a.text]));
 }
 
+/** The source's step names (any capitalisation) -> the phrase before the committee's name. Anything else ("Unknown", letters of interest) is not shown. */
+const COMMITTEE_STEP = new Map<string, string>([
+  ["referred to", "Referred to"],
+  ["re-referred to", "Re-referred to"],
+  ["re-committed to", "Re-committed to"],
+  ["markup by", "Markup by"],
+  ["reported by", "Reported by"],
+  ["reported original measure", "Reported original measure by"],
+  ["discharged from", "Discharged from"],
+  ["hearings by", "Hearings by"],
+  ["hearings by (full committee)", "Hearings by"],
+  ["hearings by (subcommittee)", "Hearings by"],
+]);
+
+/** "House Ways and Means Committee": the chamber in front unless the name already starts with it or the committee is joint or unplaced. */
+export function committeeLabel(name: string, chamber: string | null): string {
+  if (chamber !== "House" && chamber !== "Senate") return name;
+  return name.startsWith(chamber) ? name : `${chamber} ${name}`;
+}
+
+/**
+ * The bill's dated committee and subcommittee steps and its introduction, as action rows (committee-level detail kept: which
+ * committee, which subcommittee, what it did, when). A step with no date, or one the source names something we do not word, is left out.
+ */
+export function committeeActions(law: RawLaw): RawAction[] {
+  const out: RawAction[] = [];
+  if (law.introduced) out.push({ date: law.introduced, type: "Introduced", text: law.origin_chamber ? `Introduced in the ${law.origin_chamber}` : "Introduced", src: null });
+  for (const c of law.committees) {
+    const parent = committeeLabel(c.name, c.chamber);
+    for (const a of c.activities) {
+      const phrase = COMMITTEE_STEP.get(a.name.trim().toLowerCase());
+      if (phrase && a.date) out.push({ date: a.date, type: "Committee", text: `${phrase} ${parent}`, src: null });
+    }
+    for (const s of c.subcommittees) {
+      for (const a of s.activities) {
+        const phrase = COMMITTEE_STEP.get(a.name.trim().toLowerCase());
+        if (phrase && a.date) out.push({ date: a.date, type: "Committee", text: `${phrase} ${s.name} of the ${parent}`, src: null });
+      }
+    }
+  }
+  return out;
+}
+
 export function buildLawDetail(law: RawLaw): LawDetail {
   const s = law.summary_html ? summaryParagraphs(law.summary_html) : null;
   const has = s !== null && s.paragraphs.length > 0;
-  return { summary: has ? s.paragraphs : null, ...(has && s.cut ? { cut: true as const } : {}), actions: buildActions(law.actions) };
+  return { summary: has ? s.paragraphs : null, ...(has && s.cut ? { cut: true as const } : {}), actions: buildActions([...committeeActions(law), ...law.actions]) };
 }
 
 /** The gate: the shards' law ids equal `laws.json`'s exactly. Returns the differences (empty = pass). */

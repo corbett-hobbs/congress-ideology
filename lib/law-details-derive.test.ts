@@ -33,10 +33,30 @@ describe("timeline", () => {
       ["2024-09-30", 2, "Signed by President."],
       ["2024-09-26", 2, "Presented to President."],
     ]);
-    expect(t[0]).toMatchObject({ kind: "floor", rolls: ["House roll call 442"] });
-    expect(t[1]!.kind).toBe("law");
-    expect(t[2]!.kind).toBe("president");
+    expect(t.map((x) => x.kind)).toEqual(["law", "president", "floor"]);
+    expect(t[2]).toMatchObject({ rolls: ["House roll call 442"] });
     expect(rollLabel([1, 7, null])).toBe("Senate roll call 7");
+  });
+  it("runs newest first, and on one date the later step of the process first", () => {
+    const t = timeline([
+      ["2025-09-15", 7, "Introduced in the House"],
+      ["2025-09-15", 6, "Referred to House Ways and Means Committee"],
+      ["2026-09-17", 6, "Discharged from Senate Finance Committee"],
+      ["2026-09-17", 0, "Passed Senate without amendment by Unanimous Consent."],
+      ["2025-12-01", 0, "B first in the source"],
+      ["2025-12-01", 0, "A second in the source"],
+    ]);
+    expect(t.map((x) => x.text)).toEqual([
+      "Passed Senate without amendment by Unanimous Consent.",
+      "Discharged from Senate Finance Committee",
+      "B first in the source",
+      "A second in the source",
+      "Referred to House Ways and Means Committee",
+      "Introduced in the House",
+    ]);
+    expect(t[0]!.kind).toBe("floor");
+    expect(t[1]!.kind).toBe("committee");
+    expect(t[5]!.kind).toBe("introduced");
   });
 });
 
