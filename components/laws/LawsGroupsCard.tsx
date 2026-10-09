@@ -16,13 +16,13 @@ import { useLawsActions, useLawsValues } from "./LawsState";
 
 const SORTS: { key: GroupSortKey; label: string; hint: string }[] = [
   { key: "n", label: "Laws", hint: "Law counts in the heatmap; most laws first" },
-  { key: "f", label: "Narrow votes", hint: "Laws whose closest recorded vote had under 60% yes, in the heatmap; largest share first" },
+  { key: "f", label: "Under 60%", hint: "Laws whose closest recorded vote had under 60% yes, in the heatmap; largest share first" },
   { key: "u", label: "Voice vote", hint: "Laws passed by voice vote or consent in both chambers, in the heatmap; largest share first" },
   { key: "m", label: "60\u201375%", hint: "Laws whose closest recorded vote had 60\u201375% yes; largest share first" },
   { key: "h", label: "75\u201390%", hint: "Laws whose closest recorded vote had 75\u201390% yes; largest share first" },
   { key: "b", label: "90%+", hint: "Laws whose closest recorded vote had 90% or more yes; largest share first" },
 ];
-/** The toggle's three slots, Laws, the middle vote measure and Voice vote; a middle band picked in the page's vote filter takes over the middle slot from Narrow votes. */
+/** The toggle's three slots, Laws, the middle vote measure and Voice vote; a middle band picked in the page's vote filter takes over the middle slot from Under 60%. */
 const middleKey = (key: GroupSortKey): GroupSortKey => (key === "m" || key === "h" || key === "b" ? key : "f");
 const slotKeys = (key: GroupSortKey): GroupSortKey[] => ["n", middleKey(key), "u"];
 const DIM_BAND = "var(--line-strong)";
@@ -71,7 +71,7 @@ export function LawsGroupsCard() {
     <ChartCard
       tight
       title="Which kinds of laws pass, and how?"
-      lede={`Left: how many laws, how many passed on a narrow vote or by voice vote or consent, in each decade, by policy area. Right: how broadly each area's laws were supported, over the years shown. The toggle picks the measure for the heatmap and orders both; click it again to reverse.${locked ? " The vote filter in the bar above has set the measure to that band; clear it there to choose another." : ""} Click a policy area in either to filter the charts and the list.`}
+      lede={`Left: how many laws, how many passed with under 60% yes or by voice vote or consent, in each decade, by policy area. Right: how broadly each area's laws were supported, over the years shown. The toggle picks the measure for the heatmap and orders both; click it again to reverse.${locked ? " The vote filter in the bar above has set the measure to that band; clear it there to choose another." : ""} Click a policy area in either to filter the charts and the list.`}
       action={
         <ReversibleSortToggle
           ariaLabel="Sort policy areas"

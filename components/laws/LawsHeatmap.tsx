@@ -14,7 +14,7 @@ export const BAR_ROW_H = "lg:h-[calc(1.9rem+1px)]";
 
 /**
  * The companion to the topic-group rows: groups down the side (same order as the rows), decades across. The card's one toggle
- * picks the measure: laws enacted (accent), laws passed on a narrow vote or laws passed by voice vote or consent (those two in their
+ * picks the measure: laws enacted (accent), laws passed with under 60% yes or laws passed by voice vote or consent (those two in their
  * band's colour). The rows show a whole window; this shows when. Darker = more laws, on one scale for every group (the busiest
  * decade of any one) with "All policy areas" on its own. A click picks the group for the whole page (the dropdown's value);
  * decades outside the years window fade; a picked group dims the others (a comparison chart highlights, rule 4).
