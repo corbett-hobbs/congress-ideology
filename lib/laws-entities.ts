@@ -179,6 +179,14 @@ export const NOT_CLASSIFIED_GROUP = "not-classified";
 
 // ---- outputs ----
 
+/** Final-passage vote codes in `laws.json`: 0 roll call, 1 voice vote, 2 unanimous consent, 3 method not stated (no roll call cited). */
+export const VOTE_KIND_CODES = ["roll", "voice", "consent", "unstated"] as const;
+export type VoteKindCode = 0 | 1 | 2 | 3;
+
+/** One chamber's final passage: `[kind code, yea, nay, roll number]`; yea / nay / roll are null unless the kind is a roll call. */
+export const chamberVote = z.tuple([z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]), int.nullable(), int.nullable(), int.nullable()]);
+export type ChamberVoteTuple = z.infer<typeof chamberVote>;
+
 /** `laws.json`: one row per public law. */
 export const lawRow = z.object({
   law_id: z.string(),
@@ -195,11 +203,18 @@ export const lawRow = z.object({
   area_id: z.string(),
   /** True when Congress passed it over a presidential veto. */
   veto_override: z.boolean(),
+  /** Final passage in the House and in the Senate (see `chamberVote`). */
+  house: chamberVote,
+  senate: chamberVote,
+  /** Support band of the closest recorded final-passage vote: 0 none recorded, 1 under 60% yes, 2 60-75, 3 75-90, 4 90% or more. */
+  band: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
+  /** For a law passed over a veto: `[House yea, House nay, Senate yea, Senate nay]` of the override votes (null where not recorded). Not used for the band. */
+  override_votes: z.tuple([int.nullable(), int.nullable(), int.nullable(), int.nullable()]).nullable(),
 });
 export type LawRow = z.infer<typeof lawRow>;
 
 /** `laws_counts.json`: one row per `(congress, area_id)` with at least one law. Counts only; shares and groups are derived in `lib`. */
-export const lawCountRow = z.object({ congress: int, area_id: z.string(), n: int.min(1) });
+export const lawCountRow = z.object({ congress: int, area_id: z.string(), n: int.min(1), /** Laws per support band `[none, <60, 60-75, 75-90, 90+]`; adds up to `n`. */ bands: z.tuple([int, int, int, int, int]) });
 export type LawCountRow = z.infer<typeof lawCountRow>;
 
 /** `laws_cosponsors.json`: law id -> cosponsor bioguide ids (kept apart so the list payload stays small). */
@@ -217,6 +232,20 @@ export const lawCommitteesFile = z.object({
 });
 export type LawCommitteesFile = z.infer<typeof lawCommitteesFile>;
 
+/** `pipeline/reference/law-vote-exceptions.json`: the few passage tallies where the action text and Voteview disagree beyond the tolerance and a person decided. */
+export const lawVoteExceptions = z.object({
+  exceptions: z.array(
+    z.object({
+      law_id: z.string(),
+      chamber,
+      /** Which tally to keep: the action text's, Voteview's, or an explicit `[yea, nay]`. */
+      use: z.union([z.literal("text"), z.literal("voteview"), z.tuple([int, int])]),
+      reason: z.string().min(10),
+    }),
+  ),
+});
+export type LawVoteExceptions = z.infer<typeof lawVoteExceptions>;
+
 export const lawsMeta = z.object({
   first_congress: int,
   /** Latest Congress in the data. */
@@ -226,6 +255,10 @@ export const lawsMeta = z.object({
   /** Latest signing date in the data. */
   data_through: isoDate,
   law_count: int,
+  /** First Congress the support card covers (the votes parse and join from the 93rd). */
+  support_first_congress: int,
+  /** Voteview's last roll call per chamber when the data was built; newer laws are not cross-checked. */
+  voteview_last_date: z.object({ House: isoDate, Senate: isoDate }),
   sources: z.array(z.object({ source: rawSource, first_congress: int, last_congress: int })),
   areas: z.array(z.object({ id: z.string(), name: z.string().nullable(), group: z.string(), status: z.enum(["current", "retired", "none"]) })),
   groups: z.array(z.object({ id: z.string(), label: z.string() })),

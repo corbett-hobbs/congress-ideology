@@ -1,9 +1,11 @@
 import { existsSync } from "node:fs";
 import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import { z } from "zod";
-import { LawsDataError, ordinal, lawCommitteesFile, lawCosponsorsFile, lawCountRow, lawPolicyAreas, lawRow, lawsMeta, rawCongressFile, RAW_SOURCES, type RawCongressFile, type RawLaw } from "../../lib/laws-entities";
+import { LawsDataError, ordinal, lawVoteExceptions, lawCommitteesFile, lawCosponsorsFile, lawCountRow, lawPolicyAreas, lawRow, lawsMeta, rawCongressFile, RAW_SOURCES, type RawCongressFile, type RawLaw } from "../../lib/laws-entities";
 import { RAW_DIR } from "../fetch/lib";
-import { areaIndex, splitPending, buildCommittees, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, overlapDifferences, sponsorReport } from "./laws";
+import { rollcallManifest, type RollcallTuple } from "../fetch/voteview-rollcalls-lib";
+import { buildPassage, indexRollcalls, type Chamber, type Passage } from "./laws-votes";
+import { isVetoOverride, areaIndex, splitPending, buildCommittees, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, overlapDifferences, sponsorReport } from "./laws";
 
 /**
  * Laws track transform: raw/govinfo-billstatus + raw/congress-gov (+ reference/law-*.json) ->
@@ -31,6 +33,58 @@ async function readRaw(): Promise<RawCongressFile[]> {
   return files;
 }
 
+const decadeOf = (congress: number) => `${Math.floor((1789 + 2 * (congress - 1)) / 10) * 10}s`;
+
+/** Passage votes by decade: how each chamber's vote was found and checked, the bands, and what could not be checked. */
+function voteReport(laws: readonly RawLaw[], passages: ReadonlyMap<string, Passage>, rollIdx: ReturnType<typeof indexRollcalls>) {
+  const dec: Record<string, Record<string, number>> = {};
+  const bump = (d: string, k: string, n = 1) => ((dec[d] ??= {})[k] = (dec[d]![k] ?? 0) + n);
+  const unverified: string[] = [];
+  const unchecked: string[] = [];
+  const possiblyMissed: string[] = [];
+  const bands: Record<string, number[]> = {};
+  const byCongress: Record<string, number[]> = {};
+  const overrideProblems: string[] = [];
+  for (const l of laws) {
+    const p = passages.get(l.law_id)!;
+    const d = decadeOf(l.congress);
+    bump(d, "laws");
+    (bands[d] ??= [0, 0, 0, 0, 0])[p.band]++;
+    (byCongress[l.congress] ??= [0, 0, 0, 0, 0])[p.band]++;
+    if (p.resolved.size < 2) bump(d, "laws_with_a_chamber_not_found");
+    for (const [ch, r] of p.resolved) {
+      bump(d, "chamber_votes");
+      bump(d, r.vote.kind);
+      if (r.vote.kind !== "roll") {
+        // Voteview has a roll call on this bill in this chamber that day: possibly a recorded vote the feed did not attach.
+        const same = (rollIdx.byDate.get([l.congress, ch === "House" ? "H" : "S", r.vote.date].join("|")) ?? []).filter((x) => x[8].toUpperCase() === (l.bill_type + l.bill_number).toUpperCase());
+        if (same.length > 0) {
+          bump(d, "nonroll_with_a_voteview_vote_on_the_bill_that_day");
+          if (possiblyMissed.length < 40) possiblyMissed.push(`${l.law_id} ${ch} ${r.vote.kind} ${r.vote.date}: Voteview ${same.map((x) => `${x[6]}-${x[7]}`).join(", ")} | ${r.vote.text.slice(0, 70)}`);
+        }
+        continue;
+      }
+      bump(d, `tally_from_${r.vote.tally}`);
+      bump(d, `check_${r.check}`);
+      if (r.join) bump(d, `join_${r.join}`);
+      if (r.check === "unverified") unverified.push(`${l.law_id} ${ch} ${r.vote.date}: text ${r.vote.yea}-${r.vote.nay}, Voteview ${r.voteview![0]}-${r.voteview![1]} (${r.join})`);
+      if (r.check === "unchecked" && r.vote.date <= rollIdx.lastDate[ch === "House" ? "H" : "S"]) unchecked.push(`${l.law_id} ${ch} ${r.vote.date} roll ${r.vote.roll}`);
+    }
+    if (isVetoOverride(l.actions) && (p.override_votes === null || p.override_votes.some((x) => x === null))) overrideProblems.push(`${l.law_id}: override votes ${JSON.stringify(p.override_votes)}`);
+  }
+  return {
+    rule: "A chamber's final passage is its newest passage, conference-report or concurrence action; a roll call's tally is the action text's, with Voteview as the check (exact, minor = within 2 votes and the same band, unverified = a date-and-bill match disagrees, unchecked = no Voteview match, exception = recorded in law-vote-exceptions.json). The band is the narrowest yes share of any recorded final-passage vote; override votes do not count.",
+    by_decade: dec,
+    band_counts_by_decade: bands,
+    band_counts_by_congress: byCongress,
+    unverified_disagreements: unverified,
+    possible_missed_roll_calls_sample: possiblyMissed,
+    roll_calls_without_a_voteview_match: unchecked.length,
+    roll_calls_without_a_voteview_match_sample: unchecked.slice(0, 25),
+    veto_overrides_without_both_override_votes: overrideProblems,
+  };
+}
+
 /** Of the committee entries on a decade's laws, the share whose committee has a page. */
 function committeeLinkShares(laws: readonly RawLaw[], file: { committees: Record<string, { page: boolean }>; laws: Record<string, [string, string[], string[]][]> }): Record<string, string> {
   const by = new Map<string, { n: number; page: number }>();
@@ -55,6 +109,12 @@ async function main() {
   const known = new Set(legislators.map((l) => l.bioguide_id));
   const committeeRows = z.array(z.object({ committee_id: z.string() })).parse(await readJson(`${OUT}/committees.json`));
   const subcommitteeRows = z.array(z.object({ subcommittee_id: z.string() })).parse(await readJson(`${OUT}/subcommittees.json`));
+
+  const rcManifest = rollcallManifest.parse(await readJson(`${RAW_DIR}/voteview/rollcalls_manifest.json`));
+  const rolls = (await readJson(`${RAW_DIR}/voteview/rollcalls_93on.json`)) as RollcallTuple[];
+  if (rolls.length !== rcManifest.rows) throw new LawsDataError(`rollcalls_93on.json has ${rolls.length} rows, its manifest says ${rcManifest.rows}`);
+  const rollIdx = indexRollcalls(rolls, rcManifest.last_date);
+  const voteExceptions = lawVoteExceptions.parse(await readJson(`${REF}/law-vote-exceptions.json`)).exceptions;
 
   const chosen = chooseSources(await readRaw());
   const perCongress: Record<string, unknown>[] = [];
@@ -90,14 +150,19 @@ async function main() {
     });
   }
 
-  const rows = z.array(lawRow).parse(rawLaws.map((l) => buildLawRow(l, idx)));
+  const passages = new Map<string, Passage>(rawLaws.map((l) => [l.law_id, buildPassage(l, rollIdx, voteExceptions)]));
+  const unusedExceptions = voteExceptions.filter((e) => !passages.get(`${e.law_id}`)?.resolved.get(e.chamber as Chamber) || passages.get(e.law_id)!.resolved.get(e.chamber as Chamber)!.check !== "exception");
+  if (unusedExceptions.length > 0) throw new LawsDataError(`law-vote-exceptions.json lists ${unusedExceptions.map((e) => `${e.law_id} ${e.chamber}`).join(", ")}, which no longer need an exception (or do not exist); remove them`);
+  const rows = z.array(lawRow).parse(rawLaws.map((l) => buildLawRow(l, idx, passages.get(l.law_id)!)));
   const counts = z.array(lawCountRow).parse(buildCounts(rows));
   checkCounts(counts, rows);
   const cosponsors = lawCosponsorsFile.parse(Object.fromEntries(rawLaws.filter((l) => l.cosponsors.length > 0).map((l) => [l.law_id, l.cosponsors])));
   const committeeBuild = buildCommittees(rawLaws, { committees: new Set(committeeRows.map((c) => c.committee_id)), subcommittees: new Set(subcommitteeRows.map((c) => c.subcommittee_id)) });
   const committees = lawCommitteesFile.parse(committeeBuild.file);
-  const meta = lawsMeta.parse(buildMeta({ rows, chosen, areas, independent }));
+  const meta = lawsMeta.parse(buildMeta({ rows, chosen, areas, independent, voteviewLast: { House: rcManifest.last_date.H, Senate: rcManifest.last_date.S } }));
   const sp = sponsorReport(rawLaws, known);
+
+  const votesReport = voteReport(rawLaws, passages, rollIdx);
 
   // Report: area names by decade, legacy terms, vetoes, sponsors.
   const names = new Map<string, number>();
@@ -124,6 +189,7 @@ async function main() {
       not_classified: notClassified.length,
       not_classified_by_congress: byCongressNC,
     },
+    votes: votesReport,
     veto_overrides: rows.filter((r) => r.veto_override).map((r) => `${r.law_id} ${r.date}`),
     sponsors: { without_sponsor: sp.none, not_in_legislators: sp.unresolved, resolved: rawLaws.length - sp.none.length - sp.unresolved.length },
     cosponsors: { laws_with_cosponsors: Object.keys(cosponsors).length },

@@ -1,0 +1,7 @@
+{
+  "_comment": "Passage tallies where the action text and Voteview disagree beyond the tolerance (2 votes in total and the same support band), or where a tally exceeds the chamber's seats, and a person decided which is right. The transform fails on such a case until it is listed here with the evidence; it also fails on a listed case that no longer needs the exception. A disagreement found only through a date-and-bill match (not the clerk's roll number) is reported, not fatal.",
+  "exceptions": [
+    { "law_id": "104-pub-229", "chamber": "House", "use": "text", "reason": "clerk.house.gov roll 223 (1996-06-10, H.R. 3400): 339 yea, 4 nay. The action text is right; Voteview has 345-4." },
+    { "law_id": "95-pub-511", "chamber": "House", "use": "voteview", "reason": "The action text's 266-176 totals 442, more than the House's 441 seats; Voteview's 226-176 has the same nay count and is plausible." }
+  ]
+}
