@@ -55,6 +55,9 @@ interface ScatterPlotProps<T> {
   domain?: readonly [number, number];
   /** Gridline positions in domain units. Default `[-1, -0.5, 0, 0.5, 1]`. */
   ticks?: readonly number[];
+  /** Per-axis windows for a cluster that isn't centred on the origin (zoom and pan then work inside these windows). Gridlines are then picked by d3. */
+  xDomain?: readonly [number, number];
+  yDomain?: readonly [number, number];
   /** Draw the numeric tick labels (profile) or leave the axes bare (explorer). */
   axisTickLabels?: boolean;
   /** Optional rotated caption beside the y-axis (the compass's "DIMENSION 2"). */
@@ -102,6 +105,8 @@ export function ScatterPlot<T>({
   margin,
   domain = FULL_DOMAIN,
   ticks = DEFAULT_TICKS,
+  xDomain,
+  yDomain,
   axisTickLabels = false,
   yAxisCaption,
   x: xOf,
@@ -127,7 +132,9 @@ export function ScatterPlot<T>({
   const pin = usePinnedTooltip<T>();
   const pinned = pin.state != null;
   const svgRef = useRef<SVGSVGElement>(null);
-  const extent = domain[1];
+  const windowed = xDomain != null || yDomain != null;
+  // Windowed plots zoom in a normalized [-1, 1] square mapped onto their own x/y windows.
+  const extent = windowed ? 1 : domain[1];
   const mergedMargin: Margin = { ...DEFAULT_MARGIN, ...margin };
   const zoom = useZoomPan({
     svgRef,
@@ -149,7 +156,17 @@ export function ScatterPlot<T>({
       tip.hide();
     },
   });
-  const visible = viewDomains(zoom.view, extent);
+  const zoomedView = viewDomains(zoom.view, extent);
+  const mapAxis = (win: readonly [number, number] | undefined, norm: [number, number]): [number, number] => {
+    if (!win) return norm;
+    const mid = (win[0] + win[1]) / 2;
+    const half = (win[1] - win[0]) / 2;
+    return [mid + norm[0] * half, mid + norm[1] * half];
+  };
+  const visible = windowed
+    ? { x: mapAxis(xDomain, zoomedView.x), y: mapAxis(yDomain, zoomedView.y) }
+    : zoomedView;
+  const ownTicks = windowed;
   const clipId = `scatter-clip-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const ringed = useMemo(() => new Set(highlightedIds ?? []), [highlightedIds]);
 
@@ -189,9 +206,9 @@ export function ScatterPlot<T>({
           const y = scaleLinear().domain(visible.y).range([innerHeight, 0]);
           // Zoomed in, the fixed gridlines get too sparse: let d3 pick round
           // ones for the visible window and add a decimal as the step shrinks.
-          const xTicks = zoom.zoomed ? x.ticks(6) : [...ticks];
-          const yTicks = zoom.zoomed ? y.ticks(6) : [...ticks];
-          const step = zoom.zoomed && xTicks.length > 1 ? xTicks[1] - xTicks[0] : 0.5;
+          const xTicks = zoom.zoomed || ownTicks ? x.ticks(5) : [...ticks];
+          const yTicks = zoom.zoomed || ownTicks ? y.ticks(5) : [...ticks];
+          const step = (zoom.zoomed || ownTicks) && xTicks.length > 1 ? xTicks[1] - xTicks[0] : 0.5;
           const digits = step >= 0.1 ? 1 : step >= 0.01 ? 2 : 3;
           const tickFormat = (v: number) => v.toFixed(digits);
 

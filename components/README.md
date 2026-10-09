@@ -17,7 +17,7 @@ components/
   committee/ the committee wrappers over the same primitives — CommitteeCompass
             wraps ScatterPlot, CommitteeSwarm wraps SwarmRows — plus the
             committee page shell (CommitteeProfileView, CommitteeHeader,
-            CommitteeCompassCard, CommitteeRosterCard, CommitteeNeighborChips)
+            CommitteeCompassCard, CommitteeRosterCard, CommitteeNeighborList)
             and the committees-mode search. Used by SenateExplorer's
             Members/Committees toggle and /congress/committees/[committee_id]/[name_slug].
   profile/  the per-member profile page, split into verticals-agnostic pieces:

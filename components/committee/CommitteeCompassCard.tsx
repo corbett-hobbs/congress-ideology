@@ -10,7 +10,7 @@ import { CompassPanel } from "@/components/senate/CompassPanel";
 import { ProfilePanel } from "@/components/profile/ProfilePanel";
 import { ordinal } from "@/components/senate/format";
 import { CommitteeCompass } from "./CommitteeCompass";
-import { CommitteeNeighborChips } from "./CommitteeNeighborChips";
+import { CommitteeNeighborList } from "./CommitteeNeighborList";
 
 const N = 5;
 type Mode = "all" | "neighbors";
@@ -43,6 +43,12 @@ export function CommitteeCompassCard({
         (c) => c.committeeId,
       )
     : [];
+  const everyone = plottable
+    ? nearestNeighbors<CommitteeSummary>(committee, pool, pool.length, (c) => c.committeeId)
+    : pool
+        .filter((c) => c.committeeId !== committee.committeeId)
+        .sort((a, b) => a.shortName.localeCompare(b.shortName))
+        .map((member) => ({ member, distance: null as number | null }));
   const canToggle = neighbors.length > 0;
   const neighborMode = mode === "neighbors" && canToggle;
 
@@ -98,14 +104,14 @@ export function CommitteeCompassCard({
           }
           backdrop={backdrop}
           dimUnfocused
+          fitToCluster
         />
       </CompassPanel>
 
-      {neighborMode && (
-        <div className="mt-4 border-t border-line pt-3">
-          <CommitteeNeighborChips neighbors={neighbors} />
-        </div>
-      )}
+      <CommitteeNeighborList
+        rows={neighborMode ? neighbors : everyone}
+        ranked={plottable}
+      />
     </ProfilePanel>
   );
 }

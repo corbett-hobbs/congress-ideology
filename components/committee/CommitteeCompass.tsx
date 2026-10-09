@@ -44,6 +44,8 @@ interface CommitteeCompassProps {
   backdrop?: readonly { dim1: number | null; dim2: number | null }[];
   onHover?: (c: CommitteeSummary | null) => void;
   variant?: "profile" | "explorer";
+  /** Window the axes on the committees' own extent and use a shorter plot (committee page, which has a list below). */
+  fitToCluster?: boolean;
 }
 
 export function CommitteeCompass({
@@ -54,6 +56,7 @@ export function CommitteeCompass({
   backdrop,
   onHover,
   variant = "explorer",
+  fitToCluster = false,
 }: CommitteeCompassProps) {
   const router = useRouter();
   const explorer = variant === "explorer";
@@ -66,15 +69,25 @@ export function CommitteeCompass({
   // Blended committee positions cluster near the origin, so zoom the axes in to
   // a symmetric window that fits them with headroom — the zero-lines stay
   // centred and the individual-member backdrop is clipped to the plot.
-  const { domain, ticks } = useMemo(() => {
+  const { domain, ticks, xDomain, yDomain } = useMemo(() => {
     const extent = points.reduce(
       (m, c) => Math.max(m, Math.abs(c.dim1 as number), Math.abs(c.dim2 as number)),
       0,
     );
     const bound = Math.min(1, Math.max(0.25, extent * 1.18));
+    // Committee page: window each axis on the committees themselves (padded, always holding the zero-lines)
+    // instead of a square about the origin, so a cluster in one quadrant fills the plot. Nothing is clipped.
+    const fit = (vals: number[]): [number, number] => {
+      const lo = Math.min(0, ...vals);
+      const hi = Math.max(0, ...vals);
+      const pad = Math.max(0.05, (hi - lo) * 0.12);
+      return [lo === 0 ? -pad : lo - pad, hi === 0 ? pad : hi + pad];
+    };
     return {
       domain: [-bound, bound] as [number, number],
       ticks: [-2 / 3, -1 / 3, 0, 1 / 3, 2 / 3].map((k) => k * bound),
+      xDomain: fit(points.map((c) => c.dim1 as number)),
+      yDomain: fit(points.map((c) => c.dim2 as number)),
     };
   }, [points]);
 
@@ -118,10 +131,12 @@ export function CommitteeCompass({
       // Taller than the member compass: the zoomed, symmetric committee domain
       // reads better closer to square, and it gives the roster card next to it
       // the height to show a useful slice of the list before scrolling.
-      height={explorer ? 540 : 600}
+      height={fitToCluster ? 380 : explorer ? 540 : 600}
       margin={explorer ? EXPLORER_MARGIN : MARGIN}
       domain={domain}
       ticks={ticks}
+      xDomain={fitToCluster ? xDomain : undefined}
+      yDomain={fitToCluster ? yDomain : undefined}
       axisTickLabels={!explorer}
       yAxisCaption={!explorer ? "DIMENSION 2" : undefined}
       x={(c) => c.dim1 as number}
@@ -131,6 +146,7 @@ export function CommitteeCompass({
       radius={(c, s) =>
         c.committeeId === subjectId ? 9 : s.highlighted ? 7 : 6.5
       }
+      zoomable={fitToCluster}
       highlightedId={subjectId}
       highlightedIds={neighborIds}
       dimUnfocused={dimUnfocused}
