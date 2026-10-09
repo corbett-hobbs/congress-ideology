@@ -91,3 +91,13 @@ export interface LawsList {
   sponsors: LawSponsor[];
   signers: LawSigner[];
 }
+
+/**
+ * One member's laws, served at `/data/members/[bioguide_id]/laws`: the Laws list's own tuples, limited to the laws the member
+ * sponsored or cosponsored, with the small tables they index re-numbered to fit. `roles[i]` is the member's part in `rows[i]`
+ * (1 sponsor, 0 cosponsor). `areas` is the policy-area catalog the tuples index.
+ */
+export interface MemberLaws extends LawsList {
+  areas: LawsArea[];
+  roles: (0 | 1)[];
+}
