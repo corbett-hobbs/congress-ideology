@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/PageHeader";
 import { HOW_TO_READ, METHODOLOGY, type MethodEntry, type MethodSource } from "@/lib/methodology-content";
 import { docUrl } from "@/lib/site-info";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 
 const DESCRIPTION =
   "What each InsideGov chart measures, where its numbers come from, how often they update, and what to keep in mind when reading them.";
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: "/methodology" },
   openGraph: {
+    ...ogDefaults,
     title: `Methodology and sources · ${site.name}`,
     description: DESCRIPTION,
     url: "/methodology",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
-  twitter: { images: ["/opengraph-image"] },
+  twitter: twitterDefaults,
 };
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";

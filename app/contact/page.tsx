@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ContactForm } from "@/components/ContactForm";
 import { PageHeader } from "@/components/PageHeader";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 
 const DESCRIPTION = "Report a number that looks wrong, ask a question, or send an idea about InsideGov.";
 
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: "/contact" },
   openGraph: {
+    ...ogDefaults,
     title: `Contact and corrections · ${site.name}`,
     description: DESCRIPTION,
     url: "/contact",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
-  twitter: { images: ["/opengraph-image"] },
+  twitter: twitterDefaults,
 };
 
 const LINK =
