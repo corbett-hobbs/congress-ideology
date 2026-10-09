@@ -260,8 +260,8 @@ export const SUPPORT_LABELS = ["Voice vote or consent", "Under 60% yes", "60\u20
 export const SUPPORT_SHORT = ["Voice vote", "Under 60%", "60\u201375%", "75\u201390%", "90%+"] as const;
 /** The split palette, one slot per band in data order (the darkest is the voice-vote band; the cool end is broad support). */
 export const SUPPORT_COLORS = ["var(--split-0)", "var(--split-4)", "var(--split-3)", "var(--split-2)", "var(--split-1)"] as const;
-/** Display order of the bands, bottom to top in the stack and left to right in bars, legends and tables: voice vote first, then 90%+ down to under 60%, so the two broad-agreement bands sit together. Data order stays 0..4. */
-export const SUPPORT_ORDER = [0, 4, 3, 2, 1] as const;
+/** Display order of the bands, bottom to top in the stack and left to right in bars, legends and tables: under 60% up to 90%+, then voice vote last, so the two broad-agreement bands sit together and the narrow-vote band leads. Data order stays 0..4. */
+export const SUPPORT_ORDER = [1, 2, 3, 4, 0] as const;
 
 /** Below this many laws a Congress (median over the window), shares swing on a handful of laws. */
 export const SMALL_LAWS_MEDIAN = 15;

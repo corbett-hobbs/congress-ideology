@@ -170,7 +170,7 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
     check(tops.cells.length === tops.bars.length && Math.max(...diffs) < 1, `${tag}: heatmap and bar rows have equal height (max offset ${Math.max(...diffs).toFixed(2)}px)`);
   }
   const toggle = c3.locator("[aria-label='Sort policy areas']");
-  check((await toggle.locator("button").allInnerTexts()).map((t) => t.replace(/[^A-Za-z ]/g, "").trim()).join(",") === "Laws,Voice vote,Narrow votes", `${tag}: one toggle, in the order Laws, Voice vote, Narrow votes`);
+  check((await toggle.locator("button").allInnerTexts()).map((t) => t.replace(/[^A-Za-z ]/g, "").trim()).join(",") === "Laws,Narrow votes,Voice vote", `${tag}: one toggle, in the order Laws, Narrow votes, Voice vote`);
   const labelsOf = () => heat.locator("[role=row] > button[title]:not([role=gridcell])").allInnerTexts();
   const rowOrder = () => box.locator("li button span[title]").allInnerTexts();
   check(JSON.stringify(await labelsOf()) === JSON.stringify(await rowOrder()), `${tag}: heatmap and rows share one order`);

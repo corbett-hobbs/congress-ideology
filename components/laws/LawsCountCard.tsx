@@ -37,6 +37,12 @@ export function LawsCountCard() {
   const every = useMemo(() => seriesOf(data), [data]);
   const fillOf = useMemo(() => new Map(every.map((s, i) => [s.id, FILLS[i]!])), [every]);
 
+  // The groups behind "Other topics", named under the legend so the grey bar is never unexplained.
+  const otherNames = useMemo(() => {
+    const names = (every.find((s) => s.id === OTHER_GROUPS)?.groups ?? []).map((id) => data.groups.find((g) => g.id === id)?.label).filter(Boolean) as string[];
+    return names.length ? `${names.slice(0, -1).join(", ")}${names.length > 1 ? " and " : ""}${names[names.length - 1]}` : "";
+  }, [every, data]);
+
   // Seven series, or just the picked one (a group inside "Other topics" wears Other's colour).
   const series = useMemo<(StackSeries & { groups: string[] })[]>(() => {
     if (group === ALL_GROUPS) return every.map((s) => ({ id: s.id, label: s.label, fill: fillOf.get(s.id)!, groups: s.groups }));
@@ -159,9 +165,14 @@ export function LawsCountCard() {
           </LegendToggle>
         ))}
       </div>
+      {otherNames && (
+        <p className="mt-1.5 text-[0.8rem] leading-snug text-ink-muted">
+          <span className="font-medium text-ink">{every.find((s) => s.id === OTHER_GROUPS)!.label}</span> is {otherNames}.
+        </p>
+      )}
       <MethodologyNote>
         <p>
-          Counts public laws by the Congress that enacted them, from the 93rd (1973) on; private laws and bills that never became law are left out. A law&rsquo;s policy area is the one Congress.gov assigns its bill (one per bill), so a law that touches several topics is counted once. The page groups Congress.gov&rsquo;s areas into {data.groups.length - 1} topic groups; the five largest get a colour and the rest are &ldquo;Other topics&rdquo;, which the dropdown splits. {fmtInt(notClassified)} laws from the {ordinal(ncCongresses[0]!)} to {ordinal(ncCongresses[ncCongresses.length - 1]!)} Congresses carry no current Congress.gov area, only an older subject term or none, and are shown as &ldquo;Not classified&rdquo; rather than guessed. The {ordinal(lastCongress)} Congress is still in session, so its bar is partial (hatched) and left out of the peak and low labels. The president shown signed most of that Congress&rsquo;s laws; the tooltip lists any split. Major laws are David Mayhew&rsquo;s lists of important enactments, which run through the {ordinal(data.majorThrough)} Congress. Source: Congress.gov, Library of Congress; data through {data.dataThrough}.
+          Counts public laws by the Congress that enacted them, from the 93rd (1973) on; private laws and bills that never became law are left out. A law&rsquo;s policy area is the one Congress.gov assigns its bill (one per bill), so a law that touches several topics is counted once. The one exception is &ldquo;Commemorations&rdquo;, which is our own grouping, not Congress.gov&rsquo;s: it used that label in only 1985&ndash;88 and 1997&ndash;2008, so the same kind of law sat under other areas in other years. Here a law counts as a commemoration when Congress.gov filed it there or its title designates a day, week or year, names a building, post office or landmark, awards a medal or coin, or approves a memorial, with the same rule for every year. The page groups Congress.gov&rsquo;s areas into {data.groups.length - 1} topic groups; the five largest get a colour and the rest are &ldquo;Other topics&rdquo;, which the dropdown splits. {fmtInt(notClassified)} laws from the {ordinal(ncCongresses[0]!)} to {ordinal(ncCongresses[ncCongresses.length - 1]!)} Congresses carry no current Congress.gov area, only an older subject term or none, and are shown as &ldquo;Not classified&rdquo; rather than guessed. The {ordinal(lastCongress)} Congress is still in session, so its bar is partial (hatched) and left out of the peak and low labels. The president shown signed most of that Congress&rsquo;s laws; the tooltip lists any split. Major laws are David Mayhew&rsquo;s lists of important enactments, which run through the {ordinal(data.majorThrough)} Congress. Source: Congress.gov, Library of Congress; data through {data.dataThrough}.
         </p>
       </MethodologyNote>
       <TableView

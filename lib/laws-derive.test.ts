@@ -68,10 +68,18 @@ describe("the committed Laws files", () => {
     expect(meta.groups.length).toBeGreaterThanOrEqual(10);
     expect(meta.groups.length).toBeLessThanOrEqual(12);
   });
-  it("keep Commemorations out of the 2010s", () => {
-    const comm = counts.filter((c) => c.area_id === "commemorations");
-    expect(comm.length).toBeGreaterThan(0);
-    expect(Math.max(...comm.map((c) => c.congress))).toBeLessThanOrEqual(112);
+  it("count Commemorations in every Congress, not only the years CRS used its own label", () => {
+    const comm = new Map(counts.filter((c) => c.area_id === "commemorations").map((c) => [c.congress, c.n]));
+    for (let c = 93; c <= meta.last_congress; c++) expect(comm.get(c), `Congress ${c}`).toBeGreaterThan(0);
+  });
+  it("keep the CRS area of every law the commemorative flag moved", () => {
+    const moved = laws.filter((l) => l.crs_area_id !== undefined);
+    expect(moved.length).toBeGreaterThan(1000);
+    for (const l of moved) {
+      expect(l.area_id).toBe("commemorations");
+      expect(l.crs_area_id).not.toBe("commemorations");
+      expect(meta.areas.some((a) => a.id === l.crs_area_id), l.law_id).toBe(true);
+    }
   });
   it("date every law inside its Congress or by 20 January after it", () => {
     for (const l of laws) {

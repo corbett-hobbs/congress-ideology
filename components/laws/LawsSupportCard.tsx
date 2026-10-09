@@ -28,7 +28,7 @@ const share = (b: readonly number[], k: number): number => {
 
 /**
  * Card 2: how broadly laws are supported. Each law sits in the band of the closest recorded final-passage vote it faced in
- * either chamber (voice vote or consent is its own band, at the bottom, next to the 90%+ band). The shared `StackedArea`, a Share / Number toggle, and a legend
+ * either chamber (voice vote or consent is its own band, at the top, next to the 90%+ band). The shared `StackedArea`, a Share / Number toggle, and a legend
  * whose entries isolate a band (rule 12c): the pick draws that band alone from zero, switches to the count view and also
  * narrows card 1; going back to Share clears it. Few laws per Congress (a thin area, or major laws only) get a note; the chart is never hidden.
  */

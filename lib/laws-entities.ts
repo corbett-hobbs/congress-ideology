@@ -188,6 +188,8 @@ export const lawPolicyAreas = z.object({
 export type LawPolicyAreas = z.infer<typeof lawPolicyAreas>;
 
 export const NOT_CLASSIFIED_AREA = "not-classified";
+/** Catalog id of "Commemorations": CRS's retired label, and the bucket every law the commemorative flag catches is counted in. */
+export const COMMEMORATIONS_AREA = "commemorations";
 export const NOT_CLASSIFIED_GROUP = "not-classified";
 
 // ---- outputs ----
@@ -212,8 +214,10 @@ export const lawRow = z.object({
   bill_number: z.string(),
   origin_chamber: chamber.nullable(),
   sponsor_bioguide_id: z.string().nullable(),
-  /** Catalog id of the policy area; `not-classified` for legacy terms and laws with none. */
+  /** Catalog id of the area the page counts the law in: its CRS policy area (`not-classified` for legacy terms and laws with none), or `commemorations` when the law is commemorative (see `crs_area_id`). */
   area_id: z.string(),
+  /** Only where InsideGov's commemorative flag moved the law out of the area CRS gave it: that CRS area, as filed. Absent when `area_id` is CRS's own. */
+  crs_area_id: z.string().optional(),
   /** True when Congress passed it over a presidential veto. */
   veto_override: z.boolean(),
   /** Final passage in the House and in the Senate (see `chamberVote`). */

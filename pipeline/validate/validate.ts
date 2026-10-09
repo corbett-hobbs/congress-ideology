@@ -434,6 +434,11 @@ await step("output/laws.json + laws_counts.json + laws_meta.json", async () => {
   assertUnique(countsFile, counts, (r) => `${r.congress}|${r.area_id}`, (r) => `${r.congress} ${r.area_id}`);
   const areas = new Set(meta.areas.map((a) => a.id));
   for (const r of rows) if (!areas.has(r.area_id)) throw new ValidationError(file, "area_id", `${r.law_id} has area ${r.area_id}, not in laws_meta.json`);
+  for (const r of rows) {
+    if (r.crs_area_id === undefined) continue;
+    if (!areas.has(r.crs_area_id)) throw new ValidationError(file, "crs_area_id", `${r.law_id} has CRS area ${r.crs_area_id}, not in laws_meta.json`);
+    if (r.area_id !== "commemorations" || r.crs_area_id === "commemorations") throw new ValidationError(file, "crs_area_id", `${r.law_id} carries a CRS area but was not moved into Commemorations`);
+  }
   return `${rows.length} laws, ${counts.length} count rows ok; law ids and (congress, area) unique`;
 });
 

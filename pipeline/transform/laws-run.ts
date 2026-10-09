@@ -7,7 +7,7 @@ import { rollcallManifest, type RollcallTuple } from "../fetch/voteview-rollcall
 import { buildMajor } from "./laws-major";
 import { firstSentence } from "./laws-summary";
 import { buildPassage, indexRollcalls, type Chamber, type Passage } from "./laws-votes";
-import { isVetoOverride, areaIndex, splitPending, buildCommittees, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, overlapDifferences, sponsorReport } from "./laws";
+import { commemorativeReport, isVetoOverride, areaIndex, splitPending, buildCommittees, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, overlapDifferences, sponsorReport } from "./laws";
 
 /**
  * Laws track transform: raw/govinfo-billstatus + raw/congress-gov (+ reference/law-*.json) ->
@@ -216,6 +216,7 @@ async function main() {
       not_classified: notClassified.length,
       not_classified_by_congress: byCongressNC,
     },
+    commemorative: commemorativeReport(rawLaws, idx),
     votes: votesReport,
     summaries: summaryReport(rawLaws),
     major_laws: { ...major.report, laws_not_yet_assessed: rows.filter((r) => r.major === null).length },
@@ -229,7 +230,7 @@ async function main() {
       share_of_committee_links_with_a_page_by_decade: committeeLinkShares(rawLaws, committees),
       ids_with_more_than_one_name: [...committeeBuild.names].filter(([, m]) => m.size > 1).map(([id, m]) => `${id}: ${[...m.keys()].join(" / ")}`),
     },
-    gates: ["law numbers 1..N with none missing or repeated", "N equals the independent count (Statutes at Large / GovInfo PLAW) where there is one", "every law dated 3 Jan..20 Jan after its Congress", "every policy-area name is a CRS area or a listed legacy term", "counts add back to the list per Congress", "Bill Status and the API agree where both cover a Congress"],
+    gates: ["law numbers 1..N with none missing or repeated", "N equals the independent count (Statutes at Large / GovInfo PLAW) where there is one", "every law dated 3 Jan..20 Jan after its Congress", "every policy-area name is a CRS area or a listed legacy term", "counts add back to the list per Congress", "the commemorative title rules catch at least 90% of the laws CRS filed under Commemorations", "Bill Status and the API agree where both cover a Congress"],
   };
 
   await mkdir(OUT, { recursive: true });

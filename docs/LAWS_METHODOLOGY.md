@@ -29,13 +29,26 @@ Both fetchers write the same slimmed record per law (`pipeline/raw/govinfo-bills
 
 ## Policy areas and topic groups
 
-CRS assigns one policy area per law. The source field holds more than CRS's 32 current areas: the retired label **"Commemorations"** (used up to about 2009) and a few subject terms older laws carry. We keep each law's area exactly as the source names it:
+CRS assigns one policy area per law. The source field holds more than CRS's 32 current areas: the retired label **"Commemorations"** (applied only in 1985–88 and 1997–2008, never in the years between or since) and a few subject terms older laws carry. We keep each law's area exactly as the source names it, with one exception, below:
 
 - the 32 current areas and "Commemorations" are the catalog (`pipeline/reference/law-policy-areas.json`);
 - legacy subject terms and laws with no area are **"Not classified"** — never mapped to an area by us;
 - a name in neither list stops the build.
 
-Thirty-three areas are too many for the page, so the page shows **topic groups** (about ten, to match the rest of InsideGov). The grouping is one field (`group`) in the same reference file; changing it needs a `pnpm transform`, not a re-fetch. "Commemorations" is its own group so the drop after 2009 stays visible.
+Thirty-three areas are too many for the page, so the page shows **topic groups** (about ten, to match the rest of InsideGov). The grouping is one field (`group`) in the same reference file; changing it needs a `pnpm transform`, not a re-fetch. "Commemorations" is its own group.
+
+### Commemorations: an InsideGov rule, not CRS's
+
+CRS used "Commemorations" in two stretches only; in every other year the same kind of law (a post office named for someone, a week proclaimed, a gold medal) sits under Government Operations, Health, Armed Forces or another area, so CRS's label alone draws a series that stops and starts. The page therefore counts a law in Commemorations when **CRS filed it there, or its title matches a rule**, the same rules for every year (`pipeline/transform/laws-commemorative.ts`, tested in `laws-commemorative.test.ts`):
+
+- **observance**: designates, proclaims, recognizes or commemorates a day, week, month, year or anniversary, or sets up a centennial or bicentennial commission;
+- **naming**: names or renames a post office, federal building, courthouse, VA facility, road, bridge, dam, trail, lake or similar;
+- **honor**: awards a gold medal or Medal of Honor, authorizes a commemorative coin, confers honorary citizenship or promotion, or congratulates, commends or pays tribute;
+- **memorial**: authorizes a memorial, approves its location, or accepts a statue or bust for the Capitol.
+
+Not commemorative, whatever the wording: laws that create or relabel protected land (wilderness, wild and scenic rivers, national park units, "affiliated areas"), laws that designate an officer ("the Secretary ... as the lead agency"), and laws that only share a word (fiscal year, day care, a memorial museum or council, a pension for Medal of Honor recipients). Only the title is read; the rules are deliberately narrow, so a rare honorific law with a plain title is missed rather than a substantive one swept in.
+
+A moved law keeps its CRS area in `laws.json` as `crs_area_id` (present only on the 1986 laws that moved; `area_id` is where the page counts it), so nothing CRS said is lost. Of the 3,132 commemorative laws, 1,146 are CRS's own label, 1,986 are title-rule laws CRS filed elsewhere (including 42 that had no current CRS area), and 35 are CRS-labeled laws no rule catches. **Check against CRS:** in the years CRS did use the label, the rules catch 1,111 of its 1,146 laws (96.9%); the transform throws if that falls below 90%. A hand read of 70 random moved laws found none that is not honorific. The report (`laws_report.json`, `commemorative`) lists the split by rule, by CRS area moved from, by year, and the CRS-labeled laws the rules miss.
 
 ## Gates (the transform throws)
 
@@ -53,7 +66,7 @@ Reported, not fatal: sponsors missing from `legislators.json`, laws with no spon
 
 12,619 public laws, 93rd–119th (the 119th has 119; law 119-120 is held out until Congress.gov records its enactment). Sources: Congress.gov API for the 93rd–107th, Bill Status for the 108th–119th; the 108th was fetched from both and agrees on all 498 laws across seven fields. Every finished Congress's laws are numbered 1..N and equal the independent count. Files: `laws.json` 4.2 MB, `laws_cosponsors.json` 3.0 MB, `laws_committees.json` 1.3 MB, `laws_counts.json` 47 KB (816 rows); raw `congress-gov/` 36 MB and `govinfo-billstatus/` 15 MB.
 
-- **"Not classified" is a 1973–78 problem, and a bigger one than the pre-flight sample suggested.** 465 laws have no CRS area or a legacy subject term (160 distinct terms, listed in `law-policy-areas.json`): 164 of the 93rd's 651 (25%), 134 of the 94th's 588 (23%), 167 of the 95th's 633 (26%). From the 96th (1979) on every law has a current CRS area or "Commemorations". The pre-flight's sample of 40 per Congress had put it near 9%.
+- **"Not classified" is a 1973–78 problem, and a bigger one than the pre-flight sample suggested.** 465 laws have no CRS area or a legacy subject term (160 distinct terms, listed in `law-policy-areas.json`): 164 of the 93rd's 651 (25%), 134 of the 94th's 588 (23%), 167 of the 95th's 633 (26%). From the 96th (1979) on every law has a current CRS area or "Commemorations". (42 of the 465 are commemorative by title and now count in Commemorations, leaving 423 "Not classified".) The pre-flight's sample of 40 per Congress had put it near 9%.
 - **Source repairs.** Three Bill Status bills (110th S. 2499, 110th H.R. 6124, 109th H.R. 5441) also list the law under the wrong Congress; read as the bill's own. The API list repeated or omitted 22 laws in the 93rd–102nd (looked up by number). Ten 106th laws and two 99th laws carry two `BecameLaw` dates a day or two apart; the earliest is used.
 - **Veto overrides:** 33 laws (93rd 5, 94th 8, 96th 2, 97th 2, 98th 2, 99th 2, 100th 3, 102nd 1, 104th 1, 105th 1, 110th 4, 114th 1, 116th 1). Each has a veto and an "over veto" passage. Checked in Session 6 against the Senate Historical Office's vetoes table (https://www.senate.gov/legislative/vetoes/vetoCounts.htm, read 2026-10-08): overrides by signing president from Ford on are identical (Ford 12, Carter 2, Reagan 9, Bush 41 1, Clinton 2, Bush 43 4, Obama 1, Trump 1, Biden 0), and Nixon's one in range is the War Powers Resolution (his other six are before 1973). Line-item-veto notes on eleven 105th laws are correctly not counted.
 - **Sponsors:** all 12,604 sponsor ids resolve in `legislators.json`; 15 laws have no sponsor in the source (96th 2, 97th 4, 98th 2, 99th 1, 100th 1, 101st 1, 108th 1, 109th 1, 110th 1, 111th 1, listed in `laws_report.json`).
