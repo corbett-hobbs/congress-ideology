@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { TradePageClient } from "@/components/trade/TradePageClient";
 import { getTradePageData } from "@/lib/trade-data";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 
 /**
  * /presidency/trade — the Presidency vertical's Trade section. The filter bar and
@@ -14,10 +14,12 @@ export const metadata: Metadata = {
     "U.S. goods trade with every partner and the calculated duties on imports since 1991, with presidential terms marked. From the Census Bureau and the U.S. International Trade Commission.",
   alternates: { canonical: "/presidency/trade" },
   openGraph: {
+    ...ogDefaults,
     title: `How does the U.S. trade with the world? · ${site.name}`,
     description: "U.S. goods trade and calculated duties on imports, by country. From the Census Bureau and the USITC.",
     url: "/presidency/trade",
   },
+  twitter: twitterDefaults,
 };
 
 export default function TradePage() {

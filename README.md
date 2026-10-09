@@ -1,31 +1,54 @@
 # InsideGov
 
 **[insidegov.fyi](https://insidegov.fyi)** ·
-every member of Congress's voting record reduced to a point in a
-two-dimensional ideology space, from the 1st Congress (1789) to the 119th
-(2025–27).
+the U.S. government, by the numbers: public records from all three branches,
+turned into charts you can explore. The presidency, Congress (1789 to today)
+and the Supreme Court, without reading the raw files.
 
-![The ideology explorer](docs/images/screenshot-home.png)
+![The InsideGov home page, with the presidency, Congress and Supreme Court sections](docs/images/screenshot-home.png)
 
-Political scientists have spent decades boiling roll-call votes down to a
-low-dimensional "ideal point" per legislator — the **DW-NOMINATE** score. This
-site makes that data explorable:
+The site is organised by branch. Each branch has several pages, each built
+around one question.
 
-- **Scrub through 236 years** and watch each chamber go from an undifferentiated
-  cloud to two hard-separated partisan clusters.
-- **Compare a state's delegation** — the dumbbell / range chart sorts every
-  delegation by how far apart its members sit.
-- **Read any current member's trajectory** — a per-Congress line showing how
-  their score has moved, against their party's mean.
-- **See where a committee sits** — every House, Senate, and joint committee of
-  the 119th Congress blended to a point, plus a page per committee.
-- **Congressional net worth** ([`/congress/wealth`](https://insidegov.fyi/congress/wealth))
-  — where they started, where they are now: first vs. latest net worth on a
-  shared signed-log scale, highest/lowest lists, and a "Net worth over time"
-  card with the actual assets and liabilities on every current member's
-  profile page, estimated from their annual financial disclosures.
-- Party-mean trend line, a searchable roster, a full data table, and a
-  profile page for every current representative and senator.
+### The presidency (`/presidency/…`)
+
+- **Executive orders** — how many each president has signed since 1994, and on
+  what topics.
+- **Economy** — jobs, inflation, mortgage rates and more, laid against
+  administrations.
+- **Energy** — oil, gas, electricity and the Strategic Petroleum Reserve,
+  with the policy actions that touched them.
+- **Trade** — U.S. trade with each country, plus tariffs and duties collected.
+- **Immigration** — ICE removals by fiscal year and by country of citizenship.
+- **National security** — where U.S. troops are stationed abroad, and the
+  bases, over time.
+- **Foreign aid** — where U.S. foreign assistance goes, on a world map.
+
+### Congress (`/congress/…`)
+
+- **Ideology explorer** — every member's voting record reduced to a point in a
+  two-dimensional space (**DW-NOMINATE**), from the 1st Congress (1789) to the
+  119th (2025–27). Scrub through 236 years, compare a state's delegation, and
+  read any current member's trajectory against their party's mean.
+- **Who serves** — age, gender and length of service, for every Congress since
+  1933.
+- **Net worth** ([`/congress/wealth`](https://insidegov.fyi/congress/wealth))
+  — first vs. latest net worth on a shared signed-log scale, highest and
+  lowest lists, and the actual assets and liabilities on every current
+  member's profile, estimated from their annual financial disclosures.
+- **Committees and subcommittees** — every House, Senate and joint committee of
+  the 119th Congress blended to a point, with rosters and a page for each.
+- **Member profiles** — a page for every current representative and senator.
+
+### The Supreme Court (`/supreme-court/…`)
+
+- **Ideology explorer** — where the Court's middle sits, term by term, from
+  Martin–Quinn scores for every justice since 1937.
+- **Decisions** — how many argued cases the Court decides each term and how
+  often it splits, by issue area, since 1946, with a case list and landmark
+  cases.
+- **Justice profiles** — a page for every justice, with a bio, a portrait and
+  their voting record.
 
 <!--
 WHY I BUILT THIS
@@ -39,27 +62,42 @@ remembers.
 
 ## Data
 
-| Source | Used for |
-| --- | --- |
-| [**Voteview**](https://voteview.com/) (Lewis, Poole, Rosenthal, Boche, Rudkin & Sonnet) | DW-NOMINATE ideal points — the static career score and the per-Congress (Nokken–Poole) score |
-| [**@unitedstates/congress-legislators**](https://github.com/unitedstates/congress-legislators) | Names, states, parties, terms, the `icpsr` ↔ `bioguide_id` crosswalk, and current committees + rosters |
-| [**@unitedstates/images**](https://github.com/unitedstates/images) | Official member portraits (current members only), committed under `public/images/members/` |
-| [**Wikipedia**](https://en.wikipedia.org/) (CC BY-SA 4.0) | The short, abridged bio in each current member's profile header, fetched at build time (`pipeline/fetch/wikipedia.ts`) |
-| **House Clerk** ([disclosures-clerk.house.gov](https://disclosures-clerk.house.gov/)) and **Senate eFD** ([efdsearch.senate.gov](https://efdsearch.senate.gov/)) | Annual financial disclosures (assets, liabilities, net worth bands) behind `/congress/wealth` and each profile's net worth card |
+| Branch | Source | Used for |
+| --- | --- | --- |
+| Congress | [**Voteview**](https://voteview.com/) (Lewis, Poole, Rosenthal, Boche, Rudkin & Sonnet) | DW-NOMINATE ideal points — the static career score and the per-Congress (Nokken–Poole) score |
+| Congress | [**@unitedstates/congress-legislators**](https://github.com/unitedstates/congress-legislators) | Names, states, parties, terms, leadership, the `icpsr` ↔ `bioguide_id` crosswalk, and current committees and rosters |
+| Congress | [**@unitedstates/images**](https://github.com/unitedstates/images) | Official member portraits (current members only), committed under `public/images/members/` |
+| Congress | **House Clerk** ([disclosures-clerk.house.gov](https://disclosures-clerk.house.gov/)) and **Senate eFD** ([efdsearch.senate.gov](https://efdsearch.senate.gov/)) | Annual financial disclosures behind `/congress/wealth` and each profile's net worth card |
+| Court | [**Martin–Quinn scores**](https://mqscores.wustl.edu/) | Per-term ideal points for every justice |
+| Court | [**Supreme Court Database**](http://scdb.wustl.edu/) (Washington University) | Case counts, dissents, issue areas, outcomes and each justice's vote |
+| Court | [**Federal Judicial Center**](https://www.fjc.gov/history/judges) | Justice biographies |
+| Presidency | [**Federal Register**](https://www.federalregister.gov/presidential-documents/executive-orders) | Executive orders (topics are classified with the Claude API and the result is committed) |
+| Presidency | **FRED**, **BLS**, **Census**, **OMB**, **Freddie Mac** | The economic indicators |
+| Presidency | [**U.S. Energy Information Administration**](https://www.eia.gov/) | Energy series |
+| Presidency | **U.S. Census Bureau** and [**USITC DataWeb**](https://dataweb.usitc.gov/) | Trade by country; duties collected (DataWeb for 1993–2009) |
+| Presidency | [**ICE**](https://www.ice.gov/statistics) | Removals by year and by country of citizenship |
+| Presidency | [**ForeignAssistance.gov**](https://foreignassistance.gov/) | Foreign aid obligations and disbursements |
+| Presidency | **Defense Manpower Data Center**, [**troopdata**](https://github.com/meflynn/troopdata), David Vine's base lists | Troop locations and overseas bases |
+| All | [**Wikipedia**](https://en.wikipedia.org/) (CC BY-SA 4.0) | Short bios on member and justice profiles, and the landmark-case list and case articles, fetched in the pipeline |
+| All | [**Natural Earth**](https://www.naturalearthdata.com/) | World map outlines |
+
+The full list, with notes on what each source covers, is on
+[`/methodology`](https://insidegov.fyi/methodology).
 
 > Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron Rudkin,
 > and Luke Sonnet (2026). *Voteview: Congressional Roll-Call Votes Database.*
 > voteview.com
 
 Raw snapshots are committed under `pipeline/raw/`, so builds are reproducible
-and don't touch the network. A scheduled GitHub Action re-fetches Voteview
-weekly and opens a PR if it changed — see
-[`.github/workflows/voteview-freshness.yml`](.github/workflows/voteview-freshness.yml).
-Wikipedia bios are refreshed the same way
-([`wikipedia-freshness.yml`](.github/workflows/wikipedia-freshness.yml)).
-Data conventions (why `bioguide_id` is the only join key, why the two
+and don't touch the network. Scheduled GitHub Actions
+([`.github/workflows/`](.github/workflows/)) re-fetch each source on its own
+cadence and open a PR only when something material changed; the PR merges
+itself only after the same checks CI runs have passed. Hand-curated data
+(tariff and energy actions, ICE figures) has review reminders instead.
+Data conventions (why each track has its own join key, why the two
 DW-NOMINATE scores must not be conflated) are written down in
-[`docs/DATA_CONVENTIONS.md`](docs/DATA_CONVENTIONS.md).
+[`docs/DATA_CONVENTIONS.md`](docs/DATA_CONVENTIONS.md), with a methodology doc
+per topic alongside it.
 
 ## How it's built
 
@@ -67,9 +105,9 @@ DW-NOMINATE scores must not be conflated) are written down in
   themed from a small set of CSS custom properties (light/dark).
 - **A build-time data pipeline**, not a database. `pipeline/` fetches the raw
   files, validates every row against a Zod schema, and transforms them into
-  normalized JSON (`legislators.json`, `terms.json`, `ideology_scores.json`,
-  `id_crosswalk.json`, `committees.json`, `committee_memberships.json`). The app
-  reads those at build time and statically prerenders every page — there is no
+  normalized JSON, one set of files per track (Congress, the Court, executive
+  orders, indicators, energy, trade, immigration, foreign aid, troops, court
+  decisions). The app reads those at build time and statically prerenders every page — there is no
   runtime data fetching and nothing to operate. Financial disclosures are a
   separate Python sidecar (`pipeline/financial_disclosures/`, PDF/HTML parsing
   is easier there) producing `financial_disclosures.json` (one row per member
@@ -94,7 +132,7 @@ pipeline/      fetch → validate → transform → pipeline/output/*.json
                 financial_disclosures/ — Python sidecar (PDF/HTML parsing) for
                 financial_disclosures.json + line-items/<year>.json
 public/        static assets, incl. committed member photos (images/members/)
-docs/          DATA_CONVENTIONS.md, NET_WORTH_METHODOLOGY.md, CREDITS.md
+docs/          DATA_CONVENTIONS.md, CREDITS.md, and a *_METHODOLOGY.md per topic
 ```
 
 See [`ARCHITECTURE_MAP.md`](ARCHITECTURE_MAP.md) for the data-layer, route, and
@@ -119,13 +157,21 @@ pnpm pipeline:check # validate + transform + assert pipeline/output is unchanged
 
 ## Scope
 
-The House and the Senate, every Congress from the 1st (1789) to the 119th, with
-a profile page for every current representative and senator and for every
-standing committee of the 119th Congress. Committee membership is only tracked
-for the current Congress (there is no historical roster file upstream), so the
-committee views are pinned to the 119th and carry no trend chart.
+- **Congress:** the House and the Senate, every Congress from the 1st (1789) to
+  the 119th, with a profile for every current member and a page for every
+  committee and subcommittee of the 119th. Committee membership is only
+  tracked for the current Congress (there is no historical roster file
+  upstream), so those views are pinned to the 119th.
+- **The Court:** every justice with a Martin–Quinn score (1937 on), and
+  decision counts from the Supreme Court Database from 1946.
+- **The presidency:** executive orders from 1994; economic and energy series
+  with a display window starting in the modern era; trade and duties from
+  1991 and 1993; ICE removals FY2003 on; foreign aid, troops and bases over
+  their source's span. Each page's "Data notes" give the exact window.
 
-Still future work: subcommittees and a per-member bills/votes record.
+Still future work: a page for the laws Congress passes (the data layer is
+built; see [`docs/LAWS_METHODOLOGY.md`](docs/LAWS_METHODOLOGY.md)) and a
+per-member bills and votes record.
 
 ## Licence
 

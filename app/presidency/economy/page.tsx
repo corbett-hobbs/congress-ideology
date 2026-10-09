@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getEconomyPayload, getIndicatorSeriesList } from "@/lib/indicator-data";
 import { FRED_API_NOTICE } from "@/lib/indicator-entities";
 import { EconomyPageClient } from "@/components/economy/EconomyPageClient";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 
 /** /presidency/economy — the Presidency vertical's Economy section. */
 export const metadata: Metadata = {
@@ -11,10 +11,12 @@ export const metadata: Metadata = {
     "Gas prices, mortgage rates, jobs, inflation, income and the federal budget since 1991, with presidential terms, recessions and congressional control marked.",
   alternates: { canonical: "/presidency/economy" },
   openGraph: {
+    ...ogDefaults,
     title: `What was the economy like? · ${site.name}`,
     description: "Economic conditions since 1991 alongside who was president. From FRED.",
     url: "/presidency/economy",
   },
+  twitter: twitterDefaults,
 };
 
 export default function EconomyPage() {

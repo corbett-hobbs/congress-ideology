@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { DecisionsPageClient } from "@/components/decisions/DecisionsPageClient";
 import { getDecisionsPageData } from "@/lib/decisions-data";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 
 /** /supreme-court/decisions — the Supreme Court vertical's Decisions section. */
 export const metadata: Metadata = {
@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: "How many argued cases the Supreme Court decides each term and how often it splits, by issue area, since 1946.",
   alternates: { canonical: "/supreme-court/decisions" },
   openGraph: {
+    ...ogDefaults,
     title: `How does the Supreme Court decide? · ${site.name}`,
     description: "Cases decided per term, and how many justices dissented, for every Supreme Court term since 1946.",
     url: "/supreme-court/decisions",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
-  twitter: { images: ["/opengraph-image"] },
+  twitter: twitterDefaults,
 };
 
 export default function DecisionsPage() {
