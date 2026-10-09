@@ -398,3 +398,41 @@ await step("output/foreign_assistance.json + foreign_assistance_meta.json", asyn
   }
   return `${rows.length} rows ok; (recipient, fiscal_year, sector_category) unique`;
 });
+
+// --- Laws track --------------------------------------------------------------
+// Raw Bill Status and Congress.gov snapshots (schema per Congress, file name = Congress, law ids unique),
+// the committed reference files, then our committed output. Numbering and the other gates live in the transform.
+await step("govinfo-billstatus/*.json + congress-gov/*.json", async () => {
+  const { rawCongressFile, RAW_SOURCES } = await import("../../lib/laws-entities");
+  const { readdir } = await import("node:fs/promises");
+  let files = 0;
+  let laws = 0;
+  for (const source of RAW_SOURCES) {
+    const dir = `${RAW_DIR}/${source}`;
+    if (!existsSync(dir)) continue;
+    for (const name of (await readdir(dir)).filter((n) => /^\d+\.json$/.test(n))) {
+      const file = `${dir}/${name}`;
+      const parsed = rawCongressFile.safeParse(JSON.parse(await readFile(file, "utf8")));
+      if (!parsed.success) throw new ValidationError(file, "schema", parsed.error.message.slice(0, 500));
+      if (parsed.data.source !== source || `${parsed.data.congress}.json` !== name) throw new ValidationError(file, "identity", `file says ${parsed.data.source} ${parsed.data.congress}`);
+      assertUnique(file, parsed.data.laws, (l) => l.law_id, (l) => l.law_id);
+      files++;
+      laws += parsed.data.laws.length;
+    }
+  }
+  return `${files} Congress files, ${laws} laws ok; law ids unique within each`;
+});
+
+await step("output/laws.json + laws_counts.json + laws_meta.json", async () => {
+  const { lawCountRow, lawRow, lawsMeta } = await import("../../lib/laws-entities");
+  const meta = lawsMeta.parse(JSON.parse(await readFile("pipeline/output/laws_meta.json", "utf8")));
+  const file = "pipeline/output/laws.json";
+  const rows = validateAll(file, JSON.parse(await readFile(file, "utf8")) as unknown[], lawRow, (row, i) => `record ${i} (${(row as { law_id?: string }).law_id ?? "?"})`);
+  assertUnique(file, rows, (r) => r.law_id, (r) => r.law_id);
+  const countsFile = "pipeline/output/laws_counts.json";
+  const counts = validateAll(countsFile, JSON.parse(await readFile(countsFile, "utf8")) as unknown[], lawCountRow, (_row, i) => `record ${i}`);
+  assertUnique(countsFile, counts, (r) => `${r.congress}|${r.area_id}`, (r) => `${r.congress} ${r.area_id}`);
+  const areas = new Set(meta.areas.map((a) => a.id));
+  for (const r of rows) if (!areas.has(r.area_id)) throw new ValidationError(file, "area_id", `${r.law_id} has area ${r.area_id}, not in laws_meta.json`);
+  return `${rows.length} laws, ${counts.length} count rows ok; law ids and (congress, area) unique`;
+});

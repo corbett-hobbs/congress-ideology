@@ -1,0 +1,273 @@
+{
+  "first_congress": 93,
+  "last_congress": 119,
+  "partial_congresses": [
+    119
+  ],
+  "data_through": "2026-10-07",
+  "law_count": 12619,
+  "sources": [
+    {
+      "source": "congress-gov",
+      "first_congress": 93,
+      "last_congress": 107
+    },
+    {
+      "source": "govinfo-billstatus",
+      "first_congress": 108,
+      "last_congress": 119
+    }
+  ],
+  "areas": [
+    {
+      "id": "government-operations-and-politics",
+      "name": "Government Operations and Politics",
+      "group": "government-congress",
+      "status": "current"
+    },
+    {
+      "id": "congress",
+      "name": "Congress",
+      "group": "government-congress",
+      "status": "current"
+    },
+    {
+      "id": "law",
+      "name": "Law",
+      "group": "government-congress",
+      "status": "current"
+    },
+    {
+      "id": "public-lands-and-natural-resources",
+      "name": "Public Lands and Natural Resources",
+      "group": "land-water-farming",
+      "status": "current"
+    },
+    {
+      "id": "water-resources-development",
+      "name": "Water Resources Development",
+      "group": "land-water-farming",
+      "status": "current"
+    },
+    {
+      "id": "agriculture-and-food",
+      "name": "Agriculture and Food",
+      "group": "land-water-farming",
+      "status": "current"
+    },
+    {
+      "id": "native-americans",
+      "name": "Native Americans",
+      "group": "land-water-farming",
+      "status": "current"
+    },
+    {
+      "id": "economics-and-public-finance",
+      "name": "Economics and Public Finance",
+      "group": "economy-taxes-trade",
+      "status": "current"
+    },
+    {
+      "id": "taxation",
+      "name": "Taxation",
+      "group": "economy-taxes-trade",
+      "status": "current"
+    },
+    {
+      "id": "commerce",
+      "name": "Commerce",
+      "group": "economy-taxes-trade",
+      "status": "current"
+    },
+    {
+      "id": "finance-and-financial-sector",
+      "name": "Finance and Financial Sector",
+      "group": "economy-taxes-trade",
+      "status": "current"
+    },
+    {
+      "id": "foreign-trade-and-international-finance",
+      "name": "Foreign Trade and International Finance",
+      "group": "economy-taxes-trade",
+      "status": "current"
+    },
+    {
+      "id": "labor-and-employment",
+      "name": "Labor and Employment",
+      "group": "economy-taxes-trade",
+      "status": "current"
+    },
+    {
+      "id": "armed-forces-and-national-security",
+      "name": "Armed Forces and National Security",
+      "group": "defense-foreign-affairs",
+      "status": "current"
+    },
+    {
+      "id": "international-affairs",
+      "name": "International Affairs",
+      "group": "defense-foreign-affairs",
+      "status": "current"
+    },
+    {
+      "id": "health",
+      "name": "Health",
+      "group": "health-social-welfare",
+      "status": "current"
+    },
+    {
+      "id": "social-welfare",
+      "name": "Social Welfare",
+      "group": "health-social-welfare",
+      "status": "current"
+    },
+    {
+      "id": "families",
+      "name": "Families",
+      "group": "health-social-welfare",
+      "status": "current"
+    },
+    {
+      "id": "transportation-and-public-works",
+      "name": "Transportation and Public Works",
+      "group": "transport-housing-emergencies",
+      "status": "current"
+    },
+    {
+      "id": "housing-and-community-development",
+      "name": "Housing and Community Development",
+      "group": "transport-housing-emergencies",
+      "status": "current"
+    },
+    {
+      "id": "emergency-management",
+      "name": "Emergency Management",
+      "group": "transport-housing-emergencies",
+      "status": "current"
+    },
+    {
+      "id": "education",
+      "name": "Education",
+      "group": "education-science-culture",
+      "status": "current"
+    },
+    {
+      "id": "science-technology-communications",
+      "name": "Science, Technology, Communications",
+      "group": "education-science-culture",
+      "status": "current"
+    },
+    {
+      "id": "arts-culture-religion",
+      "name": "Arts, Culture, Religion",
+      "group": "education-science-culture",
+      "status": "current"
+    },
+    {
+      "id": "social-sciences-and-history",
+      "name": "Social Sciences and History",
+      "group": "education-science-culture",
+      "status": "current"
+    },
+    {
+      "id": "sports-and-recreation",
+      "name": "Sports and Recreation",
+      "group": "education-science-culture",
+      "status": "current"
+    },
+    {
+      "id": "crime-and-law-enforcement",
+      "name": "Crime and Law Enforcement",
+      "group": "crime-rights-immigration",
+      "status": "current"
+    },
+    {
+      "id": "civil-rights-and-liberties-minority-issues",
+      "name": "Civil Rights and Liberties, Minority Issues",
+      "group": "crime-rights-immigration",
+      "status": "current"
+    },
+    {
+      "id": "immigration",
+      "name": "Immigration",
+      "group": "crime-rights-immigration",
+      "status": "current"
+    },
+    {
+      "id": "energy",
+      "name": "Energy",
+      "group": "energy-environment",
+      "status": "current"
+    },
+    {
+      "id": "environmental-protection",
+      "name": "Environmental Protection",
+      "group": "energy-environment",
+      "status": "current"
+    },
+    {
+      "id": "animals",
+      "name": "Animals",
+      "group": "energy-environment",
+      "status": "current"
+    },
+    {
+      "id": "commemorations",
+      "name": "Commemorations",
+      "group": "commemorations",
+      "status": "retired"
+    },
+    {
+      "id": "not-classified",
+      "name": null,
+      "group": "not-classified",
+      "status": "none"
+    }
+  ],
+  "groups": [
+    {
+      "id": "government-congress",
+      "label": "Government & Congress"
+    },
+    {
+      "id": "land-water-farming",
+      "label": "Land, water & farming"
+    },
+    {
+      "id": "economy-taxes-trade",
+      "label": "Economy, taxes & trade"
+    },
+    {
+      "id": "defense-foreign-affairs",
+      "label": "Defense & foreign affairs"
+    },
+    {
+      "id": "commemorations",
+      "label": "Commemorations"
+    },
+    {
+      "id": "health-social-welfare",
+      "label": "Health & social welfare"
+    },
+    {
+      "id": "transport-housing-emergencies",
+      "label": "Transport, housing & emergencies"
+    },
+    {
+      "id": "education-science-culture",
+      "label": "Education, science & culture"
+    },
+    {
+      "id": "crime-rights-immigration",
+      "label": "Crime, rights & immigration"
+    },
+    {
+      "id": "energy-environment",
+      "label": "Energy & environment"
+    },
+    {
+      "id": "not-classified",
+      "label": "Not classified"
+    }
+  ]
+}
