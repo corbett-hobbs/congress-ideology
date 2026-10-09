@@ -1,6 +1,5 @@
 "use client";
 
-import { PillGroup } from "@/components/charts/PillGroup";
 import { STAGES, stageVar, type StageCounts } from "@/lib/committee-bills-derive";
 import type { Stage } from "@/lib/committee-bills-types";
 import { fmtInt } from "@/lib/decisions-derive";
@@ -9,25 +8,17 @@ import { FOCUS_RING, pct } from "./shared";
 export type StageView = "stop" | "reach";
 
 /**
- * The six steps as tiles: how many bills stopped at each (or got at least that far), with a bar for the share. They are also the
- * stage filter and the legend for the colours in the charts: a tile picks that stage, a second click clears it.
+ * The six steps as tiles: how many bills stopped at each (their furthest step), with a bar for the share. They are also the
+ * stage filter and the legend for the colours in the charts: a tile picks that stage, a second click clears it. "Got at least
+ * this far" is the flow chart's top row, not a second tile view.
  */
-export function StageTiles({ counts, view, onView, pick, onPick }: { counts: StageCounts; view: StageView; onView: (v: StageView) => void; pick: Stage | null; onPick: (k: Stage | null) => void }) {
+export function StageTiles({ counts, pick, onPick }: { counts: StageCounts; pick: Stage | null; onPick: (k: Stage | null) => void }) {
   const total = counts.reach[1] ?? 0;
-  const n = view === "stop" ? counts.stop : counts.reach;
+  const n = counts.stop;
   return (
     <div>
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+      <div className="mb-2">
         <span className="font-mono text-[0.62rem] uppercase tracking-[0.06em] text-ink-faint">Furthest step reached in this committee</span>
-        <PillGroup
-          ariaLabel="Count bills by"
-          value={view}
-          onChange={onView}
-          options={[
-            { value: "stop", label: "Stopped here", title: "Bills whose furthest step is this one" },
-            { value: "reach", label: "Got this far", title: "Bills that reached at least this step" },
-          ]}
-        />
       </div>
       <div role="group" aria-label="Filter by step" className="grid grid-cols-3 gap-2 lg:grid-cols-6">
         {STAGES.map((s) => {
@@ -47,7 +38,7 @@ export function StageTiles({ counts, view, onView, pick, onPick }: { counts: Sta
               <span className="mt-px block text-[0.72rem] leading-tight text-ink">{s.label}</span>
               <span className="mt-px block text-[0.66rem] tabular-nums text-ink-muted">
                 {pct(v, total)}
-                {s.k === 4 && view === "stop" && counts.discharged > 0 ? ` · ${fmtInt(counts.discharged)} discharged` : ""}
+                {s.k === 4 && counts.discharged > 0 ? ` · ${fmtInt(counts.discharged)} discharged` : ""}
               </span>
               <span aria-hidden className="mt-1.5 block h-1 overflow-hidden rounded-sm bg-line">
                 <i className="block h-full" style={{ width: `${v > 0 ? Math.max((v / (total || 1)) * 100, 2) : 0}%`, background: stageVar(s.k) }} />

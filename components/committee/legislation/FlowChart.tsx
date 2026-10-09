@@ -14,17 +14,17 @@ const NARROW = 760;
 /**
  * Where bills go after referral: a node for the bills that reached each step (top), a band to the next step, and a block for
  * the bills that ended at each step (bottom). Band widths are proportional to counts, drawn at least 1.5px so a handful of
- * bills stays visible. A block is a filter: a "reached" block shows bills that got that far, a bottom block those that ended there.
+ * bills stays visible. A block is a filter: a "reached" block shows bills that got that far, a bottom block those that stopped there.
  */
 export function FlowChart({ counts, pick, view, onPick }: { counts: StageCounts; pick: Stage | null; view: StageView; onPick: (k: Stage | null, v: StageView) => void }) {
   const [ref, measured] = useElementWidth<HTMLDivElement>();
   const width = measured || 960;
   const narrow = width < NARROW;
   const total = counts.reach[1] ?? 0;
-  const height = narrow ? 296 : 330;
+  const height = narrow ? 308 : 330;
   const TOP = narrow ? 38 : 40;
-  const BOTTOM = 34;
-  const layout = useMemo(() => flowLayout(counts, { width, height, top: TOP, bottom: BOTTOM, nodeW: narrow ? 10 : 14, padL: 4, padR: narrow ? 44 : 120 }), [counts, width, height, narrow, TOP]);
+  const BOTTOM = narrow ? 46 : 34;
+  const layout = useMemo(() => flowLayout(counts, { width, height, top: TOP, bottom: BOTTOM, nodeW: narrow ? 10 : 14, padL: 4, padR: narrow ? 44 : 120 }), [counts, width, height, narrow, TOP, BOTTOM]);
   const dim = (kind: "reach" | "stop", k: Stage) => pick !== null && !(pick === k && view === kind) && 0.45;
 
   return (
@@ -34,13 +34,13 @@ export function FlowChart({ counts, pick, view, onPick }: { counts: StageCounts;
           <g>
             {layout.links.map((l) => (
               <path key={l.id} d={l.d} fill={stageVar(l.stage)} opacity={dim(l.kind, l.stage) || 0.38} pointerEvents="none">
-                <title>{`${fmtInt(l.value)} ${l.kind === "reach" ? `reached ${STAGES[l.stage - 1]!.label}` : `ended at ${STAGES[l.stage - 1]!.label}`}`}</title>
+                <title>{`${fmtInt(l.value)} ${l.kind === "reach" ? `reached ${STAGES[l.stage - 1]!.label}` : `stopped at ${STAGES[l.stage - 1]!.label}`}`}</title>
               </path>
             ))}
           </g>
           <g>
             {layout.nodes.map((n) => {
-              const label = n.kind === "reach" ? `${STAGES[n.stage - 1]!.label} or beyond: ${fmtInt(n.value)} (${pct(n.value, total)})` : `Ended at ${STAGES[n.stage - 1]!.label}: ${fmtInt(n.value)} (${pct(n.value, total)})`;
+              const label = n.kind === "reach" ? `${STAGES[n.stage - 1]!.label} or beyond: ${fmtInt(n.value)} (${pct(n.value, total)})` : `Stopped at ${STAGES[n.stage - 1]!.label}: ${fmtInt(n.value)} (${pct(n.value, total)})`;
               const on = pick === n.stage && view === n.kind;
               return (
                 <rect
@@ -98,8 +98,13 @@ export function FlowChart({ counts, pick, view, onPick }: { counts: StageCounts;
                     {narrow ? "" : ` (${pct(n.value, total)})`}
                   </text>
                   <text x={n.x + n.w / 2} y={height - BOTTOM + 26} textAnchor="middle" className="fill-ink-muted text-[11px]">
-                    {narrow ? `at ${STAGES[n.stage - 1]!.short}` : `ended at ${STAGES[n.stage - 1]!.label}`}
+                    {narrow ? "stopped" : `stopped at ${STAGES[n.stage - 1]!.label}`}
                   </text>
+                  {narrow && (
+                    <text x={n.x + n.w / 2} y={height - BOTTOM + 38} textAnchor="middle" className="fill-ink-muted text-[11px]">
+                      {`at ${STAGES[n.stage - 1]!.short}`}
+                    </text>
+                  )}
                 </g>
               ))}
           </g>
@@ -107,7 +112,7 @@ export function FlowChart({ counts, pick, view, onPick }: { counts: StageCounts;
       </div>
       <TableView
         label="Bills by furthest step, as a table"
-        head={["Step", "Stopped here", "Got this far"]}
+        head={["Step", "Stopped here", "Got at least this far"]}
         rows={STAGES.map((s) => [s.label, counts.stop[s.k] ?? 0, counts.reach[s.k] ?? 0])}
       />
     </div>

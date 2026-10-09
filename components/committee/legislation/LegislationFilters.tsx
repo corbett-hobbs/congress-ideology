@@ -5,7 +5,6 @@ import { monthLabel } from "@/lib/committee-bills-derive";
 import { STAGES } from "@/lib/committee-bills-derive";
 import type { CommitteeBillsPayload } from "@/lib/committee-bills-types";
 import { FOCUS_RING } from "./shared";
-import type { StageView } from "./StageTiles";
 
 const FIELD = `h-[1.85rem] rounded-md border border-line-strong bg-surface-raised px-2.5 text-[0.8rem] text-ink ${FOCUS_RING}`;
 const LABEL = "font-mono text-[0.6rem] uppercase tracking-[0.06em] text-ink-faint";
@@ -30,16 +29,14 @@ function Chip({ children, onClear, label }: { children: string; onClear: () => v
 export function LegislationFilters({
   payload,
   filter,
-  view,
   onChange,
 }: {
   payload: Pick<CommitteeBillsPayload, "areas" | "subs">;
   filter: BillFilter;
-  view: StageView;
   onChange: (patch: Partial<BillFilter>) => void;
 }) {
   const chips: { key: string; text: string; clear: Partial<BillFilter>; label: string }[] = [];
-  if (filter.stage) chips.push({ key: "stage", text: `${view === "stop" ? "Stopped at" : "Reached"}: ${STAGES[filter.stage.k - 1]!.label}`, clear: { stage: null }, label: "Clear the step filter" });
+  if (filter.stage) chips.push({ key: "stage", text: `${filter.stage.mode === "stop" ? "Stopped at" : "Reached"}: ${STAGES[filter.stage.k - 1]!.label}`, clear: { stage: null }, label: "Clear the step filter" });
   if (filter.month) chips.push({ key: "month", text: `Referred ${monthLabel(filter.month)}`, clear: { month: null }, label: "Clear the month" });
   if (filter.party) chips.push({ key: "party", text: filter.party === "R" ? "Republican sponsor" : "Democratic sponsor", clear: { party: "" }, label: "Clear the sponsor party" });
   if (filter.bipartisan) chips.push({ key: "bip", text: "Both parties cosponsor", clear: { bipartisan: false }, label: "Clear the bipartisan filter" });

@@ -41,15 +41,11 @@ export function CommitteeLegislation({ summary }: { summary: CommitteeBillsSumma
 
 function Loaded({ payload }: { payload: CommitteeBillsPayload }) {
   const [filter, setFilter] = useState<BillFilter>(NO_FILTER);
-  const [view, setView] = useState<StageView>("stop");
   const [sort, setSort] = useState<SortId>("new");
   const patch = useCallback((p: Partial<BillFilter>) => setFilter((f) => ({ ...f, ...p })), []);
   const pick = filter.stage?.k ?? null;
-  const setPick = useCallback((k: Stage | null, v?: StageView) => setFilter((f) => ({ ...f, stage: k === null ? null : { k, mode: v ?? "stop" } })), []);
-  const applyView = (v: StageView) => {
-    setView(v);
-    setFilter((f) => (f.stage ? { ...f, stage: { ...f.stage, mode: v } } : f));
-  };
+  const view: StageView = filter.stage?.mode ?? "stop";
+  const setPick = useCallback((k: Stage | null, v: StageView = "stop") => setFilter((f) => ({ ...f, stage: k === null ? null : { k, mode: v } })), []);
 
   const prepared = useMemo(() => prepareBills(payload), [payload]);
   // The tiles and the flow ignore the stage filter (they are how it is picked), the month chart ignores the month.
@@ -78,8 +74,8 @@ function Loaded({ payload }: { payload: CommitteeBillsPayload }) {
           </>
         }
       >
-        <StageTiles counts={counts} view={view} onView={applyView} pick={pick} onPick={(k) => setPick(k, view)} />
-        <LegislationFilters payload={payload} filter={filter} view={view} onChange={patch} />
+        <StageTiles counts={counts} pick={view === "stop" ? pick : null} onPick={(k) => setPick(k, "stop")} />
+        <LegislationFilters payload={payload} filter={filter} onChange={patch} />
         <div className="mb-1 mt-5 flex flex-wrap items-baseline justify-between gap-x-3">
           <span className="font-mono text-[0.62rem] uppercase tracking-[0.06em] text-ink-faint">Referred each month, by furthest step</span>
           <span className="text-[0.72rem] text-ink-muted">Select a month to filter</span>
@@ -100,11 +96,11 @@ function Loaded({ payload }: { payload: CommitteeBillsPayload }) {
         title="Where do bills go after referral?"
         lede={
           <>
-            Each band is a group of bills moving to the next step or ending. Blocks along the bottom show where bills ended. Of the <b className="font-semibold text-ink">{fmtInt(counts.reach[1] ?? 0)}</b> bills{narrowed ? " in the current selection" : ""}, <b className="font-semibold text-ink">{fmtInt(counts.reach[4] ?? 0)}</b> left committee and <b className="font-semibold text-ink">{fmtInt(counts.reach[6] ?? 0)}</b> became law. Select a block to filter the list above.
+            Each band is a group of bills moving to the next step or ending. Blocks along the bottom show where bills stopped, with no further step recorded. Of the <b className="font-semibold text-ink">{fmtInt(counts.reach[1] ?? 0)}</b> bills{narrowed ? " in the current selection" : ""}, <b className="font-semibold text-ink">{fmtInt(counts.reach[4] ?? 0)}</b> left committee and <b className="font-semibold text-ink">{fmtInt(counts.reach[6] ?? 0)}</b> became law. Select a block to filter the list above.
           </>
         }
       >
-        <FlowChart counts={counts} pick={pick} view={view} onPick={(k, v) => (k === null ? setPick(null) : (setView(v), setPick(k, v)))} />
+        <FlowChart counts={counts} pick={pick} view={view} onPick={(k, v) => setPick(k, v)} />
         <MethodologyNote>
           <p>
             The steps are the stage tiles’. A bill counts as having reached a step only if it is recorded as reaching it, so a bill marked up with no recorded hearing counts at “Markup” but not “Hearing”. A bill that passed the chamber without a report from this committee (another committee handled it, or it was discharged) is counted at “Passed chamber”. Bands follow every filter above except the step. Source: GovInfo Bill Status.
