@@ -70,6 +70,11 @@ export function BillRow({ b, payload, open, onToggle }: { b: PreparedBill; paylo
           {`Law ${r.l.replace("-", "–")}`}
         </span>
       )}
+      {r.y && (
+        <span className={`${BADGE} border-dashed`} title={`This bill did not become law on its own; it was enacted as part of ${billLabel({ b: r.y[1], n: r.y[2] })} (Public Law ${r.y[0]}).`}>
+          {`In ${billLabel({ b: r.y[1], n: r.y[2] })}`}
+        </span>
+      )}
       {r.v === 1 && <span className={BADGE}>Vetoed</span>}
       {r.d && !r.p && <span className={BADGE}>Discharged</span>}
       {bypass && (
@@ -84,7 +89,7 @@ export function BillRow({ b, payload, open, onToggle }: { b: PreparedBill; paylo
       )}
     </>
   );
-  const latest = r.z ? { date: r.z[0], text: r.z[1] } : { date: r.r, text: "Referred" };
+  const latest = r.y && r.z ? { date: r.z[0], text: `Enacted as part of ${billLabel({ b: r.y[1], n: r.y[2] })} (Pub. L. ${r.y[0].replace("-", "–")})` } : r.z ? { date: r.z[0], text: r.z[1] } : { date: r.r, text: "Referred" };
   return (
     <li className="border-b border-line last:border-b-0">
       <button type="button" aria-expanded={open} aria-controls={panel} onClick={onToggle} className={`block w-full px-3 py-2.5 text-left text-[0.82rem] hover:bg-surface-raised ${ROW_GRID} lg:items-start ${FOCUS_RING}`}>
@@ -166,6 +171,11 @@ function BillDetail({ id, b, payload, sponsor }: { id: string; b: PreparedBill; 
             "none"
           )}
         </div>
+        {r.y && (
+          <div>
+            Became law as part of {billLabel({ b: r.y[1], n: r.y[2] })} (Public Law {r.y[0].replace("-", "–")}); this bill was not signed on its own, so its stage here is unchanged.
+          </div>
+        )}
         <div>Introduced {fmtDate(r.i)}</div>
         {r.a !== undefined && <div>Policy area: {payload.areas[r.a]}</div>}
         {subs.length > 0 && <div>Subcommittee: {subs.join(", ")}</div>}

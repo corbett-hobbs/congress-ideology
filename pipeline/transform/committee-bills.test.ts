@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { committeeBillsMeta, committeeBillsShard, type RawBill } from "../../lib/committee-bills-entities";
-import { billFacts, buildShards, checkLaws, committeeEvents, committeeIdOf, dataThrough, orderedVote, parseSponsorName, subcommitteeIdOf } from "./committee-bills";
+import { billFacts, buildShards, checkLaws, committeeEvents, committeeIdOf, dataThrough, enactedElsewhere, orderedVote, parseSponsorName, subcommitteeIdOf } from "./committee-bills";
 
 const COMMITTEES = [
   { committee_id: "HSII", chamber: "house" as const },
@@ -187,5 +187,28 @@ describe("committed output", () => {
   });
   it("only calls a bill a calendar placement after it was reported or discharged", () => {
     for (const s of shards) for (const r of s.rows) if (r.k) expect(!!(r.p || r.d)).toBe(true);
+  });
+});
+
+describe("enactedElsewhere", () => {
+  const vehicles = new Map([["119-37", { b: "hr" as const, n: "5371" }]]);
+  const rolled = (over: Partial<RawBill> = {}) => bill({ number: "3944", laws: [], latest_action: { date: "2025-11-12", text: "Became Public Law No: 119-37." }, ...over });
+
+  it("points a bill with no law of its own at the bill that is the law", () => {
+    expect(enactedElsewhere(rolled(), vehicles)).toEqual(["119-37", "hr", "5371"]);
+  });
+  it("ignores a bill that carries a law, the vehicle itself, an unknown law and other wording", () => {
+    expect(enactedElsewhere(rolled({ laws: ["119-37"] }), vehicles)).toBeUndefined();
+    expect(enactedElsewhere(rolled({ number: "5371" }), vehicles)).toBeUndefined();
+    expect(enactedElsewhere(rolled(), new Map())).toBeUndefined();
+    expect(enactedElsewhere(rolled({ latest_action: { date: "2025-11-12", text: "Referred to the Committee." } }), vehicles)).toBeUndefined();
+  });
+  it("is written to the row and counted, without making the bill a law of its own", () => {
+    const { shards, report } = buildShards([rolled()], 119, COMMITTEES, SUBS, vehicles);
+    const row = shards.get("HSII")!.rows[0]!;
+    expect(row.y).toEqual(["119-37", "hr", "5371"]);
+    expect(row.l).toBeUndefined();
+    expect(report.enacted_elsewhere).toBe(2); // counted per committee row (the bill sits in two committees)
+    expect(report.law_numbers).toEqual([]);
   });
 });
