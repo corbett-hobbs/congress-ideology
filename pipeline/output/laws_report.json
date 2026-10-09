@@ -236,7 +236,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 498,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -249,7 +249,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 482,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [
         "109-pub-295: Bill Status also lists 107-295 on HR 5441 of Congress 109; read as 109-295"
       ],
@@ -264,7 +264,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 460,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [
         "110-pub-173: Bill Status also lists 108-173 on S 2499 of Congress 110; read as 110-173",
         "110-pub-246: Bill Status also lists 106-246 on HR 6124 of Congress 110; read as 110-246"
@@ -280,7 +280,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 383,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -293,7 +293,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 283,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -306,7 +306,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 296,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -319,7 +319,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 329,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -332,7 +332,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 442,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -345,7 +345,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 344,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -358,7 +358,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 362,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -371,7 +371,7 @@
       "list_rows_beyond_laws": null,
       "independent_count": 274,
       "pending_without_signing_date": [],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     },
@@ -386,7 +386,7 @@
       "pending_without_signing_date": [
         "119-pub-120"
       ],
-      "fetched": "2026-10-08",
+      "fetched": "2026-10-09",
       "source_corrections": [],
       "multiple_became_law_dates": []
     }
@@ -1193,6 +1193,132 @@
       "100-pub-484 House 1988-10-06 roll 431"
     ],
     "veto_overrides_without_both_override_votes": []
+  },
+  "summaries": {
+    "rule": "The first sentence of the CRS summary of the enacted version (else the latest), the law's name and the (Measure passed ...) stage notes cut off, 'This act ...' turned into the verb, kept only as one finished sentence of 40-300 characters; otherwise none.",
+    "by_decade": {
+      "1970s": {
+        "laws": 2485,
+        "with_sentence": 1918,
+        "too-long": 551,
+        "too-short": 8,
+        "unfinished": 8,
+        "fill": "77%"
+      },
+      "1980s": {
+        "laws": 3123,
+        "with_sentence": 2621,
+        "too-long": 500,
+        "unfinished": 1,
+        "too-short": 1,
+        "fill": "84%"
+      },
+      "1990s": {
+        "laws": 2362,
+        "with_sentence": 1540,
+        "too-long": 591,
+        "table-of-contents": 218,
+        "unfinished": 13,
+        "fill": "65%"
+      },
+      "2000s": {
+        "laws": 2200,
+        "with_sentence": 1475,
+        "too-long": 711,
+        "unfinished": 6,
+        "too-short": 8,
+        "fill": "67%"
+      },
+      "2010s": {
+        "laws": 1694,
+        "with_sentence": 1139,
+        "too-long": 549,
+        "unfinished": 4,
+        "too-short": 2,
+        "fill": "67%"
+      },
+      "2020s": {
+        "laws": 755,
+        "with_sentence": 698,
+        "too-long": 56,
+        "empty": 1,
+        "fill": "92%"
+      }
+    },
+    "length_median": 162,
+    "length_p90": 259
+  },
+  "major_laws": {
+    "source": "David R. Mayhew, Divided We Govern (2nd ed., 2005) Table 4.1, and his updates of the important-enactments lists",
+    "covered_through_congress": 118,
+    "entries": 300,
+    "entries_without_a_public_law": [
+      "95-10 Panama Canal treaties ratified",
+      "100-11 Intermediate-Range Nuclear-Force (INF) treaty ratified",
+      "102-05 Strategic Arms Reduction Treaty ratified",
+      "105-02 Chemical Weapons Convention ratified",
+      "105-07 NATO expansion ratified",
+      "111-13 New START treaty ratified"
+    ],
+    "entries_matched": 294,
+    "join_share": 1,
+    "entries_naming_part_of_a_law": 37,
+    "entries_naming_several_laws": [
+      "95-09: 95-pub-617, 95-pub-618, 95-pub-619, 95-pub-620, 95-pub-621",
+      "105-01: 105-pub-33, 105-pub-34",
+      "110-09: 110-pub-234, 110-pub-246",
+      "112-03: 112-pub-41, 112-pub-42, 112-pub-43",
+      "113-01: 113-pub-1, 113-pub-2",
+      "115-02: 115-pub-4, 115-pub-5, 115-pub-8, 115-pub-11, 115-pub-12, 115-pub-13, 115-pub-14, 115-pub-17, 115-pub-20, 115-pub-21, 115-pub-22, 115-pub-23, 115-pub-24, 115-pub-35, 115-pub-74, 115-pub-172",
+      "115-04: 115-pub-56, 115-pub-72, 115-pub-123",
+      "116-01: 116-pub-93, 116-pub-94",
+      "117-08: 117-pub-103, 117-pub-128, 117-pub-180, 117-pub-328"
+    ],
+    "major_laws": 307,
+    "laws_named_by_more_than_one_entry": [
+      "101-pub-508: 101-03, 101-06",
+      "103-pub-66: 103-01, 103-06",
+      "109-pub-432: 109-11, 109-12",
+      "110-pub-343: 110-07, 110-13",
+      "113-pub-235: 113-09, 113-10",
+      "114-pub-113: 114-07, 114-08",
+      "115-pub-97: 115-01, 115-05, 115-06",
+      "115-pub-123: 115-04, 115-07",
+      "116-pub-260: 116-11, 116-14, 116-15",
+      "117-pub-2: 117-01, 117-03",
+      "117-pub-328: 117-08, 117-13",
+      "118-pub-50: 118-01, 118-02, 118-03, 118-04",
+      "118-pub-158: 118-07, 118-08"
+    ],
+    "entries_by_congress": {
+      "93": 22,
+      "94": 14,
+      "95": 12,
+      "96": 10,
+      "97": 9,
+      "98": 7,
+      "99": 9,
+      "100": 12,
+      "101": 9,
+      "102": 8,
+      "103": 12,
+      "104": 15,
+      "105": 9,
+      "106": 6,
+      "107": 16,
+      "108": 10,
+      "109": 14,
+      "110": 13,
+      "111": 16,
+      "112": 7,
+      "113": 10,
+      "114": 12,
+      "115": 12,
+      "116": 15,
+      "117": 13,
+      "118": 8
+    },
+    "laws_not_yet_assessed": 119
   },
   "veto_overrides": [
     "93-pub-148 1973-11-07",

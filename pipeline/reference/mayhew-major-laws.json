@@ -1,0 +1,3766 @@
+{
+ "_comment": "David R. Mayhew's lists of important congressional enactments, 93rd-118th Congress, hand-extracted: one row per list entry, with the law(s) it names matched by hand (his lists give a title and a year or month, never a Public Law number). 'quote' is the entry's opening, verbatim from the list file (the 1991-2002 table is two columns, so a few quotes stop where the columns interleave). 'marks': in Table 4.1 (1947-1990) * = listed from the newspaper wrapups ('Sweep One') and # = from retrospective policy analyses ('Sweep Two'); 'capitals' = he printed it in capitals, meaning especially important. 'scope': whole = the entry is the law; part = the entry is a provision or division of a larger law (the law is counted as major, flagged as a provision); none = it is not a public law (a Senate treaty ratification). The Congress.gov law numbers were read from the Congress.gov titles; `pnpm transform` checks every id exists in the right Congress. Update when Mayhew publishes the next list (the freshness job warns when a Congress has ended with no list).",
+ "source": {
+  "author": "David R. Mayhew",
+  "title": "Divided We Govern (2nd ed., 2005) Table 4.1, and his updates of the important-enactments lists",
+  "url": "https://campuspress.yale.edu/davidmayhew/datasets-divided-we-govern/",
+  "files_read": "2026-10-08",
+  "licence": "none stated on the page; cited and credited (docs/CREDITS.md)"
+ },
+ "first_congress": 93,
+ "covered_through_congress": 118,
+ "entries": [
+  {
+   "entry_id": "93-01",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": true,
+   "quote": "WAR POWERS ACT OF 1973. Limited president’s authority to commit U.S. troops in combat. Enacted over Nixon’s veto.",
+   "law_ids": [
+    "93-pub-148"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-02",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Federal Aid Highway Act of 1973. Opened up Highway Trust Fund to mass-transit projects.",
+   "law_ids": [
+    "93-pub-87"
+   ],
+   "scope": "whole",
+   "note": "Federal-Aid Highway Act of 1973 (S. 502)"
+  },
+  {
+   "entry_id": "93-03",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Agriculture and Consumer Protection Act of 1973. Shift to “target price” formula to subsidize commodity growers.",
+   "law_ids": [
+    "93-pub-86"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-04",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Comprehensive Employment and Training Act (CETA) of 1973. Reorganized manpower programs via Nixonian block grants. Continued public-service employment as CETA jobs.",
+   "law_ids": [
+    "93-pub-203"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-05",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Social Security increase. Two-step 11% hike. 1973.",
+   "law_ids": [
+    "93-pub-233"
+   ],
+   "scope": "whole",
+   "note": "the 7% (March 1974) and 4% (June 1974) increases"
+  },
+  {
+   "entry_id": "93-06",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "District of Columbia Home Rule. Mayor and council. 1973.",
+   "law_ids": [
+    "93-pub-198"
+   ],
+   "scope": "whole",
+   "note": "District of Columbia Self-Government and Governmental Reorganization Act"
+  },
+  {
+   "entry_id": "93-07",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Trans-Alaskan pipeline authorized. 1973.",
+   "law_ids": [
+    "93-pub-153"
+   ],
+   "scope": "whole",
+   "note": "Trans-Alaska Pipeline Authorization Act is title II of 93-153"
+  },
+  {
+   "entry_id": "93-08",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Foreign Assistance Act of 1973. Major shift in direction. Aid to go to poorest populations in poorest countries.",
+   "law_ids": [
+    "93-pub-189"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-09",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Regional Rail Reorganization Act of 1973. Bankrupt northeastern-quadrant railroads consolidated into Conrail.",
+   "law_ids": [
+    "93-pub-236"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-10",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Aid for development of Health Maintenance Organizations (HMOs). Also defined their form and activities. 1973.",
+   "law_ids": [
+    "93-pub-222"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-11",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Emergency Petroleum Allocation Act of 1973. Called for a mandatory allocation program for oil and oil products.",
+   "law_ids": [
+    "93-pub-159"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-12",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Trade Act of 1974. Major rewrite. For 5 years. Free Jewish immigration to be a bargaining point with USSR.",
+   "law_ids": [
+    "93-pub-618"
+   ],
+   "scope": "whole",
+   "note": "signed 1975-01-03"
+  },
+  {
+   "entry_id": "93-13",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Employment Retirement Income Security Act (ERISA) of 1974. Landmark guarantee of pension rights in private systems.",
+   "law_ids": [
+    "93-pub-406"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-14",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Federal Election Campaign Act of 1974. The basic law: limits on contributions and spending, full disclosure, public funding of presidential elections, the FEC.",
+   "law_ids": [
+    "93-pub-443"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-15",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Minimum wage increase. To $2.30 in 3 stages, plus coverage of 7 million new workers. 1974.",
+   "law_ids": [
+    "93-pub-259"
+   ],
+   "scope": "whole",
+   "note": "Fair Labor Standards Amendments of 1974"
+  },
+  {
+   "entry_id": "93-16",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Congressional Budget and Impoundment Control Act of 1974. New congressional budget system, curbs on impoundment.",
+   "law_ids": [
+    "93-pub-344"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-17",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Freedom of Information Act Amendments of 1974. Beefed up earlier act to insure public access to government records—e.g., FBI files. Enacted over Ford’s veto.",
+   "law_ids": [
+    "93-pub-502"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-18",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Nuclear Regulatory Commission (NRC) and Energy Research & Development Administration (ERDA) created. AEC killed. 1974.",
+   "law_ids": [
+    "93-pub-438"
+   ],
+   "scope": "whole",
+   "note": "Energy Reorganization Act of 1974"
+  },
+  {
+   "entry_id": "93-19",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Magnuson-Moss product warranty act. Gave FTC power to set industry-wide rules vs. unfair business practices. 1974.",
+   "law_ids": [
+    "93-pub-637"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-20",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "National Health Planning and Resources Development Act of 1974. New national network of local planning agencies.",
+   "law_ids": [
+    "93-pub-641"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-21",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "National Mass Transportation Assistance Act of 1974. $11 billion. Funds for operating costs, for first time.",
+   "law_ids": [
+    "93-pub-503"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "93-22",
+   "congress": 93,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Housing and Community Development Act of 1974. Switch to block grants, direct rent subsidies.",
+   "law_ids": [
+    "93-pub-383"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-01",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Energy Policy and Conservation Act of 1975. Oil price control now, but phased decontrol later.",
+   "law_ids": [
+    "94-pub-163"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-02",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Voting Rights Act extension. For 7 years; language minorities added to coverage. 1975.",
+   "law_ids": [
+    "94-pub-73"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-03",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "New York City bailout. $2.3 billion in federal loans to stave off default. 1975.",
+   "law_ids": [
+    "94-pub-143"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-04",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Repeal of fair-trade laws. That is, 40-year-old state laws allowing manufacturer-dealer price fixing. 1975.",
+   "law_ids": [
+    "94-pub-145"
+   ],
+   "scope": "whole",
+   "note": "Consumer Goods Pricing Act of 1975"
+  },
+  {
+   "entry_id": "94-05",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Tax Reduction Act of 1975. Anti-recession move. Repealed the oil depletion allowance (for large firms).",
+   "law_ids": [
+    "94-pub-12"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-06",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Securities Act Amendments of 1975. Broad reform of securities regulation; some deregulation.",
+   "law_ids": [
+    "94-pub-29"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-07",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Unemployment compensation overhaul. Revised finances; coverage for 8.5 million new workers. 1976.",
+   "law_ids": [
+    "94-pub-566"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-08",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Copyright law revision. Major rewrite, to cover photocopying, cable-TV royalties, etc. 1976.",
+   "law_ids": [
+    "94-pub-553"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-09",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Toxic substances control act. Required chemical firms to test risky products. Banned PCBs. 1976.",
+   "law_ids": [
+    "94-pub-469"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-10",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Tax Reform Act of 1976. Concerted rewrite of schedule.",
+   "law_ids": [
+    "94-pub-455"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-11",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Railroad Vitalization and Regulatory Reform Act of 1976. New subsidies and a move toward deregulation.",
+   "law_ids": [
+    "94-pub-210"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-12",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "National Forest Management Act of 1976 (NFMA). Commitment to strenuous planning. Rules about clear-cutting.",
+   "law_ids": [
+    "94-pub-588"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-13",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Federal Land Policy and Management Act (FLPMA) of 1976. Gave Bureau of Land Management permanent authority to manage public lands. A cause of Sagebrush Rebellion.",
+   "law_ids": [
+    "94-pub-579"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "94-14",
+   "congress": 94,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Resource Conservation and Recovery Act of 1976. Cradle-to-grave EPA regulation of hazardous wastes.",
+   "law_ids": [
+    "94-pub-580"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "95-01",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Social Security tax increase. To raise additional $227 billion over 10 years. 1977.",
+   "law_ids": [
+    "95-pub-216"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "95-02",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Tax cut. 3-year stimulus package. 1977.",
+   "law_ids": [
+    "95-pub-30"
+   ],
+   "scope": "whole",
+   "note": "Tax Reduction and Simplification Act of 1977"
+  },
+  {
+   "entry_id": "95-03",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Minimum wage hike. To $3.35 in 4 stages. 1977.",
+   "law_ids": [
+    "95-pub-151"
+   ],
+   "scope": "whole",
+   "note": "Fair Labor Standards Amendments of 1977"
+  },
+  {
+   "entry_id": "95-04",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Surface Mining Control and Reclamation Act of 1977. New standards for strip mining.",
+   "law_ids": [
+    "95-pub-87"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "95-05",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Food and Agriculture Act of 1977. Higher commodity subsidies; revised and expanded food stamp program.",
+   "law_ids": [
+    "95-pub-113"
+   ],
+   "scope": "whole",
+   "note": "Food and Agriculture Act of 1977 (the Food Stamp Act of 1977 is its title XIII)"
+  },
+  {
+   "entry_id": "95-06",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Clean Water Act of 1977. Standards relaxed. $24.5 billion more for sewage treatment construction.",
+   "law_ids": [
+    "95-pub-217"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "95-07",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Clean Air Act Amendments of 1977. Standards relaxed.",
+   "law_ids": [
+    "95-pub-95"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "95-08",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Tax revision. Cut corporate, capital-gains taxes. 1978.",
+   "law_ids": [
+    "95-pub-600"
+   ],
+   "scope": "whole",
+   "note": "Revenue Act of 1978"
+  },
+  {
+   "entry_id": "95-09",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Comprehensive energy package. Conservation provisions; phased decontrol of natural gas prices. A shadow of Carter’s April 1977 omnibus plan. 1978.",
+   "law_ids": [
+    "95-pub-617",
+    "95-pub-618",
+    "95-pub-619",
+    "95-pub-620",
+    "95-pub-621"
+   ],
+   "scope": "whole",
+   "note": "the five laws of the National Energy Act of 1978"
+  },
+  {
+   "entry_id": "95-10",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Panama Canal treaties ratified. U.S. control to end. 1978.",
+   "law_ids": [],
+   "scope": "none",
+   "note": "Senate ratification of treaties; no public law"
+  },
+  {
+   "entry_id": "95-11",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Civil Service Reform Act of 1978. Extensive revamping. Carter plan to inject merit into pay system.",
+   "law_ids": [
+    "95-pub-454"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "95-12",
+   "congress": 95,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Airline deregulation. Decontrol of routes, fares. 1978.",
+   "law_ids": [
+    "95-pub-504"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "96-01",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Chrysler Corporation bailout. $3.5 billion aid package to ward off bankruptcy. 1979.",
+   "law_ids": [
+    "96-pub-185"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "96-02",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Foreign trade act extension. Approved Tokyo Round non-tariff barrier reductions. 1979.",
+   "law_ids": [
+    "96-pub-39"
+   ],
+   "scope": "whole",
+   "note": "Trade Agreements Act of 1979"
+  },
+  {
+   "entry_id": "96-03",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Department of Education established. 1979.",
+   "law_ids": [
+    "96-pub-88"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "96-04",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Depository Institutions and Monetary Control Act of 1980. Banking deregulation. Removed most distinctions between commercial banks and savings-and-loans units.",
+   "law_ids": [
+    "96-pub-221"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "96-05",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Trucking deregulation. Greater pricing freedom, end of some antitrust immunities. 1980.",
+   "law_ids": [
+    "96-pub-296"
+   ],
+   "scope": "whole",
+   "note": "Motor Carrier Act of 1980"
+  },
+  {
+   "entry_id": "96-06",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Staggers Rail Act of 1980. More deregulation.",
+   "law_ids": [
+    "96-pub-448"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "96-07",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Windfall profits tax on oil. Carter’s plan; to bring in $227 billion over a decade. 1980.",
+   "law_ids": [
+    "96-pub-223"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "96-08",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Synthetic fuels program. Carter’s $88 billion plan to spur development of a private industry. 1980.",
+   "law_ids": [
+    "96-pub-294"
+   ],
+   "scope": "whole",
+   "note": "Energy Security Act"
+  },
+  {
+   "entry_id": "96-09",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Alaska lands preservation. Curbed future development of over 100 million acres of federal holdings. 1980.",
+   "law_ids": [
+    "96-pub-487"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "96-10",
+   "congress": 96,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Toxic wastes Superfund. $1.6 billion fund, largely from levies on industry, to clean up chemical dumps. 1980.",
+   "law_ids": [
+    "96-pub-510"
+   ],
+   "scope": "whole",
+   "note": "CERCLA"
+  },
+  {
+   "entry_id": "97-01",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": true,
+   "quote": "ECONOMIC RECOVERY TAX ACT OF 1981. Reagan’s plan. Largest tax cut in U.S. history; $749 billion over 5 years. Individual income tax cuts of 5%, 10%, and 10% percent over three years; indexing of tax brackets to offset inflation; cuts in corporate taxes.",
+   "law_ids": [
+    "97-pub-34"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "97-02",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": true,
+   "quote": "OMNIBUS BUDGET RECONCILIATION ACT OF 1981 (OBRA; GRAMM-LATTA II). Stockman plan to slash domestic spending, permanently, by revising authorization blueprints. Cuts for fiscal 1982 to total $35.2 billion. To affect disability benefits, Medicare, Medicaid, AFDC payments, subsidized housing, health programs, food stamps, unemployment insurance, CETA jobs, student loans, medical education, sewer grants, postal subsidies, trade adjustment assistance, small business loans, mass transit systems, highway funds, Conrail, Amtrak, and more.",
+   "law_ids": [
+    "97-pub-35"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "97-03",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Agriculture and Food Act of 1982. 4-year subsidy plan.",
+   "law_ids": [
+    "97-pub-98"
+   ],
+   "scope": "whole",
+   "note": "Agriculture and Food Act of 1981, enacted 1981-12-22; Mayhew dates it 1982"
+  },
+  {
+   "entry_id": "97-04",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Transportation Assistance Act of 1982. $71 billion for highway construction, road repairs, mass transit. Raised the gasoline tax.",
+   "law_ids": [
+    "97-pub-424"
+   ],
+   "scope": "whole",
+   "note": "Surface Transportation Assistance Act of 1982, signed 1983-01-06"
+  },
+  {
+   "entry_id": "97-05",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Tax Equity and Fiscal Responsibility Act of 1982. 3-year deficit-reducing plan to raise taxes by $98.3 billion, cut welfare and entitlements spending by $17.5 billion.",
+   "law_ids": [
+    "97-pub-248"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "97-06",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Voting Rights Act extension. For 25 years. 1982.",
+   "law_ids": [
+    "97-pub-205"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "97-07",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Nuclear waste repository act. Underground dumps. 1982.",
+   "law_ids": [
+    "97-pub-425"
+   ],
+   "scope": "whole",
+   "note": "signed 1983-01-07"
+  },
+  {
+   "entry_id": "97-08",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Garn-St. Germain Depository Institutions Act of 1982. Part deregulation, part support of savings and loans.",
+   "law_ids": [
+    "97-pub-320"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "97-09",
+   "congress": 97,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Job Training Partnership Act of 1982. Dan Quayle’s bill.",
+   "law_ids": [
+    "97-pub-300"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "98-01",
+   "congress": 98,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Martin Luther King’s birthday declared a legal holiday. 1983.",
+   "law_ids": [
+    "98-pub-144"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "98-02",
+   "congress": 98,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Social Security Act Amendments of 1983. $170 billion bipartisan package of tax increases and benefit cuts to stave off system insolvency.",
+   "law_ids": [
+    "98-pub-21"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "98-03",
+   "congress": 98,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Anti-recession jobs measure. $4.6 billion. 1983.",
+   "law_ids": [
+    "98-pub-8"
+   ],
+   "scope": "whole",
+   "note": "Emergency Jobs Appropriations Act, FY1983 (H.R. 1718)"
+  },
+  {
+   "entry_id": "98-04",
+   "congress": 98,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Anti-crime package. Criminal code revision addressing insanity defense, sentencing procedures, pretrial detention, computer tampering, credit card fraud, etc. 1984.",
+   "law_ids": [
+    "98-pub-473"
+   ],
+   "scope": "part",
+   "note": "Comprehensive Crime Control Act of 1984 is title II of the continuing appropriations resolution"
+  },
+  {
+   "entry_id": "98-05",
+   "congress": 98,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Deficit reduction measure. Spending cuts of $13 billion, new taxes worth $50 billion, through fiscal 1987. 1984.",
+   "law_ids": [
+    "98-pub-369"
+   ],
+   "scope": "whole",
+   "note": "Deficit Reduction Act of 1984"
+  },
+  {
+   "entry_id": "98-06",
+   "congress": 98,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Trade and Tariff Act of 1984. Extension of authority.",
+   "law_ids": [
+    "98-pub-573"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "98-07",
+   "congress": 98,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#",
+   "capitals": false,
+   "quote": "Cable Communications Policy Act of 1984. Rearrangement of cable-TV regulation.",
+   "law_ids": [
+    "98-pub-549"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "99-01",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Gramm-Rudman-Hollings anti-deficit act. Move to balance the budtet by 1990 through automatic spending cuts. 1985.",
+   "law_ids": [
+    "99-pub-177"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "99-02",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Food Security Act of 1985. Record commodity subsidies--$52 billion over 3 years.",
+   "law_ids": [
+    "99-pub-198"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "99-03",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": true,
+   "quote": "TAX REFORM ACT OF 1986. Sweeping revision. 14 tax brackets collapsed into 2; many breaks eliminated; rates sharply cut; shift from individual to corporate taxes.",
+   "law_ids": [
+    "99-pub-514"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "99-04",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Immigration Reform and Control Act of 1986 (IRCA). Hiring of illegal aliens outlawed. Amnesty offered to illegals in U.S. since 1982.",
+   "law_ids": [
+    "99-pub-603"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "99-05",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "South Africa sanctions. Banned all new U.S. investment there, some key imports. Over Reagan’s veto. 1986.",
+   "law_ids": [
+    "99-pub-440"
+   ],
+   "scope": "whole",
+   "note": "Comprehensive Anti-Apartheid Act of 1986, over veto"
+  },
+  {
+   "entry_id": "99-06",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Anti-narcotics measure. $1.7 billion for enforcement, education, treatment. Stiffer penalties. 1986.",
+   "law_ids": [
+    "99-pub-570"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "99-07",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Cleanup of toxic waste dumps. Major expansion of Superfund. New standards, new taxes, $9.6 billion. 1986.",
+   "law_ids": [
+    "99-pub-499"
+   ],
+   "scope": "whole",
+   "note": "Superfund Amendments and Reauthorization Act of 1986"
+  },
+  {
+   "entry_id": "99-08",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Omnibus water projects act. First such act since 1976. $16.3 billion, 262 projects, users to share costs. 1986.",
+   "law_ids": [
+    "99-pub-662"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "99-09",
+   "congress": 99,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "#*",
+   "capitals": false,
+   "quote": "Goldwater-Nichols Reorganization Act of 1986 (Defense Department). Authority shifted from the services to coordinators—e.g., chairman of the Joint Chiefs.",
+   "law_ids": [
+    "99-pub-433"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-01",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Water Quality Act of 1987. $18 billion to sewage treatment plants, etc. Over Reagan’s veto.",
+   "law_ids": [
+    "100-pub-4"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-02",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Surface Transportation Act of 1987. $88 billion for highways, mass transit. Over Reagan’s veto.",
+   "law_ids": [
+    "100-pub-17"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-03",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Deficit reduction measure. 2-year $40 billion package of spending cuts, tax increases, sales of assets. 1987.",
+   "law_ids": [
+    "100-pub-203"
+   ],
+   "scope": "whole",
+   "note": "Omnibus Budget Reconciliation Act of 1987"
+  },
+  {
+   "entry_id": "100-04",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Housing and community development act. First housing authorization since 1980. $30 billion. 1987.",
+   "law_ids": [
+    "100-pub-242"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-05",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "McKinney Homeless Assistance Act of 1987. $443 million for shelter, health, food, etc.",
+   "law_ids": [
+    "100-pub-77"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-06",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Catastrophic health insurance for the aged. Major costs to be paid for by insurance premiums. 1988.",
+   "law_ids": [
+    "100-pub-360"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-07",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Family Support Act of 1988. Welfare reform. Aimed to ease taking jobs, support families of those who do.",
+   "law_ids": [
+    "100-pub-485"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-08",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Omnibus foreign trade measure. 5-year authority. 1988.",
+   "law_ids": [
+    "100-pub-418"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-09",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Anti-drug-abuse act. Funds for policing and treatment; new drug czar; death penalty for drug kingpins. 1988.",
+   "law_ids": [
+    "100-pub-690"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-10",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Grove City civil rights measure. Overturned 1984 court decision; reasserted that civil rights laws reach whole institutions receiving federal aid, not just particular programs. Enacted over Reagan’s veto. 1988.",
+   "law_ids": [
+    "100-pub-259"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "100-11",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Intermediate-Range Nuclear-Force (INF) treaty ratified. 1988.",
+   "law_ids": [],
+   "scope": "none",
+   "note": "Senate ratification of a treaty; no public law"
+  },
+  {
+   "entry_id": "100-12",
+   "congress": 100,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Japanese-American reparations. $1.25 billion to those interned during World War II. 1988.",
+   "law_ids": [
+    "100-pub-383"
+   ],
+   "scope": "whole",
+   "note": "Civil Liberties Act of 1988"
+  },
+  {
+   "entry_id": "101-01",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Minimum wage hike. To $4.25 in 1991. New training wage for teenagers. 1989.",
+   "law_ids": [
+    "101-pub-157"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "101-02",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Savings-and-loan bailout. $50 billion to sell off or close down insolvent banks. 1989.",
+   "law_ids": [
+    "101-pub-73"
+   ],
+   "scope": "whole",
+   "note": "FIRREA"
+  },
+  {
+   "entry_id": "101-03",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": true,
+   "quote": "DEFICIT REDUCTION PACKAGE. Bipartisan deal; $490 billion in tax hikes and spending cuts over 5 years. Fall 1990.",
+   "law_ids": [
+    "101-pub-508"
+   ],
+   "scope": "whole",
+   "note": "Omnibus Budget Reconciliation Act of 1990"
+  },
+  {
+   "entry_id": "101-04",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Americans with Disabilities Act of 1990. To guarantee job rights and access to public facilities.",
+   "law_ids": [
+    "101-pub-336"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "101-05",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Clean Air Act of 1990. To curb acid rain, airborne toxics, urban smog.",
+   "law_ids": [
+    "101-pub-549"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "101-06",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Child care package. $22.5 billion; tax credits and state grants for children of working parents. 1990.",
+   "law_ids": [
+    "101-pub-508"
+   ],
+   "scope": "part",
+   "note": "child care tax credit and block grant are provisions of the Omnibus Budget Reconciliation Act of 1990"
+  },
+  {
+   "entry_id": "101-07",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Immigration Act of 1990. 40% increase in annual intake; new emphasis on occupational skills.",
+   "law_ids": [
+    "101-pub-649"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "101-08",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "National Affordable Housing Act of 1990. New block grants to expand stock; new HOPE program to sell off public housing projects to tenants.",
+   "law_ids": [
+    "101-pub-625"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "101-09",
+   "congress": 101,
+   "list": "Divided We Govern, Table 4.1 (1947-1990)",
+   "marks": "*",
+   "capitals": false,
+   "quote": "Agriculture act. 15% cut in subsidized acreage. 1990.",
+   "law_ids": [
+    "101-pub-624"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "102-01",
+   "congress": 102,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "PERSIAN GULF RESOLUTION.",
+   "law_ids": [
+    "102-pub-1"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "102-02",
+   "congress": 102,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Surface transportation act (ISTEA). $151 billion for highways, mass transit. 1991.",
+   "law_ids": [
+    "102-pub-240"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "102-03",
+   "congress": 102,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Civil Rights Act of 1991. To allow lawsuits against job discrimination.",
+   "law_ids": [
+    "102-pub-166"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "102-04",
+   "congress": 102,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Omnibus energy act. To restructure electricity industry, spur conservation, encourage new fuels. 1992.",
+   "law_ids": [
+    "102-pub-486"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "102-05",
+   "congress": 102,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Strategic Arms Reduction Treaty ratified. 1992",
+   "law_ids": [],
+   "scope": "none",
+   "note": "Senate ratification of a treaty; no public law"
+  },
+  {
+   "entry_id": "102-06",
+   "congress": 102,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Economic aid package for ex-Soviet republics. 1992.",
+   "law_ids": [
+    "102-pub-511"
+   ],
+   "scope": "whole",
+   "note": "FREEDOM Support Act"
+  },
+  {
+   "entry_id": "102-07",
+   "congress": 102,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Cable-TV regulation. To impose new rate and service requirements. Over Bush’s veto. 1992.",
+   "law_ids": [
+    "102-pub-385"
+   ],
+   "scope": "whole",
+   "note": "over veto"
+  },
+  {
+   "entry_id": "102-08",
+   "congress": 102,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "California water policy. To switch water from agri-business to cities and environment. 1992.",
+   "law_ids": [
+    "102-pub-575"
+   ],
+   "scope": "part",
+   "note": "Central Valley Project Improvement Act is title XXXIV of the Reclamation Projects Authorization and Adjustment Act of 1992"
+  },
+  {
+   "entry_id": "103-01",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "OMNIBUS DEFICIT REDUCTION ACT.",
+   "law_ids": [
+    "103-pub-66"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-02",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "NORTH AMERICAN FREE TRADE AGREEMENT (NAFTA) APPROVED. Mexico and Canada. 1993.",
+   "law_ids": [
+    "103-pub-182"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-03",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Family and Medical Leave Act of 1993. Mandated 12 weeks of unpaid leave for family emergencies.",
+   "law_ids": [
+    "103-pub-3"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-04",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Motor Voter act. To spur voter registration through use of driver, welfare, military-recruitment offices. 1993.",
+   "law_ids": [
+    "103-pub-31"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-05",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "National Service act. “AmeriCorps” plan to offer college money in exchange for community service work. 1993.",
+   "law_ids": [
+    "103-pub-82"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-06",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Reform of college-student loan financing. Money to be provided directly rather than through banks. 1993.",
+   "law_ids": [
+    "103-pub-66"
+   ],
+   "scope": "part",
+   "note": "Student Loan Reform Act of 1993 is title IV of the Omnibus Budget Reconciliation Act of 1993"
+  },
+  {
+   "entry_id": "103-07",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Brady bill. To require 5-day waiting period for purchase of handguns. 1993.",
+   "law_ids": [
+    "103-pub-159"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-08",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Goals 2000. To establish national education goals. 1994.",
+   "law_ids": [
+    "103-pub-227"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-09",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Omnibus crime act. Ban on assault weapons; expansion of death penalty; new prison construction, police officers, prevention programs. 1994.",
+   "law_ids": [
+    "103-pub-322"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-10",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "California desert protection. To create largest wilderness area outside Alaska. 1994.",
+   "law_ids": [
+    "103-pub-433"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-11",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Abortion clinic access. Criminal penalties to combat violence at abortion clinics. 1994.",
+   "law_ids": [
+    "103-pub-259"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "103-12",
+   "congress": 103,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "General Agreement on Tariffs and Trade (GATT) approved. To lower tariffs among 124 nations and create World Trade Organization (WTO). 1994.",
+   "law_ids": [
+    "103-pub-465"
+   ],
+   "scope": "whole",
+   "note": "Uruguay Round Agreements Act"
+  },
+  {
+   "entry_id": "104-01",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Curb on unfunded mandates.",
+   "law_ids": [
+    "104-pub-4"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-02",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Congressional Accountability Act. Federal labor laws to apply to Congress itself. 1995.",
+   "law_ids": [
+    "104-pub-1"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-03",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Lobbying reform. New disclosure requirements. 1995.",
+   "law_ids": [
+    "104-pub-65"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-04",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Curb on shareholder lawsuits. To curb frivolous suits against flagging firms. Over Clinton’s veto. 1995.",
+   "law_ids": [
+    "104-pub-67"
+   ],
+   "scope": "whole",
+   "note": "over veto"
+  },
+  {
+   "entry_id": "104-05",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "WELFARE REFORM. End of 61-year federal welfare guarantee to low-income women and children; block grants and regulatory leeway to states instead. 1996.",
+   "law_ids": [
+    "104-pub-193"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-06",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "TELECOMMUNICATIONS REFORM. To spur competition in telephone, video, data services; to break up local telephone and cable-TV monopolies. 1996.",
+   "law_ids": [
+    "104-pub-104"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-07",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Agriculture deregulation. To undo farm subsidies and move the industry toward free market. 1996.",
+   "law_ids": [
+    "104-pub-127"
+   ],
+   "scope": "whole",
+   "note": "Federal Agriculture Improvement and Reform Act of 1996"
+  },
+  {
+   "entry_id": "104-08",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Line-item veto. By statute, empowered president to kill individual spending items. (Later struck down by the judiciary.) 1996.",
+   "law_ids": [
+    "104-pub-130"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-09",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Anti-terrorism act. New controls on borders, funds of suspected groups; curbs on death-row appeals. 1996.",
+   "law_ids": [
+    "104-pub-132"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-10",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "$24 billion spending cuts in budget deal for fiscal 1996. Ending the shut-down-the-government crisis. 1996.",
+   "law_ids": [
+    "104-pub-134"
+   ],
+   "scope": "whole",
+   "note": "Omnibus Consolidated Rescissions and Appropriations Act of 1996"
+  },
+  {
+   "entry_id": "104-11",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Health insurance portability act. Kassebaum-Kennedy Act. Insurance to be portable across jobs. 1996.",
+   "law_ids": [
+    "104-pub-191"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-12",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Minimum wage hike. From $4.25 to $5.15. Bundled with tax breaks for business. 1996.",
+   "law_ids": [
+    "104-pub-188"
+   ],
+   "scope": "whole",
+   "note": "the minimum wage increase is title I of the Small Business Job Protection Act of 1996"
+  },
+  {
+   "entry_id": "104-13",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Overhaul of pesticides regulation. 1996.",
+   "law_ids": [
+    "104-pub-170"
+   ],
+   "scope": "whole",
+   "note": "Food Quality Protection Act of 1996"
+  },
+  {
+   "entry_id": "104-14",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Overhaul of safe drinking water legislation. 1996.",
+   "law_ids": [
+    "104-pub-182"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "104-15",
+   "congress": 104,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Immigration reform. To cut illegal immigration through border controls, deportation, workplace ID’s. 1996.",
+   "law_ids": [
+    "104-pub-208"
+   ],
+   "scope": "part",
+   "note": "Illegal Immigration Reform and Immigrant Responsibility Act is division C of the Omnibus Consolidated Appropriations Act, 1997"
+  },
+  {
+   "entry_id": "105-01",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "DEAL TO BALANCE THE BUDGET BY 2002.",
+   "law_ids": [
+    "105-pub-33",
+    "105-pub-34"
+   ],
+   "scope": "whole",
+   "note": "Balanced Budget Act of 1997 and Taxpayer Relief Act of 1997"
+  },
+  {
+   "entry_id": "105-02",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Chemical Weapons Convention ratified. 1997.",
+   "law_ids": [],
+   "scope": "none",
+   "note": "Senate ratification of a treaty; no public law"
+  },
+  {
+   "entry_id": "105-03",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Overhaul of Food and Drug Administration. To expedite approval of new drugs. 1997.",
+   "law_ids": [
+    "105-pub-115"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "105-04",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Adoption of foster children. To ease the process. 1997.",
+   "law_ids": [
+    "105-pub-89"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "105-05",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Transportation construction act. $218 billion for highways and mass transit. 1998.",
+   "law_ids": [
+    "105-pub-178"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "105-06",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Overhaul of Internal Revenue Service. More rights and protections to taxpayers. 1998.",
+   "law_ids": [
+    "105-pub-206"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "105-07",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "NATO expansion ratified. To add Poland, Hungary, the Czech Republic. 1998.",
+   "law_ids": [],
+   "scope": "none",
+   "note": "Senate ratification of a treaty; no public law"
+  },
+  {
+   "entry_id": "105-08",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Reform of public housing. New decision-making leeway to local authorities. 1998.",
+   "law_ids": [
+    "105-pub-276"
+   ],
+   "scope": "part",
+   "note": "Quality Housing and Work Responsibility Act of 1998 is title V of the VA-HUD appropriations act"
+  },
+  {
+   "entry_id": "105-09",
+   "congress": 105,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "100,000 new school teachers. A Clinton plan. 1998.",
+   "law_ids": [
+    "105-pub-277"
+   ],
+   "scope": "part",
+   "note": "class-size reduction funding in the Omnibus Consolidated and Emergency Supplemental Appropriations Act, 1999"
+  },
+  {
+   "entry_id": "106-01",
+   "congress": 106,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Banking reform.",
+   "law_ids": [
+    "106-pub-102"
+   ],
+   "scope": "whole",
+   "note": "Gramm-Leach-Bliley Act"
+  },
+  {
+   "entry_id": "106-02",
+   "congress": 106,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Y2K planning. To limit firms’ liability for new-millennium computer mixups. 1999.",
+   "law_ids": [
+    "106-pub-37"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "106-03",
+   "congress": 106,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Ed-flex program. New state leeway in spending federal education money. 1999.",
+   "law_ids": [
+    "106-pub-25"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "106-04",
+   "congress": 106,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Permanent Normal Trading Relations (PNTR) with China. 2000.",
+   "law_ids": [
+    "106-pub-286"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "106-05",
+   "congress": 106,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Florida Everglades restoration act. 2000.",
+   "law_ids": [
+    "106-pub-541"
+   ],
+   "scope": "part",
+   "note": "Comprehensive Everglades Restoration Plan is in the Water Resources Development Act of 2000"
+  },
+  {
+   "entry_id": "106-06",
+   "congress": 106,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Community Renewal and New Markets Act. $25 billion over 10 years for development in poor locales. 2000.",
+   "law_ids": [
+    "106-pub-554"
+   ],
+   "scope": "part",
+   "note": "Community Renewal and New Markets Act of 2000 is in the Consolidated Appropriations Act, 2001"
+  },
+  {
+   "entry_id": "107-01",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "BUSH TAX CUT. $1.35 trillion over 10 years;",
+   "law_ids": [
+    "107-pub-16"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-02",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "USE OF FORCE RESOLUTION.",
+   "law_ids": [
+    "107-pub-40"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-03",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "USA PATRIOT ACT.",
+   "law_ids": [
+    "107-pub-56"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-04",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Airline bailout. $15 billion to help stabilize the industry after September 11. 2001.",
+   "law_ids": [
+    "107-pub-42"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-05",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Airline security. New government program to hire 30,000 airport screeners. 2001.",
+   "law_ids": [
+    "107-pub-71"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-06",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "$40 billion emergency spending. For defense, domestic security, recovery of New York.",
+   "law_ids": [
+    "107-pub-38"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-07",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Education reform. To require annual student testing; $263 billion in new funds. 2001.",
+   "law_ids": [
+    "107-pub-110"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-08",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "IRAQ RESOLUTION. Authorized use of US force against Iraq, regardless of UN view. 2002.",
+   "law_ids": [
+    "107-pub-243"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-09",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": true,
+   "quote": "NEW HOMELAND SECURITY DEPARTMENT. Combined parts of 22 existent agencies. 2002.",
+   "law_ids": [
+    "107-pub-296"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-10",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Campaign finance reform. To ban soft money and certain pre-election ads. 2002.",
+   "law_ids": [
+    "107-pub-155"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-11",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Agriculture subsidies. $180 billion over 10 years. A rollback of 1996 deregulation. 2002.",
+   "law_ids": [
+    "107-pub-171"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-12",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Corporate Responsibility Act. To regulate the accounting industry and crack down on corporate fraud. After the collapse of Enron. 2002.",
+   "law_ids": [
+    "107-pub-204"
+   ],
+   "scope": "whole",
+   "note": "Sarbanes-Oxley Act of 2002"
+  },
+  {
+   "entry_id": "107-13",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Fast-track trade authority. New authority to president to negotiate foreign trade deals. 2002.",
+   "law_ids": [
+    "107-pub-210"
+   ],
+   "scope": "whole",
+   "note": "Trade Act of 2002"
+  },
+  {
+   "entry_id": "107-14",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Election reform. New nationwide standards; $3.9 billion to help the states meet them. 2002.",
+   "law_ids": [
+    "107-pub-252"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-15",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Terrorism insurance. $100 billion back-up guarantee against future attacks; to aid insurance and real estate industries. 2002.",
+   "law_ids": [
+    "107-pub-297"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "107-16",
+   "congress": 107,
+   "list": "Mayhew, Table E.2, Lists of Important Enactments by Congress, 1991-2002",
+   "marks": "",
+   "capitals": false,
+   "quote": "Commission created to investigate September 11 attacks. 2002.",
+   "law_ids": [
+    "107-pub-306"
+   ],
+   "scope": "part",
+   "note": "the 9/11 Commission was created by title VI of the Intelligence Authorization Act for Fiscal Year 2003"
+  },
+  {
+   "entry_id": "108-01",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": true,
+   "quote": "MEDICARE REFORM. New prescription drug benefit; large new role for private health plans. To cost a projected $400 billion over a decade.",
+   "law_ids": [
+    "108-pub-173"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "108-02",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "$350 billion tax cut. Bush administration plan. Cuts for families, investors, businesses.",
+   "law_ids": [
+    "108-pub-27"
+   ],
+   "scope": "whole",
+   "note": "Jobs and Growth Tax Relief Reconciliation Act of 2003"
+  },
+  {
+   "entry_id": "108-03",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "AIDS funding. $15 billion to fight AIDS in Africa and the Caribbean.",
+   "law_ids": [
+    "108-pub-25"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "108-04",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "Partial Birth Abortion Ban Act of 2003.",
+   "law_ids": [
+    "108-pub-105"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "108-05",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "$87.5 billion special defense funding. To finance military operations and reconstruction in Afghanistan and Iraq.",
+   "law_ids": [
+    "108-pub-106"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "108-06",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "Healthy forests law. To prevent fires by expanding forest-thinning operations and limiting anti-logging injunctions in national forests.",
+   "law_ids": [
+    "108-pub-148"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "108-07",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "Corporate tax overhaul. $143 billion in tax breaks for businesses over ten years offset by loophole closures and other revenue raisers.",
+   "law_ids": [
+    "108-pub-357"
+   ],
+   "scope": "whole",
+   "note": "American Jobs Creation Act of 2004"
+  },
+  {
+   "entry_id": "108-08",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "Disaster relief. $14 billion for hurricane relief in Florida and other states, drought relief in farm areas.",
+   "law_ids": [
+    "108-pub-324"
+   ],
+   "scope": "whole",
+   "note": "Military Construction Appropriations and Emergency Hurricane Supplemental Appropriations Act, 2005"
+  },
+  {
+   "entry_id": "108-09",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "Unborn Victims of Violence Act. “Laci and Connor’s law.” Makes it a crime to harm a fetus during commission of a violent federal crime.",
+   "law_ids": [
+    "108-pub-212"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "108-10",
+   "congress": 108,
+   "list": "Mayhew, Important laws enacted by the 108th Congress during 2003-04",
+   "marks": "",
+   "capitals": false,
+   "quote": "Intelligence overhaul. Restructuring of government intelligence services; new intelligence czar to coordinate anti-terrorism activities.",
+   "law_ids": [
+    "108-pub-458"
+   ],
+   "scope": "whole",
+   "note": "Intelligence Reform and Terrorism Prevention Act of 2004"
+  },
+  {
+   "entry_id": "109-01",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Bankruptcy reform. Makes it harder for consumers to shed their debts.",
+   "law_ids": [
+    "109-pub-8"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "109-02",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Class Action Fairness Act. Shifts class-action suits to federal courts, making it harder to bring them against businesses.",
+   "law_ids": [
+    "109-pub-2"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "109-03",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "$286 billion transportation measure. Funds for highways, mass transit, a record 6,371 pet member projects.",
+   "law_ids": [
+    "109-pub-59"
+   ],
+   "scope": "whole",
+   "note": "SAFETEA-LU"
+  },
+  {
+   "entry_id": "109-04",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Energy measure. $14.5 billion in tax breaks to encourage energy production and efficiency.",
+   "law_ids": [
+    "109-pub-58"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "109-05",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Central American Free Trade Agreement. Lowers barriers to U.S. trade and investment relations with five Central American countries and the Dominican Republic.",
+   "law_ids": [
+    "109-pub-53"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "109-06",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Hurricane assistance after Katrina. $29 billion in relief money plus altered federal policies to spur redevelopment.",
+   "law_ids": [
+    "109-pub-148"
+   ],
+   "scope": "part",
+   "note": "the $29 billion is division B of the Department of Defense, Emergency Supplemental Appropriations to Address Hurricanes in the Gulf of Mexico, and Pandemic Influenza Act, 2006"
+  },
+  {
+   "entry_id": "109-07",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Pension reform. To shore up often-shaky private retirement programs for 44 million workers and retirees.",
+   "law_ids": [
+    "109-pub-280"
+   ],
+   "scope": "whole",
+   "note": "Pension Protection Act of 2006"
+  },
+  {
+   "entry_id": "109-08",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Military Commissions Act. Sets rules for the government to prosecute terrorism suspects in military tribunals.",
+   "law_ids": [
+    "109-pub-366"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "109-09",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Port security. $5 billion six-year package to shore up security at U.S. ports.",
+   "law_ids": [
+    "109-pub-347"
+   ],
+   "scope": "whole",
+   "note": "SAFE Port Act"
+  },
+  {
+   "entry_id": "109-10",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "700 miles of new fencing authorized for U.S.-Mexico border.",
+   "law_ids": [
+    "109-pub-367"
+   ],
+   "scope": "whole",
+   "note": "Secure Fence Act of 2006"
+  },
+  {
+   "entry_id": "109-11",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Gulf of Mexico opened to oil and gas drilling. 8.3 million acres.",
+   "law_ids": [
+    "109-pub-432"
+   ],
+   "scope": "part",
+   "note": "Gulf of Mexico Energy Security Act of 2006 is in division C of the Tax Relief and Health Care Act of 2006"
+  },
+  {
+   "entry_id": "109-12",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Trade measures. To normalize trade with Vietnam and extend trade benefits to four Andean nations, sub-Saharan countries, and Haiti.",
+   "law_ids": [
+    "109-pub-432"
+   ],
+   "scope": "part",
+   "note": "the trade measures are in division D of the Tax Relief and Health Care Act of 2006"
+  },
+  {
+   "entry_id": "109-13",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "Postal Service reform. To stabilize postage rates, ease pension costs, improve efficiency.",
+   "law_ids": [
+    "109-pub-435"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "109-14",
+   "congress": 109,
+   "list": "Mayhew, Important laws enacted by the 109th Congress during 2005-06",
+   "marks": "",
+   "capitals": false,
+   "quote": "India pact. Agreement allowing the U.S. to share civilian nuclear technology with India.",
+   "law_ids": [
+    "109-pub-401"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "110-01",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Minimum wage hike. To $7.25 per hour in three stages over two years. Combined with $4.84 billion in tax breaks for small businesses.",
+   "law_ids": [
+    "110-pub-28"
+   ],
+   "scope": "part",
+   "note": "Fair Minimum Wage Act of 2007 is title VIII of the U.S. Troop Readiness, Veterans' Care, Katrina Recovery, and Iraq Accountability Appropriations Act, 2007"
+  },
+  {
+   "entry_id": "110-02",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Implementation of recommendations of the 9/11 commission. Includes reallocation of homeland security grants; screening of air and sea cargo.",
+   "law_ids": [
+    "110-pub-53"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "110-03",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Ethics and lobbying reform. New restrictions on gifts, meals, and travel supplied by lobbyists, and on the “revolving door” into the private sector.",
+   "law_ids": [
+    "110-pub-81"
+   ],
+   "scope": "whole",
+   "note": "Honest Leadership and Open Government Act of 2007"
+  },
+  {
+   "entry_id": "110-04",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Overhaul of college student aid programs. Subsidies to private lenders cut; grants to needy students increased.",
+   "law_ids": [
+    "110-pub-84"
+   ],
+   "scope": "whole",
+   "note": "College Cost Reduction and Access Act"
+  },
+  {
+   "entry_id": "110-05",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Energy conservation. Includes boost in fuel-efficiency standards for automobiles, biofuels subsidies, phase-out of incandescent light bulbs.",
+   "law_ids": [
+    "110-pub-140"
+   ],
+   "scope": "whole",
+   "note": "Energy Independence and Security Act of 2007"
+  },
+  {
+   "entry_id": "110-06",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": true,
+   "quote": "HOUSING RELIEF PROGRAM. JULY 2008. INCLUDES $300 BILLION AUTHORIZATION TO INSURE HOME MORTGAGES; RESCUE AND TIGHTENED REGULATION OF FANNIE MAE AND FREDDIE MAC.",
+   "law_ids": [
+    "110-pub-289"
+   ],
+   "scope": "whole",
+   "note": "Housing and Economic Recovery Act of 2008"
+  },
+  {
+   "entry_id": "110-07",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": true,
+   "quote": "$700 BAILOUT OF THE FINANCIAL SECTOR. OCTOBER 2008. COMBINED WITH $150 BILLION IN TAX BREAKS.",
+   "law_ids": [
+    "110-pub-343"
+   ],
+   "scope": "whole",
+   "note": "Emergency Economic Stabilization Act of 2008"
+  },
+  {
+   "entry_id": "110-08",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "$168 billion economic stimulus package. February 2008. Includes rebates to taxpayers, tax incentives for business investment.",
+   "law_ids": [
+    "110-pub-185"
+   ],
+   "scope": "whole",
+   "note": "Economic Stimulus Act of 2008"
+  },
+  {
+   "entry_id": "110-09",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Agriculture subsidy bill. $307 billion over five years. Enacted over Bush veto.",
+   "law_ids": [
+    "110-pub-234",
+    "110-pub-246"
+   ],
+   "scope": "whole",
+   "note": "Food, Conservation, and Energy Act of 2008, enacted twice over veto"
+  },
+  {
+   "entry_id": "110-10",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Domestic surveillance. Major expansion of federal anti-terrorism surveillance powers asked by Bush; telecoms immunized against liability for previous wiretapping.",
+   "law_ids": [
+    "110-pub-261"
+   ],
+   "scope": "whole",
+   "note": "FISA Amendments Act of 2008"
+  },
+  {
+   "entry_id": "110-11",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "New G.I. bill for veterans. $62.8 billion over 11 years to guarantee a four-year college education.",
+   "law_ids": [
+    "110-pub-252"
+   ],
+   "scope": "part",
+   "note": "Post-9/11 GI Bill is title V of the Supplemental Appropriations Act, 2008"
+  },
+  {
+   "entry_id": "110-12",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Nuclear trade agreement with India. Gives India access to U.S. civilian nuclear technology.",
+   "law_ids": [
+    "110-pub-369"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "110-13",
+   "congress": 110,
+   "list": "Mayhew, Important laws enacted by the 110th Congress during 2007-08",
+   "marks": "",
+   "capitals": false,
+   "quote": "Guarantee of mental illness insurance. Insurance companies required to cover mental and physical illnesses equally.",
+   "law_ids": [
+    "110-pub-343"
+   ],
+   "scope": "part",
+   "note": "Paul Wellstone and Pete Domenici Mental Health Parity and Addiction Equity Act of 2008 is division C of the Emergency Economic Stabilization Act of 2008"
+  },
+  {
+   "entry_id": "111-01",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": true,
+   "quote": "$787 BILLION STIMULUS MEASURE TO JUMP-START THE ECONOMY.",
+   "law_ids": [
+    "111-pub-5"
+   ],
+   "scope": "whole",
+   "note": "American Recovery and Reinvestment Act of 2009"
+  },
+  {
+   "entry_id": "111-02",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Expansion of State Children’s Health Insurance Program (SCHIP)",
+   "law_ids": [
+    "111-pub-3"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "111-03",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Lilly Ledbetter Fair Pay Act. Mandated equal pay for women in workplace.",
+   "law_ids": [
+    "111-pub-2"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "111-04",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Credit card bill of rights. New restrictions on credit card industry.",
+   "law_ids": [
+    "111-pub-24"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "111-05",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Tobacco regulation. New authority to FDA to regulate contents and marketing of tobacco products.",
+   "law_ids": [
+    "111-pub-31"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "111-06",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Expansion of national and community service programs. Including AmeriCorps. Participation to be tripled.",
+   "law_ids": [
+    "111-pub-13"
+   ],
+   "scope": "whole",
+   "note": "Edward M. Kennedy Serve America Act"
+  },
+  {
+   "entry_id": "111-07",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Expansion of hate crimes law. To cover attacks based on gender, gender identity, sexual orientation and disability.",
+   "law_ids": [
+    "111-pub-84"
+   ],
+   "scope": "part",
+   "note": "Matthew Shepard and James Byrd, Jr. Hate Crimes Prevention Act is division E of the National Defense Authorization Act for Fiscal Year 2010"
+  },
+  {
+   "entry_id": "111-08",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Public lands preservation. Over 2 million acres in the West set aside as protected wilderness.",
+   "law_ids": [
+    "111-pub-11"
+   ],
+   "scope": "whole",
+   "note": "Omnibus Public Land Management Act of 2009"
+  },
+  {
+   "entry_id": "111-09",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": true,
+   "quote": "AFFORDABLE CARE ACT. Long-sought commitment to national health insurance.",
+   "law_ids": [
+    "111-pub-148"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "111-10",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": true,
+   "quote": "FINANCIAL SERVICES REGULATION. Sweeping overhaul of the industry.",
+   "law_ids": [
+    "111-pub-203"
+   ],
+   "scope": "whole",
+   "note": "Dodd-Frank Wall Street Reform and Consumer Protection Act"
+  },
+  {
+   "entry_id": "111-11",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Student loan overhaul. Government to be the sole provider of college student loans; existing program subsidizing private lenders killed.",
+   "law_ids": [
+    "111-pub-152"
+   ],
+   "scope": "part",
+   "note": "the student loan overhaul (SAFRA) is title II of the Health Care and Education Reconciliation Act of 2010"
+  },
+  {
+   "entry_id": "111-12",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": true,
+   "quote": "BIPARTISAN TAX DEAL. Bush tax cuts of 2001 and 2003 extended two years for all income levels; estate tax pegged at 35%; Social Security withholding tax reduced for one year; unemployment benefits expanded.",
+   "law_ids": [
+    "111-pub-312"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "111-13",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "New START treaty ratified. Nuclear arms agreement with Russia.",
+   "law_ids": [],
+   "scope": "none",
+   "note": "Senate ratification of a treaty; no public law"
+  },
+  {
+   "entry_id": "111-14",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Repeal of ‘Don’t Ask, Don’t Tell. Ended the military’s restrictive policy on gays.",
+   "law_ids": [
+    "111-pub-321"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "111-15",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Regulation of food safety. Major new authority to the FDA.",
+   "law_ids": [
+    "111-pub-353"
+   ],
+   "scope": "whole",
+   "note": "signed 2011-01-04"
+  },
+  {
+   "entry_id": "111-16",
+   "congress": 111,
+   "list": "Mayhew, Important laws enacted during the 111th Congress of 2009-10",
+   "marks": "",
+   "capitals": false,
+   "quote": "Help to 9/11 first reponders. $4.2 billion aid to fire fighters and others suffering health problems due to World Trade Center attack of 2001.",
+   "law_ids": [
+    "111-pub-347"
+   ],
+   "scope": "whole",
+   "note": "James Zadroga 9/11 Health and Compensation Act of 2010"
+  },
+  {
+   "entry_id": "112-01",
+   "congress": 112,
+   "list": "Mayhew, Important Laws enacted during the 112th Congress of 2011-12",
+   "marks": "",
+   "capitals": true,
+   "quote": "DEBT CEILING DEAL. Bipartisan compromise to raise the debt ceiling, and to cut government spending by $2.1 trillion in two stages",
+   "law_ids": [
+    "112-pub-25"
+   ],
+   "scope": "whole",
+   "note": "Budget Control Act of 2011"
+  },
+  {
+   "entry_id": "112-02",
+   "congress": 112,
+   "list": "Mayhew, Important Laws enacted during the 112th Congress of 2011-12",
+   "marks": "",
+   "capitals": false,
+   "quote": "Modernization of patent law. To cut an application backlog, make obtaining patents easier, align US law with other countries. (September)",
+   "law_ids": [
+    "112-pub-29"
+   ],
+   "scope": "whole",
+   "note": "Leahy-Smith America Invents Act"
+  },
+  {
+   "entry_id": "112-03",
+   "congress": 112,
+   "list": "Mayhew, Important Laws enacted during the 112th Congress of 2011-12",
+   "marks": "",
+   "capitals": false,
+   "quote": "Trade agreements with Colombia, Panama, South Korea. (October)",
+   "law_ids": [
+    "112-pub-41",
+    "112-pub-42",
+    "112-pub-43"
+   ],
+   "scope": "whole",
+   "note": "the Korea, Colombia and Panama trade agreement implementation acts"
+  },
+  {
+   "entry_id": "112-04",
+   "congress": 112,
+   "list": "Mayhew, Important Laws enacted during the 112th Congress of 2011-12",
+   "marks": "",
+   "capitals": true,
+   "quote": "FISCAL CLIFF DEAL. Income and other taxes hiked on the high brackets; Bush tax cuts of 2001 made permanent for the bulk of taxpayers",
+   "law_ids": [
+    "112-pub-240"
+   ],
+   "scope": "whole",
+   "note": "American Taxpayer Relief Act of 2012, signed 2013-01-02"
+  },
+  {
+   "entry_id": "112-05",
+   "congress": 112,
+   "list": "Mayhew, Important Laws enacted during the 112th Congress of 2011-12",
+   "marks": "",
+   "capitals": false,
+   "quote": "Ban on insider trading by members of Congress (March)",
+   "law_ids": [
+    "112-pub-105"
+   ],
+   "scope": "whole",
+   "note": "STOCK Act"
+  },
+  {
+   "entry_id": "112-06",
+   "congress": 112,
+   "list": "Mayhew, Important Laws enacted during the 112th Congress of 2011-12",
+   "marks": "",
+   "capitals": false,
+   "quote": "Jumpstart Our Business Startups (JOBS) Act. To ease small businesses’ access to investments and capital markets. (April)",
+   "law_ids": [
+    "112-pub-106"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "112-07",
+   "congress": 112,
+   "list": "Mayhew, Important Laws enacted during the 112th Congress of 2011-12",
+   "marks": "",
+   "capitals": false,
+   "quote": "Normalization of trade relations with Russia, including the “Magnitsky Act” banning certain rights abusers from traveling or banking in the U.S. (December)",
+   "law_ids": [
+    "112-pub-208"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "113-01",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Superstorm Sandy aid. $60.2 billion for insurance backup, homeowners, businesses, infrastructure, shorelines, local governments. (January—in two statutory installments)",
+   "law_ids": [
+    "113-pub-1",
+    "113-pub-2"
+   ],
+   "scope": "whole",
+   "note": "the two installments of Superstorm Sandy aid"
+  },
+  {
+   "entry_id": "113-02",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Violence Against Women Act. Renewal of 1994 program plus extension of protections to LGBT victims, American Indians, illegal immigrants. (March)",
+   "law_ids": [
+    "113-pub-4"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "113-03",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Overhaul of student loan program. Shift from a fixed interest rate to variable rates pegged to financial market trading. (August)",
+   "law_ids": [
+    "113-pub-28"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "113-04",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Curb sexual assaults in the military. Overhaul of process to protect victims. (December—enacted as part of a defense authorization bill)",
+   "law_ids": [
+    "113-pub-66"
+   ],
+   "scope": "part",
+   "note": "the military sexual assault reforms are in the National Defense Authorization Act for Fiscal Year 2014"
+  },
+  {
+   "entry_id": "113-05",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Agriculture program. Five-year authorization; direct crop payments replaced by new risk-management design; food stamps trimmed somewhat. (February)",
+   "law_ids": [
+    "113-pub-79"
+   ],
+   "scope": "whole",
+   "note": "Agricultural Act of 2014"
+  },
+  {
+   "entry_id": "113-06",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Water Resources Reform and Development Act (WRRDA). $12.3 billion over ten years to back new port, dam, flood-protection projects; a new process to curb congressional earmarking. (June)",
+   "law_ids": [
+    "113-pub-121"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "113-07",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Overhaul of Department of Veterans Affairs. $16.3 billion to curb long waits in facilities, privatize certain care. (August)",
+   "law_ids": [
+    "113-pub-146"
+   ],
+   "scope": "whole",
+   "note": "Veterans Access, Choice, and Accountability Act of 2014"
+  },
+  {
+   "entry_id": "113-08",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Arm and equip Syria rebels to fight against ISIL. (September—part of a short-term continuing resolution)",
+   "law_ids": [
+    "113-pub-164"
+   ],
+   "scope": "part",
+   "note": "Syria train-and-equip authority in the Continuing Appropriations Resolution, 2015"
+  },
+  {
+   "entry_id": "113-09",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Flexibility for multi-employer pension plans. To ward off crisis; allows cuts in certain promised benefits to shore up plans from collapse. (December—part of the “cromnibus” funding bill)",
+   "law_ids": [
+    "113-pub-235"
+   ],
+   "scope": "part",
+   "note": "Multiemployer Pension Reform Act of 2014 in the Consolidated and Further Continuing Appropriations Act, 2015"
+  },
+  {
+   "entry_id": "113-10",
+   "congress": 113,
+   "list": "Mayhew, Important laws enacted during the 113th Congress of 2013-14",
+   "marks": "",
+   "capitals": false,
+   "quote": "Campaign finance loosening. A hike in the ceiling on contributions by wealthy individuals to the parties, allowing a tenfold increase in the size of donations. (December—part of the “cromnibus” funding bill)",
+   "law_ids": [
+    "113-pub-235"
+   ],
+   "scope": "part",
+   "note": "the campaign finance change is in the Consolidated and Further Continuing Appropriations Act, 2015"
+  },
+  {
+   "entry_id": "114-01",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Permanent fix to Medicare’s sustainable growth rate formula. The so-called “doc-fix.” (April)",
+   "law_ids": [
+    "114-pub-10"
+   ],
+   "scope": "whole",
+   "note": "Medicare Access and CHIP Reauthorization Act of 2015"
+  },
+  {
+   "entry_id": "114-02",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Fast-track trade authorization to president to negotiate agreements with Asia and Europe (June)",
+   "law_ids": [
+    "114-pub-27"
+   ],
+   "scope": "whole",
+   "note": "Trade Preferences Extension Act of 2015 (carries trade promotion authority)"
+  },
+  {
+   "entry_id": "114-03",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "USA Freedom Act. Rollback of NSA telephone surveillance authority. (June)",
+   "law_ids": [
+    "114-pub-23"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "114-04",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Two-year budget deal lifting domestic and defense spending caps. (November)",
+   "law_ids": [
+    "114-pub-74"
+   ],
+   "scope": "whole",
+   "note": "Bipartisan Budget Act of 2015"
+  },
+  {
+   "entry_id": "114-05",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Overhaul of No Child Left Behind education law. Powers reverted to the states. (December)",
+   "law_ids": [
+    "114-pub-95"
+   ],
+   "scope": "whole",
+   "note": "Every Student Succeeds Act"
+  },
+  {
+   "entry_id": "114-06",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Five-year transportation infrastructure plan. Spending for highway transit and rail projects. (December)",
+   "law_ids": [
+    "114-pub-94"
+   ],
+   "scope": "whole",
+   "note": "FAST Act"
+  },
+  {
+   "entry_id": "114-07",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "$680 billion tax-cut package. Dozens of expiring tax subsidies made permanent. (December)",
+   "law_ids": [
+    "114-pub-113"
+   ],
+   "scope": "part",
+   "note": "Protecting Americans from Tax Hikes Act is division Q of the Consolidated Appropriations Act, 2016"
+  },
+  {
+   "entry_id": "114-08",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Lift of 1920s-era ban on oil exports. (December)",
+   "law_ids": [
+    "114-pub-113"
+   ],
+   "scope": "part",
+   "note": "the oil export ban repeal is in division O of the Consolidated Appropriations Act, 2016"
+  },
+  {
+   "entry_id": "114-09",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Opioids policy. To strengthen treatment and recovery efforts. (July)",
+   "law_ids": [
+    "114-pub-198"
+   ],
+   "scope": "whole",
+   "note": "Comprehensive Addiction and Recovery Act of 2016"
+  },
+  {
+   "entry_id": "114-10",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Puerto Rico debt relief. To restructure $72 billion bond debt. (July)",
+   "law_ids": [
+    "114-pub-187"
+   ],
+   "scope": "whole",
+   "note": "PROMESA"
+  },
+  {
+   "entry_id": "114-11",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "21st-Centurry Cures Act. To speed up FDA approval of new drugs, supply $4.8 billion for NIH research, address mental health. (December)",
+   "law_ids": [
+    "114-pub-255"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "114-12",
+   "congress": 114,
+   "list": "Mayhew, Important laws enacted during the 114th Congress of 2015-16",
+   "marks": "",
+   "capitals": false,
+   "quote": "Water Resources and Development Act (WRDA). To authorize dozens of water-related infrastructure projects, with $170 million to address lead contamination in Flint MI (December)",
+   "law_ids": [
+    "114-pub-322"
+   ],
+   "scope": "whole",
+   "note": "WIIN Act, which carries the Water Resources Development Act of 2016"
+  },
+  {
+   "entry_id": "115-01",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": true,
+   "quote": "TAX REFORM. Biggest structural overhaul of the tax system since 1986; lower rates for many individuals; a narrower estate tax; corporate rate slashed from 35% to 21%; mortgage-deduction made less valuable for many upscale homeowners. (December)",
+   "law_ids": [
+    "115-pub-97"
+   ],
+   "scope": "whole",
+   "note": "Tax Cuts and Jobs Act"
+  },
+  {
+   "entry_id": "115-02",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": true,
+   "quote": "SIXTEEN EXECUTIVE REGULATIONS REPEALED THROUGH USE OF THE CONGRESSIONAL REVIEW ACT (CRA).",
+   "law_ids": [
+    "115-pub-4",
+    "115-pub-5",
+    "115-pub-8",
+    "115-pub-11",
+    "115-pub-12",
+    "115-pub-13",
+    "115-pub-14",
+    "115-pub-17",
+    "115-pub-20",
+    "115-pub-21",
+    "115-pub-22",
+    "115-pub-23",
+    "115-pub-24",
+    "115-pub-35",
+    "115-pub-74",
+    "115-pub-172"
+   ],
+   "scope": "whole",
+   "note": "the sixteen Congressional Review Act disapproval resolutions"
+  },
+  {
+   "entry_id": "115-03",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Reform of Department of Veterans Affairs. The Accountability and Whistleblower Protection Act to shorten wait times and allow easier firing of employees. (June)",
+   "law_ids": [
+    "115-pub-41"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "115-04",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Disaster relief totaling some $140 billion. For Hurricanes Harvey (Texas and Louisiana) and Maria (Puerto Rico), and western wildfires. Voted in three installments: $15 billion in September 2017, $36.5 billion in October 2017, nearly $90 billion in February 2018.",
+   "law_ids": [
+    "115-pub-56",
+    "115-pub-72",
+    "115-pub-123"
+   ],
+   "scope": "part",
+   "note": "the three installments of 2017-18 disaster relief: continuing appropriations act of September 2017, the October 2017 supplemental and division B of the Bipartisan Budget Act of 2018"
+  },
+  {
+   "entry_id": "115-05",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Repeal of the Affordable Care Act’s individual mandate. As an ingredient of the December 2017 tax reform bill.",
+   "law_ids": [
+    "115-pub-97"
+   ],
+   "scope": "part",
+   "note": "repeal of the individual mandate is in the Tax Cuts and Jobs Act"
+  },
+  {
+   "entry_id": "115-06",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Authorization of Arctic drilling in Alaska. As an ingredient of the December 2017 tax reform bill.",
+   "law_ids": [
+    "115-pub-97"
+   ],
+   "scope": "part",
+   "note": "Arctic refuge drilling is in the Tax Cuts and Jobs Act"
+  },
+  {
+   "entry_id": "115-07",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Abandonment of spending caps established by the Budget Control Act of 2011. Curtains for the “sequester.” $80 billion more for defense, $63 billion for domestic policy. (February)",
+   "law_ids": [
+    "115-pub-123"
+   ],
+   "scope": "whole",
+   "note": "Bipartisan Budget Act of 2018"
+  },
+  {
+   "entry_id": "115-08",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Relaxation of Dodd-Frank regulations regarding small banks. (March)",
+   "law_ids": [
+    "115-pub-174"
+   ],
+   "scope": "whole",
+   "note": "Economic Growth, Regulatory Relief, and Consumer Protection Act"
+  },
+  {
+   "entry_id": "115-09",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Reform of Veterans Affairs Department to allow privatization of care. (June)",
+   "law_ids": [
+    "115-pub-182"
+   ],
+   "scope": "whole",
+   "note": "VA MISSION Act of 2018"
+  },
+  {
+   "entry_id": "115-10",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Opioid Crisis Response Act of 2018. (October)",
+   "law_ids": [
+    "115-pub-271"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "115-11",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Five-year $867 billion agriculture and food-stamps package. (December)",
+   "law_ids": [
+    "115-pub-334"
+   ],
+   "scope": "whole",
+   "note": "Agriculture Improvement Act of 2018"
+  },
+  {
+   "entry_id": "115-12",
+   "congress": 115,
+   "list": "Mayhew, Important laws enacted during the 115th Congress of 2017-18",
+   "marks": "",
+   "capitals": false,
+   "quote": "Criminal justice reform. The First Step Act, to overhaul sentencing rules and reduce incarceration. (December)",
+   "law_ids": [
+    "115-pub-391"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-01",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": true,
+   "quote": "OMNIBUS YEAR-ENDING APPROPRIATIONS PACKAGE. Actually two bills",
+   "law_ids": [
+    "116-pub-93",
+    "116-pub-94"
+   ],
+   "scope": "whole",
+   "note": "Consolidated Appropriations Act, 2020 and Further Consolidated Appropriations Act, 2020"
+  },
+  {
+   "entry_id": "116-02",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "Public lands measure. “the largest public lands bill Congress has considered in a decade.” Five new national monuments; expansion of several national parks; new wild and scenic rivers, recreation and conservation areas, wilderness areas. February.",
+   "law_ids": [
+    "116-pub-9"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-03",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "Disaster relief. $19.1 billion to states and territories hit by flooding, wildfires, tornadoes, hurricanes and other national disasters.",
+   "law_ids": [
+    "116-pub-20"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-04",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "Emergency $4.6 billion humanitarian aid for border migrant crisis. June.",
+   "law_ids": [
+    "116-pub-26"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-05",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "Summer budget deal. Permanent kill of spending caps (the sequester rule) created by the Budget Control Act of 2011. August.",
+   "law_ids": [
+    "116-pub-37"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-06",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "National Defense Authorization Act. Creation of Space Force as sixth branch of the military; new paid parental leave for two million federal workers. December.",
+   "law_ids": [
+    "116-pub-92"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-07",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": true,
+   "quote": "COVID 1. Quick first reaction to the coronavirus pandemic. $8.3 billion for R&D, treatment, provision of vaccine, support of health agencies. March.",
+   "law_ids": [
+    "116-pub-123"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-08",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": true,
+   "quote": "COVID 2. Families First Coronavirus Response Act (FFCRA). $100 billion for help to states, sick paid leave, free testing, unemployment benefits, food assistance. March",
+   "law_ids": [
+    "116-pub-127"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-09",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": true,
+   "quote": "COVID 3. Coronavirus Aid, Relief and Economic Security Act (the CARES Act). March. $2 trillion stimulus package.",
+   "law_ids": [
+    "116-pub-136"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-10",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": true,
+   "quote": "COVID 4. $484 billion for small business, hospitals, testing. April.",
+   "law_ids": [
+    "116-pub-139"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-11",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": true,
+   "quote": "COVID 5. $900 billion for unemployment benefits, direct payments of $600 to adults and children, coronavirus vaccine, aid to businesses and schools.",
+   "law_ids": [
+    "116-pub-260"
+   ],
+   "scope": "whole",
+   "note": "Consolidated Appropriations Act, 2021"
+  },
+  {
+   "entry_id": "116-12",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "United States-Mexico-Canada Agreement. Remake of NAFTA trade pact. January.",
+   "law_ids": [
+    "116-pub-113"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-13",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "Great American Outdoors Act. Guarantee of $9.5 billion over five years to maintain national parks. June.",
+   "law_ids": [
+    "116-pub-152"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "116-14",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "Ban of ‘surprise’ medical bills. Enacted as part of budget package. December.",
+   "law_ids": [
+    "116-pub-260"
+   ],
+   "scope": "part",
+   "note": "No Surprises Act is division BB of the Consolidated Appropriations Act, 2021"
+  },
+  {
+   "entry_id": "116-15",
+   "congress": 116,
+   "list": "Mayhew, Important laws enacted during the 116th Congress of 2019-2020",
+   "marks": "",
+   "capitals": false,
+   "quote": "Climate change funding. $35 billion for wind, solar, and other clean power sources; to cut use of hydrofluorocarbons (HFCs). Enacted as part of budget package.",
+   "law_ids": [
+    "116-pub-260"
+   ],
+   "scope": "part",
+   "note": "Energy Act of 2020 and the HFC phase-down are in the Consolidated Appropriations Act, 2021"
+  },
+  {
+   "entry_id": "117-01",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": true,
+   "quote": "AMERICAN RESCUE PLAN ACT - $1.9 trillion packed into a single measure targeted for pandemic relief and welfare state expansion",
+   "law_ids": [
+    "117-pub-2"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "117-02",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": true,
+   "quote": "INFRASTRUCTURE – a historic $1.2 trillion for investment in highways, railroads, pipes, bridges, ports, airports, waterways, broadband, the electricity grid. Bipartisan compromise. November.",
+   "law_ids": [
+    "117-pub-58"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "117-03",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "Child Tax Credit Plan. Major expansion of existent child tax credit program in size and making it fully refundable",
+   "law_ids": [
+    "117-pub-2"
+   ],
+   "scope": "part",
+   "note": "the child tax credit expansion is in the American Rescue Plan Act"
+  },
+  {
+   "entry_id": "117-04",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "Emergency aid to refugee ‘Afghan allies.” $1.1 billion to help resettle Afghans who worked alongside U.S. troops. July.",
+   "law_ids": [
+    "117-pub-31"
+   ],
+   "scope": "part",
+   "note": "Afghan resettlement funds in the Emergency Security Supplemental Appropriations Act, 2021"
+  },
+  {
+   "entry_id": "117-05",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "Military Justice Improvement and Increasing Prevention Act – Overhaul of Defense Department process for handling sexual assault cases. Enacted as provision in annual Defense authorization act. December.",
+   "law_ids": [
+    "117-pub-81"
+   ],
+   "scope": "part",
+   "note": "Military Justice Improvement and Increasing Prevention Act is in the National Defense Authorization Act for Fiscal Year 2022"
+  },
+  {
+   "entry_id": "117-06",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": true,
+   "quote": "INFLATION REDUCTION ACT. Portmanteau healthcare and climate package, the residue of Biden’s original “Build Back Better” plan.",
+   "law_ids": [
+    "117-pub-169"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "117-07",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "Post Office overhaul. $107 billion to finance and upgrade USPS. March.",
+   "law_ids": [
+    "117-pub-108"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "117-08",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "$110 billion military and humanitarian aid to Ukraine. In four installments. March, May, October, December.",
+   "law_ids": [
+    "117-pub-103",
+    "117-pub-128",
+    "117-pub-180",
+    "117-pub-328"
+   ],
+   "scope": "part",
+   "note": "the four Ukraine aid installments of 2022; 117-128 is the stand-alone supplemental, the others are within larger acts"
+  },
+  {
+   "entry_id": "117-09",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "Gun safety act. Expanded background checks, mental health programs, encouragement of state red-flag laws. June.",
+   "law_ids": [
+    "117-pub-159"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "117-10",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "CHIPS and Science Act. $280 billion to boost semiconductor industry to counter China. August.",
+   "law_ids": [
+    "117-pub-167"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "117-11",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "Medical benefits for veterans exposed to toxic burn pits. August.",
+   "law_ids": [
+    "117-pub-168"
+   ],
+   "scope": "whole",
+   "note": "PACT Act"
+  },
+  {
+   "entry_id": "117-12",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "Federal protection of same-sex marriage. December.",
+   "law_ids": [
+    "117-pub-228"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "117-13",
+   "congress": 117,
+   "list": "Mayhew, Important laws enacted during the 117th Congress of 2021-2022",
+   "marks": "",
+   "capitals": false,
+   "quote": "Electoral Count Act. Amends the Electoral Count Act of 1887 to specify the vice president has only a ministerial role in counting electoral votes. An ingredient of mammoth budget package. December.",
+   "law_ids": [
+    "117-pub-328"
+   ],
+   "scope": "part",
+   "note": "Electoral Count Reform Act is in the Consolidated Appropriations Act, 2023"
+  },
+  {
+   "entry_id": "118-01",
+   "congress": 118,
+   "list": "Mayhew, Important laws enacted during the 118th Congress of 2023-2024",
+   "marks": "",
+   "capitals": true,
+   "quote": "$61 BILLION IN MILITARY AID TO UKRAINE. April.",
+   "law_ids": [
+    "118-pub-50"
+   ],
+   "scope": "whole",
+   "note": "H.R. 815, the national security supplemental"
+  },
+  {
+   "entry_id": "118-02",
+   "congress": 118,
+   "list": "Mayhew, Important laws enacted during the 118th Congress of 2023-2024",
+   "marks": "",
+   "capitals": true,
+   "quote": "$26 BILLION IN MILITARY AID TO ISRAEL. Includes humanitarian aid for civilians in conflict zones, including Gaza. April.",
+   "law_ids": [
+    "118-pub-50"
+   ],
+   "scope": "whole",
+   "note": "H.R. 815, the national security supplemental"
+  },
+  {
+   "entry_id": "118-03",
+   "congress": 118,
+   "list": "Mayhew, Important laws enacted during the 118th Congress of 2023-2024",
+   "marks": "",
+   "capitals": false,
+   "quote": "$8 billion in military aid to Taiwan. And elsewhere in Indo-Pacific region. April.",
+   "law_ids": [
+    "118-pub-50"
+   ],
+   "scope": "whole",
+   "note": "H.R. 815, the national security supplemental"
+  },
+  {
+   "entry_id": "118-04",
+   "congress": 118,
+   "list": "Mayhew, Important laws enacted during the 118th Congress of 2023-2024",
+   "marks": "",
+   "capitals": false,
+   "quote": "Ban or require sale of TikTok. April.",
+   "law_ids": [
+    "118-pub-50"
+   ],
+   "scope": "part",
+   "note": "the TikTok provision is a division of H.R. 815"
+  },
+  {
+   "entry_id": "118-05",
+   "congress": 118,
+   "list": "Mayhew, Important laws enacted during the 118th Congress of 2023-2024",
+   "marks": "",
+   "capitals": false,
+   "quote": "Air safety bill. $105 billion to improve air travel safety, upgrade airports and guarantee consumer protections; included in five-year renewal of FAA. May.",
+   "law_ids": [
+    "118-pub-63"
+   ],
+   "scope": "whole",
+   "note": "FAA Reauthorization Act of 2024"
+  },
+  {
+   "entry_id": "118-06",
+   "congress": 118,
+   "list": "Mayhew, Important laws enacted during the 118th Congress of 2023-2024",
+   "marks": "",
+   "capitals": false,
+   "quote": "Social Security Fairness Act. $200 billion over ten years to expand Social Security benefits to certain public sector workers who also collect pensions. December.",
+   "law_ids": [
+    "118-pub-273"
+   ],
+   "scope": "whole"
+  },
+  {
+   "entry_id": "118-07",
+   "congress": 118,
+   "list": "Mayhew, Important laws enacted during the 118th Congress of 2023-2024",
+   "marks": "",
+   "capitals": false,
+   "quote": "$100 billion in emergency disaster relief. To help rebuild communities hit by hurricanes Helene and Milton and other disasters. December.",
+   "law_ids": [
+    "118-pub-158"
+   ],
+   "scope": "part",
+   "note": "disaster relief in the American Relief Act, 2025"
+  },
+  {
+   "entry_id": "118-08",
+   "congress": 118,
+   "list": "Mayhew, Important laws enacted during the 118th Congress of 2023-2024",
+   "marks": "",
+   "capitals": false,
+   "quote": "$10 billion in aid to farmers hit by economic downturn. December.",
+   "law_ids": [
+    "118-pub-158"
+   ],
+   "scope": "part",
+   "note": "farm aid in the American Relief Act, 2025"
+  }
+ ]
+}

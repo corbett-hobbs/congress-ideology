@@ -67,12 +67,14 @@ export function buildLawsPayload(counts: readonly LawCountRow[], laws: readonly 
   const areaIndex = new Map(meta.areas.map((a, i) => [a.id, i]));
   const cIndex = new Map(congresses.map((c, i) => [c, i]));
   const grid = congresses.map(() => meta.areas.map(() => 0));
+  const majorGrid = congresses.map(() => meta.areas.map(() => 0));
   const bandGrid = congresses.map(() => meta.areas.map((): [number, number, number, number, number] => [0, 0, 0, 0, 0]));
   for (const r of counts) {
     const ci = cIndex.get(r.congress);
     const ai = areaIndex.get(r.area_id);
     if (ci === undefined || ai === undefined) throw new Error(`laws: counts row (${r.congress}, ${r.area_id}) is outside the catalog`);
     grid[ci]![ai]! += r.n;
+    majorGrid[ci]![ai]! += r.major;
     r.bands.forEach((n, b) => (bandGrid[ci]![ai]![b]! += n));
   }
   const signed = signedMostByCongress(laws, admins);
@@ -83,6 +85,8 @@ export function buildLawsPayload(counts: readonly LawCountRow[], laws: readonly 
     groups: meta.groups,
     counts: grid,
     bands: bandGrid,
+    major: majorGrid,
+    majorThrough: meta.major_covered_through_congress,
     signedMost: congresses.map((c) => {
       const s = signed.get(c);
       if (!s) throw new Error(`laws: no laws in the ${c}th Congress`);
