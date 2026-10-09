@@ -147,6 +147,15 @@ export function LawsListCard() {
   );
 }
 
+const BILL_SLUG: Record<string, string> = { "H.R.": "house-bill", "S.": "senate-bill", "H.J.Res.": "house-joint-resolution", "S.J.Res.": "senate-joint-resolution" };
+
+/** The law's bill page on Congress.gov, or null if the bill label isn't one we can map. */
+export function congressGovUrl(r: LawListRow): string | null {
+  const m = /^(\S+) (\d+)$/.exec(r[12]);
+  const slug = m && BILL_SLUG[m[1]!];
+  return slug ? `https://www.congress.gov/bill/${ordinal(r[0])}-congress/${slug}/${m[2]}` : null;
+}
+
 /** "Pub. L. 118-90". */
 export const pubLaw = (r: LawListRow): string => `Pub. L. ${r[0]}–${r[1]}`;
 
@@ -176,10 +185,24 @@ export function LawRow({ r, data, list }: { r: LawListRow; data: LawsPayload; li
     </>
   );
   const hasBadge = r[9] === 1 || r[10] === 1;
+  const href = congressGovUrl(r);
+  const title = href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      title="View on Congress.gov"
+      className="text-ink underline decoration-line-strong underline-offset-2 hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+    >
+      {r[3]}
+    </a>
+  ) : (
+    r[3]
+  );
   return (
     <li className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-b border-line px-3 py-2.5 text-[0.82rem] last:border-b-0 sm:grid-cols-[6.5rem_minmax(0,1fr)_9.5rem_9rem] sm:items-baseline sm:gap-y-0.5 sm:py-2">
       <span className="col-span-2 min-w-0 break-words sm:col-span-1 sm:col-start-2 sm:row-start-1">
-        {r[3]}
+        {title}
         {hasBadge && <span className="ml-2 inline-flex flex-wrap gap-1 max-sm:hidden">{badges}</span>}
         <span className="ml-2 whitespace-nowrap text-[0.75rem] tabular-nums text-ink-faint max-sm:hidden">{pubLaw(r)}</span>
       </span>
