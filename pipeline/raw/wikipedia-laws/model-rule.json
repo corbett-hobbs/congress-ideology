@@ -2056,5 +2056,119 @@
   "claimed": false,
   "evidence": null,
   "model": "claude-sonnet-5-5"
+ },
+ "Pro-nuclear energy movement": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Biosecurity in the United States": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Veterans Appeals Improvement and Modernization Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Safeguarding Therapeutics Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "American Women quarters": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Xenophobia and racism related to the COVID-19 pandemic": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Juneteenth": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Lacey Act of 1900": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Fiscal Responsibility Act of 2023": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "COVID-19 Origin Act of 2023": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Bird migration": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Prohibiting Russian Uranium Imports Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "All-American Flag Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Launch Communications Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Commission on International Religious Freedom": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Poison control center": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Mountain View Corridor": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Alzheimer's Project Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
  }
 }

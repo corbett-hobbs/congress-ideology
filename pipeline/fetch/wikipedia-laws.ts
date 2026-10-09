@@ -18,7 +18,7 @@ type ApiJson = {
   query: {
     redirects?: { from: string; to: string }[];
     normalized?: { from: string; to: string }[];
-    pages: { title: string; extract?: string; length?: number }[];
+    pages: { title: string; missing?: boolean; extract?: string; length?: number; pageprops?: { disambiguation?: string } }[];
   };
 };
 const DIR = `${RAW_DIR}/wikipedia-laws`;
@@ -46,6 +46,23 @@ async function main() {
     console.log(`${ord(c)}: ${r.length} laws, ${r.filter((x) => x.title).length} with an article`);
     rows.push(...r);
   }
+  // The lists leave many acts unlinked although the article exists (FAA Reauthorization Act of 2024): look the printed
+  // short title up by name, following redirects, and take it when it is a real page that is not a disambiguation page.
+  const byName = new Map<string, string>();
+  const names = [...new Set(rows.flatMap((r) => (!r.title && r.name ? [r.name.split(/, with:/)[0]!] : [])))];
+  for (let i = 0; i < names.length; i += 50) {
+    const j = await api({ action: "query", redirects: "1", prop: "pageprops", ppprop: "disambiguation", titles: names.slice(i, i + 50).join("|") });
+    const redirect = new Map((j.query.redirects ?? []).map((x) => [x.from, x.to]));
+    const norm = new Map((j.query.normalized ?? []).map((x) => [x.from, x.to]));
+    const pages = new Map(j.query.pages.map((p) => [p.title, p]));
+    for (const n of names.slice(i, i + 50)) {
+      const t = redirect.get(norm.get(n) ?? n) ?? norm.get(n) ?? n;
+      const p = pages.get(t);
+      if (p && !p.missing && !p.pageprops?.disambiguation) byName.set(n, t);
+    }
+  }
+  for (const r of rows) if (!r.title && r.name && byName.has(r.name.split(/, with:/)[0]!)) r.title = byName.get(r.name.split(/, with:/)[0]!)!;
+  console.log(`looked up ${names.length} unlinked short titles by name: ${byName.size} are articles`);
   const titles = [...new Set(rows.flatMap((r) => (r.title ? [r.title] : [])))];
   const leads: Record<string, { title: string; lead: string; length: number }> = {};
   for (let i = 0; i < titles.length; i += 20) {

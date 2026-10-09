@@ -20,10 +20,12 @@ export function parseActList(html: string): WikiLawRow[] {
   const out: WikiLawRow[] = [];
   for (const row of html.split("<tr>").slice(1)) {
     const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((m) => m[1]!);
-    if (cells.length < 3) continue;
+    if (cells.length < 4 || !/Pub\.\s*L\./.test(cells[cells.length - 1]!)) continue; // private laws repeat the numbers
     const id = /^\s*(\d+)[-–](\d+)\s*$/.exec(stripTags(cells[0]!));
     if (!id) continue;
-    const cell = cells[2]!;
+    // The date cell is missing from some rows (a date shared by several laws): the short title is the first cell after any date.
+    const isDate = (c: string) => /data-sort-value="\d{12}|^(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d/.test(c.trim().replace(/<[^>]+>/g, "") ? stripTags(c) : c);
+    const cell = cells[1] !== undefined && isDate(cells[1]) ? cells[2]! : cells[1]!;
     const text = stripTags(cell);
     const a = /<a\s([^>]*)>/i.exec(cell);
     let title: string | null = null;
