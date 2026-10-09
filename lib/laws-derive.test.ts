@@ -122,7 +122,7 @@ describe("passage votes and support bands", () => {
     const p = buildLawsPayload(counts, laws, meta, admins);
     for (let i = 0; i < p.congresses.length; i++) for (let j = 0; j < p.areas.length; j++) expect(p.bands[i]![j]!.reduce((a, b) => a + b, 0)).toBe(p.counts[i]![j]);
   });
-  it("show most laws with no recorded vote before 2000, as the pre-flight found", () => {
+  it("show most laws passed by voice vote or consent before 2000, as the pre-flight found", () => {
     const share = (from: number, to: number) => {
       const ls = laws.filter((l) => l.congress >= from && l.congress <= to);
       return ls.filter((l) => l.band === 0).length / ls.length;
@@ -335,7 +335,7 @@ describe("the Laws page derivations (over the committed files)", () => {
     expect(p.control.house[0]).toBe("D");
     expect(p.control.house[p.congresses.indexOf(104)]).toBe("R");
   });
-  it("finds most pre-2000 laws had no recorded vote, and far fewer after", () => {
+  it("finds most pre-2000 laws passed by voice vote or consent, and far fewer after", () => {
     expect(noVoteShare(p, 93, 106)).toBeGreaterThan(0.5);
     expect(noVoteShare(p, 107, 118)).toBeLessThan(noVoteShare(p, 93, 106));
   });
@@ -406,7 +406,7 @@ describe("the list of every law and card 3", () => {
     expect(rev.slice(1).map((r) => r.id)).toEqual(rows.slice(1).map((r) => r.id).reverse());
     expect(rows.some((r) => r.id === "not-classified")).toBe(true);
   });
-  it("orders card 3 by the share on a narrow vote or with no recorded vote", () => {
+  it("orders card 3 by the share on a narrow vote or by voice vote or consent", () => {
     for (const [key, band] of [["f", 1], ["u", 0]] as const) {
       const rows = groupRows(p, all(), false, { key, reversed: false }).slice(1);
       const shares = rows.map((r) => r.bands[band]! / r.total);

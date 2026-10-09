@@ -7,7 +7,7 @@ import { Swatch } from "@/components/decisions/shared";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { fmtDate } from "@/components/decisions/CaseListCard";
 import { fmtInt } from "@/lib/decisions-derive";
-import { ALL_GROUPS, SUPPORT_COLORS, SUPPORT_LABELS, SUPPORT_SHORT, filterLabel, filterLaws, matchLaws, tallyText } from "@/lib/laws-derive";
+import { ALL_GROUPS, SUPPORT_COLORS, SUPPORT_LABELS, SUPPORT_ORDER, SUPPORT_SHORT, filterLabel, filterLaws, matchLaws, tallyText } from "@/lib/laws-derive";
 import type { LawListRow, LawsList, LawsPayload } from "@/lib/laws-types";
 import { ordinal } from "@/lib/demographics-chart";
 import { useLawsActions, useLawsValues } from "./LawsState";
@@ -83,12 +83,12 @@ export function LawsListCard() {
           className="w-full rounded-md border border-line-strong bg-surface-raised px-2.5 py-1 text-[0.82rem] text-ink placeholder:text-ink-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:w-64"
         />
       }
-      lede={`${major ? "Major laws" : "Public laws"} enacted ${pin !== null ? `by the ${ordinal(pin)} Congress` : `in ${years}`}, newest first. The list follows the filters above and the charts: pick a policy area, a vote or a Congress to narrow it. Each law shows its closest recorded final-passage vote; a law passed by voice vote or unanimous consent in both chambers has none.`}
+      lede={`${major ? "Major laws" : "Public laws"} enacted ${pin !== null ? `by the ${ordinal(pin)} Congress` : `in ${years}`}, newest first. The list follows the filters above and the charts: pick a policy area, a vote or a Congress to narrow it. Each law shows its closest recorded final-passage vote; a law passed by voice vote or unanimous consent in both chambers shows as a voice vote.`}
     >
       <div className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-ink-muted" aria-live="polite">
         <span className="tabular-nums text-ink">{list ? `${fmtInt(matched.length)} law${matched.length === 1 ? "" : "s"}` : failed ? "Laws unavailable" : "Loading laws…"}</span>
         <div role="group" aria-label="Support" className="flex flex-wrap items-center gap-1.5">
-          {[null, 4, 3, 2, 1, 0].map((b) => {
+          {[null, ...SUPPORT_ORDER].map((b) => {
             const on = band === b;
             return (
               <button

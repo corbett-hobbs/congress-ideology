@@ -9,15 +9,15 @@ import { Swatch, TableView } from "@/components/decisions/shared";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { ordinal } from "@/lib/demographics-chart";
 import { fmtInt } from "@/lib/decisions-derive";
-import { ALL_GROUPS, ALL_ROW, SUPPORT_COLORS, SUPPORT_LABELS, SUPPORT_SHORT, bandShare, groupInFilter, openYear, groupRows, groupSelected, nextGroupSort, type GroupSort, type GroupSortKey } from "@/lib/laws-derive";
+import { ALL_GROUPS, ALL_ROW, SUPPORT_COLORS, SUPPORT_LABELS, SUPPORT_ORDER, SUPPORT_SHORT, bandShare, groupInFilter, openYear, groupRows, groupSelected, nextGroupSort, type GroupSort, type GroupSortKey } from "@/lib/laws-derive";
 import { LawsHeatmap, BAR_ROW_H } from "./LawsHeatmap";
 import { EmptyWindow } from "./shared";
 import { useLawsActions, useLawsValues } from "./LawsState";
 
 const SORTS: { key: GroupSortKey; label: string; hint: string }[] = [
   { key: "n", label: "Laws", hint: "Law counts in the heatmap; most laws first" },
+  { key: "u", label: "Voice vote", hint: "Laws passed by voice vote or consent in both chambers, in the heatmap; largest share first" },
   { key: "f", label: "Narrow votes", hint: "Laws whose closest recorded vote had under 60% yes, in the heatmap; largest share first" },
-  { key: "u", label: "No recorded vote", hint: "Laws with no recorded vote in either chamber, in the heatmap; largest share first" },
 ];
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -41,7 +41,7 @@ export function LawsGroupsCard() {
         total: fmtInt(r.total),
         selected: r.id !== ALL_ROW && groupSelected(data, group, r.id),
         dimmed: group !== ALL_GROUPS && r.id !== ALL_ROW && !groupInFilter(data, group, r.id),
-        segments: [0, 1, 2, 3, 4].map((k) => ({
+        segments: SUPPORT_ORDER.map((k) => ({
           value: bandShare(r, k),
           color: SUPPORT_COLORS[k]!,
           title: `${r.label}: ${SUPPORT_LABELS[k]}, ${pct(bandShare(r, k))} (${fmtInt(r.bands[k]!)} of ${fmtInt(r.total)})`,
@@ -61,7 +61,7 @@ export function LawsGroupsCard() {
     <ChartCard
       tight
       title="Which kinds of laws pass, and how?"
-      lede="Left: how many laws, how many passed on a narrow vote or how many had no recorded vote, in each decade, by policy area. Right: how broadly each area's laws were supported, over the years shown. The toggle picks the measure for the heatmap and orders both; click it again to reverse. Click a policy area in either to filter the charts and the list."
+      lede="Left: how many laws, how many were passed by voice vote or consent or on a narrow vote, in each decade, by policy area. Right: how broadly each area's laws were supported, over the years shown. The toggle picks the measure for the heatmap and orders both; click it again to reverse. Click a policy area in either to filter the charts and the list."
       action={<ReversibleSortToggle ariaLabel="Sort policy areas" options={SORTS} active={sort.key} reversed={sort.reversed} onSelect={(k) => setSort((cur) => nextGroupSort(cur, k))} />}
     >
       {empty ? (
@@ -72,7 +72,7 @@ export function LawsGroupsCard() {
           <div className="min-w-0">
             <p className="m-0 mb-2 text-[0.78rem] text-ink-muted">{`Years shown: ${span}`}</p>
             <div className={`mb-px flex items-end lg:h-6 ${LEGEND_ROW} pb-1`} aria-label="Support bands">
-              {[0, 1, 2, 3, 4].map((k) => (
+              {SUPPORT_ORDER.map((k) => (
                 <span key={k} className={LEGEND_ITEM}>
                   <Swatch color={SUPPORT_COLORS[k]!} />
                   {SUPPORT_SHORT[k]}
@@ -88,13 +88,13 @@ export function LawsGroupsCard() {
       )}
       <MethodologyNote>
         <p>
-          Policy areas are Congress.gov&rsquo;s own, grouped into {data.groups.length - 1} topic groups plus &ldquo;Not classified&rdquo; (the 1970s laws it never gave a current area, shown rather than guessed); small groups swing by several points on a few laws. A bar is the closest recorded final-passage vote of each law in the years shown, so a law is only as broadly supported as its narrowest vote; across them all, {pct(noRecorded)} had no recorded vote in either chamber, passed by voice vote or unanimous consent or with no method stated. The heatmap counts laws (all, those under 60% yes, or those with no recorded vote, as the toggle says) on one scale, except &ldquo;All policy areas&rdquo;, which has its own; the {data.partial[data.partial.length - 1] ? `last decade is partial (the ${ordinal(data.congresses[data.congresses.length - 1]!)} Congress is in session)` : "decades follow the Congresses that opened in them"}.{major ? ` Major laws are assessed through the ${ordinal(data.majorThrough)} Congress.` : ""}
+          Policy areas are Congress.gov&rsquo;s own, grouped into {data.groups.length - 1} topic groups plus &ldquo;Not classified&rdquo; (the 1970s laws it never gave a current area, shown rather than guessed); small groups swing by several points on a few laws. A bar is the closest recorded final-passage vote of each law in the years shown, so a law is only as broadly supported as its narrowest vote; across them all, {pct(noRecorded)} were passed by voice vote or consent in both chambers (unanimous consent, or, in the 1970s, no method stated). The heatmap counts laws (all, those under 60% yes, or those passed by voice vote or consent, as the toggle says) on one scale, except &ldquo;All policy areas&rdquo;, which has its own; the {data.partial[data.partial.length - 1] ? `last decade is partial (the ${ordinal(data.congresses[data.congresses.length - 1]!)} Congress is in session)` : "decades follow the Congresses that opened in them"}.{major ? ` Major laws are assessed through the ${ordinal(data.majorThrough)} Congress.` : ""}
         </p>
       </MethodologyNote>
       <TableView
         label="Table of policy areas by how broadly their laws were supported"
-        head={["Policy area", "Laws", ...SUPPORT_SHORT]}
-        rows={rows.map((r) => [r.label, r.total, ...r.bands])}
+        head={["Policy area", "Laws", ...SUPPORT_ORDER.map((k) => SUPPORT_SHORT[k]!)]}
+        rows={rows.map((r) => [r.label, r.total, ...SUPPORT_ORDER.map((k) => r.bands[k]!)])}
       />
     </ChartCard>
   );

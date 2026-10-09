@@ -83,12 +83,12 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check(segs.length >= 10 && segs.every((s) => s.a.length > 0 && (s.w < 20 || s.t.length > 0)), `${tag}: slider president labels present (${segs.length} tenures, ${segs.filter((s) => s.t).length} with text)`);
 
   // Card 2: a stacked area of five bands, a legend of five that isolates and narrows card 1
-  const legend = c2.locator("button[aria-pressed]", { hasText: /recorded vote|% yes|or more yes/ });
+  const legend = c2.locator("button[aria-pressed]", { hasText: /voice vote|% yes|or more yes/ });
   check((await legend.count()) === 5, `${tag}: card 2 legend names all five bands`);
   check((await c2.locator("svg.chart-svg path[fill]").count()) === 5, `${tag}: card 2 is a stacked area of five bands`);
   if (w >= 520) {
     const names = await svgTexts(c2.locator("svg.chart-svg text"));
-    check(["No recorded vote", "90%+"].every((n) => names.includes(n)), `${tag}: card 2 names bands on the chart`);
+    check(["Voice vote or consent", "90%+"].every((n) => names.includes(n)), `${tag}: card 2 names bands on the chart`);
   }
 
   // The list
@@ -170,7 +170,7 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
     check(tops.cells.length === tops.bars.length && Math.max(...diffs) < 1, `${tag}: heatmap and bar rows have equal height (max offset ${Math.max(...diffs).toFixed(2)}px)`);
   }
   const toggle = c3.locator("[aria-label='Sort policy areas']");
-  check((await toggle.locator("button").allInnerTexts()).map((t) => t.replace(/[^A-Za-z ]/g, "").trim()).join(",") === "Laws,Narrow votes,No recorded vote", `${tag}: one toggle, in the order Laws, Narrow votes, No recorded vote`);
+  check((await toggle.locator("button").allInnerTexts()).map((t) => t.replace(/[^A-Za-z ]/g, "").trim()).join(",") === "Laws,Voice vote,Narrow votes", `${tag}: one toggle, in the order Laws, Voice vote, Narrow votes`);
   const labelsOf = () => heat.locator("[role=row] > button[title]:not([role=gridcell])").allInnerTexts();
   const rowOrder = () => box.locator("li button span[title]").allInnerTexts();
   check(JSON.stringify(await labelsOf()) === JSON.stringify(await rowOrder()), `${tag}: heatmap and rows share one order`);
@@ -178,9 +178,9 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   await toggle.locator("button", { hasText: "Narrow votes" }).click();
   await settle(page);
   check(/narrow vote/.test((await heat.locator("[role=gridcell]").nth(7).getAttribute("title")) ?? "") && JSON.stringify(await labelsOf()) === JSON.stringify(await rowOrder()), `${tag}: Narrow votes re-measures the heatmap and reorders both`);
-  await toggle.locator("button", { hasText: "No recorded vote" }).click();
+  await toggle.locator("button", { hasText: "Voice vote" }).click();
   await settle(page);
-  check(/no recorded vote/.test((await heat.locator("[role=gridcell]").nth(7).getAttribute("title")) ?? ""), `${tag}: No recorded vote re-measures the heatmap`);
+  check(/voice vote/.test((await heat.locator("[role=gridcell]").nth(7).getAttribute("title")) ?? ""), `${tag}: Voice vote re-measures the heatmap`);
   await toggle.locator("button", { hasText: "Laws" }).click();
   await settle(page);
   check(JSON.stringify(await rowOrder()) === JSON.stringify(firstOrder), `${tag}: Laws returns to the first order`);

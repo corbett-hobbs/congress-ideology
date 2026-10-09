@@ -256,10 +256,12 @@ export function windowIndexes(p: LawsPayload, range: YearRange, major: boolean):
   return a < 0 ? [0, -1] : [a, b];
 }
 
-export const SUPPORT_LABELS = ["No recorded vote", "Under 60% yes", "60\u201375% yes", "75\u201390% yes", "90% or more yes"] as const;
-export const SUPPORT_SHORT = ["No recorded vote", "Under 60%", "60\u201375%", "75\u201390%", "90%+"] as const;
-/** The split palette, one slot per band in data order (the darkest is "no recorded vote"; the cool end is broad support). */
+export const SUPPORT_LABELS = ["Voice vote or consent", "Under 60% yes", "60\u201375% yes", "75\u201390% yes", "90% or more yes"] as const;
+export const SUPPORT_SHORT = ["Voice vote", "Under 60%", "60\u201375%", "75\u201390%", "90%+"] as const;
+/** The split palette, one slot per band in data order (the darkest is the voice-vote band; the cool end is broad support). */
 export const SUPPORT_COLORS = ["var(--split-0)", "var(--split-4)", "var(--split-3)", "var(--split-2)", "var(--split-1)"] as const;
+/** Display order of the bands, bottom to top in the stack and left to right in bars, legends and tables: voice vote first, then 90%+ down to under 60%, so the two broad-agreement bands sit together. Data order stays 0..4. */
+export const SUPPORT_ORDER = [0, 4, 3, 2, 1] as const;
 
 /** Below this many laws a Congress (median over the window), shares swing on a handful of laws. */
 export const SMALL_LAWS_MEDIAN = 15;
@@ -276,7 +278,7 @@ export function signedMostSegments(p: LawsPayload, indexes: readonly number[]): 
   return out;
 }
 
-/** Share of laws in `[firstCongress, lastCongress]` that had no recorded final-passage vote in either chamber. */
+/** Share of laws in `[firstCongress, lastCongress]` passed by voice vote or consent (no roll call on final passage in either chamber). */
 export function noVoteShare(p: LawsPayload, firstCongress: number, lastCongress: number): number {
   let none = 0;
   let all = 0;
@@ -387,11 +389,11 @@ export interface GroupSort {
 /** Click on the active key reverses it; another key starts largest-first. */
 export const nextGroupSort = (cur: GroupSort, key: GroupSortKey): GroupSort => (cur.key === key ? { key, reversed: !cur.reversed } : { key, reversed: false });
 
-/** What each toggle key counts: every law, or the laws in one support band (1 = under 60% yes, 0 = no recorded vote). */
+/** What each toggle key counts: every law, or the laws in one support band (1 = under 60% yes, 0 = voice vote or consent). */
 export const GROUP_MEASURES: Record<GroupSortKey, { band: number | null; noun: string }> = {
   n: { band: null, noun: "laws" },
   f: { band: 1, noun: "passed on a narrow vote (under 60% yes)" },
-  u: { band: 0, noun: "had no recorded vote" },
+  u: { band: 0, noun: "passed by voice vote or consent" },
 };
 
 export const ALL_ROW = "all";
