@@ -148,9 +148,7 @@ function VoteRow({ chamber, t, label }: { chamber: string; t: ChamberTally; labe
           </span>
           <span className="whitespace-nowrap tabular-nums text-ink">{`${t[1]}–${t[2]}`}</span>
         </span>
-      ) : (
-        <span className="text-[0.78rem] text-ink-faint sm:col-span-2">No tally</span>
-      )}
+      ) : null}
     </li>
   );
 }
