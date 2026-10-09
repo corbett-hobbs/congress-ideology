@@ -65,4 +65,29 @@ export interface LawsPayload {
   presidents: LawsPresident[];
   dataThrough: string;
   lawCount: number;
+  /** Short hash of the list payload, for its fetch URL (set by `lib/laws-data.ts`). */
+  listVersion: string;
+}
+
+/** One chamber's final passage: `[kind 0 roll call / 1 voice vote / 2 unanimous consent / 3 method not stated, yea, nay]`. */
+export type ChamberTally = [0 | 1 | 2 | 3, number | null, number | null];
+
+/**
+ * One law in the list, as a compact tuple (the payload is ~12,600 rows): `[0 Congress, 1 law number, 2 signing date,
+ * 3 title, 4 index into `LawsPayload.areas`, 5 support band 0-4, 6 House passage, 7 Senate passage, 8 index into the list's
+ * `sponsors` (-1 none), 9 major (1 Mayhew-listed, 0 not, 2 not yet assessed), 10 veto override, 11 CRS first sentence ("" none),
+ * 12 bill ("H.R. 1"), 13 index into `signers`, 14 override votes `[House yea, nay, Senate yea, nay]` or null]`.
+ */
+export type LawListRow = [number, number, string, string, number, 0 | 1 | 2 | 3 | 4, ChamberTally, ChamberTally, number, 0 | 1 | 2, 0 | 1, string, string, number, [number | null, number | null, number | null, number | null] | null];
+
+/** A bill's sponsor as the list shows them: `[name with title, "D-CA-12", party letter, profile path or null]`. */
+export type LawSponsor = [string, string, "D" | "R" | "I", string | null];
+
+/** The president who signed a law. */
+export type LawSigner = [name: string, party: "D" | "R"];
+
+export interface LawsList {
+  rows: LawListRow[];
+  sponsors: LawSponsor[];
+  signers: LawSigner[];
 }

@@ -2,7 +2,7 @@ import type { TermSegment } from "@/components/charts/TermBandSvg";
 import type { CongressControlRow } from "./congress-control";
 import type { Administration } from "./executive-orders-entities";
 import type { LawCountRow, LawRow, LawsMeta } from "./laws-entities";
-import type { BandCounts, LawsPayload, LawsPresident, SignedMost } from "./laws-types";
+import type { BandCounts, ChamberTally, LawListRow, LawSigner, LawSponsor, LawsList, LawsPayload, LawsPresident, SignedMost } from "./laws-types";
 import { initialsOf } from "./term-label";
 import type { BandTerm } from "@/components/charts/TermBand";
 import type { YearRange } from "./year-range";
@@ -117,6 +117,7 @@ export function buildLawsPayload(
     presidents: presidentTerms(admins, openYear(meta.first_congress), openYear(last) + 1),
     dataThrough: meta.data_through,
     lawCount: meta.law_count,
+    listVersion: "",
   };
 }
 
@@ -287,4 +288,198 @@ export function noVoteShare(p: LawsPayload, firstCongress: number, lastCongress:
     });
   });
   return all ? none / all : 0;
+}
+
+// --------------------------------------------------------------------------- the list of every law
+
+const BILL_LABEL: Record<LawRow["bill_type"], string> = { hr: "H.R.", s: "S.", hjres: "H.J.Res.", sjres: "S.J.Res." };
+export const billLabel = (l: Pick<LawRow, "bill_type" | "bill_number">): string => `${BILL_LABEL[l.bill_type]} ${l.bill_number}`;
+
+/**
+ * The list payload: one compact tuple per law, newest first, plus the small tables the tuples index (sponsors, signers).
+ * `sponsorOf` resolves a bioguide id to how the list shows them (name, party-state, profile path); the signer is derived from
+ * the signing date, never stored on the law.
+ */
+export function buildLawsList(
+  laws: readonly LawRow[],
+  meta: Pick<LawsMeta, "areas">,
+  admins: readonly Administration[],
+  sponsorOf: (bioguideId: string, congress: number, origin: LawRow["origin_chamber"]) => LawSponsor | null,
+): LawsList {
+  const areaIndex = new Map(meta.areas.map((a, i) => [a.id, i]));
+  const sponsors: LawSponsor[] = [];
+  const sponsorKey = new Map<string, number>();
+  const signers: LawSigner[] = [];
+  const signerKey = new Map<string, number>();
+  const rows = [...laws]
+    .sort((a, b) => b.date.localeCompare(a.date) || b.congress - a.congress || b.number - a.number)
+    .map((l): LawListRow => {
+      const ai = areaIndex.get(l.area_id);
+      if (ai === undefined) throw new Error(`laws: ${l.law_id} names area "${l.area_id}", which the catalog does not list`);
+      let si = -1;
+      if (l.sponsor_bioguide_id) {
+        const key = `${l.sponsor_bioguide_id}|${l.congress}|${l.origin_chamber ?? ""}`;
+        si = sponsorKey.get(key) ?? -1;
+        if (si < 0) {
+          const s = sponsorOf(l.sponsor_bioguide_id, l.congress, l.origin_chamber);
+          if (s) {
+            si = sponsors.push(s) - 1;
+            sponsorKey.set(key, si);
+          }
+        }
+      }
+      const a = administrationOn(l.date, admins);
+      if (!a) throw new Error(`laws: ${l.law_id} is dated ${l.date}, which no administration covers`);
+      let gi = signerKey.get(a.term_id);
+      if (gi === undefined) {
+        gi = signers.push([a.president, partyLetter(a.party)]) - 1;
+        signerKey.set(a.term_id, gi);
+      }
+      return [l.congress, l.number, l.date, l.title, ai, l.band, [l.house[0], l.house[1], l.house[2]], [l.senate[0], l.senate[1], l.senate[2]], si, l.major === null ? 2 : l.major ? 1 : 0, l.veto_override ? 1 : 0, l.summary ?? "", billLabel(l), gi, l.override_votes];
+    });
+  return { rows, sponsors, signers };
+}
+
+/** "House 267–140" / "Senate voice vote" / "Senate unanimous consent" / "House: no method stated". */
+export function tallyText(chamber: "House" | "Senate", t: ChamberTally): string {
+  if (t[0] === 0 && t[1] !== null && t[2] !== null) return `${chamber} ${t[1]}–${t[2]}`;
+  if (t[0] === 1) return `${chamber} voice vote`;
+  if (t[0] === 2) return `${chamber} unanimous consent`;
+  return `${chamber}: no method stated`;
+}
+
+export interface LawFilter {
+  /** Inclusive Congress index range into `data.congresses`; `first > last` = none. */
+  window: [number, number];
+  /** A pinned Congress number overrides the window. */
+  congress: number | null;
+  group: string;
+  major: boolean;
+  band: number | null;
+}
+
+/** The list rows a set of page-level filters keeps (order kept: newest first). */
+export function filterLaws(p: LawsPayload, rows: readonly LawListRow[], f: LawFilter): LawListRow[] {
+  const [lo, hi] = f.congress !== null ? [f.congress, f.congress] : [p.congresses[f.window[0]] ?? 1, p.congresses[f.window[1]] ?? 0];
+  const groups = filterGroups(p, f.group);
+  const ok = new Set(p.areas.flatMap((a, i) => (!groups || groups.has(a.group) ? [i] : [])));
+  return rows.filter((r) => r[0] >= lo && r[0] <= hi && ok.has(r[4]) && (!f.major || r[9] === 1) && (f.band === null || r[5] === f.band));
+}
+
+/** Every word of `query` must appear in the law's name, bill, sponsor, policy area, summary or Pub. L. number. */
+export function matchLaws(p: LawsPayload, list: Pick<LawsList, "sponsors">, rows: readonly LawListRow[], query: string): LawListRow[] {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (terms.length === 0) return [...rows];
+  return rows.filter((r) => {
+    const sp = r[8] >= 0 ? list.sponsors[r[8]]![0] : "";
+    const hay = `${r[3]} ${r[12]} ${sp} ${p.areas[r[4]]!.name ?? "Not classified"} ${p.groups.find((g) => g.id === p.areas[r[4]]!.group)?.label ?? ""} ${r[11]} ${r[0]}-${r[1]} pub. l. ${r[0]}–${r[1]}`.toLowerCase();
+    return terms.every((t) => hay.includes(t));
+  });
+}
+
+// --------------------------------------------------------------------------- card 3: topic groups by decade
+
+export type GroupSortKey = "n" | "f" | "u";
+export interface GroupSort {
+  key: GroupSortKey;
+  reversed: boolean;
+}
+/** Click on the active key reverses it; another key starts largest-first. */
+export const nextGroupSort = (cur: GroupSort, key: GroupSortKey): GroupSort => (cur.key === key ? { key, reversed: !cur.reversed } : { key, reversed: false });
+
+/** What each toggle key counts: every law, or the laws in one support band (1 = under 60% yes, 0 = no recorded vote). */
+export const GROUP_MEASURES: Record<GroupSortKey, { band: number | null; noun: string }> = {
+  n: { band: null, noun: "laws" },
+  f: { band: 1, noun: "passed on a narrow vote (under 60% yes)" },
+  u: { band: 0, noun: "had no recorded vote" },
+};
+
+export const ALL_ROW = "all";
+
+export interface GroupRow {
+  /** A topic group's id, or `ALL_ROW`. */
+  id: string;
+  label: string;
+  bands: BandCounts;
+  total: number;
+}
+
+const sumBands = (b: readonly number[]): number => b[0]! + b[1]! + b[2]! + b[3]! + b[4]!;
+
+/** Laws in the Congresses `[a, b]` for `groups` (null = all): the five band counts. */
+function windowBands(p: LawsPayload, a: number, b: number, groups: ReadonlySet<string> | null, major: boolean): BandCounts {
+  const out: BandCounts = [0, 0, 0, 0, 0];
+  for (let ci = a; ci <= b; ci++) cellFor(p, ci, groups, major).bands.forEach((n, k) => (out[k]! += n));
+  return out;
+}
+
+/**
+ * One row per topic group with laws in the window (Not classified included, so the 1973-78 gap stays visible), ordered by the
+ * toggle's measure, with "All policy areas" pinned first. A comparison chart: the policy-area filter dims rows, never removes them.
+ */
+export function groupRows(p: LawsPayload, window: readonly [number, number], major: boolean, sort: GroupSort): GroupRow[] {
+  const rows: GroupRow[] = p.groups
+    .map((g) => {
+      const bands = window[0] > window[1] ? ([0, 0, 0, 0, 0] as BandCounts) : windowBands(p, window[0], window[1], new Set([g.id]), major);
+      return { id: g.id, label: g.label, bands, total: sumBands(bands) };
+    })
+    .filter((r) => r.total > 0);
+  const measure = GROUP_MEASURES[sort.key].band;
+  const value = (r: GroupRow): number => (measure === null ? r.total : r.total ? r.bands[measure]! / r.total : 0);
+  const dir = sort.reversed ? 1 : -1;
+  const order = new Map(p.groups.map((g, i) => [g.id, i]));
+  rows.sort((a, b) => dir * (value(a) - value(b)) || order.get(a.id)! - order.get(b.id)!);
+  const all = window[0] > window[1] ? ([0, 0, 0, 0, 0] as BandCounts) : windowBands(p, window[0], window[1], null, major);
+  return [{ id: ALL_ROW, label: "All policy areas", bands: all, total: sumBands(all) }, ...rows];
+}
+
+export const bandShare = (r: Pick<GroupRow, "bands" | "total">, band: number): number => (r.total ? r.bands[band]! / r.total : 0);
+
+/** The decade a Congress opened in (93rd = 1970). */
+export const decadeOfCongress = (congress: number): number => Math.floor(openYear(congress) / 10) * 10;
+
+export interface DecadeCell {
+  decade: number;
+  bands: BandCounts;
+  total: number;
+}
+
+/** Decades the data spans, ascending. */
+export const decadesOf = (p: LawsPayload): number[] => [...new Set(p.congresses.map(decadeOfCongress))];
+
+/** One topic group's laws (`ALL_ROW` = every group) summed by decade, over every Congress (not only the window). */
+export function decadeCells(p: LawsPayload, id: string, major: boolean): DecadeCell[] {
+  const groups = id === ALL_ROW ? null : new Set([id]);
+  return decadesOf(p).map((decade) => {
+    const bands: BandCounts = [0, 0, 0, 0, 0];
+    p.congresses.forEach((c, ci) => {
+      if (decadeOfCongress(c) === decade) cellFor(p, ci, groups, major).bands.forEach((n, k) => (bands[k]! += n));
+    });
+    return { decade, bands, total: sumBands(bands) };
+  });
+}
+
+/** The number a heatmap cell shows for a measure. */
+export const heatCount = (c: DecadeCell, band: number | null): number => (band === null ? c.total : c.bands[band]!);
+
+/** The top of the colour scale: the busiest decade of any one group (`ALL_ROW` has its own, being several times any group). */
+export function heatMax(p: LawsPayload, id: string, band: number | null, major: boolean): number {
+  const ids = id === ALL_ROW ? [ALL_ROW] : p.groups.map((g) => g.id);
+  return Math.max(1, ...ids.flatMap((g) => decadeCells(p, g, major).map((c) => heatCount(c, band))));
+}
+
+/** Does any Congress of this decade have a second year inside the years window? */
+export const decadeInWindow = (p: LawsPayload, decade: number, window: readonly [number, number]): boolean =>
+  p.congresses.some((c, ci) => decadeOfCongress(c) === decade && ci >= window[0] && ci <= window[1]);
+
+/** Is the topic group `id` selected by the policy-area filter? */
+export function groupSelected(p: LawsPayload, filter: string, id: string): boolean {
+  const g = filterGroups(p, filter);
+  return g !== null && g.has(id) && g.size === 1;
+}
+
+/** Does the policy-area filter keep topic group `id` (everything, or the group / groups it names)? */
+export function groupInFilter(p: LawsPayload, filter: string, id: string): boolean {
+  const g = filterGroups(p, filter);
+  return g === null || g.has(id);
 }

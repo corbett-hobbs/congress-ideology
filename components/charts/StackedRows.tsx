@@ -28,6 +28,7 @@ export function StackedRows({
   onRowClick,
   ariaLabel,
   emptyText,
+  rowClass = "",
 }: {
   rows: readonly StackedRowData[];
   /** The value a full-width bar stands for. */
@@ -35,6 +36,8 @@ export function StackedRows({
   onRowClick: (id: string) => void;
   ariaLabel: string;
   emptyText: string;
+  /** Extra classes for each row's button (a fixed height, so the rows can line up with a companion chart). */
+  rowClass?: string;
 }) {
   // No row has a second value (a delta, a military dollar figure): drop its column so the bar runs the full width.
   const hasDelta = rows.some((r) => !!r.delta);
@@ -49,7 +52,7 @@ export function StackedRows({
             aria-pressed={!!r.selected}
             className={`grid w-full cursor-pointer ${hasDelta ? "grid-cols-[24px_minmax(86px,118px)_minmax(60px,1fr)_50px_58px]" : "grid-cols-[24px_minmax(86px,118px)_minmax(60px,1fr)_56px]"} items-center gap-x-2 rounded-md border-0 px-2 py-1.5 text-left text-ink hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus ${hasDelta ? "@max-[400px]:grid-cols-[24px_1fr_auto_auto]" : "@max-[400px]:grid-cols-[24px_1fr_auto]"} @max-[400px]:gap-y-1 ${
               r.selected ? "bg-[color-mix(in_oklab,var(--accent)_13%,var(--surface))]" : "bg-transparent"
-            } ${r.dimmed ? "opacity-50" : ""}`}
+            } ${r.dimmed ? "opacity-50" : ""} ${rowClass}`}
           >
             <span className="text-right font-mono text-[0.7rem] tabular-nums text-ink-faint">{r.rank ?? ""}</span>
             <span title={r.label} className={`truncate text-[0.82rem] @max-[400px]:whitespace-normal @max-[400px]:text-[0.85rem] @max-[400px]:leading-tight ${r.selected ? "font-semibold" : ""}`}>
