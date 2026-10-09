@@ -10,20 +10,20 @@ import {
   getCommittees,
   getCommitteeSearchIndex,
 } from "@/lib/committee-data";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 import { SenateExplorer } from "@/components/senate/SenateExplorer";
 
 export const metadata: Metadata = {
   title: "Congress ideology explorer",
-  description: site.description,
+  description: site.congressIdeologyDescription,
   alternates: { canonical: "/congress/ideology" },
   openGraph: {
-    title: site.name,
-    description: site.description,
+    ...ogDefaults,
+    title: `Congress ideology explorer · ${site.name}`,
+    description: site.congressIdeologyDescription,
     url: "/congress/ideology",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
-  twitter: { images: ["/opengraph-image"] },
+  twitter: twitterDefaults,
 };
 
 export default function Home() {

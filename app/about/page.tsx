@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { siteInfo } from "@/lib/site-info";
-import { site } from "@/lib/site";
+import { site, ogDefaults, twitterDefaults } from "@/lib/site";
 
 const DESCRIPTION =
   "InsideGov puts public government records into charts you can explore: the presidency, Congress and the Supreme Court, without reading the raw files.";
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: "/about" },
   openGraph: {
+    ...ogDefaults,
     title: `About · ${site.name}`,
     description: DESCRIPTION,
     url: "/about",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
-  twitter: { images: ["/opengraph-image"] },
+  twitter: twitterDefaults,
 };
 
 const QUESTIONS = [
@@ -41,7 +41,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function AboutPage() {
-  const { whyIBuiltIt, fundingStatement, builderName, githubUrl } = siteInfo;
+  const { fundingStatement, builderName, githubUrl } = siteInfo;
   return (
     <main className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col gap-8 px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
       <PageHeader title="About InsideGov">
@@ -52,12 +52,29 @@ export default function AboutPage() {
       </PageHeader>
 
       <div className="flex flex-col gap-7 text-[0.95rem] leading-[1.65] [&_p]:m-0">
-        <Section title="Why it exists">
+        <Section title="Why I built this">
           <p>
-            Government data is public, but it is scattered across agencies and published in formats built for
-            specialists. InsideGov gathers it in one place, lines it up by date and by who was in office, and makes the
-            patterns visible.
-            {whyIBuiltIt ? ` ${whyIBuiltIt}` : ""}
+            Almost everything the federal government does leaves a public record: roll-call votes, executive orders,
+            financial disclosures, trade statistics, court decisions, troop counts. Very little of it is easy to read.
+            It is spread across dozens of agencies and published in formats meant for specialists. InsideGov does the
+            work of lining it up once, in the open, so anyone can see what the records show.
+          </p>
+          <p>
+            I studied international politics at Georgetown’s School of Foreign Service and worked in the press office of
+            U.S. Senator Charles Schumer. That showed me how much of politics is an argument about framing. What drew
+            me was the layer underneath: what actually happened, and what the numbers say.
+          </p>
+          <p>
+            In 2013 I joined FindTheBest, later renamed Graphiq, which turned large public datasets into charts anyone
+            could browse or embed. There I launched the original InsideGov.com, which reached 5.1 million visitors a
+            month in its first year. On election night 2016 we sent live-updating results charts to publishers
+            including Reuters, Fox News and Yahoo, and drew 2.3 million people to Graphiq’s site, a company record.
+            After Amazon acquired Graphiq in 2017, I ran the politics vertical for Alexa.
+          </p>
+          <p>
+            I started this version in August 2026. I decide which questions are worth asking, which sources to trust
+            and what the editorial rules are, and Claude writes much of the code. That lets one person build and
+            maintain what once took a team.
           </p>
         </Section>
 
@@ -69,45 +86,28 @@ export default function AboutPage() {
           </ul>
         </Section>
 
-        <Section title="Who it’s for">
-          <p>Voters, students, teachers, journalists and anyone curious. No account is needed.</p>
-        </Section>
-
-        <Section title="How to read it">
+        <Section title="How it’s made and how to read it">
           <p>
-            The charts describe what the records show. They don’t claim that a president or a party caused what
-            happened. <Link href="/methodology" className={LINK}>Methodology and sources</Link> explains what each chart
-            measures and where its numbers come from.
-          </p>
-        </Section>
-
-        <Section title="How it’s made">
-          <p>
-            Data comes straight from the original publishers, is checked automatically, and updates when they publish new
-            figures. The code and data pipeline are open on{" "}
-            <a href={githubUrl} className={LINK}>GitHub</a>.
+            Every number comes from a named public source through an automated, checked pipeline, and the code and data
+            are open on <a href={githubUrl} className={LINK}>GitHub</a>. Each chart has Data notes saying what it
+            measures and what to be careful about. The charts describe what the records show; they don’t claim that a
+            president or party caused it. <Link href="/methodology" className={LINK}>Methodology and sources</Link>{" "}
+            has the detail.
           </p>
         </Section>
 
         <Section title="Independence">
           <p>
-            InsideGov is an independent project. It is not affiliated with, endorsed by, or funded by any government
-            agency, political party, campaign or advocacy group.
-            {fundingStatement ? ` ${fundingStatement}` : ""}
+            InsideGov is not affiliated with, endorsed by, or funded by any government agency, party, campaign or
+            advocacy group. {fundingStatement}
           </p>
         </Section>
 
-        {builderName && (
-          <Section title="Who’s behind it">
-            <p>InsideGov is built and maintained by {builderName}.</p>
-          </Section>
-        )}
-
-        <Section title="Contact">
+        <Section title="Who’s behind it">
           <p>
-            Questions, ideas, or a number that looks wrong? Use the{" "}
-            <Link href="/contact" className={LINK}>contact form</Link>. We fix confirmed errors and note significant
-            ones.
+            InsideGov is built and maintained by {builderName}. Found a mistake or have an idea? Use the{" "}
+            <Link href="/contact" className={LINK}>contact form</Link>; confirmed errors are fixed and significant ones
+            noted.
           </p>
         </Section>
       </div>
