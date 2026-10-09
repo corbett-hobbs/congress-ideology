@@ -375,7 +375,7 @@ export function matchLaws(p: LawsPayload, list: Pick<LawsList, "sponsors">, rows
 
 // --------------------------------------------------------------------------- card 3: topic groups by decade
 
-export type GroupSortKey = "n" | "f" | "u";
+export type GroupSortKey = "n" | "f" | "u" | "m" | "h" | "b";
 export interface GroupSort {
   key: GroupSortKey;
   reversed: boolean;
@@ -388,7 +388,13 @@ export const GROUP_MEASURES: Record<GroupSortKey, { band: number | null; noun: s
   n: { band: null, noun: "laws" },
   f: { band: 1, noun: "passed on a narrow vote (under 60% yes)" },
   u: { band: 0, noun: "passed by voice vote or consent" },
+  m: { band: 2, noun: "passed with 60\u201375% yes" },
+  h: { band: 3, noun: "passed with 75\u201390% yes" },
+  b: { band: 4, noun: "passed with 90% or more yes" },
 };
+
+/** The toggle key that measures a support band (what the page's vote filter locks card 3 to). */
+export const GROUP_KEY_FOR_BAND: Record<number, GroupSortKey> = { 0: "u", 1: "f", 2: "m", 3: "h", 4: "b" };
 
 export const ALL_ROW = "all";
 
