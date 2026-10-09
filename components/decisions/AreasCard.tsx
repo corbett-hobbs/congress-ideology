@@ -87,7 +87,7 @@ export function AreasCard() {
       </div>
       <MethodologyNote>
         <p>
-          Issue areas are the Supreme Court Database’s own 14 categories, a rough guide; the {fmtInt(data.unclassified)} cases with none count only in “All issue areas”. Shares for small areas are rough, since a few dozen cases can swing several points. The heatmap counts cases (all, 5–4 or unanimous, as the toggle says) on one scale, except “All issue areas”, which has its own; the first and last decades are partial (1946–49 and 2020–25).
+          Issue areas are the Supreme Court Database&rsquo;s 14 categories, a rough guide; the {fmtInt(data.unclassified)} cases with none count only in &ldquo;All issue areas&rdquo;. Shares for small areas swing on a few cases. Each heatmap shares one colour scale, except &ldquo;All issue areas&rdquo;, which has its own.
         </p>
       </MethodologyNote>
       <TableView

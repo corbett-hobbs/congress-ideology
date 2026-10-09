@@ -151,7 +151,7 @@ export function TradeTariffCard({
 
       <MethodologyNote>
         <p>
-          The line is calculated duties divided by imports for consumption: Census Bureau data from January 2010, and the U.S. International Trade Commission’s DataWeb for 1993 to 2009 (the two match exactly over 2010 to 2012). Duties are computed from import entries, not taken from Treasury receipts, so they are not tariff revenue, and the line can fall without any tariff being cut if importers shift to other countries or products. Not seasonally adjusted. Census data runs about two months behind, so later actions are pinned to the right edge. Dates are when each action took effect; legal status is as of {dateText(lastReviewed)}.
+          Calculated duties divided by imports for consumption: Census data from January 2010, U.S. International Trade Commission DataWeb for 1993&ndash;2009 (the two match over 2010&ndash;12). Duties are computed from import entries, not Treasury receipts, so the line can fall without any tariff cut if importers shift countries or products. Not seasonally adjusted. Census runs about two months behind, so later actions are pinned to the right edge. Dates are when each action took effect; legal status is as of {dateText(lastReviewed)}.
         </p>
       </MethodologyNote>
       <EventsTable flags={flags} lastReviewed={lastReviewed} />

@@ -224,7 +224,7 @@ export function ElectricityCard({ payload, view }: { payload: EnergyPayload; vie
       }
       notes={
         <p>
-          Energy Information Administration, Monthly Energy Review: net generation, all sectors, <em>utility-scale only</em>. Small-scale solar such as rooftop panels is estimated separately from 2014 (about a quarter of all solar in 2025), so solar and the total are understated from then; the two are not spliced. “Other” is the total minus the six named fuels (petroleum, biomass, geothermal, waste, pumped storage and other gases). Not seasonally adjusted, so shares swing with the seasons. The hatched stretch is the current and previous calendar year, preliminary until EIA’s annual figures. Prices, demand, weather and build cycles set the mix; the 2022 Inflation Reduction Act and 2025 reconciliation law flags mark when Congress acted, not any month’s mix.
+          Energy Information Administration net generation, all sectors, <em>utility-scale only</em>. Small-scale solar such as rooftop panels is estimated separately from 2014 (about a quarter of all solar in 2025), so solar and the total are understated from then. &ldquo;Other&rdquo; is the total minus the six named fuels (petroleum, biomass, geothermal, waste, pumped storage, other gases). The hatched stretch is the current and previous calendar year, preliminary until EIA&rsquo;s annual figures. The 2022 Inflation Reduction Act and 2025 reconciliation flags mark when Congress acted, not any month&rsquo;s mix.
         </p>
       }
       tables={

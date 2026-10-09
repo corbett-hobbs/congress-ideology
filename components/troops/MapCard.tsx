@@ -329,18 +329,18 @@ export function MapCard({ map, bases }: { map: WorldMapFile; bases: BasesPayload
         <p>
           <b className="font-semibold text-ink">Not on the map:</b>{" "}
           {view.territories.length > 0
-            ? `U.S. territories ${view.territories.map((t) => `${places[t.place].name} ${formatCount(t.value)}`).join(", ")} (${formatCount(view.territoryTotal)}) sit inside DMDC’s overseas total but are not hosts and are not counted above`
+            ? `U.S. territories ${view.territories.map((t) => `${places[t.place].name} ${formatCount(t.value)}`).join(", ")} (${formatCount(view.territoryTotal)}) are inside DMDC’s overseas total but are not hosts`
             : "no U.S. territory figures this quarter"}
-          {view.afloat > 0 ? `; ${formatCount(view.afloat)} are afloat or unassigned (DMDC’s UNKNOWN row)` : ""}
+          {view.afloat > 0 ? `; ${formatCount(view.afloat)} are afloat or unassigned` : ""}
           {noOutline.length > 0 ? `; no outline is drawn for ${noOutline.map((r) => `${places[r.place].name} ${formatCount(r.value)}`).join(", ")}` : ""}.{" "}
           {view.contingency.length > 0 &&
-            `† ${view.contingency.map((c) => places[c.place].name).join(" and ")}: DMDC’s separate theatre total stands in for the country table, which prints zero, so it is on a different basis from the other countries. `}
+            `† ${view.contingency.map((c) => places[c.place].name).join(" and ")}: DMDC’s separate theatre total stands in for the country table, which prints zero, so it is on a different basis. `}
           {view.suppressed.length > 0
-            ? `${view.suppressed.map((x) => places[x].name).join(", ")} ${view.suppressed.length > 1 ? "print" : "prints"} blank or unavailable (listed “n/r”): not reported, not zero. `
+            ? `${view.suppressed.map((x) => places[x].name).join(", ")} ${view.suppressed.length > 1 ? "print" : "prints"} blank or unavailable (“n/r”): not reported, not zero. `
             : "A blank row is not a zero. "}
-          Counts are active-duty personnel assigned to the place and include deployed forces through 2017, so years before and after 2018 are not like-for-like.
+          Counts include deployed forces through 2017, so years before and after 2018 are not like-for-like.
           {!p.afloatIncluded && " This year’s source has no afloat or unassigned rows."}{" "}
-          <b className="font-semibold text-ink">Known installations</b> ({bases.sites.length} sites in {bases.countries.length} places, through {bases.through}) are one fixed list from David Vine’s compilation in the troopdata package (GPL-3.0), not tied to the year chosen. Dots carry no headcount, classified sites are missing, and {bases.sites.filter((x) => x.review).length} sites with doubtful coordinates are in the table but not drawn.
+          <b className="font-semibold text-ink">Known installations</b> ({bases.sites.length} sites in {bases.countries.length} places, through {bases.through}) are one fixed list from David Vine&rsquo;s compilation (troopdata package, GPL-3.0), not tied to the year chosen. Dots carry no headcount, classified sites are missing, and {bases.sites.filter((x) => x.review).length} sites with doubtful coordinates are in the table but not drawn.
         </p>
       </MethodologyNote>
 

@@ -96,7 +96,7 @@ export function LngCard({ payload, view }: { payload: EnergyPayload; view: reado
       }
       notes={
         <p>
-          Energy Information Administration, natural gas exports of liquefied natural gas, not seasonally adjusted. The series starts in 1997 but large-scale exports begin in February 2016; the earlier volumes are small but unverified, so read the flat stretch as small, not necessarily zero. The hatched stretch is the last 12 months, which EIA revises. Export approvals come years before cargoes, so the flags mark what the Department of Energy decided and when, not any month’s volume.
+          Energy Information Administration LNG exports. The series starts in 1997 but large-scale exports begin in February 2016; earlier volumes are small but unverified, so read the flat stretch as small, not necessarily zero. Export approvals come years before cargoes, so flags mark what the Department of Energy decided and when, not any month&rsquo;s volume.
         </p>
       }
       tables={

@@ -101,7 +101,7 @@ export function WomenCard({ rows, presidents, pin, onPin }: { rows: readonly Dem
       </div>
       <MethodologyNote>
         <p>
-          Each bar is one Congress and counts everyone who held a seat at any time in it, so a Congress has more members than the chambers have seats. The source records gender as male or female only. The strip under the chart shows the president in office on the Congress’s first day.
+          A Congress has more members than the chambers have seats because replacements are counted. The source records gender as male or female only.
         </p>
       </MethodologyNote>
       <TableView

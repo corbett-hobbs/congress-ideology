@@ -57,14 +57,10 @@ function EnergyPage({ payload }: { payload: EnergyPayload }) {
           </p>
           <HowToRead>
             <p>
-              The cards are not equally tied to Washington. The reserve’s level is the closest to a presidential decision, and even it is shared: presidents authorize emergency releases and exchanges, while
-              Congress mandates sales, cancels them and funds refills, so each mark says who acted and whether oil was sold, lent or bought back. Oil production, imports, exports and liquefied natural gas
-              exports are shaped by policy but mostly move with markets and technology, and the rules that enabled them often came years before the trade did; a mark on those charts reads “enabled, not caused.” Products supplied
-              (a stand-in for consumption) and the electricity mix are context: prices, weather, demand and decades-long build cycles set them.
+              The cards are not equally tied to Washington. The reserve&rsquo;s level is closest to a presidential decision, and even it is shared: presidents authorize releases and exchanges, Congress mandates sales and funds refills. Oil production, imports, exports and LNG exports are shaped by policy but mostly move with markets and technology, and enabling rules often came years before the trade did, so a mark there reads &ldquo;enabled, not caused.&rdquo; Products supplied and the electricity mix are context.
             </p>
             <p>
-              Monthly figures are not seasonally adjusted. The hatched stretch at the right of a chart is preliminary and may be revised. Figures are as of {longDate(payload.fetchedAt)}; each chart ends at its newest published month.
-              The marked actions were last reviewed on {dateText(payload.flagsReviewed)}.
+              Monthly figures are not seasonally adjusted. The hatched stretch at the right of a chart is preliminary. Figures are as of {longDate(payload.fetchedAt)}; marked actions were last reviewed {dateText(payload.flagsReviewed)}.
             </p>
           </HowToRead>
         </PageHeader>

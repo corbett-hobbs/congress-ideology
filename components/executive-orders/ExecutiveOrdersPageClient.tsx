@@ -202,7 +202,7 @@ export function ExecutiveOrdersPageClient({ data }: { data: EoPayload }) {
 
           <MethodologyNote>
             <p>
-              Orders are counted in the year they were signed, and each has one primary topic, so a year’s columns add up to its total. Topics are classifier-assisted: a language model read each order’s title and issuing agencies, and orders that only amend or revoke another take its topic. A person checked a random sample of 100 and confirmed all of them; the rest are unreviewed, and a topic is a judgment call, so counts show how many orders touched a subject, not how significant they were. In a transition year, orders signed before and after Inauguration Day count toward the outgoing and incoming president.
+              Orders are counted in the year signed, each with one primary topic, so a year&rsquo;s columns sum to its total; in a transition year, orders before and after Inauguration Day go to the outgoing and incoming president. Topics are classifier-assisted: a language model read each title and issuing agencies, and orders that only amend or revoke another take its topic. A person checked a random sample of 100 and confirmed all of them; the rest are unreviewed. Counts show how many orders touched a subject, not how significant they were.
             </p>
           </MethodologyNote>
 

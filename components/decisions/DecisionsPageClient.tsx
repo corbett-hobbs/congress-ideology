@@ -30,7 +30,7 @@ export function DecisionsPageClient({ data }: { data: DecisionsPayload }) {
           <JumpToCases />
           <HowToRead>
             <p>
-              A case counts once, in the term it was decided. “Unanimous” means no justice dissented; the other bands count the justices who dissented, so “5–4” is four dissents (a 4–4 tie is counted there too). Select a term to see its numbers and pin it on both time charts and in the case list; select it again to release it. The legends are filters: an issue area under the top chart, or a vote (how many justices dissented) under the second. “Landmark cases” in the top bar narrows everything to the cases on Wikipedia’s list of landmark decisions.
+              A case counts once, in the term it was decided. &ldquo;Unanimous&rdquo; means no justice dissented; the other bands count dissents, so &ldquo;5&ndash;4&rdquo; is four dissents (a 4&ndash;4 tie counts there too). Select a term to pin it across both charts and the case list. The band under each axis marks the president in office for most of the term.
             </p>
           </HowToRead>
         </PageHeader>

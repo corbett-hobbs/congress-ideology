@@ -195,7 +195,7 @@ export function TradePartnersCard({
 
       <MethodologyNote>
         <p>
-          Census Bureau goods trade, Census basis. The map and the list share the year and the Total trade / Balance choice; the map is shaded on fixed bins so years compare. The list uses a symmetric log scale so small partners stay visible next to China, so distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.{model.undrawn.length > 0 ? ` ${model.undrawn.length} small partners with no outline (${fmtMoney(model.undrawn.reduce((a, r) => a + r.exports + r.imports, 0))} of ${fmtMoney(model.totals.total)}) are in the list and table but not on the map.` : ""}
+          Census Bureau goods trade. The map is shaded on fixed bins so years compare; the list uses a symmetric log scale so small partners stay visible beside China, so distances are not proportional. Before 1992 Census lists fewer partners, so rows can fall a little short of the total.{model.undrawn.length > 0 ? ` ${model.undrawn.length} small partners with no outline (${fmtMoney(model.undrawn.reduce((a, r) => a + r.exports + r.imports, 0))} of ${fmtMoney(model.totals.total)}) are in the list and table but not on the map.` : ""}
         </p>
       </MethodologyNote>
       {rows.length > 0 && <DataTable rows={rows} year={shown} />}

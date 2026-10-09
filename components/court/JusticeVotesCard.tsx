@@ -175,7 +175,7 @@ export function JusticeVotesCard({ justiceId, last, source }: { justiceId: numbe
       </div>
       <MethodologyNote>
         <p>
-          The same argued cases as the Decisions page, each with the justice’s own row from the Supreme Court Database’s justice-centered file. “Majority” includes a concurrence. A case the justice sat out is marked “Did not take part”; it and any case decided by an equally divided Court are left out of the percentages. The database codes a vote that dissented in part by the side the justice took overall, so there is no “split” vote here. “Wrote” means the justice authored an opinion in the case. Votes, opinion authors and the Liberal and Conservative tags: Supreme Court Database (Spaeth et al.); case sentences from Wikipedia as on the Decisions page.
+          The Decisions page&rsquo;s argued cases with this justice&rsquo;s vote from the Supreme Court Database. &ldquo;Majority&rdquo; includes a concurrence; a vote that dissented in part is coded by the side the justice took overall. Cases the justice sat out and equally divided cases are left out of the percentages. &ldquo;Wrote&rdquo; means authored an opinion. Source: Supreme Court Database (Spaeth et al.).
         </p>
       </MethodologyNote>
     </ChartCard>

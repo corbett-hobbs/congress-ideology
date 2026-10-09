@@ -143,7 +143,7 @@ export function LawsSupportCard() {
       {thin && <p className="m-0 mt-2 text-[0.78rem] leading-[1.45] text-ink-muted">Few laws per Congress in this selection, so shares swing widely. Read the trend, not individual Congresses.</p>}
       <MethodologyNote>
         <p>
-          A law&rsquo;s band is the yes share (yes votes out of votes cast) of the closest recorded final-passage vote it faced in either chamber, so a 50&ndash;49 vote lands in &ldquo;under 60%&rdquo;. &ldquo;Voice vote or consent&rdquo; means the bill&rsquo;s action history shows no roll call on final passage in either chamber: a voice vote, unanimous consent, or, for most of the 1970s, no method stated. That is {fmtPct(noVoteShare(data, data.congresses[0]!, lastPre))} of the laws before 2000, so read the early years as &ldquo;what was recorded&rdquo;, not as how divided Congress was. Tallies come from the final-passage action in each bill&rsquo;s history and are checked against Voteview&rsquo;s roll calls; override votes do not set the band. The {ordinal(data.congresses[data.congresses.length - 1]!)} Congress is still in session, so its slot is partial.
+          A band is the yes share of votes cast, so a 50&ndash;49 vote lands in &ldquo;under 60%&rdquo;. &ldquo;Voice vote or consent&rdquo; means no roll call on final passage in either chamber (for most of the 1970s, no method stated); that is {fmtPct(noVoteShare(data, data.congresses[0]!, lastPre))} of laws before 2000, so the early years show what was recorded, not how divided Congress was. Tallies are checked against Voteview; override votes do not set the band.
         </p>
       </MethodologyNote>
       <TableView

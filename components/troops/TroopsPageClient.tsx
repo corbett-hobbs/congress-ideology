@@ -29,23 +29,13 @@ export function TroopsPageClient({ payload, map, bases }: { payload: TroopsPaylo
           </p>
           <HowToRead>
             <p>
-              <b className="font-semibold text-ink">Each bar is one year’s table</b>: the September 30 report (June 30 for 1953–56). The figures come from three sources that count a little differently: DMDC’s location tables from 2008, DMDC’s
-              own country tables for 1996 and 1998–2005, and a research compilation of DMDC reports for the rest of 1953–2007. Only the DMDC tables include personnel afloat or unassigned, so a jump where the source changes is not a change
-              in troops, and no percent change is shown across one. September 2006 and 2007 are estimates, shown in lighter bars.
+              <b className="font-semibold text-ink">Each bar is one year&rsquo;s table</b>: the September 30 report (June 30 for 1953&ndash;56). Three sources count a little differently: DMDC&rsquo;s location tables from 2008, its country tables for 1996 and 1998&ndash;2005, and a research compilation for the rest. Only the DMDC tables include personnel afloat or unassigned, so a jump where the source changes is not a change in troops and no percent change is shown across one.
             </p>
             <p>
-              <b className="font-semibold text-ink">The series changes meaning after 2017.</b> Through the September 2017 table the counts include personnel deployed in support of contingency operations; from the December 2017
-              table they count only personnel permanently assigned to a location. A drop across that line is a change in what is counted, not a withdrawal, so no change is shown across it.
+              <b className="font-semibold text-ink">The series changes meaning after 2017.</b> Through the September 2017 table, counts include personnel deployed for contingency operations; from December 2017 they count only those permanently assigned. A drop across that line is a change in what is counted, not a withdrawal.
             </p>
             <p>
-              <b className="font-semibold text-ink">“Not reported” is not zero.</b> In 2003–2005 DMDC’s country tables leave out Iraq, Kuwait and Afghanistan (a separate table covers forces in and around Iraq, drawn as dashed boxes above those
-              bars, on a different basis and not in any total). From 2018 to 2021 the tables print Afghanistan, Iraq and Syria blank. Those hosts are shown as not reported and add nothing to the totals. (The Army did not report in
-              three quarters of 2022–23, none of them a September, so no year is missing.) The latest year is partial, hatched: the newest quarter published so far.
-            </p>
-            <p>
-              <b className="font-semibold text-ink">Abroad</b> means active-duty personnel at a foreign host plus the “afloat and unassigned” rows where the source has them, and leaves out U.S. territories (Guam, Puerto Rico, American Samoa, the Northern
-              Mariana Islands and the U.S. Virgin Islands). Regions are fixed groupings of today’s countries; Turkey and Greenland count as Europe, Egypt as the Middle East, and North Africa and Djibouti as Africa. South Vietnam is shown
-              as Vietnam.
+              <b className="font-semibold text-ink">&ldquo;Not reported&rdquo; is not zero.</b> Hosts a table leaves blank add nothing to the totals. <b className="font-semibold text-ink">Abroad</b> means active-duty personnel at a foreign host plus &ldquo;afloat and unassigned&rdquo; rows where the source has them; U.S. territories are left out. Regions are fixed groupings of today&rsquo;s countries (Turkey and Greenland count as Europe, Egypt as the Middle East, North Africa and Djibouti as Africa); South Vietnam is shown as Vietnam.
             </p>
           </HowToRead>
         </PageHeader>

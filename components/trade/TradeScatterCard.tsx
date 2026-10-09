@@ -423,7 +423,7 @@ export function TradeScatterCard({
 
       <MethodologyNote>
         <p>
-          Calculated duties divided by imports for consumption, both from Census data, over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}, so the season matches; countries missing any month are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles are pinned outliers, with their true values in the tooltip. Goods re-routed through other countries can distort a single country’s figures. Dot area follows each country’s total trade in the latest full year of the partner chart.
+          Calculated duties divided by imports for consumption (Census), over {windowText(windows.latest)} against the same months of {windows.baseline.from.slice(0, 4)}{windows.baseline.from.slice(0, 4) !== windows.baseline.to.slice(0, 4) ? " and the year before" : ""}; countries missing any month are not plotted. The vertical axis is a symmetric log scale capped at +{Y_CAP_PCT.toLocaleString("en-US")}%: triangles are pinned outliers, with true values in the tooltip. Re-routed goods can distort a country&rsquo;s figures. Dot area is total trade in the partner chart&rsquo;s latest full year.
         </p>
       </MethodologyNote>
       <DataTable rows={rows} windows={windows} />

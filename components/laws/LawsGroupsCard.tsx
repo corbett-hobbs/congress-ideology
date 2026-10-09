@@ -88,7 +88,7 @@ export function LawsGroupsCard() {
       )}
       <MethodologyNote>
         <p>
-          Policy areas are Congress.gov&rsquo;s own, grouped into {data.groups.filter((g) => g.id !== "not-classified").length} topic groups, plus any laws Congress.gov has not classified yet; small groups swing by several points on a few laws. A bar is the closest recorded final-passage vote of each law in the years shown, so a law is only as broadly supported as its narrowest vote; across them all, {pct(noRecorded)} were passed by voice vote or consent in both chambers (unanimous consent, or, in the 1970s, no method stated). The heatmap counts laws (all, those under 60% yes, or those passed by voice vote or consent, as the toggle says) on one scale, except &ldquo;All policy areas&rdquo;, which has its own; the {data.partial[data.partial.length - 1] ? `last decade is partial (the ${ordinal(data.congresses[data.congresses.length - 1]!)} Congress is in session)` : "decades follow the Congresses that opened in them"}.{major ? ` Major laws are assessed through the ${ordinal(data.majorThrough)} Congress.` : ""}
+          Each bar splits a policy area&rsquo;s laws by support band; across all areas, {pct(noRecorded)} passed by voice vote or consent. Small areas swing by several points on a few laws. Heatmap cells share one colour scale, except &ldquo;All policy areas&rdquo;, which has its own{data.partial[data.partial.length - 1] ? `; the last decade is partial (the ${ordinal(data.congresses[data.congresses.length - 1]!)} Congress is in session)` : ""}.
         </p>
       </MethodologyNote>
       <TableView

@@ -146,9 +146,9 @@ export function RemovalsCountryCard({
 
       <MethodologyNote>
         <p>
-          ICE’s headline removal counts, which since FY2007 include returns, by country of citizenship rather than where a person was sent. ICE only: Border Patrol removals and Title 42 expulsions are not counted. ICE prints country tables for {coverage} only (FY2013 lists just the top ten; FY2025 has none), and “Unknown” and “Stateless” are ICE categories, not countries.
-          {off.count > 0 && <>{off.count} rows with no outline ({n(off.removals)} removals) are in the list and table but not on the map. </>}
-          FY{fy}: {n(year.total)} removals across {ranked.length} countries and categories. Source:{" "}
+          ICE removals, which since FY2007 include returns, by country of citizenship rather than where a person was sent. ICE prints country tables for {coverage} only (FY2013 lists just the top ten; FY2025 has none), and &ldquo;Unknown&rdquo; and &ldquo;Stateless&rdquo; are ICE categories, not countries.
+          {off.count > 0 && <> {off.count} rows with no outline ({n(off.removals)} removals) are in the list and table but not on the map.</>}
+          {" "}FY{fy}: {n(year.total)} removals across {ranked.length} countries and categories. Source:{" "}
           <a href={year.sourceUrl} target="_blank" rel="noreferrer" className="text-accent underline-offset-2 hover:underline">
             {year.source}
           </a>

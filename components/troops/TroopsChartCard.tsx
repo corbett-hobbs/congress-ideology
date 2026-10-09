@@ -70,7 +70,7 @@ export function TroopsChartCard() {
       </RegionLegend>
       <MethodologyNote>
         <p>
-          Band under the axis: the president in office on the snapshot date (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic). Each bar is DMDC’s September 30 report (June 30 for 1953–56): active-duty personnel at a foreign host plus “afloat and unassigned” rows where the source has them, with U.S. territories left out. The source changes at 1996 and 2008, and the troopdata compilation before them has no afloat rows and so runs lower, which is not a change in troops; no percent change is shown across sources. Sep 2006 and 2007 are estimates (lighter bars) and the latest year is partial (hatched). For Iraq and Afghanistan in 2003–2005, DMDC’s country tables print zero, so the bars use its separate theatre totals, a different basis from the country counts. Blank counts are not reported, not zero.
+          Band under the axis: the president in office on the snapshot date (<span style={{ color: "var(--rep)" }}>■</span> Republican <span style={{ color: "var(--dem)" }}>■</span> Democratic). Sep 2006 and 2007 are estimates (lighter bars) and the latest year is partial (hatched). For Iraq and Afghanistan in 2003&ndash;2005, DMDC&rsquo;s country tables print zero, so bars use its separate theatre totals, a different basis from the country counts (dashed boxes mark them).
         </p>
       </MethodologyNote>
       <TableView caption="Active-duty personnel abroad by region and year">
