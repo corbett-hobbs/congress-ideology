@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { lawDetailsShard } from "../../lib/law-details-entities";
 import type { RawAction, RawLaw } from "../../lib/laws-entities";
-import { buildActions, buildLawDetail, cleanActionText, lawIdDifferences, RAW_SUMMARY_CAP, summaryParagraphs } from "./law-details";
+import { buildActions, buildLawDetail, cleanActionText, committeeActions, committeeLabel, lawIdDifferences, RAW_SUMMARY_CAP, summaryParagraphs } from "./law-details";
 
 const act = (date: string, type: string, text: string, votes?: RawAction["votes"]): RawAction => ({ date, type, text, src: null, ...(votes ? { votes } : {}) });
 
@@ -77,5 +77,31 @@ describe("lawIdDifferences", () => {
   it("is empty when the ids are equal and names both sides otherwise", () => {
     expect(lawIdDifferences(["a", "b"], ["b", "a"])).toEqual({ missing: [], extra: [] });
     expect(lawIdDifferences(["a", "c"], ["a", "b"])).toEqual({ missing: ["b"], extra: ["c"] });
+  });
+});
+
+describe("committeeActions", () => {
+  const committees = [
+    { code: "hswm00", name: "Ways and Means Committee", chamber: "House", activities: [{ name: "Reported By", date: "2025-10-31" }, { name: "Markup by", date: "2025-09-17" }, { name: "Referred To", date: "2025-09-15" }, { name: "Unknown", date: "2025-09-15" }, { name: "Referred to", date: null }], subcommittees: [{ code: "hswm03", name: "Health Subcommittee", activities: [{ name: "Hearings By (subcommittee)", date: "2025-09-20" }] }] },
+    { code: "ssfi00", name: "Finance Committee", chamber: "Senate", activities: [{ name: "Discharged From", date: "2026-09-17" }], subcommittees: [] },
+  ];
+  it("words the introduction, each dated committee step and each subcommittee step, and drops the undated and the unknown", () => {
+    const out = committeeActions(law({ introduced: "2025-09-15", origin_chamber: "House", committees }));
+    expect(out.map((a) => [a.date, a.type, a.text])).toEqual([
+      ["2025-09-15", "Introduced", "Introduced in the House"],
+      ["2025-10-31", "Committee", "Reported by House Ways and Means Committee"],
+      ["2025-09-17", "Committee", "Markup by House Ways and Means Committee"],
+      ["2025-09-15", "Committee", "Referred to House Ways and Means Committee"],
+      ["2025-09-20", "Committee", "Hearings by Health Subcommittee of the House Ways and Means Committee"],
+      ["2026-09-17", "Committee", "Discharged from Senate Finance Committee"],
+    ]);
+  });
+  it("does not double the chamber and leaves a joint committee bare", () => {
+    expect(committeeLabel("House Administration Committee", "House")).toBe("House Administration Committee");
+    expect(committeeLabel("Joint Economic Committee", "Joint")).toBe("Joint Economic Committee");
+  });
+  it("puts them in the stored action list, oldest first, ahead of the floor on a shared date", () => {
+    const d = buildLawDetail(law({ introduced: "2025-09-15", committees, actions: [act("2025-09-15", "Floor", "Floor same day")] }));
+    expect(d.actions.map((a) => a[2]).slice(0, 3)).toEqual(["Introduced in the House", "Referred to House Ways and Means Committee", "Floor same day"]);
   });
 });

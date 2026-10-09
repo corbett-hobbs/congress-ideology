@@ -13,8 +13,12 @@ import { LAWS_FIRST_CONGRESS } from "./laws-entities";
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const int = z.number().int();
 
-/** Raw action types in the order their code is stored: `LAW_ACTION_TYPES[code]`. */
-export const LAW_ACTION_TYPES = ["Floor", "ResolvingDifferences", "President", "BecameLaw", "Veto", "NotUsed"] as const;
+/**
+ * Action types in the order their code is stored: `LAW_ACTION_TYPES[code]`. The first six are the source's own types; `Committee`
+ * (a dated committee or subcommittee step) and `Introduced` are built from the bill's committee list and introduction date, so
+ * the timeline runs from introduction to signing. New codes are only ever appended.
+ */
+export const LAW_ACTION_TYPES = ["Floor", "ResolvingDifferences", "President", "BecameLaw", "Veto", "NotUsed", "Committee", "Introduced"] as const;
 export type LawActionType = (typeof LAW_ACTION_TYPES)[number];
 
 /** A roll call attached to an action: `[chamber (0 House, 1 Senate), roll number, session or null]`. */
