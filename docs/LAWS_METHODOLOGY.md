@@ -171,3 +171,40 @@ Three weekly jobs keep the page current; none edits data without a gate.
 - **`laws-major-review.yml`** (Mondays): opens one issue when a Congress has ended and Mayhew's lists do not cover it (`pipeline/validate/laws-major-coverage.ts`). No provisional flag ships, so nothing is flipped; the fix is adding his entries by hand.
 
 A failed or interrupted run leaves the committed raw data and output untouched: a Congress's file is written only after all four of its ZIPs were read, and nothing is committed unless every step passed. If govinfo.gov is unreachable the job ends green with a warning.
+
+## Provisional major flag: acceptance bar (Session 3b, written before any back-test)
+
+The 119th Congress has no Mayhew list, so its laws read "not yet assessed". A provisional flag (`major_provisional`, never counted as Mayhew's) ships only if a rule meets this bar, written before any rule was scored:
+
+- **Test set:** every public law of the 113th–118th Congresses (2013–2024), with Mayhew's `major` as the reference.
+- **Precision ≥ 70%** (of laws the rule flags, the share Mayhew also lists) **and recall ≥ 80%** (of Mayhew's laws, the share the rule flags). Both are measured on laws, not entries.
+- A rule must reach the bar on the whole span and must not fall below 60% precision or 70% recall in any single Congress.
+- A rule that needs a model must keep every quote verbatim in its source text and every number in the output present in the source; it is scored only on its committed, cached output.
+- If no rule meets the bar, nothing ships and the UI keeps "Not yet assessed". The score table is recorded here either way.
+
+
+## Provisional major flag: back-test result (Session 3b) — NO-GO, nothing ships
+
+Reference: Mayhew's `major` over the 113th–118th, 2,047 laws of which 79 are major. Script: `pipeline/preflight/laws/14-provisional-backtest.mjs`; inputs `pipeline/raw/wikipedia-laws/` (Wikipedia's "List of acts of the Nth United States Congress" for the 113th–118th, which says which public laws have an article, plus each article's lead; unlinked short titles are also looked up by name; `pnpm fetch:wikipedia-laws`) and the model-rule cache `model-rule.json` (362 leads, Claude Sonnet 5.5, verbatim-evidence guard). The table was re-run after fixing a parser fault (private laws share public-law numbers and overwrote real rows, which hid the American Rescue Plan Act's article); the figures below are the corrected ones.
+
+This measures **agreement with Mayhew**, not truth. Mayhew is the standard reference in political science and the only published, hand-judged list for the whole period, but it is one scholar's reading of contemporary press wrapups; it counts the sixteen 2017–18 Congressional Review Act repeals as one law and lists only four 118th-Congress laws, so a rule can look wrong against it for good reasons.
+
+| Rule | flagged | precision | recall | per-Congress range (precision / recall) |
+|---|---|---|---|---|
+| a. the law has its own Wikipedia article | 297 | 18.2% | 68.4% | 7.4–34.1% / 38.5–100% |
+| b. the article lead uses major / landmark / significant / historic / sweeping / reform ... | 45 | 42.2% | 24.1% | 0–55.6% / 0–35.7% |
+| b2. the lead says landmark / major / historic / sweeping only | 14 | 42.9% | 7.6% | not computed |
+| c. CRS summary 1,000+ characters | 673 | 8.8% | 74.7% | not computed |
+| c. CRS summary 2,000+ characters | 341 | 14.4% | 62.0% | not computed |
+| c. omnibus / reconciliation / authorization wording in title or summary | 104 | 14.4% | 19.0% | not computed |
+| c. summary 2,000+ characters and an article | 150 | 26.0% | 49.4% | not computed |
+| d. a model reads the lead; it must quote the words that call the law major, verbatim | 12 | 66.7% | 10.1% | 0–100% / 0–21.4% |
+
+**Bar: precision 70% and recall 80%. No rule meets both, and none comes close on recall except the broad ones (a, c) that give up precision.**
+- *An article is a notability signal, not a "major" signal.* 297 laws (14.5%) have an article against Mayhew's 79 (3.9%); only 54 are his. The rest are mostly naming, codification and single-topic acts that Wikipedia covers and Mayhew rightly leaves out.
+- *Most of Mayhew's laws without an article are of a kind Wikipedia does not write up per law.* Of the 25: 11 Congressional Review Act disapprovals, 7 appropriations, supplementals or debt-limit bills, and 7 substantive acts that really have no article (the Bipartisan Budget Act of 2015, Comprehensive Addiction and Recovery Act, WIIN Act, VA MISSION Act, FAA Reauthorization Act of 2024 and two others). Rules built on article leads (b, d) are capped at 68.4% recall before they read a word.
+- *Leads rarely say "major".* Under the guard, the model found a verbatim claim in 15 of 362 leads (12 within the test span); 8 are Mayhew's.
+- *Size is not importance.* The stored CRS summaries top out near 3,000 characters; summaries of 2,000+ characters flag 341 laws for 14% precision. Page counts were not tested (not in the data).
+- *Wikipedia has no equivalent of the landmark-cases list for statutes.* The case list is a curated page; for federal laws the only per-Congress pages are the act lists used here, and a search for a landmark-legislation list found only a topical one (African-American legislation).
+
+**Decision: no-go for a "major" flag.** No `major_provisional` field, badge or count is added. The 119th reads "not yet assessed". An alternative that does not claim importance, a "Has a Wikipedia article" link on a law, is a separate product decision (recorded in the PR), not a stand-in for Mayhew's flag.

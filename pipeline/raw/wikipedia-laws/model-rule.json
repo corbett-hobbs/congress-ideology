@@ -1,0 +1,2174 @@
+{
+ "Disaster Relief Appropriations Act, 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "No Budget, No Pay Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Violence Against Women Reauthorization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Pandemic and All-Hazards Preparedness Reauthorization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated and Further Continuing Appropriations Act, 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Stolen Valor Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Freedom to Fish Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Animal Drug and Animal Generic Drug User Fee Reauthorization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "South Utah Valley Electric Conveyance Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Bonneville Unit Clean Hydropower Facilitation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "FOR VETS Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Hydropower Regulatory Efficiency Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Powell Shooting Range Land Conveyance Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Bipartisan Student Loan Certainty Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Denali National Park Improvement Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Natchez Trace Parkway Land Conveyance Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Missing Children's Assistance Reauthorization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Minuteman Missile National Historic Site Boundary Modification Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Pay Our Military Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Organization of American States Revitalization and Reform Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Congressional Award Program Reauthorization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "U.S. Department of Defense": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Continuing Appropriations Act, 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Parole Commission Extension Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Streamlining Claims Processing for Federal Contractor Employees Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Veterans' Compensation Cost-of-Living Adjustment Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "HIV Organ Policy Equity Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Small Airplane Revitalization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Drug Quality and Security Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "PREEMIE Reauthorization Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Veterans Paralympic Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Community Fire Safety Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Alaska Native Tribal Health Consortium Land Transfer Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Bipartisan Budget Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Agriculture Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Temporary Debt Limit Extension Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Support for United States-Republic of Korea Civil Nuclear Cooperation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Integrated Drought Information System Reauthorization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Sleeping Bear Dunes National Lakeshore Conservation and Recreation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Home Heating Emergency Assistance Through Transportation Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Philippines Charitable Giving Assistance Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Homeowner Flood Insurance Affordability Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Protecting Access to Medicare Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Gabriella Miller Kids First Research Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States International Programming to Ukraine and Neighboring Regions": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Support for the Sovereignty, Integrity, Democracy, and Economic Stability of Ukraine Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Cooperative and Small Employer Charity Pension Flexibility Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Children's Hospital GME Support Reauthorization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Digital Accountability and Transparency Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Green Mountain Lookout Heritage Protection Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Kilah Davenport Child Protection Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Sandia Pueblo Settlement Technical Amendment Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "North Texas Invasive Species Barrier Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Water Resources Reform and Development Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Collinsville Renewable Energy Promotion Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Harmful Algal Bloom and Hypoxia Research and Control Amendments Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "World War II Memorial Prayer Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Reliable Home Heating Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Intelligence Authorization Act for Fiscal Year 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Workforce Innovation and Opportunity Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Black Hills Cemetery Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Distinguished Flying Cross National Memorial Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Hill Creek Cultural Preservation and Energy Development Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Three Kids Mine Remediation and Reclamation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Lake Hill Administrative Site Affordable Housing Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "North Cascades National Park Service Complex Fish Stocking Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Huna Tlingit Traditional Gull Egg Use Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Veterinary Medicine Mobility Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Veterans' Access to Care through Choice, Accountability, and Transparency Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Unlocking Consumer Choice and Wireless Competition Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Money Remittances Improvement Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Improving Trauma Care Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Autism CARES Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Emergency Afghan Allies Extension Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Victims of Child Abuse Act Reauthorization Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Continuing Appropriations Resolution, 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Paul D. Wellstone Muscular Dystrophy Community Assistance, Research and Education Amendments of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "All Circuit Review Extension Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Gun Lake Trust Land Reaffirmation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Emergency Medical Services for Children Reauthorization Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Veterans' Compensation Cost-of-Living Adjustment Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Debbie Smith Reauthorization Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Presidential and Federal Records Act Amendments of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Government Reports Elimination Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Preventing Sex Trafficking and Strengthening Families Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Sunscreen Innovation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Honor Flight Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "STELA Reauthorization Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated and Further Continuing Appropriations Act, 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Permanent Electronic Duck Stamp Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Death in Custody Reporting Act of 2013": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "American Savings Promotion Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Crooked River Collaborative Water Security and Jobs Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Smart Savings Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Chemical Facility Anti-Terrorism Standards Program Authorization and Accountability Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Credit Union Share Insurance Fund Parity Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Designer Anabolic Steroid Control Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "EPS Service Parts Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Venezuela Defense of Human Rights and Civil Society Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Insurance Capital Standards Clarification Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Howard Coble Coast Guard and Maritime Transportation Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Ukraine Freedom Support Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Federal Information Security Modernization Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States-Israel Strategic Partnership Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Terrorism Risk Insurance Program Reauthorization Act of 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Carl Levin and Howard P. \"Buck\" McKeon National Defense Authorization Act for Fiscal Year 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Protecting Volunteer Firefighters and Emergency Responders Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Department of Homeland Security Appropriations Act, 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Medicare Access and CHIP Reauthorization Act of 2015": {
+  "major": true,
+  "claimed": true,
+  "evidence": "the Bipartisan Act was the largest scale change to the American health care system following the Affordable Care Act in 2010.",
+  "model": "claude-sonnet-5-5"
+ },
+ "Iran Nuclear Agreement Review Act of 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Office of Compliance Administrative and Technical Corrections Act of 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "USA Freedom Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Justice for Victims of Trafficking Act of 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "WIOA Technical Amendments Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Trade Preferences Extension Act of 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Department of Homeland Security Interoperable Communications Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Sawtooth National Recreation Area": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Gerardo Hernandez Airport Security Act of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Windstorm Impact Reduction Act Reauthorization of 2014": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "U.S. Commercial Space Launch Competitiveness Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Fixing America's Surface Transportation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2016": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Every Student Succeeds Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2016": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Microbead-Free Waters Act of 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Grants Oversight and New Efficiency Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "International Megan's Law to Prevent Child Exploitation and Other Sexual Crimes Through Advanced Notification of Traveling Sex Offenders": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Coast Guard Authorization Act of 2015": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Protect and Preserve International Cultural Property Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Bison Legacy Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Frank R. Lautenberg Chemical Safety for the 21st Century Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Puerto Rico Oversight, Management, and Economic Stability Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "MEGABYTE Act of 2016": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Global Food Security Act of 2016": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Justice Against Sponsors of Terrorism Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Sexual Assault Survivors' Rights Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "is a landmark civil rights and victims rights legislation in the United States that establishes, for the first time, statutory rights in federal code for survivors of sexual assault and rape",
+  "model": "claude-sonnet-5-5"
+ },
+ "Further Continuing and Security Assistance Appropriations Act, 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Continuing Appropriations and Military Construction, Veterans Affairs, and Related Agencies Appropriations Act, 2017, and Zika Response and Preparedness Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "21st Century Cures Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Better Online Tickets Sales Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Frank R. Wolf International Religious Freedom Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "First Responder Anthrax Preparedness Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Foreign Cultural Exchange Jurisdictional Immunity Clarification Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Holocaust Expropriated Art Recovery Act of 2016": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States-Israel Advanced Research Partnership Act of 2016": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "American Innovation and Competitiveness Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "GAO Access and Oversight Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Tested Ability to Leverage Exceptional National Talent Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Repeal of the Disclosure of Payments by Resource Extraction Issuers Rule": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Repeal of Stream Protection Rule": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "INSPIRE Women Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Promoting Women in Entrepreneurship Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Repeal of the Implementation of the NICS Improvement Amendments Act of 2007": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Vietnam War Veterans Recognition Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Weather Research and Forecasting Innovation Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Department of Veterans Affairs": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Strengthening State and Local Cyber Crime Fighting Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Countering America's Adversaries Through Sanctions Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Tax Cuts and Jobs Act of 2017": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The New York Times described the TCJA as \"the most sweeping tax overhaul in decades\".",
+  "model": "claude-sonnet-5-5"
+ },
+ "Thomasina E. Jordan": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Bipartisan Budget Act of 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Protecting Young Victims from Sexual Abuse and Safe Sport Authorization Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Allow States and Victims to Fight Online Sex Trafficking Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Taiwan Travel Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The law is considered a substantial upgrade to Taiwan–United States relations, removing previous restrictions on travels for the officials.",
+  "model": "claude-sonnet-5-5"
+ },
+ "Justice for Uncompensated Survivors Today (JUST) Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Economic Growth, Regulatory Relief and Consumer Protection Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The Act was the most significant change to U.S. banking regulations since Dodd–Frank.",
+  "model": "claude-sonnet-5-5"
+ },
+ "Trickett Wendler, Frank Mongiello, Jordan McLinn, and Matthew Bellina Right to Try Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Swan Lake Hydroelectric Project Boundary Correction Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "John S. McCain National Defense Authorization Act for Fiscal Year 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "FAA Reauthorization Act of 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "America's Water Infrastructure Act of 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Music Modernization Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Cybersecurity and Infrastructure Security Agency Act of 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Amy, Vicky, and Andy Child Pornography Victim Assistance Act of 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Iraq and Syria Genocide Relief and Accountability Act of 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "SUPPORT for Patients and Communities Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Quantum Initiative Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Agriculture Improvement Act of 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "President's Emergency Plan for AIDS Relief": {
+  "major": true,
+  "claimed": true,
+  "evidence": "making it the largest commitment by any nation focused on a single disease in history",
+  "model": "claude-sonnet-5-5"
+ },
+ "SECURE Technology Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Foundations for Evidence-Based Policymaking Act of 2018": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "First Step Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Victims of Trafficking and Violence Protection Act of 2000": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "John L. Canley": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Elie Wiesel Genocide and Atrocities Prevention Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "TANF Extension Act of 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Government Employee Fair Treatment Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Further Additional Continuing Appropriations Act, 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Flood Insurance Extension Act of 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Taxpayer First Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "is a law that makes significant reforms to the Internal Revenue Service (IRS)",
+  "model": "claude-sonnet-5-5"
+ },
+ "Emergency Supplemental Appropriations for Humanitarian Assistance and Security at the Southern Border Act, 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "James Zadroga 9/11 Health and Compensation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "John D. Dingell Jr. Conservation, Management, and Recreation Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Preventing Animal Cruelty and Torture Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "ONDCP Technical Corrections Act of 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Hong Kong Human Rights and Democracy Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2020": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2020": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Payment Integrity Information Act of 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Coronavirus Preparedness and Response Supplemental Appropriations Act, 2020": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States–Mexico–Canada Agreement": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Secure and Trusted Communications Networks Act of 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Families First Coronavirus Response Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Taiwan Allies International Protection and Enhancement Initiative Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Coronavirus Aid, Relief, and Economic Security Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "Unprecedented in size and scope, the legislation was the largest economic stimulus package in U.S. history, amounting to 10% of total U.S. gross domestic product.",
+  "model": "claude-sonnet-5-5"
+ },
+ "Supporting Older Americans Act of 2020": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Paycheck Protection Program and Health Care Enhancement Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Paycheck Protection Program": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Hong Kong Autonomy Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Uyghur Human Rights Policy Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Great American Outdoors Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The Associated Press wrote that it would be \"the most significant conservation legislation enacted in nearly half a century.\"",
+  "model": "claude-sonnet-5-5"
+ },
+ "Rodchenkov Anti-Doping Act of 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Holding Foreign Companies Accountable Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Savanna's Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Save Our Seas 2.0 Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Malala Yousafzai Scholarship Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "William M. (Mac) Thornberry National Defense Authorization Act for Fiscal Year 2021": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "American Rescue Plan Act of 2021": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2021": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The bill is one of the largest spending measures ever enacted, surpassing the $2.2 trillion CARES Act, enacted in March 2020.",
+  "model": "claude-sonnet-5-5"
+ },
+ "PPP Extension Act of 2021": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "RENACER Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Secure Equipment Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Jaime Zapata": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Infrastructure Investment and Jobs Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "John M. McHugh": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Capitol Police Emergency Assistance Act of 2021": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2022": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2022": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "John Lewis": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Lorna Breen": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Amache National Historic Site": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Postal Service Reform Act of 2022": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Emmett Till Antilynching Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "William T. Coleman, Jr.": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Ukraine Democracy Defense Lend-Lease Act of 2022": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "CHIPS and Science Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Bipartisan Safer Communities Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Inflation Reduction Act of 2022": {
+  "major": true,
+  "claimed": true,
+  "evidence": "It was described as a landmark piece of legislation.",
+  "model": "claude-sonnet-5-5"
+ },
+ "Honoring our PACT Act of 2022": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Speak Out Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Respect for Marriage Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The Respect for Marriage Act (RFMA; H.R. 8404) is a landmark federal statute passed by the 117th United States Congress in 2022",
+  "model": "claude-sonnet-5-5"
+ },
+ "Medical Marijuana and Cannabidiol Research Expansion Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "James M. Inhofe National Defense Authorization Act for Fiscal Year 2023": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Don Young": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2023": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Sami's Law": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Durbin Feeling": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Director of National Intelligence": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Debt ceiling": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Pala Indian Reservation": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United Network for Organ Sharing": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 38 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Armed Forces": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Federal Communications Commission": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Act of Congress": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Federal Election Campaign Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Siletz Reservation": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2024": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 49 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2024": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Narcotic": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Pan Am Flight 103": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Robert T. Stafford Disaster Relief and Emergency Assistance Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Detroit": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Postal Service": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 18 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Low-enriched uranium": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Jennifer Wexton": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Debbie Smith Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 28 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Social Security Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Public Health Service Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Electromagnetic spectrum": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Lake Tahoe": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Human trafficking": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Institutes of Health": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 5 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Congressional Gold Medal": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Customs-Trade Partnership Against Terrorism": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Department of Homeland Security": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Coastal Barrier Resources Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2021": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Secretary of the Treasury": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Federal Emergency Management Agency": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Government Accountability Office": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Trademark": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "U.S. Customs and Border Protection": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Border Patrol": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Weitzman National Museum of American Jewish History": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "FAFSA": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Firefighter Registry for Cancer": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Clean Water Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The Clean Water Act was one of the first and most influential modern environmental laws in the United States.",
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Federal Protective Service": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "American Relief Act, 2025": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "U.S. Route 20": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Defense Authorization Act for Fiscal Year 2025": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Chesapeake and Ohio Canal National Historical Park": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Bureau of Reclamation": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Secretary of the Interior": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Internal Revenue Code of 1986": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 31 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Central Utah Project Completion Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Homeland Security Act of 2002": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The HSA imposed the largest federal government reorganization since the Department of Defense was created via the National Security Act of 1947 (as amended in 1949).",
+  "model": "claude-sonnet-5-5"
+ },
+ "Higher Education Act of 1965": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Fort McHenry": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Atchafalaya National Heritage Area": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Geological Survey": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 40 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Colorado River Basin Salinity Control Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "DHS Science and Technology Directorate": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Nebraska": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Civil service": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Source code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Controlled Substances Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Federal government of the United States": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Child abuse": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Working dog": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Child Abuse Prevention and Treatment Act": {
+  "major": true,
+  "claimed": true,
+  "evidence": "The key federal legislation addressing child abuse and neglect is the Child Abuse Prevention and Treatment Act (CAPTA)",
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Holocaust Memorial Museum": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "California": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Transportation Security Administration": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States district court": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Amtrak": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 36 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Tribal colleges and universities": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Elizabeth Dole": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Mall": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Office of Management and Budget": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "American Samoa": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Federal lands": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Rucker Park": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "TSA PreCheck": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Legislative Reorganization Act of 1970": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Title 44 of the United States Code": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Jackie Robinson Ballpark": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Social Security Fairness Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Pro-nuclear energy movement": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Biosecurity in the United States": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Consolidated Appropriations Act, 2019": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Veterans Appeals Improvement and Modernization Act of 2017": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Safeguarding Therapeutics Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "American Women quarters": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Xenophobia and racism related to the COVID-19 pandemic": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Juneteenth": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Lacey Act of 1900": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Fiscal Responsibility Act of 2023": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "COVID-19 Origin Act of 2023": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Bird migration": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Prohibiting Russian Uranium Imports Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "All-American Flag Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Launch Communications Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "United States Commission on International Religious Freedom": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Poison control center": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "Mountain View Corridor": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ },
+ "National Alzheimer's Project Act": {
+  "major": false,
+  "claimed": false,
+  "evidence": null,
+  "model": "claude-sonnet-5-5"
+ }
+}
