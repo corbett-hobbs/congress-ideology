@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "fetch:all": "pnpm fetch:voteview && pnpm fetch:legislators && pnpm fetch:committees",
     "fetch:voteview": "tsx pipeline/fetch/voteview.ts",
+    "fetch:voteview-rollcalls": "tsx pipeline/fetch/voteview-rollcalls.ts",
     "fetch:legislators": "tsx pipeline/fetch/legislators.ts",
     "fetch:committees": "tsx pipeline/fetch/committees.ts",
     "fetch:photos": "tsx pipeline/fetch/photos.ts",

@@ -64,6 +64,51 @@ describe("the committed Laws files", () => {
   });
 });
 
+describe("passage votes and support bands", () => {
+  const byId = new Map(laws.map((l) => [l.law_id, l]));
+  it("record the known tallies", () => {
+    expect(byId.get("111-pub-148")).toMatchObject({ house: [0, 219, 212, 165], senate: [0, 60, 39, 396], band: 1 }); // Affordable Care Act
+    expect(byId.get("99-pub-514")).toMatchObject({ house: [0, 292, 136, 413], senate: [0, 74, 23, 296], band: 2 }); // Tax Reform Act of 1986
+    expect(byId.get("107-pub-56")).toMatchObject({ house: [0, 357, 66, 398], senate: [0, 98, 1, 313], band: 3 }); // USA PATRIOT Act
+    expect(byId.get("117-pub-169")).toMatchObject({ house: [0, 220, 207, 420], senate: [0, 51, 50, 325], band: 1 }); // Inflation Reduction Act
+  });
+  it("keep the override votes apart from the passage band", () => {
+    expect(byId.get("93-pub-148")).toMatchObject({ house: [0, 238, 123, 520], override_votes: [284, 135, 75, 18], band: 2, veto_override: true }); // War Powers Resolution
+    for (const l of laws.filter((x) => x.veto_override)) expect(l.override_votes?.every((n) => n !== null), l.law_id).toBe(true);
+    for (const l of laws.filter((x) => !x.veto_override)) expect(l.override_votes, l.law_id).toBeNull();
+  });
+  it("give a roll-call vote a tally and a roll number, and any other kind neither", () => {
+    for (const l of laws) for (const v of [l.house, l.senate]) {
+      if (v[0] === 0) expect(v[1] !== null && v[2] !== null && v[1] + v[2] > 0, l.law_id).toBe(true);
+      else expect(v.slice(1), l.law_id).toEqual([null, null, null]);
+    }
+  });
+  it("set each law's band from the narrowest recorded yes share", () => {
+    for (const l of laws) {
+      const shares = [l.house, l.senate].flatMap((v) => (v[0] === 0 ? [v[1]! / (v[1]! + v[2]!)] : []));
+      const expected = shares.length === 0 ? 0 : (() => { const m = Math.min(...shares); return m < 0.6 ? 1 : m < 0.75 ? 2 : m < 0.9 ? 3 : 4; })();
+      expect(l.band, l.law_id).toBe(expected);
+    }
+  });
+  it("add the band counts up to the law counts, in every row and in the payload", () => {
+    for (const c of counts) expect(c.bands.reduce((a, b) => a + b, 0)).toBe(c.n);
+    const p = buildLawsPayload(counts, laws, meta, admins);
+    for (let i = 0; i < p.congresses.length; i++) for (let j = 0; j < p.areas.length; j++) expect(p.bands[i]![j]!.reduce((a, b) => a + b, 0)).toBe(p.counts[i]![j]);
+  });
+  it("show most laws with no recorded vote before 2000, as the pre-flight found", () => {
+    const share = (from: number, to: number) => {
+      const ls = laws.filter((l) => l.congress >= from && l.congress <= to);
+      return ls.filter((l) => l.band === 0).length / ls.length;
+    };
+    expect(share(93, 106)).toBeGreaterThan(0.6);
+    expect(share(116, 118)).toBeLessThan(0.7);
+  });
+  it("start the support card at the first Congress and record Voteview's last roll call", () => {
+    expect(meta.support_first_congress).toBe(93);
+    expect(meta.voteview_last_date.House >= "2025-01-03").toBe(true);
+  });
+});
+
 describe("Not classified and committees", () => {
   it("leaves laws without a CRS area only in the 93rd-95th Congresses", () => {
     const nc = counts.filter((c) => c.area_id === "not-classified");

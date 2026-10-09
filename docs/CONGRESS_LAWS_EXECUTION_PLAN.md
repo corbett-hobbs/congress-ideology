@@ -10,6 +10,7 @@ Companion to `docs/CONGRESS_LAWS_SCOPE.md` (what and why) and the mockup `docs/m
 - **Rules from the pre-flight:** the count gate is "law numbers run 1..N with none missing or duplicated, N equals the independent count" (the list endpoint repeats rows and omits laws; missing numbers are looked up by number); a law's date may fall up to 20 January after its Congress ends (35 of 1,080 sampled do), later is flagged; the signing date is the earliest `BecameLaw` action, never the list's `latestAction`; the Congress comes from the law number, the signing president from the date; Mayhew entries carry no Pub. L. numbers, so matching is by title and year, done by hand.
 - Support band = the **closest recorded final-passage vote** in either chamber; no recorded vote in either = its own band. Display order bottom to top: No recorded vote, Under 60%, 60–75%, 75–90%, 90%+. Minority-party support is v1.1, not v1.
 - Major laws from **Mayhew** (through the 118th), three states (Major / Not major / Not yet assessed), plus a **provisional flag** for the in-progress Congress that ships only if it passes its back-test (Session 3b).
+- **Not classified is shown as a visible band** in the Laws charts (decided at the Session 1 gate): 465 laws, about a quarter of the 93rd–95th, none after.
 - Summaries are the first sentence of the CRS summary. **Never model-written text** unless held to the source's own words (the case-summary guard).
 - No new colour tokens: policy areas reuse `--fuel-*`, bands reuse `--split-*`.
 

@@ -167,7 +167,7 @@ export function areaIdFor(name: string | null, idx: AreaIndex): string {
   throw new LawsDataError(`policy area "${name}" is neither a CRS area nor a listed legacy term; add it to pipeline/reference/law-policy-areas.json`);
 }
 
-export function buildLawRow(l: RawLaw, idx: AreaIndex): LawRow {
+export function buildLawRow(l: RawLaw, idx: AreaIndex, passage: Pick<LawRow, "house" | "senate" | "band" | "override_votes">): LawRow {
   return {
     law_id: l.law_id,
     congress: l.congress,
@@ -180,6 +180,7 @@ export function buildLawRow(l: RawLaw, idx: AreaIndex): LawRow {
     sponsor_bioguide_id: l.sponsor,
     area_id: areaIdFor(l.policy_area, idx),
     veto_override: isVetoOverride(l.actions),
+    ...passage,
   };
 }
 
@@ -187,9 +188,10 @@ export function buildCounts(rows: LawRow[]): LawCountRow[] {
   const m = new Map<string, LawCountRow>();
   for (const r of rows) {
     const k = `${r.congress}|${r.area_id}`;
-    const cur = m.get(k);
-    if (cur) cur.n++;
-    else m.set(k, { congress: r.congress, area_id: r.area_id, n: 1 });
+    const cur = m.get(k) ?? { congress: r.congress, area_id: r.area_id, n: 0, bands: [0, 0, 0, 0, 0] as LawCountRow["bands"] };
+    cur.n++;
+    cur.bands[r.band]++;
+    m.set(k, cur);
   }
   return [...m.values()].sort((a, b) => a.congress - b.congress || a.area_id.localeCompare(b.area_id));
 }
@@ -199,13 +201,16 @@ export function checkCounts(counts: LawCountRow[], rows: LawRow[]): void {
   const byCongress = new Map<number, number>();
   for (const r of rows) byCongress.set(r.congress, (byCongress.get(r.congress) ?? 0) + 1);
   const sums = new Map<number, number>();
-  for (const c of counts) sums.set(c.congress, (sums.get(c.congress) ?? 0) + c.n);
+  for (const c of counts) {
+    sums.set(c.congress, (sums.get(c.congress) ?? 0) + c.n);
+    if (c.bands.reduce((a, b) => a + b, 0) !== c.n) throw new LawsDataError(`${ordinal(c.congress)} Congress, ${c.area_id}: the band counts add to ${c.bands.reduce((a, b) => a + b, 0)}, not ${c.n}`);
+  }
   for (const [c, n] of byCongress) if (sums.get(c) !== n) throw new LawsDataError(`${ordinal(c)} Congress: counts add to ${sums.get(c) ?? 0}, the list has ${n}`);
   if (sums.size !== byCongress.size) throw new LawsDataError("counts and list cover different Congresses");
 }
 
-export function buildMeta(args: { rows: LawRow[]; chosen: Map<number, Chosen>; areas: LawPolicyAreas; independent: Record<string, number> }): LawsMeta {
-  const { rows, chosen, areas, independent } = args;
+export function buildMeta(args: { rows: LawRow[]; chosen: Map<number, Chosen>; areas: LawPolicyAreas; independent: Record<string, number>; voteviewLast: { House: string; Senate: string } }): LawsMeta {
+  const { rows, chosen, areas, independent, voteviewLast } = args;
   const congresses = [...chosen.keys()].sort((a, b) => a - b);
   const bySource = new Map<RawSource, number[]>();
   for (const c of congresses) bySource.set(chosen.get(c)!.primary.source, [...(bySource.get(chosen.get(c)!.primary.source) ?? []), c]);
@@ -215,6 +220,8 @@ export function buildMeta(args: { rows: LawRow[]; chosen: Map<number, Chosen>; a
     partial_congresses: congresses.filter((c) => independent[String(c)] === undefined),
     data_through: rows.reduce((m, r) => (r.date > m ? r.date : m), "0000-00-00"),
     law_count: rows.length,
+    support_first_congress: congresses[0]!,
+    voteview_last_date: voteviewLast,
     sources: [...bySource].map(([source, cs]) => ({ source, first_congress: Math.min(...cs), last_congress: Math.max(...cs) })),
     areas: [
       ...areas.areas.map((a) => ({ id: a.id, name: a.name, group: a.group, status: a.status })),

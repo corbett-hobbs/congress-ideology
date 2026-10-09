@@ -436,3 +436,15 @@ await step("output/laws.json + laws_counts.json + laws_meta.json", async () => {
   for (const r of rows) if (!areas.has(r.area_id)) throw new ValidationError(file, "area_id", `${r.law_id} has area ${r.area_id}, not in laws_meta.json`);
   return `${rows.length} laws, ${counts.length} count rows ok; law ids and (congress, area) unique`;
 });
+
+await step("voteview/rollcalls_93on.json", async () => {
+  const { rollcallManifest } = await import("../fetch/voteview-rollcalls-lib");
+  const { z } = await import("zod");
+  const manifest = rollcallManifest.parse(JSON.parse(await readFile(`${VOTEVIEW}/rollcalls_manifest.json`, "utf8")));
+  const file = `${VOTEVIEW}/rollcalls_93on.json`;
+  const tuple = z.tuple([z.number().int().min(93), z.enum(["H", "S"]), z.number().int().min(1), z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.number().int().nullable(), z.number().int().nullable(), z.number().int().min(0), z.number().int().min(0), z.string()]);
+  const rows = validateAll(file, JSON.parse(await readFile(file, "utf8")) as unknown[], tuple, (_row, i) => `record ${i}`);
+  if (rows.length !== manifest.rows) throw new ValidationError(file, "row count", `${rows.length} rows, manifest says ${manifest.rows}`);
+  assertUnique(file, rows, (r) => `${r[0]}|${r[1]}|${r[2]}`, (r) => `Congress ${r[0]} ${r[1]} roll ${r[2]}`);
+  return `${rows.length} roll calls ok; (congress, chamber, rollnumber) unique; last House ${manifest.last_date.H}, Senate ${manifest.last_date.S}`;
+});

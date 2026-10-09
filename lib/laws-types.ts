@@ -36,6 +36,8 @@ export interface LawsPayload {
   groups: LawsGroup[];
   /** `counts[congressIndex][areaIndex]` = laws; areas in `areas` order. */
   counts: number[][];
+  /** `bands[congressIndex][areaIndex]` = laws per support band `[none recorded, under 60%, 60-75, 75-90, 90%+]`; adds up to `counts`. */
+  bands: [number, number, number, number, number][][];
   /** Per Congress, same order as `congresses`. */
   signedMost: SignedMost[];
   dataThrough: string;

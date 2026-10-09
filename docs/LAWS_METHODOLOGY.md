@@ -52,7 +52,7 @@ Reported, not fatal: sponsors missing from `legislators.json`, laws with no spon
 
 ## Not yet in the data
 
-Passage votes and support bands (Session 2), Mayhew's major-law flag, party control back to 1973 and CRS summaries (Session 3). `laws_counts.json` carries `n` only for now.
+Mayhew's major-law flag, party control back to 1973 and CRS summaries (Session 3).
 
 ## What the first full run found (Session 1)
 
@@ -63,3 +63,59 @@ Passage votes and support bands (Session 2), Mayhew's major-law flag, party cont
 - **Veto overrides:** 33 laws (93rd 5, 94th 8, 96th 2, 97th 2, 98th 2, 99th 2, 100th 3, 102nd 1, 104th 1, 105th 1, 110th 4, 114th 1, 116th 1). Each has a veto and an "over veto" passage. They have not been compared with the Senate Historical Office's list yet (Session 6). Line-item-veto notes on eleven 105th laws are correctly not counted.
 - **Sponsors:** all 12,604 sponsor ids resolve in `legislators.json`; 15 laws have no sponsor in the source (96th 2, 97th 4, 98th 2, 99th 1, 100th 1, 101st 1, 108th 1, 109th 1, 110th 1, 111th 1, listed in `laws_report.json`).
 - **Committees:** 12,150 laws carry at least one committee; 386 distinct committee and subcommittee ids, 156 of them with a page today. Of a decade's committee entries, the share that link to a page: 1970s 89%, 1980s 79%, 1990s 92%, 2000s–2020s 100%. The API maps old committees to their successors' codes (a 1979 Science and Technology bill carries `hssy00`), which is why the 1970s are not lower. Nine ids changed name over time; the most common name is kept.
+
+
+## Passage votes and support bands (Session 2)
+
+Each law carries its two chambers' final-passage votes (`house`, `senate`: `[kind, yea, nay, roll]`, kind 0 roll call / 1 voice / 2 unanimous consent / 3 method not stated) and a **band**: the yes share of the narrowest recorded final-passage vote in either chamber, yes ÷ (yes + no). Bands: 0 no recorded vote in either chamber, 1 under 60%, 2 60–75% (60.0% counts here), 3 75–90%, 4 90% and over. Display order is a UI constant. The counts file carries the five band counts per Congress and policy area. Minority-party support is v1.1.
+
+**Rules.**
+- A chamber's final passage is its newest `Passed/agreed to in <chamber>` or `Conference report agreed to in <chamber>` action, or a concurrence or recession recorded under "Resolving differences", or, where only the chamber's own feed has the line (much of 1987–88), its `House Agreed to Senate Amendments…` / `Senate concurred…` text. On a day with two such lines, the one that records a roll call wins. A chamber's last action is taken even when it was a step back to the other chamber; the closest vote over both chambers is what the band uses.
+- **Method.** Wording that names a voice vote or consent decides it. Otherwise it is a roll call if the action carries a roll-call reference (or an identically worded twin does), cites a roll number or a yea-nay count. Anything else says nothing about the method ("Measure passed House." in the 1970s) and is read as no recorded vote: in 21,000 non-roll passages Voteview holds a roll call on the same bill, chamber and day for only 122 (0.6%; sample in `laws_report.json`).
+- **Tally source.** The action text's tally is primary (it is current for every law). Voteview's `yea_count` / `nay_count` are the check, and fill in the few roll calls whose text has no count (12 of 3,884). Voteview trails the live feed, so `rollcalls_manifest.json` records its last date per chamber and a newer vote is simply not checked (none today: it runs to 2026-09-30).
+- **The check.** Exact where the two agree (3,782 of 3,845 compared); *minor* when they differ by at most 2 votes and the band is the same (55); anything else stops the build if the match was by the clerk's roll number, and is reported as *unverified* if it was only by date and bill (6), because on a day with several votes on one bill the date match can land on the wrong vote. A tally above the chamber's seats (441 House, 101 Senate) also stops the build. Two tallies were decided by hand in `pipeline/reference/law-vote-exceptions.json`: 104-229 (the clerk's roll 223 says 339–4 as the text does; Voteview has 345–4) and 95-511 (the text's 266–176 exceeds the House; Voteview's 226–176 is used). A Vice President's tie-break counts the official result (51–50 for 119-21 and five others; Voteview has 50–50, a one-vote difference that leaves the band alone).
+- **Override votes** are kept in `override_votes` and do not set the band: the band answers how broadly a bill was supported when Congress passed it, and an override is by definition at least two thirds. Every one of the 33 override laws has both override tallies, which also confirms the override detector.
+- **Decade rows** below are binned by the year a Congress opens, so "1970s" is the 93rd–96th (1973–80).
+
+| Decade | chamber passages | roll calls | voice | consent | not stated | tally from text | tally from Voteview | exact | within 2 votes | disagree by date match | no Voteview match | exceptions |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1970s | 4970 | 798 | 0 | 0 | 4172 | 797 | 1 | 758 | 21 | 3 | 15 | 1 |
+| 1980s | 6246 | 520 | 4957 | 689 | 80 | 520 | 0 | 486 | 21 | 3 | 10 | 0 |
+| 1990s | 4724 | 654 | 2228 | 1810 | 32 | 652 | 2 | 643 | 5 | 0 | 5 | 1 |
+| 2000s | 4400 | 835 | 1271 | 2277 | 17 | 829 | 6 | 826 | 3 | 0 | 6 | 0 |
+| 2010s | 3388 | 659 | 1131 | 1584 | 14 | 656 | 3 | 653 | 3 | 0 | 3 | 0 |
+| 2020s | 1510 | 418 | 470 | 585 | 37 | 418 | 0 | 416 | 2 | 0 | 0 | 0 |
+
+**Share of laws in each band, by Congress** (the support card's data; the 119th is partial):
+
+| Congress | laws | No recorded vote | Under 60% | 60–75% | 75–90% | 90%+ |
+|---|---|---|---|---|---|---|
+| 93 | 651 | 75% | 2% | 3% | 6% | 15% |
+| 94 | 588 | 68% | 3% | 5% | 8% | 16% |
+| 95 | 633 | 72% | 3% | 5% | 5% | 15% |
+| 96 | 613 | 79% | 3% | 4% | 5% | 8% |
+| 97 | 473 | 82% | 3% | 2% | 4% | 9% |
+| 98 | 623 | 87% | 1% | 3% | 3% | 7% |
+| 99 | 664 | 89% | 1% | 3% | 2% | 5% |
+| 100 | 713 | 84% | 1% | 3% | 3% | 10% |
+| 101 | 650 | 88% | 1% | 2% | 2% | 6% |
+| 102 | 590 | 86% | 1% | 3% | 4% | 6% |
+| 103 | 465 | 79% | 3% | 5% | 4% | 9% |
+| 104 | 333 | 74% | 1% | 4% | 5% | 15% |
+| 105 | 394 | 77% | 1% | 2% | 4% | 16% |
+| 106 | 580 | 74% | 1% | 1% | 4% | 21% |
+| 107 | 377 | 66% | 1% | 2% | 3% | 28% |
+| 108 | 498 | 71% | 1% | 2% | 2% | 23% |
+| 109 | 482 | 75% | 2% | 3% | 2% | 18% |
+| 110 | 460 | 71% | 0% | 3% | 4% | 21% |
+| 111 | 383 | 58% | 5% | 6% | 3% | 27% |
+| 112 | 283 | 59% | 1% | 8% | 3% | 30% |
+| 113 | 296 | 62% | 1% | 4% | 3% | 29% |
+| 114 | 329 | 75% | 0% | 3% | 2% | 20% |
+| 115 | 442 | 66% | 5% | 2% | 3% | 25% |
+| 116 | 344 | 81% | 0% | 2% | 4% | 12% |
+| 117 | 362 | 48% | 5% | 2% | 9% | 35% |
+| 118 | 274 | 70% | 1% | 2% | 4% | 23% |
+| 119 | 119 | 49% | 24% | 5% | 4% | 18% |
+
+Reading it: before 2000 about four laws in five show as "No recorded vote" (68–89%); from the 107th on it is 48–81%, and the share of laws with a recorded vote above 90% yes grows from about a tenth to a quarter. Checked against well-known votes in the tests: Affordable Care Act (House 219–212, Senate 60–39), Tax Reform Act of 1986 (292–136, 74–23), USA PATRIOT Act (357–66, 98–1), Inflation Reduction Act (220–207, 51–50) and the War Powers Resolution (override votes 284–135 and 75–18).

@@ -1,0 +1,12 @@
+{
+  "url": "https://voteview.com/static/data/out/rollcalls/HSall_rollcalls.csv",
+  "source_bytes": 29776435,
+  "source_sha256": "98fcc6eac8d966557c4f10c3a64aaee321b88b68522bf339ee18da858f5b1988",
+  "rows": 52171,
+  "first_congress": 93,
+  "last_date": {
+    "H": "2026-09-16",
+    "S": "2026-09-30"
+  },
+  "fetched": "2026-10-09"
+}

@@ -782,6 +782,418 @@
       "95": 167
     }
   },
+  "votes": {
+    "rule": "A chamber's final passage is its newest passage, conference-report or concurrence action; a roll call's tally is the action text's, with Voteview as the check (exact, minor = within 2 votes and the same band, unverified = a date-and-bill match disagrees, unchecked = no Voteview match, exception = recorded in law-vote-exceptions.json). The band is the narrowest yes share of any recorded final-passage vote; override votes do not count.",
+    "by_decade": {
+      "1970s": {
+        "laws": 2485,
+        "chamber_votes": 4970,
+        "unstated": 4172,
+        "roll": 798,
+        "tally_from_text": 797,
+        "check_exact": 758,
+        "join_date+bill": 691,
+        "join_date+tally": 92,
+        "nonroll_with_a_voteview_vote_on_the_bill_that_day": 43,
+        "check_minor": 21,
+        "check_unchecked": 15,
+        "check_unverified": 3,
+        "tally_from_voteview": 1,
+        "check_exception": 1
+      },
+      "1980s": {
+        "laws": 3123,
+        "chamber_votes": 6246,
+        "voice": 4957,
+        "roll": 520,
+        "tally_from_text": 520,
+        "check_exact": 486,
+        "join_date+bill": 398,
+        "nonroll_with_a_voteview_vote_on_the_bill_that_day": 47,
+        "join_date+tally": 43,
+        "consent": 689,
+        "unstated": 80,
+        "check_unchecked": 10,
+        "check_minor": 21,
+        "check_unverified": 3,
+        "join_clerk": 69
+      },
+      "1990s": {
+        "laws": 2362,
+        "chamber_votes": 4724,
+        "consent": 1810,
+        "roll": 654,
+        "tally_from_text": 652,
+        "check_exact": 643,
+        "join_clerk": 651,
+        "voice": 2228,
+        "check_unchecked": 5,
+        "unstated": 32,
+        "nonroll_with_a_voteview_vote_on_the_bill_that_day": 14,
+        "check_minor": 5,
+        "tally_from_voteview": 2,
+        "check_exception": 1
+      },
+      "2000s": {
+        "laws": 2200,
+        "chamber_votes": 4400,
+        "consent": 2277,
+        "roll": 835,
+        "tally_from_text": 829,
+        "check_exact": 826,
+        "join_clerk": 834,
+        "voice": 1271,
+        "nonroll_with_a_voteview_vote_on_the_bill_that_day": 14,
+        "tally_from_voteview": 6,
+        "check_unchecked": 6,
+        "unstated": 17,
+        "check_minor": 3,
+        "join_date+bill": 1
+      },
+      "2010s": {
+        "laws": 1694,
+        "chamber_votes": 3388,
+        "voice": 1131,
+        "consent": 1584,
+        "roll": 659,
+        "tally_from_text": 656,
+        "check_exact": 653,
+        "join_clerk": 659,
+        "tally_from_voteview": 3,
+        "check_unchecked": 3,
+        "unstated": 14,
+        "nonroll_with_a_voteview_vote_on_the_bill_that_day": 3,
+        "check_minor": 3
+      },
+      "2020s": {
+        "laws": 755,
+        "chamber_votes": 1510,
+        "roll": 418,
+        "tally_from_text": 418,
+        "check_exact": 416,
+        "join_clerk": 418,
+        "consent": 585,
+        "voice": 470,
+        "unstated": 37,
+        "check_minor": 2,
+        "nonroll_with_a_voteview_vote_on_the_bill_that_day": 1
+      }
+    },
+    "band_counts_by_decade": {
+      "1970s": [
+        1823,
+        69,
+        111,
+        149,
+        333
+      ],
+      "1980s": [
+        2698,
+        41,
+        81,
+        77,
+        226
+      ],
+      "1990s": [
+        1853,
+        34,
+        65,
+        97,
+        313
+      ],
+      "2000s": [
+        1517,
+        42,
+        66,
+        67,
+        508
+      ],
+      "2010s": [
+        1164,
+        28,
+        61,
+        53,
+        388
+      ],
+      "2020s": [
+        425,
+        51,
+        20,
+        48,
+        211
+      ]
+    },
+    "band_counts_by_congress": {
+      "93": [
+        485,
+        10,
+        22,
+        38,
+        96
+      ],
+      "94": [
+        398,
+        17,
+        31,
+        47,
+        95
+      ],
+      "95": [
+        453,
+        22,
+        31,
+        34,
+        93
+      ],
+      "96": [
+        487,
+        20,
+        27,
+        30,
+        49
+      ],
+      "97": [
+        390,
+        12,
+        11,
+        17,
+        43
+      ],
+      "98": [
+        539,
+        9,
+        17,
+        17,
+        41
+      ],
+      "99": [
+        593,
+        6,
+        20,
+        13,
+        32
+      ],
+      "100": [
+        602,
+        5,
+        19,
+        18,
+        69
+      ],
+      "101": [
+        574,
+        9,
+        14,
+        12,
+        41
+      ],
+      "102": [
+        507,
+        8,
+        15,
+        23,
+        37
+      ],
+      "103": [
+        369,
+        12,
+        24,
+        19,
+        41
+      ],
+      "104": [
+        247,
+        4,
+        14,
+        17,
+        51
+      ],
+      "105": [
+        303,
+        5,
+        6,
+        17,
+        63
+      ],
+      "106": [
+        427,
+        5,
+        6,
+        21,
+        121
+      ],
+      "107": [
+        248,
+        5,
+        6,
+        13,
+        105
+      ],
+      "108": [
+        354,
+        7,
+        11,
+        11,
+        115
+      ],
+      "109": [
+        363,
+        8,
+        14,
+        11,
+        86
+      ],
+      "110": [
+        328,
+        2,
+        13,
+        19,
+        98
+      ],
+      "111": [
+        224,
+        20,
+        22,
+        13,
+        104
+      ],
+      "112": [
+        166,
+        2,
+        23,
+        8,
+        84
+      ],
+      "113": [
+        184,
+        3,
+        12,
+        10,
+        87
+      ],
+      "114": [
+        246,
+        1,
+        11,
+        6,
+        65
+      ],
+      "115": [
+        290,
+        21,
+        7,
+        14,
+        110
+      ],
+      "116": [
+        278,
+        1,
+        8,
+        15,
+        42
+      ],
+      "117": [
+        175,
+        19,
+        8,
+        32,
+        128
+      ],
+      "118": [
+        192,
+        3,
+        6,
+        11,
+        62
+      ],
+      "119": [
+        58,
+        29,
+        6,
+        5,
+        21
+      ]
+    },
+    "unverified_disagreements": [
+      "94-pub-375 House 1976-06-30: text 341-68, Voteview 157-250 (date+bill)",
+      "95-pub-392 Senate 1978-09-20: text 75-6, Voteview 51-28 (date+bill)",
+      "96-pub-70 Senate 1979-09-25: text 63-32, Voteview 59-29 (date+bill)",
+      "100-pub-488 House 1988-10-04: text 409-9, Voteview 417-0 (date+bill)",
+      "100-pub-580 House 1988-10-04: text 316-57, Voteview 360-57 (date+bill)",
+      "100-pub-636 House 1988-10-04: text 412-5, Voteview 398-21 (date+bill)"
+    ],
+    "possible_missed_roll_calls_sample": [
+      "93-pub-71 House unstated 1973-06-22: Voteview 109-238 | Passed/agreed to in House: Measure passed House.",
+      "93-pub-97 House unstated 1973-07-30: Voteview 373-9 | Conference report agreed to in House: House agreed to conference repor",
+      "93-pub-155 House unstated 1973-10-31: Voteview 102-290 | Conference report agreed to in House: House agreed to conference repor",
+      "93-pub-228 Senate unstated 1973-10-11: Voteview 43-48 | Passed/agreed to in Senate: Measure passed Senate, amended.",
+      "93-pub-449 House unstated 1974-10-15: Voteview 354-13 | Passed/agreed to in House: Measure passed House.",
+      "93-pub-452 Senate unstated 1974-10-08: Voteview 21-49 | Conference report agreed to in Senate: Senate agreed to conference rep",
+      "93-pub-493 Senate unstated 1974-10-11: Voteview 40-11 | Passed/agreed to in Senate: Measure passed Senate, amended.",
+      "94-pub-64 House unstated 1975-07-30: Voteview 167-255 | Conference report agreed to in House: House agreed to conference repor",
+      "94-pub-82 House unstated 1975-07-30: Voteview 348-60 | House agreed to Senate amendment.",
+      "94-pub-126 House unstated 1975-10-20: Voteview 117-261 | Passed/agreed to in House: Measure passed House, amended.",
+      "94-pub-134 House unstated 1975-11-11: Voteview 158-231, 297-95 | Conference report agreed to in House: House agreed to conference repor",
+      "94-pub-163 House unstated 1975-12-15: Voteview 300-103, 215-179, 236-160 | House receded and concurred in certain Senate amendments with an amend",
+      "94-pub-176 Senate unstated 1975-12-09: Voteview 66-24 | Passed/agreed to in Senate: Measure passed Senate.",
+      "94-pub-212 Senate unstated 1975-12-19: Voteview 21-58, 54-22 | Senate agreed to House amendment with an amendment.",
+      "94-pub-269 House unstated 1976-04-06: Voteview 311-66 | Passed/agreed to in House: Measure passed House, in lieu of H.R. 12388",
+      "94-pub-337 Senate unstated 1976-06-11: Voteview 10-73 | Passed/agreed to in Senate: Measure passed Senate, in lieu of S. 1776.",
+      "94-pub-373 House unstated 1976-07-20: Voteview 325-70 | Conference report agreed to in House: House agreed to conference repor",
+      "94-pub-402 House unstated 1976-08-23: Voteview 262-92 | Passed/agreed to in House: Measure passed House, amended.",
+      "94-pub-451 Senate unstated 1976-09-23: Voteview 41-29 | Passed/agreed to in Senate: Measure passed Senate.",
+      "94-pub-557 Senate unstated 1976-09-30: Voteview 32-38 | Senate agreed to House amendments.",
+      "94-pub-569 Senate unstated 1976-10-01: Voteview 37-19, 28-29 | Passed/agreed to in Senate: Measure passed Senate, amended.",
+      "94-pub-582 House unstated 1976-10-01: Voteview 64-307 | Conference report agreed to in House: House agreed to conference repor",
+      "94-pub-586 House unstated 1976-09-30: Voteview 163-209 | Passed/agreed to in House: Measure passed House, amended.",
+      "95-pub-15 House unstated 1977-03-03: Voteview 161-252, 137-269 | Passed/agreed to in House: Measure passed House, amended.",
+      "95-pub-38 House unstated 1977-05-23: Voteview 387-3 | Passed/agreed to in House: Measure passed House, in lieu of H.R. 6258.",
+      "95-pub-118 House unstated 1977-09-16: Voteview 153-230 | House receded and concurred in Senate amendment with an amendment.",
+      "95-pub-173 House unstated 1977-10-31: Voteview 166-231 | Conference report agreed to in House: House agreed to conference repor",
+      "95-pub-201 Senate unstated 1977-11-04: Voteview 37-48 | Passed/agreed to in Senate: Measure passed Senate, amended.",
+      "95-pub-233 Senate unstated 1977-09-14: Voteview 8-83, 60-29 | Passed/agreed to in Senate: Measure passed Senate, amended.",
+      "95-pub-288 House unstated 1978-05-16: Voteview 190-199, 199-183 | Conference report agreed to in House: House agreed to conference repor",
+      "95-pub-320 Senate unstated 1978-05-10: Voteview 92-0 | Passed/agreed to in Senate: Measure passed Senate, amended.",
+      "95-pub-515 Senate unstated 1978-09-26: Voteview 75-6 | Passed/agreed to in Senate: Measure passed Senate, amended.",
+      "95-pub-565 Senate unstated 1978-08-01: Voteview 48-45 | Passed/agreed to in Senate: Measure passed Senate, amended.",
+      "96-pub-7 House unstated 1979-03-27: Voteview 225-177 | Conference report agreed to in House: House agreed to conference repor",
+      "96-pub-69 Senate unstated 1979-09-10: Voteview 48-44 | Conference report agreed to in Senate: Senate agreed to conference rep",
+      "96-pub-84 House unstated 1979-07-25: Voteview 85-325 | Passed/agreed to in House: Measure passed House.",
+      "96-pub-97 Senate unstated 1979-06-20: Voteview 33-58 | Passed/agreed to in Senate: Measure passed Senate.",
+      "96-pub-131 House unstated 1979-11-15: Voteview 366-10 | Conference report agreed to in House: House agreed to conference repor",
+      "96-pub-175 House unstated 1979-12-12: Voteview 272-122 | House receded and concurred in Senate amendment with an amendment.",
+      "96-pub-264 House unstated 1980-06-05: Voteview 335-34 | House agreed to Senate amendment."
+    ],
+    "roll_calls_without_a_voteview_match": 39,
+    "roll_calls_without_a_voteview_match_sample": [
+      "93-pub-148 House 1973-10-12 roll 520",
+      "93-pub-563 House 1974-12-12 roll 675",
+      "94-pub-96 House 1975-09-09 roll null",
+      "94-pub-252 House 1976-03-25 roll 134",
+      "94-pub-486 Senate 1976-09-28 roll 663",
+      "95-pub-80 House 1977-07-29 roll 482",
+      "95-pub-259 House 1978-02-28 roll 92",
+      "95-pub-524 House 1978-10-14 roll null",
+      "95-pub-557 House 1978-10-14 roll null",
+      "95-pub-626 House 1978-10-15 roll null",
+      "96-pub-48 House 1979-07-27 roll null",
+      "96-pub-123 House 1979-11-16 roll null",
+      "96-pub-126 House 1979-11-09 roll 647",
+      "96-pub-286 Senate 1980-06-26 roll 257",
+      "96-pub-536 House 1980-12-15 roll null",
+      "97-pub-85 Senate 1981-11-23 roll 426",
+      "97-pub-93 House 1981-12-10 roll 347",
+      "97-pub-377 House 1982-12-20 roll null",
+      "97-pub-377 Senate 1982-12-20 roll 459",
+      "98-pub-293 House 1984-05-01 roll 116",
+      "98-pub-473 House 1984-10-10 roll null",
+      "99-pub-17 Senate 1985-03-19 roll 19",
+      "100-pub-119 Senate 1987-09-23 roll 262",
+      "100-pub-120 Senate 1987-09-25 roll 274",
+      "100-pub-484 House 1988-10-06 roll 431"
+    ],
+    "veto_overrides_without_both_override_votes": []
+  },
   "veto_overrides": [
     "93-pub-148 1973-11-07",
     "93-pub-445 1974-10-16",
