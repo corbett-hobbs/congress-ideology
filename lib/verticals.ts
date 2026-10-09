@@ -1,6 +1,6 @@
 /**
  * Two-level site structure: verticals (Congress, Supreme Court, Presidency),
- * each with ordered sections (Congress: Ideology, Demographics, Wealth). Every section lands
+ * each with ordered sections (Congress: Ideology, Laws, Demographics, Wealth). Every section lands
  * at `/<vertical>/<section>`; a bare `/<vertical>` redirects to the vertical's
  * default section.
  *
@@ -122,6 +122,13 @@ const DEFS: readonly BranchDef[] = [
         status: "live",
         blurb:
           "Every member of the House and Senate placed on a two-dimensional map from their roll-call votes.",
+      },
+      {
+        id: "laws",
+        label: "Laws",
+        status: "live",
+        blurb:
+          "How many public laws Congress enacts each Congress, by policy area, and how broadly they are supported, since 1973.",
       },
       {
         id: "demographics",

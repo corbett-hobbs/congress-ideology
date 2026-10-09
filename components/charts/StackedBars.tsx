@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, type ReactNode } from "react";
+import { useId, useMemo, type ReactNode } from "react";
 import { scaleLinear } from "d3-scale";
 import { ChartFrame } from "./ChartFrame";
 import { Axis } from "./Axis";
@@ -10,6 +10,7 @@ import { findExtremes } from "@/lib/chart-extremes";
 import { Y_GUTTER, fmtShare, yearLabelEvery } from "@/lib/chart-bars";
 import { SegmentLabel } from "./SegmentLabel";
 import { TERM_BAND_H, TermBandSvg, type TermSegment } from "./TermBandSvg";
+import { ControlRowsSvg, controlRowsHeight, type ControlRow } from "./ControlRowsSvg";
 
 export interface StackSeries {
   id: string;
@@ -70,6 +71,12 @@ interface Props<C extends StackColumn> {
   onActive?: (key: string | null) => void;
   /** Column labels are years: print round years every 1, 2, 5, 10 or 20 (rule 10h) instead of every nth column. */
   yearTicks?: boolean;
+  /** Years a column spans (a two-year Congress = 2). With `yearTicks`, labels then fall every few columns from the first, not on round years. */
+  slotYears?: number;
+  /** Columns still in progress: drawn hatched and left out of the peak and low marks. */
+  partialKeys?: ReadonlySet<string>;
+  /** Strips under the term band, one cell per column (which party held each chamber). */
+  controlRows?: readonly ControlRow[];
   /** Room above the plot for the peak and low labels (default 34, enough for a y-axis caption too). */
   marginTop?: number;
   renderTooltip: (column: C) => ReactNode;
@@ -108,13 +115,18 @@ export function StackedBars<C extends StackColumn>({
   activeKey = null,
   onActive,
   yearTicks = false,
+  slotYears = 1,
+  partialKeys,
+  controlRows,
   marginTop,
   renderTooltip,
 }: Props<C>) {
+  const hatchId = `hatch${useId().replace(/:/g, "")}`;
   const [wrapRef, measured] = useElementWidth<HTMLDivElement>();
   const width = measured || 960;
   const narrow = width < NARROW_W;
-  const height = narrow ? 300 : 360;
+  const ctlH = controlRowsHeight(controlRows);
+  const height = (narrow ? 300 : 360) + ctlH;
   const tip = useStickyTooltip<C>();
   // A highlighted series is isolated: drawn alone from zero as a count, on its own scale.
   const eff = highlight ? "count" : mode;
@@ -134,13 +146,13 @@ export function StackedBars<C extends StackColumn>({
     const topOf = val;
     const fmt = (v: number) => (share ? fmtShare(v) : String(v));
     // A topic with no orders in a year has no bar to label: its low is the smallest year that has some.
-    const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: highlight && val(c) === 0 ? null : val(c) })));
+    const { peak, low } = findExtremes(columns.map((c, i) => ({ day: i, value: (highlight && val(c) === 0) || partialKeys?.has(c.key) ? null : val(c) })));
     return [peak, low].flatMap((p, k) =>
       p ? [{ i: p.day, kind: k === 0 ? ("peak" as const) : ("low" as const), text: `${columns[p.day].label}: ${fmt(p.value as number)}`, top: topOf(columns[p.day]) }] : [],
     );
-  }, [columns, eff, highlight, markShare]);
+  }, [columns, eff, highlight, markShare, partialKeys]);
   const bandH = terms ? TERM_BAND_H : BAND_H;
-  const margin = { ...MARGIN, ...(marginTop === undefined ? {} : { top: marginTop }), bottom: AXIS_H + (bands.length > 0 || terms ? bandH + 6 : 0) };
+  const margin = { ...MARGIN, ...(marginTop === undefined ? {} : { top: marginTop }), bottom: AXIS_H + (bands.length > 0 || terms ? bandH + 6 : 0) + ctlH };
 
   return (
     <div ref={wrapRef} data-sticky-tip className="relative -mx-3 sm:mx-0">
@@ -165,11 +177,17 @@ export function StackedBars<C extends StackColumn>({
           const step = innerWidth / columns.length;
           const barW = Math.max(2, step * 0.78);
           // Label as many columns as fit: a zoomed-in window gets every year, the full span every few.
-          const every = yearTicks ? yearLabelEvery(step) : Math.max(1, Math.ceil((narrow ? 30 : 44) / step));
+          const every = yearTicks ? yearLabelEvery(step / slotYears) : Math.max(1, Math.ceil((narrow ? 30 : 44) / step));
+          const tickEvery = slotYears > 1 ? Math.ceil(every / slotYears) : every;
           const xOf = (i: number) => i * step;
 
           return (
             <>
+              <defs>
+                <pattern id={hatchId} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" strokeWidth="2.5" opacity="0.7" />
+                </pattern>
+              </defs>
               <Axis
                 scale={y}
                 orientation="left"
@@ -235,6 +253,7 @@ export function StackedBars<C extends StackColumn>({
                         />
                       );
                     })}
+                    {partialKeys?.has(col.key) && acc > 0 && <rect x={x} y={y(acc / denom)} width={barW} height={Math.max(0, innerHeight - y(acc / denom))} fill={`url(#${hatchId})`} pointerEvents="none" />}
                     {/* Segment values, only where the segment is tall and wide enough to hold them. */}
                     {(() => {
                       let a = 0;
@@ -312,7 +331,7 @@ export function StackedBars<C extends StackColumn>({
               {/* x labels */}
               {columns.map((col, i) => {
                 const year = Number(col.label);
-                const show = yearTicks && Number.isFinite(year) ? year % every === 0 : i % every === 0 || i === columns.length - 1;
+                const show = yearTicks && Number.isFinite(year) ? (slotYears > 1 ? i % tickEvery === 0 : year % every === 0) : i % every === 0 || i === columns.length - 1;
                 // Don't crowd the final label with the previous one.
                 const crowded = !yearTicks && i !== columns.length - 1 && columns.length - 1 - i < every / 2;
                 if (!show || crowded) return null;
@@ -332,6 +351,7 @@ export function StackedBars<C extends StackColumn>({
               })}
 
               {terms && <TermBandSvg segments={terms} x0={0} step={step} y={innerHeight + AXIS_H + 6} />}
+              {controlRows && controlRows.length > 0 && <ControlRowsSvg rows={controlRows} x0={0} step={step} y={innerHeight + AXIS_H + 6 + bandH + 6} />}
 
               {/* spans under the axis */}
               {bands.length > 0 && (
