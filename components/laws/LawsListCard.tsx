@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type UIEvent } from "react";
+import { useMemo, useState, type ReactNode, type UIEvent } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { Swatch } from "@/components/decisions/shared";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { fmtDate } from "@/components/decisions/CaseListCard";
 import { fmtInt } from "@/lib/decisions-derive";
 import { ALL_GROUPS, SUPPORT_COLORS, SUPPORT_LABELS, SUPPORT_ORDER, SUPPORT_SHORT, filterLabel, filterLaws, matchLaws, tallyText } from "@/lib/laws-derive";
-import type { LawListRow, LawsList, LawsPayload } from "@/lib/laws-types";
+import type { LawListRow, LawsArea, LawsList } from "@/lib/laws-types";
 import { ordinal } from "@/lib/demographics-chart";
 import { useLawsActions, useLawsValues } from "./LawsState";
 import { useLawsList } from "./useLawsList";
@@ -164,7 +164,7 @@ export const pubLaw = (r: LawListRow): string => `Pub. L. ${r[0]}–${r[1]}`;
  * right; then the sponsor line, the policy area and the badges. From `sm`: date, title (badges inline), policy area and vote in
  * four columns, with the bill and sponsor line and the CRS sentence under the title.
  */
-export function LawRow({ r, data, list }: { r: LawListRow; data: LawsPayload; list: LawsList }) {
+export function LawRow({ r, data, list, extraBadge }: { r: LawListRow; data: { areas: LawsArea[] }; list: LawsList; /** A badge the member pages add (the member's part in the law). */ extraBadge?: ReactNode }) {
   const area = data.areas[r[4]]!;
   const areaLabel = area.name ?? "Not classified";
   const sponsor = r[8] >= 0 ? list.sponsors[r[8]]! : null;
@@ -172,6 +172,7 @@ export function LawRow({ r, data, list }: { r: LawListRow; data: LawsPayload; li
   const votes = r[5] === 0 && r[6][0] === 3 && r[7][0] === 3 ? "No method stated in either chamber" : `${tallyText("House", r[6])}, ${tallyText("Senate", r[7])}`;
   const badges = (
     <>
+      {extraBadge}
       {r[9] === 1 && (
         <span className={BADGE} title="One of David Mayhew’s important enactments">
           Major law
@@ -184,7 +185,7 @@ export function LawRow({ r, data, list }: { r: LawListRow; data: LawsPayload; li
       )}
     </>
   );
-  const hasBadge = r[9] === 1 || r[10] === 1;
+  const hasBadge = r[9] === 1 || r[10] === 1 || !!extraBadge;
   const href = congressGovUrl(r);
   const title = href ? (
     <a

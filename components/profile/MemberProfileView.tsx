@@ -12,6 +12,7 @@ import { ProfileHeader } from "./ProfileHeader";
 import { MemberIdeologySection } from "./MemberIdeologySection";
 import { CommitteeMembershipsCard } from "./CommitteeMembershipsCard";
 import { MemberWealthSection } from "./MemberWealthSection";
+import { MemberLawsCard } from "./MemberLawsCard";
 
 interface MemberProfileViewProps {
   profile: MemberProfile;
@@ -69,6 +70,8 @@ export function MemberProfileView({
       {wealthProfile && (
         <MemberWealthSection profile={profile} wealthProfile={wealthProfile} />
       )}
+
+      <MemberLawsCard bioguideId={profile.bioguideId} name={profile.name} />
 
       <SiteFooter />
     </main>
