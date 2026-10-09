@@ -124,12 +124,16 @@ function Timeline({ law }: { law: LawPageData }) {
   );
 }
 
+/** Yea and nay are not party colours: the source holds totals only, so blue and red would read as Democrats and Republicans. */
+const YEA = "var(--ink)";
+const NAY = "var(--line-strong)";
+
 function VoteRow({ chamber, t, label }: { chamber: string; t: ChamberTally; label?: string }) {
   const counted = t[0] === 0 && t[1] !== null && t[2] !== null;
   const share = yeaShare(t[1], t[2]);
   return (
-    <li className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-x-3 gap-y-1 py-2 text-[0.85rem] sm:grid-cols-[5.5rem_minmax(0,1fr)_12rem]">
-      <span className="font-medium">{chamber}</span>
+    <li className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-x-3 gap-y-1 py-1.5 text-[0.85rem] sm:grid-cols-[5.5rem_minmax(0,1fr)_14rem]">
+      <span className="font-medium text-ink">{chamber}</span>
       <span className="min-w-0 text-ink-muted">
         {label ?? methodText(t)}
         {counted && <span className="sr-only">{`: ${t[1]} yea, ${t[2]} nay`}</span>}
@@ -137,10 +141,10 @@ function VoteRow({ chamber, t, label }: { chamber: string; t: ChamberTally; labe
       {counted && share !== null ? (
         <span className="col-span-2 flex items-center gap-2 sm:col-span-1">
           <span aria-hidden className="flex h-2.5 min-w-0 flex-1 overflow-hidden rounded-sm bg-line">
-            <span style={{ width: `${share * 100}%`, background: "var(--split-1)" }} />
-            <span style={{ width: `${(1 - share) * 100}%`, background: "var(--split-4)" }} />
+            <span style={{ width: `${share * 100}%`, background: YEA }} />
+            <span style={{ width: `${(1 - share) * 100}%`, background: NAY }} />
           </span>
-          <span className="whitespace-nowrap tabular-nums">{`${t[1]}–${t[2]}`}</span>
+          <span className="whitespace-nowrap tabular-nums text-ink">{`${t[1]}–${t[2]}`}</span>
         </span>
       ) : (
         <span className="col-span-2 text-[0.78rem] text-ink-faint sm:col-span-1">No tally</span>
@@ -149,17 +153,31 @@ function VoteRow({ chamber, t, label }: { chamber: string; t: ChamberTally; labe
   );
 }
 
+/** The passage votes, in the page header under the facts. */
 function Votes({ law }: { law: LawPageData }) {
   const { house, senate, override } = law.passage;
   return (
-    <ChartCard title="Passage votes" lede="How each chamber passed the final version. Blue is yea, red is nay.">
+    <section aria-label="Passage votes" className="mt-1">
+      <h2 className="m-0 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.72rem] font-medium uppercase tracking-[0.06em] text-ink-faint">
+        <span>Passage votes</span>
+        <span className="inline-flex items-center gap-3 normal-case tracking-normal">
+          <span className="inline-flex items-center gap-1.5">
+            <i aria-hidden className="inline-block size-2 rounded-sm" style={{ background: YEA }} />
+            Yea
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <i aria-hidden className="inline-block size-2 rounded-sm" style={{ background: NAY }} />
+            Nay
+          </span>
+        </span>
+      </h2>
       <ul className="m-0 list-none divide-y divide-line p-0">
         <VoteRow chamber="House" t={house} />
         <VoteRow chamber="Senate" t={senate} />
       </ul>
       {override && (
         <>
-          <h3 className="mb-0 mt-4 text-[0.9rem] font-medium">Veto override votes</h3>
+          <h3 className="mb-0 mt-3 text-[0.82rem] font-medium text-ink">Veto override votes</h3>
           <ul className="m-0 list-none divide-y divide-line p-0">
             <VoteRow chamber="House" t={override[0] === null ? [3, null, null] : [0, override[0], override[1]]} label={override[0] === null ? "Not recorded" : "Needs two-thirds"} />
             <VoteRow chamber="Senate" t={override[2] === null ? [3, null, null] : [0, override[2], override[3]]} label={override[2] === null ? "Not recorded" : "Needs two-thirds"} />
@@ -168,10 +186,10 @@ function Votes({ law }: { law: LawPageData }) {
       )}
       <MethodologyNote>
         <p>
-          A chamber that passed the law by voice vote or unanimous consent has no count. “Method not stated” means the record does not say how the chamber voted. Who voted which way is not shown yet.
+          The final version of the law, as each chamber passed it. A chamber that passed it by voice vote or unanimous consent has no count. “Method not stated” means the record does not say how the chamber voted. Who voted which way is not shown yet, so the bar is not split by party.
         </p>
       </MethodologyNote>
-    </ChartCard>
+    </section>
   );
 }
 
@@ -251,10 +269,10 @@ export function LawPageView({ law }: { law: LawPageData }) {
       <SetBackLink href="/congress/laws" />
       <PageHeader eyebrow="Congress · Laws" title={law.title}>
         <Facts law={law} />
+        <Votes law={law} />
       </PageHeader>
       <Summary law={law} />
       <Timeline law={law} />
-      <Votes law={law} />
       <Cosponsors law={law} />
       <Committees law={law} />
       <section aria-label="Official record" className="rounded-[10px] border border-line bg-surface p-[1.1rem_1.35rem] text-[0.85rem] text-ink-muted">
