@@ -132,7 +132,7 @@ function VoteRow({ chamber, t, label }: { chamber: string; t: ChamberTally; labe
   const counted = t[0] === 0 && t[1] !== null && t[2] !== null;
   const share = yeaShare(t[1], t[2]);
   return (
-    <li className="grid min-w-0 grid-cols-1 items-center gap-x-3 gap-y-1 py-1.5 text-[0.85rem] sm:w-[22rem] sm:grid-cols-[4.5rem_minmax(0,1fr)]">
+    <li className="grid min-w-0 grid-cols-1 items-center gap-x-3 gap-y-1 py-1.5 text-[0.85rem] sm:w-[17rem] sm:grid-cols-[4.5rem_minmax(0,1fr)]">
       <span className="font-medium text-ink">{chamber}</span>
       <span className="min-w-0 text-ink-muted">
         {label ?? methodText(t)}
@@ -158,27 +158,15 @@ function Votes({ law }: { law: LawPageData }) {
   const { house, senate, override } = law.passage;
   return (
     <section aria-label="Passage votes" className="mt-1">
-      <h2 className="m-0 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.72rem] font-medium uppercase tracking-[0.06em] text-ink-faint">
-        <span>Passage votes</span>
-        <span className="inline-flex items-center gap-3 normal-case tracking-normal">
-          <span className="inline-flex items-center gap-1.5">
-            <i aria-hidden className="inline-block size-2 rounded-sm" style={{ background: YEA }} />
-            Yea
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <i aria-hidden className="inline-block size-2 rounded-sm" style={{ background: NAY }} />
-            Nay
-          </span>
-        </span>
-      </h2>
-      <ul className="m-0 grid list-none grid-cols-2 gap-x-5 p-0 sm:flex sm:flex-wrap sm:gap-x-10">
+      <h2 className="m-0 text-[0.72rem] font-medium uppercase tracking-[0.06em] text-ink-faint">Passage votes</h2>
+      <ul className="m-0 grid list-none grid-cols-2 gap-x-5 p-0 sm:flex sm:flex-wrap sm:gap-x-8">
         <VoteRow chamber="House" t={house} />
         <VoteRow chamber="Senate" t={senate} />
       </ul>
       {override && (
         <>
           <h3 className="mb-0 mt-3 text-[0.82rem] font-medium text-ink">Veto override votes</h3>
-          <ul className="m-0 grid list-none grid-cols-2 gap-x-5 p-0 sm:flex sm:flex-wrap sm:gap-x-10">
+          <ul className="m-0 grid list-none grid-cols-2 gap-x-5 p-0 sm:flex sm:flex-wrap sm:gap-x-8">
             <VoteRow chamber="House" t={override[0] === null ? [3, null, null] : [0, override[0], override[1]]} label={override[0] === null ? "Not recorded" : "Needs two-thirds"} />
             <VoteRow chamber="Senate" t={override[2] === null ? [3, null, null] : [0, override[2], override[3]]} label={override[2] === null ? "Not recorded" : "Needs two-thirds"} />
           </ul>
