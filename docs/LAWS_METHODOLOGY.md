@@ -62,7 +62,7 @@ Reported, not fatal: sponsors missing from `legislators.json`, laws with no spon
 
 ## Passage votes and support bands (Session 2)
 
-Each law carries its two chambers' final-passage votes (`house`, `senate`: `[kind, yea, nay, roll]`, kind 0 roll call / 1 voice / 2 unanimous consent / 3 method not stated) and a **band**: the yes share of the narrowest recorded final-passage vote in either chamber, yes ÷ (yes + no). Bands: 0 no recorded vote in either chamber, 1 under 60%, 2 60–75% (60.0% counts here), 3 75–90%, 4 90% and over. Display order is a UI constant. The counts file carries the five band counts per Congress and policy area. Minority-party support is v1.1.
+Each law carries its two chambers' final-passage votes (`house`, `senate`: `[kind, yea, nay, roll]`, kind 0 roll call / 1 voice / 2 unanimous consent / 3 method not stated) and a **band**: the yes share of the narrowest recorded final-passage vote in either chamber, yes ÷ (yes + no). Bands: 0 voice vote or consent (no roll call in either chamber), 1 under 60%, 2 60–75% (60.0% counts here), 3 75–90%, 4 90% and over. Display order is a UI constant. The counts file carries the five band counts per Congress and policy area. Minority-party support is v1.1.
 
 **Rules.**
 - A chamber's final passage is its newest `Passed/agreed to in <chamber>` or `Conference report agreed to in <chamber>` action, or a concurrence or recession recorded under "Resolving differences", or, where only the chamber's own feed has the line (much of 1987–88), its `House Agreed to Senate Amendments…` / `Senate concurred…` text. On a day with two such lines, the one that records a roll call wins. A chamber's last action is taken even when it was a step back to the other chamber; the closest vote over both chambers is what the band uses.
@@ -83,7 +83,7 @@ Each law carries its two chambers' final-passage votes (`house`, `senate`: `[kin
 
 **Share of laws in each band, by Congress** (the support card's data; the 119th is partial):
 
-| Congress | laws | No recorded vote | Under 60% | 60–75% | 75–90% | 90%+ |
+| Congress | laws | Voice vote or consent | Under 60% | 60–75% | 75–90% | 90%+ |
 |---|---|---|---|---|---|---|
 | 93 | 651 | 75% | 2% | 3% | 6% | 15% |
 | 94 | 588 | 68% | 3% | 5% | 8% | 16% |
@@ -113,7 +113,7 @@ Each law carries its two chambers' final-passage votes (`house`, `senate`: `[kin
 | 118 | 274 | 70% | 1% | 2% | 4% | 23% |
 | 119 | 119 | 49% | 24% | 5% | 4% | 18% |
 
-Reading it: before 2000 about four laws in five show as "No recorded vote" (68–89%); from the 107th on it is 48–81%, and the share of laws with a recorded vote above 90% yes grows from about a tenth to a quarter. Checked against well-known votes in the tests: Affordable Care Act (House 219–212, Senate 60–39), Tax Reform Act of 1986 (292–136, 74–23), USA PATRIOT Act (357–66, 98–1), Inflation Reduction Act (220–207, 51–50) and the War Powers Resolution (override votes 284–135 and 75–18).
+Reading it: before 2000 about four laws in five show as "Voice vote or consent" (68–89%); from the 107th on it is 48–81%, and the share of laws with a recorded vote above 90% yes grows from about a tenth to a quarter. Checked against well-known votes in the tests: Affordable Care Act (House 219–212, Senate 60–39), Tax Reform Act of 1986 (292–136, 74–23), USA PATRIOT Act (357–66, 98–1), Inflation Reduction Act (220–207, 51–50) and the War Powers Resolution (override votes 284–135 and 75–18).
 
 
 ## Major laws, party control and summaries (Session 3)
@@ -135,7 +135,7 @@ Reading it: before 2000 about four laws in five show as "No recorded vote" (68�
 
 - **Range and slots.** 1973 on (93rd Congress), public laws only, one slot per Congress; the president under a bar signed most of that Congress's laws, and the tooltip lists every signer when it splits. A Congress is in the years window when its second year is inside it.
 - **Topics.** Congress.gov policy areas, shown as about ten topic groups plus a visible **Not classified** band (465 laws, 1973–78); the five largest groups get a colour, the rest share "Other topics", which the dropdown splits. Never mapped by us.
-- **Support.** The closest recorded final-passage vote in either chamber; no recorded vote is its own band (about four laws in five before 2000, stated in the card's Data note). Minority-party support is later work.
+- **Support.** The closest recorded final-passage vote in either chamber; voice vote or consent (no roll call in either chamber) is its own band (about four laws in five before 2000, stated in the card's Data note). Minority-party support is later work.
 - **Major laws.** Mayhew only, three states, through the 118th Congress; "Major laws" stops the window at the last assessed Congress and never draws the 119th as zero. No provisional flag ships (Session 3b has no go).
 - **Summaries.** The CRS first sentence only; never model-written.
 - **Colour.** No new tokens: topic groups reuse `--fuel-*`, support bands `--split-*`.

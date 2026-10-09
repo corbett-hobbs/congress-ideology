@@ -11,7 +11,7 @@ import { MethodologyNote } from "@/components/MethodologyNote";
 import { buildStacks, fmtInt, fmtPct, median } from "@/lib/decisions-derive";
 import { ordinal } from "@/lib/demographics-chart";
 import type { SplitMode } from "@/lib/decisions-types";
-import { SMALL_LAWS_MEDIAN, SUPPORT_COLORS, SUPPORT_LABELS, SUPPORT_SHORT, cellFor, filterGroups, filterLabel, noVoteShare, openYear, signedMostSegments } from "@/lib/laws-derive";
+import { SMALL_LAWS_MEDIAN, SUPPORT_COLORS, SUPPORT_ORDER, SUPPORT_LABELS, SUPPORT_SHORT, cellFor, filterGroups, filterLabel, noVoteShare, openYear, signedMostSegments } from "@/lib/laws-derive";
 import type { BandCounts } from "@/lib/laws-types";
 import { EmptyWindow, congressSub, congressTitle, controlRowsFor } from "./shared";
 import { useLawsActions, useLawsValues } from "./LawsState";
@@ -20,7 +20,7 @@ const CAPTIONS: Record<SplitMode, readonly string[]> = {
   share: ["Share of laws by the closest recorded vote on final passage, percent", "Share of laws by vote, percent", "Share of laws, %"],
   count: ["Laws per Congress by the closest recorded vote on final passage", "Laws by closest vote", "Laws"],
 };
-const BANDS = [0, 1, 2, 3, 4];
+const BANDS: number[] = [...SUPPORT_ORDER];
 const share = (b: readonly number[], k: number): number => {
   const t = b[0]! + b[1]! + b[2]! + b[3]! + b[4]!;
   return t ? b[k]! / t : 0;
@@ -28,7 +28,7 @@ const share = (b: readonly number[], k: number): number => {
 
 /**
  * Card 2: how broadly laws are supported. Each law sits in the band of the closest recorded final-passage vote it faced in
- * either chamber (no recorded vote is its own band, at the bottom). The shared `StackedArea`, a Share / Number toggle, and a legend
+ * either chamber (voice vote or consent is its own band, at the bottom, next to the 90%+ band). The shared `StackedArea`, a Share / Number toggle, and a legend
  * whose entries isolate a band (rule 12c): the pick draws that band alone from zero, switches to the count view and also
  * narrows card 1; going back to Share clears it. Few laws per Congress (a thin area, or major laws only) get a note; the chart is never hidden.
  */
@@ -62,7 +62,7 @@ export function LawsSupportCard() {
   const hi = idx.length ? openYear(data.congresses[idx[idx.length - 1]!]!) + 1 : 0;
   const who = `${major ? "Major laws, " : ""}${filterLabel(data, group)}`;
   const lede = total
-    ? `${who}, ${lo}–${hi}: ${fmtPct(share(sum, 0))} of ${fmtInt(total)} laws had no recorded vote in either chamber, ${fmtPct(share(sum, 4))} passed with at least 90% yes and ${fmtPct(share(sum, 1))} with under 60%.`
+    ? `${who}, ${lo}–${hi}: ${fmtPct(share(sum, 0))} of ${fmtInt(total)} laws were passed by voice vote or consent in both chambers, ${fmtPct(share(sum, 4))} passed with at least 90% yes and ${fmtPct(share(sum, 1))} with under 60%.`
     : "No laws in this selection.";
   const thin = idx.length > 0 && median(cells.map((c) => c[0] + c[1] + c[2] + c[3] + c[4])) < SMALL_LAWS_MEDIAN;
   const pre2000 = data.congresses.filter((c) => openYear(c) < 2000);
@@ -119,7 +119,7 @@ export function LawsSupportCard() {
             return (
               <TooltipCard title={congressTitle(data, ci)} sub={congressSub(data, ci)}>
                 <div>{fmtInt(t)} laws</div>
-                {[4, 3, 2, 1, 0].map((k) => (
+                {[...BANDS].reverse().map((k) => (
                   <div key={k}>
                     <Swatch color={SUPPORT_COLORS[k]!} /> {SUPPORT_SHORT[k]}: {b[k]}
                     {t ? ` (${fmtPct(share(b, k))})` : ""}
@@ -143,13 +143,13 @@ export function LawsSupportCard() {
       {thin && <p className="m-0 mt-2 text-[0.78rem] leading-[1.45] text-ink-muted">Few laws per Congress in this selection, so shares swing widely. Read the trend, not individual Congresses.</p>}
       <MethodologyNote>
         <p>
-          A law&rsquo;s band is the yes share (yes votes out of votes cast) of the closest recorded final-passage vote it faced in either chamber, so a 50&ndash;49 vote lands in &ldquo;under 60%&rdquo;. &ldquo;No recorded vote&rdquo; means the bill&rsquo;s action history shows no roll call on final passage in either chamber: a voice vote, unanimous consent, or, for most of the 1970s, no method stated. That is {fmtPct(noVoteShare(data, data.congresses[0]!, lastPre))} of the laws before 2000, so read the early years as &ldquo;what was recorded&rdquo;, not as how divided Congress was. Tallies come from the final-passage action in each bill&rsquo;s history and are checked against Voteview&rsquo;s roll calls; override votes do not set the band. The {ordinal(data.congresses[data.congresses.length - 1]!)} Congress is still in session, so its slot is partial.
+          A law&rsquo;s band is the yes share (yes votes out of votes cast) of the closest recorded final-passage vote it faced in either chamber, so a 50&ndash;49 vote lands in &ldquo;under 60%&rdquo;. &ldquo;Voice vote or consent&rdquo; means the bill&rsquo;s action history shows no roll call on final passage in either chamber: a voice vote, unanimous consent, or, for most of the 1970s, no method stated. That is {fmtPct(noVoteShare(data, data.congresses[0]!, lastPre))} of the laws before 2000, so read the early years as &ldquo;what was recorded&rdquo;, not as how divided Congress was. Tallies come from the final-passage action in each bill&rsquo;s history and are checked against Voteview&rsquo;s roll calls; override votes do not set the band. The {ordinal(data.congresses[data.congresses.length - 1]!)} Congress is still in session, so its slot is partial.
         </p>
       </MethodologyNote>
       <TableView
         label="Table of laws per Congress by closest recorded vote"
-        head={["Congress", "Opened", "Laws", ...SUPPORT_SHORT]}
-        rows={idx.map((ci, i) => [ordinal(data.congresses[ci]!), openYear(data.congresses[ci]!), cells[i]!.reduce((a, b) => a + b, 0), ...cells[i]!]).reverse()}
+        head={["Congress", "Opened", "Laws", ...BANDS.map((k) => SUPPORT_SHORT[k]!)]}
+        rows={idx.map((ci, i) => [ordinal(data.congresses[ci]!), openYear(data.congresses[ci]!), cells[i]!.reduce((a, b) => a + b, 0), ...BANDS.map((k) => cells[i]![k]!)]).reverse()}
       />
     </ChartCard>
   );
