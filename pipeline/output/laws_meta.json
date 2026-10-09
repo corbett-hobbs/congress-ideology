@@ -11,6 +11,7 @@
     "House": "2026-09-16",
     "Senate": "2026-09-30"
   },
+  "major_covered_through_congress": 118,
   "sources": [
     {
       "source": "congress-gov",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseBillStatus, tagText, zipEntries } from "./billstatus-lib";
+import { parseBillStatus, summaryHtml, tagText, zipEntries } from "./billstatus-lib";
 import { deflateRawSync } from "node:zlib";
 
 const bill = (extra = "", laws = "<item><type>Public Law</type><number>118-90</number></item>") => `<?xml version="1.0"?>
@@ -141,5 +141,17 @@ describe("zipEntries", () => {
       ["a.xml", "<a/>"],
       ["b.xml", "<b>hello</b>".repeat(10)],
     ]);
+  });
+});
+
+describe("summaryHtml", () => {
+  it("reads both ways Bill Status wraps the summary", () => {
+    expect(summaryHtml("<summary><text><![CDATA[ <p>Amends the <b>Act</b>.</p> ]]></text></summary>")).toBe("<p>Amends the <b>Act</b>.</p>");
+    expect(summaryHtml("<summary><cdata><text>&lt;p&gt;This act does a thing.&lt;/p&gt;</text></cdata></summary>")).toBe("<p>This act does a thing.</p>");
+    expect(summaryHtml("<summary></summary>")).toBe("");
+  });
+  it("is what parseBillStatus keeps for an older-format file", () => {
+    const xml = `<billStatus><bill><number>2</number><type>HR</type><congress>114</congress><laws><item><type>Public Law</type><number>114-10</number></item></laws><actions><item><actionDate>2015-04-16</actionDate><text>Became Public Law No: 114-10.</text><type>BecameLaw</type></item></actions><summaries><summary><actionDesc>Introduced in House</actionDesc><actionDate>2015-03-24</actionDate><text><![CDATA[ <p>Amends title XVIII to remove the formula.</p> ]]></text></summary></summaries></bill></billStatus>`;
+    expect(parseBillStatus(xml)[0]!.summary_html).toBe("<p>Amends title XVIII to remove the formula.</p>");
   });
 });

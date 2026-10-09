@@ -3,7 +3,7 @@ import { dayOfIso } from "./indicator-time";
 
 /**
  * Chamber-majority reference table (`pipeline/reference/congress-control.json`).
- * Hand-curated with a primary-source citation per chamber because roster counts
+ * Hand-curated with a primary-source citation per chamber (rows run from the 93rd Congress, 1973; the Economy and Trade charts clip them to their own 1991 axis) because roster counts
  * in terms.json cannot reliably say who held the majority (mid-Congress
  * replacements, caucusing independents, tie-breaking vice presidents).
  */
@@ -41,10 +41,14 @@ export function controlSpans(rows: readonly CongressControlRow[], chamber: "hous
     const e = r.to === null ? span : dayOfIso(r.to) + 1;
     if (prevEnd !== null && s !== prevEnd) throw new Error(`congress-control: ${chamber} gap/overlap at ${r.from}`);
     prevEnd = e;
-    // The first row starts on the 102nd Congress's day one; the two axis days before it (still the 101st, same majorities) are drawn as part of it.
+    // The first span drawn starts at axis day 0 (the Congress opens on day 2; the two days before it have the same majority).
     const cs = out.length === 0 ? 0 : Math.max(0, s);
     const ce = Math.min(span, e);
-    if (ce > cs) out.push({ s: cs, e: ce, party: r.party });
+    if (ce <= cs) continue;
+    const last = out[out.length - 1];
+    // Rows before the axis starts are clipped away; two neighbouring rows of one party (a table that runs back to 1973) draw as one span.
+    if (last && last.party === r.party && last.e === cs) last.e = ce;
+    else out.push({ s: cs, e: ce, party: r.party });
   }
   if (out.length === 0) throw new Error(`congress-control: no ${chamber} rows`);
   return out;

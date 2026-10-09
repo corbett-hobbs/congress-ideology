@@ -448,3 +448,11 @@ await step("voteview/rollcalls_93on.json", async () => {
   assertUnique(file, rows, (r) => `${r[0]}|${r[1]}|${r[2]}`, (r) => `Congress ${r[0]} ${r[1]} roll ${r[2]}`);
   return `${rows.length} roll calls ok; (congress, chamber, rollnumber) unique; last House ${manifest.last_date.H}, Senate ${manifest.last_date.S}`;
 });
+
+await step("reference/mayhew-major-laws.json", async () => {
+  const { mayhewFile } = await import("../../lib/laws-entities");
+  const file = "pipeline/reference/mayhew-major-laws.json";
+  const ref = mayhewFile.parse(JSON.parse(await readFile(file, "utf8")));
+  assertUnique(file, ref.entries, (e) => e.entry_id, (e) => e.entry_id);
+  return `${ref.entries.length} entries, Congresses ${ref.first_congress}-${ref.covered_through_congress}; ids unique`;
+});

@@ -109,6 +109,41 @@ describe("passage votes and support bands", () => {
   });
 });
 
+describe("major laws and summaries", () => {
+  const major = JSON.parse(readFileSync("pipeline/output/laws_major.json", "utf8")) as { entries: Record<string, { title: string }>; laws: Record<string, [string, number, number][]> };
+  it("flag Mayhew's laws as major, the rest as not major, and the Congress after his last list as not yet assessed", () => {
+    const by = new Map(laws.map((l) => [l.law_id, l]));
+    expect(meta.major_covered_through_congress).toBe(118);
+    for (const l of laws) expect(l.major, l.law_id).toBe(l.congress > 118 ? null : l.law_id in major.laws);
+    expect(by.get("111-pub-148")!.major).toBe(true); // Affordable Care Act
+    expect(by.get("93-pub-148")!.major).toBe(true); // War Powers Resolution
+    expect(by.get("117-pub-169")!.major).toBe(true); // Inflation Reduction Act
+    expect(by.get("119-pub-21")!.major).toBeNull(); // 2025 reconciliation law: no Mayhew list for the 119th yet
+    expect(by.get("94-pub-1")!.major).toBe(false);
+  });
+  it("give every Congress some major laws and keep the counts in step", () => {
+    const perCongress = new Map<number, number>();
+    for (const c of counts) perCongress.set(c.congress, (perCongress.get(c.congress) ?? 0) + c.major);
+    for (let c = 93; c <= 118; c++) expect(perCongress.get(c), `Congress ${c}`).toBeGreaterThan(0);
+    expect(perCongress.get(119)).toBe(0);
+    expect([...perCongress.values()].reduce((a, b) => a + b, 0)).toBe(Object.keys(major.laws).length);
+  });
+  it("name an entry for every major law", () => {
+    for (const refs of Object.values(major.laws)) for (const [id] of refs) expect(major.entries[id], id).toBeDefined();
+  });
+  it("carry a clean first sentence of 40-300 characters or none", () => {
+    let with_ = 0;
+    for (const l of laws) {
+      if (l.summary === undefined) continue;
+      with_++;
+      expect(l.summary.length >= 40 && l.summary.length <= 300, l.law_id).toBe(true);
+      expect(l.summary, l.law_id).toMatch(/^["“‘(]?[A-Z0-9]/);
+      expect(l.summary, l.law_id).toMatch(/[.!?]["”')\]]*$/);
+    }
+    expect(with_).toBeGreaterThan(laws.length * 0.6);
+  });
+});
+
 describe("Not classified and committees", () => {
   it("leaves laws without a CRS area only in the 93rd-95th Congresses", () => {
     const nc = counts.filter((c) => c.area_id === "not-classified");
@@ -184,6 +219,8 @@ describe("groupCountsByCongress and buildLawsPayload", () => {
   });
   it("builds a dense payload that matches the counts", () => {
     const p = buildLawsPayload(counts, laws, meta, admins);
+    expect(p.majorThrough).toBe(118);
+    expect(p.major.flat().reduce((a, b) => a + b, 0)).toBe(laws.filter((l) => l.major).length);
     expect(p.congresses[0]).toBe(93);
     expect(p.counts.map((row) => row.reduce((a, b) => a + b, 0))[0]).toBe(651);
     expect(p.signedMost).toHaveLength(p.congresses.length);

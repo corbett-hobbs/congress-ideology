@@ -208,13 +208,17 @@ export const lawRow = z.object({
   senate: chamberVote,
   /** Support band of the closest recorded final-passage vote: 0 none recorded, 1 under 60% yes, 2 60-75, 3 75-90, 4 90% or more. */
   band: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
+  /** The first sentence of the CRS summary (name and stage notes cut), 40-300 characters; absent when the summary has no clean first sentence. */
+  summary: z.string().optional(),
+  /** Is it one of David Mayhew's important enactments? `null` = its Congress has no list yet ("not yet assessed"). */
+  major: z.boolean().nullable(),
   /** For a law passed over a veto: `[House yea, House nay, Senate yea, Senate nay]` of the override votes (null where not recorded). Not used for the band. */
   override_votes: z.tuple([int.nullable(), int.nullable(), int.nullable(), int.nullable()]).nullable(),
 });
 export type LawRow = z.infer<typeof lawRow>;
 
 /** `laws_counts.json`: one row per `(congress, area_id)` with at least one law. Counts only; shares and groups are derived in `lib`. */
-export const lawCountRow = z.object({ congress: int, area_id: z.string(), n: int.min(1), /** Laws per support band `[none, <60, 60-75, 75-90, 90+]`; adds up to `n`. */ bands: z.tuple([int, int, int, int, int]) });
+export const lawCountRow = z.object({ congress: int, area_id: z.string(), n: int.min(1), /** Laws per support band `[none, <60, 60-75, 75-90, 90+]`; adds up to `n`. */ bands: z.tuple([int, int, int, int, int]), /** Laws in this cell that are major (0 where the Congress has no list yet). */ major: int });
 export type LawCountRow = z.infer<typeof lawCountRow>;
 
 /** `laws_cosponsors.json`: law id -> cosponsor bioguide ids (kept apart so the list payload stays small). */
@@ -231,6 +235,38 @@ export const lawCommitteesFile = z.object({
   laws: z.record(z.string(), z.array(z.tuple([z.string(), z.array(z.string()), z.array(z.string())]))),
 });
 export type LawCommitteesFile = z.infer<typeof lawCommitteesFile>;
+
+/** `pipeline/reference/mayhew-major-laws.json`: Mayhew's important-enactment lists, hand-extracted and matched to laws. */
+export const mayhewEntry = z.object({
+  entry_id: z.string().regex(/^\d+-\d{2}$/),
+  congress: int.min(LAWS_FIRST_CONGRESS),
+  list: z.string(),
+  marks: z.string(),
+  capitals: z.boolean(),
+  quote: z.string().min(3),
+  /** Public laws the entry names (empty only for a treaty ratification). */
+  law_ids: z.array(z.string().regex(/^\d+-pub-\d+$/)),
+  /** whole = the entry is the law; part = a provision or division of a larger law; none = not a public law. */
+  scope: z.enum(["whole", "part", "none"]),
+  note: z.string().optional(),
+});
+export type MayhewEntry = z.infer<typeof mayhewEntry>;
+export const mayhewFile = z.object({
+  _comment: z.string(),
+  source: z.object({ author: z.string(), title: z.string(), url: z.string(), files_read: isoDate, licence: z.string() }),
+  first_congress: int,
+  /** Last Congress with a list; later Congresses read "not yet assessed". */
+  covered_through_congress: int,
+  entries: z.array(mayhewEntry).min(1),
+});
+export type MayhewFile = z.infer<typeof mayhewFile>;
+
+/** `laws_major.json`: for each major law, the Mayhew entries that name it (`[entry id, 0 whole | 1 provision, 1 if in capitals]`), and each entry's short title. */
+export const lawMajorFile = z.object({
+  entries: z.record(z.string(), z.object({ title: z.string(), list: z.string() })),
+  laws: z.record(z.string(), z.array(z.tuple([z.string(), z.union([z.literal(0), z.literal(1)]), z.union([z.literal(0), z.literal(1)])]))),
+});
+export type LawMajorFile = z.infer<typeof lawMajorFile>;
 
 /** `pipeline/reference/law-vote-exceptions.json`: the few passage tallies where the action text and Voteview disagree beyond the tolerance and a person decided. */
 export const lawVoteExceptions = z.object({
@@ -259,6 +295,8 @@ export const lawsMeta = z.object({
   support_first_congress: int,
   /** Voteview's last roll call per chamber when the data was built; newer laws are not cross-checked. */
   voteview_last_date: z.object({ House: isoDate, Senate: isoDate }),
+  /** Mayhew's lists cover the Congresses up to this one; laws after it are "not yet assessed". */
+  major_covered_through_congress: int,
   sources: z.array(z.object({ source: rawSource, first_congress: int, last_congress: int })),
   areas: z.array(z.object({ id: z.string(), name: z.string().nullable(), group: z.string(), status: z.enum(["current", "retired", "none"]) })),
   groups: z.array(z.object({ id: z.string(), label: z.string() })),

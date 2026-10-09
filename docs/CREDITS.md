@@ -306,3 +306,23 @@ licensed CC BY-NC 3.0 US. Release used: **Version 2026 Release 01** (terms 1946�
 
 Source: http://scdb.wustl.edu/data.php. Snapshot committed in `pipeline/raw/scdb/`.
 
+
+## Congress.gov and GovInfo — public laws
+
+The Laws page counts every public law from the 93rd Congress (1973) on. The laws, their sponsors, cosponsors, policy areas, committees, actions and the Congressional Research Service summaries come from the Library of Congress's Congress.gov API (93rd–107th Congresses) and GPO's GovInfo Bill Status bulk data (108th on). Both are U.S. government works in the public domain. Credit line: "Source: Congress.gov (Library of Congress) and GovInfo (U.S. Government Publishing Office); summaries by the Congressional Research Service." Raw snapshots are committed in `pipeline/raw/congress-gov/` and `pipeline/raw/govinfo-billstatus/`.
+
+## Voteview — roll calls checked against passage tallies
+
+The Laws page's support bands take each chamber's final-passage tally from the Congressional Record action text kept by Congress.gov and check it against Voteview's roll-call file (`HSall_rollcalls.csv`, 93rd Congress on, kept in `pipeline/raw/voteview/rollcalls_93on.json`). Cite as in the Voteview section above.
+
+## David R. Mayhew — important enactments
+
+The "Major laws" filter is David R. Mayhew's judgment of which laws were important, from the lists in *Divided We Govern: Party Control, Lawmaking, and Investigations, 1946–2002* (Yale University Press, 2nd ed. 2005), Table 4.1, and his updates of the lists for later Congresses (the 102nd through the 118th), published at https://campuspress.yale.edu/davidmayhew/datasets-divided-we-govern/. Requested citation:
+
+> David R. Mayhew, *Divided We Govern: Party Control, Lawmaking, and Investigations, 1946–2002*, 2nd ed. (New Haven: Yale University Press, 2005), and "Important Laws Enacted" lists for the 102nd–118th Congresses, https://campuspress.yale.edu/davidmayhew/datasets-divided-we-govern/.
+
+The lists run through the 118th Congress (2023–24); laws of later Congresses read "not yet assessed". The page states no licence and the lists were hand-extracted (his entries give a title and a year, never a law number) and matched to laws by this site, so any error in the matching is ours; each matched entry keeps a verbatim quotation of his wording in `pipeline/reference/mayhew-major-laws.json`. Files read 2026-10-08.
+
+## U.S. Senate Historical Office and the Clerk of the House — party control
+
+The "which party held the House and Senate" rows come from the Senate Historical Office's *Party Division in the Senate, 1789–Present* (https://www.senate.gov/history/partydiv.htm) and the House History, Art & Archives *Party Divisions of the House of Representatives* (https://history.house.gov/Institution/Party-Divisions/Party-Divisions/), recorded in `pipeline/reference/congress-control.json` from the 93rd Congress (1973). U.S. government pages in the public domain.

@@ -50,9 +50,6 @@ Thirty-three areas are too many for the page, so the page shows **topic groups**
 
 Reported, not fatal: sponsors missing from `legislators.json`, laws with no sponsor, laws with several `BecameLaw` dates.
 
-## Not yet in the data
-
-Mayhew's major-law flag, party control back to 1973 and CRS summaries (Session 3).
 
 ## What the first full run found (Session 1)
 
@@ -119,3 +116,18 @@ Each law carries its two chambers' final-passage votes (`house`, `senate`: `[kin
 | 119 | 119 | 49% | 24% | 5% | 4% | 18% |
 
 Reading it: before 2000 about four laws in five show as "No recorded vote" (68–89%); from the 107th on it is 48–81%, and the share of laws with a recorded vote above 90% yes grows from about a tenth to a quarter. Checked against well-known votes in the tests: Affordable Care Act (House 219–212, Senate 60–39), Tax Reform Act of 1986 (292–136, 74–23), USA PATRIOT Act (357–66, 98–1), Inflation Reduction Act (220–207, 51–50) and the War Powers Resolution (override votes 284–135 and 75–18).
+
+
+## Major laws, party control and summaries (Session 3)
+
+**Major laws** are David Mayhew's. His lists of "important enactments" cover every Congress up to the 118th, from *Divided We Govern* (Table 4.1, 1947–90) and his updates for the 102nd on; the 119th has none yet. He judges importance from newspaper and magazine "wrapups" at the close of each session (and, for 1947–90, also from retrospective policy studies); he excludes debt-ceiling hikes, routine appropriations and short renewals unless they contain something new. We read 300 entries for the 93rd–118th, matched by hand to the laws they name (`pipeline/reference/mayhew-major-laws.json`).
+- **Matching.** His entries give a title and a year or month and never a law number, so every match was made by reading the entry and the law's title and summary. 294 entries name public laws and all 294 are matched (the plan's bar was 97%). Six name a treaty ratified by the Senate (the Panama Canal treaties, INF, START, the Chemical Weapons Convention, NATO expansion, New START) and no public law, so they are listed and not counted. The check that each named law exists in the entry's own Congress runs on every build.
+- **Provisions.** 37 entries name a provision or division of a larger law (the 1994 crime act inside the 1984 appropriations resolution, the Affordable Care Act's student-loan overhaul inside the reconciliation act, the TikTok provision inside H.R. 815). The whole law counts as major and the entry is marked a provision (`laws_major.json`). Thirteen laws are named by more than one entry (the 1990 and 1993 budget acts, the Tax Cuts and Jobs Act and others); 307 laws are major in all.
+- **Several laws, one entry.** The National Energy Act of 1978 (five laws), the sixteen Congressional Review Act repeals of 2017–18 (Mayhew counts them as one "law"), the 2008 farm bill (enacted twice over a veto), the Sandy aid installments, the Ukraine installments and the 2020 omnibus pair each map to several laws.
+- **Three states.** A law is *major*, *not major*, or *not yet assessed* (`major: null`) when its Congress has no list. The 119th reads "not yet assessed" and its major count is never shown as zero.
+- **What the flag is not.** It is Mayhew's reading of contemporary coverage, not ours and not a ranking; entries in capitals (`capitals`, 38 of 300) are the ones he judged especially important; his Table 4.1 `*` and `#` marks (newspaper wrapups and retrospective studies) are kept.
+- **Not a rule for recent Congresses.** Whether a provisional flag for the 119th is possible is decided separately, by a back-test against his lists (Session 3b).
+
+**Party control** (`pipeline/reference/congress-control.json`) now starts on 3 January 1973, so the Laws page can show who held the House and Senate. House: Democrats throughout the 93rd–103rd. Senate: Democrats 1973–81, Republicans 1981–87, Democrats 1987–95, then the table that already ran from 1991 (including the 107th Congress's two mid-Congress changes of 2001). No majority changed hands mid-Congress between 1973 and 1991. The Economy and Trade charts clip the table to their own 1991-based axis and draw exactly what they drew before.
+
+**Summaries.** `summary` on each law is the first sentence of the CRS summary of the enacted version (else the latest), with the law's name, the "(Measure passed House, amended)" stage note and the "Title I:" or "=Title I=" heading cut off, "This act designates ..." turned into "Designates ...", kept only if it is one finished sentence of 40–300 characters; otherwise the law has none. It is never model-written. The source summaries come in three styles (1970s–90s "Act name - Amends ...", 2000s "(This measure has not been amended ...)", 2010s on "<strong>Title</strong> This act ..."). A summary that opens with a table of contents, or whose first sentence is longer than 300 characters (an omnibus act's first sentence is usually a list), gets none. Fill by decade (decades bin by the year a Congress opens): 1970s 77%, 1980s 84%, 1990s 65%, 2000s 67%, 2010s 67%, 2020s 92%; 9,391 of 12,619 laws in all, median 164 characters.

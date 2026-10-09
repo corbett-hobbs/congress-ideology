@@ -1,9 +1,11 @@
 import { existsSync } from "node:fs";
 import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import { z } from "zod";
-import { LawsDataError, ordinal, lawVoteExceptions, lawCommitteesFile, lawCosponsorsFile, lawCountRow, lawPolicyAreas, lawRow, lawsMeta, rawCongressFile, RAW_SOURCES, type RawCongressFile, type RawLaw } from "../../lib/laws-entities";
+import { LawsDataError, ordinal, lawMajorFile, mayhewFile, lawVoteExceptions, lawCommitteesFile, lawCosponsorsFile, lawCountRow, lawPolicyAreas, lawRow, lawsMeta, rawCongressFile, RAW_SOURCES, type RawCongressFile, type RawLaw } from "../../lib/laws-entities";
 import { RAW_DIR } from "../fetch/lib";
 import { rollcallManifest, type RollcallTuple } from "../fetch/voteview-rollcalls-lib";
+import { buildMajor } from "./laws-major";
+import { firstSentence } from "./laws-summary";
 import { buildPassage, indexRollcalls, type Chamber, type Passage } from "./laws-votes";
 import { isVetoOverride, areaIndex, splitPending, buildCommittees, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, overlapDifferences, sponsorReport } from "./laws";
 
@@ -31,6 +33,29 @@ async function readRaw(): Promise<RawCongressFile[]> {
     }
   }
   return files;
+}
+
+/** CRS first sentences: how many laws have one, by decade, and why the others do not. */
+function summaryReport(laws: readonly RawLaw[]) {
+  const dec: Record<string, Record<string, number>> = {};
+  const lengths: number[] = [];
+  for (const l of laws) {
+    const d = `${Math.floor((1789 + 2 * (l.congress - 1)) / 10) * 10}s`;
+    const o = (dec[d] ??= { laws: 0, with_sentence: 0 });
+    o.laws!++;
+    const r = firstSentence(l.summary_html);
+    if (r.sentence) {
+      o.with_sentence!++;
+      lengths.push(r.sentence.length);
+    } else o[r.why!] = (o[r.why!] ?? 0) + 1;
+  }
+  lengths.sort((a, b) => a - b);
+  return {
+    rule: "The first sentence of the CRS summary of the enacted version (else the latest), the law's name and the (Measure passed ...) stage notes cut off, 'This act ...' turned into the verb, kept only as one finished sentence of 40-300 characters; otherwise none.",
+    by_decade: Object.fromEntries(Object.entries(dec).sort().map(([d, o]) => [d, { ...o, fill: `${((100 * o.with_sentence!) / o.laws!).toFixed(0)}%` }])),
+    length_median: lengths[Math.floor(lengths.length / 2)],
+    length_p90: lengths[Math.floor(lengths.length * 0.9)],
+  };
 }
 
 const decadeOf = (congress: number) => `${Math.floor((1789 + 2 * (congress - 1)) / 10) * 10}s`;
@@ -153,13 +178,15 @@ async function main() {
   const passages = new Map<string, Passage>(rawLaws.map((l) => [l.law_id, buildPassage(l, rollIdx, voteExceptions)]));
   const unusedExceptions = voteExceptions.filter((e) => !passages.get(`${e.law_id}`)?.resolved.get(e.chamber as Chamber) || passages.get(e.law_id)!.resolved.get(e.chamber as Chamber)!.check !== "exception");
   if (unusedExceptions.length > 0) throw new LawsDataError(`law-vote-exceptions.json lists ${unusedExceptions.map((e) => `${e.law_id} ${e.chamber}`).join(", ")}, which no longer need an exception (or do not exist); remove them`);
-  const rows = z.array(lawRow).parse(rawLaws.map((l) => buildLawRow(l, idx, passages.get(l.law_id)!)));
+  const mayhew = mayhewFile.parse(await readJson(`${REF}/mayhew-major-laws.json`));
+  const major = buildMajor(mayhew, new Map(rawLaws.map((l) => [l.law_id, { congress: l.congress }])), Math.max(...rawLaws.map((l) => l.congress)));
+  const rows = z.array(lawRow).parse(rawLaws.map((l) => buildLawRow(l, idx, { ...passages.get(l.law_id)!, major: l.congress <= mayhew.covered_through_congress ? major.byLaw.has(l.law_id) : null, summary: firstSentence(l.summary_html).sentence })));
   const counts = z.array(lawCountRow).parse(buildCounts(rows));
   checkCounts(counts, rows);
   const cosponsors = lawCosponsorsFile.parse(Object.fromEntries(rawLaws.filter((l) => l.cosponsors.length > 0).map((l) => [l.law_id, l.cosponsors])));
   const committeeBuild = buildCommittees(rawLaws, { committees: new Set(committeeRows.map((c) => c.committee_id)), subcommittees: new Set(subcommitteeRows.map((c) => c.subcommittee_id)) });
   const committees = lawCommitteesFile.parse(committeeBuild.file);
-  const meta = lawsMeta.parse(buildMeta({ rows, chosen, areas, independent, voteviewLast: { House: rcManifest.last_date.H, Senate: rcManifest.last_date.S } }));
+  const meta = lawsMeta.parse(buildMeta({ rows, chosen, areas, independent, voteviewLast: { House: rcManifest.last_date.H, Senate: rcManifest.last_date.S }, majorThrough: mayhew.covered_through_congress }));
   const sp = sponsorReport(rawLaws, known);
 
   const votesReport = voteReport(rawLaws, passages, rollIdx);
@@ -190,6 +217,8 @@ async function main() {
       not_classified_by_congress: byCongressNC,
     },
     votes: votesReport,
+    summaries: summaryReport(rawLaws),
+    major_laws: { ...major.report, laws_not_yet_assessed: rows.filter((r) => r.major === null).length },
     veto_overrides: rows.filter((r) => r.veto_override).map((r) => `${r.law_id} ${r.date}`),
     sponsors: { without_sponsor: sp.none, not_in_legislators: sp.unresolved, resolved: rawLaws.length - sp.none.length - sp.unresolved.length },
     cosponsors: { laws_with_cosponsors: Object.keys(cosponsors).length },
@@ -213,6 +242,8 @@ async function main() {
     `${OUT}/laws_committees.json`,
     `{\n"committees": {\n${Object.entries(committees.committees).map(([k, v]) => `${JSON.stringify(k)}: ${JSON.stringify(v)}`).join(",\n")}\n},\n"laws": {\n${cids.map((id) => `${JSON.stringify(id)}: ${JSON.stringify(committees.laws[id])}`).join(",\n")}\n}\n}\n`,
   );
+  const majorOut = lawMajorFile.parse(major.file);
+  await writeFile(`${OUT}/laws_major.json`, `{\n"entries": {\n${Object.entries(majorOut.entries).map(([k, v]) => `${JSON.stringify(k)}: ${JSON.stringify(v)}`).join(",\n")}\n},\n"laws": {\n${Object.entries(majorOut.laws).map(([k, v]) => `${JSON.stringify(k)}: ${JSON.stringify(v)}`).join(",\n")}\n}\n}\n`);
   await writeFile(`${OUT}/laws_meta.json`, JSON.stringify(meta, null, 2) + "\n");
   await writeFile(`${OUT}/laws_report.json`, JSON.stringify(report, null, 2) + "\n");
   const kb = async (f: string) => ((await stat(`${OUT}/${f}`)).size / 1024).toFixed(0);

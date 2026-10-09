@@ -38,6 +38,10 @@ export interface LawsPayload {
   counts: number[][];
   /** `bands[congressIndex][areaIndex]` = laws per support band `[none recorded, under 60%, 60-75, 75-90, 90%+]`; adds up to `counts`. */
   bands: [number, number, number, number, number][][];
+  /** `major[congressIndex][areaIndex]` = laws Mayhew lists as important; 0 for Congresses after `majorThrough`. */
+  major: number[][];
+  /** Last Congress with a Mayhew list; later Congresses read "not yet assessed", never zero. */
+  majorThrough: number;
   /** Per Congress, same order as `congresses`. */
   signedMost: SignedMost[];
   dataThrough: string;

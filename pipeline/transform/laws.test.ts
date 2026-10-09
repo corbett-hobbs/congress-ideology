@@ -105,21 +105,21 @@ describe("policy areas", () => {
 
 describe("counts and meta", () => {
   const idx = areaIndex(areas);
-  const rows = [law(113, 1), law(113, 2, { policy_area: "Noise" }), law(114, 1, { became_law: ["2015-03-01"] })].map((l) => buildLawRow(l, idx, { house: [3, null, null, null], senate: [3, null, null, null], band: 0, override_votes: null }));
+  const rows = [law(113, 1), law(113, 2, { policy_area: "Noise" }), law(114, 1, { became_law: ["2015-03-01"] })].map((l) => buildLawRow(l, idx, { house: [3, null, null, null], senate: [3, null, null, null], band: 0, override_votes: null, major: l.congress === 93 ? true : null }));
   it("counts per Congress and area and adds back to the list", () => {
     const c = buildCounts(rows);
     expect(c).toEqual([
-      { congress: 113, area_id: "health", n: 1, bands: [1, 0, 0, 0, 0] },
-      { congress: 113, area_id: "not-classified", n: 1, bands: [1, 0, 0, 0, 0] },
-      { congress: 114, area_id: "health", n: 1, bands: [1, 0, 0, 0, 0] },
+      { congress: 113, area_id: "health", n: 1, bands: [1, 0, 0, 0, 0], major: 0 },
+      { congress: 113, area_id: "not-classified", n: 1, bands: [1, 0, 0, 0, 0], major: 0 },
+      { congress: 114, area_id: "health", n: 1, bands: [1, 0, 0, 0, 0], major: 0 },
     ]);
     expect(() => checkCounts(c, rows)).not.toThrow();
-    expect(() => checkCounts([{ congress: 113, area_id: "health", n: 5, bands: [5, 0, 0, 0, 0] }, c[2]!], rows)).toThrow("counts add to");
+    expect(() => checkCounts([{ congress: 113, area_id: "health", n: 5, bands: [5, 0, 0, 0, 0], major: 0 }, c[2]!], rows)).toThrow("counts add to");
     expect(() => checkCounts([{ ...c[0]!, bands: [0, 0, 0, 0, 0] }, c[1]!, c[2]!], rows)).toThrow("band counts");
   });
   it("flags a Congress with no independent count as partial", () => {
     const chosen = chooseSources([file(93, [law(93, 1)]), file(94, [law(94, 1)])]);
-    const meta = buildMeta({ rows, chosen, areas, independent: { "93": 1 }, voteviewLast: { House: "2026-09-16", Senate: "2026-09-30" } });
+    const meta = buildMeta({ rows, chosen, areas, independent: { "93": 1 }, voteviewLast: { House: "2026-09-16", Senate: "2026-09-30" }, majorThrough: 93 });
     expect(meta.partial_congresses).toEqual([94]);
     expect(meta.areas.at(-1)).toMatchObject({ id: "not-classified", status: "none" });
   });

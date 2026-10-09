@@ -57,6 +57,16 @@ export function tagText(xml: string, tag: string): string | null {
   return t === "" ? null : t;
 }
 
+/**
+ * The HTML inside a summary's `<text>`. Bill Status wraps it two ways: from about the 117th as entity-escaped text inside `<cdata>`,
+ * and in the older files as a CDATA section directly under `<summary>`. Either way the result is the HTML itself.
+ */
+export function summaryHtml(summaryXml: string): string {
+  const raw = /<text>([\s\S]*?)<\/text>/.exec(summaryXml)?.[1] ?? "";
+  const cdata = /<!\[CDATA\[([\s\S]*?)\]\]>/.exec(raw);
+  return (cdata ? cdata[1]! : decodeXml(raw)).trim();
+}
+
 /** The inner XML of the first `<tag>…</tag>` block, or "". */
 export function block(xml: string, tag: string): string {
   const m = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`).exec(xml);
@@ -139,7 +149,7 @@ export function parseBillStatus(xml: string, corrections?: string[]): RawLaw[] {
   const versions: SummaryVersion[] = [...block(bill, "summaries").matchAll(/<summary>([\s\S]*?)<\/summary>/g)].map((m) => ({
     stage: tagText(m[1]!, "actionDesc"),
     date: isoDay(tagText(m[1]!, "actionDate")),
-    html: tagText(block(m[1]!, "cdata"), "text") ?? "",
+    html: summaryHtml(m[1]!),
   }));
   const summary = pickSummary(versions);
   const committees = normaliseCommittees(
