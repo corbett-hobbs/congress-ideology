@@ -80,7 +80,7 @@ function Loaded({ payload }: { payload: CommitteeBillsPayload }) {
           <span className="font-mono text-[0.62rem] uppercase tracking-[0.06em] text-ink-faint">Referred each month, by furthest step</span>
           <span className="text-[0.72rem] text-ink-muted">Select a month to filter</span>
         </div>
-        <MonthChart columns={columns} month={filter.month} onMonth={(m) => patch({ month: m })} />
+        <MonthChart columns={columns} month={filter.month} onMonth={(m) => patch({ month: m })} pick={view === "stop" ? pick : null} onPick={(k) => setPick(k, "stop")} />
         <div className="mt-5">
           <BillList rows={matched} total={total} payload={payload} sort={sort} onSort={setSort} resetKey={resetKey} />
         </div>
