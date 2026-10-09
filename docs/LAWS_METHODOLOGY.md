@@ -171,3 +171,38 @@ Three weekly jobs keep the page current; none edits data without a gate.
 - **`laws-major-review.yml`** (Mondays): opens one issue when a Congress has ended and Mayhew's lists do not cover it (`pipeline/validate/laws-major-coverage.ts`). No provisional flag ships, so nothing is flipped; the fix is adding his entries by hand.
 
 A failed or interrupted run leaves the committed raw data and output untouched: a Congress's file is written only after all four of its ZIPs were read, and nothing is committed unless every step passed. If govinfo.gov is unreachable the job ends green with a warning.
+
+## Provisional major flag: acceptance bar (Session 3b, written before any back-test)
+
+The 119th Congress has no Mayhew list, so its laws read "not yet assessed". A provisional flag (`major_provisional`, never counted as Mayhew's) ships only if a rule meets this bar, written before any rule was scored:
+
+- **Test set:** every public law of the 113th–118th Congresses (2013–2024), with Mayhew's `major` as the reference.
+- **Precision ≥ 70%** (of laws the rule flags, the share Mayhew also lists) **and recall ≥ 80%** (of Mayhew's laws, the share the rule flags). Both are measured on laws, not entries.
+- A rule must reach the bar on the whole span and must not fall below 60% precision or 70% recall in any single Congress.
+- A rule that needs a model must keep every quote verbatim in its source text and every number in the output present in the source; it is scored only on its committed, cached output.
+- If no rule meets the bar, nothing ships and the UI keeps "Not yet assessed". The score table is recorded here either way.
+
+
+## Provisional major flag: back-test result (Session 3b) — NO-GO, nothing ships
+
+Reference: Mayhew's `major` over the 113th–118th, 2,047 laws of which 79 are major. Script: `pipeline/preflight/laws/14-provisional-backtest.mjs`; inputs `pipeline/raw/wikipedia-laws/` (Wikipedia's "List of acts of the Nth United States Congress" for the 113th–119th, which says which public laws have an article, plus each article's lead; `pnpm fetch:wikipedia-laws`) and the model-rule cache `model-rule.json` (343 leads, Claude Sonnet 5.5, verbatim-evidence guard).
+
+| Rule | flagged | precision | recall | per-Congress range (precision / recall) |
+|---|---|---|---|---|
+| a. the law has its own Wikipedia article | 467 | 11.3% | 67.1% | 1.0–35.9% / 38.5–100% |
+| b. the article lead uses major / landmark / significant / historic / sweeping / reform ... | 78 | 23.1% | 22.8% | 0–75% / 0–35.7% |
+| b2. the lead says landmark / major / historic / sweeping only | 31 | 19.4% | 7.6% | 0–100% / 0–21.4% |
+| a and b | 78 | 23.1% | 22.8% | as b |
+| c. CRS summary 1,000+ characters | 673 | 8.8% | 74.7% | not computed |
+| c. CRS summary 2,000+ characters | 341 | 14.4% | 62.0% | not computed |
+| c. omnibus / reconciliation / authorization wording in title or summary | 104 | 14.4% | 19.0% | not computed |
+| c. summary 2,000+ characters and an article | 152 | 25.0% | 48.1% | not computed |
+| d. a model reads the lead; it must quote the words that call the law major, verbatim | 15 | 53.3% | 10.1% | 0–100% / 0–21.4% |
+
+**Bar: precision 70% and recall 80%. No rule comes near either.** What the numbers say:
+- *An article does not mean major.* Wikipedia has an article for 467 of the 2,047 laws, and 2013–24 includes many naming and codification acts (the 118th list alone links 208). Only 53 of the 467 are Mayhew's.
+- *Mayhew's laws often have no article of their own.* 26 of his 79 have none, so any rule built on article leads (b, d) is capped at 67.1% recall before it reads a word; rule (d) cannot reach the 80% bar by construction. The 15 short-summary, no-article misses are mostly Congressional Review Act disapprovals that Mayhew counts as one.
+- *Leads rarely say "major".* Under the guard, the model found a verbatim "major / landmark / historic" claim in 15 of 343 leads; 8 of those are Mayhew's.
+- *Size is not importance.* The stored CRS summaries top out near 3,000 characters, and summaries of 2,000+ characters flag 341 laws for 14% precision. Page counts were not tested: they are not in the data, and the summary-length result gives no reason to expect they would separate omnibus laws from major ones at 70%.
+
+**Decision: no-go.** No `major_provisional` field, badge or count is added. The 119th reads "not yet assessed" and Mayhew's coverage boundary (118th) stays the line the UI draws. The Wikipedia act lists and the cached model answers stay in `pipeline/raw/wikipedia-laws/` as the record; if Mayhew publishes a 119th list, it replaces the question.

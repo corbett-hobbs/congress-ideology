@@ -36,6 +36,7 @@
     "fetch:billstatus": "tsx pipeline/fetch/govinfo-billstatus.ts",
     "fetch:laws": "tsx pipeline/fetch/congress-gov.ts",
     "fetch:scdb": "tsx pipeline/fetch/scdb.ts",
+    "fetch:wikipedia-laws": "tsx pipeline/fetch/wikipedia-laws.ts",
     "fetch:landmarks": "tsx pipeline/fetch/wikipedia-landmarks.ts",
     "fetch:wikipedia-cases": "tsx pipeline/fetch/wikipedia-cases.ts",
     "fetch:wikipedia-case-leads": "tsx pipeline/fetch/wikipedia-case-leads.ts",
