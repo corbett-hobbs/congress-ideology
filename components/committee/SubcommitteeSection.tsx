@@ -166,7 +166,12 @@ export function SubcommitteeSection({ committee }: { committee: CommitteeProfile
         chair and ranking member.
       </p>
 
-      <div className="border-t border-line">
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label="Subcommittees"
+        className={`touch-scroll relative max-h-[22rem] overflow-y-auto overscroll-contain border-t border-line sm:max-h-[28rem] ${FOCUS_RING}`}
+      >
         {committee.subcommittees.map((sub) => (
           <SubcommitteeRow
             key={sub.subcommitteeId}
