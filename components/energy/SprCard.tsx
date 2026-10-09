@@ -106,7 +106,7 @@ export function SprCard({ payload, view }: { payload: EnergyPayload; view: reado
       }
       notes={
         <p>
-          Weekly stock level from the Energy Information Administration, taken from the Department of Energy’s inventory: a level, not a flow. Presidents authorize emergency drawdowns and exchanges; Congress mandates sales, cancels them and sets appropriations. A sale sells the oil, an exchange lends it to be returned with a premium, and a refill buys oil or takes back what was lent. The 2026 drawdown is an exchange, so the lower level is not a sale. A date marks when an action was authorized, not when barrels moved. Actions are a hand-curated list checked against Department of Energy and Federal Register pages; the 1991 sale predates the first weekly reading, and the 2005 and 2011 sales are unmarked because their months are unconfirmed.
+          Weekly stock level from the Energy Information Administration: a level, not a flow. A sale sells the oil, an exchange lends it to be returned with a premium, and a refill buys oil or takes back what was lent; the 2026 drawdown is an exchange, so the lower level is not a sale. A date marks when an action was authorized, not when barrels moved. Actions are hand-curated and checked against Department of Energy and Federal Register pages; the 1991 sale predates the first weekly reading, and the 2005 and 2011 sales are unmarked because their months are unconfirmed.
         </p>
       }
       tables={

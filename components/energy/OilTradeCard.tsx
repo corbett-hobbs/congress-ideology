@@ -143,7 +143,7 @@ export function OilTradeCard({ payload, view }: { payload: EnergyPayload; view: 
       }
       notes={
         <p>
-          Energy Information Administration, Monthly Energy Review. Imports, exports and net imports are <em>total petroleum</em> (crude oil plus natural gas liquids and refined products). Net imports below zero means the U.S. exported more than it imported, first true for a full year in 2020. The dashed line is the one crude-only series, where the 2015 repeal shows: crude exports rose from about 0.5 million barrels a day in 2015 to about 3 million in 2019, but the flag marks the act, which enabled the change and did not cause it by itself. Monthly rates are not seasonally adjusted. The hatched stretch is the last 12 months, which EIA revises.
+          Energy Information Administration, Monthly Energy Review. Imports, exports and net imports are <em>total petroleum</em> (crude plus natural gas liquids and refined products). Net imports below zero means the U.S. exported more than it imported, first true for a full year in 2020. The dashed line is the one crude-only series: crude exports rose from about 0.5 million barrels a day in 2015 to about 3 million in 2019, but the 2015 repeal flag marks an act that enabled the change, not one that caused it.
         </p>
       }
       tables={

@@ -82,7 +82,7 @@ export function SplitCard() {
       ) : null}
       <MethodologyNote>
         <p>
-          Each band is the number of justices who dissented, not the full tally, so a 5–3 decision (when only eight justices sat) lands in the 6–3 band. Cases are counted once, in the term they were decided. A selection with a median under 15 cases a term is grouped by decade automatically; the first and last decades are partial (1946–49 and 2020–25).
+          Each band counts dissenting justices, not the full tally, so a 5&ndash;3 decision (eight justices sitting) lands in the 6&ndash;3 band. A selection with a median under 15 cases a term is grouped by decade automatically; the first and last decades are partial (1946&ndash;49 and 2020&ndash;25).
         </p>
       </MethodologyNote>
       <TableView

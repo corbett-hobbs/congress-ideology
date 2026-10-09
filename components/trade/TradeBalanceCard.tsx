@@ -166,7 +166,7 @@ export function TradeBalanceCard({
 
       <MethodologyNote>
         <p>
-          Census Bureau goods trade on the Census basis, monthly. The national line is seasonally adjusted; the country view is not. Services are not included, so the figure differs from the combined goods-and-services deficit usually quoted in the news.
+          Census Bureau goods trade, monthly. The national line is seasonally adjusted; the country view is not. Services are excluded, so the figure differs from the goods-and-services deficit usually quoted.
         </p>
       </MethodologyNote>
       {series && <DataTable series={series} era={era} caption={`${title}, monthly, ${adjLabel.toLowerCase()}`} />}

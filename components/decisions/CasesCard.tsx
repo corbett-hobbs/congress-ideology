@@ -132,7 +132,7 @@ export function CasesCard() {
       </div>
       <MethodologyNote>
         <p>
-          Orally argued cases only, counted in the term they were decided (October to June). Summary reversals and the {fmtInt(data.unclearVotes)} cases whose vote the Supreme Court Database marks unclear are left out. The six biggest of the database’s 14 issue areas get a colour; “Other areas” holds the rest and the {fmtInt(data.unclassified)} cases with no area. The band under the axis marks the president in office for most of each term.
+          Orally argued cases, counted in the term decided (October to June). Summary reversals and the {fmtInt(data.unclearVotes)} cases with an unclear vote are left out. The six biggest issue areas get a colour; &ldquo;Other areas&rdquo; holds the rest and the {fmtInt(data.unclassified)} cases with none.
         </p>
       </MethodologyNote>
       <TableView

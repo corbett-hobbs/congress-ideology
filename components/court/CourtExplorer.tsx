@@ -192,15 +192,9 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
             )}
 
             <MethodologyNote className="mt-2">
-            <p>
-              Martin&ndash;Quinn scores run on a single
-              liberal&ndash;conservative scale and are not comparable in number
-              to the DW-NOMINATE scores on the Congress pages. Dimming a
-              party&rsquo;s appointees never changes the median. In terms with a
-              mid-term change, hollow dots mark the justices who left or joined,
-              and in the four terms MQ scores as two records (1937, 1938, 1956,
-              2005) the median is the Court after the change.
-            </p>
+              <p>
+                Martin&ndash;Quinn scores sit on one liberal&ndash;conservative scale and are not comparable in number to the DW-NOMINATE scores on the Congress pages. Hollow dots mark justices who left or joined mid-term; in 1937, 1938, 1956 and 2005, where MQ scores two records, the median is the Court after the change.
+              </p>
             </MethodologyNote>
             <SeatedTable term={term} seated={ordered} />
           </ChartCard>
@@ -233,11 +227,9 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
               </div>
             </div>
             <MethodologyNote className="mt-2">
-            <p>
-              Career average is the mean of a justice&rsquo;s per-term scores.
-              It can hide justices who moved a long way. Justices still serving
-              are not final.
-            </p>
+              <p>
+                Career average is the mean of a justice&rsquo;s per-term scores, so it can hide justices who moved a long way. Justices still serving are not final.
+              </p>
             </MethodologyNote>
             <CareerTable data={data} />
           </ChartCard>
@@ -257,9 +249,7 @@ export function CourtExplorer({ data }: { data: CourtPayload }) {
           />
           <MethodologyNote className="mt-2">
             <p>
-              Scores are smoothed by the model, so a justice&rsquo;s stability is
-              partly an assumption of the method. The shaded band for a selected
-              justice is its 95% estimation interval.
+              The model smooths scores over time, so a justice&rsquo;s stability is partly an assumption. The shaded band is the 95% estimation interval.
             </p>
           </MethodologyNote>
           <MedianTable data={data} selected={selected} />

@@ -2,6 +2,7 @@
 
 import { HowToRead } from "@/components/HowToRead";
 import { PageHeader } from "@/components/PageHeader";
+import { ordinal } from "@/lib/demographics-chart";
 import { openYear } from "@/lib/laws-derive";
 import type { LawsPayload } from "@/lib/laws-types";
 import { LawsCountCard } from "./LawsCountCard";
@@ -41,7 +42,7 @@ export function LawsPageClient({ data }: { data: LawsPayload }) {
           <JumpToLaws />
           <HowToRead>
             <p>
-              One bar is one two-year Congress, labelled by the year it opens. A law counts in the Congress that enacted it, signed or not (veto overrides included); private laws are left out. The president under each bar is the one who signed most of that Congress&rsquo;s laws. A law&rsquo;s policy area is the single area the Congressional Research Service assigns its bill, grouped here into topic groups. Its vote band comes from the closest final-passage vote it faced in either chamber, so a law is only as broadly supported as its narrowest vote; laws passed by voice vote or unanimous consent in both chambers have no tally and form their own band. Select a Congress to see its numbers and pin it on both charts; select it again to release it. The legends are filters: a policy area under the top chart, or a vote band under the second. &ldquo;Major laws&rdquo; in the top bar narrows everything to the laws David Mayhew&rsquo;s lists of important enactments name.
+              One bar is one two-year Congress, labelled by the year it opens; the president under it signed most of its laws. A law counts in the Congress that enacted it, signed or not (veto overrides included); private laws are left out. A law&rsquo;s vote band is the closest final-passage vote it faced in either chamber; laws passed by voice vote or consent in both chambers have no tally and form their own band. &ldquo;Major laws&rdquo; are David Mayhew&rsquo;s lists of important enactments, assessed through the {ordinal(data.majorThrough)} Congress. Select a Congress to pin it on both charts.
             </p>
           </HowToRead>
         </PageHeader>

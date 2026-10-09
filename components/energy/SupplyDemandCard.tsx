@@ -107,7 +107,7 @@ export function SupplyDemandCard({ payload, view }: { payload: EnergyPayload; vi
       }
       notes={
         <p>
-          Energy Information Administration, Monthly Energy Review. Both lines are <em>total petroleum</em> (crude oil plus natural gas liquids and refined products); crude alone is smaller, about 13.7 million barrels a day produced in 2025 against 21.2 million for total. Products supplied is what left refineries, blending and storage for the domestic market, adjusted for stock changes, and approximates consumption. Monthly rates are not seasonally adjusted, so read the trend. The hatched stretch is the last 12 months, which EIA revises (12 months is a cautious placeholder). Prices, weather and the vehicle fleet drive both lines, not any one policy, so the card carries no policy marks.
+          Energy Information Administration, Monthly Energy Review. Both lines are <em>total petroleum</em> (crude plus natural gas liquids and refined products); crude alone is smaller, about 13.7 million barrels a day produced in 2025 against 21.2 million for total. Products supplied is what left refineries, blending and storage for the domestic market, adjusted for stock changes, and approximates consumption. Prices, weather and the vehicle fleet drive both lines, so the card carries no policy marks.
         </p>
       }
       tables={
