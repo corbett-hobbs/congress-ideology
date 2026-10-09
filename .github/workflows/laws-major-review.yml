@@ -1,0 +1,49 @@
+name: Laws major-list review
+
+# "Major laws" on the Laws page are David Mayhew's lists (pipeline/reference/mayhew-major-laws.json), added by hand. Nothing
+# fetches them, so nothing notices when a Congress ends and its laws are still "not yet assessed". Weekly, compare the last
+# Congress the data covers (`major_covered_through_congress` in pipeline/output/laws_meta.json) with the last Congress that has
+# ended; if one is missing open ONE GitHub issue. An issue, not a red build. Never blocks a deploy and never edits data.
+# No provisional flag ships (Session 3b was a no-go), so there are no provisional laws to flip when the list arrives.
+
+on:
+  schedule:
+    - cron: "47 14 * * 1" # Mondays 14:47 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Is a ended Congress missing its list?
+        id: missing
+        continue-on-error: true
+        run: pnpm exec tsx pipeline/validate/laws-major-coverage.ts
+
+      - name: Open an issue (once)
+        if: steps.missing.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create laws-major-review --color BFD4F2 --description "Laws page needs a Mayhew list" 2>/dev/null || true
+          existing="$(gh issue list --state open --label laws-major-review --json number --jq 'length')"
+          if [ "$existing" = "0" ]; then
+            gh issue create \
+              --title "Add Mayhew's important-enactments list for the Congress that just ended" \
+              --label laws-major-review \
+              --body "A Congress has ended and pipeline/reference/mayhew-major-laws.json does not cover it, so its laws read 'not yet assessed' on /congress/laws. Check Mayhew's page (see docs/LAWS_METHODOLOGY.md) for a new list; if there is one, extract and match its entries by hand, then run pnpm exec tsx pipeline/transform/laws-run.ts. If there is none yet, close this issue; it reopens weekly."
+          else
+            echo "An open review issue already exists."
+          fi

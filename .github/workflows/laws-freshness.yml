@@ -1,0 +1,109 @@
+name: Laws data freshness
+
+# Keeps the Congress → Laws page current: the in-progress Congress's new public laws, and corrections GovInfo makes to older ones.
+#
+# Weekly: HEAD-check GovInfo's Bill Status ZIPs (`pnpm fetch:billstatus`, keyless). A Congress is re-read only when one of its
+# four ZIPs changed size or Last-Modified since pipeline/raw/govinfo-billstatus/manifest.json (about 50 MB for a Congress), then the
+# Laws transform re-runs (its gates throw on any miss) and a pull request opens only if pipeline/raw or pipeline/output changed.
+# The 93rd-107th come from the Congress.gov API and are closed history, so they are not re-fetched here (`pnpm fetch:laws` by hand).
+# Voteview's roll calls, which the transform cross-checks passage tallies against, refresh in voteview-freshness.yml.
+#
+# Rate-limit-safe: the fetch writes a file only after a Congress has been read whole, and nothing is committed unless every
+# step passes, so a failed or half-finished run leaves the committed raw data and output exactly as they were. GovInfo being
+# unreachable ends the job GREEN WITH A WARNING (same stance as wikipedia-cases-freshness); a changed ZIP layout or a failed gate
+# is a real failure on purpose.
+#
+# Requires repo setting:
+#   Settings > Actions > General > "Allow GitHub Actions to create and
+#   approve pull requests"  (off by default)
+
+on:
+  schedule:
+    - cron: "37 7 * * 1" # Mondays 07:37 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: laws-freshness
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Fetch changed Bill Status ZIPs
+        id: fetch
+        run: |
+          set +e
+          pnpm fetch:billstatus
+          code=$?
+          set -e
+          if [ "$code" -ne 0 ]; then
+            if curl -sfI --max-time 30 https://www.govinfo.gov/bulkdata/BILLSTATUS/ > /dev/null; then
+              exit "$code"
+            fi
+            echo "unreachable=true" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Laws refresh skipped::govinfo.gov was unreachable or rate-limited the job. It will retry next week."
+            echo "### Laws refresh skipped: host unreachable" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Detect changes
+        id: detect
+        if: steps.fetch.outputs.unreachable != 'true'
+        run: |
+          if [ -z "$(git status --porcelain -- pipeline/raw/govinfo-billstatus)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Bill Status is unchanged."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- pipeline/raw/govinfo-billstatus
+          fi
+
+      - name: Re-run the laws transform
+        if: steps.detect.outputs.changed == 'true'
+        run: pnpm exec tsx pipeline/transform/laws-run.ts
+
+      - name: Open pull request
+        id: cpr
+        if: steps.detect.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          add-paths: |
+            pipeline/raw/govinfo-billstatus
+            pipeline/output/laws*.json
+          branch: data/laws-refresh
+          base: main
+          delete-branch: true
+          commit-message: "chore(pipeline): refresh public laws from GovInfo Bill Status"
+          title: "Laws data refresh"
+          labels: data-refresh
+          body: |
+            GovInfo's Bill Status ZIPs changed (new public laws in the current Congress, or corrections to older ones).
+            `pipeline/raw/govinfo-billstatus/`, `pipeline/output/laws*.json` and the run report (`laws_report.json`: every miss
+            and judgment call) are regenerated. The transform's count, number-sequence and vote gates passed, or this PR would not exist.
+
+            Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
+            (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.
+
+      - name: Gate and merge
+        if: contains(fromJSON('["created","updated"]'), steps.cpr.outputs.pull-request-operation)
+        uses: ./.github/actions/gate-and-merge
+        with:
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+          branch: ${{ steps.cpr.outputs.pull-request-branch }}
+          head-sha: ${{ steps.cpr.outputs.pull-request-head-sha }}
+          token: ${{ github.token }}
