@@ -2,6 +2,7 @@ import "server-only";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
+import { congressControlFile } from "./congress-control";
 import { administration } from "./executive-orders-entities";
 import { buildLawsPayload } from "./laws-derive";
 import { lawCountRow, lawRow, lawsMeta } from "./laws-entities";
@@ -24,6 +25,7 @@ export function getLawsPageData(): LawsPayload {
   const laws = z.array(lawRow).parse(read("laws.json"));
   const meta = lawsMeta.parse(read("laws_meta.json"));
   const admins = [...HISTORICAL_ADMINISTRATIONS, ...z.array(administration).parse(read("administrations.json"))];
-  cache = buildLawsPayload(counts, laws, meta, admins);
+  const control = congressControlFile.parse(JSON.parse(readFileSync(join(process.cwd(), "pipeline", "reference", "congress-control.json"), "utf8")));
+  cache = buildLawsPayload(counts, laws, meta, admins, control.rows);
   return cache;
 }

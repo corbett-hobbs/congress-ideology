@@ -27,6 +27,19 @@ export interface SignedMost {
   split: { termId: string; president: string; party: "D" | "R"; n: number }[];
 }
 
+/** One tenure on the slider's term band, in calendar years clamped to the page's span. */
+export interface LawsPresident {
+  id: string;
+  president: string;
+  last: string;
+  party: "D" | "R";
+  from: number;
+  to: number;
+}
+
+/** A support band as `[none recorded, under 60%, 60-75, 75-90, 90%+]`. */
+export type BandCounts = [number, number, number, number, number];
+
 export interface LawsPayload {
   /** Congress numbers, ascending (93rd = index 0). */
   congresses: number[];
@@ -37,13 +50,19 @@ export interface LawsPayload {
   /** `counts[congressIndex][areaIndex]` = laws; areas in `areas` order. */
   counts: number[][];
   /** `bands[congressIndex][areaIndex]` = laws per support band `[none recorded, under 60%, 60-75, 75-90, 90%+]`; adds up to `counts`. */
-  bands: [number, number, number, number, number][][];
+  bands: BandCounts[][];
+  /** `majorBands[congressIndex][areaIndex]` = the major laws among `bands`; adds up to `major`. */
+  majorBands: BandCounts[][];
   /** `major[congressIndex][areaIndex]` = laws Mayhew lists as important; 0 for Congresses after `majorThrough`. */
   major: number[][];
   /** Last Congress with a Mayhew list; later Congresses read "not yet assessed", never zero. */
   majorThrough: number;
   /** Per Congress, same order as `congresses`. */
   signedMost: SignedMost[];
+  /** Which party held each chamber for most of each Congress (day-weighted), same order as `congresses`. */
+  control: { house: ("D" | "R")[]; senate: ("D" | "R")[] };
+  /** Presidents in office from the first Congress's opening year to the last, for the year slider's term band. */
+  presidents: LawsPresident[];
   dataThrough: string;
   lawCount: number;
 }

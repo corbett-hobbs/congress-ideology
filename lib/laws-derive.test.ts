@@ -2,7 +2,25 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { administration } from "./executive-orders-entities";
-import { administrationOn, buildLawsPayload, groupCountsByCongress, signedMostByCongress, totalsByCongress } from "./laws-derive";
+import { congressControlFile } from "./congress-control";
+import {
+  ALL_GROUPS,
+  OTHER_GROUPS,
+  administrationOn,
+  buildLawsPayload,
+  cellFor,
+  filterGroups,
+  groupCountsByCongress,
+  noVoteShare,
+  openYear,
+  presidentTerms,
+  seriesOf,
+  signedMostByCongress,
+  signedMostSegments,
+  totalsByCongress,
+  windowIndexes,
+  yearSpan,
+} from "./laws-derive";
 import { lawCommitteesFile, lawCountRow, lawRow, lawsMeta } from "./laws-entities";
 import { HISTORICAL_ADMINISTRATIONS } from "./troops-presidents";
 
@@ -226,5 +244,90 @@ describe("groupCountsByCongress and buildLawsPayload", () => {
     expect(p.signedMost).toHaveLength(p.congresses.length);
     expect(p.partial.at(-1)).toBe(true);
     expect(p.lawCount).toBe(laws.length);
+  });
+});
+
+describe("the Laws page derivations (over the committed files)", () => {
+  const control = congressControlFile.parse(JSON.parse(readFileSync("pipeline/reference/congress-control.json", "utf8")));
+  const p = buildLawsPayload(counts, laws, meta, admins, control.rows);
+  const all = filterGroups(p, ALL_GROUPS);
+
+  it("opens the 93rd in 1973 and spans 1973 to the second year of the latest Congress", () => {
+    expect(openYear(93)).toBe(1973);
+    expect(yearSpan(p)).toEqual([1973, openYear(p.congresses.at(-1)!) + 1]);
+  });
+  it("splits every cell's laws into bands, and the major ones into bands that add up to the major count", () => {
+    p.congresses.forEach((_, ci) => {
+      p.areas.forEach((_a, ai) => {
+        expect(p.bands[ci]![ai]!.reduce((a, b) => a + b, 0)).toBe(p.counts[ci]![ai]);
+        expect(p.majorBands[ci]![ai]!.reduce((a, b) => a + b, 0)).toBe(p.major[ci]![ai]);
+      });
+    });
+  });
+  it("reads the anchors back through cellFor: 651 laws in the 93rd, 274 in the 118th", () => {
+    expect(cellFor(p, 0, all, false).n).toBe(651);
+    expect(cellFor(p, p.congresses.indexOf(118), all, false).n).toBe(274);
+  });
+  it("has major laws only through the last assessed Congress", () => {
+    const after = p.congresses.map((c, ci) => (c > p.majorThrough ? cellFor(p, ci, all, true).n : 0));
+    expect(after.every((n) => n === 0)).toBe(true);
+    expect(cellFor(p, 0, all, true).n).toBeGreaterThan(0);
+  });
+  it("draws seven series: five coloured groups, Other topics and Not classified, covering every group once", () => {
+    const s = seriesOf(p);
+    expect(s).toHaveLength(7);
+    expect(s.at(-1)!.id).toBe("not-classified");
+    expect(s.flatMap((x) => x.groups).sort()).toEqual(p.groups.map((g) => g.id).sort());
+    const other = filterGroups(p, OTHER_GROUPS)!;
+    expect([...other].sort()).toEqual([...s.find((x) => x.id === OTHER_GROUPS)!.groups].sort());
+  });
+  it("sums the series back to each Congress's total", () => {
+    const s = seriesOf(p);
+    for (const ci of [0, 10, p.congresses.length - 1]) {
+      const sum = s.reduce((t, x) => t + cellFor(p, ci, new Set(x.groups), false).n, 0);
+      expect(sum).toBe(cellFor(p, ci, all, false).n);
+    }
+  });
+  it("shows every Congress for the full span, and the Congresses a president's term held for a term", () => {
+    expect(windowIndexes(p, yearSpan(p), false)).toEqual([0, p.congresses.length - 1]);
+    const span = (from: number, to: number) => {
+      const [a, b] = windowIndexes(p, [from, to], false);
+      return [p.congresses[a], p.congresses[b]];
+    };
+    expect(span(2017, 2021)).toEqual([115, 116]);
+    expect(span(2021, 2025)).toEqual([117, 118]);
+    expect(span(2009, 2017)).toEqual([111, 114]);
+    expect(span(1981, 1989)).toEqual([97, 100]);
+  });
+  it("never leaves a window of two or more years empty, and stops at the last assessed Congress for major laws", () => {
+    const [lo, hi] = yearSpan(p);
+    for (let y = lo; y < hi; y++) {
+      const [a, b] = windowIndexes(p, [y, y + 1], false);
+      expect(b, `${y}`).toBeGreaterThanOrEqual(a);
+    }
+    const [, b] = windowIndexes(p, yearSpan(p), true);
+    expect(p.congresses[b]).toBe(p.majorThrough);
+  });
+  it("lists the presidents from Nixon to the sitting one, once each in a row", () => {
+    const t = presidentTerms(admins, 1973, yearSpan(p)[1]);
+    expect(t[0]).toMatchObject({ last: "Nixon", from: 1973, to: 1974 });
+    expect(t.map((x) => x.last).slice(0, 4)).toEqual(["Nixon", "Ford", "Carter", "Reagan"]);
+    expect(t.at(-1)!.to).toBe(yearSpan(p)[1]);
+    expect(new Set(t.map((x) => x.id)).size).toBe(t.length);
+  });
+  it("labels each Congress's bar with who signed most of its laws, merging runs", () => {
+    const segs = signedMostSegments(p, p.congresses.map((_, i) => i));
+    expect(segs.reduce((n, s) => n + s.e - s.s + 1, 0)).toBe(p.congresses.length);
+    expect(segs[0]).toMatchObject({ last: "Nixon", s: 0 });
+  });
+  it("reads party control for every Congress in both chambers (Democrats held the 93rd, Republicans the 104th House)", () => {
+    expect(p.control.house).toHaveLength(p.congresses.length);
+    expect(p.control.senate).toHaveLength(p.congresses.length);
+    expect(p.control.house[0]).toBe("D");
+    expect(p.control.house[p.congresses.indexOf(104)]).toBe("R");
+  });
+  it("finds most pre-2000 laws had no recorded vote, and far fewer after", () => {
+    expect(noVoteShare(p, 93, 106)).toBeGreaterThan(0.5);
+    expect(noVoteShare(p, 107, 118)).toBeLessThan(noVoteShare(p, 93, 106));
   });
 });
