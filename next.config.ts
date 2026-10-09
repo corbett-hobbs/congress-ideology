@@ -38,6 +38,9 @@ const nextConfig: NextConfig = {
     "/congress/committees/[committee_id]/[name_slug]/opengraph-image": [
       "./pipeline/output/*.json",
     ],
+    // Law pages read pipeline/output/law_details/<congress>.json by a computed path.
+    "/congress/laws/[law_id]/[name_slug]": ["./pipeline/output/*.json", "./pipeline/output/law_details/*.json"],
+    "/congress/laws/[law_id]/[name_slug]/opengraph-image": ["./pipeline/output/*.json", "./pipeline/output/law_details/*.json"],
     "/sitemap.xml": ["./pipeline/output/*.json"],
     // The Court pages and the hub card read pipeline/output/court/ via
     // lib/justice-data.ts.

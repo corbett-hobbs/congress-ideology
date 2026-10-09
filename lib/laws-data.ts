@@ -49,6 +49,19 @@ export function getLawsList(): LawsList {
   const laws = z.array(lawRow).parse(read("laws.json"));
   const meta = lawsMeta.parse(read("laws_meta.json"));
   const admins = [...HISTORICAL_ADMINISTRATIONS, ...z.array(administration).parse(read("administrations.json"))];
+  listCache = buildLawsList(laws, meta, admins, getLawSponsorResolver());
+  return listCache;
+}
+
+let resolver: ((id: string, congress: number, origin: "House" | "Senate" | null) => LawSponsor | null) | null = null;
+
+/**
+ * Resolves a bioguide id to how a law shows a member: name, party-state, party and a profile path (only for a member of the
+ * current Congress, the only members with a page). Shared by the Laws list and the individual law pages.
+ */
+export function getLawSponsorResolver() {
+  if (resolver) return resolver;
+  const meta = lawsMeta.parse(read("laws_meta.json"));
   const people = new Map(z.array(legislator).parse(read("legislators.json")).map((l) => [l.bioguide_id, l]));
   const terms = new Map<string, ReturnType<typeof term.parse>[]>();
   for (const t of z.array(term).parse(read("terms.json"))) {
@@ -57,7 +70,7 @@ export function getLawsList(): LawsList {
     terms.set(key, [...(terms.get(key) ?? []), t]);
   }
   const current = getCurrentMemberIndex();
-  listCache = buildLawsList(laws, meta, admins, (id, congress, origin): LawSponsor | null => {
+  resolver = (id, congress, origin): LawSponsor | null => {
     const person = people.get(id);
     if (!person) return null;
     const mine = terms.get(`${id}|${congress}`) ?? [];
@@ -67,8 +80,8 @@ export function getLawsList(): LawsList {
     const place = t ? `${t.state}${t.chamber === "house" && t.district ? `-${t.district}` : ""}` : "";
     const cur = current.get(id);
     return [`${t?.chamber === "senate" ? "Sen." : t ? "Rep." : ""} ${name}`.trim(), place ? `${party}-${place}` : party, party, cur ? memberPath({ bioguideId: id, chamber: cur.chamber, name: cur.name }) : null];
-  });
-  return listCache;
+  };
+  return resolver;
 }
 
 /** A short hash of the list, for the fetch URL. */

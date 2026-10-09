@@ -79,6 +79,7 @@ jobs:
         if: steps.detect.outputs.changed == 'true'
         run: |
           pnpm exec tsx pipeline/transform/laws-run.ts
+          pnpm exec tsx pipeline/transform/law-details-run.ts
           pnpm exec tsx pipeline/transform/committee-bills-run.ts
 
       - name: Open pull request
@@ -90,6 +91,7 @@ jobs:
             pipeline/raw/govinfo-billstatus
             pipeline/raw/govinfo-bills
             pipeline/output/laws*.json
+            pipeline/output/law_details
             pipeline/output/committee_bills*
           branch: data/laws-refresh
           base: main
@@ -100,7 +102,7 @@ jobs:
           body: |
             GovInfo's Bill Status ZIPs changed (new public laws in the current Congress, or corrections to older ones).
             `pipeline/raw/govinfo-billstatus/`, `pipeline/raw/govinfo-bills/`, `pipeline/output/laws*.json`,
-            `pipeline/output/committee_bills*` and the run reports (`laws_report.json`: every miss and judgment call) are
+            `pipeline/output/law_details/`, `pipeline/output/committee_bills*` and the run reports (`laws_report.json`: every miss and judgment call) are
             regenerated. The transforms' count, number-sequence, vote and laws-agree gates passed, or this PR would not exist.
 
             Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
