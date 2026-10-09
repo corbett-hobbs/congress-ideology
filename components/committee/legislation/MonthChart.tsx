@@ -10,7 +10,7 @@ type Col = StackColumn & MonthColumn;
 const SERIES: StackSeries[] = STAGES.map((s) => ({ id: String(s.k), label: s.label, fill: stageVar(s.k) }));
 
 /**
- * Bills referred each month, stacked by the furthest step they reached (`charts/StackedBars`; the stage tiles are its legend).
+ * Bills referred each month, stacked by the furthest step they reached (`charts/StackedBars`), with a key of the six steps underneath. The same colours mark the dots on each bill's progress track.
  * A month is a filter: select a bar to narrow the list to that month's referrals. The latest month is still filling in, so it
  * is hatched and left out of the peak and low labels.
  */
@@ -46,6 +46,14 @@ export function MonthChart({ columns, month, onMonth }: { columns: readonly Mont
           </TooltipCard>
         )}
       />
+      <ul aria-label="Colour key: furthest step reached" className="m-0 mt-2 flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-[0.72rem] text-ink-muted">
+        {STAGES.map((s) => (
+          <li key={s.k} className="inline-flex items-center gap-1.5">
+            <Swatch color={stageVar(s.k)} />
+            {s.label}
+          </li>
+        ))}
+      </ul>
       <TableView
         label="Bills referred each month by furthest step, as a table"
         head={["Month", "Referred", ...STAGES.slice(1).map((s) => s.label), "Total"]}
