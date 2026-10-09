@@ -162,6 +162,15 @@ Reading it: before 2000 about four laws in five show as "Voice vote or consent" 
 
 Three charts and a list on one state (years, policy area, major only, support band, pinned Congress). Card 1 counts laws per Congress by topic group; card 2 shows the support bands as a stacked area; card 3 compares topic groups (100% band bars over the years shown, beside a decade heatmap measured in laws, narrow-vote laws or no-recorded-vote laws); the list names every law the filters keep, newest first, with its closest vote, sponsor, signer and CRS sentence. A sponsor links to a profile only for members of the current Congress. Every chart has a table view and Data notes. The list is served as `/data/laws/list` and fetched once. Browser acceptance test: `pnpm check:laws`.
 
+## Law pages (Phase 1)
+
+Every public law has a page, `/congress/laws/<law_id>/<title-slug>` (`docs/LAW_PAGES_PLAN.md`). `pipeline/output/law_details/<congress>.json` holds what the other Laws files do not: the CRS summary and the action list.
+
+- **Summary.** The raw summary's HTML as plain paragraphs: tags dropped, entities decoded, a leading all-bold paragraph (the law's name, already the page title) and a paragraph that is only a stage note ("(LATEST SUMMARY)", "(Measure passed House, amended)") removed. Nothing is reworded. The fetchers keep at most 3,000 characters of HTML (`SUMMARY_CAP`), so about 18% of summaries are cut; the transform then ends the text on its last finished sentence and sets `cut`, and the page links to Congress.gov for the rest. A summary that opens with a table of contents and has no finished sentence in 3,000 characters is shown as it stands. Phase 2a can lift the cap for the 108th–119th, which are re-parsed from the cached ZIPs.
+- **Actions.** The kept actions (floor, resolving differences, president, became law, veto) oldest first. The source lists many twice (a chamber's own entry and the Library of Congress copy beginning "Passed/agreed to in House:", or a President and a BecameLaw entry with identical text): same date and same cleaned text is one action. Trailing "(consideration: CR S6003; text: CR S6003)" record references are cut. Roll-call references are kept as `[chamber, roll, session]`. Order within a day is the source's.
+- **Not stored.** Sponsor, cosponsors, committees, passage votes and the signer come from `laws.json`, `laws_cosponsors.json`, `laws_committees.json` and `administrations.json` when the page is built, so a refresh cannot leave two copies disagreeing.
+- **Gate.** The shards' law ids equal `laws.json`'s exactly (`lawIdDifferences`), checked in `law-details-run.ts` and again by `lib/law-details-entities.test.ts`.
+
 ## Freshness
 
 Three weekly jobs keep the page current; none edits data without a gate.

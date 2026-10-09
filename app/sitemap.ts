@@ -6,6 +6,8 @@ import { memberPath } from "@/lib/member-url";
 import { committeePath } from "@/lib/committee-url";
 import { getJusticeRefs } from "@/lib/justice-data";
 import { justicePath } from "@/lib/justice-url";
+import { getLawRefs } from "@/lib/law-details-data";
+import { lawPath } from "@/lib/law-url";
 import { liveSections } from "@/lib/verticals";
 import { absoluteUrl } from "@/lib/site";
 import { STATIC_PAGES } from "@/lib/site-info";
@@ -38,6 +40,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  const laws = getLawRefs().map((l) => ({
+    url: absoluteUrl(lawPath(l.lawId, l.title)),
+    lastModified: now,
+    changeFrequency: "yearly" as const,
+    priority: 0.4,
+  }));
+
   return [
     {
       url: absoluteUrl("/"),
@@ -60,5 +69,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...profiles,
     ...committees,
     ...justices,
+    ...laws,
   ];
 }
