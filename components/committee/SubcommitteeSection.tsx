@@ -50,7 +50,7 @@ function SubcommitteeRow({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={onToggle}
-        className={`grid w-full grid-cols-[1fr_140px] items-center gap-4 px-1 py-[0.7rem] text-left hover:bg-surface-raised sm:grid-cols-[1fr_180px] ${FOCUS_RING}`}
+        className={`grid w-full grid-cols-1 items-center gap-x-4 gap-y-2 px-1 py-[0.7rem] text-left hover:bg-surface-raised sm:grid-cols-[1fr_180px] ${FOCUS_RING}`}
       >
         <div className="min-w-0">
           <span className="text-[0.9rem] text-ink">{sub.name}</span>
@@ -75,7 +75,7 @@ function SubcommitteeRow({
           {points.length > 0 ? (
             <AlignmentTrack points={points} />
           ) : (
-            <div className="text-right text-[0.72rem] text-ink-faint">
+            <div className="text-[0.72rem] text-ink-faint sm:text-right">
               Not enough scored members to compare
             </div>
           )}
