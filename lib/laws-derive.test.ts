@@ -6,6 +6,8 @@ import { congressControlFile } from "./congress-control";
 import {
   ALL_GROUPS,
   ALL_ROW,
+  GROUP_KEY_FOR_BAND,
+  GROUP_MEASURES,
   administrationOn,
   buildLawsList,
   decadeCells,
@@ -432,5 +434,11 @@ describe("the list of every law and card 3", () => {
     expect(heatCount(cells[0]!, 0)).toBeLessThanOrEqual(cells[0]!.total);
     const major = decadeCells(p, ALL_ROW, true);
     expect(major.reduce((n, c) => n + c.total, 0)).toBe(laws.filter((l) => l.major === true).length);
+  });
+});
+
+describe("the vote filter's card 3 measure", () => {
+  it("maps every support band to a toggle key that measures that band", () => {
+    for (const band of [0, 1, 2, 3, 4]) expect(GROUP_MEASURES[GROUP_KEY_FOR_BAND[band]!].band).toBe(band);
   });
 });
