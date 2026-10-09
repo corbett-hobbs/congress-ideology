@@ -326,3 +326,8 @@ The lists run through the 118th Congress (2023–24); laws of later Congresses r
 ## U.S. Senate Historical Office and the Clerk of the House — party control
 
 The "which party held the House and Senate" rows come from the Senate Historical Office's *Party Division in the Senate, 1789–Present* (https://www.senate.gov/history/partydiv.htm) and the House History, Art & Archives *Party Divisions of the House of Representatives* (https://history.house.gov/Institution/Party-Divisions/Party-Divisions/), recorded in `pipeline/reference/congress-control.json` from the 93rd Congress (1973). U.S. government pages in the public domain. The Senate Historical Office's table of presidential vetoes (https://www.senate.gov/legislative/vetoes/vetoCounts.htm) was used once, as a cross-check of the page's veto-override laws (see `docs/LAWS_METHODOLOGY.md`); nothing from it is shown.
+
+## GovInfo Bill Status — committee legislation
+
+The legislation section of each committee page lists every bill and joint resolution referred to the committee in the Congress in progress, with its sponsor, cosponsors, policy area and the committee steps recorded for it (referral, hearing, markup, report, discharge). They come from GPO's GovInfo Bill Status bulk data, which carries the Library of Congress's and the Congressional Research Service's bill records; U.S. government works in the public domain. Credit line: "Source: GovInfo Bill Status (U.S. Government Publishing Office, with the Library of Congress and the Congressional Research Service)." Raw digest committed in `pipeline/raw/govinfo-bills/`.
+

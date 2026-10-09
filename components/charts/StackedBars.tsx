@@ -25,6 +25,8 @@ export interface StackColumn {
   key: string;
   /** Axis label for the column. */
   label: string;
+  /** Axis label on a narrow chart, when `’yy` (the default, for year labels) is not it. */
+  shortLabel?: string;
   total: number;
   values: Record<string, number>;
   /** Extra axis line under the label (e.g. "YTD" for a year still in progress). */
@@ -79,6 +81,8 @@ interface Props<C extends StackColumn> {
   controlRows?: readonly ControlRow[];
   /** Room above the plot for the peak and low labels (default 34, enough for a y-axis caption too). */
   marginTop?: number;
+  /** The chart's height in px, narrow and wide, before the term band and control rows (default 300 and 360). */
+  heights?: { narrow: number; wide: number };
   renderTooltip: (column: C) => ReactNode;
 }
 
@@ -119,6 +123,7 @@ export function StackedBars<C extends StackColumn>({
   partialKeys,
   controlRows,
   marginTop,
+  heights,
   renderTooltip,
 }: Props<C>) {
   const hatchId = `hatch${useId().replace(/:/g, "")}`;
@@ -126,7 +131,7 @@ export function StackedBars<C extends StackColumn>({
   const width = measured || 960;
   const narrow = width < NARROW_W;
   const ctlH = controlRowsHeight(controlRows);
-  const height = (narrow ? 300 : 360) + ctlH;
+  const height = (narrow ? (heights?.narrow ?? 300) : (heights?.wide ?? 360)) + ctlH;
   const tip = useStickyTooltip<C>();
   // A highlighted series is isolated: drawn alone from zero as a count, on its own scale.
   const eff = highlight ? "count" : mode;
@@ -339,7 +344,7 @@ export function StackedBars<C extends StackColumn>({
                   <g key={col.key} transform={`translate(${xOf(i) + step / 2},${innerHeight})`}>
                     <line className="grid-line" y1={0} y2={5} />
                     <text className="axis-tick-label" y={18} textAnchor="middle">
-                      {narrow && !yearTicks ? `’${col.label.slice(2)}` : col.label}
+                      {narrow && !yearTicks ? (col.shortLabel ?? `’${col.label.slice(2)}`) : col.label}
                     </text>
                     {col.sublabel && (
                       <text className="axis-tick-label" y={30} textAnchor="middle">

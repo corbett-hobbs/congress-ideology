@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
     "/congress/house/[bioguide_id]/[name_slug]/opengraph-image": [
       "./pipeline/output/*.json",
     ],
-    "/congress/committees/[committee_id]/[name_slug]": ["./pipeline/output/*.json"],
+    "/congress/committees/[committee_id]/[name_slug]": ["./pipeline/output/*.json", "./pipeline/output/committee_bills/*.json"],
     "/congress/committees/[committee_id]/[name_slug]/opengraph-image": [
       "./pipeline/output/*.json",
     ],

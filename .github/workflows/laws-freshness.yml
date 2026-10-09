@@ -1,6 +1,8 @@
 name: Laws data freshness
 
 # Keeps the Congress → Laws page current: the in-progress Congress's new public laws, and corrections GovInfo makes to older ones.
+# The same pass writes the digest of every bill of the Congress in progress (pipeline/raw/govinfo-bills, read by the
+# committee pages' legislation section), so one PR carries both.
 #
 # Weekly: HEAD-check GovInfo's Bill Status ZIPs (`pnpm fetch:billstatus`, keyless). A Congress is re-read only when one of its
 # four ZIPs changed size or Last-Modified since pipeline/raw/govinfo-billstatus/manifest.json (about 50 MB for a Congress), then the
@@ -65,17 +67,19 @@ jobs:
         id: detect
         if: steps.fetch.outputs.unreachable != 'true'
         run: |
-          if [ -z "$(git status --porcelain -- pipeline/raw/govinfo-billstatus)" ]; then
+          if [ -z "$(git status --porcelain -- pipeline/raw/govinfo-billstatus pipeline/raw/govinfo-bills)" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Bill Status is unchanged."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            git diff --stat -- pipeline/raw/govinfo-billstatus
+            git diff --stat -- pipeline/raw/govinfo-billstatus pipeline/raw/govinfo-bills
           fi
 
-      - name: Re-run the laws transform
+      - name: Re-run the laws and committee-legislation transforms
         if: steps.detect.outputs.changed == 'true'
-        run: pnpm exec tsx pipeline/transform/laws-run.ts
+        run: |
+          pnpm exec tsx pipeline/transform/laws-run.ts
+          pnpm exec tsx pipeline/transform/committee-bills-run.ts
 
       - name: Open pull request
         id: cpr
@@ -84,7 +88,9 @@ jobs:
         with:
           add-paths: |
             pipeline/raw/govinfo-billstatus
+            pipeline/raw/govinfo-bills
             pipeline/output/laws*.json
+            pipeline/output/committee_bills*
           branch: data/laws-refresh
           base: main
           delete-branch: true
@@ -93,8 +99,9 @@ jobs:
           labels: data-refresh
           body: |
             GovInfo's Bill Status ZIPs changed (new public laws in the current Congress, or corrections to older ones).
-            `pipeline/raw/govinfo-billstatus/`, `pipeline/output/laws*.json` and the run report (`laws_report.json`: every miss
-            and judgment call) are regenerated. The transform's count, number-sequence and vote gates passed, or this PR would not exist.
+            `pipeline/raw/govinfo-billstatus/`, `pipeline/raw/govinfo-bills/`, `pipeline/output/laws*.json`,
+            `pipeline/output/committee_bills*` and the run reports (`laws_report.json`: every miss and judgment call) are
+            regenerated. The transforms' count, number-sequence, vote and laws-agree gates passed, or this PR would not exist.
 
             Merged automatically only if typecheck, lint, tests, `pnpm pipeline:check` and the build all pass on this branch
             (.github/actions/gate-and-merge). If you are reading this on an open PR, that gate failed: see the run log.

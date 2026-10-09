@@ -49,6 +49,7 @@ const PALETTE_KEYS = [
   "sector-ps", "sector-health", "sector-hum", "sector-econ", "sector-prog", "sector-other",
   "fuel-coal", "fuel-gas", "fuel-nuclear", "fuel-hydro", "fuel-wind", "fuel-solar", "fuel-other",
   "tenure-1", "tenure-2", "tenure-3", "tenure-4",
+  "stage-1", "stage-2", "stage-3", "stage-4", "stage-5", "stage-6",
   "split-0", "split-1", "split-2", "split-3", "split-4",
 ];
 const BG_KEYS = ["bg", "surface", "surface-raised"];
@@ -87,13 +88,17 @@ FORCED_PAIRS.push(...FUEL_KEYS.flatMap((a, i) => FUEL_KEYS.slice(i + 1).map((b) 
 // They never meet a party colour, and adjacent steps must differ in lightness, not hue.
 const TENURE_KEYS = ["tenure-1", "tenure-2", "tenure-3", "tenure-4"];
 FORCED_PAIRS.push(...TENURE_KEYS.flatMap((a, i) => TENURE_KEYS.slice(i + 1).map((b) => [a, b])));
+// Committee-legislation stages (components/committee/legislation): six steps stacked on one chart and drawn together in the
+// flow chart, so every pair must be separable. They never meet a party colour, so no dem/rep pairs.
+const STAGE_KEYS = ["stage-1", "stage-2", "stage-3", "stage-4", "stage-5", "stage-6"];
+FORCED_PAIRS.push(...STAGE_KEYS.flatMap((a, i) => STAGE_KEYS.slice(i + 1).map((b) => [a, b])));
 // Dissent-count bands (components/decisions): five bands stacked on one chart (and in the rows), so every pair must be
 // separable, and each is also held against --dem/--rep (they are not party colours and must not read as them, though they
 // never co-occur with a real party_code).
 const SPLIT_KEYS = ["split-0", "split-1", "split-2", "split-3", "split-4"];
 FORCED_PAIRS.push(...SPLIT_KEYS.flatMap((a, i) => SPLIT_KEYS.slice(i + 1).map((b) => [a, b])));
 FORCED_PAIRS.push(...SPLIT_KEYS.flatMap((a) => [[a, "dem"], [a, "rep"]]));
-const NEW_KEYS = ["committee-house", "committee-senate", "committee-joint", ...SECTOR_KEYS, ...FUEL_KEYS, ...TENURE_KEYS, ...SPLIT_KEYS];
+const NEW_KEYS = ["committee-house", "committee-senate", "committee-joint", ...SECTOR_KEYS, ...FUEL_KEYS, ...TENURE_KEYS, ...STAGE_KEYS, ...SPLIT_KEYS];
 
 // ---- CLI overrides -------------------------------------------------------
 const override = { light: {}, dark: {} };

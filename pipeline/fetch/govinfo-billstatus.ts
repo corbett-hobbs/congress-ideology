@@ -1,7 +1,8 @@
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { existsSync, statSync } from "node:fs";
 import { billstatusManifest, rawCongressFile, BILLSTATUS_FIRST_CONGRESS, LawsDataError, ordinal, type BillstatusManifest, type RawLaw } from "../../lib/laws-entities";
-import { BILLSTATUS_BASE, LAW_BILL_TYPES, lawsFromZip, zipName, zipUrl } from "./billstatus-lib";
+import { rawBillsFile, type RawBill } from "../../lib/committee-bills-entities";
+import { BILLSTATUS_BASE, LAW_BILL_TYPES, billsFromZip, formatRawBills, lawsFromZip, zipName, zipUrl } from "./billstatus-lib";
 import { congressForDate, formatRawCongress } from "./laws-raw";
 import { RAW_DIR, download, run } from "./lib";
 
@@ -17,10 +18,15 @@ import { RAW_DIR, download, run } from "./lib";
  * The ZIPs (one per bill type per Congress, one XML per bill) are cached under `pipeline/raw/_scratch/govinfo-billstatus/`
  * (gitignored) and only the public-law bills are kept, in the same shape the Congress.gov fetcher writes. A ZIP is
  * re-downloaded only when its size or Last-Modified differs from manifest.json. Not part of `fetch:all`.
+ *
+ * For the Congress in progress it also writes `pipeline/raw/govinfo-bills/<congress>.json`: a digest of EVERY bill and joint
+ * resolution (committee referrals and their dated steps, sponsor, cosponsor parties, the few actions the stage logic reads),
+ * which the committee-legislation transform turns into one shard per committee. Earlier Congresses have no committee pages.
  */
 const DIR = `${RAW_DIR}/govinfo-billstatus`;
 const CACHE = `${RAW_DIR}/_scratch/govinfo-billstatus`;
 const MANIFEST = `${DIR}/manifest.json`;
+const BILLS_DIR = `${RAW_DIR}/govinfo-bills`;
 const BIG_DOWNLOAD = 150 * 1024 * 1024;
 const USER_AGENT = "InsideGov-pipeline/0.1 (+https://github.com/corbett-hobbs/insidegov; weekly data check)";
 
@@ -41,6 +47,7 @@ async function main() {
   const rebuildAll = args.includes("--rebuild");
   const wanted = args.filter((a) => /^\d+$/.test(a)).map(Number);
   const last = congressForDate(new Date());
+  const billsFile = (c: number) => `${BILLS_DIR}/${c}.json`;
   const congresses = wanted.length > 0 ? wanted : Array.from({ length: last - BILLSTATUS_FIRST_CONGRESS + 1 }, (_, i) => BILLSTATUS_FIRST_CONGRESS + i);
   for (const c of congresses) if (c < BILLSTATUS_FIRST_CONGRESS) throw new LawsDataError(`Bill Status starts at the ${ordinal(BILLSTATUS_FIRST_CONGRESS)} Congress; use pnpm fetch:laws for ${c}`);
 
@@ -55,7 +62,7 @@ async function main() {
         continue;
       }
       const k = known.get(`${congress}|${type}`);
-      const fresh = !rebuildAll && !!k && k.bytes === h.bytes && k.last_modified === h.lastModified && existsSync(`${DIR}/${congress}.json`);
+      const fresh = !rebuildAll && !!k && k.bytes === h.bytes && k.last_modified === h.lastModified && existsSync(`${DIR}/${congress}.json`) && (congress !== last || existsSync(billsFile(congress)));
       plan.push({ congress, type, ...h, stale: !fresh });
     }
   }
@@ -73,6 +80,7 @@ async function main() {
   const byCongress = new Map<number, RawLaw[]>();
   const corrected = new Map<number, string[]>();
   const counts = new Map<string, number>();
+  const digests: RawBill[] = [];
   // A Congress is rebuilt from all four of its ZIPs, so re-read the cached ones that did not change.
   const rebuild = new Set(toGet.map((p) => p.congress));
   for (const p of plan.filter((x) => rebuild.has(x.congress))) {
@@ -81,7 +89,9 @@ async function main() {
       process.stdout.write(`  downloading ${zipName(p.congress, p.type)} (${mb(p.bytes)} MB)\n`);
       await download(zipUrl(p.congress, p.type), file);
     }
-    const { laws, bills, corrections } = lawsFromZip(await readFile(file));
+    const zip = await readFile(file);
+    const { laws, bills, corrections } = lawsFromZip(zip);
+    if (p.congress === last) digests.push(...billsFromZip(zip));
     for (const c of corrections) console.log(`    corrected: ${c}`);
     corrected.set(p.congress, [...(corrected.get(p.congress) ?? []), ...corrections]);
     console.log(`  ${zipName(p.congress, p.type)}: ${bills} bills, ${laws.length} public laws`);
@@ -93,6 +103,13 @@ async function main() {
     laws.sort((a, b) => a.number - b.number || a.law_id.localeCompare(b.law_id));
     const file = rawCongressFile.parse({ source: "govinfo-billstatus", congress, fetched: today, list_count: null, max_number: laws.at(-1)!.number, ...(corrected.get(congress)?.length ? { corrections: corrected.get(congress)!.sort() } : {}), laws });
     await writeFile(`${DIR}/${congress}.json`, formatRawCongress(file));
+  }
+  if (rebuild.has(last)) {
+    await mkdir(BILLS_DIR, { recursive: true });
+    digests.sort((a, b) => a.type.localeCompare(b.type) || Number(a.number) - Number(b.number));
+    const file = rawBillsFile.parse({ source: "govinfo-billstatus", congress: last, fetched: today, bills: digests });
+    await writeFile(billsFile(last), formatRawBills(file));
+    console.log(`  ${billsFile(last)}: ${digests.length} bills`);
   }
   const next = new Map(known);
   for (const p of plan.filter((x) => rebuild.has(x.congress))) {

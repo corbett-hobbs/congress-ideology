@@ -664,3 +664,19 @@ The list the Laws page shows is not a file in `pipeline/output`: `getLawsList()`
 - **Major laws.** `pipeline/reference/mayhew-major-laws.json` is David Mayhew's lists of important enactments (93rd–118th), hand-extracted: one row per entry with a verbatim quote, his marks, and the law ids a person matched (his lists never give law numbers). The transform fails if a named law is missing or belongs to another Congress, if an entry that is not a treaty names no law, or if a Congress up to the last covered has no entry; `major` is null for later Congresses ("not yet assessed"). `laws_major.json` maps each major law to its entries. Credit: `docs/CREDITS.md`.
 - **Page payload (Session 4).** `buildLawsPayload` adds `majorBands` (major laws by support band, from `laws.json`), `control` (the party holding each chamber for most days of each Congress, from `congress-control.json`) and `presidents` (tenures clamped to the page's years, for the slider band). The five topic groups with a colour, "Other topics" and "Not classified" are `seriesOf`.
 - **Summaries.** `summary` is one finished first sentence of the CRS summary, never model-written; a law whose summary has no clean first sentence of 40–300 characters has none.
+
+## 16. Committee legislation track
+
+An eleventh data track: every bill and joint resolution of the Congress in progress, as each committee it was referred to holds it. Methodology: `docs/COMMITTEE_BILLS_METHODOLOGY.md`; schemas: `lib/committee-bills-entities.ts`. Built from the same GovInfo Bill Status ZIPs as the Laws track (section 15). The key is the committee (`committee_id`, the THOMAS id `HSJU`, joining `committees.json`; subcommittees join `subcommittees.json`); the bill is a row inside it, with the sponsor as a column. Not a `bioguide_id` or `law_id` track.
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/raw/govinfo-bills/<congress>.json` | one digest per bill and joint resolution, current Congress only | type + number | Committee referrals with dated steps, sponsor, cosponsor party counts, policy area, the few actions the stage logic reads, public law numbers. One bill per line. Written by `pnpm fetch:billstatus`. |
+| `pipeline/output/committee_bills/<COMMITTEE_ID>.json` | one row per (bill, committee); one file per committee with bills | `b` + `n` within the shard | Terse keys (see `lib/committee-bills-entities.ts`): dated steps `r` referred, `h` hearing, `m` markup, `p` reported, `d` discharged, `k` calendar; `g` first passage per chamber; `l` / `w` public law and signing date; the shard carries the sponsor, policy-area and subcommittee tables the rows index. **The stage is derived** (`lib/committee-bills-derive.ts`), never stored. |
+| `pipeline/output/committee_bills_meta.json` | one object | — | Congress, data-through date, bill and row counts, rows per committee. |
+| `pipeline/output/committee_bills_report.json` | run summary | — | Humans only: unmapped committees and subcommittees, unparsed sponsor names, rows per committee. |
+
+- **One gate ties it to the Laws track:** the bills' public laws (bill has a law number *and* a "became law" action) equal `laws.json` for the Congress, exactly.
+- A bill appears once per committee it was referred to. The page never sums across committees.
+- The card's rows are not read at page build: `getCommitteeBillsPayload()` in `lib/committee-bills-data.ts` joins the shard to the current-member index for sponsor names and links and serves it as `/data/committees/<id>/bills`.
+

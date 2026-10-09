@@ -1,0 +1,26 @@
+{
+"committee_id": "SSBU",
+"congress": 119,
+"chamber": "senate",
+"areas": ["Economics and Public Finance","Immigration","Health"],
+"subs": [],
+"sponsors": [["S001176","Scalise, Steve","R","LA-1"],["G000359","Graham, Lindsey","R","SC"],["L000575","Lankford, James","R","OK"],["L000577","Lee, Mike","R","UT"],["C001114","Curtis, John R.","R","UT"],["R000122","Reed, Jack","D","RI"],["R000618","Ricketts, Pete","R","NE"],["S001227","Schmitt, Eric","R","MO"],["M001198","Marshall, Roger","R","KS"],["W000802","Whitehouse, Sheldon","D","RI"],["K000383","King, Angus S., Jr.","I","ME"],["S001217","Scott, Rick","R","FL"],["B001261","Barrasso, John","R","WY"],["B001267","Bennet, Michael F.","D","CO"]],
+"rows": [
+{"b":"s","n":"5442","t":"Cost Estimates Improvement Act","i":"2026-09-17","s":11,"a":0,"r":"2026-09-17"},
+{"b":"s","n":"2","t":"Secure America Act","i":"2026-05-20","s":1,"a":1,"r":"2026-05-20","p":"2026-05-20","k":"2026-05-20","x":1,"g":["2026-06-09","2026-06-05"],"l":"119-98","w":"2026-06-10","o":3,"z":["2026-06-09","Motion to reconsider laid on the table Agreed to without objection."]},
+{"b":"s","n":"4455","t":"Public Lands Integrity Act","i":"2026-04-30","s":13,"c":[5,0,0],"a":0,"r":"2026-04-30"},
+{"b":"s","n":"4372","t":"No Bias in the Baseline Act","i":"2026-04-22","s":8,"a":0,"r":"2026-04-22"},
+{"b":"s","n":"4173","t":"Dollar-for-Dollar Deficit Reduction Act","i":"2026-03-24","s":12,"c":[0,2,0],"a":0,"r":"2026-03-24"},
+{"b":"s","n":"3951","t":"Balanced Budget Responsibility Act of 2026","i":"2026-02-26","s":11,"a":0,"r":"2026-02-26"},
+{"b":"s","n":"3204","t":"Preventive Health Savings Act","i":"2025-11-19","s":10,"c":[1,2,0],"a":0,"r":"2025-11-19"},
+{"b":"s","n":"2749","t":"A bill to exempt Medicare from any sequestration under Statutory PAYGO that is caused by the One Big Beautiful Bill Act.","i":"2025-09-09","s":9,"a":2,"r":"2025-09-09"},
+{"b":"hr","n":"4","t":"Rescissions Act of 2025","i":"2025-06-06","s":0,"c":[0,5,0],"a":0,"r":"2025-07-10","d":"2025-07-16","k":"2025-07-15","x":2,"g":["2025-06-12","2025-07-17"],"l":"119-28","w":"2025-07-24","o":1,"z":["2025-06-11","Motion to reconsider laid on the table Agreed to without objection."]},
+{"b":"s","n":"2090","t":"Budget Reform Act of 2025","i":"2025-06-17","s":8,"a":0,"r":"2025-06-17"},
+{"b":"s","n":"2067","t":"Rescissions Act of 2025","i":"2025-06-12","s":7,"c":[0,6,0],"a":0,"r":"2025-06-12","x":1},
+{"b":"s","n":"1903","t":"A bill to prohibit changes to Medicare and Medicaid in reconciliation.","i":"2025-05-22","s":5,"c":[2,0,0],"a":2,"r":"2025-05-22"},
+{"b":"s","n":"1911","t":"HEALTH Panel Act","i":"2025-05-22","s":6,"c":[0,1,0],"a":0,"r":"2025-05-22"},
+{"b":"s","n":"1760","t":"Restoring WIFIA Eligibility Act of 2025","i":"2025-05-14","s":4,"c":[1,0,0],"a":0,"r":"2025-05-14"},
+{"b":"s","n":"515","t":"A bill to repeal the Impoundment Control Act of 1974.","i":"2025-02-11","s":3,"c":[0,1,0],"a":0,"r":"2025-02-11"},
+{"b":"s","n":"285","t":"Fairness for Crime Victims Act of 2025","i":"2025-01-28","s":2,"c":[0,2,0],"a":0,"r":"2025-01-28"}
+]
+}

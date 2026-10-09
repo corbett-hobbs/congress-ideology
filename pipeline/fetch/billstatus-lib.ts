@@ -1,5 +1,6 @@
 import { inflateRawSync } from "node:zlib";
 import { BILL_TYPES, type BillType, type RawAction, type RawLaw } from "../../lib/laws-entities";
+import type { RawBill, RawBillAction } from "../../lib/committee-bills-entities";
 import { becameLawDates, isoDay, normaliseCommittees, keepAction, lawId, parsePublicLawNumber, pickSummary, slimActions, type SummaryVersion } from "./laws-raw";
 
 /**
@@ -211,4 +212,112 @@ export function lawsFromZip(zip: Buffer): { laws: RawLaw[]; bills: number; corre
     laws.push(...parseBillStatus(e.data().toString("utf8"), corrections));
   }
   return { laws, bills, corrections };
+}
+
+// ---- every bill of a Congress, as a digest for the committee pages ----------------------------------------------------
+
+/** A committee step the stage logic reads from the action text: a mark-up, or "ordered to be reported" (with its vote tally). */
+const COMMITTEE_STEP = /mark-?up|ordered to be reported|ordered reported/i;
+const PASSAGE = /passed\/agreed to in (house|senate)/i;
+const BILL_ACTION_TEXT_CAP = 200;
+
+/**
+ * Keep an action only when the stage logic reads it: a committee mark-up or "ordered to be reported" (text kept, for the
+ * vote tally), a calendar placement (date only), a chamber passage (the matched phrase only) a veto or the signing (type only).
+ */
+export function slimBillAction(type: string, text: string, committees: string[]): Omit<RawBillAction, "date"> | null {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (COMMITTEE_STEP.test(t)) return { type, text: t.length > BILL_ACTION_TEXT_CAP ? t.slice(0, BILL_ACTION_TEXT_CAP - 1) + "…" : t, committees };
+  if (type === "Calendars") return { type, text: "", committees: [] };
+  const passed = PASSAGE.exec(t);
+  if (passed) return { type, text: `Passed/agreed to in ${passed[1]![0]!.toUpperCase()}${passed[1]!.slice(1).toLowerCase()}`, committees: [] };
+  if (type === "Veto" || type === "BecameLaw") return { type, text: "", committees: [] };
+  // Older files type the signing as a President action; the Laws track reads it the same way (`becameLawDates`).
+  if (type === "President" && /became public law/i.test(t)) return { type, text: "Became Public Law", committees: [] };
+  return null;
+}
+
+/** A Bill Status file -> the digest the committee pages read; null for a type that cannot be a bill or joint resolution. */
+export function parseBillDigest(xml: string): RawBill | null {
+  const bill = block(xml, "bill").replace(/<amendments>[\s\S]*?<\/amendments>/g, "");
+  const top = topLevel(bill);
+  const type = (tagText(top, "type") ?? "").toLowerCase();
+  if (!(LAW_BILL_TYPES as readonly string[]).includes(type)) return null;
+  const sponsorItem = items(bill, "sponsors")[0];
+  const sponsorId = sponsorItem ? tagText(sponsorItem, "bioguideId") : null;
+  const sponsorName = sponsorItem ? tagText(sponsorItem, "fullName") : null;
+  const cosponsors: [number, number, number] = [0, 0, 0];
+  for (const it of items(bill, "cosponsors")) {
+    if (tagText(it, "sponsorshipWithdrawnDate") !== null) continue;
+    const party = tagText(it, "party");
+    cosponsors[party === "D" ? 0 : party === "R" ? 1 : 2]++;
+  }
+  const seen = new Set<string>();
+  const actions: RawBillAction[] = [];
+  for (const it of items(bill, "actions")) {
+    const date = isoDay(tagText(it, "actionDate"));
+    if (!date) continue;
+    const codes = items(it, "committees").flatMap((c) => {
+      const code = tagText(c, "systemCode");
+      return code ? [code.toLowerCase()] : [];
+    });
+    const kept = slimBillAction(tagText(it, "type") ?? "", tagText(it, "text") ?? "", codes);
+    if (!kept) continue;
+    const key = `${date}|${kept.type}|${kept.text}|${kept.committees.join(",")}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    actions.push({ date, ...kept });
+  }
+  actions.sort((a, b) => a.date.localeCompare(b.date));
+  const latestXml = block(bill, "latestAction");
+  const latestDate = isoDay(tagText(latestXml, "actionDate"));
+  const latestText = (tagText(latestXml, "text") ?? "").replace(/\s+/g, " ").trim();
+  const origin = tagText(top, "originChamber");
+  return {
+    type: type as BillType,
+    number: tagText(top, "number") ?? "",
+    title: tagText(top, "title") ?? "",
+    introduced: isoDay(tagText(top, "introducedDate")),
+    origin_chamber: origin === "House" || origin === "Senate" ? origin : null,
+    sponsor: sponsorId && sponsorName ? { id: sponsorId, name: sponsorName } : null,
+    cosponsors,
+    policy_area: tagText(block(bill, "policyArea"), "name"),
+    committees: normaliseCommittees(
+      items(bill, "committees").map((it) => ({
+        code: tagText(it, "systemCode"),
+        name: tagText(it, "name"),
+        chamber: tagText(it, "chamber"),
+        activities: bulkActivities(it),
+        subcommittees: items(it, "subcommittees").map((sub) => ({ code: tagText(sub, "systemCode"), name: tagText(sub, "name"), activities: bulkActivities(sub) })),
+      })),
+    ),
+    actions,
+    laws: items(bill, "laws").flatMap((it) => (tagText(it, "type") === "Public Law" ? [tagText(it, "number") ?? ""] : [])).filter((n) => /^\d+-\d+$/.test(n)),
+    reports: [...block(bill, "committeeReports").matchAll(/<committeeReport>([\s\S]*?)<\/committeeReport>/g)].flatMap((m) => {
+      const c = tagText(m[1]!, "citation");
+      return c ? [c] : [];
+    }),
+    cbo_estimates: items(bill, "cboCostEstimates").length,
+    latest_action: latestDate ? { date: latestDate, text: latestText.length > 160 ? latestText.slice(0, 159) + "…" : latestText } : null,
+    updated: isoDay(tagText(top, "updateDate")),
+  };
+}
+
+/** Every bill in one Bill Status ZIP, digested; sorted by number so a re-run diffs cleanly. */
+export function billsFromZip(zip: Buffer): RawBill[] {
+  const out: RawBill[] = [];
+  for (const e of zipEntries(zip)) {
+    if (!e.name.endsWith(".xml")) continue;
+    const b = parseBillDigest(e.data().toString("utf8"));
+    if (b) out.push(b);
+  }
+  return out.sort((a, b) => a.type.localeCompare(b.type) || Number(a.number) - Number(b.number));
+}
+
+/** One bill per line, so a `git diff` of the weekly refresh shows which bills moved. */
+export function formatRawBills(file: { bills: unknown[] } & Record<string, unknown>): string {
+  const { bills, ...head } = file;
+  return `{\n${Object.entries(head)
+    .map(([k, v]) => `${JSON.stringify(k)}: ${JSON.stringify(v)},`)
+    .join("\n")}\n"bills": [\n${bills.map((b) => JSON.stringify(b)).join(",\n")}\n]\n}\n`;
 }

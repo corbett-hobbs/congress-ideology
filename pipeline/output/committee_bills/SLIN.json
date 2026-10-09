@@ -1,0 +1,33 @@
+{
+"committee_id": "SLIN",
+"congress": 119,
+"chamber": "senate",
+"areas": ["Armed Forces and National Security","International Affairs"],
+"subs": [],
+"sponsors": [["W000805","Warner, Mark R.","D","VA"],["S001217","Scott, Rick","R","FL"],["C001056","Cornyn, John","R","TX"],["C001095","Cotton, Tom","R","AR"],["R000605","Rounds, Mike","R","SD"],["Y000064","Young, Todd","R","IN"],["B001277","Blumenthal, Richard","D","CT"],["H001076","Hassan, Margaret Wood","D","NH"],["G000386","Grassley, Chuck","R","IA"],["W000779","Wyden, Ron","D","OR"],["S001208","Slotkin, Elissa","D","MI"]],
+"rows": [
+{"b":"s","n":"5009","t":"MERIT Act of 2026","i":"2026-07-16","s":10,"a":0,"r":"2026-07-16"},
+{"b":"s","n":"4760","t":"A bill to amend the FISA Amendments Act of 2008 to extend the authorities of title VII of the Foreign Intelligence Surveillance Act of 1978, and for other purposes.","i":"2026-06-11","s":3,"a":0,"r":"2026-06-11"},
+{"b":"s","n":"4764","t":"A bill to amend the FISA Amendments Act of 2008 to extend the authorities of title VII of the Foreign Intelligence Surveillance Act of 1978, and for other purposes.","i":"2026-06-11","s":3,"a":0,"r":"2026-06-11"},
+{"b":"s","n":"4738","t":"A bill to implement reforms relating to foreign intelligence surveillance authorities, protections relating to warrantless queries for the communications of United States persons, and for other purposes.","i":"2026-06-10","s":9,"a":0,"r":"2026-06-10"},
+{"b":"s","n":"4739","t":"A bill to implement reforms relating to foreign intelligence surveillance authorities, to prohibit reverse targeting of United States persons and persons located in the United States, and for other purposes.","i":"2026-06-10","s":9,"a":0,"r":"2026-06-10"},
+{"b":"s","n":"4740","t":"A bill to amend the Foreign Intelligence Surveillance Act of 1978 to improve transparency, and for other purposes.","i":"2026-06-10","s":9,"a":0,"r":"2026-06-10"},
+{"b":"s","n":"4712","t":"Intelligence Community Inspector General Parity Act of 2026","i":"2026-06-09","s":8,"a":0,"r":"2026-06-09"},
+{"b":"s","n":"4586","t":"Blocking CCP Spy Tech Act of 2026","i":"2026-05-20","s":1,"c":[0,4,0],"a":0,"r":"2026-05-20"},
+{"b":"s","n":"4615","t":"Intelligence Authorization Act for Fiscal Year 2027","i":"2026-05-20","s":3,"a":0,"r":"2026-05-20","p":"2026-05-20","k":"2026-05-20","e":["S. Rept. 119-133"],"z":["2026-07-16","Read twice and referred to the Committee on the Judiciary."]},
+{"b":"s","n":"4444","t":"A bill to amend the FISA Amendments Act of 2008 to extend the authorities of title VII of the Foreign Intelligence Surveillance Act of 1978 through May 21, 2026, and for other purposes.","i":"2026-04-30","s":9,"a":0,"r":"2026-04-30"},
+{"b":"s","n":"4342","t":"A bill to extend section 702 of the Foreign Intelligence Surveillance Act of 1978 for 18 months.","i":"2026-04-16","s":8,"c":[0,1,0],"a":0,"r":"2026-04-16"},
+{"b":"s","n":"4230","t":"Protecting Stolen Encrypted Data Act of 2026","i":"2026-03-26","s":7,"c":[0,1,0],"a":0,"r":"2026-03-26"},
+{"b":"s","n":"3390","t":"Tracking and Restricting Adversarial Circumvention of Embargoes Act of 2025","i":"2025-12-09","s":6,"c":[0,1,0],"a":1,"r":"2025-12-09"},
+{"b":"s","n":"3288","t":"A bill to require the Director of National Intelligence to develop a strategy on intelligence coordination and sharing relating to critical and emerging technologies.","i":"2025-12-01","s":5,"a":0,"r":"2025-12-01"},
+{"b":"s","n":"3291","t":"Enhanced COVID-19 Transparency Act of 2025","i":"2025-12-01","s":5,"a":0,"r":"2025-12-01"},
+{"b":"s","n":"3202","t":"Advanced Artificial Intelligence Security Readiness Act of 2025","i":"2025-11-19","s":5,"c":[1,0,0],"a":0,"r":"2025-11-19"},
+{"b":"s","n":"2425","t":"Intelligence Community Property Security Act of 2025","i":"2025-07-24","s":4,"c":[0,3,1],"a":0,"r":"2025-07-24"},
+{"b":"s","n":"2342","t":"Intelligence Authorization Act for Fiscal Year 2026","i":"2025-07-17","s":3,"a":0,"r":"2025-07-17","p":"2025-07-17","k":"2025-07-17","e":["S. Rept. 119-51"],"z":["2025-06-26","Read twice and referred to the Select Committee on Intelligence."]},
+{"b":"s","n":"2242","t":"Counternarcotics Enhancement Act","i":"2025-07-10","s":2,"c":[1,0,0],"a":0,"r":"2025-07-10"},
+{"b":"s","n":"2202","t":"Intelligence Community Efficiency and Effectiveness Act of 2025","i":"2025-06-27","s":3,"c":[0,4,0],"a":0,"r":"2025-06-27"},
+{"b":"s","n":"2194","t":"Intelligence Community Technology Bridge Act of 2025","i":"2025-06-26","s":2,"c":[2,1,0],"a":0,"r":"2025-06-26"},
+{"b":"s","n":"2125","t":"PICTURES Act","i":"2025-06-18","s":1,"c":[0,3,0],"a":0,"r":"2025-06-18"},
+{"b":"s","n":"1959","t":"A bill to protect integrity, fairness, and objectivity in decisions regarding access to classified information, and for other purposes.","i":"2025-06-05","s":0,"c":[0,1,0],"a":0,"r":"2025-06-05"}
+]
+}

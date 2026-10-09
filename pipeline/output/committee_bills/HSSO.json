@@ -1,0 +1,25 @@
+{
+"committee_id": "HSSO",
+"congress": 119,
+"chamber": "house",
+"areas": ["Congress","Government Operations and Politics","Taxation"],
+"subs": [],
+"sponsors": [["M000312","McGovern, James P.","D","MA-2"],["C001119","Craig, Angie","D","MN-2"],["F000466","Fitzpatrick, Brian K.","R","PA-1"],["S001201","Suozzi, Thomas R.","D","NY-3"],["M001223","Magaziner, Seth","D","RI-2"],["U000040","Underwood, Lauren","D","IL-14"]],
+"rows": [
+{"b":"hr","n":"9821","t":"Shared Values Act","i":"2026-07-21","s":5,"a":1,"r":"2026-07-21","x":20},
+{"b":"hr","n":"9586","t":"Delivering Priority Legislation Act","i":"2026-07-02","s":0,"a":1,"r":"2026-07-02","x":20},
+{"b":"hr","n":"9358","t":"Improving the Lives of the American People Act","i":"2026-06-18","s":4,"a":1,"r":"2026-06-18","x":20},
+{"b":"hr","n":"7314","t":"Advancing Commonsense Policies Act","i":"2026-02-02","s":4,"a":1,"r":"2026-02-02","x":20},
+{"b":"hr","n":"7315","t":"Advancing Policy Priorities Act","i":"2026-02-02","s":4,"a":1,"r":"2026-02-02","x":20},
+{"b":"hjres","n":"143","t":"Resolution Act.","i":"2026-01-22","s":0,"a":0,"r":"2026-01-22","x":20},
+{"b":"hr","n":"7007","t":"Governing for the People Act","i":"2026-01-12","s":0,"a":1,"r":"2026-01-12","x":20},
+{"b":"hr","n":"6636","t":"To advance sensible priorities.","i":"2025-12-11","s":2,"a":2,"r":"2025-12-11","x":20},
+{"b":"hr","n":"6637","t":"To advance bipartisan priorities.","i":"2025-12-11","s":2,"a":2,"r":"2025-12-11","x":20},
+{"b":"hr","n":"6039","t":"Commonsense Legislating Act","i":"2025-11-12","s":0,"a":1,"r":"2025-11-12","x":20},
+{"b":"hr","n":"5827","t":"To advance bipartisan, common sense solutions.","i":"2025-10-24","s":3,"a":2,"r":"2025-10-24","x":20},
+{"b":"hr","n":"3001","t":"To advance commonsense priorities.","i":"2025-04-24","s":2,"a":2,"r":"2025-04-24","x":20},
+{"b":"hr","n":"2624","t":"HUMBLE Act","i":"2025-04-03","s":1,"c":[1,0,0],"a":0,"r":"2025-04-03","x":4},
+{"b":"hr","n":"1834","t":"To advance policy priorities that will break the gridlock.","i":"2025-03-04","s":0,"a":0,"r":"2025-03-04","x":20,"g":["2026-01-08",null],"o":1,"z":["2026-01-08","Motion to reconsider laid on the table Agreed to without objection."]},
+{"b":"hr","n":"185","t":"Responsible Legislating Act","i":"2025-01-03","s":0,"a":1,"r":"2025-01-03","x":20}
+]
+}
