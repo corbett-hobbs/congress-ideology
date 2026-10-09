@@ -22,8 +22,9 @@ const SORTS: { key: GroupSortKey; label: string; hint: string }[] = [
   { key: "h", label: "75\u201390%", hint: "Laws whose closest recorded vote had 75\u201390% yes; largest share first" },
   { key: "b", label: "90%+", hint: "Laws whose closest recorded vote had 90% or more yes; largest share first" },
 ];
-/** The three keys that are always in the toggle; the middle bands' keys join it only while the page's vote filter has picked one. */
-const BASE_KEYS: readonly GroupSortKey[] = ["n", "f", "u"];
+/** The toggle's three slots, Laws, the middle vote measure and Voice vote; a middle band picked in the page's vote filter takes over the middle slot from Narrow votes. */
+const middleKey = (key: GroupSortKey): GroupSortKey => (key === "m" || key === "h" || key === "b" ? key : "f");
+const slotKeys = (key: GroupSortKey): GroupSortKey[] => ["n", middleKey(key), "u"];
 const DIM_BAND = "var(--line-strong)";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -74,7 +75,7 @@ export function LawsGroupsCard() {
       action={
         <ReversibleSortToggle
           ariaLabel="Sort policy areas"
-          options={SORTS.filter((o) => BASE_KEYS.includes(o.key) || o.key === sort.key).map((o) => (locked && o.key !== sort.key ? { ...o, disabled: true, hint: "Clear the vote filter to change the measure" } : o))}
+          options={slotKeys(sort.key).map((k) => SORTS.find((o) => o.key === k)!).map((o) => (locked && o.key !== sort.key ? { ...o, disabled: true, hint: "Clear the vote filter to change the measure" } : o))}
           active={sort.key}
           reversed={sort.reversed}
           onSelect={(k) => setSort((cur) => nextGroupSort(locked ? { key: sort.key, reversed: cur.reversed } : cur, k))}
