@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { LawPolicyAreas, RawCongressFile, RawLaw } from "../../lib/laws-entities";
-import { buildCommittees, committeeIdOf, areaIdFor, areaIndex, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, isVetoOverride, splitPending, overlapDifferences, signingDate, sponsorReport } from "./laws";
+import { checkAssignments, commemorativeReport, buildCommittees, committeeIdOf, areaIdFor, areaIndex, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, isVetoOverride, splitPending, overlapDifferences, signingDate, sponsorReport } from "./laws";
 
 const law = (congress: number, number: number, over: Partial<RawLaw> = {}): RawLaw => ({
   law_id: `${congress}-pub-${number}`,
@@ -101,6 +101,55 @@ describe("policy areas", () => {
   });
   it("stops on a name it does not know", () => expect(() => areaIdFor("Pest control", idx)).toThrow("Pest control"));
   it("rejects an area in an unknown group", () => expect(() => areaIndex({ ...areas, areas: [{ id: "x", name: "X", group: "nope", status: "current" }] })).toThrow("unknown group"));
+});
+
+describe("commemorative laws", () => {
+  const idx = areaIndex(areas);
+  const extra: Parameters<typeof buildLawRow>[2] = { house: [3, null, null, null], senate: [3, null, null, null], band: 0, override_votes: null, major: null };
+  it("moves a law whose title names a building into Commemorations and keeps the CRS area", () => {
+    const row = buildLawRow(law(113, 1, { title: 'To designate the facility of the United States Postal Service located at 1 Main Street in Troy, Ohio, as the "A. B. Post Office".' }), idx, extra);
+    expect(row).toMatchObject({ area_id: "commemorations", crs_area_id: "health" });
+  });
+  it("leaves an ordinary law alone, with no crs_area_id", () => {
+    const row = buildLawRow(law(113, 1), idx, extra);
+    expect(row.area_id).toBe("health");
+    expect("crs_area_id" in row).toBe(false);
+  });
+  it("counts a law CRS itself filed under Commemorations, with no crs_area_id", () => {
+    const row = buildLawRow(law(113, 1, { title: "An act", policy_area: "Commemorations" }), idx, extra);
+    expect(row.area_id).toBe("commemorations");
+    expect("crs_area_id" in row).toBe(false);
+  });
+  it("reports the agreement with CRS and stops below the floor", () => {
+    const filed = (n: number, title: string) => law(113, n, { title, policy_area: "Commemorations" });
+    const ok = commemorativeReport([filed(1, "A joint resolution designating the week of May 1 as \"National Test Week\"."), filed(2, "An act")].slice(0, 1), idx);
+    expect(ok.crs_labeled).toMatchObject({ laws: 1, also_caught_by_title_rules: 1, agreement: 1 });
+    expect(() => commemorativeReport([filed(1, "An act"), filed(2, "An act")], idx)).toThrow("below the 90% floor");
+  });
+});
+
+describe("assigned areas", () => {
+  const unclassified = (n: number, over: Partial<RawLaw> = {}) => law(93, n, { policy_area: "Noise", ...over });
+  const extra: Parameters<typeof buildLawRow>[2] = { house: [3, null, null, null], senate: [3, null, null, null], band: 0, override_votes: null, major: null };
+  it("counts a law CRS gave no area in the assigned area and keeps not-classified as crs_area_id", () => {
+    const idx = areaIndex(areas, { "93-pub-1": "health" });
+    expect(buildLawRow(unclassified(1), idx, extra)).toMatchObject({ area_id: "health", crs_area_id: "not-classified" });
+    expect(buildLawRow(unclassified(2), idx, extra)).toMatchObject({ area_id: "not-classified" });
+  });
+  it("never lets an assignment override an area CRS gave", () => {
+    const idx = areaIndex(areas, { "93-pub-1": "commemorations" });
+    expect("crs_area_id" in buildLawRow(law(93, 1), idx, extra)).toBe(false);
+  });
+  it("stops on a law with no area and no entry, an entry no law needs, or an unknown area", () => {
+    expect(() => checkAssignments([unclassified(1)], areaIndex(areas), new Set())).toThrow("no entry");
+    expect(() => checkAssignments([law(93, 1)], areaIndex(areas, { "93-pub-1": "health" }), new Set())).toThrow("do not need");
+    expect(() => checkAssignments([law(93, 1)], areaIndex(areas, { "93-pub-9": "health" }), new Set())).toThrow("do not need");
+    expect(() => areaIndex(areas, { "93-pub-1": "nope" })).toThrow("not a catalog area");
+  });
+  it("lets a Congress still in progress hold laws CRS has not classified yet, and lists them", () => {
+    const r = checkAssignments([unclassified(1), unclassified(2)], areaIndex(areas, { "93-pub-1": "health" }), new Set([93]));
+    expect(r).toMatchObject({ assigned: 1, by_area: { health: 1 }, still_unassigned: ["93-pub-2"] });
+  });
 });
 
 describe("counts and meta", () => {

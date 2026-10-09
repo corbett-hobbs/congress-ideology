@@ -28,19 +28,19 @@
     {
       "id": "government-operations-and-politics",
       "name": "Government Operations and Politics",
-      "group": "government-congress",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
       "id": "congress",
       "name": "Congress",
-      "group": "government-congress",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
       "id": "law",
       "name": "Law",
-      "group": "government-congress",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
@@ -118,19 +118,19 @@
     {
       "id": "health",
       "name": "Health",
-      "group": "health-social-welfare",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "social-welfare",
       "name": "Social Welfare",
-      "group": "health-social-welfare",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "families",
       "name": "Families",
-      "group": "health-social-welfare",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
@@ -154,49 +154,49 @@
     {
       "id": "education",
       "name": "Education",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "science-technology-communications",
       "name": "Science, Technology, Communications",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "arts-culture-religion",
       "name": "Arts, Culture, Religion",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "social-sciences-and-history",
       "name": "Social Sciences and History",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "sports-and-recreation",
       "name": "Sports and Recreation",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "crime-and-law-enforcement",
       "name": "Crime and Law Enforcement",
-      "group": "crime-rights-immigration",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
       "id": "civil-rights-and-liberties-minority-issues",
       "name": "Civil Rights and Liberties, Minority Issues",
-      "group": "crime-rights-immigration",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
       "id": "immigration",
       "name": "Immigration",
-      "group": "crime-rights-immigration",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
@@ -232,8 +232,8 @@
   ],
   "groups": [
     {
-      "id": "government-congress",
-      "label": "Government & Congress"
+      "id": "government-justice-rights",
+      "label": "Government, justice & rights"
     },
     {
       "id": "land-water-farming",
@@ -252,20 +252,12 @@
       "label": "Commemorations"
     },
     {
-      "id": "health-social-welfare",
-      "label": "Health & social welfare"
+      "id": "health-education-culture",
+      "label": "Health, education & culture"
     },
     {
       "id": "transport-housing-emergencies",
       "label": "Transport, housing & emergencies"
-    },
-    {
-      "id": "education-science-culture",
-      "label": "Education, science & culture"
-    },
-    {
-      "id": "crime-rights-immigration",
-      "label": "Crime, rights & immigration"
     },
     {
       "id": "energy-environment",

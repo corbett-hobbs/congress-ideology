@@ -187,7 +187,13 @@ export const lawPolicyAreas = z.object({
 });
 export type LawPolicyAreas = z.infer<typeof lawPolicyAreas>;
 
+/** `pipeline/reference/law-areas-assigned.json`: law id -> catalog area id, for laws Congress.gov never gave a current policy area. */
+export const lawAssignedAreas = z.object({ _comment: z.string(), assignments: z.record(z.string().regex(/^\d+-pub-\d+$/), z.string()) });
+export type LawAssignedAreas = z.infer<typeof lawAssignedAreas>;
+
 export const NOT_CLASSIFIED_AREA = "not-classified";
+/** Catalog id of "Commemorations": CRS's retired label, and the bucket every law the commemorative flag catches is counted in. */
+export const COMMEMORATIONS_AREA = "commemorations";
 export const NOT_CLASSIFIED_GROUP = "not-classified";
 
 // ---- outputs ----
@@ -212,8 +218,10 @@ export const lawRow = z.object({
   bill_number: z.string(),
   origin_chamber: chamber.nullable(),
   sponsor_bioguide_id: z.string().nullable(),
-  /** Catalog id of the policy area; `not-classified` for legacy terms and laws with none. */
+  /** Catalog id of the area the page counts the law in: its CRS policy area; or `commemorations` when the law is commemorative; or, for a 1970s law CRS never gave a current area, the area InsideGov assigned (see `crs_area_id`). `not-classified` only for a law in a Congress still in progress that has no area yet. */
   area_id: z.string(),
+  /** Only where InsideGov's commemorative flag or an assigned area moved the law off the area CRS gave it: that CRS area, as filed (`not-classified` for a law CRS gave none). Absent when `area_id` is CRS's own. */
+  crs_area_id: z.string().optional(),
   /** True when Congress passed it over a presidential veto. */
   veto_override: z.boolean(),
   /** Final passage in the House and in the Senate (see `chamberVote`). */

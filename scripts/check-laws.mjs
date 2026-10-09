@@ -83,7 +83,7 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   check(segs.length >= 10 && segs.every((s) => s.a.length > 0 && (s.w < 20 || s.t.length > 0)), `${tag}: slider president labels present (${segs.length} tenures, ${segs.filter((s) => s.t).length} with text)`);
 
   // Card 2: a stacked area of five bands, a legend of five that isolates and narrows card 1
-  const legend = c2.locator("button[aria-pressed]", { hasText: /voice vote|% yes|or more yes/ });
+  const legend = c2.locator("button[aria-pressed]", { hasText: /voice vote|% yes|or more yes/i });
   check((await legend.count()) === 5, `${tag}: card 2 legend names all five bands`);
   check((await c2.locator("svg.chart-svg path[fill]").count()) === 5, `${tag}: card 2 is a stacked area of five bands`);
   if (w >= 520) {
@@ -155,7 +155,7 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
   if (w >= 1024) check(dims.sh <= dims.ch + 1 && dims.oy === "visible", `${tag}: card 3 shows every row, no scrollbar (${dims.sh} vs ${dims.ch}, overflow ${dims.oy})`);
   else check(dims.oy === "auto" && dims.ch <= 28 * 16 + 2, `${tag}: card 3 rows sit in a capped scroll box (${dims.sh} in ${dims.ch}, overflow ${dims.oy})`);
   const nRows = await box.locator("li").count();
-  check(nRows === 12, `${tag}: All + 11 topic groups in the rows (${nRows})`);
+  check(nRows === 9, `${tag}: All + 8 topic groups in the rows (${nRows})`);
   const heat = c3.locator("[role=grid]");
   check((await heat.locator("[role=gridcell]").count()) === nRows * 6, `${tag}: heatmap has ${nRows} rows x 6 decades`);
   const sideBySide = await heat.evaluate((el, sel) => el.getBoundingClientRect().right <= document.querySelector(sel).getBoundingClientRect().left + 1, "[aria-label='Policy areas, one row each']");
@@ -170,7 +170,7 @@ for (const [w, h] of [[1280, 900], [1024, 800], [768, 900], [390, 844]]) {
     check(tops.cells.length === tops.bars.length && Math.max(...diffs) < 1, `${tag}: heatmap and bar rows have equal height (max offset ${Math.max(...diffs).toFixed(2)}px)`);
   }
   const toggle = c3.locator("[aria-label='Sort policy areas']");
-  check((await toggle.locator("button").allInnerTexts()).map((t) => t.replace(/[^A-Za-z ]/g, "").trim()).join(",") === "Laws,Voice vote,Narrow votes", `${tag}: one toggle, in the order Laws, Voice vote, Narrow votes`);
+  check((await toggle.locator("button").allInnerTexts()).map((t) => t.replace(/[^A-Za-z ]/g, "").trim()).join(",") === "Laws,Narrow votes,Voice vote", `${tag}: one toggle, in the order Laws, Narrow votes, Voice vote`);
   const labelsOf = () => heat.locator("[role=row] > button[title]:not([role=gridcell])").allInnerTexts();
   const rowOrder = () => box.locator("li button span[title]").allInnerTexts();
   check(JSON.stringify(await labelsOf()) === JSON.stringify(await rowOrder()), `${tag}: heatmap and rows share one order`);

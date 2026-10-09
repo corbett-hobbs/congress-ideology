@@ -10,7 +10,7 @@ import { Swatch, TableView, TooltipCard } from "@/components/decisions/shared";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { ordinal } from "@/lib/demographics-chart";
 import { fmtInt } from "@/lib/decisions-derive";
-import { ALL_GROUPS, OTHER_GROUPS, SUPPORT_LABELS, cellFor, filterLabel, openYear, seriesOf, signedMostSegments } from "@/lib/laws-derive";
+import { ALL_GROUPS, SUPPORT_LABELS, cellFor, filterLabel, openYear, seriesOf, signedMostSegments } from "@/lib/laws-derive";
 import { EmptyWindow, congressSub, congressTitle, congressYears, controlRowsFor } from "./shared";
 import { useLawsActions, useLawsValues } from "./LawsState";
 
@@ -20,8 +20,9 @@ interface Col extends StackColumn {
   all: number;
 }
 
-/** Seven validated, pairwise-separable colours (the electricity fuels'): five topic groups, Other topics, Not classified. */
-const FILLS = ["var(--fuel-coal)", "var(--fuel-gas)", "var(--fuel-nuclear)", "var(--fuel-hydro)", "var(--fuel-wind)", "var(--fuel-other)", "var(--fuel-solar)"];
+/** Eight validated categorical slots (globals.css `--laws-1..8`), one per topic group in stack order; "Not classified", when it shows, is neutral grey. */
+const FILLS = [1, 2, 3, 4, 5, 6, 7, 8].map((i) => `var(--laws-${i})`);
+const NOT_CLASSIFIED_FILL = "var(--ink-faint)";
 type Mode = "count" | "share";
 
 /**
@@ -35,14 +36,14 @@ export function LawsCountCard() {
   const { moveHover, leaveHover, togglePin, clearPin, setGroup } = useLawsActions();
   const [mode, setMode] = useState<Mode>("count");
   const every = useMemo(() => seriesOf(data), [data]);
-  const fillOf = useMemo(() => new Map(every.map((s, i) => [s.id, FILLS[i]!])), [every]);
+  const fillOf = useMemo(() => new Map(every.map((s, i) => [s.id, s.id === "not-classified" ? NOT_CLASSIFIED_FILL : FILLS[i]!])), [every]);
 
-  // Seven series, or just the picked one (a group inside "Other topics" wears Other's colour).
+  // One series per topic group, or just the picked one.
   const series = useMemo<(StackSeries & { groups: string[] })[]>(() => {
     if (group === ALL_GROUPS) return every.map((s) => ({ id: s.id, label: s.label, fill: fillOf.get(s.id)!, groups: s.groups }));
     const hit = every.find((s) => s.id === group);
     if (hit) return [{ id: hit.id, label: hit.label, fill: fillOf.get(hit.id)!, groups: hit.groups }];
-    return [{ id: group, label: filterLabel(data, group), fill: fillOf.get(OTHER_GROUPS)!, groups: [group] }];
+    return [{ id: group, label: filterLabel(data, group), fill: NOT_CLASSIFIED_FILL, groups: [group] }];
   }, [group, every, fillOf, data]);
 
   const cols = useMemo<Col[]>(() => {
@@ -88,7 +89,6 @@ export function LawsCountCard() {
   const filtered = group !== ALL_GROUPS || band !== null || major;
   const ncByCongress = data.counts.map((row) => row.reduce((t, n, ai) => t + (data.areas[ai]!.group === "not-classified" ? n : 0), 0));
   const notClassified = ncByCongress.reduce((a, b) => a + b, 0);
-  const ncCongresses = data.congresses.filter((_, i) => ncByCongress[i]! > 0);
   const lastCongress = data.congresses[data.congresses.length - 1]!;
 
   return (
@@ -161,7 +161,7 @@ export function LawsCountCard() {
       </div>
       <MethodologyNote>
         <p>
-          Counts public laws by the Congress that enacted them, from the 93rd (1973) on; private laws and bills that never became law are left out. A law&rsquo;s policy area is the one Congress.gov assigns its bill (one per bill), so a law that touches several topics is counted once. The page groups Congress.gov&rsquo;s areas into {data.groups.length - 1} topic groups; the five largest get a colour and the rest are &ldquo;Other topics&rdquo;, which the dropdown splits. {fmtInt(notClassified)} laws from the {ordinal(ncCongresses[0]!)} to {ordinal(ncCongresses[ncCongresses.length - 1]!)} Congresses carry no current Congress.gov area, only an older subject term or none, and are shown as &ldquo;Not classified&rdquo; rather than guessed. The {ordinal(lastCongress)} Congress is still in session, so its bar is partial (hatched) and left out of the peak and low labels. The president shown signed most of that Congress&rsquo;s laws; the tooltip lists any split. Major laws are David Mayhew&rsquo;s lists of important enactments, which run through the {ordinal(data.majorThrough)} Congress. Source: Congress.gov, Library of Congress; data through {data.dataThrough}.
+          Counts public laws by the Congress that enacted them, from the 93rd (1973) on; private laws and bills that never became law are left out. A law&rsquo;s policy area is the one Congress.gov assigns its bill (one per bill), so a law that touches several topics is counted once. The one exception is &ldquo;Commemorations&rdquo;, which is our own grouping, not Congress.gov&rsquo;s: it used that label in only 1985&ndash;88 and 1997&ndash;2008, so the same kind of law sat under other areas in other years. Here a law counts as a commemoration when Congress.gov filed it there or its title designates a day, week or year, names a building, post office or landmark, awards a medal or coin, or approves a memorial, with the same rule for every year. The page groups Congress.gov&rsquo;s areas into {every.filter((s) => s.id !== "not-classified").length} topic groups, one colour each. Laws from the 93rd to 95th Congresses that Congress.gov never gave a current area (none, or only an older subject term) were placed by InsideGov from their titles, so each has a topic{notClassified > 0 ? `; ${fmtInt(notClassified)} recent laws Congress.gov has not classified yet show as “Not classified”` : ""}. The {ordinal(lastCongress)} Congress is still in session, so its bar is partial (hatched) and left out of the peak and low labels. The president shown signed most of that Congress&rsquo;s laws; the tooltip lists any split. Major laws are David Mayhew&rsquo;s lists of important enactments, which run through the {ordinal(data.majorThrough)} Congress. Source: Congress.gov, Library of Congress; data through {data.dataThrough}.
         </p>
       </MethodologyNote>
       <TableView

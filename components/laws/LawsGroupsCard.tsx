@@ -16,8 +16,8 @@ import { useLawsActions, useLawsValues } from "./LawsState";
 
 const SORTS: { key: GroupSortKey; label: string; hint: string }[] = [
   { key: "n", label: "Laws", hint: "Law counts in the heatmap; most laws first" },
-  { key: "u", label: "Voice vote", hint: "Laws passed by voice vote or consent in both chambers, in the heatmap; largest share first" },
   { key: "f", label: "Narrow votes", hint: "Laws whose closest recorded vote had under 60% yes, in the heatmap; largest share first" },
+  { key: "u", label: "Voice vote", hint: "Laws passed by voice vote or consent in both chambers, in the heatmap; largest share first" },
 ];
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -61,7 +61,7 @@ export function LawsGroupsCard() {
     <ChartCard
       tight
       title="Which kinds of laws pass, and how?"
-      lede="Left: how many laws, how many were passed by voice vote or consent or on a narrow vote, in each decade, by policy area. Right: how broadly each area's laws were supported, over the years shown. The toggle picks the measure for the heatmap and orders both; click it again to reverse. Click a policy area in either to filter the charts and the list."
+      lede="Left: how many laws, how many passed on a narrow vote or by voice vote or consent, in each decade, by policy area. Right: how broadly each area's laws were supported, over the years shown. The toggle picks the measure for the heatmap and orders both; click it again to reverse. Click a policy area in either to filter the charts and the list."
       action={<ReversibleSortToggle ariaLabel="Sort policy areas" options={SORTS} active={sort.key} reversed={sort.reversed} onSelect={(k) => setSort((cur) => nextGroupSort(cur, k))} />}
     >
       {empty ? (
@@ -88,7 +88,7 @@ export function LawsGroupsCard() {
       )}
       <MethodologyNote>
         <p>
-          Policy areas are Congress.gov&rsquo;s own, grouped into {data.groups.length - 1} topic groups plus &ldquo;Not classified&rdquo; (the 1970s laws it never gave a current area, shown rather than guessed); small groups swing by several points on a few laws. A bar is the closest recorded final-passage vote of each law in the years shown, so a law is only as broadly supported as its narrowest vote; across them all, {pct(noRecorded)} were passed by voice vote or consent in both chambers (unanimous consent, or, in the 1970s, no method stated). The heatmap counts laws (all, those under 60% yes, or those passed by voice vote or consent, as the toggle says) on one scale, except &ldquo;All policy areas&rdquo;, which has its own; the {data.partial[data.partial.length - 1] ? `last decade is partial (the ${ordinal(data.congresses[data.congresses.length - 1]!)} Congress is in session)` : "decades follow the Congresses that opened in them"}.{major ? ` Major laws are assessed through the ${ordinal(data.majorThrough)} Congress.` : ""}
+          Policy areas are Congress.gov&rsquo;s own, grouped into {data.groups.filter((g) => g.id !== "not-classified").length} topic groups, plus any laws Congress.gov has not classified yet; small groups swing by several points on a few laws. A bar is the closest recorded final-passage vote of each law in the years shown, so a law is only as broadly supported as its narrowest vote; across them all, {pct(noRecorded)} were passed by voice vote or consent in both chambers (unanimous consent, or, in the 1970s, no method stated). The heatmap counts laws (all, those under 60% yes, or those passed by voice vote or consent, as the toggle says) on one scale, except &ldquo;All policy areas&rdquo;, which has its own; the {data.partial[data.partial.length - 1] ? `last decade is partial (the ${ordinal(data.congresses[data.congresses.length - 1]!)} Congress is in session)` : "decades follow the Congresses that opened in them"}.{major ? ` Major laws are assessed through the ${ordinal(data.majorThrough)} Congress.` : ""}
         </p>
       </MethodologyNote>
       <TableView

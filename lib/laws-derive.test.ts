@@ -5,7 +5,6 @@ import { administration } from "./executive-orders-entities";
 import { congressControlFile } from "./congress-control";
 import {
   ALL_GROUPS,
-  OTHER_GROUPS,
   ALL_ROW,
   administrationOn,
   buildLawsList,
@@ -62,16 +61,24 @@ describe("the committed Laws files", () => {
     expect(meta.areas.filter((a) => a.status === "retired").map((a) => a.name)).toEqual(["Commemorations"]);
     expect(meta.areas.at(-1)).toMatchObject({ id: "not-classified", status: "none" });
   });
-  it("give every area a topic group, and about ten groups plus Not classified", () => {
+  it("give every area a topic group: eight groups plus Not classified", () => {
     const groups = new Set(meta.groups.map((g) => g.id));
     for (const a of meta.areas) expect(groups.has(a.group), a.id).toBe(true);
-    expect(meta.groups.length).toBeGreaterThanOrEqual(10);
-    expect(meta.groups.length).toBeLessThanOrEqual(12);
+    expect(meta.groups).toHaveLength(9);
   });
-  it("keep Commemorations out of the 2010s", () => {
-    const comm = counts.filter((c) => c.area_id === "commemorations");
-    expect(comm.length).toBeGreaterThan(0);
-    expect(Math.max(...comm.map((c) => c.congress))).toBeLessThanOrEqual(112);
+  it("count Commemorations in every Congress, not only the years CRS used its own label", () => {
+    const comm = new Map(counts.filter((c) => c.area_id === "commemorations").map((c) => [c.congress, c.n]));
+    for (let c = 93; c <= meta.last_congress; c++) expect(comm.get(c), `Congress ${c}`).toBeGreaterThan(0);
+  });
+  it("keep the CRS area of every law the commemorative flag or an assigned area moved", () => {
+    const moved = laws.filter((l) => l.crs_area_id !== undefined);
+    expect(moved.length).toBeGreaterThan(2000);
+    for (const l of moved) {
+      expect(l.area_id).not.toBe(l.crs_area_id);
+      expect(l.crs_area_id).not.toBe("commemorations");
+      if (l.area_id !== "commemorations") expect(l.crs_area_id, l.law_id).toBe("not-classified");
+      expect(meta.areas.some((a) => a.id === l.crs_area_id), l.law_id).toBe(true);
+    }
   });
   it("date every law inside its Congress or by 20 January after it", () => {
     for (const l of laws) {
@@ -172,10 +179,13 @@ describe("major laws and summaries", () => {
 });
 
 describe("Not classified and committees", () => {
-  it("leaves laws without a CRS area only in the 93rd-95th Congresses", () => {
-    const nc = counts.filter((c) => c.area_id === "not-classified");
-    expect(nc.length).toBeGreaterThan(0);
-    expect(Math.max(...nc.map((c) => c.congress))).toBeLessThanOrEqual(95);
+  it("leaves no law without an area except in a Congress still in progress", () => {
+    for (const c of counts.filter((c) => c.area_id === "not-classified")) expect(meta.partial_congresses, `Congress ${c.congress}`).toContain(c.congress);
+  });
+  it("assigns every 1970s law CRS gave no current area, keeping what CRS filed", () => {
+    const assigned = laws.filter((l) => l.crs_area_id === "not-classified" && l.area_id !== "commemorations");
+    expect(assigned.length).toBeGreaterThan(300);
+    for (const l of assigned) expect(l.congress, l.law_id).toBeLessThanOrEqual(95);
   });
   const committees = lawCommitteesFile.parse(read("laws_committees.json"));
   it("links a law to its committees and subcommittees", () => {
@@ -282,13 +292,14 @@ describe("the Laws page derivations (over the committed files)", () => {
     expect(after.every((n) => n === 0)).toBe(true);
     expect(cellFor(p, 0, all, true).n).toBeGreaterThan(0);
   });
-  it("draws seven series: five coloured groups, Other topics and Not classified, covering every group once", () => {
+  it("draws one series per topic group, eight at most, with no Other topics", () => {
     const s = seriesOf(p);
-    expect(s).toHaveLength(7);
-    expect(s.at(-1)!.id).toBe("not-classified");
-    expect(s.flatMap((x) => x.groups).sort()).toEqual(p.groups.map((g) => g.id).sort());
-    const other = filterGroups(p, OTHER_GROUPS)!;
-    expect([...other].sort()).toEqual([...s.find((x) => x.id === OTHER_GROUPS)!.groups].sort());
+    expect(s).toHaveLength(8);
+    expect(s.map((x) => x.id)).not.toContain("other");
+    expect(s.every((x) => x.groups.length === 1 && x.groups[0] === x.id)).toBe(true);
+    expect(s.flatMap((x) => x.groups).sort()).toEqual(p.groups.filter((g) => g.id !== "not-classified").map((g) => g.id).sort());
+    const totals = s.map((x) => p.congresses.reduce((t, _, ci) => t + cellFor(p, ci, new Set(x.groups), false).n, 0));
+    expect([...totals].sort((a, b) => b - a)).toEqual(totals);
   });
   it("sums the series back to each Congress's total", () => {
     const s = seriesOf(p);
@@ -375,7 +386,7 @@ describe("the list of every law and card 3", () => {
       }
       return n;
     };
-    for (const [group, major, band] of [["", true, null], ["", false, 1], [seriesOf(p)[0]!.groups[0]!, false, null], ["other", true, 0]] as const) {
+    for (const [group, major, band] of [["", true, null], ["", false, 1], [seriesOf(p)[0]!.groups[0]!, false, null], [seriesOf(p)[3]!.groups[0]!, true, 0]] as const) {
       const w = windowIndexes(p, [1990, 2010], major);
       expect(filterLaws(p, list.rows, { window: w, congress: null, group, major, band }), `${group}/${major}/${band}`).toHaveLength(fromCharts(group, major, band, w[0], w[1]));
     }
@@ -404,7 +415,7 @@ describe("the list of every law and card 3", () => {
     expect([...sizes].sort((a, b) => b - a)).toEqual(sizes);
     const rev = groupRows(p, all(), false, { key: "n", reversed: true });
     expect(rev.slice(1).map((r) => r.id)).toEqual(rows.slice(1).map((r) => r.id).reverse());
-    expect(rows.some((r) => r.id === "not-classified")).toBe(true);
+    expect(rows.some((r) => r.id === "not-classified")).toBe(false);
   });
   it("orders card 3 by the share on a narrow vote or by voice vote or consent", () => {
     for (const [key, band] of [["f", 1], ["u", 0]] as const) {

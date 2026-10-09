@@ -175,16 +175,14 @@ export const yearSpan = (p: LawsPayload): YearRange => [openYear(p.congresses[0]
 
 /** Value of the topic filter that means "every group". */
 export const ALL_GROUPS = "";
-/** Value of the topic filter that means the groups without a colour of their own, together. */
-export const OTHER_GROUPS = "other";
-/** Groups that keep a colour of their own (the validated palette has seven: these, Other topics and Not classified). */
-export const COLOURED_GROUPS = 5;
+/** Topic groups the page can draw: one colour each, eight being the most a categorical palette keeps distinguishable (no "Other topics"). */
+export const MAX_GROUPS = 8;
 const NOT_CLASSIFIED = "not-classified";
 
 export interface LawsSeries {
   id: string;
   label: string;
-  /** Topic groups this series sums. */
+  /** Topic groups this series sums (always one). */
   groups: string[];
 }
 
@@ -197,29 +195,25 @@ function groupTotals(p: LawsPayload): { id: string; n: number }[] {
 }
 
 /**
- * The series card 1 stacks, bottom to top: the five biggest topic groups, "Other topics" (the rest together), then Not classified
- * (the 1973-78 laws CRS never gave a current area; shown, never mapped). Seven colours is what the validated palette holds.
+ * The series card 1 stacks, bottom to top: every topic group that has laws, largest first. "Not classified" comes last and only
+ * while some law (in a Congress still in progress) has no area yet. More than `MAX_GROUPS` groups with laws throws: merge groups in
+ * `law-policy-areas.json` rather than add a colour.
  */
 export function seriesOf(p: LawsPayload): LawsSeries[] {
   const label = new Map(p.groups.map((g) => [g.id, g.label]));
-  const ranked = groupTotals(p).filter((g) => g.id !== NOT_CLASSIFIED);
-  const top = ranked.slice(0, COLOURED_GROUPS).map((g) => ({ id: g.id, label: label.get(g.id)!, groups: [g.id] }));
-  const rest = ranked.slice(COLOURED_GROUPS).map((g) => g.id);
-  return [...top, { id: OTHER_GROUPS, label: otherLabel(rest.length), groups: rest }, { id: NOT_CLASSIFIED, label: label.get(NOT_CLASSIFIED)!, groups: [NOT_CLASSIFIED] }];
+  const ranked = groupTotals(p).filter((g) => g.n > 0);
+  const topics = ranked.filter((g) => g.id !== NOT_CLASSIFIED);
+  if (topics.length > MAX_GROUPS) throw new Error(`laws: ${topics.length} topic groups have laws; the page draws at most ${MAX_GROUPS}`);
+  return ranked.map((g) => ({ id: g.id, label: label.get(g.id)!, groups: [g.id] }));
 }
 
-export const otherLabel = (n: number): string => `Other topics (${n})`;
-
 /** The groups a filter value selects; null = all. */
-export function filterGroups(p: LawsPayload, filter: string): ReadonlySet<string> | null {
-  if (filter === ALL_GROUPS) return null;
-  if (filter === OTHER_GROUPS) return new Set(seriesOf(p).find((s) => s.id === OTHER_GROUPS)!.groups);
-  return new Set([filter]);
+export function filterGroups(_p: LawsPayload, filter: string): ReadonlySet<string> | null {
+  return filter === ALL_GROUPS ? null : new Set([filter]);
 }
 
 export function filterLabel(p: LawsPayload, filter: string): string {
   if (filter === ALL_GROUPS) return "All policy areas";
-  if (filter === OTHER_GROUPS) return seriesOf(p).find((s) => s.id === OTHER_GROUPS)!.label;
   return p.groups.find((g) => g.id === filter)?.label ?? filter;
 }
 
@@ -260,8 +254,8 @@ export const SUPPORT_LABELS = ["Voice vote or consent", "Under 60% yes", "60\u20
 export const SUPPORT_SHORT = ["Voice vote", "Under 60%", "60\u201375%", "75\u201390%", "90%+"] as const;
 /** The split palette, one slot per band in data order (the darkest is the voice-vote band; the cool end is broad support). */
 export const SUPPORT_COLORS = ["var(--split-0)", "var(--split-4)", "var(--split-3)", "var(--split-2)", "var(--split-1)"] as const;
-/** Display order of the bands, bottom to top in the stack and left to right in bars, legends and tables: voice vote first, then 90%+ down to under 60%, so the two broad-agreement bands sit together. Data order stays 0..4. */
-export const SUPPORT_ORDER = [0, 4, 3, 2, 1] as const;
+/** Display order of the bands, bottom to top in the stack and left to right in bars, legends and tables: under 60% up to 90%+, then voice vote last, so the two broad-agreement bands sit together and the narrow-vote band leads. Data order stays 0..4. */
+export const SUPPORT_ORDER = [1, 2, 3, 4, 0] as const;
 
 /** Below this many laws a Congress (median over the window), shares swing on a handful of laws. */
 export const SMALL_LAWS_MEDIAN = 15;

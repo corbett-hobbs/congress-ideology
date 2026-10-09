@@ -1,9 +1,9 @@
 {
-  "_comment": "CRS policy areas as Congress.gov prints them, their catalog ids and the topic group each belongs to. The page shows groups (about ten, to match the rest of InsideGov); the area stays on each law. Regroup by editing `group` here and re-running `pnpm transform`; nothing is re-fetched. 'Commemorations' is a CRS label used for laws up to about 2009 and is kept as its own group so the drop after 2009 stays visible. `legacy_terms` are subject terms older laws carry in the policy-area field; they count as 'Not classified' and are never mapped to an area by us. A name in neither list stops the transform. The legacy terms were listed from the raw files of the 93rd-107th Congresses (160 terms on 391 laws, all in the 93rd-95th); a term not listed stops the build.",
+  "_comment": "CRS policy areas as Congress.gov prints them, their catalog ids and the topic group each belongs to. The page shows eight groups (one colour each: eight is the most a categorical palette keeps distinguishable, so there is no 'Other topics'); the area stays on each law. Regroup by editing `group` here and re-running `pnpm transform`; nothing is re-fetched. 'Commemorations' is a CRS label applied only in 1985-88 and 1997-2008; it is its own group, and the transform also counts there any law whose title matches the rules in transform/laws-commemorative.ts (the CRS area stays on the law as crs_area_id). `legacy_terms` are subject terms older laws carry in the policy-area field; they count as 'Not classified' and are never mapped to an area by us. A name in neither list stops the transform. The legacy terms were listed from the raw files of the 93rd-107th Congresses (160 terms on 391 laws, all in the 93rd-95th); a term not listed stops the build.",
   "groups": [
     {
-      "id": "government-congress",
-      "label": "Government & Congress"
+      "id": "government-justice-rights",
+      "label": "Government, justice & rights"
     },
     {
       "id": "land-water-farming",
@@ -22,20 +22,12 @@
       "label": "Commemorations"
     },
     {
-      "id": "health-social-welfare",
-      "label": "Health & social welfare"
+      "id": "health-education-culture",
+      "label": "Health, education & culture"
     },
     {
       "id": "transport-housing-emergencies",
       "label": "Transport, housing & emergencies"
-    },
-    {
-      "id": "education-science-culture",
-      "label": "Education, science & culture"
-    },
-    {
-      "id": "crime-rights-immigration",
-      "label": "Crime, rights & immigration"
     },
     {
       "id": "energy-environment",
@@ -46,19 +38,19 @@
     {
       "id": "government-operations-and-politics",
       "name": "Government Operations and Politics",
-      "group": "government-congress",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
       "id": "congress",
       "name": "Congress",
-      "group": "government-congress",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
       "id": "law",
       "name": "Law",
-      "group": "government-congress",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
@@ -136,19 +128,19 @@
     {
       "id": "health",
       "name": "Health",
-      "group": "health-social-welfare",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "social-welfare",
       "name": "Social Welfare",
-      "group": "health-social-welfare",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "families",
       "name": "Families",
-      "group": "health-social-welfare",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
@@ -172,49 +164,49 @@
     {
       "id": "education",
       "name": "Education",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "science-technology-communications",
       "name": "Science, Technology, Communications",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "arts-culture-religion",
       "name": "Arts, Culture, Religion",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "social-sciences-and-history",
       "name": "Social Sciences and History",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "sports-and-recreation",
       "name": "Sports and Recreation",
-      "group": "education-science-culture",
+      "group": "health-education-culture",
       "status": "current"
     },
     {
       "id": "crime-and-law-enforcement",
       "name": "Crime and Law Enforcement",
-      "group": "crime-rights-immigration",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
       "id": "civil-rights-and-liberties-minority-issues",
       "name": "Civil Rights and Liberties, Minority Issues",
-      "group": "crime-rights-immigration",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
       "id": "immigration",
       "name": "Immigration",
-      "group": "crime-rights-immigration",
+      "group": "government-justice-rights",
       "status": "current"
     },
     {
