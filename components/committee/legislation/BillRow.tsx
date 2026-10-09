@@ -63,6 +63,7 @@ export function BillRow({ b, payload, open, onToggle }: { b: PreparedBill; paylo
   const sponsor: BillSponsorCell | undefined = r.s === undefined ? undefined : payload.sponsors[r.s];
   const panel = `bill-${r.b}${r.n}`;
   const bypass = b.stage === 5 && !r.p && !r.d;
+  const hasBadges = !!(r.l || r.y || r.v === 1 || (r.d && !r.p) || bypass || (r.x ?? 0) > 0);
   const badges = (
     <>
       {r.l && (
@@ -96,7 +97,7 @@ export function BillRow({ b, payload, open, onToggle }: { b: PreparedBill; paylo
         <span className="block min-w-0 break-words leading-[1.3]">
           <span className="mr-1.5 whitespace-nowrap font-mono text-[0.72rem] text-ink-muted">{billLabel(r)}</span>
           <span className="text-ink">{r.t}</span>
-          <span className="ml-1.5 inline-flex flex-wrap gap-1 align-baseline">{badges}</span>
+          {hasBadges && <span className="ml-1.5 inline-flex flex-wrap gap-1 align-baseline">{badges}</span>}
         </span>
         <span className="mt-1 block text-[0.76rem] leading-[1.3] text-ink-muted lg:mt-0">
           {sponsor ? (
