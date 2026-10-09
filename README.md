@@ -10,7 +10,7 @@ The original page, and still the centrepiece of the Congress section, reduces
 every member's voting record to a point in a two-dimensional ideology space,
 from the 1st Congress (1789) to the 119th (2025–27).
 
-![The ideology explorer](docs/images/screenshot-home.png)
+![The InsideGov home page, with the presidency, Congress and Supreme Court sections](docs/images/screenshot-home.png)
 
 Political scientists have spent decades boiling roll-call votes down to a
 low-dimensional "ideal point" per legislator — the **DW-NOMINATE** score. This
