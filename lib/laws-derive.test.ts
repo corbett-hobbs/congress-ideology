@@ -6,7 +6,16 @@ import { congressControlFile } from "./congress-control";
 import {
   ALL_GROUPS,
   OTHER_GROUPS,
+  ALL_ROW,
   administrationOn,
+  buildLawsList,
+  decadeCells,
+  decadesOf,
+  filterLaws,
+  groupRows,
+  heatCount,
+  matchLaws,
+  tallyText,
   buildLawsPayload,
   cellFor,
   filterGroups,
@@ -329,5 +338,88 @@ describe("the Laws page derivations (over the committed files)", () => {
   it("finds most pre-2000 laws had no recorded vote, and far fewer after", () => {
     expect(noVoteShare(p, 93, 106)).toBeGreaterThan(0.5);
     expect(noVoteShare(p, 107, 118)).toBeLessThan(noVoteShare(p, 93, 106));
+  });
+});
+
+describe("the list of every law and card 3", () => {
+  const p = buildLawsPayload(counts, laws, meta, admins);
+  const sponsors = (id: string): [string, string, "D" | "R" | "I", string | null] => [`Rep. ${id}`, "D-XX", "D", null];
+  const list = buildLawsList(laws, meta, admins, (id) => sponsors(id));
+  const all = (): [number, number] => [0, p.congresses.length - 1];
+  const filt = { window: all(), congress: null, group: "", major: false, band: null } as const;
+
+  it("carries every law once, newest first", () => {
+    expect(list.rows).toHaveLength(laws.length);
+    expect(new Set(list.rows.map((r) => `${r[0]}-${r[1]}`)).size).toBe(laws.length);
+    for (let i = 1; i < list.rows.length; i++) expect(list.rows[i - 1]![2] >= list.rows[i]![2]).toBe(true);
+  });
+  it("derives the signer from the date and the bill label from the type", () => {
+    const row = (id: string) => list.rows.find((r) => `${r[0]}-${r[1]}` === id.replace("-pub-", "-"))!;
+    expect(list.signers[row("111-pub-148")[13]]![0]).toBe("Barack Obama");
+    expect(row("111-pub-148")[12]).toBe("H.R. 3590");
+    expect(list.signers[row("93-pub-148")[13]]![0]).toBe("Richard Nixon"); // vetoed by Nixon, signed by none: dated by the override
+    expect(row("93-pub-148")[10]).toBe(1);
+  });
+  it("keeps three major states", () => {
+    const ms = new Set(list.rows.map((r) => r[9]));
+    expect([...ms].sort()).toEqual([0, 1, 2]);
+    for (const r of list.rows) expect(r[9] === 2).toBe(r[0] > p.majorThrough);
+  });
+  it("counts the same laws as the charts under any filter", () => {
+    expect(filterLaws(p, list.rows, filt)).toHaveLength(laws.length);
+    const fromCharts = (group: string, major: boolean, band: number | null, a: number, b: number) => {
+      let n = 0;
+      for (let ci = a; ci <= b; ci++) {
+        const c = cellFor(p, ci, filterGroups(p, group), major);
+        n += band === null ? c.n : c.bands[band]!;
+      }
+      return n;
+    };
+    for (const [group, major, band] of [["", true, null], ["", false, 1], [seriesOf(p)[0]!.groups[0]!, false, null], ["other", true, 0]] as const) {
+      const w = windowIndexes(p, [1990, 2010], major);
+      expect(filterLaws(p, list.rows, { window: w, congress: null, group, major, band }), `${group}/${major}/${band}`).toHaveLength(fromCharts(group, major, band, w[0], w[1]));
+    }
+    expect(filterLaws(p, list.rows, { ...filt, congress: 93 })).toHaveLength(651);
+    expect(filterLaws(p, list.rows, { ...filt, congress: 118 })).toHaveLength(274);
+  });
+  it("searches every word across name, bill, sponsor, area and Pub. L. number", () => {
+    expect(matchLaws(p, list, list.rows, "").length).toBe(laws.length);
+    const hit = matchLaws(p, list, list.rows, "H.R. 3590 patient protection");
+    expect(hit.map((r) => `${r[0]}-${r[1]}`)).toContain("111-148");
+    expect(matchLaws(p, list, list.rows, "111-148").length).toBeGreaterThanOrEqual(1);
+    expect(matchLaws(p, list, list.rows, "zzzz nonexistent")).toHaveLength(0);
+  });
+  it("words each passage the way the page says it", () => {
+    expect(tallyText("Senate", [0, 60, 39])).toBe("Senate 60\u201339");
+    expect(tallyText("House", [1, null, null])).toBe("House voice vote");
+    expect(tallyText("House", [2, null, null])).toBe("House unanimous consent");
+    expect(tallyText("House", [3, null, null])).toContain("no method stated");
+  });
+  it("builds card 3's rows: All first, every group, bands summing to the total", () => {
+    const rows = groupRows(p, all(), false, { key: "n", reversed: false });
+    expect(rows[0]).toMatchObject({ id: ALL_ROW, total: laws.length });
+    expect(rows.slice(1).reduce((n, r) => n + r.total, 0)).toBe(laws.length);
+    for (const r of rows) expect(r.bands.reduce((a, b) => a + b, 0)).toBe(r.total);
+    const sizes = rows.slice(1).map((r) => r.total);
+    expect([...sizes].sort((a, b) => b - a)).toEqual(sizes);
+    const rev = groupRows(p, all(), false, { key: "n", reversed: true });
+    expect(rev.slice(1).map((r) => r.id)).toEqual(rows.slice(1).map((r) => r.id).reverse());
+    expect(rows.some((r) => r.id === "not-classified")).toBe(true);
+  });
+  it("orders card 3 by the share on a narrow vote or with no recorded vote", () => {
+    for (const [key, band] of [["f", 1], ["u", 0]] as const) {
+      const rows = groupRows(p, all(), false, { key, reversed: false }).slice(1);
+      const shares = rows.map((r) => r.bands[band]! / r.total);
+      expect([...shares].sort((a, b) => b - a)).toEqual(shares);
+    }
+  });
+  it("shades the heatmap by decade, every Congress counted once", () => {
+    expect(decadesOf(p)).toEqual([1970, 1980, 1990, 2000, 2010, 2020]);
+    const cells = decadeCells(p, ALL_ROW, false);
+    expect(cells.reduce((n, c) => n + c.total, 0)).toBe(laws.length);
+    expect(cells[0]!.total).toBe(totalsByCongress(counts).get(93)! + totalsByCongress(counts).get(94)! + totalsByCongress(counts).get(95)! + totalsByCongress(counts).get(96)!);
+    expect(heatCount(cells[0]!, 0)).toBeLessThanOrEqual(cells[0]!.total);
+    const major = decadeCells(p, ALL_ROW, true);
+    expect(major.reduce((n, c) => n + c.total, 0)).toBe(laws.filter((l) => l.major === true).length);
   });
 });

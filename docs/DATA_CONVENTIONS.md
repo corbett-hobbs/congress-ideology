@@ -650,6 +650,8 @@ A tenth data track: every public law from the 93rd Congress (1973) on. Methodolo
 | `pipeline/output/laws_meta.json` | one object | — | Data-through date, partial Congresses, sources, the policy-area catalog (with topic group) and the groups. |
 | `pipeline/output/laws_report.json` | run summary | — | Humans only. |
 
+The list the Laws page shows is not a file in `pipeline/output`: `getLawsList()` in `lib/laws-data.ts` joins `laws.json` to `legislators.json` and `terms.json` (the sponsor's name and party-state in that Congress) and `administrations.json` (the signer) at build time and serves compact tuples as `/data/laws/list`. Sponsor and signer are derived, never stored on the law.
+
 - **Two raw sources, one shape.** GovInfo Bill Status XML (108th on) and the Congress.gov API (93rd-107th, plus the 108th as an overlap check) are both reduced by the fetchers to the same slim record; the transform checks that they agree wherever both cover a law. Raw files are committed, one law per line.
 - **The law list is not trusted.** The API's law list repeats rows and omits laws, so a Congress's laws are checked as numbers 1..N and compared with `pipeline/reference/law-counts-independent.json` (Statutes at Large / GovInfo PLAW). A Congress with no entry there is in progress (partial).
 - **Policy areas.** Each law keeps its CRS area exactly as the source names it; the 32 current areas plus the retired "Commemorations" are the catalog, legacy subject terms count as "Not classified", and an unknown name stops the build. The page shows **topic groups** (`group` in `pipeline/reference/law-policy-areas.json`); regrouping needs a transform run, not a fetch.
