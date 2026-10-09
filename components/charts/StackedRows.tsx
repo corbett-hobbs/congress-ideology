@@ -41,6 +41,15 @@ export function StackedRows({
 }) {
   // No row has a second value (a delta, a military dollar figure): drop its column so the bar runs the full width.
   const hasDelta = rows.some((r) => !!r.delta);
+  // No row has a rank (policy areas, issue areas): drop its column so labels start at the left edge and get the space back.
+  const hasRank = rows.some((r) => r.rank !== undefined);
+  const cols = hasRank
+    ? hasDelta ? "grid-cols-[24px_minmax(86px,118px)_minmax(60px,1fr)_50px_58px]" : "grid-cols-[24px_minmax(86px,118px)_minmax(60px,1fr)_56px]"
+    : hasDelta ? "grid-cols-[minmax(86px,170px)_minmax(60px,1fr)_50px_58px]" : "grid-cols-[minmax(86px,170px)_minmax(60px,1fr)_56px]";
+  const narrow = hasRank
+    ? hasDelta ? "@max-[400px]:grid-cols-[24px_1fr_auto_auto]" : "@max-[400px]:grid-cols-[24px_1fr_auto]"
+    : hasDelta ? "@max-[400px]:grid-cols-[1fr_auto_auto]" : "@max-[400px]:grid-cols-[1fr_auto]";
+  const barSpan = hasRank ? "@max-[400px]:col-[2/-1]" : "@max-[400px]:col-[1/-1]";
   if (rows.length === 0) return <div className="px-2 py-10 text-center text-[0.82rem] text-ink-muted">{emptyText}</div>;
   return (
     <ul aria-label={ariaLabel} className="@container m-0 list-none p-0">
@@ -50,15 +59,15 @@ export function StackedRows({
             type="button"
             onClick={() => onRowClick(r.id)}
             aria-pressed={!!r.selected}
-            className={`grid w-full cursor-pointer ${hasDelta ? "grid-cols-[24px_minmax(86px,118px)_minmax(60px,1fr)_50px_58px]" : "grid-cols-[24px_minmax(86px,118px)_minmax(60px,1fr)_56px]"} items-center gap-x-2 rounded-md border-0 px-2 py-1.5 text-left text-ink hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus ${hasDelta ? "@max-[400px]:grid-cols-[24px_1fr_auto_auto]" : "@max-[400px]:grid-cols-[24px_1fr_auto]"} @max-[400px]:gap-y-1 ${
+            className={`grid w-full cursor-pointer ${cols} items-center gap-x-2 rounded-md border-0 px-2 py-1.5 text-left text-ink hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus ${narrow} @max-[400px]:gap-y-1 ${
               r.selected ? "bg-[color-mix(in_oklab,var(--accent)_13%,var(--surface))]" : "bg-transparent"
             } ${r.dimmed ? "opacity-50" : ""} ${rowClass}`}
           >
-            <span className="text-right font-mono text-[0.7rem] tabular-nums text-ink-faint">{r.rank ?? ""}</span>
+            {hasRank && <span className="text-right font-mono text-[0.7rem] tabular-nums text-ink-faint">{r.rank ?? ""}</span>}
             <span title={r.label} className={`truncate text-[0.82rem] @max-[400px]:whitespace-normal @max-[400px]:text-[0.85rem] @max-[400px]:leading-tight ${r.selected ? "font-semibold" : ""}`}>
               {r.label}
             </span>
-            <span className="flex h-[11px] overflow-hidden rounded-[2px] bg-[color-mix(in_oklab,var(--ink)_5%,transparent)] @max-[400px]:order-last @max-[400px]:col-[2/-1]">
+            <span className={`flex h-[11px] overflow-hidden rounded-[2px] bg-[color-mix(in_oklab,var(--ink)_5%,transparent)] @max-[400px]:order-last ${barSpan}`}>
               {r.segments.map((s, i) =>
                 s.value > 0 ? <i key={i} title={s.title} className="block h-full" style={{ width: `${(s.value / scaleMax) * 100}%`, background: s.color }} /> : null,
               )}
