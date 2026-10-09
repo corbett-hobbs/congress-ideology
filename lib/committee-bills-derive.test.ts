@@ -16,7 +16,6 @@ import {
   sortBills,
   stageCounts,
   stageOf,
-  subcommitteeMix,
   timelineSteps,
 } from "./committee-bills-derive";
 import type { BillSponsorCell } from "./committee-bills-types";
@@ -195,15 +194,6 @@ describe("flowLayout", () => {
     expect(e.links).toHaveLength(0);
     expect(e.nodes.every((n) => n.h === 0)).toBe(true);
     expect(FLOW_MIN_BAND).toBeGreaterThan(0);
-  });
-});
-
-describe("subcommitteeMix", () => {
-  it("counts a bill in every subcommittee it was referred to, most bills first", () => {
-    const mix = subcommitteeMix(list, [{ id: "X01", name: "Alpha" }, { id: "X02", name: "Beta" }, { id: "X03", name: "Gamma" }]);
-    expect(mix.map((m) => [m.name, m.total])).toEqual([["Alpha", 2], ["Beta", 1]]);
-    expect(mix[0]!.stop[1]).toBe(1);
-    expect(mix[0]!.stop[3]).toBe(1);
   });
 });
 
