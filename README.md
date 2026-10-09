@@ -5,7 +5,7 @@ the U.S. government, by the numbers: public records from all three branches,
 turned into charts you can explore. The presidency, Congress (1789 to today)
 and the Supreme Court, without reading the raw files.
 
-![The ideology explorer](docs/images/screenshot-home.png)
+![The InsideGov home page, with the presidency, Congress and Supreme Court sections](docs/images/screenshot-home.png)
 
 The site is organised by branch. Each branch has several pages, each built
 around one question.
