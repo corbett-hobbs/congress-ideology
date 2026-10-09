@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { ChartCard } from "@/components/charts/ChartCard";
 import { MethodologyNote } from "@/components/MethodologyNote";
-import { NO_FILTER, filterBills, monthColumns, prepareBills, sortBills, stageCounts, subcommitteeMix, type BillFilter, type SortId } from "@/lib/committee-bills-derive";
+import { NO_FILTER, filterBills, monthColumns, prepareBills, sortBills, stageCounts, type BillFilter, type SortId } from "@/lib/committee-bills-derive";
 import type { CommitteeBillsPayload, CommitteeBillsSummary, Stage } from "@/lib/committee-bills-types";
 import { fmtInt } from "@/lib/decisions-derive";
 import { ordinal } from "@/lib/demographics-chart";
@@ -12,7 +12,6 @@ import { FlowChart } from "./FlowChart";
 import { LegislationFilters } from "./LegislationFilters";
 import { MonthChart } from "./MonthChart";
 import { StageTiles, type StageView } from "./StageTiles";
-import { SubcommitteeStages } from "./SubcommitteeStages";
 import { fmtDate, pct } from "./shared";
 import { useCommitteeBills } from "./useCommitteeBills";
 
@@ -54,7 +53,6 @@ function Loaded({ payload }: { payload: CommitteeBillsPayload }) {
   const forMonths = useMemo(() => filterBills(prepared, filter, payload.sponsors, "month"), [prepared, filter, payload.sponsors]);
   const columns = useMemo(() => monthColumns(forMonths, payload.congress, payload.dataThrough), [forMonths, payload.congress, payload.dataThrough]);
   const matched = useMemo(() => sortBills(filterBills(prepared, filter, payload.sponsors), sort), [prepared, filter, payload.sponsors, sort]);
-  const mix = useMemo(() => subcommitteeMix(filterBills(prepared, { ...filter, sub: null }, payload.sponsors, "stage"), payload.subs), [prepared, filter, payload.sponsors, payload.subs]);
 
   const all = useMemo(() => stageCounts(prepared), [prepared]);
   const total = prepared.length;
@@ -107,19 +105,6 @@ function Loaded({ payload }: { payload: CommitteeBillsPayload }) {
           </p>
         </MethodologyNote>
       </ChartCard>
-
-      {mix.length > 0 && (
-        <ChartCard
-          tight
-          title="Which subcommittees move bills?"
-          lede={`Only the ${fmtInt(withSub)} bills with a recorded subcommittee referral are counted. Each bar is that subcommittee's bills, split by furthest step; select one to filter the list above.`}
-        >
-          <SubcommitteeStages rows={mix} picked={filter.sub} onPick={(i) => patch({ sub: i })} />
-          <MethodologyNote>
-            <p>A bill referred to two subcommittees counts in both. Many bills are referred to the full committee only, and some committees’ subcommittees are never logged, so this is a partial view. Source: GovInfo Bill Status.</p>
-          </MethodologyNote>
-        </ChartCard>
-      )}
     </section>
   );
 }

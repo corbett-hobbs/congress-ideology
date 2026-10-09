@@ -17,7 +17,7 @@ What a digest keeps per bill: type, number, title, introduced date, origin chamb
 - **Dates.** Referral = the committee's earliest `Referred To` step (the introduction date if none). Hearing, markup, report and discharge = the earliest such step in the committee or any of its subcommittees. A calendar placement is kept only on a bill the committee reported or was discharged from. Passage dates are the first passage action of each chamber.
 - **Committee vote.** When the committee's "ordered to be reported" action gives a tally ("Yeas and Nays: 24 - 11") the row keeps it; otherwise "voice vote" or "unanimous consent" where the text says so. The Senate rarely states a method, so most Senate rows have none.
 - **Sponsor and cosponsors.** The sponsor is the bill's sponsor in the source. A sponsor links to a profile only for a member of the current Congress (the only members with a page); a former member shows as a name. A bill is **bipartisan** when it has a cosponsor from the other party than its sponsor (an independent sponsor: cosponsors from both parties). Withdrawn cosponsors are not counted.
-- **Subcommittees.** Subcommittee referral is logged for only some committees' bills (about a quarter of Natural Resources', none of Judiciary's), so the subcommittee chart is partial and says how many bills it covers. Names come from `subcommittees.json`.
+- **Subcommittees.** Subcommittee referral is logged for only some committees' bills (about a quarter of Natural Resources', none of Judiciary's), so there is no per-subcommittee chart, only a Subcommittee filter over the bills that do log one. Names come from `subcommittees.json`.
 
 ## Output
 

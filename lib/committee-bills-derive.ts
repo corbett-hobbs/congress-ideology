@@ -300,31 +300,6 @@ export function flowLayout(counts: Pick<StageCounts, "stop" | "reach">, o: FlowO
   return { nodes, links, labelBand: o.bottom };
 }
 
-// ---- subcommittees ----------------------------------------------------------------------------------------------
-
-export interface SubMixRow {
-  index: number;
-  id: string;
-  name: string;
-  total: number;
-  /** Index 1..6: bills whose furthest stage is this one. */
-  stop: number[];
-}
-
-/** Per subcommittee: its bills by furthest stage (a bill referred to two counts in both), most bills first. */
-export function subcommitteeMix(list: readonly PreparedBill[], subs: readonly { id: string; name: string }[]): SubMixRow[] {
-  const rows: SubMixRow[] = subs.map((s, index) => ({ index, id: s.id, name: s.name, total: 0, stop: [0, 0, 0, 0, 0, 0, 0] }));
-  for (const b of list) {
-    for (const u of b.row.u ?? []) {
-      const r = rows[u];
-      if (!r) continue;
-      r.total++;
-      r.stop[b.stage]!++;
-    }
-  }
-  return rows.filter((r) => r.total > 0).sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
-}
-
 // ---- one bill's timeline -----------------------------------------------------------------------------------------
 
 export interface TimelineStep {
