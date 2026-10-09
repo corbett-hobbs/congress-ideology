@@ -147,4 +147,10 @@ Three charts and a list on one state (years, policy area, major only, support ba
 
 ## Freshness
 
-Planned (Session 7), not yet built: a weekly incremental fetch, a Mayhew-coverage warning when a Congress ends with no list, and the Voteview roll-call refresh riding the existing freshness job.
+Three weekly jobs keep the page current; none edits data without a gate.
+
+- **`laws-freshness.yml`** (Mondays): `pnpm fetch:billstatus` HEAD-checks GovInfo's Bill Status ZIPs and re-reads a Congress only when one of its ZIPs changed size or Last-Modified (in practice the in-progress Congress, about 50 MB). The Laws transform then re-runs; its count, number-sequence and vote gates throw on any miss. A pull request opens only if the raw files or `pipeline/output/laws*.json` changed, and merges only through the shared `gate-and-merge` action. The 93rd–107th (Congress.gov API) are closed history and are refreshed by hand with `pnpm fetch:laws`.
+- **`voteview-freshness.yml`** (existing): also re-fetches `rollcalls_93on.json`, the file passage tallies are cross-checked against. The gate re-runs the Laws transform, so a roll call that contradicts a law's tally keeps the PR open for a human.
+- **`laws-major-review.yml`** (Mondays): opens one issue when a Congress has ended and Mayhew's lists do not cover it (`pipeline/validate/laws-major-coverage.ts`). No provisional flag ships, so nothing is flipped; the fix is adding his entries by hand.
+
+A failed or interrupted run leaves the committed raw data and output untouched: a Congress's file is written only after all four of its ZIPs were read, and nothing is committed unless every step passed. If govinfo.gov is unreachable the job ends green with a warning.

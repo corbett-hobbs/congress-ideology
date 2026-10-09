@@ -44,6 +44,11 @@ jobs:
       - name: Re-fetch Voteview snapshot
         run: pnpm fetch:voteview
 
+      # The roll calls (93rd Congress on) the Laws transform checks passage tallies against; the gate re-runs that
+      # transform, so a roll call that now contradicts a law's tally fails the gate and the PR stays open.
+      - name: Re-fetch Voteview roll calls
+        run: pnpm fetch:voteview-rollcalls
+
       - name: Detect changes
         id: detect
         run: |
@@ -69,7 +74,7 @@ jobs:
           labels: data-refresh
           body: |
             The weekly freshness check found upstream changes to the Voteview
-            `HSall` files.
+            `HSall` files or the roll calls the Laws track checks passage votes against.
 
             **Before merging**
 

@@ -21,6 +21,19 @@ export class LawsDataError extends Error {
   }
 }
 
+/** The latest Congress that has ended by `today` (YYYY-MM-DD): Congress N ends on 3 January of year 1789 + 2N. */
+export function lastEndedCongress(today: string): number {
+  const [y, m, d] = today.split("-").map(Number) as [number, number, number];
+  const ended = m > 1 || d >= 3 ? y : y - 1; // before 3 January the year's Congress has not turned over yet
+  return Math.floor((ended - 1789) / 2);
+}
+
+/** Congresses that have ended but that Mayhew's lists (`major_covered_through_congress`) do not cover yet. */
+export function congressesAwaitingMayhew(coveredThrough: number, today: string): number[] {
+  const last = lastEndedCongress(today);
+  return Array.from({ length: Math.max(0, last - coveredThrough) }, (_, i) => coveredThrough + 1 + i);
+}
+
 /** "93rd", "101st", "112th". */
 export function ordinal(n: number): string {
   const v = n % 100;
