@@ -636,3 +636,23 @@ The issue-area taxonomy lives behind `pipeline/reference/decision-issue-areas.js
 verified against `court/justices.json` and the presidents tables (no second president table). Raw: `pnpm fetch:scdb` (manual refresh, not in `fetch:all`); freshness: `.github/workflows/scdb-freshness.yml` (monthly, warns when the host is down).
 Gates are build-failing (see the methodology doc).
 
+
+## 15. Laws track
+
+A tenth data track: every public law from the 93rd Congress (1973) on. Methodology: `docs/LAWS_METHODOLOGY.md`; measured source behaviour: `docs/LAWS_PREFLIGHT.md`; schemas: `lib/laws-entities.ts`. Separate from Decisions (section 14) but built the same way. The key is the law (`law_id` = `<congress>-pub-<number>`), **not** a `bioguide_id`: the sponsor is a column (`sponsor_bioguide_id`, joined to `legislators.json`), and cosponsors are kept in a separate file.
+
+| File | Grain | Key | Notes |
+| --- | --- | --- | --- |
+| `pipeline/output/laws.json` | one row per public law (a bill that became two laws is two rows) | `law_id` | Signing `date` (earliest `BecameLaw` action), title, bill, origin chamber, sponsor, `area_id`, `veto_override`. The signing president is **derived** from the date (`lib/laws-derive.ts`), never stored. |
+| `pipeline/output/laws_counts.json` | one row per `(congress, area_id)` with a law | `congress` + `area_id` | `n` only. Shares, topic groups and president attribution are derived in `lib`. Band counts arrive with Session 2. |
+| `pipeline/output/laws_cosponsors.json` | law id -> current cosponsor ids | `law_id` | Withdrawn cosponsors dropped. |
+| `pipeline/output/laws_committees.json` | `laws`: law id -> `[committee_id, subcommittee_ids, steps]`; `committees`: id -> name, chamber, parent, `page` | `law_id` | The committees and subcommittees a bill went through, with the steps recorded for the committee itself ("referred to", "reported by"). Ids join to `committees.json` / `subcommittees.json` (`hsif00` -> `HSIF`, `hsif14` -> `HSIF14`). `page` is true only for committees in the current-Congress data; older and renamed committees keep a name and no link. "Reported by" is the better sign of which committee handled a bill; a referral is not authorship. |
+| `pipeline/output/laws_meta.json` | one object | — | Data-through date, partial Congresses, sources, the policy-area catalog (with topic group) and the groups. |
+| `pipeline/output/laws_report.json` | run summary | — | Humans only. |
+
+- **Two raw sources, one shape.** GovInfo Bill Status XML (108th on) and the Congress.gov API (93rd-107th, plus the 108th as an overlap check) are both reduced by the fetchers to the same slim record; the transform checks that they agree wherever both cover a law. Raw files are committed, one law per line.
+- **The law list is not trusted.** The API's law list repeats rows and omits laws, so a Congress's laws are checked as numbers 1..N and compared with `pipeline/reference/law-counts-independent.json` (Statutes at Large / GovInfo PLAW). A Congress with no entry there is in progress (partial).
+- **Policy areas.** Each law keeps its CRS area exactly as the source names it; the 32 current areas plus the retired "Commemorations" are the catalog, legacy subject terms count as "Not classified", and an unknown name stops the build. The page shows **topic groups** (`group` in `pipeline/reference/law-policy-areas.json`); regrouping needs a transform run, not a fetch.
+- **Dates.** A law may be dated up to 20 January after its Congress ends. A numbered law in the Congress in progress with no enactment action yet is held out and listed in the report.
+- **Source typos** the fetcher repairs (a law number citing the wrong Congress) are recorded in the raw file's `corrections` and echoed in the report.
+- Raw: `pnpm fetch:billstatus` (keyless) and `pnpm fetch:laws` (`CONGRESS_API_KEY`); neither is in `fetch:all`. Freshness workflow: Session 7.

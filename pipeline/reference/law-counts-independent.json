@@ -1,0 +1,31 @@
+{
+  "_comment": "Public laws per Congress from sources independent of the Congress.gov law list, measured in docs/LAWS_PREFLIGHT.md section 1. The transform requires each Congress it covers to have exactly this many laws numbered 1..N. Sources: for 93, 94 and 99 the printed citations of every PUBLICLAW granule of the Statutes at Large (GovInfo STATUTE collection) run 1..N; for the others the number of PUBLICLAW granules in the Statutes volumes equals N; for 104, 105, 108 and 118 GovInfo PLAW packages (docClass PUBLIC) also equal N. The 119th is in progress and has no entry.",
+  "counts": {
+    "93": 651,
+    "94": 588,
+    "95": 633,
+    "96": 613,
+    "97": 473,
+    "98": 623,
+    "99": 664,
+    "100": 713,
+    "101": 650,
+    "102": 590,
+    "103": 465,
+    "104": 333,
+    "105": 394,
+    "106": 580,
+    "107": 377,
+    "108": 498,
+    "109": 482,
+    "110": 460,
+    "111": 383,
+    "112": 283,
+    "113": 296,
+    "114": 329,
+    "115": 442,
+    "116": 344,
+    "117": 362,
+    "118": 274
+  }
+}

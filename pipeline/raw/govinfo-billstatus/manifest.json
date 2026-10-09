@@ -1,0 +1,341 @@
+{
+  "base_url": "https://www.govinfo.gov/bulkdata/BILLSTATUS",
+  "zips": [
+    {
+      "congress": 108,
+      "type": "hjres",
+      "bytes": 627253,
+      "last_modified": "Sat, 20 Jan 2024 00:55:46 GMT",
+      "public_law_bills": 22
+    },
+    {
+      "congress": 108,
+      "type": "hr",
+      "bytes": 21864287,
+      "last_modified": "Sat, 20 Jan 2024 00:55:15 GMT",
+      "public_law_bills": 330
+    },
+    {
+      "congress": 108,
+      "type": "s",
+      "bytes": 10321935,
+      "last_modified": "Sat, 20 Jan 2024 00:55:31 GMT",
+      "public_law_bills": 140
+    },
+    {
+      "congress": 108,
+      "type": "sjres",
+      "bytes": 137570,
+      "last_modified": "Sat, 20 Jan 2024 00:20:33 GMT",
+      "public_law_bills": 6
+    },
+    {
+      "congress": 109,
+      "type": "hjres",
+      "bytes": 349327,
+      "last_modified": "Thu, 18 Jan 2024 02:24:38 GMT",
+      "public_law_bills": 16
+    },
+    {
+      "congress": 109,
+      "type": "hr",
+      "bytes": 24705887,
+      "last_modified": "Thu, 18 Jan 2024 08:29:43 GMT",
+      "public_law_bills": 316
+    },
+    {
+      "congress": 109,
+      "type": "s",
+      "bytes": 12378409,
+      "last_modified": "Thu, 18 Jan 2024 08:27:29 GMT",
+      "public_law_bills": 148
+    },
+    {
+      "congress": 109,
+      "type": "sjres",
+      "bytes": 115243,
+      "last_modified": "Wed, 17 Jan 2024 21:51:03 GMT",
+      "public_law_bills": 2
+    },
+    {
+      "congress": 110,
+      "type": "hjres",
+      "bytes": 370564,
+      "last_modified": "Sun, 14 Jan 2024 08:58:02 GMT",
+      "public_law_bills": 10
+    },
+    {
+      "congress": 110,
+      "type": "hr",
+      "bytes": 28108110,
+      "last_modified": "Tue, 16 Jan 2024 14:02:39 GMT",
+      "public_law_bills": 308
+    },
+    {
+      "congress": 110,
+      "type": "s",
+      "bytes": 12015255,
+      "last_modified": "Tue, 16 Jan 2024 07:54:33 GMT",
+      "public_law_bills": 134
+    },
+    {
+      "congress": 110,
+      "type": "sjres",
+      "bytes": 137684,
+      "last_modified": "Sun, 14 Jan 2024 07:50:25 GMT",
+      "public_law_bills": 8
+    },
+    {
+      "congress": 111,
+      "type": "hjres",
+      "bytes": 346494,
+      "last_modified": "Thu, 11 Jan 2024 19:55:35 GMT",
+      "public_law_bills": 11
+    },
+    {
+      "congress": 111,
+      "type": "hr",
+      "bytes": 25282891,
+      "last_modified": "Fri, 12 Jan 2024 07:04:49 GMT",
+      "public_law_bills": 254
+    },
+    {
+      "congress": 111,
+      "type": "s",
+      "bytes": 11527979,
+      "last_modified": "Fri, 15 May 2026 20:19:55 GMT",
+      "public_law_bills": 110
+    },
+    {
+      "congress": 111,
+      "type": "sjres",
+      "bytes": 117463,
+      "last_modified": "Fri, 12 Jan 2024 06:45:33 GMT",
+      "public_law_bills": 8
+    },
+    {
+      "congress": 112,
+      "type": "hjres",
+      "bytes": 450886,
+      "last_modified": "Wed, 10 Jan 2024 00:51:56 GMT",
+      "public_law_bills": 6
+    },
+    {
+      "congress": 112,
+      "type": "hr",
+      "bytes": 25346487,
+      "last_modified": "Wed, 10 Jan 2024 00:54:49 GMT",
+      "public_law_bills": 199
+    },
+    {
+      "congress": 112,
+      "type": "s",
+      "bytes": 10872730,
+      "last_modified": "Wed, 10 Jan 2024 00:52:06 GMT",
+      "public_law_bills": 72
+    },
+    {
+      "congress": 112,
+      "type": "sjres",
+      "bytes": 155811,
+      "last_modified": "Wed, 10 Jan 2024 00:52:07 GMT",
+      "public_law_bills": 6
+    },
+    {
+      "congress": 113,
+      "type": "hjres",
+      "bytes": 523044,
+      "last_modified": "Sat, 06 Jan 2024 08:15:14 GMT",
+      "public_law_bills": 10
+    },
+    {
+      "congress": 113,
+      "type": "hr",
+      "bytes": 24696449,
+      "last_modified": "Mon, 08 Jan 2024 12:34:43 GMT",
+      "public_law_bills": 209
+    },
+    {
+      "congress": 113,
+      "type": "s",
+      "bytes": 9734814,
+      "last_modified": "Sat, 06 Jan 2024 08:15:14 GMT",
+      "public_law_bills": 73
+    },
+    {
+      "congress": 113,
+      "type": "sjres",
+      "bytes": 127635,
+      "last_modified": "Sat, 06 Jan 2024 08:03:42 GMT",
+      "public_law_bills": 4
+    },
+    {
+      "congress": 114,
+      "type": "hjres",
+      "bytes": 383203,
+      "last_modified": "Wed, 03 Jan 2024 17:50:33 GMT",
+      "public_law_bills": 3
+    },
+    {
+      "congress": 114,
+      "type": "hr",
+      "bytes": 27063907,
+      "last_modified": "Thu, 04 Jan 2024 22:22:57 GMT",
+      "public_law_bills": 216
+    },
+    {
+      "congress": 114,
+      "type": "s",
+      "bytes": 11575042,
+      "last_modified": "Thu, 04 Jan 2024 03:26:03 GMT",
+      "public_law_bills": 110
+    },
+    {
+      "congress": 114,
+      "type": "sjres",
+      "bytes": 121724,
+      "last_modified": "Wed, 03 Jan 2024 17:33:53 GMT",
+      "public_law_bills": 0
+    },
+    {
+      "congress": 115,
+      "type": "hjres",
+      "bytes": 529052,
+      "last_modified": "Sat, 30 Dec 2023 09:34:20 GMT",
+      "public_law_bills": 18
+    },
+    {
+      "congress": 115,
+      "type": "hr",
+      "bytes": 28697203,
+      "last_modified": "Sat, 30 Dec 2023 10:48:41 GMT",
+      "public_law_bills": 283
+    },
+    {
+      "congress": 115,
+      "type": "s",
+      "bytes": 10613629,
+      "last_modified": "Sat, 30 Dec 2023 10:48:29 GMT",
+      "public_law_bills": 133
+    },
+    {
+      "congress": 115,
+      "type": "sjres",
+      "bytes": 204810,
+      "last_modified": "Sat, 30 Dec 2023 09:32:55 GMT",
+      "public_law_bills": 8
+    },
+    {
+      "congress": 116,
+      "type": "hjres",
+      "bytes": 536609,
+      "last_modified": "Thu, 28 Dec 2023 06:16:40 GMT",
+      "public_law_bills": 8
+    },
+    {
+      "congress": 116,
+      "type": "hr",
+      "bytes": 33194205,
+      "last_modified": "Thu, 28 Dec 2023 16:44:41 GMT",
+      "public_law_bills": 214
+    },
+    {
+      "congress": 116,
+      "type": "s",
+      "bytes": 13941002,
+      "last_modified": "Thu, 28 Dec 2023 16:44:49 GMT",
+      "public_law_bills": 119
+    },
+    {
+      "congress": 116,
+      "type": "sjres",
+      "bytes": 236199,
+      "last_modified": "Thu, 28 Dec 2023 06:16:40 GMT",
+      "public_law_bills": 3
+    },
+    {
+      "congress": 117,
+      "type": "hjres",
+      "bytes": 393085,
+      "last_modified": "Sun, 24 Dec 2023 04:08:35 GMT",
+      "public_law_bills": 3
+    },
+    {
+      "congress": 117,
+      "type": "hr",
+      "bytes": 33733417,
+      "last_modified": "Tue, 11 Jun 2024 13:16:51 GMT",
+      "public_law_bills": 195
+    },
+    {
+      "congress": 117,
+      "type": "s",
+      "bytes": 14088276,
+      "last_modified": "Sun, 24 Dec 2023 06:59:16 GMT",
+      "public_law_bills": 160
+    },
+    {
+      "congress": 117,
+      "type": "sjres",
+      "bytes": 188699,
+      "last_modified": "Sun, 24 Dec 2023 06:57:10 GMT",
+      "public_law_bills": 4
+    },
+    {
+      "congress": 118,
+      "type": "hjres",
+      "bytes": 819266,
+      "last_modified": "Tue, 27 Jan 2026 16:34:11 GMT",
+      "public_law_bills": 5
+    },
+    {
+      "congress": 118,
+      "type": "hr",
+      "bytes": 35522726,
+      "last_modified": "Fri, 15 May 2026 20:20:26 GMT",
+      "public_law_bills": 178
+    },
+    {
+      "congress": 118,
+      "type": "s",
+      "bytes": 14410894,
+      "last_modified": "Fri, 15 May 2026 20:20:32 GMT",
+      "public_law_bills": 91
+    },
+    {
+      "congress": 118,
+      "type": "sjres",
+      "bytes": 344680,
+      "last_modified": "Tue, 27 Jan 2026 16:34:15 GMT",
+      "public_law_bills": 0
+    },
+    {
+      "congress": 119,
+      "type": "hjres",
+      "bytes": 673806,
+      "last_modified": "Tue, 06 Oct 2026 08:43:33 GMT",
+      "public_law_bills": 19
+    },
+    {
+      "congress": 119,
+      "type": "hr",
+      "bytes": 32497741,
+      "last_modified": "Thu, 08 Oct 2026 20:42:24 GMT",
+      "public_law_bills": 53
+    },
+    {
+      "congress": 119,
+      "type": "s",
+      "bytes": 13397233,
+      "last_modified": "Thu, 08 Oct 2026 20:41:17 GMT",
+      "public_law_bills": 42
+    },
+    {
+      "congress": 119,
+      "type": "sjres",
+      "bytes": 538733,
+      "last_modified": "Tue, 06 Oct 2026 08:16:21 GMT",
+      "public_law_bills": 6
+    }
+  ]
+}
