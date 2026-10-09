@@ -177,12 +177,15 @@ export const METHODOLOGY: MethodGroup[] = [
         vertical: "congress",
         title: "Committees",
         description:
-          "A committee’s position is the unweighted average of its members’ scores. Its spread is the gap between its most liberal and most conservative member.",
+          "A committee’s position is the unweighted average of its members’ scores. Its spread is the gap between its most liberal and most conservative member. Each committee page also lists the bills referred to it this Congress and how far each got: a hearing, a markup, a report or discharge, passage, law. A step the Library of Congress never logged is shown as not recorded, not guessed.",
         sources: [
           { name: "congress-legislators", url: "https://github.com/unitedstates/congress-legislators", note: "rosters" },
           { name: "Voteview", url: "https://voteview.com/data", note: "scores, as above" },
+          { name: "GovInfo Bill Status", url: "https://www.govinfo.gov/bulkdata/BILLSTATUS", note: "bills and their committee steps" },
         ],
-        updates: "Rosters checked daily, scores weekly.",
+        credit: "Bills, sponsors, cosponsors and committee steps: GovInfo Bill Status (U.S. Government Publishing Office, with the Library of Congress and the Congressional Research Service).",
+        updates: "Rosters checked daily, scores weekly, bills weekly.",
+        docPath: "docs/COMMITTEE_BILLS_METHODOLOGY.md",
       },
       {
         id: "laws",

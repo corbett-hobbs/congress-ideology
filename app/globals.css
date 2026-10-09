@@ -93,6 +93,15 @@
   --tenure-2: #6c5c9c;
   --tenure-3: #4b3a78;
   --tenure-4: #2a2043;
+  /* Committee-legislation stages (components/committee/legislation): Referred (grey, nothing recorded) then a purple ramp
+     (Hearing, Markup, Out of committee, Passed chamber; the --tenure steps) and gold for Became law. All six sit on one chart,
+     so every pair must be separable: validate_palette.js (FORCED_PAIRS, >= 3:1 on every surface). */
+  --stage-1: #757370;
+  --stage-2: #8d82b5;
+  --stage-3: #6c5c9c;
+  --stage-4: #4b3a78;
+  --stage-5: #2a2043;
+  --stage-6: #9a6b00;
   /* Dissent-count bands (components/decisions): unanimous / 8-1 / 7-2 / 6-3 / 5-4 stacked on one chart and drawn together in
      the rows, so every pair must be separable. NOT party colours (the page's only party colour is the Chief Justice term
      band); validated by validate_palette.js (FORCED_PAIRS: all pairs plus each vs --dem/--rep, >= 3:1 on every surface).
@@ -192,6 +201,12 @@
     --tenure-2: #9588c8;
     --tenure-3: #b9aee2;
     --tenure-4: #e0d9f5;
+    --stage-1: #7b7974;
+    --stage-2: #7466a5;
+    --stage-3: #9588c8;
+    --stage-4: #b9aee2;
+    --stage-5: #e0d9f5;
+    --stage-6: #e6b422;
     --split-0: #9591ad;
     --split-1: #5cb2fd;
     --split-2: #6acdc6;
@@ -279,6 +294,12 @@
   --tenure-2: #9588c8;
   --tenure-3: #b9aee2;
   --tenure-4: #e0d9f5;
+  --stage-1: #7b7974;
+  --stage-2: #7466a5;
+  --stage-3: #9588c8;
+  --stage-4: #b9aee2;
+  --stage-5: #e0d9f5;
+  --stage-6: #e6b422;
   --split-0: #9591ad;
   --split-1: #5cb2fd;
   --split-2: #6acdc6;
