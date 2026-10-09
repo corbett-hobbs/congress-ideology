@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 const BLURBS: Record<string, string> = {
   congress:
-    "Every member\u2019s votes as a two-dimensional ideology score, who serves by age, gender and tenure, and estimated net worth from financial disclosures.",
+    "Every member\u2019s votes as a two-dimensional ideology score, the laws Congress enacts and how broadly they are supported, who serves by age, gender and tenure, and estimated net worth from financial disclosures.",
   "supreme-court":
     "Where the justices sit over time, from Martin\u2013Quinn ideology scores, and how many cases the Court decides and how often it splits.",
   presidency:

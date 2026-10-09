@@ -2,7 +2,7 @@
 
 Execution plan, session by session: `docs/CONGRESS_LAWS_EXECUTION_PLAN.md`.
 
-Status: **scoping and mockup only. Nothing is built.** Mockup: `docs/mockups/congress-laws/laws-page.html` (open it over any static server, e.g. `python3 -m http.server` in that folder; desktop and phone boards, interactive). Written 2026-10-08.
+Status: **built through Session 6; settled items now live in `docs/LAWS_METHODOLOGY.md`.** (Originally: scoping and mockup only.) Mockup: `docs/mockups/congress-laws/laws-page.html` (open it over any static server, e.g. `python3 -m http.server` in that folder; desktop and phone boards, interactive). Written 2026-10-08.
 
 The page is the Congress sibling of Supreme Court → Decisions: *what Congress enacts*, by policy area, over time, with a trend or two underneath and a list of every law. The long-term goal is per-member pages ("laws this member sponsored, how they voted on laws"), the way the justice pages followed Decisions. Section 6 lists what the data layer must carry now so that step is cheap.
 

@@ -86,14 +86,15 @@ export function LawsStateProvider({ data, children }: { data: LawsPayload; child
   );
 
   // A pin or hover that has left the window is simply not shown (and comes back if the window widens).
+  // The window is its own memo: a hover or pin must not hand the cards a new array, or they rebuild their columns (and a second tap on the open bar no longer matches it).
+  const window = useMemo(() => windowIndexes(data, range, major), [data, range, major]);
   const values = useMemo<LawsValues>(() => {
-    const window = windowIndexes(data, range, major);
     const inWin = (c: number | null) => {
       const i = c === null ? -1 : data.congresses.indexOf(c);
       return i >= window[0] && i <= window[1] ? c : null;
     };
     return { data, range, group, major, band, control, window, hover: inWin(hover), pin: inWin(pin) };
-  }, [data, range, group, major, band, control, hover, pin]);
+  }, [data, range, group, major, band, control, window, hover, pin]);
 
   return (
     <ActionsCtx.Provider value={actions}>
