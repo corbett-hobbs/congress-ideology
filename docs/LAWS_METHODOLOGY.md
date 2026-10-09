@@ -1,8 +1,6 @@
-# Laws: methodology (draft)
+# Laws: methodology
 
-Draft written in Session 1 (data layer). Sessions 2 (passage votes and support bands), 3 (major laws, party control, summaries) and 6 (finalise) extend it. Scope and page spec: `docs/CONGRESS_LAWS_SCOPE.md`; plan: `docs/CONGRESS_LAWS_EXECUTION_PLAN.md`; measured source behaviour: `docs/LAWS_PREFLIGHT.md`. Schemas: `lib/laws-entities.ts`; conventions: `docs/DATA_CONVENTIONS.md` section 15.
-
-## What the data is
+Draft wrHow the Congress Laws page (`/congress/laws`) is built and what its numbers mean. Written across Sessions 1–6. Scope and page spec: `docs/CONGRESS_LAWS_SCOPE.md` (its settled items are repeated below); plan: `docs/CONGRESS_LAWS_EXECUTION_PLAN.md`; measured source behaviour: `docs/LAWS_PREFLIGHT.md`. Schemas: `lib/laws-entities.ts`; conventions: `docs/DATA_CONVENTIONS.md` section 15; the page's own conventions: `ARCHITECTURE_MAP.md` "Laws page".t the data is
 
 Every **public law** from the 93rd Congress (1973) on, one row per law. Private laws (individual relief; hundreds a Congress in the 1970s, none now) are excluded. Joint resolutions that became public laws are in. The unit is the **law**, not the bill: a bill that became two laws (99th H.J.Res. 738) is two rows.
 
@@ -57,7 +55,7 @@ Reported, not fatal: sponsors missing from `legislators.json`, laws with no spon
 
 - **"Not classified" is a 1973–78 problem, and a bigger one than the pre-flight sample suggested.** 465 laws have no CRS area or a legacy subject term (160 distinct terms, listed in `law-policy-areas.json`): 164 of the 93rd's 651 (25%), 134 of the 94th's 588 (23%), 167 of the 95th's 633 (26%). From the 96th (1979) on every law has a current CRS area or "Commemorations". The pre-flight's sample of 40 per Congress had put it near 9%.
 - **Source repairs.** Three Bill Status bills (110th S. 2499, 110th H.R. 6124, 109th H.R. 5441) also list the law under the wrong Congress; read as the bill's own. The API list repeated or omitted 22 laws in the 93rd–102nd (looked up by number). Ten 106th laws and two 99th laws carry two `BecameLaw` dates a day or two apart; the earliest is used.
-- **Veto overrides:** 33 laws (93rd 5, 94th 8, 96th 2, 97th 2, 98th 2, 99th 2, 100th 3, 102nd 1, 104th 1, 105th 1, 110th 4, 114th 1, 116th 1). Each has a veto and an "over veto" passage. They have not been compared with the Senate Historical Office's list yet (Session 6). Line-item-veto notes on eleven 105th laws are correctly not counted.
+- **Veto overrides:** 33 laws (93rd 5, 94th 8, 96th 2, 97th 2, 98th 2, 99th 2, 100th 3, 102nd 1, 104th 1, 105th 1, 110th 4, 114th 1, 116th 1). Each has a veto and an "over veto" passage. Checked in Session 6 against the Senate Historical Office's vetoes table (https://www.senate.gov/legislative/vetoes/vetoCounts.htm, read 2026-10-08): overrides by signing president from Ford on are identical (Ford 12, Carter 2, Reagan 9, Bush 41 1, Clinton 2, Bush 43 4, Obama 1, Trump 1, Biden 0), and Nixon's one in range is the War Powers Resolution (his other six are before 1973). Line-item-veto notes on eleven 105th laws are correctly not counted.
 - **Sponsors:** all 12,604 sponsor ids resolve in `legislators.json`; 15 laws have no sponsor in the source (96th 2, 97th 4, 98th 2, 99th 1, 100th 1, 101st 1, 108th 1, 109th 1, 110th 1, 111th 1, listed in `laws_report.json`).
 - **Committees:** 12,150 laws carry at least one committee; 386 distinct committee and subcommittee ids, 156 of them with a page today. Of a decade's committee entries, the share that link to a page: 1970s 89%, 1980s 79%, 1990s 92%, 2000s–2020s 100%. The API maps old committees to their successors' codes (a 1979 Science and Technology bill carries `hssy00`), which is why the 1970s are not lower. Nine ids changed name over time; the most common name is kept.
 
@@ -131,3 +129,22 @@ Reading it: before 2000 about four laws in five show as "No recorded vote" (68�
 **Party control** (`pipeline/reference/congress-control.json`) now starts on 3 January 1973, so the Laws page can show who held the House and Senate. House: Democrats throughout the 93rd–103rd. Senate: Democrats 1973–81, Republicans 1981–87, Democrats 1987–95, then the table that already ran from 1991 (including the 107th Congress's two mid-Congress changes of 2001). No majority changed hands mid-Congress between 1973 and 1991. The Economy and Trade charts clip the table to their own 1991-based axis and draw exactly what they drew before.
 
 **Summaries.** `summary` on each law is the first sentence of the CRS summary of the enacted version (else the latest), with the law's name, the "(Measure passed House, amended)" stage note and the "Title I:" or "=Title I=" heading cut off, "This act designates ..." turned into "Designates ...", kept only if it is one finished sentence of 40–300 characters; otherwise the law has none. It is never model-written. The source summaries come in three styles (1970s–90s "Act name - Amends ...", 2000s "(This measure has not been amended ...)", 2010s on "<strong>Title</strong> This act ..."). A summary that opens with a table of contents, or whose first sentence is longer than 300 characters (an omnibus act's first sentence is usually a list), gets none. Fill by decade (decades bin by the year a Congress opens): 1970s 77%, 1980s 84%, 1990s 65%, 2000s 67%, 2010s 67%, 2020s 92%; 9,391 of 12,619 laws in all, median 164 characters.
+
+
+## Settled decisions (from the scope and the gates)
+
+- **Range and slots.** 1973 on (93rd Congress), public laws only, one slot per Congress; the president under a bar signed most of that Congress's laws, and the tooltip lists every signer when it splits. A Congress is in the years window when its second year is inside it.
+- **Topics.** Congress.gov policy areas, shown as about ten topic groups plus a visible **Not classified** band (465 laws, 1973–78); the five largest groups get a colour, the rest share "Other topics", which the dropdown splits. Never mapped by us.
+- **Support.** The closest recorded final-passage vote in either chamber; no recorded vote is its own band (about four laws in five before 2000, stated in the card's Data note). Minority-party support is later work.
+- **Major laws.** Mayhew only, three states, through the 118th Congress; "Major laws" stops the window at the last assessed Congress and never draws the 119th as zero. No provisional flag ships (Session 3b has no go).
+- **Summaries.** The CRS first sentence only; never model-written.
+- **Colour.** No new tokens: topic groups reuse `--fuel-*`, support bands `--split-*`.
+- **Copy.** Every number in a lede, note or link is computed from the data; tests assert the anchors (93rd 651 laws, 118th 274).
+
+## The page (Sessions 4–6)
+
+Three charts and a list on one state (years, policy area, major only, support band, pinned Congress). Card 1 counts laws per Congress by topic group; card 2 shows the support bands as a stacked area; card 3 compares topic groups (100% band bars over the years shown, beside a decade heatmap measured in laws, narrow-vote laws or no-recorded-vote laws); the list names every law the filters keep, newest first, with its closest vote, sponsor, signer and CRS sentence. A sponsor links to a profile only for members of the current Congress. Every chart has a table view and Data notes. The list is served as `/data/laws/list` and fetched once. Browser acceptance test: `pnpm check:laws`.
+
+## Freshness
+
+Planned (Session 7), not yet built: a weekly incremental fetch, a Mayhew-coverage warning when a Congress ends with no list, and the Voteview roll-call refresh riding the existing freshness job.

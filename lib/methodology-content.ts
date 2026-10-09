@@ -185,6 +185,25 @@ export const METHODOLOGY: MethodGroup[] = [
         updates: "Rosters checked daily, scores weekly.",
       },
       {
+        id: "laws",
+        vertical: "congress",
+        title: "Laws",
+        description:
+          "Every public law since 1973, counted by the Congress that enacted it and its Congress.gov policy area, with the closest recorded final-passage vote in either chamber. Major laws are David Mayhew’s lists of important enactments, through the 118th Congress. The sentence under a law is the first sentence of the Congressional Research Service summary, never written by us.",
+        sources: [
+          { name: "Congress.gov", url: "https://www.congress.gov/", note: "laws, policy areas, sponsors, summaries, 1973–2002" },
+          { name: "GovInfo Bill Status", url: "https://www.govinfo.gov/bulkdata/BILLSTATUS", note: "the same fields, 2003 on" },
+          { name: "Voteview", url: "https://voteview.com/data", note: "roll calls, to check passage tallies" },
+          { name: "David Mayhew", url: "https://campuspress.yale.edu/davidmayhew/datasets-divided-we-govern/", note: "important enactments" },
+          { name: "Senate Historical Office", url: "https://www.senate.gov/history/partydiv.htm", note: "party control" },
+        ],
+        credit:
+          VOTEVIEW_CITATION +
+          " Mayhew, David R. *Divided We Govern: Party Control, Lawmaking, and Investigations, 1946–2002*, 2nd ed. (Yale University Press, 2005), and his lists of important laws enacted for later Congresses. Laws, policy areas and summaries: Congress.gov (Library of Congress) and GovInfo (U.S. Government Publishing Office); summaries by the Congressional Research Service.",
+        updates: "Checked weekly; the major-law lists are updated by hand when Mayhew publishes a new one.",
+        docPath: "docs/LAWS_METHODOLOGY.md",
+      },
+      {
         id: "demographics",
         vertical: "congress",
         title: "Demographics",
