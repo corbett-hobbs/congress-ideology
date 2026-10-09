@@ -147,9 +147,11 @@ export interface AreaIndex {
   /** Source name -> catalog area id. */
   byName: Map<string, string>;
   legacy: Set<string>;
+  /** Law id -> the area InsideGov assigned to a law CRS gave none (`law-areas-assigned.json`). */
+  assigned: ReadonlyMap<string, string>;
 }
 
-export function areaIndex(areas: LawPolicyAreas): AreaIndex {
+export function areaIndex(areas: LawPolicyAreas, assigned: Readonly<Record<string, string>> = {}): AreaIndex {
   const byName = new Map<string, string>();
   for (const a of areas.areas) {
     if (byName.has(a.name)) throw new LawsDataError(`policy area "${a.name}" is listed twice`);
@@ -159,7 +161,9 @@ export function areaIndex(areas: LawPolicyAreas): AreaIndex {
   for (const a of areas.areas) if (!groups.has(a.group)) throw new LawsDataError(`policy area "${a.name}" names an unknown group "${a.group}"`);
   const legacy = new Set(areas.legacy_terms);
   for (const t of legacy) if (byName.has(t)) throw new LawsDataError(`"${t}" is both a catalog area and a legacy term`);
-  return { byName, legacy };
+  const ids = new Set(byName.values());
+  for (const [lawId, id] of Object.entries(assigned)) if (!ids.has(id)) throw new LawsDataError(`law-areas-assigned.json gives ${lawId} the area "${id}", which is not a catalog area`);
+  return { byName, legacy, assigned: new Map(Object.entries(assigned)) };
 }
 
 /** Catalog id for a source's policy-area name; legacy terms and laws with none are "not classified"; any other name stops the build. */
@@ -175,6 +179,7 @@ export function buildLawRow(l: RawLaw, idx: AreaIndex, extra: Pick<LawRow, "hous
   const { summary, ...rest } = extra;
   const crsArea = areaIdFor(l.policy_area, idx);
   const commemorative = crsArea === COMMEMORATIONS_AREA || commemorativeBasis(l.title) !== null;
+  const area = commemorative ? COMMEMORATIONS_AREA : ((crsArea === NOT_CLASSIFIED_AREA ? idx.assigned.get(l.law_id) : undefined) ?? crsArea);
   return {
     law_id: l.law_id,
     congress: l.congress,
@@ -185,12 +190,51 @@ export function buildLawRow(l: RawLaw, idx: AreaIndex, extra: Pick<LawRow, "hous
     bill_number: l.bill_number,
     origin_chamber: l.origin_chamber,
     sponsor_bioguide_id: l.sponsor,
-    area_id: commemorative ? COMMEMORATIONS_AREA : crsArea,
-    ...(commemorative && crsArea !== COMMEMORATIONS_AREA ? { crs_area_id: crsArea } : {}),
+    area_id: area,
+    ...(area !== crsArea ? { crs_area_id: crsArea } : {}),
     veto_override: isVetoOverride(l.actions),
     ...rest,
     ...(summary ? { summary } : {}),
   };
+}
+
+export interface AssignmentReport {
+  /** Laws CRS gave no current area that now sit in an assigned area. */
+  assigned: number;
+  by_area: Record<string, number>;
+  by_congress: Record<string, number>;
+  /** Laws with no area and no assignment, all in a Congress still in progress. */
+  still_unassigned: string[];
+}
+
+/**
+ * Every law CRS gave no current policy area (and that is not commemorative by title) in a finished Congress needs an entry in
+ * `law-areas-assigned.json`, and every entry must be needed: a missing or stale one throws. A Congress still in progress may hold
+ * laws CRS has not yet classified; they stay "Not classified" and are listed.
+ */
+export function checkAssignments(laws: readonly RawLaw[], idx: AreaIndex, inProgress: ReadonlySet<number>): AssignmentReport {
+  const by_area: Record<string, number> = {};
+  const by_congress: Record<string, number> = {};
+  const still: string[] = [];
+  const missing: string[] = [];
+  const stale: string[] = [];
+  const all = new Set(laws.map((l) => l.law_id));
+  let assigned = 0;
+  for (const l of laws) {
+    const unclassified = areaIdFor(l.policy_area, idx) === NOT_CLASSIFIED_AREA && commemorativeBasis(l.title) === null;
+    const area = idx.assigned.get(l.law_id);
+    if (unclassified && area === undefined) (inProgress.has(l.congress) ? still : missing).push(l.law_id);
+    if (!unclassified && area !== undefined) stale.push(l.law_id);
+    if (unclassified && area !== undefined) {
+      assigned++;
+      by_area[area] = (by_area[area] ?? 0) + 1;
+      by_congress[l.congress] = (by_congress[l.congress] ?? 0) + 1;
+    }
+  }
+  for (const id of idx.assigned.keys()) if (!all.has(id)) stale.push(id);
+  if (missing.length > 0) throw new LawsDataError(`${missing.length} law(s) have no CRS area and no entry in law-areas-assigned.json: ${missing.slice(0, 8).join(", ")}${missing.length > 8 ? " ..." : ""}`);
+  if (stale.length > 0) throw new LawsDataError(`law-areas-assigned.json lists ${stale.length} law(s) that do not need an assigned area (already classified, commemorative by title, or not in the data): ${stale.slice(0, 8).join(", ")}`);
+  return { assigned, by_area: Object.fromEntries(Object.entries(by_area).sort((a, b) => b[1] - a[1])), by_congress, still_unassigned: still };
 }
 
 /** Of the laws CRS itself filed under "Commemorations", the share the title rules also catch must stay at or above this. */

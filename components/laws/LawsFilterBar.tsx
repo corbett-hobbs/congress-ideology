@@ -5,7 +5,7 @@ import { FILTER_LABEL, FILTER_SELECT, HelpTip } from "@/components/charts/Filter
 import { RangeReset } from "@/components/charts/RangeReset";
 import { RangeSelector } from "@/components/charts/RangeSelector";
 import { TermBand } from "@/components/charts/TermBand";
-import { ALL_GROUPS, OTHER_GROUPS, filterLabel, presidentBand, seriesOf, yearSpan } from "@/lib/laws-derive";
+import { ALL_GROUPS, filterLabel, presidentBand, seriesOf, yearSpan } from "@/lib/laws-derive";
 import { sameRange } from "@/lib/year-range";
 import { useLawsActions, useLawsValues } from "./LawsState";
 
@@ -25,9 +25,8 @@ export function LawsFilterBar() {
   const series = useMemo(() => seriesOf(data), [data]);
   const [lo, hi] = yearSpan(data);
   const full = sameRange(range, [lo, hi]);
-  // The legend's order: the five coloured groups, the groups behind "Other topics", Not classified; then "Other topics" itself.
-  const other = series.find((s) => s.id === OTHER_GROUPS)!;
-  const ordered = [...series.slice(0, other ? series.indexOf(other) : 0).flatMap((s) => s.groups), ...other.groups, ...series[series.length - 1]!.groups];
+  // The legend's order: one entry per topic group, largest first.
+  const ordered = series.flatMap((s) => s.groups);
   return (
     <div data-pinned-bar className="sticky top-0 z-40 border-b border-line-strong bg-surface/95 shadow-[0_2px_6px_rgba(26,34,51,0.08)] backdrop-blur sm:shadow-none">
       <div className="mx-auto w-full max-w-[1180px] px-4 pb-2 pt-2 sm:px-6 sm:py-2.5">
@@ -42,7 +41,6 @@ export function LawsFilterBar() {
                     {filterLabel(data, g)}
                   </option>
                 ))}
-                <option value={OTHER_GROUPS}>{other.label}</option>
               </select>
             </label>
             <div className="flex flex-none items-center gap-1">

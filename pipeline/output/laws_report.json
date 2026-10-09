@@ -775,12 +775,8 @@
       "Radiation safety": 1,
       "Import restrictions": 1
     },
-    "not_classified": 423,
-    "not_classified_by_congress": {
-      "93": 145,
-      "94": 123,
-      "95": 155
-    }
+    "not_classified": 0,
+    "not_classified_by_congress": {}
   },
   "commemorative": {
     "rule": "A law is commemorative when CRS filed it under Commemorations or its title matches a rule in transform/laws-commemorative.ts (observance, naming, honor, memorial). Its CRS area is kept as crs_area_id.",
@@ -924,6 +920,50 @@
       "2025": 46,
       "2026": 3
     }
+  },
+  "assigned_areas": {
+    "assigned": 423,
+    "by_area": {
+      "government-operations-and-politics": 70,
+      "native-americans": 46,
+      "agriculture-and-food": 33,
+      "armed-forces-and-national-security": 24,
+      "finance-and-financial-sector": 20,
+      "public-lands-and-natural-resources": 19,
+      "economics-and-public-finance": 18,
+      "labor-and-employment": 18,
+      "water-resources-development": 16,
+      "commerce": 14,
+      "transportation-and-public-works": 12,
+      "international-affairs": 11,
+      "foreign-trade-and-international-finance": 11,
+      "energy": 11,
+      "environmental-protection": 10,
+      "arts-culture-religion": 10,
+      "crime-and-law-enforcement": 9,
+      "health": 8,
+      "education": 7,
+      "social-welfare": 6,
+      "social-sciences-and-history": 6,
+      "housing-and-community-development": 5,
+      "taxation": 5,
+      "immigration": 5,
+      "commemorations": 5,
+      "congress": 4,
+      "law": 4,
+      "science-technology-communications": 4,
+      "animals": 4,
+      "emergency-management": 3,
+      "families": 2,
+      "civil-rights-and-liberties-minority-issues": 2,
+      "sports-and-recreation": 1
+    },
+    "by_congress": {
+      "93": 145,
+      "94": 123,
+      "95": 155
+    },
+    "still_unassigned": []
   },
   "votes": {
     "rule": "A chamber's final passage is its newest passage, conference-report or concurrence action; a roll call's tally is the action text's, with Voteview as the check (exact, minor = within 2 votes and the same band, unverified = a date-and-bill match disagrees, unchecked = no Voteview match, exception = recorded in law-vote-exceptions.json). The band is the narrowest yes share of any recorded final-passage vote; override votes do not count.",
@@ -1552,6 +1592,7 @@
     "every law dated 3 Jan..20 Jan after its Congress",
     "every policy-area name is a CRS area or a listed legacy term",
     "counts add back to the list per Congress",
+    "every law CRS gave no current area has an assigned area (finished Congresses), and no assignment is stale",
     "the commemorative title rules catch at least 90% of the laws CRS filed under Commemorations",
     "Bill Status and the API agree where both cover a Congress"
   ]

@@ -437,7 +437,8 @@ await step("output/laws.json + laws_counts.json + laws_meta.json", async () => {
   for (const r of rows) {
     if (r.crs_area_id === undefined) continue;
     if (!areas.has(r.crs_area_id)) throw new ValidationError(file, "crs_area_id", `${r.law_id} has CRS area ${r.crs_area_id}, not in laws_meta.json`);
-    if (r.area_id !== "commemorations" || r.crs_area_id === "commemorations") throw new ValidationError(file, "crs_area_id", `${r.law_id} carries a CRS area but was not moved into Commemorations`);
+    if (r.crs_area_id === r.area_id) throw new ValidationError(file, "crs_area_id", `${r.law_id} carries a CRS area equal to its area_id; it is only for a law moved off CRS's area`);
+    if (r.area_id !== "commemorations" && r.crs_area_id !== "not-classified") throw new ValidationError(file, "crs_area_id", `${r.law_id} was moved off a CRS area that is neither Commemorations' flag nor an assigned gap`);
   }
   return `${rows.length} laws, ${counts.length} count rows ok; law ids and (congress, area) unique`;
 });

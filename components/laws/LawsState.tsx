@@ -6,15 +6,14 @@ import { ALL_GROUPS, windowIndexes, yearSpan } from "@/lib/laws-derive";
 import type { LawsPayload } from "@/lib/laws-types";
 
 /**
- * The Laws page's one source of truth: the years-shown window, the policy-area filter ("" = all, a topic group's id, or
- * "other" = the groups without a colour), "major laws only", the support band picked on card 2, the party-control rows
+ * The Laws page's one source of truth: the years-shown window, the policy-area filter ("" = all, or a topic group's id), "major laws only", the support band picked on card 2, the party-control rows
  * toggle, and the hovered and pinned Congress, so one crosshair runs through both charts. Two contexts, so components that
  * only need the stable actions don't re-render on every hover frame (same shape as `DecisionsState`). Hover is rAF-throttled.
  */
 export interface LawsValues {
   data: LawsPayload;
   range: YearRange;
-  /** `ALL_GROUPS`, a topic group id, or `OTHER_GROUPS`. */
+  /** `ALL_GROUPS` or a topic group id. */
   group: string;
   /** Only laws on Mayhew's lists of important enactments (assessed through `data.majorThrough`). */
   major: boolean;

@@ -71,6 +71,15 @@
   --fuel-wind: #708ca9;
   --fuel-solar: #878b36;
   --fuel-other: #526f64;
+  /* Laws page topic groups: eight categorical slots (validate_palette.js: lightness, chroma, adjacent CVD and normal-vision separation pass; light-mode contrast is below 3:1 for slots 3-5, so the legend and table view carry the names). Slot order is the stack order. */
+  --laws-1: #2a78d6;
+  --laws-2: #eb6834;
+  --laws-3: #1baf7a;
+  --laws-4: #eda100;
+  --laws-5: #e87ba4;
+  --laws-6: #008300;
+  --laws-7: #4a3aa7;
+  --laws-8: #e34948;
   /* Decisions case list: the Liberal / Conservative outcome tag. Teal and violet, not red and blue: a tag codes who prevailed in a case, it is not a party. */
   --outcome-lib: #0f6e56;
   --outcome-lib-bg: #e1f5ee;
@@ -165,6 +174,14 @@
     --fuel-wind: #5bf6ef;
     --fuel-solar: #eedb3c;
     --fuel-other: #ddb183;
+    --laws-1: #3987e5;
+    --laws-2: #d95926;
+    --laws-3: #199e70;
+    --laws-4: #c98500;
+    --laws-5: #d55181;
+    --laws-6: #008300;
+    --laws-7: #9085e9;
+    --laws-8: #e66767;
     --outcome-lib: #5dcaa5;
     --outcome-lib-bg: #0b3a30;
     --outcome-lib-ink: #9fe1cb;
@@ -244,6 +261,14 @@
   --fuel-wind: #5bf6ef;
   --fuel-solar: #eedb3c;
   --fuel-other: #ddb183;
+  --laws-1: #3987e5;
+  --laws-2: #d95926;
+  --laws-3: #199e70;
+  --laws-4: #c98500;
+  --laws-5: #d55181;
+  --laws-6: #008300;
+  --laws-7: #9085e9;
+  --laws-8: #e66767;
   --outcome-lib: #5dcaa5;
   --outcome-lib-bg: #0b3a30;
   --outcome-lib-ink: #9fe1cb;

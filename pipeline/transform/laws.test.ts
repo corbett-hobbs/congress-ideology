@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { LawPolicyAreas, RawCongressFile, RawLaw } from "../../lib/laws-entities";
-import { commemorativeReport, buildCommittees, committeeIdOf, areaIdFor, areaIndex, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, isVetoOverride, splitPending, overlapDifferences, signingDate, sponsorReport } from "./laws";
+import { checkAssignments, commemorativeReport, buildCommittees, committeeIdOf, areaIdFor, areaIndex, buildCounts, buildLawRow, buildMeta, checkCounts, checkDates, checkNumbering, chooseSources, isVetoOverride, splitPending, overlapDifferences, signingDate, sponsorReport } from "./laws";
 
 const law = (congress: number, number: number, over: Partial<RawLaw> = {}): RawLaw => ({
   law_id: `${congress}-pub-${number}`,
@@ -125,6 +125,30 @@ describe("commemorative laws", () => {
     const ok = commemorativeReport([filed(1, "A joint resolution designating the week of May 1 as \"National Test Week\"."), filed(2, "An act")].slice(0, 1), idx);
     expect(ok.crs_labeled).toMatchObject({ laws: 1, also_caught_by_title_rules: 1, agreement: 1 });
     expect(() => commemorativeReport([filed(1, "An act"), filed(2, "An act")], idx)).toThrow("below the 90% floor");
+  });
+});
+
+describe("assigned areas", () => {
+  const unclassified = (n: number, over: Partial<RawLaw> = {}) => law(93, n, { policy_area: "Noise", ...over });
+  const extra: Parameters<typeof buildLawRow>[2] = { house: [3, null, null, null], senate: [3, null, null, null], band: 0, override_votes: null, major: null };
+  it("counts a law CRS gave no area in the assigned area and keeps not-classified as crs_area_id", () => {
+    const idx = areaIndex(areas, { "93-pub-1": "health" });
+    expect(buildLawRow(unclassified(1), idx, extra)).toMatchObject({ area_id: "health", crs_area_id: "not-classified" });
+    expect(buildLawRow(unclassified(2), idx, extra)).toMatchObject({ area_id: "not-classified" });
+  });
+  it("never lets an assignment override an area CRS gave", () => {
+    const idx = areaIndex(areas, { "93-pub-1": "commemorations" });
+    expect("crs_area_id" in buildLawRow(law(93, 1), idx, extra)).toBe(false);
+  });
+  it("stops on a law with no area and no entry, an entry no law needs, or an unknown area", () => {
+    expect(() => checkAssignments([unclassified(1)], areaIndex(areas), new Set())).toThrow("no entry");
+    expect(() => checkAssignments([law(93, 1)], areaIndex(areas, { "93-pub-1": "health" }), new Set())).toThrow("do not need");
+    expect(() => checkAssignments([law(93, 1)], areaIndex(areas, { "93-pub-9": "health" }), new Set())).toThrow("do not need");
+    expect(() => areaIndex(areas, { "93-pub-1": "nope" })).toThrow("not a catalog area");
+  });
+  it("lets a Congress still in progress hold laws CRS has not classified yet, and lists them", () => {
+    const r = checkAssignments([unclassified(1), unclassified(2)], areaIndex(areas, { "93-pub-1": "health" }), new Set([93]));
+    expect(r).toMatchObject({ assigned: 1, by_area: { health: 1 }, still_unassigned: ["93-pub-2"] });
   });
 });
 

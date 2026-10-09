@@ -32,10 +32,14 @@ Both fetchers write the same slimmed record per law (`pipeline/raw/govinfo-bills
 CRS assigns one policy area per law. The source field holds more than CRS's 32 current areas: the retired label **"Commemorations"** (applied only in 1985–88 and 1997–2008, never in the years between or since) and a few subject terms older laws carry. We keep each law's area exactly as the source names it, with one exception, below:
 
 - the 32 current areas and "Commemorations" are the catalog (`pipeline/reference/law-policy-areas.json`);
-- legacy subject terms and laws with no area are **"Not classified"** — never mapped to an area by us;
+- legacy subject terms and laws with no area get an area **assigned by InsideGov** (below); only a law in a Congress still in progress that CRS has not classified yet shows as **"Not classified"**;
 - a name in neither list stops the build.
 
-Thirty-three areas are too many for the page, so the page shows **topic groups** (about ten, to match the rest of InsideGov). The grouping is one field (`group`) in the same reference file; changing it needs a `pnpm transform`, not a re-fetch. "Commemorations" is its own group.
+Thirty-three areas are too many for the page, so the page shows **eight topic groups**, one colour each (eight is the most a categorical palette keeps distinguishable, so there is no "Other topics" band; the palette is `--laws-1..8` in `globals.css`, validated with the dataviz `validate_palette.js`). More than eight groups with laws makes `seriesOf` throw. The grouping is one field (`group`) in the same reference file; changing it needs a `pnpm transform`, not a re-fetch. "Commemorations" is its own group.
+
+### Laws CRS gave no area: assigned from the title
+
+423 laws of the 93rd–95th Congresses have no current CRS policy area (none, or only an older subject term; 160 distinct terms). Rather than leave a grey "Not classified" band, each was assigned a CRS area by reading its title and old subject term, to the area that holds the same kind of law today (`pipeline/reference/law-areas-assigned.json`, law id -> area id). The old terms were not mapped mechanically: they are unreliable (a "Postal service" term sits on an Indian-policy commission, "Lobbying" on a food-stamp amendment). A law CRS gave no area keeps `crs_area_id` = `not-classified`. The transform throws if a law in a finished Congress still has no area and no entry, or an entry is not needed (already classified, commemorative by title, or not in the data); a Congress in progress may hold unclassified laws, which are listed in the report (`assigned_areas`). These are one reader's judgement calls on 423 short titles, not CRS's; corrections go in the reference file and need only `pnpm transform`.
 
 ### Commemorations: an InsideGov rule, not CRS's
 
@@ -66,7 +70,7 @@ Reported, not fatal: sponsors missing from `legislators.json`, laws with no spon
 
 12,619 public laws, 93rd–119th (the 119th has 119; law 119-120 is held out until Congress.gov records its enactment). Sources: Congress.gov API for the 93rd–107th, Bill Status for the 108th–119th; the 108th was fetched from both and agrees on all 498 laws across seven fields. Every finished Congress's laws are numbered 1..N and equal the independent count. Files: `laws.json` 4.2 MB, `laws_cosponsors.json` 3.0 MB, `laws_committees.json` 1.3 MB, `laws_counts.json` 47 KB (816 rows); raw `congress-gov/` 36 MB and `govinfo-billstatus/` 15 MB.
 
-- **"Not classified" is a 1973–78 problem, and a bigger one than the pre-flight sample suggested.** 465 laws have no CRS area or a legacy subject term (160 distinct terms, listed in `law-policy-areas.json`): 164 of the 93rd's 651 (25%), 134 of the 94th's 588 (23%), 167 of the 95th's 633 (26%). From the 96th (1979) on every law has a current CRS area or "Commemorations". (42 of the 465 are commemorative by title and now count in Commemorations, leaving 423 "Not classified".) The pre-flight's sample of 40 per Congress had put it near 9%.
+- **Laws with no CRS area are a 1973–78 problem, and a bigger one than the pre-flight sample suggested.** 465 laws have no CRS area or a legacy subject term (160 distinct terms, listed in `law-policy-areas.json`): 164 of the 93rd's 651 (25%), 134 of the 94th's 588 (23%), 167 of the 95th's 633 (26%). From the 96th (1979) on every law has a current CRS area or "Commemorations". (42 of the 465 are commemorative by title and count in Commemorations; the other 423 are assigned an area, see above, so none shows as "Not classified".) The pre-flight's sample of 40 per Congress had put it near 9%.
 - **Source repairs.** Three Bill Status bills (110th S. 2499, 110th H.R. 6124, 109th H.R. 5441) also list the law under the wrong Congress; read as the bill's own. The API list repeated or omitted 22 laws in the 93rd–102nd (looked up by number). Ten 106th laws and two 99th laws carry two `BecameLaw` dates a day or two apart; the earliest is used.
 - **Veto overrides:** 33 laws (93rd 5, 94th 8, 96th 2, 97th 2, 98th 2, 99th 2, 100th 3, 102nd 1, 104th 1, 105th 1, 110th 4, 114th 1, 116th 1). Each has a veto and an "over veto" passage. Checked in Session 6 against the Senate Historical Office's vetoes table (https://www.senate.gov/legislative/vetoes/vetoCounts.htm, read 2026-10-08): overrides by signing president from Ford on are identical (Ford 12, Carter 2, Reagan 9, Bush 41 1, Clinton 2, Bush 43 4, Obama 1, Trump 1, Biden 0), and Nixon's one in range is the War Powers Resolution (his other six are before 1973). Line-item-veto notes on eleven 105th laws are correctly not counted.
 - **Sponsors:** all 12,604 sponsor ids resolve in `legislators.json`; 15 laws have no sponsor in the source (96th 2, 97th 4, 98th 2, 99th 1, 100th 1, 101st 1, 108th 1, 109th 1, 110th 1, 111th 1, listed in `laws_report.json`).
@@ -147,11 +151,11 @@ Reading it: before 2000 about four laws in five show as "Voice vote or consent" 
 ## Settled decisions (from the scope and the gates)
 
 - **Range and slots.** 1973 on (93rd Congress), public laws only, one slot per Congress; the president under a bar signed most of that Congress's laws, and the tooltip lists every signer when it splits. A Congress is in the years window when its second year is inside it.
-- **Topics.** Congress.gov policy areas, shown as about ten topic groups plus a visible **Not classified** band (465 laws, 1973–78); the five largest groups get a colour, the rest share "Other topics", which the dropdown splits. Never mapped by us.
+- **Topics.** Congress.gov policy areas, shown as eight topic groups, one colour each, largest first (no "Other topics"). The 465 laws of 1973–78 with no CRS area are not a band: 42 are commemorative by title and 423 carry an InsideGov-assigned area from `law-areas-assigned.json` (`crs_area_id` keeps what CRS filed).
 - **Support.** The closest recorded final-passage vote in either chamber; voice vote or consent (no roll call in either chamber) is its own band (about four laws in five before 2000, stated in the card's Data note). Minority-party support is later work.
 - **Major laws.** Mayhew only, three states, through the 118th Congress; "Major laws" stops the window at the last assessed Congress and never draws the 119th as zero. No provisional flag ships (Session 3b has no go).
 - **Summaries.** The CRS first sentence only; never model-written.
-- **Colour.** No new tokens: topic groups reuse `--fuel-*`, support bands `--split-*`.
+- **Colour.** Topic groups use `--laws-1..8` (the dataviz default categorical palette, eight hues in a fixed order, validated in light and dark; slots 3–5 are under 3:1 on the light surface, so the legend and the table view carry the names); support bands reuse `--split-*`.
 - **Copy.** Every number in a lede, note or link is computed from the data; tests assert the anchors (93rd 651 laws, 118th 274).
 
 ## The page (Sessions 4–6)
