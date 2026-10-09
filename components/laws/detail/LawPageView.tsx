@@ -128,6 +128,8 @@ function Timeline({ law }: { law: LawPageData }) {
 const YEA = "var(--ink)";
 const NAY = "var(--line-strong)";
 
+const isCounted = (t: ChamberTally): boolean => t[0] === 0 && t[1] !== null && t[2] !== null;
+
 function VoteRow({ chamber, t, label }: { chamber: string; t: ChamberTally; label?: string }) {
   const counted = t[0] === 0 && t[1] !== null && t[2] !== null;
   const share = yeaShare(t[1], t[2]);
@@ -156,9 +158,25 @@ function VoteRow({ chamber, t, label }: { chamber: string; t: ChamberTally; labe
 /** The passage votes, in the page header under the facts. */
 function Votes({ law }: { law: LawPageData }) {
   const { house, senate, override } = law.passage;
+  // The Yea / Nay key only appears when a bar is drawn: a voice vote or unanimous consent has no count to colour.
+  const hasBars = [house, senate].some(isCounted) || (override !== null && (override[0] !== null || override[2] !== null));
   return (
     <section aria-label="Passage votes" className="mt-1">
-      <h2 className="m-0 text-[0.72rem] font-medium uppercase tracking-[0.06em] text-ink-faint">Passage votes</h2>
+      <h2 className="m-0 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.72rem] font-medium uppercase tracking-[0.06em] text-ink-faint">
+        <span>Passage votes</span>
+        {hasBars && (
+          <span className="inline-flex items-center gap-3 normal-case tracking-normal">
+            <span className="inline-flex items-center gap-1.5">
+              <i aria-hidden className="inline-block size-2 rounded-sm" style={{ background: YEA }} />
+              Yea
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <i aria-hidden className="inline-block size-2 rounded-sm" style={{ background: NAY }} />
+              Nay
+            </span>
+          </span>
+        )}
+      </h2>
       <ul className="m-0 grid list-none grid-cols-2 gap-x-5 p-0 sm:flex sm:flex-wrap sm:gap-x-8">
         <VoteRow chamber="House" t={house} />
         <VoteRow chamber="Senate" t={senate} />
