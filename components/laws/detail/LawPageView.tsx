@@ -3,28 +3,15 @@ import { SetBackLink } from "@/components/BackLinkContext";
 import { MethodologyNote } from "@/components/MethodologyNote";
 import { PageHeader } from "@/components/PageHeader";
 import { ChartCard } from "@/components/charts/ChartCard";
-import { ACTION_KIND_LABEL, longDate, methodText, PARTY_NAME, partySplit, yeaShare, type PartyLetter, type TimelineAction } from "@/lib/law-details-derive";
-import type { LawCommitteeEntry, LawPageData, LawPerson } from "@/lib/law-details-types";
+import { ACTION_KIND_LABEL, longDate, methodText, yeaShare, type TimelineAction } from "@/lib/law-details-derive";
+import type { LawCommitteeEntry, LawPageData } from "@/lib/law-details-types";
 import { ordinal } from "@/lib/laws-entities";
+import { CosponsorsHeader } from "./CosponsorsHeader";
+import { Dot, LINK, Person } from "./LawPeople";
 import type { ChamberTally } from "@/lib/laws-types";
 
-const PARTY_VAR: Record<PartyLetter, string> = { D: "var(--dem)", R: "var(--rep)", I: "var(--demrep)" };
 const BADGE = "inline-flex items-center rounded-full border border-line-strong px-2 py-px text-[0.68rem] font-medium text-ink-muted";
-const LINK = "text-ink underline decoration-line-strong underline-offset-2 hover:decoration-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
-function Person({ p }: { p: LawPerson }) {
-  return p.path ? (
-    <Link href={p.path} className={LINK}>
-      {p.name}
-    </Link>
-  ) : (
-    <span className="text-ink">{p.name}</span>
-  );
-}
-
-function Dot({ party }: { party: PartyLetter }) {
-  return <i aria-hidden className="inline-block h-2 w-2 flex-none rounded-full" style={{ background: PARTY_VAR[party] }} />;
-}
 
 /** Facts line under the title: number, bill, date, signer, sponsor, policy area. */
 function Facts({ law }: { law: LawPageData }) {
@@ -37,16 +24,16 @@ function Facts({ law }: { law: LawPageData }) {
       </p>
       <p className="m-0">
         {law.veto ? "Vetoed by " : "Signed by "}
-        <span className="inline-flex items-center gap-1 whitespace-nowrap text-ink">
-          <Dot party={signerParty} />
-          {law.president.name}
-        </span>
+        <span className="whitespace-nowrap text-ink">{law.president.name}</span>
         <span className="text-ink-faint">{` (${signerParty})`}</span>
         {law.veto ? `; passed over the veto on ${longDate(law.date)}` : ` on ${longDate(law.date)}`}
         {law.sponsor && (
           <>
             {" · sponsored by "}
-            <Person p={law.sponsor} />
+            <span className="inline-flex items-center gap-1">
+              <Dot party={law.sponsor.party} />
+              <Person p={law.sponsor} />
+            </span>
             {` (${law.sponsor.label})`}
           </>
         )}
@@ -197,48 +184,6 @@ function Votes({ law }: { law: LawPageData }) {
   );
 }
 
-function Cosponsors({ law }: { law: LawPageData }) {
-  const people = law.cosponsors;
-  const split = partySplit(people.map((p) => p.party));
-  return (
-    <ChartCard title="Cosponsors" lede={people.length === 0 ? "No members signed on as cosponsors of this bill." : `${people.length} member${people.length === 1 ? "" : "s"} signed on as cosponsors, besides the sponsor.`}>
-      {people.length > 0 && (
-        <>
-          <div aria-hidden className="flex h-3 w-full overflow-hidden rounded-sm bg-line">
-            {split.map((s) => (
-              <span key={s.party} style={{ width: `${(100 * s.n) / people.length}%`, background: PARTY_VAR[s.party] }} />
-            ))}
-          </div>
-          <p className="m-0 mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[0.8rem]">
-            {split.map((s) => (
-              <span key={s.party} className="inline-flex items-center gap-1.5">
-                <Dot party={s.party} />
-                <span className="tabular-nums font-medium">{s.n}</span>
-                <span className="text-ink-muted">{PARTY_NAME[s.party]}</span>
-              </span>
-            ))}
-          </p>
-          <ul tabIndex={0} aria-label="Cosponsors, scrollable" className="touch-scroll m-0 mt-3 max-h-72 list-none overflow-y-auto overscroll-contain rounded-md border border-line p-0">
-            {people.map((p, i) => (
-              <li key={`${p.name}-${i}`} className="flex flex-wrap items-center gap-x-2 border-b border-line px-3 py-1.5 text-[0.82rem] last:border-b-0">
-                <Dot party={p.party} />
-                <Person p={p} />
-                <span className="text-ink-faint">{p.label}</span>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-      <MethodologyNote>
-        <p>
-          Cosponsors who withdrew are not listed. A name links to a profile only for members of the current Congress.
-          {law.cosponsorsUnresolved > 0 ? ` ${law.cosponsorsUnresolved} cosponsor${law.cosponsorsUnresolved === 1 ? "" : "s"} could not be matched to a member record and ${law.cosponsorsUnresolved === 1 ? "is" : "are"} left out.` : ""}
-        </p>
-      </MethodologyNote>
-    </ChartCard>
-  );
-}
-
 function CommitteeItem({ c }: { c: LawCommitteeEntry }) {
   return (
     <li className="border-b border-line px-3 py-2 text-[0.82rem] last:border-b-0">
@@ -273,11 +218,11 @@ export function LawPageView({ law }: { law: LawPageData }) {
       <SetBackLink href="/congress/laws" />
       <PageHeader eyebrow="Congress · Laws" title={law.title}>
         <Facts law={law} />
+        <CosponsorsHeader people={law.cosponsors} unresolved={law.cosponsorsUnresolved} />
         <Votes law={law} />
       </PageHeader>
       <Summary law={law} />
       <Timeline law={law} />
-      <Cosponsors law={law} />
       <Committees law={law} />
       <section aria-label="Official record" className="rounded-[10px] border border-line bg-surface p-[1.1rem_1.35rem] text-[0.85rem] text-ink-muted">
         <h2 className="m-0 font-serif text-[1.05rem] font-medium text-ink">Official record</h2>
